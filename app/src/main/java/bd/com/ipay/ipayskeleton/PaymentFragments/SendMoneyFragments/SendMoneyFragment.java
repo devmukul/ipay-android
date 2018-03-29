@@ -420,6 +420,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
         //mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         //mProgressDialog.show();
+        mCustomProgressDialog = new CustomProgressDialog(getContext());
         mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
         mCustomProgressDialog.showDialog();
         mProgressDialog.setCancelable(false);
@@ -567,7 +568,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                             public void run() {
                                 getActivity().finish();
                             }
-                        }, 2000);
+                        }, 4000);
 
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());

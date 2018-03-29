@@ -32,7 +32,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         customView = LayoutInflater.from(context).inflate(R.layout.view_custom_progress_dialog, null, false);
         progressDialogTextView = (TextView) customView.findViewById(R.id.progress_dialog_text_view);
         animationView = (LottieAnimationView) customView.findViewById(R.id.view_animation);
-        animationView.setSpeed(1.4f);
+        animationView.setSpeed(1.2f);
         setUpAnimationAction();
         animationView.playAnimation();
         this.setView(customView);
@@ -79,7 +79,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void showSuccessAnimationAndMessage(final String successMessage) {
         animationView.pauseAnimation();
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(300,300);
+        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(220,220);
         animationView.setLayoutParams(layoutParams);
         animationView.setAnimation(R.raw.done_test);
         animationView.playAnimation();
@@ -89,9 +89,15 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void showFailureAnimationAndMessage(String failureMessage) {
         animationView.pauseAnimation();
+        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(220,220);
+        animationView.setLayoutParams(layoutParams);
         progressDialogTextView.setText(failureMessage);
-        animationView.setAnimation(R.raw.failure);
+        animationView.setAnimation(R.raw.cruz);
+        currentState="FAILED";
         animationView.playAnimation();
+    }
+    public void clearAnimation(){
+        animationView.clearAnimation();
     }
 }
 
