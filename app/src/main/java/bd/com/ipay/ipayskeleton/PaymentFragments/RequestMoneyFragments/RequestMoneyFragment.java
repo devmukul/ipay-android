@@ -418,7 +418,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mProgressDialog.setMessage(getString(R.string.requesting_money));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(mMobileNumber,
+        RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(ContactEngine.formatMobileNumberBD(mMobileNumber),
                 new BigDecimal(mAmount).doubleValue(), mDescription);
         Gson gson = new Gson();
         String json = gson.toJson(mRequestMoneyRequest);
