@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -106,6 +107,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private String country;
     private String district;
     private String thana;
+    private Context mContext;
 
 
     @Override
@@ -210,6 +212,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
+        mContext = getContext();
 
         return v;
     }
@@ -420,7 +423,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
         //mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         //mProgressDialog.show();
-        mCustomProgressDialog = new CustomProgressDialog(getContext());
+        mCustomProgressDialog = new CustomProgressDialog(mContext);
         mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
         mCustomProgressDialog.showDialog();
         mProgressDialog.setCancelable(false);
@@ -560,8 +563,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 final SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
-                        //if (getActivity() != null)
-                        //  Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                         mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -580,25 +581,46 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                         launchOTPVerification();
                         break;
                     case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
-                        if (getActivity() != null)
-                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
-                        Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                        if (getActivity() != null) {
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((MyApplication) getActivity().getApplication()).launchLoginPage("");
+                                }
+                            }, 4000);
+
+                            Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                        }
                         break;
                     default:
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (getActivity() != null) {
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                   mCustomProgressDialog.dismissDialog();
+                                }
+                            }, 4000);
 
-                        //Google Analytic event
-                        Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
-                                mSendMoneyResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                            //Google Analytic event
+                            Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
+                                    mSendMoneyResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                        }
                         break;
 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+                mCustomProgressDialog.showFailureAnimationAndMessage(getResources().getString(R.string.service_not_available));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCustomProgressDialog.dismissDialog();
+                    }
+                }, 4000);
             }
-            mProgressDialog.dismiss();
             mSendMoneyTask = null;
 
         }

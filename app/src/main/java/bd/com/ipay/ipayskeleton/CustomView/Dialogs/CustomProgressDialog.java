@@ -36,6 +36,8 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         setUpAnimationAction();
         animationView.playAnimation();
         this.setView(customView);
+        this.setCancelable(false);
+        this.setCanceledOnTouchOutside(false);
     }
 
     public void showDialog() {
@@ -67,7 +69,6 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
             public void onAnimationRepeat(Animator animator) {
                 if (currentState.equals("SUCCESS") || currentState.equals("FAILED")) {
                     animationView.pauseAnimation();
-
                 }
             }
         });
@@ -79,7 +80,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void showSuccessAnimationAndMessage(final String successMessage) {
         animationView.pauseAnimation();
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(220,220);
+        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(210,210);
         animationView.setLayoutParams(layoutParams);
         animationView.setAnimation(R.raw.done_test);
         animationView.playAnimation();
@@ -89,7 +90,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void showFailureAnimationAndMessage(String failureMessage) {
         animationView.pauseAnimation();
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(220,220);
+        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(210,210);
         animationView.setLayoutParams(layoutParams);
         progressDialogTextView.setText(failureMessage);
         animationView.setAnimation(R.raw.cruz);
