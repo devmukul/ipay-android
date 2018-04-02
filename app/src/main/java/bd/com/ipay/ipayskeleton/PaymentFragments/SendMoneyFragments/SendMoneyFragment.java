@@ -19,6 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -49,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -163,7 +168,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.performQRCodeScan(SendMoneyFragment.this, REQUEST_CODE_PERMISSION);
+                Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
             }
         });
 
@@ -224,7 +230,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
+                    Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                    startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
                 } else {
                     Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
                 }
@@ -234,7 +241,40 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    final String result = barcode.displayValue;
+                    if (result != null) {
+                        Handler mHandler = new Handler();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (InputValidator.isValidNumber(result)) {
+                                    mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
+                                    if (Utilities.isConnectionAvailable(getActivity())) {
+                                        String mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                        getUserInfo(mobileNumber);
+                                    } else {
+                                        Toaster.makeText(getActivity(), getResources().getString(
+                                                R.string.no_internet_connection), Toast.LENGTH_SHORT);
+                                        mProgressDialog.cancel();
+                                        getActivity().finish();
+                                    }
+                                } else if (getActivity() != null)
+                                    Toaster.makeText(getActivity(), getResources().getString(
+                                            R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                } else {
+                    getActivity().finish();
+                }
+            }else{
+                getActivity().finish();
+            }
+        }else if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             String name = data.getStringExtra(Constants.NAME);
             String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
@@ -254,35 +294,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
-                            if (Utilities.isConnectionAvailable(getActivity())) {
-                                String mobileNumber = ContactEngine.formatMobileNumberBD(result);
-                                getUserInfo(mobileNumber);
-                            } else {
-                                Toaster.makeText(getActivity(), getResources().getString(
-                                        R.string.no_internet_connection), Toast.LENGTH_SHORT);
-                                mProgressDialog.cancel();
-                                getActivity().finish();
-                            }
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
-                    }
-                });
-            }
         }
     }
 
