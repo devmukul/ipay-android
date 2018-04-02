@@ -30,8 +30,12 @@ public class BusinessContactsSearchView extends FrameLayout {
 
     private List<BusinessContact> mBusinessContactList;
     private String mQuery = "";
+    private String mImageURL = "";
+    private String mName = "";
 
     private Context mContext;
+
+    private CustomTextChangeListener customTextChangeListener;
 
     public BusinessContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -57,6 +61,20 @@ public class BusinessContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView = (CustomAutoCompleteView) view.findViewById(R.id.auto_complete_view);
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
+
+        mCustomAutoCompleteView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String inputString = mCustomAutoCompleteView.getText().toString().trim();
+
+                    if (mName.isEmpty() && mImageURL.isEmpty())
+                        customTextChangeListener.onTextChange(inputString);
+                    else
+                        customTextChangeListener.onTextChange(inputString, mName, mImageURL);
+                }
+            }
+        });
 
         mBusinessContactList = new ArrayList<>();
         setBusinessContactAdapter(mBusinessContactList);
@@ -90,6 +108,21 @@ public class BusinessContactsSearchView extends FrameLayout {
                 }
             }
         }
+    }
+
+    public void setCustomTextChangeListener(CustomTextChangeListener customTextChangeListener) {
+        this.customTextChangeListener = customTextChangeListener;
+    }
+
+    public interface CustomTextChangeListener {
+        void onTextChange(String inputText);
+
+        void onTextChange(String inputText, String name, String imageURL);
+    }
+
+    public void clearSelectedData() {
+        mName = "";
+        mImageURL = "";
     }
 
     public Editable getText() {
@@ -218,7 +251,7 @@ public class BusinessContactsSearchView extends FrameLayout {
             final String businessName = businessContact.getBusinessName();
             final String mobileNumber = businessContact.getMobileNumber();
             final String businessType = businessContact.getBusinessType();
-            final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + businessContact.getProfilePictureUrl();
+            final String profilePictureUrl = businessContact.getProfilePictureUrl();
 
             if (businessName != null && !businessName.isEmpty())
                 businessNameView.setText(businessName);
@@ -228,12 +261,16 @@ public class BusinessContactsSearchView extends FrameLayout {
                 businessTypeView.setVisibility(VISIBLE);
             }
             mobileNumberView.setText(mobileNumber);
-            profilePictureView.setProfilePicture(profilePictureUrl, false);
+            profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setText(mobileNumber);
+
+                    mName = businessName;
+                    mImageURL = profilePictureUrl;
+                    mCustomAutoCompleteView.clearFocus();
                 }
             });
 

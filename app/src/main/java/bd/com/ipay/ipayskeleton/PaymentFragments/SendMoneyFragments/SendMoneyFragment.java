@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,17 +26,32 @@ import com.google.zxing.integration.android.IntentResult;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -43,7 +60,10 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyFragment extends BaseFragment implements HttpResponseListener {
@@ -54,6 +74,11 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+    private HttpRequestGetAsyncTask mGetUserInfoTask;
+
+    private HttpRequestPostAsyncTask mSendMoneyTask = null;
+    private SendMoneyRequest mSendMoneyRequest;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
@@ -62,6 +87,24 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private ProgressDialog mProgressDialog;
+    private ProfileImageView mProfileImageView;
+    private TextView mNameTextView;
+    private View mProfilePicHolderView;
+    private View mMobileNumberHolderView;
+    private View mIconEditMobileNumber;
+    private CheckBox addToContactCheckBox;
+
+    private String mReceiver;
+    private String mAmount;
+    private String mDescription;
+    private String mSenderMobileNumber;
+    private String mName;
+    private String mProfilePicture;
+
+    private String address;
+    private String country;
+    private String district;
+    private String thana;
 
 
     @Override
@@ -69,12 +112,18 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money, container, false);
         mMobileNumberEditText = (CustomContactsSearchView) v.findViewById(R.id.mobile_number);
+        mNameTextView = (TextView) v.findViewById(R.id.receiver_name_text_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.receiver_profile_image_view);
+        mProfilePicHolderView = v.findViewById(R.id.profile_pic_holder);
+        mMobileNumberHolderView = v.findViewById(R.id.mobile_number_holder);
+        mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
         mProgressDialog = new ProgressDialog(getActivity());
+        addToContactCheckBox = (CheckBox) v.findViewById(R.id.add_to_contact_check_box);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
@@ -101,7 +150,10 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     // For now, we are directly sending the money without going through any send money query
                     // sendMoneyQuery();
                     if (verifyUserInputs()) {
-                        launchReviewPage();
+                        attemptSendMoneyWithPinCheck();
+                        if (addToContactCheckBox.isChecked()) {
+                            addContact(mName, mReceiver, null);
+                        }
                     }
                 } else if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
@@ -111,9 +163,46 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Utilities.performQRCodeScan(SendMoneyFragment.this, REQUEST_CODE_PERMISSION);
+            }
+        });
 
+        mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProfilePicHolderView.setVisibility(View.GONE);
+                mMobileNumberHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberEditText.requestFocus();
+
+                addToContactCheckBox.setVisibility(View.GONE);
+                addToContactCheckBox.setChecked(false);
+            }
+        });
+
+        mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
+            @Override
+            public void onTextChange(String inputText) {
+                if (mProfilePicHolderView.getVisibility() == View.GONE
+                        && Utilities.isConnectionAvailable(getActivity())
+                        && InputValidator.isValidNumber(inputText)) {
+                    getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
+                }
+            }
+
+            @Override
+            public void onTextChange(String inputText, String name, String imageURL) {
+                mProfilePicHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberHolderView.setVisibility(View.GONE);
+
+                if (!imageURL.isEmpty()) {
+                    mProfileImageView.setProfilePicture(imageURL,
+                            false);
+                }
+                if (!name.isEmpty()) {
+                    mNameTextView.setText(name);
+                }
+
+                mMobileNumberEditText.clearSelectedData();
             }
         });
 
@@ -147,9 +236,22 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+            String name = data.getStringExtra(Constants.NAME);
+            String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
+
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
 
+            mProfilePicHolderView.setVisibility(View.VISIBLE);
+            mMobileNumberHolderView.setVisibility(View.GONE);
+
+            if (!imageURL.isEmpty()) {
+                mProfileImageView.setProfilePicture(imageURL,
+                        false);
+            }
+            if (!name.isEmpty()) {
+                mNameTextView.setText(name);
+            }
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
@@ -166,6 +268,15 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     public void run() {
                         if (InputValidator.isValidNumber(result)) {
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
+                            if (Utilities.isConnectionAvailable(getActivity())) {
+                                String mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                getUserInfo(mobileNumber);
+                            } else {
+                                Toaster.makeText(getActivity(), getResources().getString(
+                                        R.string.no_internet_connection), Toast.LENGTH_SHORT);
+                                mProgressDialog.cancel();
+                                getActivity().finish();
+                            }
                         } else if (getActivity() != null)
                             Toaster.makeText(getActivity(), getResources().getString(
                                     R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
@@ -182,8 +293,12 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         boolean cancel = false;
         View focusView = null;
         String errorMessage;
-
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+
+        mReceiver = mMobileNumberEditText.getText().toString().trim();
+        mAmount = mAmountEditText.getText().toString().trim();
+        mDescription = mDescriptionEditText.getText().toString().trim();
+        mSenderMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
         if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
@@ -219,17 +334,13 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             focusView = mAmountEditText;
             mAmountEditText.setError(errorMessage);
             cancel = true;
-        } else if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
-            focusView = mDescriptionEditText;
-            mDescriptionEditText.setError(getString(R.string.please_write_note));
-            cancel = true;
         } else if (!InputValidator.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
         } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
             focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.you_cannot_send_money_to_your_number));
+            DialogUtils.showDialogOwnNumberErrorDialog(getActivity(), mIconEditMobileNumber);
             cancel = true;
         }
 
@@ -239,6 +350,50 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         } else {
             return true;
         }
+    }
+
+    private void attemptSendMoneyWithPinCheck() {
+
+        if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+                @Override
+                public void ifPinCheckedAndAdded(String pin) {
+                    attemptSendMoney(pin);
+                }
+            });
+        } else {
+            attemptSendMoney(null);
+        }
+    }
+
+    private void getUserInfo(String mobileNumber) {
+        mReceiver = mobileNumber;
+
+
+        GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+        if (mGetUserInfoTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+        mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
+        mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
+    @ValidateAccess
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void launchReviewPage() {
@@ -256,6 +411,25 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
     }
 
+    private void attemptSendMoney(String pin) {
+        if (mSendMoneyTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
+        mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
+        mSendMoneyRequest = new SendMoneyRequest(
+                mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiver),
+                mAmount, mDescription, pin);
+        Gson gson = new Gson();
+        String json = gson.toJson(mSendMoneyRequest);
+        mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
+        mSendMoneyTask.mHttpResponseListener = this;
+        mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void attemptGetBusinessRule(int serviceID) {
         if (mGetBusinessRuleTask != null) {
             return;
@@ -269,20 +443,30 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mSendMoneyRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_SEND_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         mProgressDialog.dismiss();
+        Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+            mGetUserInfoTask = null;
+            mSendMoneyTask = null;
+            mGetBusinessRuleTask = null;
+
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    Gson gson = new Gson();
 
                     BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
@@ -312,6 +496,104 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
 
             mGetBusinessRuleTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+            try {
+                GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfilePicHolderView.setVisibility(View.VISIBLE);
+                    mMobileNumberHolderView.setVisibility(View.GONE);
+
+                    if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiver)) {
+                        addToContactCheckBox.setVisibility(View.VISIBLE);
+                        addToContactCheckBox.setChecked(true);
+                    }
+
+                    mName = mGetUserInfoResponse.getName();
+
+                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                        mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
+                                false);
+                    }
+                    mNameTextView.setText(mName);
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            mGetUserInfoTask = null;
+            mProgressDialog.dismiss();
+        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
+
+            try {
+                SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
+                switch (result.getStatus()) {
+                    case Constants.HTTP_RESPONSE_STATUS_OK:
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                        getActivity().finish();
+                        //Google Analytic event
+                        Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                        break;
+                    case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
+                    case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
+                        Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
+                        launchOTPVerification();
+                        break;
+                    case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
+                        if (getActivity() != null)
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
+                        Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                        break;
+                    default:
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+
+                        if (mSendMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
+                        //Google Analytic event
+                        Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
+                                mSendMoneyResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                        break;
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+            }
+            mProgressDialog.dismiss();
+            mSendMoneyTask = null;
+
         }
+    }
+
+    private void switchActivity(Class tClass) {
+        Intent intent = new Intent(getActivity(), tClass);
+        intent.putExtra(Constants.MOBILE_NUMBER, mReceiver);
+        intent.putExtra(Constants.FROM_QR_SCAN, true);
+        intent.putExtra(Constants.NAME, mName);
+        intent.putExtra(Constants.PHOTO_URI, mProfilePicture);
+        intent.putExtra(Constants.COUNTRY, country);
+        intent.putExtra(Constants.DISTRICT, district);
+        intent.putExtra(Constants.ADDRESS, address);
+        intent.putExtra(Constants.THANA, thana);
+        startActivity(intent);
+        getActivity().finish();
     }
 }

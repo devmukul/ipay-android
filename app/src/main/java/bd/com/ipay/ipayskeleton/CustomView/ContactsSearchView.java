@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DBContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class ContactsSearchView extends FrameLayout {
@@ -35,6 +36,8 @@ public class ContactsSearchView extends FrameLayout {
     private List<DBContactNode> mContactList;
     private String mQuery = "";
     private Context mContext;
+    private String mImageURL = "";
+    private String mName = "";
 
     private CustomTextChangeListener customTextChangeListener;
 
@@ -63,6 +66,20 @@ public class ContactsSearchView extends FrameLayout {
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
+        mCustomAutoCompleteView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String inputString = mCustomAutoCompleteView.getText().toString().trim();
+
+                    if (mName.isEmpty() && mImageURL.isEmpty())
+                        customTextChangeListener.onTextChange(inputString);
+                    else
+                        customTextChangeListener.onTextChange(inputString, mName, mImageURL);
+                }
+            }
+        });
+
         mContactList = new ArrayList<>();
         setBusinessContactAdapter(mContactList);
     }
@@ -77,6 +94,11 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setError(null);
 
         hideSuggestionList();
+    }
+
+    public void clearSelectedData() {
+        mName = "";
+        mImageURL = "";
     }
 
     public void setError(String error) {
@@ -138,12 +160,11 @@ public class ContactsSearchView extends FrameLayout {
     private void readContactsFromDB() {
         Cursor mCursor;
         DataHelper dataHelper = DataHelper.getInstance(mContext);
-        if(!ProfileInfoCacheManager.isAccountSwitched()) {
+        if (!ProfileInfoCacheManager.isAccountSwitched()) {
             mCursor = dataHelper.searchContacts(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
                     mFilterByVerifiedUsersOnly, false, false, null);
-        }
-        else{
-            mCursor=dataHelper.searchBusinessContacts(mQuery,mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
+        } else {
+            mCursor = dataHelper.searchBusinessContacts(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
                     mFilterByVerifiedUsersOnly, false, false, null, Long.parseLong(TokenManager.getOnAccountId()));
         }
 
@@ -176,12 +197,15 @@ public class ContactsSearchView extends FrameLayout {
 
     public interface CustomTextChangeListener {
         void onTextChange(String inputText);
+
+        void onTextChange(String inputText, String name, String imageURL);
     }
 
     public class CustomAutoCompleteTextChangedListener implements TextWatcher {
 
         @Override
         public void afterTextChanged(Editable s) {
+
         }
 
         @Override
@@ -191,11 +215,6 @@ public class ContactsSearchView extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-            if (userInput.length() > 0) {
-                if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP))
-                    customTextChangeListener.onTextChange(userInput.toString());
-            }
-
             mQuery = userInput.toString();
 
             try {
@@ -276,6 +295,11 @@ public class ContactsSearchView extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     setText(mobileNumber);
+                    if (originalName != null)
+                        mName = originalName;
+                    else mName = name;
+                    mImageURL = profilePictureUrlQualityMedium;
+                    mCustomAutoCompleteView.clearFocus();
                 }
             });
 

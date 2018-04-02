@@ -45,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAccep
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -197,7 +198,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                         getLocationAndAttemptAcceptRequestWithPinCheck();
                     }
                 } else {
-                    attemptAcceptRequestWithPinCheck();
+                    verifyBalance();
                 }
             }
         });
@@ -286,6 +287,25 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         });
 
         alertDialogue.show();
+    }
+
+    private void verifyBalance() {
+        String errorMessage = null;
+
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+            if (mAmount.compareTo(balance) > 0) {
+                errorMessage = getString(R.string.insufficient_balance);
+            }
+        } else {
+            errorMessage = getString(R.string.balance_not_available);
+        }
+
+        if (errorMessage != null) {
+            DialogUtils.showBalanceErrorInTransaction(getActivity(), errorMessage);
+        } else {
+            attemptAcceptRequestWithPinCheck();
+        }
     }
 
     private void cancelRequestPayment() {

@@ -7,35 +7,92 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/profile_pic_holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView
-                android:id="@+id/mobile_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:inputType="text"
-                android:maxLines="1" />
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
-                android:id="@+id/select_receiver_from_contacts"
-                style="@style/ButtonStyleWithIcon"
+                android:id="@+id/edit_icon_mobile_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:clickable="true"
-                android:src="@drawable/ic_book3x" />
+                android:layout_gravity="right"
+                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin_semi_double"
+                android:paddingRight="@dimen/activity_horizontal_margin_semi_double"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_editgrey" />
 
-        </RelativeLayout>
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/receiver_profile_image_view"
+                style="@style/PaymentReviewImageStyleLarge"
+                android:layout_margin="@dimen/activity_horizontal_margin" />
 
-        <View style="@style/Divider" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/receiver_name_text_view"
+                    style="@style/TextViewUserInfoPaymentReviewPrimary"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/receiver_mobile_number_text_view"
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:gravity="center_horizontal"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mobile_number_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView
+                    android:id="@+id/mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:inputType="text"
+                    android:maxLines="1" />
+
+                <ImageView
+                    android:id="@+id/select_receiver_from_contacts"
+                    style="@style/ButtonStyleWithIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:clickable="true"
+                    android:padding="@dimen/value5"
+                    android:src="@drawable/ic_book3x" />
+
+            </RelativeLayout>
+
+            <View style="@style/Divider" />
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -97,6 +154,17 @@
         <View
             style="@style/Divider"
             android:visibility="visible" />
+
+        <CheckBox
+            android:id="@+id/add_to_contact_check_box"
+            style="@style/CheckboxRightStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableTint="@color/colorPrimary"
+            android:text="@string/add_to_contacts"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_recharge"
