@@ -204,10 +204,6 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
             focusView = null;
             mBankSelectorView.setError(R.string.select_a_bank);
             shouldProceed = false;
-        } else if (TextUtils.isEmpty(mNoteEditText.getText().toString().trim())) {
-            focusView = mNoteEditText;
-            mNoteEditText.setError(getString(R.string.please_write_note));
-            shouldProceed = false;
         } else {
             focusView = null;
             shouldProceed = true;
