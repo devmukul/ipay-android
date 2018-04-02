@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -87,7 +86,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private CustomContactsSearchView mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
-    private ProgressDialog mProgressDialog;
     private ProfileImageView mProfileImageView;
     private TextView mNameTextView;
     private View mProfilePicHolderView;
@@ -126,7 +124,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mProfilePicHolderView = v.findViewById(R.id.profile_pic_holder);
         mMobileNumberHolderView = v.findViewById(R.id.mobile_number_holder);
         mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
-        mProgressDialog = new ProgressDialog(getActivity());
         addToContactCheckBox = (CheckBox) v.findViewById(R.id.add_to_contact_check_box);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
@@ -279,7 +276,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                             } else {
                                 Toaster.makeText(getActivity(), getResources().getString(
                                         R.string.no_internet_connection), Toast.LENGTH_SHORT);
-                                mProgressDialog.cancel();
                                 getActivity().finish();
                             }
                         } else if (getActivity() != null)
@@ -381,9 +377,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.please_wait));
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait));
+        mCustomProgressDialog.showDialog();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
         mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
@@ -421,12 +416,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             return;
         }
 
-        //mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
-        //mProgressDialog.show();
-        mCustomProgressDialog = new CustomProgressDialog(mContext);
         mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
         mCustomProgressDialog.showDialog();
-        mProgressDialog.setCancelable(false);
+
         mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiver),
                 mAmount, mDescription, pin);
@@ -442,8 +434,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         if (mGetBusinessRuleTask != null) {
             return;
         }
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.show();
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_fetching));
+        mCustomProgressDialog.showDialog();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this);
@@ -462,15 +454,16 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        mProgressDialog.dismiss();
         Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetUserInfoTask = null;
             mSendMoneyTask = null;
             mGetBusinessRuleTask = null;
+            mCustomProgressDialog.dismissDialog();
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+            mCustomProgressDialog.dismissDialog();
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -505,6 +498,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+            mCustomProgressDialog.dismissDialog();
             try {
                 GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
@@ -556,7 +550,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
 
             mGetUserInfoTask = null;
-            mProgressDialog.dismiss();
         } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
 
             try {
@@ -576,6 +569,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                         break;
                     case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                     case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
+                        mCustomProgressDialog.dismissDialog();
                         Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
                         launchOTPVerification();
@@ -599,7 +593,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                   mCustomProgressDialog.dismissDialog();
+                                    mCustomProgressDialog.dismissDialog();
                                 }
                             }, 4000);
 
