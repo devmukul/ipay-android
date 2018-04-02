@@ -24,6 +24,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         super(context);
         this.context = context;
         currentState = "LOADING";
+        createView();
     }
 
     public void createView() {
@@ -39,11 +40,15 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     }
 
     public void showDialog() {
+        currentState = "LOADING";
+        animationView.setAnimation(R.raw.spinner);
+        animationView.setMinAndMaxProgress(0.0f,1.0f);
+        animationView.playAnimation();
         this.show();
     }
 
     public void dismissDialog() {
-        animationView.resumeAnimation();
+        this.clearAnimation();
         this.dismiss();
     }
 
@@ -68,6 +73,10 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
             public void onAnimationRepeat(Animator animator) {
                 if (currentState.equals("SUCCESS") || currentState.equals("FAILED")) {
                     animationView.pauseAnimation();
+                }
+                else{
+                   float r= animationView.getProgress();
+                   float t=r;
                 }
             }
         });

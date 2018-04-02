@@ -542,7 +542,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private void getLocationAndLaunchReviewPage() {
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mCustomProgressDialog.createView();
             mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait));
             mCustomProgressDialog.showDialog();
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
@@ -561,7 +560,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, getContext(), this);
-        mCustomProgressDialog.createView();
         mCustomProgressDialog.setLoadingMessage(getString(R.string.loading));
         mCustomProgressDialog.showDialog();
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -570,7 +568,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private void attemptGetBusinessRule(int serviceID) {
         if (mGetBusinessRuleTask != null)
             return;
-        mCustomProgressDialog.createView();
         mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_fetching));
         mCustomProgressDialog.showDialog();
 
@@ -585,7 +582,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     public void onLocationChanged(Location location) {
         longitude = location.getLongitude();
         latitude = location.getLatitude();
-
+        mCustomProgressDialog.dismissDialog();
         attemptPaymentWithPinCheck();
 
         if (locationManager != null)
@@ -765,6 +762,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                mCustomProgressDialog.clearAnimation();
                                 mCustomProgressDialog.dismissDialog();
                             }
                         }, 4000);
