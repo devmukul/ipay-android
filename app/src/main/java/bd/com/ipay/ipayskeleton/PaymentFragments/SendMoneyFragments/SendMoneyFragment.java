@@ -626,6 +626,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         }
     }
 
+
     private void switchActivity(Class tClass) {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(Constants.MOBILE_NUMBER, mReceiver);

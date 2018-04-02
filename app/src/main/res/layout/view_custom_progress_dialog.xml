@@ -12,6 +12,7 @@
         android:layout_height="@dimen/value50"
         android:layout_margin="@dimen/activity_horizontal_margin"
         app:lottie_fileName="spinner.json"
+        app:lottie_autoPlay="true"
         app:lottie_loop="true" />
 
     <TextView

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -25,14 +24,13 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         super(context);
         this.context = context;
         currentState = "LOADING";
-        createView();
     }
 
-    private void createView() {
+    public void createView() {
         customView = LayoutInflater.from(context).inflate(R.layout.view_custom_progress_dialog, null, false);
         progressDialogTextView = (TextView) customView.findViewById(R.id.progress_dialog_text_view);
         animationView = (LottieAnimationView) customView.findViewById(R.id.view_animation);
-        animationView.setSpeed(1.2f);
+        animationView.setSpeed(1.3f);
         setUpAnimationAction();
         animationView.playAnimation();
         this.setView(customView);
@@ -45,6 +43,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     }
 
     public void dismissDialog() {
+        animationView.resumeAnimation();
         this.dismiss();
     }
 
@@ -80,9 +79,8 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void showSuccessAnimationAndMessage(final String successMessage) {
         animationView.pauseAnimation();
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(210,210);
-        animationView.setLayoutParams(layoutParams);
-        animationView.setAnimation(R.raw.done_test);
+        animationView.setAnimation(R.raw.check_success);
+        animationView.setMinAndMaxProgress(0.5f, 1.0f);
         animationView.playAnimation();
         progressDialogTextView.setText(successMessage);
         currentState = "SUCCESS";
@@ -90,14 +88,14 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void showFailureAnimationAndMessage(String failureMessage) {
         animationView.pauseAnimation();
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(210,210);
-        animationView.setLayoutParams(layoutParams);
+        animationView.setMinAndMaxProgress(0.0f, 0.3f);
         progressDialogTextView.setText(failureMessage);
         animationView.setAnimation(R.raw.cruz);
-        currentState="FAILED";
+        currentState = "FAILED";
         animationView.playAnimation();
     }
-    public void clearAnimation(){
+
+    public void clearAnimation() {
         animationView.clearAnimation();
     }
 }

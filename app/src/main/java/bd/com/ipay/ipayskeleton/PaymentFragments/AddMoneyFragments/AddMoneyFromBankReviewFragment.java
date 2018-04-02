@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
@@ -53,6 +55,9 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
 
     private AddMoneyRequest mAddMoneyRequest;
 
+    private Context context;
+    private CustomProgressDialog mCustomProgressDialog;
+
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
 
@@ -65,6 +70,8 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
         mSelectedBank = getActivity().getIntent().getParcelableExtra(Constants.SELECTED_BANK_ACCOUNT);
 
         mProgressDialog = new ProgressDialog(getActivity());
+        context = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(context);
 
         mTracker = Utilities.getTracker(getActivity());
     }
