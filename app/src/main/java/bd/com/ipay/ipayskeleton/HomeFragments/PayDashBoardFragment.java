@@ -179,6 +179,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), TrendingBusinessResponse.class);
                 mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                 for (TrendingBusiness trendingBusiness : mTrendingBusinessList) {
+
                     String mBusinessType = trendingBusiness.getBusinessType();
 
                     PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());
