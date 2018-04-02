@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
@@ -112,6 +113,18 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
                 Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                 intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
+            }
+        });
+
+        mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
+            @Override
+            public void onTextChange(String inputText) {
+
+            }
+
+            @Override
+            public void onTextChange(String inputText, String name, String imageURL) {
+
             }
         });
 
