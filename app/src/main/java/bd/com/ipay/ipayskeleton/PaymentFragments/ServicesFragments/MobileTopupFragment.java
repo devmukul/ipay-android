@@ -231,6 +231,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
+                setOperator(inputText);
                 mProfilePicHolderView.setVisibility(View.VISIBLE);
                 mMobileNumberHolderView.setVisibility(View.GONE);
 
