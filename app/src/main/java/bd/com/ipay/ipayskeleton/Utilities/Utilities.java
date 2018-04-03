@@ -757,14 +757,18 @@ public class Utilities {
         return userAttributes;
     }
 
-    public static void performQRCodeScan(Fragment fragment, int requestCode) {
-        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
-        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
-            initiateQRCodeScan(fragment);
-        } else {
-            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
-        }
-    }
+//    public static void performQRCodeScan(Fragment fragment, int requestCode) {
+//        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
+//        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
+//            initiateQRCodeScan(fragment);
+//        } else {
+//            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
+//        }
+//    }
+//
+//    public static void initiateQRCodeScan(Fragment fragment) {
+//        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
+//    }
 
     public static String getFormattedCountryName(String countryName) {
         if (countryName.toLowerCase().equals("bd")) {
@@ -773,9 +777,6 @@ public class Utilities {
         return countryName;
     }
 
-    public static void initiateQRCodeScan(Fragment fragment) {
-        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
-    }
 
     public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {
         for (String permission : permissionList) {

@@ -70,12 +70,10 @@ public class CustomDashboardItemView extends LinearLayout {
             }
 
             glide
-                    .placeholder(R.drawable.background_icon_make_payment)
-                    .error(R.drawable.background_icon_make_payment)
+                    .placeholder(R.drawable.ic_business_logo_round)
+                    .error(R.drawable.ic_business_logo_round)
                     .crossFade()
                     .dontAnimate()
-                    .fitCenter()
-                    .override(60, 60)
                     .into(mImageView);
 
         } catch (Exception e) {

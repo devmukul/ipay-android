@@ -135,6 +135,20 @@ public class DialogUtils {
                 .show();
         dialog.show();
     }
+    public static void showProfilePictureUpdateRestrictionDialog(Context context) {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+        dialog
+                .content(R.string.can_not_change_picture)
+                .cancelable(false)
+                .positiveText(R.string.got_it)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
 
     public static void showDialogOwnNumberErrorDialog(final Context context, final View view) {
         MaterialDialog dialog = new MaterialDialog.Builder(context)
@@ -145,6 +159,21 @@ public class DialogUtils {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         view.callOnClick();
+                    }
+                })
+                .show();
+        dialog.show();
+    }
+
+    public static void showBalanceErrorInTransaction(final Context context, String errorMessage) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(errorMessage)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((Activity) context).onBackPressed();
                     }
                 })
                 .show();
