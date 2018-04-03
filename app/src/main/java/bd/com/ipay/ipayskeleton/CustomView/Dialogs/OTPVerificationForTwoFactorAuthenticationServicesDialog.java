@@ -98,7 +98,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         mResendOTPButton = (Button) view.findViewById(R.id.buttonResend);
         mCancelButton = (Button) view.findViewById(R.id.buttonCancel);
 
-        mCustomProgressDialog=new CustomProgressDialog(context);
+        mCustomProgressDialog = new CustomProgressDialog(context);
 
         setSMSBroadcastReceiver();
         setCountDownTimer();
@@ -233,7 +233,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        mCustomProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mHttpPutAsyncTask = null;
@@ -241,7 +240,15 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
             if (context != null) {
                 Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
             }
+            mCustomProgressDialog.dismissDialog();
             return;
+        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+            TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =
+                    new Gson().fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
+            mCustomProgressDialog.showSuccessAnimationAndMessage(twoFactorAuthSettingsSaveResponse.getMessage());
+        }
+        else{
+            mCustomProgressDialog.dismissDialog();
         }
         Gson gson = new Gson();
         TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse

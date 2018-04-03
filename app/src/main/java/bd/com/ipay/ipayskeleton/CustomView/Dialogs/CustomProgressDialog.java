@@ -32,7 +32,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         customView = LayoutInflater.from(context).inflate(R.layout.view_custom_progress_dialog, null, false);
         progressDialogTextView = (TextView) customView.findViewById(R.id.progress_dialog_text_view);
         animationView = (LottieAnimationView) customView.findViewById(R.id.view_animation);
-        animationView.setSpeed(1.3f);
+        animationView.setSpeed(1.1f);
         setUpAnimationAction();
         animationView.playAnimation();
         this.setView(customView);
@@ -93,7 +93,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void showSuccessAnimationAndMessage(final String successMessage) {
         if (!this.isShowing()) {
-            this.showDialog();
+            this.show();
         }
         animationView.pauseAnimation();
         animationView.setAnimation(R.raw.check_success);

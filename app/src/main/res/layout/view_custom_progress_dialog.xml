@@ -22,7 +22,6 @@
         android:layout_marginLeft="@dimen/value10"
         android:layout_marginRight="@dimen/value15"
         android:layout_gravity="center"
-        android:text="tested"
         android:textSize="@dimen/value15" />
 
 </LinearLayout>
