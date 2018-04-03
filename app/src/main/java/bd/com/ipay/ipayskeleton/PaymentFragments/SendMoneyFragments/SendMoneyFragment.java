@@ -577,25 +577,19 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
                         if (getActivity() != null) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ((MyApplication) getActivity().getApplication()).launchLoginPage("");
-                                }
-                            }, 4000);
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage("");
 
                             Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         }
                         break;
                     default:
                         if (getActivity() != null) {
-                            mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mCustomProgressDialog.dismissDialog();
-                                }
-                            }, 4000);
+                            if(mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
+                            }
+                            else{
+                                Toast.makeText(mContext,mSendMoneyResponse.getMessage(),Toast.LENGTH_LONG).show();
+                            }
 
                             //Google Analytic event
                             Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
@@ -608,12 +602,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 mCustomProgressDialog.showFailureAnimationAndMessage(getResources().getString(R.string.service_not_available));
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCustomProgressDialog.dismissDialog();
-                    }
-                }, 4000);
             }
             mSendMoneyTask = null;
 

@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     public void showDialog() {
         currentState = "LOADING";
         animationView.setAnimation(R.raw.spinner);
-        animationView.setMinAndMaxProgress(0.0f,1.0f);
+        animationView.setMinAndMaxProgress(0.0f, 1.0f);
         animationView.playAnimation();
         this.show();
     }
@@ -73,11 +74,15 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
             public void onAnimationRepeat(Animator animator) {
                 if (currentState.equals("SUCCESS") || currentState.equals("FAILED")) {
                     animationView.pauseAnimation();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            CustomProgressDialog.this.animationView.setMinAndMaxProgress(0.0f, 1.0f);
+                            CustomProgressDialog.this.dismissDialog();
+                        }
+                    }, 4000);
                 }
-                else{
-                   float r= animationView.getProgress();
-                   float t=r;
-                }
+
             }
         });
     }
@@ -87,6 +92,9 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     }
 
     public void showSuccessAnimationAndMessage(final String successMessage) {
+        if (!this.isShowing()) {
+            this.showDialog();
+        }
         animationView.pauseAnimation();
         animationView.setAnimation(R.raw.check_success);
         animationView.setMinAndMaxProgress(0.5f, 1.0f);
@@ -96,7 +104,6 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     }
 
     public void showFailureAnimationAndMessage(String failureMessage) {
-        animationView.pauseAnimation();
         animationView.setMinAndMaxProgress(0.0f, 0.3f);
         progressDialogTextView.setText(failureMessage);
         animationView.setAnimation(R.raw.cruz);
