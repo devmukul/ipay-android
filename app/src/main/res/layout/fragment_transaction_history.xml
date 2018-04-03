@@ -14,8 +14,7 @@
             android:id="@+id/simpleSearchView"
             style="@style/SearchViewStyle"
             android:layout_toLeftOf="@+id/filter_menu"
-            android:queryHint="@string/search_transaction"
-            android:visibility="invisible" />
+            android:queryHint="@string/search_transaction" />
 
 
         <TextView
@@ -26,7 +25,8 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_toLeftOf="@+id/filter_clear"
-            android:text="@string/completed_transaction_list" />
+            android:text="@string/completed_transaction_list"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/filter_clear"
