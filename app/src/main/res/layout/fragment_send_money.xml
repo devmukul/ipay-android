@@ -13,21 +13,22 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/value15">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/profile_pic_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_horizontal_margin_semi_double"
             android:visibility="gone">
 
             <ImageView
                 android:id="@+id/edit_icon_mobile_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="@dimen/activity_horizontal_margin_semi_double"
                 android:paddingLeft="@dimen/activity_horizontal_margin_semi_double"
                 android:paddingRight="@dimen/activity_horizontal_margin_semi_double"
                 android:paddingTop="@dimen/activity_horizontal_margin"
@@ -36,6 +37,7 @@
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/receiver_profile_image_view"
                 style="@style/PaymentReviewImageStyleLarge"
+                android:layout_centerHorizontal="true"
                 android:layout_margin="@dimen/activity_horizontal_margin" />
 
             <LinearLayout
@@ -43,7 +45,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_below="@id/receiver_profile_image_view">
 
                 <TextView
                     android:id="@+id/receiver_name_text_view"
@@ -59,7 +62,7 @@
                     android:visibility="gone" />
 
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/mobile_number_holder"
