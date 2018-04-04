@@ -74,7 +74,6 @@ public class CustomDashboardItemView extends LinearLayout {
                     .error(R.drawable.ic_business_logo_round)
                     .crossFade()
                     .dontAnimate()
-                    .fitCenter()
                     .into(mImageView);
 
         } catch (Exception e) {
