@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -82,6 +84,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     private String mTransactionID;
     private int mStatus;
 
+
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
@@ -101,6 +104,10 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
     private String mPin;
     private LocationManager locationManager;
+
+    private CustomProgressDialog mCustomProgressDialog;
+
+    private Context mContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,6 +152,9 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mNetAmountViewHolder = v.findViewById(R.id.netAmountViewHolder);
         mServiceChargeViewHolder = v.findViewById(R.id.serviceChargeViewHolder);
+
+        mContext = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(mContext);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
@@ -380,9 +390,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
             return;
         }
 
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog.setLoadingMessage(getActivity().getString(R.string.progress_dialog_accepted));
+        mCustomProgressDialog.showDialog();
 
         if (!switchedFromTransactionHistory) {
             mRequestPaymentAcceptRejectOrCancelRequest =
@@ -473,6 +482,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -561,27 +571,46 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        mCustomProgressDialog.showSuccessAnimationAndMessage
+                                (mRequestPaymentAcceptRejectOrCancelResponse.getMessage());
 
-                            if (switchedFromTransactionHistory)
-                                Utilities.finishLauncherActivity(getActivity());
-                            else
-                                getActivity().onBackPressed();
-                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (switchedFromTransactionHistory) {
+                                    Utilities.finishLauncherActivity(getActivity());
+                                } else {
+                                    getActivity().onBackPressed();
+                                }
+                            }
+                        }, 2000);
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
                             result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mCustomProgressDialog.dismissDialog();
                         Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = mRequestPaymentAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
                         if (getActivity() != null) {
-                            Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
-                            if (mRequestPaymentAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
-                            } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage
+                                        (mRequestPaymentAcceptRejectOrCancelResponse.getMessage());
+                            } else {
+                                Toast.makeText(mContext,
+                                        mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+
+                            if (mRequestPaymentAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains
+                                    (TwoFactorAuthConstants.WRONG_OTP)) {
+                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                                    mCustomProgressDialog.dismissDialog();
+                                }
+                            } else {
+                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                }
                             }
                         }
                     }
@@ -590,15 +619,13 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
+                    mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.service_not_available));
                 }
                 mProgressDialog.dismiss();
                 mAcceptRequestTask = null;
 
                 break;
             case Constants.COMMAND_REJECT_PAYMENT_REQUEST:
-
                 try {
                     mRequestPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                             PaymentAcceptRejectOrCancelResponse.class);

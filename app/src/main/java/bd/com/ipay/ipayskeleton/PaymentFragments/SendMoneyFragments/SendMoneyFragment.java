@@ -548,7 +548,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         } else {
-                            Toast.makeText(mContext, mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
                         }
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -556,7 +556,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                                 mCustomProgressDialog.dismissDialog();
                                 getActivity().finish();
                             }
-                        }, 4000);
+                        }, 2000);
 
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());

@@ -190,7 +190,6 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        mCustomProgressDialog.showSuccessAnimationAndMessage(mAddMoneyByBankResponse.getMessage());
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }

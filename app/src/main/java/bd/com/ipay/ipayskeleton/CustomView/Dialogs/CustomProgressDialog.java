@@ -10,11 +10,11 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 
 public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     private Context context;
-    private LayoutInflater layoutInflater;
     private View customView;
     private LottieAnimationView animationView;
     private TextView progressDialogTextView;
@@ -24,7 +24,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     public CustomProgressDialog(Context context) {
         super(context);
         this.context = context;
-        currentState = "LOADING";
+        currentState = Constants.STATE_LOADING;
         createView();
     }
 
@@ -41,7 +41,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     }
 
     public void showDialog() {
-        currentState = "LOADING";
+        currentState = Constants.STATE_LOADING;
         animationView.setAnimation(R.raw.spinner);
         animationView.setMinAndMaxProgress(0.0f, 1.0f);
         animationView.playAnimation();
@@ -72,7 +72,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
             @Override
             public void onAnimationRepeat(Animator animator) {
-                if (currentState.equals("SUCCESS") || currentState.equals("FAILED")) {
+                if (currentState.equals(Constants.STATE_SUCCESS) || currentState.equals(Constants.STATE_FAILED)) {
                     animationView.pauseAnimation();
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -80,7 +80,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
                             CustomProgressDialog.this.animationView.setMinAndMaxProgress(0.0f, 1.0f);
                             CustomProgressDialog.this.dismissDialog();
                         }
-                    }, 4000);
+                    }, 1000);
                 }
 
             }
@@ -100,14 +100,14 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         animationView.setMinAndMaxProgress(0.5f, 1.0f);
         animationView.playAnimation();
         progressDialogTextView.setText(successMessage);
-        currentState = "SUCCESS";
+        currentState = Constants.STATE_SUCCESS;
     }
 
     public void showFailureAnimationAndMessage(String failureMessage) {
         animationView.setMinAndMaxProgress(0.0f, 0.3f);
         progressDialogTextView.setText(failureMessage);
         animationView.setAnimation(R.raw.cruz);
-        currentState = "FAILED";
+        currentState = Constants.STATE_FAILED;
         animationView.playAnimation();
     }
 

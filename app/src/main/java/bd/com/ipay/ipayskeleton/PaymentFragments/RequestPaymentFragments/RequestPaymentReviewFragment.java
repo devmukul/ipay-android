@@ -3,9 +3,11 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -26,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActiv
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestSentResponse;
@@ -35,6 +38,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -58,6 +62,9 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     private View mNetAmountViewHolder;
     private View mServiceChargeViewHolder;
 
+    private Context mContext;
+    private CustomProgressDialog mCustomProgressDialog;
+
     private Tracker mTracker;
 
     @Override
@@ -71,6 +78,9 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
         mProgressDialog = new ProgressDialog(getActivity());
+
+        mContext = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(mContext);
 
         mTracker = Utilities.getTracker(getActivity());
     }
@@ -171,9 +181,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_payment_request));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_sending_payment_request));
+        mCustomProgressDialog.showDialog();
         mSendNewPaymentRequest = new SendNewPaymentRequest(mAmount, mReceiverMobileNumber, mDescription, null, null);
         Gson gson = new Gson();
         String json = gson.toJson(mSendNewPaymentRequest);
@@ -227,22 +236,50 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
                 PaymentRequestSentResponse mPaymentRequestSentResponse = gson.fromJson(result.getJsonString(), PaymentRequestSentResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_LONG);
-                    getActivity().finish();
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    } else {
+                        mCustomProgressDialog.showSuccessAnimationAndMessage(mPaymentRequestSentResponse.getMessage());
+                    }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCustomProgressDialog.dismissDialog();
+                            getActivity().setResult(Activity.RESULT_OK);
+                            getActivity().finish();
+                        }
+                    }, 2000);
+
+                    //getActivity().finish();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                        result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    mCustomProgressDialog.dismissDialog();
                     Toast.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     SecuritySettingsActivity.otpDuration = mPaymentRequestSentResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT);
+                    if (getActivity() != null) {
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mPaymentRequestSentResponse.getMessage());
+                        } else {
+                            Toast.makeText(mContext, mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                        if (mPaymentRequestSentResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                                mCustomProgressDialog.dismissDialog();
+                            }
+                        } else {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.failed_request_payment, Toast.LENGTH_SHORT);
+                mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.service_not_available));
             }
             mSendPaymentRequestTask = null;
         }
