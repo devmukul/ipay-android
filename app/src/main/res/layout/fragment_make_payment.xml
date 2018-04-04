@@ -61,7 +61,7 @@
 
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,14 +69,15 @@
             android:animateLayoutChanges="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:paddingBottom="@dimen/activity_horizontal_margin_semi_double">
 
             <ImageView
                 android:id="@+id/edit_icon_mobile_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="@dimen/activity_horizontal_margin_semi_double"
                 android:paddingLeft="@dimen/activity_horizontal_margin_semi_double"
                 android:paddingRight="@dimen/activity_horizontal_margin_semi_double"
                 android:paddingTop="@dimen/activity_horizontal_margin"
@@ -84,16 +85,19 @@
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_picture"
-                style="@style/PaymentReviewImageStyleLarge" />
+                style="@style/PaymentReviewImageStyleLarge"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_below="@id/profile_picture">
 
-                <TextView
+            <TextView
                     android:id="@+id/textview_name"
                     style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
@@ -125,7 +129,7 @@
                     android:visibility="gone" />
 
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/mobile_number_holder"

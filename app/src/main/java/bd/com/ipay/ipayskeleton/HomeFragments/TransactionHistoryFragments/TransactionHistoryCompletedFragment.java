@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -87,6 +88,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Button mClearFilterButton;
     private ImageView mMoreButton;
     private ImageView mCancelButton;
+    private SearchView mSearchTransactionText;
 
     private TextView mFilterTitle;
     private TextView mEmptyListTextView;
@@ -102,6 +104,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
+    private String mSearchText;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -146,6 +149,37 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 }
             }
         });
+
+        mSearchTransactionText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mSearchText = query;
+                setContentShown(false);
+                refreshTransactionHistory();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    mSearchText = newText;
+                    setContentShown(false);
+                    refreshTransactionHistory();
+                }
+                return false;
+            }
+        });
+
+        mSearchTransactionText.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mSearchText = "";
+                setContentShown(false);
+                refreshTransactionHistory();
+                return false;
+            }
+        });
+
         return v;
     }
 
@@ -188,6 +222,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
         switch (item.getItemId()) {
             case R.id.action_filter_by_date:
+                mSearchTransactionText.setVisibility(View.INVISIBLE);
                 if (serviceFilterLayout.getVisibility() == View.VISIBLE)
                     serviceFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
@@ -198,6 +233,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mFilterTitle.setText(getString(R.string.filter_by_date));
                 return true;
             case R.id.action_filter_by_service:
+                mSearchTransactionText.setVisibility(View.INVISIBLE);
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
                 serviceFilterLayout.setVisibility(View.VISIBLE);
@@ -225,11 +261,15 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 popupMenu.show();
                 break;
             case R.id.cancel_filter:
-                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                if (serviceFilterLayout.getVisibility() == View.VISIBLE) {
+                    mSearchTransactionText.setVisibility(View.VISIBLE);
                     serviceFilterLayout.setVisibility(View.GONE);
+                }
 
-                if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                if (dateFilterLayout.getVisibility() == View.VISIBLE) {
+                    mSearchTransactionText.setVisibility(View.VISIBLE);
                     dateFilterLayout.setVisibility(View.GONE);
+                }
                 mFilterTitle.setVisibility(View.INVISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
                 mMoreButton.setVisibility(View.VISIBLE);
@@ -309,6 +349,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mCancelButton = (ImageView) v.findViewById(R.id.cancel_filter);
         mClearFilterButton = (Button) v.findViewById(R.id.filter_clear);
         mFilterTitle = (TextView) v.findViewById(R.id.filter_title);
+        mSearchTransactionText = (SearchView) v.findViewById(R.id.simpleSearchView);
     }
 
     private void setupViewsAndActions() {
@@ -559,7 +600,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             return;
         }
         String url = TransactionHistoryRequest.generateUri(type,
-                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
+                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT, mSearchText);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 url, getActivity());

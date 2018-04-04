@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -47,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -134,8 +137,8 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.performQRCodeScan(RequestMoneyFragment.this, REQUEST_CODE_PERMISSION);
-
+                Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
             }
         });
 
@@ -314,7 +317,50 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    final String result = barcode.displayValue;
+                    final String[] resultElements = result.split(" ");
+
+                    if (result != null) {
+                        Handler mHandler = new Handler();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (InputValidator.isValidNumber(resultElements[0])) {
+                                    mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
+                                    if (Utilities.isConnectionAvailable(getActivity())) {
+                                        String mobileNumber = ContactEngine.formatMobileNumberBD(resultElements[0]);
+                                        getUserInfo(mobileNumber);
+                                    }
+                                    if (resultElements.length > 1) {
+                                        switch (resultElements.length) {
+                                            case 2: {
+                                                mAmountEditText.setText(resultElements[1]);
+                                                break;
+                                            }
+                                            case 3: {
+                                                mAmountEditText.setText(resultElements[1]);
+                                                mDescriptionEditText.setText(resultElements[2]);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                } else if (getActivity() != null)
+                                    Toaster.makeText(getActivity(), getResources().getString(
+                                            R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                } else {
+                    getActivity().finish();
+                }
+            }else{
+                getActivity().finish();
+            }
+        }else if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             String name = data.getStringExtra(Constants.NAME);
             String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
@@ -334,45 +380,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            final String[] resultElements = result.split(" ");
-
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(resultElements[0])) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
-                            if (Utilities.isConnectionAvailable(getActivity())) {
-                                String mobileNumber = ContactEngine.formatMobileNumberBD(resultElements[0]);
-                                getUserInfo(mobileNumber);
-                            }
-                            if (resultElements.length > 1) {
-                                switch (resultElements.length) {
-                                    case 2: {
-                                        mAmountEditText.setText(resultElements[1]);
-                                        break;
-                                    }
-                                    case 3: {
-                                        mAmountEditText.setText(resultElements[1]);
-                                        mDescriptionEditText.setText(resultElements[2]);
-                                        break;
-                                    }
-                                }
-                            }
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
-                    }
-                });
-            }
         }
     }
 
