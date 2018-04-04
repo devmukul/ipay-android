@@ -12,6 +12,15 @@ import com.airbnb.lottie.LottieAnimationView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+/*
+
+Used lottie json files as animations
+
+link :  https://www.lottiefiles.com
+Library Github Link:   https://github.com/airbnb/lottie-android
+
+*/
+
 
 public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     private Context context;

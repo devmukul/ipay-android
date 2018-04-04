@@ -55,7 +55,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
     private View view;
 
     private MaterialDialog mOTPInputDialog;
-    //private ProgressDialog mProgressDialog;
     private CustomProgressDialog mCustomProgressDialog;
 
     public HttpResponseListener mParentHttpResponseListener;
@@ -246,8 +245,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
             TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =
                     new Gson().fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
             mCustomProgressDialog.showSuccessAnimationAndMessage(twoFactorAuthSettingsSaveResponse.getMessage());
-        }
-        else{
+        } else {
             mCustomProgressDialog.dismissDialog();
         }
         Gson gson = new Gson();
