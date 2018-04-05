@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,12 +11,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +31,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadChequebookCoverAsyncTask;
@@ -45,9 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
-import bd.com.ipay.ipayskeleton.CustomView.DocumentPreviewImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankDocument;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -87,7 +80,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
             mSelectedChequebookCover = getArguments().getParcelable(Constants.SELECTED_CHEQUEBOOK_COVER);
         }
         mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage(getString(R.string.adding_bank));
+        mProgressDialog.setMessage(getString(R.string.uploading_cheque));
 
 
     }
@@ -287,8 +280,16 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
             mProgressDialog.dismiss();
 
             UploadDocumentResponse uploadDocumentResponse = gson.fromJson(result.getJsonString(), UploadDocumentResponse.class);
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), uploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), getString(R.string.cheque_uploaded), Toast.LENGTH_LONG);
+            } else {
+                mProgressDialog.dismiss();
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), uploadDocumentResponse.getMessage(), Toast.LENGTH_SHORT);
+            }
+
+
             ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
         }
     }
