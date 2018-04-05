@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -61,7 +62,6 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private BankAccountList mSelectedChequebookCover;
-    private DocumentPreviewImageView documentPreviewImageView;
     private TextView mBankName;
     private TextView mBankAccountNumber;
     private TextView mBranchName;
@@ -118,15 +118,6 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
         mChequebookCoverPageErrorTextView = findViewById(R.id.chequebook_cover_error_text_view);
         mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
 
-        documentPreviewImageView = findViewById(R.id.chequebook_preview_image_view);
-        documentPreviewImageView.setVisibility(View.GONE);
-        documentPreviewImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                documentPreviewImageView.setVisibility(View.GONE);
-            }
-        });
-
         if (mSelectedChequebookCover != null) {
             mBankName.setText(mSelectedChequebookCover.getBankName());
             mBranchName.setText(mSelectedChequebookCover.getBranchName());
@@ -171,12 +162,18 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
     }
 
 
+    @SuppressLint("StringFormatInvalid")
     private boolean verifyUserInputs() {
         clearAllErrorMessages();
         final boolean isValidInput;
         final View focusableView;
         if (mChequebookCoverImageFile == null) {
             mChequebookCoverPageErrorTextView.setText(R.string.please_select_a_file_to_upload);
+            mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
+            focusableView = null;
+            isValidInput = false;
+        }  else if (mChequebookCoverImageFile!=null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
+            mChequebookCoverPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
             mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
             isValidInput = false;
@@ -208,15 +205,6 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
         //noinspection unchecked,ConstantConditions
         return (T) getView().findViewById(id);
     }
-
-    public boolean isDocumentViewOpen() {
-        return documentPreviewImageView.getVisibility() == View.VISIBLE;
-    }
-
-    public void hideDocumentPreview() {
-        documentPreviewImageView.setVisibility(View.GONE);
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -305,104 +293,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
         }
     }
 
-    class DocumentPreviewAdapter extends RecyclerView.Adapter<DocumentPreviewAdapter.DocumentPreviewViewPager> {
 
-        private Context mContext;
-        private LayoutInflater mLayoutInflater;
-        private List<BankDocument> mDocumentPageList;
-
-        private static final int FIRST_PAGE = 0;
-        private static final int SECOND_PAGE = 1;
-
-        public DocumentPreviewAdapter(Context context, List<BankDocument> documentPageList) {
-            this.mContext = context;
-            this.mDocumentPageList = new ArrayList<>(documentPageList);
-            mLayoutInflater = LayoutInflater.from(this.mContext);
-        }
-
-
-
-
-        @Override
-        public DocumentPreviewViewPager onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new DocumentPreviewViewPager(mLayoutInflater.inflate(R.layout.list_item_document_preview, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(final DocumentPreviewViewPager holder, int position) {
-            final BankDocument documentPage = mDocumentPageList.get(position);
-            final @DrawableRes int previewImageResId;
-            switch (position) {
-                case SECOND_PAGE:
-                    previewImageResId = R.drawable.icon_id_card_back;
-                    break;
-                case FIRST_PAGE:
-                default:
-                    previewImageResId = R.drawable.icon_id_card_front;
-                    break;
-            }
-            holder.documentImageView.setImageResource(previewImageResId);
-            if (!TextUtils.isEmpty(documentPage.getDocumentPages().get(0).getUrl())) {
-                Glide.with(this.mContext).load(Constants.BASE_URL_FTP_SERVER + documentPage.getDocumentPages().get(0).getUrl())
-                        .listener(new RequestListener<String, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                holder.documentImageView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mProgressDialog.setMessage(getString(R.string.loading));
-                                        mProgressDialog.setCancelable(false);
-                                        mProgressDialog.show();
-                                        Glide.with(PreviewChequebookCoverFragment.this).load(Constants.BASE_URL_FTP_SERVER + documentPage.getDocumentPages().get(0).getUrl()).listener(new RequestListener<String, GlideDrawable>() {
-                                            @Override
-                                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                                mProgressDialog.cancel();
-                                                return false;
-                                            }
-
-                                            @Override
-                                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                                mProgressDialog.cancel();
-                                                documentPreviewImageView.setVisibility(View.VISIBLE);
-                                                return false;
-                                            }
-                                        }).into(documentPreviewImageView.getImageView());
-                                    }
-                                });
-                                return false;
-                            }
-                        }).crossFade().into(holder.documentImageView);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mDocumentPageList == null || mDocumentPageList.isEmpty())
-                return 0;
-            else
-                return mDocumentPageList.size();
-        }
-
-        class DocumentPreviewViewPager extends RecyclerView.ViewHolder {
-
-            private ImageView documentImageView;
-
-            public DocumentPreviewViewPager(View itemView) {
-                super(itemView);
-                documentImageView = findViewById(R.id.document_image_view);
-            }
-
-            public <T extends View> T findViewById(@IdRes int id) {
-                //noinspection unchecked,ConstantConditions
-                return (T) itemView.findViewById(id);
-            }
-        }
-    }
 
 
     class ChequebookCoverSelectorButtonClickListener implements View.OnClickListener {

@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -96,6 +98,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private File mChequebookCoverImageFile;
     private Button mChequebookCoverSelectorButton;
     private ChequebookCoverSelectorButtonClickListener chequebookCoverSelectorButtonClickListener;
+    private TextView mChequebookCoverPageErrorTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -134,6 +137,9 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
         mChequebookCoverImageView = (ImageView) v.findViewById(R.id.chequebook_cover_image_view);
         mChequebookCoverSelectorButton.setOnClickListener(chequebookCoverSelectorButtonClickListener);
+
+        mChequebookCoverPageErrorTextView = (TextView) v.findViewById(R.id.chequebook_cover_error_text_view);
+        mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
 
         if (!CommonData.isAvailableBankListLoaded()) {
             attemptRefreshAvailableBankNames();
@@ -281,9 +287,12 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         });
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void verifyUserInputs() {
         // The first position is "Select One"
         View focusView;
+
+        clearAllErrorMessages();
         if (mSelectedBankId < 0) {
             mBankListSelection.setError(getString(R.string.please_select_a_bank));
         } else if (mSelectedDistrictId < 0) {
@@ -302,10 +311,19 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number_of_minimum_digit));
             focusView = mAccountNumberEditText;
             focusView.requestFocus();
+        } else if (mChequebookCoverImageFile!=null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
+            mChequebookCoverPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
+            mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
+            focusView = null;
         } else {
             Utilities.hideKeyboard(getActivity());
             launchAddBankAgreementPage();
         }
+    }
+
+    private void clearAllErrorMessages() {
+        mChequebookCoverPageErrorTextView.setText("");
+        mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
     }
 
     private void launchAddBankAgreementPage() {
@@ -389,6 +407,9 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             if (mChequebookCoverImageView != null) {
                 mChequebookCoverImageView.setImageBitmap(imageBitmap);
             }
+
+            mChequebookCoverPageErrorTextView.setText("");
+            mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
             mChequebookCoverImageFile = imageFile;
             mPickerActionId = -1;
         }
