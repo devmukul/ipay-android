@@ -25,7 +25,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UploadCheckbookCoverAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
+public class UploadChequebookCoverAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
     private final Context mContext;
     private final String API_COMMAND;
@@ -37,7 +37,7 @@ public class UploadCheckbookCoverAsyncTask extends AsyncTask<Void, Void, Generic
 
     public HttpResponseListener mHttpResponseListener;
 
-    public UploadCheckbookCoverAsyncTask(String API_COMMAND, String url, Context context, String documentType, String[] imagePath, HttpResponseListener httpResponseListener, long bankId) {
+    public UploadChequebookCoverAsyncTask(String API_COMMAND, String url, Context context, String documentType, String[] imagePath, HttpResponseListener httpResponseListener, long bankId) {
         this.mContext = context;
         this.mUrl = url;
         this.mHttpResponseListener = httpResponseListener;

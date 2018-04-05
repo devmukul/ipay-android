@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadCheckbookCoverAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadChequebookCoverAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
@@ -74,7 +74,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
     private ChequebookCoverSelectorButtonClickListener chequebookCoverSelectorButtonClickListener;
     private Button mAgreeButton;
 
-    private UploadCheckbookCoverAsyncTask mUploadCheckbookCovorAsyncTask;
+    private UploadChequebookCoverAsyncTask mUploadCheckbookCovorAsyncTask;
     private ProgressDialog mProgressDialog;
     private String [] mImageUrl;
     private View uploadImageView;
@@ -199,7 +199,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
         final String url;
         url = Constants.BASE_URL_MM + Constants.URL_CHECKBOOK_COVOR_UPLOAD;
         mImageUrl = getUploadFilePaths();
-        mUploadCheckbookCovorAsyncTask = new UploadCheckbookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), "cheque",  mImageUrl, PreviewChequebookCoverFragment.this, mSelectedChequebookCover.getBankAccountId());
+        mUploadCheckbookCovorAsyncTask = new UploadChequebookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), "cheque",  mImageUrl, PreviewChequebookCoverFragment.this, mSelectedChequebookCover.getBankAccountId());
         mUploadCheckbookCovorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.show();
     }

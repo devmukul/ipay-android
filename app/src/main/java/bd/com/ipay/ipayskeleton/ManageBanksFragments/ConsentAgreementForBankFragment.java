@@ -13,13 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadCheckbookCoverAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadMultipleIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadChequebookCoverAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -28,12 +25,9 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -41,7 +35,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
 
     private HttpRequestPostAsyncTask mAddBankTask = null;
     private AddBankResponse mAddBankResponse;
-    private UploadCheckbookCoverAsyncTask mUploadCheckbookCovorAsyncTask;
+    private UploadChequebookCoverAsyncTask mUploadCheckbookCovorAsyncTask;
     private ProgressDialog mProgressDialog;
 
     private TextView mAccountNameTextView;
@@ -157,7 +151,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
         final String url;
 
         url = Constants.BASE_URL_MM + Constants.URL_CHECKBOOK_COVOR_UPLOAD;
-        mUploadCheckbookCovorAsyncTask = new UploadCheckbookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), mDocType,  mImageUrl, ConsentAgreementForBankFragment.this, bankId);
+        mUploadCheckbookCovorAsyncTask = new UploadChequebookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), mDocType,  mImageUrl, ConsentAgreementForBankFragment.this, bankId);
         mUploadCheckbookCovorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.show();
     }
