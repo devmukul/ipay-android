@@ -8,12 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
-import bd.com.ipay.ipayskeleton.Activities.AddCardActivity;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EditBusinessInformationFragment;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;

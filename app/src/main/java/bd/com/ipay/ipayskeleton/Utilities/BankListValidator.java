@@ -11,7 +11,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.R;
 
 /**
@@ -19,9 +19,9 @@ import bd.com.ipay.ipayskeleton.R;
  * Depending on that, show proper dialog to the user.
  */
 public class BankListValidator {
-    private final List<UserBankClass> mListUserBankClasses;
+    private final List<BankAccountList> mListUserBankClasses;
 
-    public BankListValidator(List<UserBankClass> mListUserBankClasses) {
+    public BankListValidator(List<BankAccountList> mListUserBankClasses) {
         this.mListUserBankClasses = mListUserBankClasses;
     }
 
@@ -33,7 +33,7 @@ public class BankListValidator {
         if (mListUserBankClasses == null)
             return false;
 
-        for (UserBankClass userBankClass : mListUserBankClasses) {
+        for (BankAccountList userBankClass : mListUserBankClasses) {
             if (userBankClass.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED))
                 return true;
         }

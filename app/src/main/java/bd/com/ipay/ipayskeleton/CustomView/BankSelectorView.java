@@ -24,7 +24,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BankListValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -40,7 +40,7 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     private TextView mBankBranchTextView;
     private TextView mBankAccountTextView;
 
-    private List<UserBankClass> mListUserBankClasses;
+    private List<BankAccountList> mListUserBankClasses;
 
     private String mSelectorDialogTitle;
     private String mHint;
@@ -102,13 +102,13 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     }
 
 
-    public void setItems(List<UserBankClass> listUserBankClasses) {
+    public void setItems(List<BankAccountList> listUserBankClasses) {
         mBankListValidator = new BankListValidator(listUserBankClasses);
         if (isBankAdded() && isVerifiedBankAdded()) {
             this.mListUserBankClasses = listUserBankClasses;
             mUserBankList.clear();
             mBankIconArray = new int[this.mListUserBankClasses.size()];
-            for (UserBankClass userBankClass : this.mListUserBankClasses) {
+            for (BankAccountList userBankClass : this.mListUserBankClasses) {
                 mBankIconArray[mUserBankList.size()] = userBankClass.getBankIcon(getContext());
                 mUserBankList.add(userBankClass.getBankName() + "\n" + userBankClass.getBranchName() + "\n" + userBankClass.getAccountNumber());
             }

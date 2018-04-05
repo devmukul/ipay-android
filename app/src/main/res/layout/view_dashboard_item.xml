@@ -12,7 +12,8 @@
             android:layout_height="@dimen/value80"
             android:scaleType="centerCrop"
             android:elevation="@dimen/value2"
-            android:src="@drawable/background_icon_pay_by_qc" />
+            android:src="@drawable/background_icon_pay_by_qc"
+            android:background="@drawable/semiround_white_default" />
 
         <TextView
             android:id="@+id/nameView"

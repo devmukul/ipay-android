@@ -31,8 +31,8 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -59,7 +59,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     private EditText mNoteEditText;
     private EditText mAmountEditText;
 
-    private List<UserBankClass> mListUserBankClasses;
+    private List<BankAccountList> mListUserBankClasses;
 
     private ProgressDialog mProgressDialog;
 
@@ -255,7 +255,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         intent.putExtra(Constants.AMOUNT, Double.parseDouble(amount));
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
 
-        UserBankClass selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
+        BankAccountList selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
         intent.putExtra(Constants.SELECTED_BANK_ACCOUNT, selectedBankAccount);
         startActivityForResult(intent, WITHDRAW_MONEY_REVIEW_REQUEST);
     }
@@ -291,7 +291,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                             mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
                             mListUserBankClasses = new ArrayList<>();
 
-                            for (UserBankClass bank : mBankListResponse.getBanks()) {
+                            for (BankAccountList bank : mBankListResponse.getBankAccountList()) {
                                 if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                                     mListUserBankClasses.add(bank);
                                 }
