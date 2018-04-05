@@ -45,9 +45,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
-import bd.com.ipay.ipayskeleton.CustomView.DocumentPreviewImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankDocument;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -87,7 +85,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
             mSelectedChequebookCover = getArguments().getParcelable(Constants.SELECTED_CHEQUEBOOK_COVER);
         }
         mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage(getString(R.string.adding_bank));
+        mProgressDialog.setMessage(getString(R.string.uploading_check));
 
 
     }
@@ -287,8 +285,16 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
             mProgressDialog.dismiss();
 
             UploadDocumentResponse uploadDocumentResponse = gson.fromJson(result.getJsonString(), UploadDocumentResponse.class);
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), uploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), getString(R.string.cheque_uploaded), Toast.LENGTH_LONG);
+            } else {
+                mProgressDialog.dismiss();
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), uploadDocumentResponse.getMessage(), Toast.LENGTH_SHORT);
+            }
+
+
             ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
         }
     }

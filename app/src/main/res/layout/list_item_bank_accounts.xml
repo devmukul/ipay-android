@@ -63,12 +63,13 @@
             <Button
                 android:id="@+id/bank_account_pending_button"
                 android:text="@string/pending"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="24dp"
                 android:background="@drawable/oval_shaped_white_button_with_border_default"
                 android:textSize="10.0sp"
                 android:textColor="@color/colorPrimary"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textAllCaps="false"/>
 
             <ImageView
                 android:id="@+id/bank_account_verify_status"
