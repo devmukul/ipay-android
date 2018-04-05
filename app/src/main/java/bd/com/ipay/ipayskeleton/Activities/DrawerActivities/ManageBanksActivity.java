@@ -113,7 +113,7 @@ public class ManageBanksActivity extends BaseActivity {
         mFabAddNewBank.setVisibility(View.VISIBLE);
     }
 
-    public void switchToPreviewIdentificationDocumentFragment(Bundle bundle) {
+    public void switchToPreviewChequebookCoverFragment(Bundle bundle) {
         PreviewChequebookCoverFragment mPreviewIdentificationDocumentFragment = new PreviewChequebookCoverFragment();
         mPreviewIdentificationDocumentFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mPreviewIdentificationDocumentFragment).addToBackStack(null).commit();

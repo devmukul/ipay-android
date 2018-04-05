@@ -20,7 +20,6 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditParentInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.IdentificationDocumentListFragment;
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.PreviewChequebookCoverFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.UploadIdentificationFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;

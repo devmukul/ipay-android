@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentifi
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfilePictureUploadHelperFragment;
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.PreviewChequebookCoverFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -158,7 +158,7 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
     public void switchToPreviewIdentificationDocumentFragment(Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 3)
             getSupportFragmentManager().popBackStackImmediate();
-        PreviewChequebookCoverFragment previewIdentificationDocumentFragment = new PreviewChequebookCoverFragment();
+        PreviewIdentificationDocumentFragment previewIdentificationDocumentFragment = new PreviewIdentificationDocumentFragment();
         previewIdentificationDocumentFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, previewIdentificationDocumentFragment).addToBackStack(null).commit();
     }

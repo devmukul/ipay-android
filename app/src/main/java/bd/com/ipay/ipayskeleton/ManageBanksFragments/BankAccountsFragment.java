@@ -524,7 +524,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     public void onClick(View view) {
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(Constants.SELECTED_CHEQUEBOOK_COVER, mListUserBankClasses.get(pos));
-                        ((ManageBanksActivity) getActivity()).switchToPreviewIdentificationDocumentFragment(bundle);
+                        ((ManageBanksActivity) getActivity()).switchToPreviewChequebookCoverFragment(bundle);
                     }
                 });
             }
