@@ -908,4 +908,6 @@ public class Constants {
 
     public static final int LOCATION_REQUIRED_TRUE = 1;
 
+    public static final int RC_BARCODE_CAPTURE = 9001;
+
 }

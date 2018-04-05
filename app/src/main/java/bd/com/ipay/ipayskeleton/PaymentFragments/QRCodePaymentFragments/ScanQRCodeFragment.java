@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -27,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -64,7 +67,8 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.setCancelable(false);
 
-        Utilities.performQRCodeScan(this, REQUEST_CODE_PERMISSION);
+        Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+        startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
         return mRootView;
     }
 
@@ -76,47 +80,47 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                getActivity().finish();
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                final Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            if (Utilities.isConnectionAvailable(getActivity())) {
-                                mobileNumber = ContactEngine.formatMobileNumberBD(result);
-                                GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+        if (requestCode == Constants.RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    final String result = barcode.displayValue;
 
-                                if (mGetUserInfoTask != null) {
-                                    return;
+                    final Handler mHandler = new Handler();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (InputValidator.isValidNumber(result)) {
+                                if (Utilities.isConnectionAvailable(getActivity())) {
+                                    mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                    GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+                                    if (mGetUserInfoTask != null) {
+                                        return;
+                                    }
+
+                                    mProgressDialog.show();
+                                    mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                                    mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
+                                    mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                } else {
+                                    Toaster.makeText(getActivity(), getResources().getString(
+                                            R.string.no_internet_connection), Toast.LENGTH_SHORT);
+                                    mProgressDialog.cancel();
+                                    getActivity().finish();
                                 }
-
-                                mProgressDialog.show();
-                                mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                                        getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
-                                mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
-                                mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            } else {
-                                Toaster.makeText(getActivity(), getResources().getString(
-                                        R.string.no_internet_connection), Toast.LENGTH_SHORT);
-                                mProgressDialog.cancel();
-                                getActivity().finish();
+                            } else if (getActivity() != null) {
+                                DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                             }
-                        } else if (getActivity() != null) {
-                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                         }
-                    }
-                });
+                    });
+                } else {
+                    getActivity().finish();
+                }
+            }else{
+                getActivity().finish();
             }
-        } else {
-            getActivity().finish();
         }
     }
 
@@ -125,7 +129,8 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
+                    Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                    startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
                 } else {
                     getActivity().finish();
                     Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);

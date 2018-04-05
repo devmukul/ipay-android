@@ -66,7 +66,7 @@
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="face" />
+            android:value="face,barcode"/>
 
         <activity
             android:name=".Activities.LauncherActivity"
@@ -338,6 +338,9 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".QRScanner.BarcodeCaptureActivity"
+            android:label="Read Barcode"/>
 
     </application>
 </manifest>

@@ -175,7 +175,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
             mOperatorEditText.setEnabled(false);
             mSelectReceiverButton.setVisibility(View.GONE);
-            mAmountEditText.requestFocus();
 
         } else {
             mMobileNumberEditText.setEnabledStatus(true);
@@ -189,7 +188,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                 }
             });
 
-            mMobileNumberEditText.requestFocus();
         }
 
         mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
@@ -231,6 +229,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
+                setOperator(inputText);
                 mProfilePicHolderView.setVisibility(View.VISIBLE);
                 mMobileNumberHolderView.setVisibility(View.GONE);
 
@@ -246,9 +245,25 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             }
         });
 
-        mMobileNumberEditText.setText(mUserMobileNumber);
+        setDefaultUserInfo();
     }
 
+    private void setDefaultUserInfo(){
+        mMobileNumberEditText.setText(mUserMobileNumber);
+
+        mProfilePicHolderView.setVisibility(View.VISIBLE);
+        mMobileNumberHolderView.setVisibility(View.GONE);
+
+        mName = ProfileInfoCacheManager.getName();
+
+        if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+            mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
+            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
+                    false);
+        }
+        mNameTextView.setText(mName);
+        mAmountEditText.requestFocus();
+    }
     private void setOperatorAndPackageAdapter() {
 
         int[] mIconList = getOperatorIcons();
