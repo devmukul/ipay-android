@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
@@ -65,6 +66,7 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
     private String mPhotoUri;
     private String mDescription;
     private boolean isInContacts;
+    private CustomProgressDialog mCustomProgressDialog;
 
     private Tracker mTracker;
 
@@ -85,6 +87,7 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
         isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
 
         mProgressDialog = new ProgressDialog(getContext());
+        mCustomProgressDialog = new CustomProgressDialog(getContext());
 
         mTracker = Utilities.getTracker(getActivity());
     }
@@ -219,9 +222,11 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        //mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
+        //mProgressDialog.show();
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
+        mCustomProgressDialog.show();
+        //mProgressDialog.setCancelable(false);
         mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
                 mAmount.toString(), mDescription, pin);
@@ -270,6 +275,7 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                             }
+                            mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
                         }
                         launchHomeActivity();
                         //Google Analytic event

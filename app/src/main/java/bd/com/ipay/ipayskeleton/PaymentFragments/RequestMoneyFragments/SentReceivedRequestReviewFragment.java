@@ -2,10 +2,12 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -95,6 +98,10 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
     private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
 
+    private CustomProgressDialog mCustomProgressDialog;
+
+    private Context mContext;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +123,8 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+        mContext = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(mContext);
         mRequestType = getActivity().getIntent()
                 .getIntExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
 
@@ -316,7 +325,6 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
         if (mRejectRequestTask != null) {
             return;
         }
-
         mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
@@ -347,9 +355,8 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             return;
         }
 
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_accepted));
+        mCustomProgressDialog.showDialog();
 
         if (!switchedFromTransactionHistory) {
             mRequestMoneyAcceptRejectOrCancelRequest =
@@ -448,33 +455,54 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        } else {
+                            mCustomProgressDialog.showSuccessAnimationAndMessage
+                                    (mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
                         }
-                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null) {
-                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
-
-                            if (switchedFromTransactionHistory) {
-                                Intent intent = new Intent();
-                                getActivity().setResult(Activity.RESULT_OK, intent);
-                                getActivity().finish();
-                            } else
-                                getActivity().onBackPressed();
-                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mCustomProgressDialog.dismissDialog();
+                                if (switchedFromTransactionHistory) {
+                                    Intent intent = new Intent();
+                                    getActivity().setResult(Activity.RESULT_OK, intent);
+                                    getActivity().finish();
+                                } else
+                                    getActivity().onBackPressed();
+                            }
+                        }, 2000);
                         Utilities.sendSuccessEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
+                        if (getActivity() != null) {
+                            mCustomProgressDialog.showFailureAnimationAndMessage
+                                    (mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage("");
+                        }
                         Utilities.sendBlockedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mCustomProgressDialog.dismissDialog();
                         Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = mRequestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
                         if (getActivity() != null) {
-                            Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage(
+                                        mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
+                            } else {
+                                Toast.makeText(mContext, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                            }
+
                             if (mRequestMoneyAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
-                            } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                                    mCustomProgressDialog.dismissDialog();
+                                }
+                            } else {
+                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                }
                             }
                         }
                         Utilities.sendFailedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), mAmount.longValue());
@@ -484,8 +512,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
+                    mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.service_not_available));
                     Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 }
 

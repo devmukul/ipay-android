@@ -150,6 +150,10 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
+    public static final String STATE_LOADING = "LOADING";
+    public static final String STATE_SUCCESS = "SUCCESS";
+    public static final String STATE_FAILED = "FAILED";
+
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+8809638900801";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
