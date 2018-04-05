@@ -826,6 +826,8 @@
         <item name="android:layout_marginBottom">@dimen/value5</item>
     </style>
 
+
+
     <style name="DividerReview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/divider_space</item>

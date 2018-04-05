@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -37,9 +39,9 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.RemoveBankAccountResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountResponse;
@@ -66,7 +68,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
     private TextView mEmptyListTextView;
     private UserBankListAdapter mUserBankListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<UserBankClass> mListUserBankClasses;
+    private List<BankAccountList> mListUserBankClasses;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private Tracker mTracker;
@@ -209,10 +211,10 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             mBankListResponse = gson.fromJson(json, GetBankListResponse.class);
 
             if (mListUserBankClasses == null) {
-                mListUserBankClasses = mBankListResponse.getBanks();
+                mListUserBankClasses = mBankListResponse.getBankAccountList();
             } else {
-                List<UserBankClass> tempBankClasses;
-                tempBankClasses = mBankListResponse.getBanks();
+                List<BankAccountList> tempBankClasses;
+                tempBankClasses = mBankListResponse.getBankAccountList();
                 mListUserBankClasses.clear();
                 mListUserBankClasses.addAll(tempBankClasses);
             }
@@ -416,7 +418,9 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView mBankName;
             private final TextView mBankAccountNumber;
+            private final ImageView mAttachmentChequebook;
             private final ImageView mBankVerifiedStatus;
+            private final Button mBankPending;
             private final TextView mBranchName;
             private final View divider;
             private final ImageView bankIcon;
@@ -430,12 +434,14 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 mBankAccountNumber = (TextView) itemView.findViewById(R.id.bank_account_number);
                 mBankName = (TextView) itemView.findViewById(R.id.bank_name);
                 mBankVerifiedStatus = (ImageView) itemView.findViewById(R.id.bank_account_verify_status);
+                mAttachmentChequebook = (ImageView) itemView.findViewById(R.id.chequebook_attachment);
+                mBankPending = (Button) itemView.findViewById(R.id.bank_account_pending_button);
                 mBranchName = (TextView) itemView.findViewById(R.id.bank_branch_name);
                 divider = itemView.findViewById(R.id.divider);
                 bankIcon = (ImageView) itemView.findViewById(R.id.portrait);
             }
 
-            public void bindView(int pos) {
+            public void bindView(final int pos) {
 
                 final long bankAccountID = mListUserBankClasses.get(pos).getBankAccountId();
                 final String bankName = mListUserBankClasses.get(pos).getBankName();
@@ -454,26 +460,36 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
                 switch (verificationStatus) {
                     case Constants.BANK_ACCOUNT_STATUS_VERIFIED:
+                        mBankVerifiedStatus.setVisibility(View.VISIBLE);
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
                         mBankVerifiedStatus.clearColorFilter();
+                        mBankPending.setVisibility(View.GONE);
                         mBankActionList = Arrays.asList(getResources().getStringArray(R.array.verified_bank_action));
+                        if(mListUserBankClasses.get(pos).getBankDocuments()==null || mListUserBankClasses.get(pos).getBankDocuments().size()<1)
+                            mAttachmentChequebook.setVisibility(View.GONE);
+                        else
+                            mAttachmentChequebook.setVisibility(View.VISIBLE);
                         break;
 
                     case Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED:
+                        mBankVerifiedStatus.setVisibility(View.VISIBLE);
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
                         mBankVerifiedStatus.setColorFilter(Color.RED);
+                        mBankPending.setVisibility(View.GONE);
                         mBankActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_bank_action));
                         break;
 
                     case Constants.BANK_ACCOUNT_STATUS_BLOCKED:
+                        mBankVerifiedStatus.setVisibility(View.VISIBLE);
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
                         mBankVerifiedStatus.setColorFilter(Color.RED);
+                        mBankPending.setVisibility(View.GONE);
                         break;
 
                     default:
                         // Bank verification status pending
-                        mBankVerifiedStatus.setImageResource(R.drawable.ic_workinprogress);
-                        mBankVerifiedStatus.setColorFilter(Color.GRAY);
+                        mBankPending.setVisibility(View.VISIBLE);
+                        mBankVerifiedStatus.setVisibility(View.GONE);
                         mBankActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_bank_action));
                         break;
                 }
@@ -500,6 +516,15 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                             });
                             mCustomSelectorDialog.show();
                         }
+                    }
+                });
+
+                mAttachmentChequebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(Constants.SELECTED_CHEQUEBOOK_COVER, mListUserBankClasses.get(pos));
+                        ((ManageBanksActivity) getActivity()).switchToPreviewIdentificationDocumentFragment(bundle);
                     }
                 });
             }

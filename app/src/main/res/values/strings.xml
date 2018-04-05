@@ -1039,8 +1039,10 @@
 
     <string name="verification_icon">Verification Icon</string>
     <string name="document_front_side">Document Front Side/First Page</string>
+    <string name="chequebook_cover_page">Chequebook Cover Page</string>
     <string name="upload_front_page">Upload first/front page</string>
     <string name="upload_back_page">Upload second/back page</string>
+    <string name="upload_chequebook_front_page">Upload cover of account\'s chequebook</string>
     <string name="choose_file">Choose file</string>
     <string name="maximum_file_size_message">Maximum file size is 3 MB. JPG or PNG format only.</string>
     <string name="upload_document">Upload Document</string>
