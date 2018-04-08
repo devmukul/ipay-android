@@ -3,27 +3,22 @@ package bd.com.ipay.ipayskeleton.Api.DocumentUploadApi;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
 import java.io.File;
-import java.nio.charset.Charset;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.OkHttpResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
@@ -82,55 +77,54 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
 
     }
 
-    private GenericHttpResponse uploadDocument(String[] selectedImagePath) {
-
+    private GenericHttpResponse uploadDocument(String selectedImagePath[]) {
+        File[] files = new File[selectedImagePath.length];
+        GenericHttpResponse genericHttpResponse = new GenericHttpResponse();
+        final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+        for (int i = 0; i < selectedImagePath.length; i++) {
+            files[i] = new File(selectedImagePath[i]);
+        }
         try {
-            HttpClient client = new DefaultHttpClient();
-            File[] files = new File[selectedImagePath.length];
-            for (int i = 0; i < selectedImagePath.length; i++) {
-                files[i] = new File(selectedImagePath[i]);
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM);
+
+            for (int i = 0; i < files.length; i++) {
+                builder.addFormDataPart("files", files[i].getName(), okhttp3.RequestBody.create(MEDIA_TYPE_PNG, files[i]));
             }
-            HttpPost post = new HttpPost(mUrl);
 
-            if (TokenManager.isTokenExists())
-                post.setHeader(Constants.TOKEN, TokenManager.getToken());
-            if (TokenManager.isEmployerAccountActive())
-                post.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
+            builder.addFormDataPart(Constants.DOCUMENT_ID_NUMBER, documentIdNumber)
+                    .addFormDataPart(Constants.DOCUMENT_TYPE, documentType);
 
-            MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
-                    Constants.BOUNDARY, Charset.defaultCharset());
-
-            for (File file : files) {
-                entity.addPart("files", new FileBody(file));
+            if (documentName != null) {
+                builder.addFormDataPart(Constants.DOCUMENT_NAME, documentName);
             }
-            entity.addPart(Constants.DOCUMENT_ID_NUMBER, new StringBody(documentIdNumber));
-            entity.addPart(Constants.DOCUMENT_TYPE, new StringBody(documentType));
-            if (documentName != null)
-                entity.addPart(Constants.DOCUMENT_NAME, new StringBody(documentName));
-            post.setEntity(entity);
-
-            post.setHeader("Accept", "application/json");
-            post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
-
-            HttpResponse response = client.execute(post);
-            HttpEntity httpEntity = response.getEntity();
-
-            Logger.logE("POST", post.toString());
-
-            int status = response.getStatusLine().getStatusCode();
-
-            GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
-            mGenericHttpResponse.setStatus(status);
-            mGenericHttpResponse.setApiCommand(API_COMMAND);
-            mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
-
-            Logger.logE("Result", mGenericHttpResponse.toString());
-
-            return mGenericHttpResponse;
+            Request.Builder requestBuilder = new Request.Builder().
+                    header("Accept", "application/json")
+                    .header("Content-Type", "multipart/form-data");
+            if (TokenManager.getToken() != null) {
+                requestBuilder.header(Constants.TOKEN, TokenManager.getToken());
+            }
+            if (TokenManager.getOnAccountId() != null && TokenManager.getOnAccountId() != "") {
+                requestBuilder.header(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
+            }
+            RequestBody requestBody = builder.build();
+            Request request = requestBuilder.url(mUrl)
+                    .post(requestBody)
+                    .build();
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Response response = okHttpClient.newCall(request).execute();
+            OkHttpResponse okHttpResponse = new OkHttpResponse();
+            okHttpResponse.setResponse(response);
+            String jsonString;
+            jsonString = response.body().string();
+            genericHttpResponse.setApiCommand(API_COMMAND);
+            genericHttpResponse.setStatus(response.code());
+            genericHttpResponse.setJsonString(jsonString);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+
         }
+        return genericHttpResponse;
     }
 }
