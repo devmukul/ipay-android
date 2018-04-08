@@ -2,12 +2,12 @@ package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
 
-import org.apache.http.entity.StringEntity;
-import org.apache.http.protocol.HTTP;
-
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Utilities.HttpPatchRequestBase;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
 
@@ -24,21 +24,24 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
     }
 
     @Override
-    protected okhttp3.Request getRequest() {
+    protected Request getRequest() {
         Logger.logW("POST_URL", mUri);
         if (mJsonString != null)
             Logger.logW("json", mJsonString);
-
-        HttpPatchRequestBase httpPatch = new HttpPatchRequestBase(mUri);
-
-        try {
-            if (mJsonString != null) {
-                httpPatch.setEntity(new StringEntity(mJsonString, HTTP.UTF_8));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "";
+        MediaType JSON
+                = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestBody = RequestBody.create(JSON, mJsonString);
+        if (mJsonString != null)
+            Logger.logW("json", mJsonString);
+        Request request = new Request.Builder().
+                header(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID)
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .header(Constants.TOKEN,"")
+                .header(Constants.OPERATING_ON_ACCOUNT_ID,"")
+                .patch(requestBody)
+                .url(mUri)
+                .build();
+        return request;
     }
 }

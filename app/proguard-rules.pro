@@ -55,6 +55,10 @@
     public static *** i(...);
     public static *** e(...);
 }
+-ignorewarnings
+-keep class * {
+    public private *;
+}
 
 -printmapping build/outputs/mapping/release/mapping.txt
 

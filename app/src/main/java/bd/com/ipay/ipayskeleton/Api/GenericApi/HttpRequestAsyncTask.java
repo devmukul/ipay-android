@@ -16,7 +16,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.SSLPinning;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -127,12 +126,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         final OkHttpResponse okHttpResponse = new OkHttpResponse();
         try {
             Request request = getRequest();
-            if (TokenManager.getToken().length() > 0){
-                request.header(Constants.TOKEN).replace("",TokenManager.getToken());
-            }
-
-            if (TokenManager.isEmployerAccountActive())
-                request.header(Constants.OPERATING_ON_ACCOUNT_ID).replace("", TokenManager.getOnAccountId());
             OkHttpClient client = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
                     .connectTimeout(15, TimeUnit.SECONDS).build();
 
