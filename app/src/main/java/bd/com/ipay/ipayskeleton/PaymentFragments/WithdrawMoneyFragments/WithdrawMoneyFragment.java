@@ -325,7 +325,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_VERIFICATION_REQUIRED)) {
+                                } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_VERIFICATION_REQUIRED)) {
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_PIN_REQUIRED)) {
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
