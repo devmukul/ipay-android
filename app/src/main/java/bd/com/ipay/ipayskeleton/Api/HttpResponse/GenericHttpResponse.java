@@ -2,12 +2,9 @@ package bd.com.ipay.ipayskeleton.Api.HttpResponse;
 
 import android.content.Context;
 
-import org.apache.http.Header;
-
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import okhttp3.Headers;
 
 public class GenericHttpResponse {
     private int status;
@@ -15,7 +12,7 @@ public class GenericHttpResponse {
     private String jsonString;
     private boolean isUpdateNeeded;
     private Context context;
-    private List<Header> headers;
+    private Headers headers;
 
     public GenericHttpResponse() {
     }
@@ -60,19 +57,19 @@ public class GenericHttpResponse {
         this.jsonString = jsonString;
     }
 
-    public List<Header> getHeaders() {
+    public Headers getHeaders() {
         return headers;
     }
 
-    public void setHeaders(List<Header> headers) {
+    public void setHeaders(Headers headers) {
         this.headers = headers;
     }
 
     private String getHeaderValue(String headerName) {
-        for (Header header : headers) {
-            Logger.logW(header.getName(), header.getValue());
-            if (header.getName().equals(headerName))
-                return header.getValue();
+        for (int i=0;i<headers.size();i++) {
+            Logger.logW(headers.name(i), headers.value(i));
+            if (headers.value(i).equals(headerName))
+                return headers.value(i);
         }
 
         return null;

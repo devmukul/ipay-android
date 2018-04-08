@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
 
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
@@ -25,7 +24,7 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
     }
 
     @Override
-    protected HttpRequestBase getRequest() {
+    protected String getRequest() {
         Logger.logW("POST_URL", mUri);
         if (mJsonString != null)
             Logger.logW("json", mJsonString);
@@ -40,6 +39,6 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
             e.printStackTrace();
         }
 
-        return httpPatch;
+        return "";
     }
 }

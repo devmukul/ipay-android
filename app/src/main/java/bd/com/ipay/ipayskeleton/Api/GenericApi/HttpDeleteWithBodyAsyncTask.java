@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
 
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
@@ -18,13 +17,13 @@ public class HttpDeleteWithBodyAsyncTask extends HttpRequestAsyncTask {
     private final String mJsonString;
 
     public HttpDeleteWithBodyAsyncTask(String API_COMMAND, String mUri, String mJsonString,
-                                       Context mContext, HttpResponseListener listener) {
+                                         Context mContext, HttpResponseListener listener) {
         super(API_COMMAND, mUri, mContext, listener);
         this.mJsonString = mJsonString;
     }
 
     @Override
-    protected HttpRequestBase getRequest() {
+    protected String getRequest() {
         Logger.logW(Constants.DELETE_URL, mUri);
 
         HttpDeleteWithBody httpDeleteWithBody = new HttpDeleteWithBody(mUri);
@@ -33,6 +32,6 @@ public class HttpDeleteWithBodyAsyncTask extends HttpRequestAsyncTask {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return httpDeleteWithBody;
+        return httpDeleteWithBody.toString();
     }
 }

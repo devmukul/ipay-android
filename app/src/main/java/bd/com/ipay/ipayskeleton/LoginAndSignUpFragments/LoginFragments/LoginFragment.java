@@ -661,4 +661,5 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mGetProfileInfoTask.mHttpResponseListener = this;
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 }
