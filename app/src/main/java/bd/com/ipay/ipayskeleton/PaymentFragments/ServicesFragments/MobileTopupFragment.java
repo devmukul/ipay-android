@@ -254,7 +254,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mProfilePicHolderView.setVisibility(View.VISIBLE);
         mMobileNumberHolderView.setVisibility(View.GONE);
 
-        mName = ProfileInfoCacheManager.getName();
+        mName = ProfileInfoCacheManager.getUserName();
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
             mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
