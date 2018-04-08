@@ -339,6 +339,11 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
 
+                        // Save Remember me in shared preference
+                        if (SignupOrLoginActivity.isRememberMe) {
+                            SharedPrefManager.setRememberMeActive(SignupOrLoginActivity.isRememberMe);
+                        }
+
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId());
                         getProfileInfo();
