@@ -212,6 +212,32 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
         });
 
+        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+            mMobileNumberHolderView.setVisibility(View.GONE);
+            mProfilePicHolderView.setVisibility(View.VISIBLE);
+            mReceiver = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+            mMobileNumberEditText.setText(mReceiver);
+            if (getActivity().getIntent().hasExtra(Constants.NAME)) {
+                mName = getActivity().getIntent().getStringExtra(Constants.NAME);
+                if (TextUtils.isEmpty(mName)) {
+                    mNameTextView.setVisibility(View.GONE);
+                } else {
+                    mNameTextView.setVisibility(View.VISIBLE);
+                    mNameTextView.setText(mName);
+                }
+            }
+            if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
+                String imageURL = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+                if (!imageURL.isEmpty()) {
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageURL,
+                            false);
+                }
+            }
+        } else {
+            mProfilePicHolderView.setVisibility(View.GONE);
+            mMobileNumberHolderView.setVisibility(View.VISIBLE);
+        }
+
         // Get business rule
 
         attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
