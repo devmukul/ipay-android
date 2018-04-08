@@ -386,58 +386,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 });
 
                 mProfileCompletionPromptView.setVisibility(View.VISIBLE);
-            } else {
-                // "Good to have" properties
-                List<ProfileCompletionStatusResponse.PropertyDetails> otherCompletionDetails =
-                        mProfileCompletionStatusResponse.getOtherCompletionDetails();
-                final List<ProfileCompletionStatusResponse.PropertyDetails> incompleteOtherCompletionDetails = new ArrayList<>();
-                for (ProfileCompletionStatusResponse.PropertyDetails propertyDetails : otherCompletionDetails) {
-                    if (!propertyDetails.isCompleted()) {
-                        incompleteOtherCompletionDetails.add(propertyDetails);
-                    }
-                }
-
-                if (incompleteOtherCompletionDetails.size() > 0) {
-                    Random random = new Random();
-
-                    /*
-                     * We want to show the prompt once in every five launch on average.
-                     */
-                    if (random.nextInt(5) == 0) {
-                        int index = random.nextInt(incompleteOtherCompletionDetails.size());
-                        final ProfileCompletionStatusResponse.PropertyDetails incompletePropertyDetails = incompleteOtherCompletionDetails.get(index);
-
-                        String profileCompletionMessage = "Your profile is " +
-                                mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                                + "complete.\n"
-                                + incompletePropertyDetails.getPropertyTitle()
-                                + " to improve your profile";
-
-                        mProfileCompletionMessageView.setText(profileCompletionMessage);
-
-                        /*
-                         * For ADD_PIN, we show a PIN input dialog to the user.
-                         * For other cases, we forward the user to the corresponding fragment
-                         * in the ProfileActivity.
-                         */
-                        mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (incompletePropertyDetails.getPropertyName().equals(ProfileCompletionPropertyConstants.ADD_PIN)) {
-                                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity(), null);
-                                    addPinDialogBuilder.show();
-                                } else {
-                                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                                    intent.putExtra(Constants.TARGET_FRAGMENT, incompletePropertyDetails.getPropertyName());
-                                    startActivity(intent);
-                                }
-                            }
-                        });
-
-                        mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
-                        mProfileCompletionPromptView.setVisibility(View.VISIBLE);
-                    }
-                }
             }
         }
     }
