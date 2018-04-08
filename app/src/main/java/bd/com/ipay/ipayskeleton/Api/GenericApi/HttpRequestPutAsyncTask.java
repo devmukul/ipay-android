@@ -20,7 +20,7 @@ public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
     }
 
     @Override
-    protected String getRequest() {
+    protected okhttp3.Request getRequest() {
         Logger.logW("PUT_URL", mUri);
         if (mJsonString != null)
             Logger.logW("json", mJsonString);

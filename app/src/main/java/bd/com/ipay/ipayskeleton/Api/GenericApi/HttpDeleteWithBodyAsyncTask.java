@@ -23,7 +23,7 @@ public class HttpDeleteWithBodyAsyncTask extends HttpRequestAsyncTask {
     }
 
     @Override
-    protected String getRequest() {
+    protected okhttp3.Request getRequest() {
         Logger.logW(Constants.DELETE_URL, mUri);
 
         HttpDeleteWithBody httpDeleteWithBody = new HttpDeleteWithBody(mUri);

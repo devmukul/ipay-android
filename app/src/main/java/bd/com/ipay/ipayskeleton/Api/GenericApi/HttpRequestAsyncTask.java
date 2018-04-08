@@ -18,10 +18,8 @@ import bd.com.ipay.ipayskeleton.Utilities.SSLPinning;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
@@ -128,37 +126,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
 
         final OkHttpResponse okHttpResponse = new OkHttpResponse();
         try {
-            String mJsonString = getRequest();
-            MediaType JSON
-                    = MediaType.parse("application/json; charset=utf-8");
-            Request request;
-
-            if (mJsonString == "") {
-                request = new Request.Builder()
-                        .header(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID)
-                        .header("Accept", "application/json")
-                        .header("Content-type", "application/json")
-                        .header(Constants.TOKEN, TokenManager.getToken())
-                        .header(Constants.OPERATING_ON_ACCOUNT_ID, "")
-                        .get()
-                        .url(mUri)
-                        .build();
-            } else {
-                RequestBody requestBody = RequestBody.create(JSON, mJsonString);
-                request=new Request.Builder()
-                        .header(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID)
-                        .header("Accept", "application/json")
-                        .header("Content-type", "application/json")
-                        .header(Constants.TOKEN, TokenManager.getToken())
-                        .header(Constants.OPERATING_ON_ACCOUNT_ID, "")
-                        .post(requestBody)
-                        .url(mUri)
-                        .build();
+            Request request = getRequest();
+            if (TokenManager.getToken().length() > 0){
+                request.header(Constants.TOKEN).replace("",TokenManager.getToken());
             }
 
-            if (TokenManager.getToken().length() > 0) {
-                request.header(Constants.TOKEN).replace("", TokenManager.getToken());
-            }
             if (TokenManager.isEmployerAccountActive())
                 request.header(Constants.OPERATING_ON_ACCOUNT_ID).replace("", TokenManager.getOnAccountId());
             OkHttpClient client = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
@@ -248,5 +220,5 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         return mContext;
     }
 
-    abstract protected String getRequest();
+    abstract protected Request getRequest();
 }

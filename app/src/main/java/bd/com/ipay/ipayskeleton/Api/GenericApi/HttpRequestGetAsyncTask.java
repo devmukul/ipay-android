@@ -17,9 +17,18 @@ public class HttpRequestGetAsyncTask extends HttpRequestAsyncTask {
     }
 
     @Override
-    protected String getRequest() {
+    protected okhttp3.Request getRequest() {
         Logger.logW(Constants.GET_URL, mUri);
-        return "";
+        okhttp3.Request request = new okhttp3.Request.Builder().
+                header(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID)
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .header(Constants.TOKEN,"")
+                .header(Constants.OPERATING_ON_ACCOUNT_ID,"")
+                .get()
+                .url(mUri)
+                .build();
+        return request;
     }
 
 }

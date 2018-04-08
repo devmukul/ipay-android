@@ -24,7 +24,7 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
     }
 
     @Override
-    protected String getRequest() {
+    protected okhttp3.Request getRequest() {
         Logger.logW("POST_URL", mUri);
         if (mJsonString != null)
             Logger.logW("json", mJsonString);
