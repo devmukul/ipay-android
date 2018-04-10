@@ -2,12 +2,16 @@ package bd.com.ipay.ipayskeleton.Api.DocumentUploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.OkHttpResponse;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -29,6 +33,7 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
     private final String documentIdNumber;
     private final String documentType;
     private final String documentName;
+    private String socketTimeOutException;
 
     public HttpResponseListener mHttpResponseListener;
 
@@ -42,6 +47,7 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
         this.mImagePath = imagePath;
         this.documentIdNumber = documentIdNumber;
         this.documentName = documentName;
+        socketTimeOutException = null;
     }
 
     @Override
@@ -65,6 +71,10 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
 
     @Override
     protected void onPostExecute(final GenericHttpResponse result) {
+
+        if (socketTimeOutException != null) {
+            Toast.makeText(mContext, socketTimeOutException, Toast.LENGTH_LONG).show();
+        }
 
         if (result != null) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
@@ -111,15 +121,29 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
             Request request = requestBuilder.url(mUrl)
                     .post(requestBody)
                     .build();
-            OkHttpClient okHttpClient = new OkHttpClient();
-            Response response = okHttpClient.newCall(request).execute();
-            OkHttpResponse okHttpResponse = new OkHttpResponse();
-            okHttpResponse.setResponse(response);
-            String jsonString;
-            jsonString = response.body().string();
-            genericHttpResponse.setApiCommand(API_COMMAND);
-            genericHttpResponse.setStatus(response.code());
-            genericHttpResponse.setJsonString(jsonString);
+            OkHttpClient okHttpClient;
+            if (MyApplication.getMyApplicationInstance().getOkHttpClient() != null) {
+                okHttpClient = MyApplication.getMyApplicationInstance().getOkHttpClient();
+            } else {
+                okHttpClient = new OkHttpClient.Builder()
+                        .readTimeout(15, TimeUnit.SECONDS)
+                        .connectTimeout(15, TimeUnit.SECONDS)
+                        .build();
+            }
+            Response response = null;
+            try {
+                response = okHttpClient.newCall(request).execute();
+                String jsonString;
+                jsonString = response.body().string();
+                genericHttpResponse.setApiCommand(API_COMMAND);
+                genericHttpResponse.setStatus(response.code());
+                genericHttpResponse.setJsonString(jsonString);
+            } catch (IOException e) {
+                if (e instanceof SocketTimeoutException) {
+                    socketTimeOutException = mContext.getString(R.string.connection_time_out);
+                }
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();

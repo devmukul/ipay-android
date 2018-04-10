@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -34,6 +35,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
     private final Context mContext;
     private final String API_COMMAND;
     private OkHttpResponse mHttpResponse;
+    private String socketTimeOutConnection;
 
     private boolean error = false;
 
@@ -42,6 +44,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         this.mUri = mUri;
         this.mContext = mContext;
         this.mHttpResponseListener = listener;
+        socketTimeOutConnection = null;
     }
 
     @Override
@@ -57,9 +60,12 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
                         mGenericHttpResponse.setUpdateNeeded(false);
                     } else {
-                        mHttpResponse = makeRequest();
+                        mHttpResponse = makeApiVersionCheckRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
-                        mGenericHttpResponse.setUpdateNeeded(false);
+                        Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
+
+                        // Validate the Api version and set whether the update is required or not
+                        mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
                     }
 
                 } else {
@@ -81,6 +87,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         if (error) {
             if (mContext != null)
                 Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(socketTimeOutConnection !=null){
+            if (mContext != null)
+                Toast.makeText(mContext, socketTimeOutConnection, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -145,7 +156,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     Response response = okHttpClient.newCall(request).execute();
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
-
+                    if (e instanceof SocketTimeoutException) {
+                        socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
+                    }
                 }
             }
             return okHttpResponse;
@@ -181,7 +194,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 response = okHttpClient.newCall(request).execute();
                 okHttpResponse.setResponse(response);
             } catch (IOException e) {
-
+                if (e instanceof SocketTimeoutException) {
+                    socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
+                }
             }
 
             return okHttpResponse;
@@ -192,26 +207,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         return okHttpResponse;
     }
 
-    /* private OkHttpResponse makeApiVersionCheckRequest() {
-         try {
-             HttpRequestBase httpRequest = new HttpGet(Constants.BASE_URL_MM + Constants.URL_GET_MIN_API_VERSION_REQUIRED);
-
-             httpRequest.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
-             httpRequest.setHeader("Accept", "application/json");
-             httpRequest.setHeader("Content-type", "application/json");
-
-             HttpParams httpParams = new BasicHttpParams();
-             HttpProtocolParams.setContentCharset(httpParams, HTTP.UTF_8);
-             HttpProtocolParams.setHttpElementCharset(httpParams, HTTP.UTF_8);
-             HttpClient client = new DefaultHttpClient(httpParams);
-
-             return client.execute(httpRequest);
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
-         return null;
-     }
- */
     private GenericHttpResponse parseHttpResponse(Response response) {
         GenericHttpResponse mGenericHttpResponse = null;
 
