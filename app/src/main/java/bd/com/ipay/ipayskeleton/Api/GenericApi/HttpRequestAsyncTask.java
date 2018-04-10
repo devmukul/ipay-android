@@ -1,12 +1,15 @@
 package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
@@ -89,10 +92,18 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             return;
         }
-        if(socketTimeOutConnection !=null){
-            if (mContext != null)
-                Toast.makeText(mContext, socketTimeOutConnection, Toast.LENGTH_LONG).show();
-            return;
+        if (socketTimeOutConnection != null) {
+            if (mContext != null) {
+                new AlertDialog.Builder(mContext).setMessage(socketTimeOutConnection)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mHttpResponseListener.httpResponseReceiver(null);
+                                dialogInterface.dismiss();
+                            }
+                        }).setCancelable(false).show();
+            }
+
         }
 
         if (result == null)
@@ -127,8 +138,10 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             }
 
         } else {
-            if (mHttpResponseListener != null)
-                mHttpResponseListener.httpResponseReceiver(null);
+            if (socketTimeOutConnection == null) {
+                if (mHttpResponseListener != null)
+                    mHttpResponseListener.httpResponseReceiver(null);
+            }
         }
     }
 
@@ -147,6 +160,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     Response response = MyApplication.getMyApplicationInstance().getOkHttpClient().newCall(request).execute();
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
+                    if (e instanceof SocketException || e instanceof SocketTimeoutException) {
+                        socketTimeOutConnection = e.getMessage();
+                    }
 
                 }
             } else {
@@ -156,9 +172,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     Response response = okHttpClient.newCall(request).execute();
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
-                    if (e instanceof SocketTimeoutException) {
-                        socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
+                    if (e instanceof SocketException || e instanceof SocketTimeoutException) {
+                        socketTimeOutConnection = e.getMessage();
+
                     }
+
                 }
             }
             return okHttpResponse;
@@ -194,8 +212,8 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 response = okHttpClient.newCall(request).execute();
                 okHttpResponse.setResponse(response);
             } catch (IOException e) {
-                if (e instanceof SocketTimeoutException) {
-                    socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
+                if (e instanceof SocketException || e instanceof SocketTimeoutException) {
+                    socketTimeOutConnection = e.getMessage();
                 }
             }
 
