@@ -13,7 +13,9 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.ConsentAgreementForBankFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.PreviewChequebookCoverFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -109,6 +111,13 @@ public class ManageBanksActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new BankAccountsFragment()).commit();
 
         mFabAddNewBank.setVisibility(View.VISIBLE);
+    }
+
+    public void switchToPreviewChequebookCoverFragment(Bundle bundle) {
+        PreviewChequebookCoverFragment mPreviewIdentificationDocumentFragment = new PreviewChequebookCoverFragment();
+        mPreviewIdentificationDocumentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mPreviewIdentificationDocumentFragment).addToBackStack(null).commit();
+        mFabAddNewBank.setVisibility(View.GONE);
     }
 
     public void switchToAddNewBankFragment() {

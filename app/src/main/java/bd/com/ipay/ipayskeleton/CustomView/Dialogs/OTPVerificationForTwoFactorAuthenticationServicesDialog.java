@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -56,7 +55,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
     private View view;
 
     private MaterialDialog mOTPInputDialog;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mCustomProgressDialog;
 
     public HttpResponseListener mParentHttpResponseListener;
 
@@ -98,8 +97,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         mResendOTPButton = (Button) view.findViewById(R.id.buttonResend);
         mCancelButton = (Button) view.findViewById(R.id.buttonCancel);
 
-        mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog = new CustomProgressDialog(context);
 
         setSMSBroadcastReceiver();
         setCountDownTimer();
@@ -199,8 +197,8 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         if (method.equals(Constants.METHOD_PUT)) {
             if (mHttpPutAsyncTask != null) return;
             else {
-                mProgressDialog.setMessage(mProgressDialogStringMap.get(desiredRequest));
-                mProgressDialog.show();
+                mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
+                mCustomProgressDialog.showDialog();
                 hideOtpDialog();
                 mHttpPutAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
                 mHttpPutAsyncTask.mHttpResponseListener = this;
@@ -209,8 +207,8 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         } else if (method.equals(Constants.METHOD_POST)) {
             if (mHttpPostAsyncTask != null) return;
             else {
-                mProgressDialog.setMessage(mProgressDialogStringMap.get(desiredRequest));
-                mProgressDialog.show();
+                mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
+                mCustomProgressDialog.showDialog();
                 hideOtpDialog();
                 mHttpPostAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);
                 mHttpPostAsyncTask.mHttpResponseListener = this;
@@ -234,16 +232,21 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mHttpPutAsyncTask = null;
             mHttpPostAsyncTask = null;
             if (context != null) {
                 Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                mProgressDialog.dismiss();
             }
+            mCustomProgressDialog.dismissDialog();
             return;
+        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+            TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =
+                    new Gson().fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
+            mCustomProgressDialog.showSuccessAnimationAndMessage(twoFactorAuthSettingsSaveResponse.getMessage());
+        } else {
+            mCustomProgressDialog.dismissDialog();
         }
         Gson gson = new Gson();
         TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse

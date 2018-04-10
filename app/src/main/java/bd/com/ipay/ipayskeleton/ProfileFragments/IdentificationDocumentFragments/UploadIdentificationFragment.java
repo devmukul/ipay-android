@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -192,6 +193,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
         return files;
     }
 
+    @SuppressLint("StringFormatInvalid")
     private boolean verifyUserInputs() {
         clearAllErrorMessages();
         final boolean isValidInput;
