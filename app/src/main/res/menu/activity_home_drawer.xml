@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_drawer_profile"
             android:title="@string/account" />
         <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/ic_contact"
+            android:title="@string/contacts" />
+        <item
             android:id="@+id/nav_bank_account"
             android:icon="@drawable/ic_bank"
             android:title="@string/add_bank" />
