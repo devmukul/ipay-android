@@ -14,6 +14,20 @@ public class GenericHttpResponse {
     private Context context;
     private Headers headers;
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public GenericHttpResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    private String errorMessage;
+
     public GenericHttpResponse() {
     }
 

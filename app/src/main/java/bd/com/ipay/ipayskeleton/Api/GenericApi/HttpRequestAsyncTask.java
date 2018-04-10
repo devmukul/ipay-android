@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -92,19 +90,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             return;
         }
-        if (socketTimeOutConnection != null) {
-            if (mContext != null) {
-                new AlertDialog.Builder(mContext).setMessage(socketTimeOutConnection)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                mHttpResponseListener.httpResponseReceiver(null);
-                                dialogInterface.dismiss();
-                            }
-                        }).setCancelable(false).show();
-            }
-
-        }
 
         if (result == null)
             Logger.logE(Constants.RESULT, API_COMMAND + " NULL");
@@ -142,6 +127,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 if (mHttpResponseListener != null)
                     mHttpResponseListener.httpResponseReceiver(null);
             }
+            else{
+                mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection));
+            }
         }
     }
 
@@ -160,6 +148,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     Response response = MyApplication.getMyApplicationInstance().getOkHttpClient().newCall(request).execute();
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
+
                     if (e instanceof SocketException || e instanceof SocketTimeoutException) {
                         socketTimeOutConnection = e.getMessage();
                     }
