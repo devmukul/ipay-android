@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -26,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
+import okhttp3.OkHttpClient;
 
 public class MyApplication extends MultiDexApplication implements HttpResponseListener {
 
@@ -45,6 +47,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
     private LogoutResponse mLogOutResponse;
+    private OkHttpClient okHttpClient;
 
     public static MyApplication getMyApplicationInstance() {
         return myApplicationInstance;
@@ -54,7 +57,8 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
     public void onCreate() {
         super.onCreate();
         myApplicationInstance = this;
-
+        okHttpClient = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS).build();
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize(this);
@@ -64,6 +68,10 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 
         sAnalytics = GoogleAnalytics.getInstance(this);
 
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
     }
 
     public void startUserInactivityDetectorTimer() {

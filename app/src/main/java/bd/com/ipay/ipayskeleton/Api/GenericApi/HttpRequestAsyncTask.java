@@ -4,12 +4,17 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseParser;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.OkHttpResponse;
+import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Configuration.ApiVersionResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -126,11 +131,23 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         final OkHttpResponse okHttpResponse = new OkHttpResponse();
         try {
             Request request = getRequest();
-            OkHttpClient client = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
-                    .connectTimeout(15, TimeUnit.SECONDS).build();
+            if (MyApplication.getMyApplicationInstance().getOkHttpClient() != null) {
+                try {
+                    Response response = MyApplication.getMyApplicationInstance().getOkHttpClient().newCall(request).execute();
+                    okHttpResponse.setResponse(response);
+                } catch (IOException e) {
 
-            Response response = client.newCall(request).execute();
-            okHttpResponse.setResponse(response);
+                }
+            } else {
+                OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
+                        .connectTimeout(15, TimeUnit.SECONDS).build();
+                try {
+                    Response response = okHttpClient.newCall(request).execute();
+                    okHttpResponse.setResponse(response);
+                } catch (IOException e) {
+
+                }
+            }
             return okHttpResponse;
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,6 +155,41 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
 
         return okHttpResponse;
 
+    }
+
+    private OkHttpResponse makeApiVersionCheckRequest() {
+        final OkHttpResponse okHttpResponse = new OkHttpResponse();
+        try {
+            Request request = new Request.Builder().
+                    header(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID)
+                    .header("Accept", "application/json")
+                    .header("Content-type", "application/json")
+                    .get()
+                    .url(Constants.BASE_URL_MM + Constants.URL_GET_MIN_API_VERSION_REQUIRED)
+                    .build();
+            OkHttpClient okHttpClient;
+            Response response;
+            if (MyApplication.getMyApplicationInstance().getOkHttpClient() != null) {
+                okHttpClient = MyApplication.getMyApplicationInstance().getOkHttpClient();
+            } else {
+                okHttpClient = new OkHttpClient.Builder().
+                        readTimeout(15, TimeUnit.SECONDS)
+                        .connectTimeout(15, TimeUnit.SECONDS)
+                        .build();
+            }
+            try {
+                response = okHttpClient.newCall(request).execute();
+                okHttpResponse.setResponse(response);
+            } catch (IOException e) {
+
+            }
+
+            return okHttpResponse;
+
+        } catch (Exception e) {
+
+        }
+        return okHttpResponse;
     }
 
     /* private OkHttpResponse makeApiVersionCheckRequest() {
@@ -179,7 +231,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         return mGenericHttpResponse;
     }
 
-    /*private GenericHttpResponse validateApiVersion(GenericHttpResponse mGenericHttpResponse) {
+    private GenericHttpResponse validateApiVersion(GenericHttpResponse mGenericHttpResponse) {
 
         Gson gson = new Gson();
 
@@ -197,7 +249,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                         Constants.IS_API_VERSION_CHECKED = true;
                         Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
                         mHttpResponse = makeRequest();
-                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
                         mGenericHttpResponse.setUpdateNeeded(false);
                     }
                 }
@@ -207,7 +259,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         }
 
         return mGenericHttpResponse;
-    }*/
+    }
 
     Context getContext() {
         return mContext;
