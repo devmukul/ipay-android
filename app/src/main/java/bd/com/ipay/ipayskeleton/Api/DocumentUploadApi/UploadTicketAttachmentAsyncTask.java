@@ -87,12 +87,19 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
 
     private GenericHttpResponse uploadDocument(String selectedImagePath) {
         File file = new File(selectedImagePath);
+        String extension = selectedImagePath.substring(selectedImagePath.lastIndexOf("."));
+        MediaType MEDIA_TYPE;
+        if (extension.toLowerCase().equals("pdf")) {
+            MEDIA_TYPE = MediaType.parse("application/pdf");
+        } else {
+            MEDIA_TYPE = MediaType.parse("image/png");
+        }
         GenericHttpResponse genericHttpResponse = new GenericHttpResponse();
-        final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+
         try {
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM);
-            builder.addFormDataPart("file", file.getName(), okhttp3.RequestBody.create(MEDIA_TYPE_PNG, file))
+            builder.addFormDataPart("file", file.getName(), okhttp3.RequestBody.create(MEDIA_TYPE, file))
                     .addFormDataPart(Constants.TICKET_COMMENT_ID, commentId + "");
 
             Request.Builder requestBuilder = new Request.Builder().
