@@ -285,6 +285,7 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
                         launchOTPVerification();
                     } else {
                         if (getActivity() != null) {
+
                             Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
                             if (mTopupResponse.getMessage().toLowerCase().contains("wrong")) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();

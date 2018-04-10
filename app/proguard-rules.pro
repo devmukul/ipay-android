@@ -33,6 +33,7 @@
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class bd.com.ipay.ipayskeleton.Model.** { *; }
 -keep class com.afollestad.** { *; }
+-keep class com.airbnb.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.DataCollectors.Model.** { *; }
 
@@ -47,6 +48,7 @@
 -dontwarn com.makeramen.**
 -dontwarn com.squareup.**
 -dontwarn okio.**
+-dontwarn com.airbnb.**
 
 -assumenosideeffects class android.util.Log {
     public static *** d(...);

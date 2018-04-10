@@ -150,6 +150,10 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
+    public static final String STATE_LOADING = "LOADING";
+    public static final String STATE_SUCCESS = "SUCCESS";
+    public static final String STATE_FAILED = "FAILED";
+
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+8809638900801";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
@@ -235,6 +239,7 @@ public class Constants {
     public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
     public static final String TWO_FACTOR_AUTH_SETTINGS = "TWO_FACTOR_AUTH_SETTINGS";
     public static final String SELECTED_IDENTIFICATION_DOCUMENT = "SELECTED_IDENTIFICATION_DOCUMENT";
+    public static final String SELECTED_CHEQUEBOOK_COVER = "SELECTED_CHEQUEBOOK_COVER";
     public static final String IMAGE_VALIDATOR_REGEX = "([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
 
     public static final String ADD_MONEY_TYPE = "ADD_MONEY_TYPE";
@@ -369,8 +374,12 @@ public class Constants {
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
+
     // Bank Verify Rest
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "verify";
+
+    // Check book covor upload Rest
+    public static final String URL_CHECKBOOK_COVOR_UPLOAD = "bank/document";
 
     // Card Transaction REST
     public static final String URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD = "add-money";
@@ -393,7 +402,6 @@ public class Constants {
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
-    //business rule Rest
     //business rule Rest
     public static final String URL_BUSINESS_RULE = "business-rule";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
@@ -798,6 +806,7 @@ public class Constants {
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
     public static final String DOCUMENT_NAME = "documentName";
+    public static final String BANK_ID = "bankId";
 
     public static final String ACCOUNT_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";

@@ -2,10 +2,11 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -28,10 +29,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -44,14 +46,15 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
 
     private HttpRequestPostAsyncTask mAddMoneyTask = null;
 
-    private ProgressDialog mProgressDialog;
-
     private double mAmount;
     private String mDescription;
-    private UserBankClass mSelectedBank;
+    private BankAccountList mSelectedBank;
     private Tracker mTracker;
 
     private AddMoneyRequest mAddMoneyRequest;
+
+    private Context context;
+    private CustomProgressDialog mCustomProgressDialog;
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
@@ -64,7 +67,9 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mSelectedBank = getActivity().getIntent().getParcelableExtra(Constants.SELECTED_BANK_ACCOUNT);
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        mCustomProgressDialog = new CustomProgressDialog(getContext());
+        context = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(context);
 
         mTracker = Utilities.getTracker(getActivity());
     }
@@ -141,9 +146,8 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_add_money_in_progress));
+        mCustomProgressDialog.showDialog();
         mAddMoneyRequest = new AddMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
@@ -170,7 +174,6 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             mAddMoneyTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
@@ -187,40 +190,53 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }
                     }
-                    getActivity().setResult(Activity.RESULT_OK);
-                    // Exit the Add money activity and return to HomeActivity
-                    getActivity().finish();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().setResult(Activity.RESULT_OK);
+                            // Exit the Add money activity and return to HomeActivity
+                            getActivity().finish();
+
+                        }
+                    }, 2000);
 
                     //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Add Money By Bank", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    mCustomProgressDialog.showFailureAnimationAndMessage(mAddMoneyByBankResponse.getMessage());
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mAddMoneyByBankResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Add Money By Bank", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     Toast.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    mCustomProgressDialog.dismissDialog();
                     SecuritySettingsActivity.otpDuration = mAddMoneyByBankResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mAddMoneyByBankResponse.getMessage());
+                        } else {
+                            Toast.makeText(context, mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                         if (mAddMoneyByBankResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            }
                         } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }
                     }
-
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Add Money By Bank", ProfileInfoCacheManager.getAccountId(), mAddMoneyByBankResponse.getMessage(), Double.valueOf(mAmount).longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.service_not_available));
                 if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                 }
@@ -229,7 +245,6 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
-            mProgressDialog.dismiss();
             mAddMoneyTask = null;
 
         }

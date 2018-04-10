@@ -41,8 +41,8 @@ import bd.com.ipay.ipayskeleton.CustomView.AbstractSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.SelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.ServiceSelectorView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
@@ -78,7 +78,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     private TextView mMessageTextView;
 
-    private List<UserBankClass> mListUserBankClasses;
+    private List<BankAccountList> mListUserBankClasses;
 
     private ProgressDialog mProgressDialog;
     boolean isOnlyByCard;
@@ -351,7 +351,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 intent.putExtra(Constants.ADD_MONEY_TYPE, Constants.ADD_MONEY_TYPE_BY_BANK);
 
                 // Adding the info of the selected bank
-                UserBankClass selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
+                BankAccountList selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
                 intent.putExtra(Constants.SELECTED_BANK_ACCOUNT, selectedBankAccount);
                 break;
             case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
@@ -414,7 +414,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                             mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
                             mListUserBankClasses = new ArrayList<>();
 
-                            for (UserBankClass bank : mBankListResponse.getBanks()) {
+                            for (BankAccountList bank : mBankListResponse.getBankAccountList()) {
                                 if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                                     mListUserBankClasses.add(bank);
                                 }

@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BusinessContactsSearchView extends FrameLayout {
 
@@ -271,6 +272,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     mName = businessName;
                     mImageURL = profilePictureUrl;
                     mCustomAutoCompleteView.clearFocus();
+                    Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
                 }
             });
 

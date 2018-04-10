@@ -254,7 +254,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mProfilePicHolderView.setVisibility(View.VISIBLE);
         mMobileNumberHolderView.setVisibility(View.GONE);
 
-        mName = ProfileInfoCacheManager.getName();
+        mName = ProfileInfoCacheManager.getUserName();
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
             mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
@@ -552,7 +552,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                             TopUpActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
                             TopUpActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                        } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_VERIFICATION_REQUIRED)) {
+                        } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_TOP_UP_VERIFICATION_REQUIRED)) {
                             TopUpActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_PIN_REQUIRED)) {
                             TopUpActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
