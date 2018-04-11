@@ -295,7 +295,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/colorBackground">
 
                 <TextView
                     android:id="@+id/empty_list_text"
@@ -309,7 +310,10 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_transaction_history"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/activity_horizontal_margin_card"
+                    android:background="@drawable/background_round_recyclerview"
+                    android:elevation="@dimen/value2" />
 
             </LinearLayout>
 

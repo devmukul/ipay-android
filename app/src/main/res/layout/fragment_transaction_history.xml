@@ -340,7 +340,8 @@
             <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/colorBackground">
 
                 <LinearLayout
                     android:id="@+id/content_container"
@@ -361,7 +362,10 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_transaction_history"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:background="@drawable/background_round_recyclerview"
+                        android:elevation="@dimen/value2"
+                        android:layout_margin="@dimen/activity_horizontal_margin_card" />
 
                 </LinearLayout>
             </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
