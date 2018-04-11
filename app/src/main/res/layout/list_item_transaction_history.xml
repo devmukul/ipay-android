@@ -59,9 +59,9 @@
                 android:id="@+id/status_description_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/value5"
-                android:layout_marginTop="@dimen/value1"
                 android:layout_toRightOf="@id/activity_description" />
 
             <TextView

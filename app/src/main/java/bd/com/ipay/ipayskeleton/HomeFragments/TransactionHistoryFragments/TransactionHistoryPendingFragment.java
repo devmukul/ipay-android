@@ -654,6 +654,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             private final TextView mNetAmountView;
             private final ImageView mOtherImageView;
             private final ProfileImageView mProfileImageView;
+            private ImageView mStatusIconView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -664,6 +665,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 mNetAmountView = (TextView) itemView.findViewById(R.id.net_amount);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 mOtherImageView = (ImageView) itemView.findViewById(R.id.other_image);
+                mStatusIconView = (ImageView) itemView.findViewById(R.id.status_description_icon);
             }
 
             public void bindView(int pos) {
@@ -682,6 +684,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
                 mNetAmountView.setText(netAmount);
                 mTimeView.setText(responseTime);
+
+                mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.pending));
 
                 if (transactionHistory.getAdditionalInfo().getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_USER)) {
                     String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();

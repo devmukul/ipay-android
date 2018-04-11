@@ -736,9 +736,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                         mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_tick_sign));
                         break;
                     }
-                    case Constants.TRANSACTION_STATUS_PROCESSING: {
-                        mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                        mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.pending));
+                    case Constants.TRANSACTION_STATUS_CANCELLED: {
+                        mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_cross_sign));
                         break;
                     }
                     case Constants.TRANSACTION_STATUS_REJECTED: {
