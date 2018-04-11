@@ -161,9 +161,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     Response response = okHttpClient.newCall(request).execute();
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
-                    if (e instanceof SocketException || e instanceof SocketTimeoutException) {
+                    if (e instanceof SocketException) {
                         socketTimeOutConnection = e.getMessage();
-
+                    }
+                    else if(e instanceof SocketTimeoutException){
+                        socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
                     }
 
                 }
