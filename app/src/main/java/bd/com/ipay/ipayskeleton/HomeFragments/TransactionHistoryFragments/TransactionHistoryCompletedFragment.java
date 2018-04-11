@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -696,7 +697,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
+                String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
                 final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
@@ -759,7 +760,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
 
-
+                if (DateUtils.isToday(transactionHistory.getTime())) {
+                    responseTime = "Today, " + Utilities.formatTimeOnly(transactionHistory.getTime());
+                }
                 mTimeView.setText(responseTime);
 
                 if (transactionHistory.getAdditionalInfo().getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_USER)) {

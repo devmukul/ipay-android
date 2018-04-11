@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -672,7 +673,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
+                String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
                 final String netAmount = String.valueOf(Utilities.formatTaka(transactionHistory.getNetAmount()));
                 final int serviceId = transactionHistory.getServiceId();
 
@@ -683,6 +684,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 } else mReceiverView.setVisibility(View.GONE);
 
                 mNetAmountView.setText(netAmount);
+                if (DateUtils.isToday(transactionHistory.getTime())) {
+                    responseTime = "Today, " + Utilities.formatTimeOnly(transactionHistory.getTime());
+                }
+
                 mTimeView.setText(responseTime);
 
                 mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.pending));

@@ -82,7 +82,8 @@ import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy, h:mm a", Locale.US);
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
@@ -563,7 +564,11 @@ public class Utilities {
     }
 
     public static String formatDayMonthYear(long time) {
-        return DATE_FORMAT_FROM_STRING.format(time);
+        return dateFormat.format(time);
+    }
+
+    public static String formatTimeOnly(long time) {
+        return timeFormat.format(time);
     }
 
     public static Date formatDateFromString(String dateString) {
