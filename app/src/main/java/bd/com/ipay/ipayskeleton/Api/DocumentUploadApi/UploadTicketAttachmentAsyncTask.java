@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
@@ -71,7 +72,8 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
     protected void onPostExecute(final GenericHttpResponse result) {
 
         if (socketTimeOutException != null) {
-            Toast.makeText(mContext, socketTimeOutException, Toast.LENGTH_LONG).show();
+           mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException));
+           return;
         }
 
         if (result != null) {
@@ -135,7 +137,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
                 genericHttpResponse.setStatus(response.code());
                 genericHttpResponse.setJsonString(jsonString);
             } catch (IOException e) {
-                if (e instanceof SocketTimeoutException) {
+                if (e instanceof SocketTimeoutException || e instanceof SocketException) {
                     socketTimeOutException = mContext.getString(R.string.connection_time_out);
                 }
             }

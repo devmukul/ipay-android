@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -69,6 +70,10 @@ public class UploadChequebookCoverAsyncTask extends AsyncTask<Void, Void, Generi
 
     @Override
     protected void onPostExecute(final GenericHttpResponse result) {
+
+        if(HttpErrorHandler.isErrorFound(result,mContext,null)){
+            return;
+        }
 
         if (result != null) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {

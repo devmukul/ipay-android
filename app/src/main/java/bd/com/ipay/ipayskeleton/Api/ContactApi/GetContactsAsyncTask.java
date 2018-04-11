@@ -11,6 +11,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.GetContactsResponse;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -29,11 +30,8 @@ public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements Htt
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            if (context != null) {
-                return;
-            }
+        if (HttpErrorHandler.isErrorFound(result, context, null)) {
+            return;
         }
 
         try {
@@ -44,7 +42,7 @@ public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements Htt
 
                 final List<ContactNode> mGetAllContactsResponse = mGetContactsResponse.getContactList();
                 if (ProfileInfoCacheManager.isAccountSwitched()) {
-                    new AsyncTask<Void,Void,Void>(){
+                    new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
                             DataHelper dataHelper = DataHelper.getInstance(context);
