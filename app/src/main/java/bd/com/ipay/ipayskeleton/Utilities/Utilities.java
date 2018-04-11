@@ -562,6 +562,10 @@ public class Utilities {
         return DATE_FORMAT_WITHOUT_TIME.format(time);
     }
 
+    public static String formatDayMonthYear(long time) {
+        return DATE_FORMAT_FROM_STRING.format(time);
+    }
+
     public static Date formatDateFromString(String dateString) {
         Date newDate = null;
         try {

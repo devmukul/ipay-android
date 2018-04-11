@@ -696,8 +696,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = Utilities.formatDateWithTime(transactionHistory.getTime());
-
+                final String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
                 final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
