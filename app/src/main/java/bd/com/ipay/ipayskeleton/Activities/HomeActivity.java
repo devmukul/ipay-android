@@ -74,6 +74,7 @@ import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
@@ -777,8 +778,7 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
+        if (HttpErrorHandler.isErrorFound(result,this,mProgressDialog)) {
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;

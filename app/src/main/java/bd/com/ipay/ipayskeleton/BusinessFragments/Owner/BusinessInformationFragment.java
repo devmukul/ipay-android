@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PhotoSelectionHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
@@ -576,20 +577,13 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         if (getActivity() != null) {
             mProgressDialog.dismiss();
         }
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetBusinessInformationAsyncTask = null;
             mGetProfileInfoTask = null;
             mGetOccupationTask = null;
             mGetUserAddressTask = null;
             mGetDistrictListAsyncTask = null;
             mGetThanaListAsyncTask = null;
-
-            if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
-                ((ProfileActivity) getActivity()).switchToProfileFragment();
-            }
 
             return;
         }

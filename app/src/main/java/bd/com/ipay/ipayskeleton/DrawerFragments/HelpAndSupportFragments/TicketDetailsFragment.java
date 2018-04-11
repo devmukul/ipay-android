@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomDrawable;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
@@ -324,11 +325,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             mProgressDialog.dismiss();
         }
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mGetTicketDetailsTask = null;
             if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 getActivity().onBackPressed();
             }
             return;

@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.EditBusinessManagerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ManagerList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ManagerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
@@ -115,12 +116,8 @@ public class ManagerRequestAcceptedFragment extends BaseFragment implements Http
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetAllManagerAsyncTask = null;
-
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -244,8 +241,7 @@ public class ManagerRequestAcceptedFragment extends BaseFragment implements Http
                         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.UPDATE_BUSINESS_MANAGER_ROLE)) {
                             editBusinessManagerDialog = new EditBusinessManagerDialog(getActivity(), "Edit Account", employee.getManagerName(), employee.getManagerAccountId(), employee.getRoleName(), employee.getProfilePictures().get(0).getUrl());
                             editBusinessManagerDialog.show();
-                        }
-                        else
+                        } else
                             DialogUtils.showServiceNotAllowedDialog(getActivity());
                     }
                 });

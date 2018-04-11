@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessManagerInvitationDetailsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.UpdateBusinessRoleInvitationRequest;
@@ -186,11 +187,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             return;
         } else {
             if (result.getApiCommand().equals(Constants.COMMAND_GET_DETAILS_OF_INVITED_BUSINESS_ROLE)) {

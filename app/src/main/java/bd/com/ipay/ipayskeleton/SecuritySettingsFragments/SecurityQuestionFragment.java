@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.AddSecurityQuestionAnswerClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetAllSecurityQuestionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetAllSecurityQuestionResponse;
@@ -217,14 +218,10 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetAllSecurityQuestionTask = null;
             mGetPreviousSelectedSecurityQuestionTask = null;
             mSetSecurityAnswerTask = null;
-
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.security_question_get_failed, Toast.LENGTH_LONG).show();
             return;
         }
 

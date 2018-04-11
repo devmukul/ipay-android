@@ -44,6 +44,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomDrawable;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.TicketCategory;
@@ -394,17 +395,10 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         if (getActivity() != null)
             mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mCreateTicketTask = null;
             mGetEmailsTask = null;
             mGetTicketCategoriesTask = null;
-
-            if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
-                mProgressDialog.dismiss();
-            }
-
             return;
         }
 

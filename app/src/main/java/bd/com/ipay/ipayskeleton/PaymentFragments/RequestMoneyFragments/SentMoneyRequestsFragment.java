@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.MoneyRequest;
@@ -179,14 +180,10 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (this.isAdded()) setContentShown(true);
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
             mProgressDialog.dismiss();
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
-            if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
-            }
             return;
         }
         Gson gson = new Gson();

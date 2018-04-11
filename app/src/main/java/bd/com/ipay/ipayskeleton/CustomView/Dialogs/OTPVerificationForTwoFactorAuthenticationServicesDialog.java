@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -232,13 +233,9 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),this.mOTPInputDialog)) {
             mHttpPutAsyncTask = null;
             mHttpPostAsyncTask = null;
-            if (context != null) {
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            }
             mCustomProgressDialog.dismissDialog();
             return;
         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

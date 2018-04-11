@@ -369,7 +369,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext())) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             hideProgressDialog();
             mLoginTask = null;
             mGetAllAddedCards = null;

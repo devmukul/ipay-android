@@ -21,9 +21,10 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EventParticipant;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetSessionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetStudentInfoByStudentIDRequestBuilder;
@@ -244,12 +245,10 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mGetAllInstitutionsTask = null;
             mGetSessionsByInstitutionTask = null;
             mGetStudentInfoByStudentIDTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

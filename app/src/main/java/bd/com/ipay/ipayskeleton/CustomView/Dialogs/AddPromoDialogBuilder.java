@@ -12,12 +12,10 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.PromoCode.AddPromoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.PromoCode.AddPromoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -112,11 +110,8 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
 
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mAddPromoTask = null;
-            if (getContext() != null)
-                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
