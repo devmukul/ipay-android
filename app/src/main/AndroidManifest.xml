@@ -314,7 +314,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
+        <activity
+            android:name=".Activities.DrawerActivities.ContactsActivity"
+            android:label="@string/contacts"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.CardPaymentWebViewActivity"
             android:label="@string/card_payment_web_view_title"

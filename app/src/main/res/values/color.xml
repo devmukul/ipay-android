@@ -36,6 +36,10 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
 
+    <color name="colorAsh">#666666</color>
+    <color name="colorLightGreen">#68BC57</color>
+    <color name="colorLightRed">#F24002</color>
+
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="colorLightGray">#E5E5E5</color>
     <color name="colorGray">#737373</color>
