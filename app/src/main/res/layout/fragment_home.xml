@@ -307,7 +307,7 @@
         android:layout_weight="55"
         android:layout_margin="@dimen/activity_horizontal_margin_card"
         android:background="@drawable/semiround_white_default"
-        android:elevation="3dp"
+        apps:cardElevation="3dp"
         apps:cardCornerRadius="5dp">
 
         <LinearLayout
