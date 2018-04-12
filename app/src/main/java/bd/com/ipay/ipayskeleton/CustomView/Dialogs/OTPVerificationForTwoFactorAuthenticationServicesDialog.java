@@ -233,10 +233,10 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),this.mOTPInputDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mHttpPutAsyncTask = null;
             mHttpPostAsyncTask = null;
-            mCustomProgressDialog.dismissDialog();
+            mOTPInputDialog.dismiss();
             return;
         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
             TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =

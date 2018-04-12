@@ -6,15 +6,19 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 public class SSLPinning {
+
+    private static String responseString = null;
 
     static final String[] PINS =
             new String[]{
                     "sha1/AZWfAo2G1fHZcKNXPHeRmK4ZeR0=",
                     "sha1/RcLRLpszlmNF23hE+iOoPN+iH0E="};
 
-    public static boolean validatePinning() {
+    public static String validatePinning() {
         if (Constants.SERVER_TYPE == Constants.SERVER_TYPE_LIVE) {
 
             CertificatePinner certificatePinner = new CertificatePinner.Builder()
@@ -31,13 +35,18 @@ public class SSLPinning {
             try {
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful()) {
-                    return true;
-                } else return false;
+                    return responseString = "OK";
+                } else return responseString = "Service  is unavailable";
             } catch (IOException e) {
-                e.printStackTrace();
+                if (e instanceof SocketTimeoutException) {
+                    return responseString = "Connection time out";
+                } else if (e instanceof SocketException) {
+                    return responseString = "Network is unreachable";
+                } else {
+                    return responseString = "Service  is unavailable";
+                }
             }
-            return false;
-        } else return true;
+        } else return "OK";
     }
 }
 

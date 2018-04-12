@@ -58,8 +58,8 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
     public void onCreate() {
         super.onCreate();
         myApplicationInstance = this;
-        okHttpClient = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
-                .connectTimeout(15, TimeUnit.SECONDS).build();
+        okHttpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS).build();
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize(this);

@@ -54,8 +54,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         GenericHttpResponse mGenericHttpResponse = null;
 
         try {
-            if (SSLPinning.validatePinning()) {
-                if (Utilities.isConnectionAvailable(mContext)) {
+            if (Utilities.isConnectionAvailable(mContext)) {
+                String responseFromSSL = SSLPinning.validatePinning();
+                if (responseFromSSL.equals("OK")) {
                     if (Constants.IS_API_VERSION_CHECKED && !Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND) {
                         mHttpResponse = makeRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
@@ -68,12 +69,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                         // Validate the Api version and set whether the update is required or not
                         mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
                     }
-
                 } else {
-                    Logger.logD(Constants.ERROR, API_COMMAND);
-                    error = true;
-                    return null;
+                    return new GenericHttpResponse(responseFromSSL);
                 }
+            } else {
+                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,8 +126,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             if (socketTimeOutConnection == null) {
                 if (mHttpResponseListener != null)
                     mHttpResponseListener.httpResponseReceiver(null);
-            }
-            else{
+            } else {
                 mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection));
             }
         }
@@ -149,22 +148,24 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
 
-                    if (e instanceof SocketException || e instanceof SocketTimeoutException) {
-                        socketTimeOutConnection = e.getMessage();
+                    if (e instanceof SocketException) {
+                        socketTimeOutConnection = "Network is unreachable";
+                    }
+                    else if(e instanceof SocketTimeoutException){
+                        socketTimeOutConnection=mContext.getString(R.string.connection_time_out);
                     }
 
                 }
             } else {
-                OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
-                        .connectTimeout(15, TimeUnit.SECONDS).build();
+                OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
+                        .connectTimeout(30, TimeUnit.SECONDS).build();
                 try {
                     Response response = okHttpClient.newCall(request).execute();
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
                     if (e instanceof SocketException) {
-                        socketTimeOutConnection = e.getMessage();
-                    }
-                    else if(e instanceof SocketTimeoutException){
+                        socketTimeOutConnection = "Network is unreachable";
+                    } else if (e instanceof SocketTimeoutException) {
                         socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
                     }
 
@@ -195,16 +196,18 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 okHttpClient = MyApplication.getMyApplicationInstance().getOkHttpClient();
             } else {
                 okHttpClient = new OkHttpClient.Builder().
-                        readTimeout(15, TimeUnit.SECONDS)
-                        .connectTimeout(15, TimeUnit.SECONDS)
+                        readTimeout(30, TimeUnit.SECONDS)
+                        .connectTimeout(30, TimeUnit.SECONDS)
                         .build();
             }
             try {
                 response = okHttpClient.newCall(request).execute();
                 okHttpResponse.setResponse(response);
             } catch (IOException e) {
-                if (e instanceof SocketException || e instanceof SocketTimeoutException) {
-                    socketTimeOutConnection = e.getMessage();
+                if (e instanceof SocketException) {
+                    socketTimeOutConnection = "Network is unreachable";
+                } else if (e instanceof SocketTimeoutException) {
+                    socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
                 }
             }
 
