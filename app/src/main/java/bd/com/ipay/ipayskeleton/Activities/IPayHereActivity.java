@@ -14,23 +14,18 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,14 +34,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.RuntimeRemoteException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereRequest
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.NearbyBusinessResponseList;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -70,17 +61,16 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     private static final int REQUEST_LOCATION = 1;
 
     private List <NearbyBusinessResponseList> mNearByBusinessResponse;
-    private HttpRequestGetAsyncTask mAddTrustedDeviceTask = null;
+    private HttpRequestGetAsyncTask mIPayHereTask = null;
 
     private SupportMapFragment mapFragment;
     private ProgressDialog mProgressDialog;
     private GoogleMap mMap;
 
     private IPayHereResponse mIPayHereResponse;
-    //protected GeoDataClient mGeoDataClient;
     private LocationManager locationManager;
-    private String lattitude;
-    private String longitude;
+    private String mLatitude;
+    private String mLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +97,88 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public Context setContext() {
+        return IPayHereActivity.this;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Utilities.hideKeyboard(this);
+            onBackPressed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_LOCATION:
+                for (int i = 0; i < permissions.length; i++) {
+                    String permission = permissions[i];
+                    if(Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)){
+                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                            finish();
+                        }else {
+                            getLocation();
+                        }
+                    }
+                }
+                break;
+            default:
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        readItems();
+
+    }
+
+    @Override
+    public void onPlaceSelected(Place place) {
+        LatLng attributions = place.getLatLng();
+        if (attributions != null) {
+            mMap.clear();
+            this.mLatitude = String.valueOf(attributions.latitude);
+            this.mLongitude = String.valueOf(attributions.longitude);
+            retrieveFileFromUrl(this.mLatitude, this.mLongitude);
+
+        }
+    }
+
+    /**
+     * Callback invoked when PlaceAutocompleteFragment encounters an error.
+     */
+    @Override
+    public void onError(Status status) {
+        Toast.makeText(this, "Place selection failed: " + status.getStatusMessage(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+    }
+
     private void getLocation() {
         if (!Utilities.isNecessaryPermissionExists(this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION })) {
             ActivityCompat.requestPermissions(IPayHereActivity.this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, REQUEST_LOCATION);
@@ -119,12 +191,11 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             }
 
             if (location != null) {
-                double latti = location.getLatitude();
-                double longi = location.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-                retrieveFileFromUrl(this.lattitude, this.longitude);
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                mLatitude = String.valueOf(latitude);
+                mLongitude = String.valueOf(longitude);
+                retrieveFileFromUrl(this.mLatitude, this.mLongitude);
             }else{
                 finish();
                 Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
@@ -133,38 +204,44 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         }
     }
 
+    private void retrieveFileFromUrl(String lattitude, String longitude) {
+        if (mIPayHereTask != null)
+            return;
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mProgressDialog.show();;
+        String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
+        mIPayHereTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
+                url, IPayHereActivity.this);
+        mIPayHereTask.mHttpResponseListener = this;
+        mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-        switch (requestCode) {
-            case REQUEST_LOCATION:
-                for (int i = 0; i < permissions.length; i++) {
+    private void setUpMap() {
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
 
-                    System.out.println("TEST PERMISION " + permissions[i]+" "+grantResults[i]);
-                    String permission = permissions[i];
+    private void readItems() {
+        startDemo();
+        for (int i = 0; i < mNearByBusinessResponse.size(); i++) {
 
-                    if(Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)){
-                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                finish();
-                        }else {
-                            getLocation();
-                        }
+            NearbyBusinessResponseList iPayHereResponse = mNearByBusinessResponse.get(i);
+            Coordinate cc = mNearByBusinessResponse.get(i).getCoordinate();
+            Marker mMarker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(cc.getLatitude(), cc.getLongitude()))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ipay_here_marker))
+                    .title(mNearByBusinessResponse.get(i).getBusinessName()));
 
-                    }
-
-
-
-
-                }
-
-                break;
-            default:
-                finish();
-                break;
-
+            mMarker.setTag(iPayHereResponse);
         }
+    }
+
+    void startDemo() {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(mLatitude),Double.valueOf(mLongitude)), 13f ));
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     protected void buildAlertMessageNoGps() {
@@ -186,87 +263,12 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    private void setUpMap() {
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Utilities.hideKeyboard(this);
-            onBackPressed();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    void startDemo() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(lattitude),Double.valueOf(longitude)), 13f ));
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnInfoWindowClickListener(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-            super.onBackPressed();
-    }
-
-    @Override
-    public Context setContext() {
-        return IPayHereActivity.this;
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        readItems();
-
-    }
-
-
-    private void retrieveFileFromUrl(String lattitude, String longitude) {
-
-        if (mAddTrustedDeviceTask != null)
-            return;
-
-        mProgressDialog.show();;
-        String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
-        mAddTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
-                url, IPayHereActivity.this);
-        mAddTrustedDeviceTask.mHttpResponseListener = this;
-        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void readItems() {
-        startDemo();
-        for (int i = 0; i < mNearByBusinessResponse.size(); i++) {
-
-            NearbyBusinessResponseList iPayHereResponse = mNearByBusinessResponse.get(i);
-            Coordinate cc = mNearByBusinessResponse.get(i).getCoordinate();
-            Marker mMarker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(cc.getLatitude(), cc.getLongitude()))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ipay_here_marker))
-                    .title(mNearByBusinessResponse.get(i).getBusinessName()));
-
-            mMarker.setTag(iPayHereResponse);
-        }
-    }
-
-    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             hideProgressDialog();
-            mAddTrustedDeviceTask = null;
+            mIPayHereTask = null;
             Toast.makeText(IPayHereActivity.this, R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -292,35 +294,9 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                     e.printStackTrace();Toast.makeText(IPayHereActivity.this, mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
-                mAddTrustedDeviceTask = null;
+                mIPayHereTask = null;
                 break;
         }
-
-    }
-
-    @Override
-    public void onPlaceSelected(Place place) {
-        LatLng attributions = place.getLatLng();
-        if (attributions != null) {
-            mMap.clear();
-            this.lattitude = String.valueOf(attributions.latitude);
-            this.longitude = String.valueOf(attributions.longitude);
-            retrieveFileFromUrl(this.lattitude, this.longitude);
-
-        }
-    }
-
-    /**
-     * Callback invoked when PlaceAutocompleteFragment encounters an error.
-     */
-    @Override
-    public void onError(Status status) {
-        Toast.makeText(this, "Place selection failed: " + status.getStatusMessage(),
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
 
     }
 
@@ -329,10 +305,8 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         private View view;
         private Marker marker;
         boolean not_first_time_showing_info_window = false;
-
         private CircleImageView businessProfileImageView;
         private TextView businessNameTextView;
-
         public CustomInfoWindowAdapter() {
             view = IPayHereActivity.this.getLayoutInflater().inflate(R.layout.ipay_here_info_window_map,
                     null);
@@ -352,7 +326,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         @Override
         public View getInfoWindow(final Marker marker) {
             this.marker = marker;
-
             NearbyBusinessResponseList infoWindowData = (NearbyBusinessResponseList) marker.getTag();
             businessProfileImageView = (CircleImageView) view.findViewById(R.id.profile_picture);
             businessNameTextView = (TextView) view.findViewById(R.id.textview_name);
@@ -392,24 +365,4 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     private void hideProgressDialog() {
          mProgressDialog.dismiss();
     }
-
-    private OnCompleteListener<PlaceBufferResponse> mUpdatePlaceDetailsCallback
-            = new OnCompleteListener<PlaceBufferResponse>() {
-        @Override
-        public void onComplete(Task<PlaceBufferResponse> task) {
-            try {
-                PlaceBufferResponse places = task.getResult();
-
-                // Get the Place object from the buffer.
-                final Place place = places.get(0);
-                places.release();
-            } catch (RuntimeRemoteException e) {
-                // Request did not complete successfully
-                return;
-            }
-        }
-    };
-
-
-
 }
