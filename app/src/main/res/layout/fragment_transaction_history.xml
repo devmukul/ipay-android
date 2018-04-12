@@ -14,6 +14,7 @@
             android:id="@+id/simpleSearchView"
             style="@style/SearchViewStyle"
             android:layout_toLeftOf="@+id/filter_menu"
+            android:background="@color/colorWhite"
             android:queryHint="@string/search_transaction" />
 
 
@@ -75,7 +76,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/colorBackground"
             android:orientation="vertical">
 
             <include layout="@layout/layout_progress_container" />
@@ -340,8 +341,7 @@
             <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorBackground">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/content_container"
@@ -363,9 +363,9 @@
                         android:id="@+id/list_transaction_history"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_margin="@dimen/activity_horizontal_margin_card"
                         android:background="@drawable/background_round_recyclerview"
-                        android:elevation="@dimen/value2"
-                        android:layout_margin="@dimen/activity_horizontal_margin_card" />
+                        android:elevation="@dimen/value2" />
 
                 </LinearLayout>
             </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
