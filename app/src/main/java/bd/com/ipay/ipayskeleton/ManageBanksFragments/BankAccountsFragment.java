@@ -484,6 +484,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
                         mBankVerifiedStatus.setColorFilter(Color.RED);
                         mBankPending.setVisibility(View.GONE);
+                        mAttachmentChequebook.setVisibility(View.GONE);
                         break;
 
                     default:
