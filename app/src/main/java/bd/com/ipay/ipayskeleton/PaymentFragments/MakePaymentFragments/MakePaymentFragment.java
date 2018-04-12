@@ -713,6 +713,9 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 .setCancelable(false)
                                 .show();
                     }
+                    if (!mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                        DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
+                    }
 
                     String profilePicture = null;
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
