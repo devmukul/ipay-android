@@ -287,6 +287,8 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
+    <string name="promotions">Promotions</string>
+    <string name="ipay_here">iPay Here</string>
     <string name="requesting_money">Money request processing…</string>
     <string name="progress_dialog_requesting">Processing request …</string>
     <string name="add_money">Add Money</string>
@@ -434,7 +436,7 @@
     <string name="logout">Log Out</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
-    <string name="pay_by_QR_code">Pay by QR Code</string>
+    <string name="pay_by_QR_code">Scan to Pay</string>
     <string name="pay">Pay</string>
     <string name="transaction">Transaction</string>
     <string name="transaction_history">Transaction History</string>
@@ -572,6 +574,7 @@
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
     <string name="filter_offer">Offer from iPay</string>
+    <string name="offer">Offer</string>
     <string name="basic_info">Basic Information</string>
     <string name="student_info">Student Information</string>
     <string name="pay_education_fee">Pay education fees</string>
@@ -1138,7 +1141,7 @@
     <string name="remove_account">Remove Account</string>
     <string name="you_do_not_have_any_introducer">You do not have any introducer yet</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
-    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
     <string name="cheque_uploaded">Cheque successfully uploaded</string>
 </resources>

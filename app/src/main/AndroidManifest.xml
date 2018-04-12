@@ -60,9 +60,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4" />
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4" />-->
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -326,6 +326,16 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <activity android:name=".QRScanner.BarcodeCaptureActivity"
+            android:label="Read Barcode"/>
+
+        <activity
+            android:name=".Activities.IPayHereActivity"
+            android:label="@string/ipay_here"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
             <intent-filter>
@@ -339,8 +349,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".QRScanner.BarcodeCaptureActivity"
-            android:label="Read Barcode"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAfsNoEC1Hdv0SMHBD1ElcFU3L_dLzeOpI"/>
 
     </application>
 </manifest>
