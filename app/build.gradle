@@ -43,9 +43,9 @@ android {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "4"
     def AutoLogin = java.lang.System.getProperty('AutoLogin') ?: "false"
-    def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "true"
+    def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "false"
 
     buildTypes {
         debug {
@@ -111,8 +111,8 @@ dependencies {
     compile 'com.google.zxing:core:3.2.0'
     compile 'com.airbnb.android:lottie:2.5.0'
     compile 'com.makeramen:roundedimageview:2.2.1'
-
-    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
     compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
         transitive = true
     }

@@ -84,6 +84,7 @@ public class Utilities {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.US);
+    private static final SimpleDateFormat DATE_FORMAT_WITH_TIME_WITH_DEVIDER = new SimpleDateFormat("MMM d, yyyy | h:mm a", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
@@ -556,6 +557,10 @@ public class Utilities {
 
     public static String formatDateWithTime(long time) {
         return DATE_FORMAT_WITH_TIME.format(time);
+    }
+
+    public static String formatDateWithTimeWithDevider(long time) {
+        return DATE_FORMAT_WITH_TIME_WITH_DEVIDER.format(time);
     }
 
     public static String formatDateWithoutTime(long time) {

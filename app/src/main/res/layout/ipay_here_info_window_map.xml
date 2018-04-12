@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:background="@drawable/semiround_white_default">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_picture"
         android:src="@drawable/ic_business_logo_round"
         android:layout_centerVertical="true"

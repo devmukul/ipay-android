@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -62,6 +63,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class IPayHereActivity extends BaseActivity implements PlaceSelectionListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, HttpResponseListener {
 
@@ -139,11 +141,22 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         switch (requestCode) {
             case REQUEST_LOCATION:
                 for (int i = 0; i < permissions.length; i++) {
-                    Logger.logW(permissions[i], grantResults[i] + "");
 
-                    if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        getLocation();
+                    System.out.println("TEST PERMISION " + permissions[i]+" "+grantResults[i]);
+                    String permission = permissions[i];
+
+                    if(Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)){
+                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                finish();
+                        }else {
+                            getLocation();
+                        }
+
                     }
+
+
+
+
                 }
 
                 break;
@@ -317,7 +330,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         private Marker marker;
         boolean not_first_time_showing_info_window = false;
 
-        private RoundedImageView businessProfileImageView;
+        private CircleImageView businessProfileImageView;
         private TextView businessNameTextView;
 
         public CustomInfoWindowAdapter() {
@@ -341,7 +354,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             this.marker = marker;
 
             NearbyBusinessResponseList infoWindowData = (NearbyBusinessResponseList) marker.getTag();
-            businessProfileImageView = (RoundedImageView) view.findViewById(R.id.profile_picture);
+            businessProfileImageView = (CircleImageView) view.findViewById(R.id.profile_picture);
             businessNameTextView = (TextView) view.findViewById(R.id.textview_name);
             String title = infoWindowData.getBusinessName();
             businessNameTextView.setText(title);
@@ -368,8 +381,8 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                                     return false;
                                 }
                             }).crossFade().placeholder(R.drawable.ic_business_logo_round)
-                            .error(R.drawable.ic_business_logo_round)
-                            .into(businessProfileImageView);
+                            .error(R.drawable.ic_business_logo_round).into(businessProfileImageView);;
+
                 }
             }
             return view;

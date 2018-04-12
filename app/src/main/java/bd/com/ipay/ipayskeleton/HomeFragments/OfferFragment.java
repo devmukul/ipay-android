@@ -122,6 +122,7 @@ public class OfferFragment extends BaseFragment {
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView mOfferTitleView;
             private final TextView mOfferDetailsView;
+            private final TextView mExpireDateView;
             private final ProfileImageView mOfferImageView;
 
             public ViewHolder(final View itemView) {
@@ -129,6 +130,7 @@ public class OfferFragment extends BaseFragment {
 
                 mOfferTitleView = (TextView) itemView.findViewById(R.id.title);
                 mOfferDetailsView = (TextView) itemView.findViewById(R.id.sub_title);
+                mExpireDateView = (TextView) itemView.findViewById(R.id.offer_expire);
                 mOfferImageView = (ProfileImageView) itemView.findViewById(R.id.offer_image);
                 mOfferImageView.setBusinessLogoPlaceHolder();
             }
@@ -139,9 +141,11 @@ public class OfferFragment extends BaseFragment {
                 final String description = transactionHistory.getTitle();
                 final String receiver = transactionHistory.getSubtitle();
                 final String status = transactionHistory.getImage_url();
+                final long expire = transactionHistory.getExpire_date();
 
                 mOfferTitleView.setText(description);
                 mOfferDetailsView.setText(receiver);
+                mExpireDateView.setText("This offer will expire in "+Utilities.formatDateWithTimeWithDevider(expire));
                 mOfferImageView.setProfilePicture(status, false);
             }
         }
