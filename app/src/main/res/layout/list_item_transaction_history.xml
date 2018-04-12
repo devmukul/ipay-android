@@ -52,7 +52,7 @@
                 android:id="@+id/activity_description"
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:fontFamily="sans-serif-light"
-                android:textSize="@dimen/ef_font_medium"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <ImageView
