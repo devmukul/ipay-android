@@ -25,7 +25,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,9 +35,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.RuntimeRemoteException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -160,7 +156,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             mMap.clear();
             this.mLatitude = String.valueOf(attributions.latitude);
             this.mLongitude = String.valueOf(attributions.longitude);
-            retrieveFileFromUrl(this.mLatitude, this.mLongitude);
+            fetchNearByBusiness(this.mLatitude, this.mLongitude);
 
         }
     }
@@ -195,7 +191,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                 double longitude = location.getLongitude();
                 mLatitude = String.valueOf(latitude);
                 mLongitude = String.valueOf(longitude);
-                retrieveFileFromUrl(this.mLatitude, this.mLongitude);
+                fetchNearByBusiness(this.mLatitude, this.mLongitude);
             }else{
                 finish();
                 Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
@@ -204,7 +200,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         }
     }
 
-    private void retrieveFileFromUrl(String lattitude, String longitude) {
+    private void fetchNearByBusiness(String lattitude, String longitude) {
         if (mIPayHereTask != null)
             return;
 
