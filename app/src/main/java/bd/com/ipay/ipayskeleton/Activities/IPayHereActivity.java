@@ -24,6 +24,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -79,8 +80,14 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         // Retrieve the PlaceAutocompleteFragment.
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(Place.TYPE_COUNTRY)
+                .setCountry("BD")
+                .build();
         // Register a listener to receive callbacks when a place has been selected or an error ha occurred.
         autocompleteFragment.setOnPlaceSelectedListener(this);
+        autocompleteFragment.setFilter(autocompleteFilter);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Loading Bussiness..");
