@@ -701,34 +701,12 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
-                final String transactionType = transactionHistory.getType();
 
                 if (balance != null) {
                     mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
                 }
 
                 mNetAmountView.setText(netAmountWithSign);
-
-                switch (transactionType) {
-                    case Constants.TRANSACTION_TYPE_CREDIT: {
-                        if (statusCode.equals(Constants.TRANSACTION_STATUS_ACCEPTED))
-                            mNetAmountView.setTextColor(getResources().getColor(R.color.colorLightGreen));
-                        else
-                            mNetAmountView.setTextColor(getResources().getColor(R.color.colorAsh));
-                        break;
-                    }
-                    case Constants.TRANSACTION_TYPE_DEBIT: {
-                        if (statusCode.equals(Constants.TRANSACTION_STATUS_ACCEPTED))
-                            mNetAmountView.setTextColor(getResources().getColor(R.color.colorLightRed));
-                        else
-                            mNetAmountView.setTextColor(getResources().getColor(R.color.colorAsh));
-                        break;
-                    }
-                    default: {
-                        mNetAmountView.setTextColor(getResources().getColor(R.color.colorAsh));
-                        break;
-                    }
-                }
 
                 switch (statusCode) {
                     case Constants.TRANSACTION_STATUS_ACCEPTED: {
