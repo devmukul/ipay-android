@@ -38,11 +38,48 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <fragment android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/transection_serch_view"/>
+        android:layout_below="@+id/transection_serch_view">
+
+        <fragment android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/search_this_place"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="center_horizontal"
+            android:elevation="@dimen/value25"
+            app:cardElevation="3dp"
+            app:cardCornerRadius="17dp"
+            android:layout_marginTop="@dimen/value10"
+            android:visibility="invisible">
+
+            <Button
+                android:id="@+id/seach_this_place_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTransparent"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingLeft="@dimen/value15"
+                android:paddingRight="@dimen/value15"
+                android:text="Search this Area"
+                android:textSize="12sp"
+                android:layout_gravity="center"/>
+
+        </android.support.v7.widget.CardView>
+
+    </FrameLayout>
+
+
 
 </RelativeLayout>
 

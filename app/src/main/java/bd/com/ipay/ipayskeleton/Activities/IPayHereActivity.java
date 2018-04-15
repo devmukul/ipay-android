@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +56,9 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class IPayHereActivity extends BaseActivity implements PlaceSelectionListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, HttpResponseListener {
+public class IPayHereActivity extends BaseActivity implements PlaceSelectionListener, OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener, HttpResponseListener,
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener{
 
     private static final int REQUEST_LOCATION = 1;
 
@@ -68,6 +73,9 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     private LocationManager locationManager;
     private String mLatitude;
     private String mLongitude;
+    private boolean isStartedMoving = false;
+    private CardView searchLocationView;
+    private Button searchLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +99,8 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Loading Bussiness..");
+        searchLocationView = (CardView) findViewById(R.id.search_this_place);
+        searchLocation = (Button) findViewById(R.id.seach_this_place_btn);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -98,6 +108,24 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             getLocation();
         }
+
+        searchLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LatLng initialLoc= mMap.getCameraPosition().target;
+                searchLocationView.setVisibility(View.INVISIBLE);
+
+                if (initialLoc != null) {
+                    mMap.clear();
+                    isStartedMoving = false;
+                    mLatitude = String.valueOf(initialLoc.latitude);
+                    mLongitude = String.valueOf(initialLoc.longitude);
+                    fetchNearByBusiness(mLatitude, mLongitude);
+
+                }
+
+            }
+        });
     }
 
     @Override
@@ -240,11 +268,12 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     void startDemo() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(mLatitude),Double.valueOf(mLongitude)), 13f ));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(mLatitude),Double.valueOf(mLongitude)), 13f ));
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         mMap.setMyLocationEnabled(true);
-        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnCameraMoveStartedListener(this);
+        mMap.setOnCameraIdleListener(this);
     }
 
     protected void buildAlertMessageNoGps() {
@@ -294,13 +323,33 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();Toast.makeText(IPayHereActivity.this, mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                    Toast.makeText(IPayHereActivity.this, mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
                 mIPayHereTask = null;
                 break;
         }
 
+    }
+
+    @Override
+    public void onCameraIdle() {
+
+        if(isStartedMoving)
+            searchLocationView.setVisibility(View.VISIBLE);
+        else
+            searchLocationView.setVisibility(View.INVISIBLE);
+
+
+    }
+
+    @Override
+    public void onCameraMoveStarted(int reason) {
+
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            isStartedMoving = true ;
+        }
     }
 
     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
