@@ -306,7 +306,7 @@
         android:layout_height="0dp"
         android:layout_weight="55"
         android:layout_margin="@dimen/activity_horizontal_margin_card"
-        android:background="@drawable/semiround_white_default"
+        android:background="@color/colorWhite"
         apps:cardElevation="3dp"
         apps:cardCornerRadius="5dp">
 

@@ -77,8 +77,14 @@ public class OfferFragment extends BaseFragment {
                     }
                 }
 
-
-                setupRecyclerView();
+                if(mOfferList.size()<=0){
+                    mEmptyListTextView.setVisibility(View.VISIBLE);
+                    mOfferListRecyclerView.setVisibility(View.GONE);
+                }else {
+                    mEmptyListTextView.setVisibility(View.GONE);
+                    mOfferListRecyclerView.setVisibility(View.VISIBLE);
+                    setupRecyclerView();
+                }
             }
 
             @Override
