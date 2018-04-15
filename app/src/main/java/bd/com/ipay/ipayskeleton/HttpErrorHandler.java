@@ -34,17 +34,14 @@ public class HttpErrorHandler {
                 alertDialog.dismiss();
             }
             if (result == null) {
-                Toast.makeText(context, context.getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
                 return true;
-            } else if (result.getErrorMessage() != null) {
+            } else if (result.getErrorMessage() != null && !result.isSilent()) {
                 Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
                 return true;
             } else {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    Toast.makeText(context, "Not Found", Toast.LENGTH_LONG).show();
                     return true;
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-                    Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
                     return true;
                 }
                 return false;

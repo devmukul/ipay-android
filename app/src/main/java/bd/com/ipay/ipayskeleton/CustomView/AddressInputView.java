@@ -101,7 +101,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         mThanaEditTextProgressBar.showProgressBar();
 
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this);
+                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this,true);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -112,7 +112,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         mThanaEditTextProgressBar.hideProgressBar();
 
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), context, this);
+                new DistrictRequestBuilder().getGeneratedUri(), context, this,true);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

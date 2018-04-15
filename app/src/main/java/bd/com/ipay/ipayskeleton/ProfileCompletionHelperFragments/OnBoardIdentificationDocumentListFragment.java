@@ -98,7 +98,7 @@ public class OnBoardIdentificationDocumentListFragment extends ProgressFragment 
 
         url = Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS_v2;
 
-        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, url, getContext(), this);
+        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, url, getContext(), this,false);
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         setContentShown(false);
     }

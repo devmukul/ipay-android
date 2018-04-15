@@ -224,7 +224,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         }
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this,true);
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -241,7 +241,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         mProgressDialog.show();
 
         mAddNewEmailTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_NEW_EMAIL,
-                Constants.BASE_URL_MM + Constants.URL_POST_EMAIL, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_POST_EMAIL, json, getActivity(), this,false);
         mAddNewEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -254,7 +254,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         mProgressDialog.show();
 
         mDeleteEmailTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_DELETE_EMAIL,
-                Constants.BASE_URL_MM + Constants.URL_DELETE_EMAIL + id, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_DELETE_EMAIL + id, getActivity(), this,false);
         mDeleteEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -273,7 +273,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         mMakePrimaryEmailTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_MAKE_PRIMARY,
                 Constants.BASE_URL_MM + Constants.URL_POST_EMAIL + id + Constants.URL_MAKE_PRIMARY_EMAIL,
-                json, getActivity(), this);
+                json, getActivity(), this,false);
         mMakePrimaryEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -289,6 +289,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             mAddNewEmailTask = null;
             mEmailVerificationTask = null;
             mMakePrimaryEmailTask = null;
+            setContentShown(true);
             return;
         }
 

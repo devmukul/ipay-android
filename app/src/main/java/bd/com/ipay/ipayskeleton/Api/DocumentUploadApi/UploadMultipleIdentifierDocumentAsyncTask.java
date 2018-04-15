@@ -139,6 +139,7 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
                 genericHttpResponse.setApiCommand(API_COMMAND);
                 genericHttpResponse.setStatus(response.code());
                 genericHttpResponse.setJsonString(jsonString);
+                genericHttpResponse.setSilent(false);
             } catch (IOException e) {
                 if (e instanceof SocketTimeoutException || e instanceof SocketException) {
                     socketTimeOutException = mContext.getString(R.string.connection_time_out);

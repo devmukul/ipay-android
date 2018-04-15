@@ -49,7 +49,7 @@ public class RegisterFCMTokenToServerAsyncTask implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mFcmRefreshTokenRequest);
         mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_FIREBASE_TOKEN,
-                Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_REFRESH_FIREBASE_TOKEN, json, context);
+                Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_REFRESH_FIREBASE_TOKEN, json, context,true);
         mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

@@ -14,13 +14,13 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
     private final String mJsonString;
 
     public HttpRequestPatchAsyncTask(String API_COMMAND, String mUri, String mJsonString,
-                                     Context mContext, HttpResponseListener listener) {
-        super(API_COMMAND, mUri, mContext, listener);
+                                     Context mContext, HttpResponseListener listener, boolean isSilent) {
+        super(API_COMMAND, mUri, mContext, listener, isSilent);
         this.mJsonString = mJsonString;
     }
 
-    public HttpRequestPatchAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext) {
-        this(API_COMMAND, mUri, mJsonString, mContext, null);
+    public HttpRequestPatchAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext, boolean isSilent) {
+        this(API_COMMAND, mUri, mJsonString, mContext, null, isSilent);
     }
 
     @Override
@@ -37,8 +37,8 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
                 header(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID)
                 .header("Accept", "application/json")
                 .header("Content-type", "application/json")
-                .header(Constants.TOKEN,"")
-                .header(Constants.OPERATING_ON_ACCOUNT_ID,"")
+                .header(Constants.TOKEN, "")
+                .header(Constants.OPERATING_ON_ACCOUNT_ID, "")
                 .patch(requestBody)
                 .url(mUri)
                 .build();

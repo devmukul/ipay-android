@@ -338,7 +338,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity(),false);
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

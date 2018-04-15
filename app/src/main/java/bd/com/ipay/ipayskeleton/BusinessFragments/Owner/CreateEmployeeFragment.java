@@ -194,7 +194,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         String json = gson.toJson(createEmployeeRequest);
 
         mCreateEmployeeAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_CREATE_EMPLOYEE, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_CREATE_EMPLOYEE, json, getActivity(), this,false);
         mCreateEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -250,7 +250,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             mProgressDialog.setMessage(getString(R.string.preparing));
             mProgressDialog.show();
             mRoleDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
-                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + mSelectedRoleID, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + mSelectedRoleID, getActivity(),false);
             mRoleDetailsAsyncTask.mHttpResponseListener = this;
             mRoleDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

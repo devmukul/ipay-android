@@ -189,7 +189,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         }
 
         mGetAllInstitutionsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INSTITUTION_LIST,
-                Constants.BASE_URL_EDU + Constants.URL_GET_ALL_INSTITUTIONS_LIST, getActivity(), this);
+                Constants.BASE_URL_EDU + Constants.URL_GET_ALL_INSTITUTIONS_LIST, getActivity(), this,false);
         mGetAllInstitutionsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -219,7 +219,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         String mUrl = mGetSessionRequestBuilder.getGeneratedUrl();
 
         mGetSessionsByInstitutionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SESSION_LIST,
-                mUrl, getActivity());
+                mUrl, getActivity(),false);
         mGetSessionsByInstitutionTask.mHttpResponseListener = this;
 
         mGetSessionsByInstitutionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -235,7 +235,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         String mUrl = mGetStudentInfoByStudentIDRequestBuilder.getGeneratedUrl();
 
         mGetStudentInfoByStudentIDTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID,
-                mUrl, getActivity());
+                mUrl, getActivity(),false);
         mGetStudentInfoByStudentIDTask.mHttpResponseListener = this;
 
         mGetStudentInfoByStudentIDTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

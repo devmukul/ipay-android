@@ -168,7 +168,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new
                     HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity()
+                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity(),false
 
             );
             mRequestOTPTask.mHttpResponseListener = this;
@@ -199,7 +199,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP,
-                    Constants.BASE_URL_MM + Constants.URL_SIGN_UP, json, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_SIGN_UP, json, getActivity(),false);
             mSignUpTask.mHttpResponseListener = this;
             mSignUpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -369,7 +369,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity(),false);
         mAddTrustedDeviceTask.mHttpResponseListener = this;
         mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

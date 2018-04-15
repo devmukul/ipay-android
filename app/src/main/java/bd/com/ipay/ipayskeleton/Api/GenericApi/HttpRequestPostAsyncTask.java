@@ -16,13 +16,13 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
 
 
     public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString,
-                                    Context mContext, HttpResponseListener listener) {
-        super(API_COMMAND, mUri, mContext, listener);
+                                    Context mContext, HttpResponseListener listener,boolean isSilent) {
+        super(API_COMMAND, mUri, mContext, listener,isSilent);
         this.mJsonString = mJsonString;
     }
 
-    public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext) {
-        this(API_COMMAND, mUri, mJsonString, mContext, null);
+    public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext, boolean isSilent) {
+        this(API_COMMAND, mUri, mJsonString, mContext, null,isSilent);
     }
 
     @Override

@@ -106,7 +106,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
             mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_details));
             mProgressDialog.show();
             mGetDetailsOfInviteRoleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_INVITED_BUSINESS_ROLE,
-                    Constants.BASE_URL_MM + Constants.URL_GET_DETAILS_OF_INVITED_BUSINESS_ROLE + mID, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_GET_DETAILS_OF_INVITED_BUSINESS_ROLE + mID, getActivity(),false);
             mGetDetailsOfInviteRoleTask.mHttpResponseListener = this;
             mGetDetailsOfInviteRoleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -177,7 +177,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
                     status);
             String jsonString = new Gson().toJson(updateBusinessRoleInvitationRequest);
             mAcceptOrCancelBusinessAsynctask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_BUSINESS_ROLE_INVITATION,
-                    Constants.BASE_URL_MM + Constants.URL_CREATE_EMPLOYEE, jsonString, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_CREATE_EMPLOYEE, jsonString, getActivity(),false);
             mAcceptOrCancelBusinessAsynctask.mHttpResponseListener = this;
             mAcceptOrCancelBusinessAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

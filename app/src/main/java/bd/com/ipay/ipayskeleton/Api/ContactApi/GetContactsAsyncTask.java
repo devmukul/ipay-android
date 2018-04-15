@@ -23,7 +23,7 @@ public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements Htt
     private GetContactsResponse mGetContactsResponse;
 
     public GetContactsAsyncTask(Context context) {
-        super(Constants.COMMAND_GET_CONTACTS, Constants.BASE_URL_CONTACT + Constants.URL_GET_CONTACTS, context);
+        super(Constants.COMMAND_GET_CONTACTS, Constants.BASE_URL_CONTACT + Constants.URL_GET_CONTACTS, context,true);
         this.context = context;
         mHttpResponseListener = this;
     }

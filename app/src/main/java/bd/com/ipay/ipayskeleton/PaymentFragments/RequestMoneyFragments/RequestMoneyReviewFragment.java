@@ -156,7 +156,7 @@ public class RequestMoneyReviewFragment extends BaseFragment implements HttpResp
         Gson gson = new Gson();
         String json = gson.toJson(mRequestMoneyRequest);
         mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY, json, getActivity(),false);
         mRequestMoneyTask.mHttpResponseListener = this;
         mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

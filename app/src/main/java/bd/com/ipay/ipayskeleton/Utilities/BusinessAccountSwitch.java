@@ -59,7 +59,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             getAccessControlList();
         } else {
             mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
-                    Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this);
+                    Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this,false);
 
             mSwitchAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.setMessage(context.getResources().getString(R.string.switching));
@@ -72,7 +72,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             return;
 
         mGetAccessControlTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCESS_CONTROL_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, context, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, context, this,false);
         mGetAccessControlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setMessage(context.getString(R.string.switching));
         mProgressDialog.show();

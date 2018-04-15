@@ -99,7 +99,7 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends BaseFragment im
         String json = gson.toJson(mAddMoneyRequest);
 
         mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD, json, getActivity());
+                Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD, json, getActivity(),false);
         mAddMoneyTask.mHttpResponseListener = this;
 
         mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

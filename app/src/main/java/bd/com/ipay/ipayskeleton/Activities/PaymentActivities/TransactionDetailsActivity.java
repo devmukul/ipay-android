@@ -83,7 +83,7 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_SINGLE + "/" + requestID, this.getApplicationContext());
+                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_SINGLE + "/" + requestID, this.getApplicationContext(),false);
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

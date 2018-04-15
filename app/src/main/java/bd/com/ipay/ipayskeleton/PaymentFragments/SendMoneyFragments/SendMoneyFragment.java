@@ -418,7 +418,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait));
         mCustomProgressDialog.showDialog();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity(),false);
         mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
         mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -463,7 +463,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity(),false);
         mSendMoneyTask.mHttpResponseListener = this;
         mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -476,7 +476,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this,true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

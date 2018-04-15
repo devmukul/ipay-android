@@ -37,15 +37,17 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
     private final String API_COMMAND;
     private OkHttpResponse mHttpResponse;
     private String socketTimeOutConnection;
+    private boolean isSlient;
 
     private boolean error = false;
 
-    HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
+    HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener, boolean isSilent) {
         this.API_COMMAND = API_COMMAND;
         this.mUri = mUri;
         this.mContext = mContext;
         this.mHttpResponseListener = listener;
         socketTimeOutConnection = null;
+        this.isSlient = isSilent;
     }
 
     @Override
@@ -70,10 +72,10 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                         mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
                     }
                 } else {
-                    return new GenericHttpResponse(responseFromSSL);
+                    return new GenericHttpResponse(responseFromSSL,true);
                 }
             } else {
-                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection));
+                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection),false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,9 +152,8 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
 
                     if (e instanceof SocketException) {
                         socketTimeOutConnection = "Network is unreachable";
-                    }
-                    else if(e instanceof SocketTimeoutException){
-                        socketTimeOutConnection=mContext.getString(R.string.connection_time_out);
+                    } else if (e instanceof SocketTimeoutException) {
+                        socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
                     }
 
                 }

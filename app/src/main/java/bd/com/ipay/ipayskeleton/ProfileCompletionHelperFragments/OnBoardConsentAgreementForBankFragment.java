@@ -123,7 +123,7 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
         Gson gson = new Gson();
         String json = gson.toJson(mAddBankRequest);
         mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity(),false);
         mAddBankTask.mHttpResponseListener = this;
         mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -156,7 +156,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         }
 
         mGetTrendingBusinessListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity(),false);
         mGetTrendingBusinessListTask.mHttpResponseListener = this;
         mGetTrendingBusinessListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

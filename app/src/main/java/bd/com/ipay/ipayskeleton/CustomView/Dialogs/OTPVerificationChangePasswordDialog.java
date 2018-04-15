@@ -215,7 +215,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         Gson gson = new Gson();
         String json = gson.toJson(mChangePasswordRequest);
         mRequestOTPTask = new HttpRequestPutAsyncTask(Constants.COMMAND_RESEND_OTP,
-                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context);
+                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context,false);
         mRequestOTPTask.mHttpResponseListener = this;
         mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -230,7 +230,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         Gson gson = new Gson();
         String json = gson.toJson(mChangePasswordWithOTPRequest);
         mChangePasswordWithOTPTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
-                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context);
+                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context,false);
         mChangePasswordWithOTPTask.mHttpResponseListener = this;
         mChangePasswordWithOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

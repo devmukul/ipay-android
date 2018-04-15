@@ -210,6 +210,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
             mTransactionHistoryTask = null;
+            setContentShown(true);
             return;
         }
 
@@ -581,7 +582,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY,
-                url, getActivity());
+                url, getActivity(),false);
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

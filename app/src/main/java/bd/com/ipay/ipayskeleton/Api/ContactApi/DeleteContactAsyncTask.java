@@ -17,7 +17,7 @@ public class DeleteContactAsyncTask extends HttpRequestPatchAsyncTask implements
     private Context context;
 
     public DeleteContactAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext) {
-        super(API_COMMAND, mUri, mJsonString, mContext);
+        super(API_COMMAND, mUri, mJsonString, mContext,false);
         this.context = mContext;
         mHttpResponseListener = this;
     }

@@ -92,7 +92,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         AddContactRequestBuilder addContactRequestBuilder = new AddContactRequestBuilder(contactList);
         mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this);
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this,true);
         mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -106,7 +106,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         UpdateContactRequestBuilder updateContactRequestBuilder = new UpdateContactRequestBuilder(contactList);
         mUpdateContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_CONTACTS,
-                updateContactRequestBuilder.generateUri(), updateContactRequestBuilder.getUpdateContactRequest(), context, this);
+                updateContactRequestBuilder.generateUri(), updateContactRequestBuilder.getUpdateContactRequest(), context, this,true);
         mUpdateContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

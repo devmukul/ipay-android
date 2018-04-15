@@ -187,7 +187,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         Gson gson = new Gson();
         String json = gson.toJson(mSendNewPaymentRequest);
         mSendPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_SEND_PAYMENT_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SEND_PAYMENT_REQUEST, json, getActivity(),true);
         mSendPaymentRequestTask.mHttpResponseListener = this;
         mSendPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

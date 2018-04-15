@@ -148,7 +148,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
-                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity(),false);
         mGetMoneyRequestTask.mHttpResponseListener = this;
         mGetMoneyRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

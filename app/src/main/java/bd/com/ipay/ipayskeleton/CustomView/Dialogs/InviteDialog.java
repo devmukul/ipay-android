@@ -168,7 +168,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                 AddContactRequestBuilder(name, phoneNumber, relationship);
 
         mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this);
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this,false);
         mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -187,7 +187,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             Gson gson = new Gson();
             String json = gson.toJson(inviteContactNode, InviteContactNode.class);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, context, this);
+                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, context, this,false);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

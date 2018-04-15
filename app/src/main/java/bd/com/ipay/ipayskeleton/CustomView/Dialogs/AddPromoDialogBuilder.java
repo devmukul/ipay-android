@@ -101,7 +101,7 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
         String json = gson.toJson(addPromoRequest);
 
         mAddPromoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_PROMO,
-                Constants.BASE_URL_OFFER + Constants.URL_PROMO_ACTIVE, json, getContext(), this);
+                Constants.BASE_URL_OFFER + Constants.URL_PROMO_ACTIVE, json, getContext(), this,false);
         mAddPromoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

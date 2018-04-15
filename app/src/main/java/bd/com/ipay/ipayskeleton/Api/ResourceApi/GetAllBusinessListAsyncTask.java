@@ -21,7 +21,7 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
     private Context context;
 
     public GetAllBusinessListAsyncTask(Context context, String mUri) {
-        super(Constants.COMMAND_GET_ALL_BUSINESS_LIST, mUri, context);
+        super(Constants.COMMAND_GET_ALL_BUSINESS_LIST, mUri, context,true);
         mHttpResponseListener = this;
         this.context = context;
     }

@@ -14,7 +14,7 @@ public class AddContactAsyncTask extends HttpRequestPostAsyncTask implements Htt
     private Context context;
 
     public AddContactAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext) {
-        super(API_COMMAND, mUri, mJsonString, mContext);
+        super(API_COMMAND, mUri, mJsonString, mContext,true);
         this.context = mContext;
         mHttpResponseListener = this;
     }

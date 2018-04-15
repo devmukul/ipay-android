@@ -85,7 +85,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         }
         String API_COMMAND = Constants.COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS;
         String mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FACTOR_AUTH_SETTINGS;
-        mGetTwoFactorAuthSettingsAsyncTask = new HttpRequestGetAsyncTask(API_COMMAND, mUri, getActivity());
+        mGetTwoFactorAuthSettingsAsyncTask = new HttpRequestGetAsyncTask(API_COMMAND, mUri, getActivity(),false);
         mGetTwoFactorAuthSettingsAsyncTask.mHttpResponseListener = this;
         mGetTwoFactorAuthSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.show();
@@ -147,7 +147,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FACTOR_AUTH_SETTINGS;
         TwoFactorAuthServicesListWithOTPRequest twoFactorAuthServicesListWithOtpRequest = new TwoFactorAuthServicesListWithOTPRequest(null, mChangedList);
         mJsonString = gson.toJson(twoFactorAuthServicesListWithOtpRequest);
-        mPutTwoFactorAuthSettingsAsyncTask = new HttpRequestPutAsyncTask(API_COMMAND, mUri, mJsonString, getActivity());
+        mPutTwoFactorAuthSettingsAsyncTask = new HttpRequestPutAsyncTask(API_COMMAND, mUri, mJsonString, getActivity(),false);
         mPutTwoFactorAuthSettingsAsyncTask.mHttpResponseListener = this;
         mPutTwoFactorAuthSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

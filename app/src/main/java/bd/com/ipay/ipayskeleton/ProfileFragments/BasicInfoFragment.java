@@ -234,7 +234,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             setContentShown(false);
 
             mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this,false);
             mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -248,7 +248,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
                 return;
             }
             mGetParentInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PARENT_INFO_REQUEST,
-                    Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this,true);
             mGetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -260,7 +260,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             return;
         }
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
-                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
+                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this,true);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -270,6 +270,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mGetProfileInfoTask = null;
+            setContentShown(true);
             mGetOccupationTask = null;
             return;
         }

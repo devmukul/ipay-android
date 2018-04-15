@@ -123,7 +123,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         String json = gson.toJson(setPinRequest);
 
         mSavePINTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN,
-                Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getContext(), this);
+                Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getContext(), this,false);
         mSavePINTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

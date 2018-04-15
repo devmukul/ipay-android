@@ -145,7 +145,7 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
         CheckIfUserExistsRequestBuilder checkIfUserExistsRequestBuilder = new CheckIfUserExistsRequestBuilder(SignupOrLoginActivity.mMobileNumberBusiness);
         String mUri = checkIfUserExistsRequestBuilder.getGeneratedUri();
         mCheckIfUserExistsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_IF_USER_EXISTS,
-                mUri, null, getActivity());
+                mUri, null, getActivity(),false);
         mCheckIfUserExistsTask.mHttpResponseListener = this;
         mCheckIfUserExistsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

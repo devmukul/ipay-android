@@ -189,7 +189,7 @@ public class UpdateSecurityQuestionFragment extends BaseFragment implements Http
         Gson gson = new Gson();
         String json = gson.toJson(updateSecurityAnswerRequest, UpdateSecurityAnswerRequest.class);
         mUpdateSecurityAnswerTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_SECURITY_ANSWERS,
-                Constants.BASE_URL_MM + Constants.URL_SET_SECURITY_ANSWERS, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_SET_SECURITY_ANSWERS, json, getActivity(),false);
         mUpdateSecurityAnswerTask.mHttpResponseListener = this;
         mUpdateSecurityAnswerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

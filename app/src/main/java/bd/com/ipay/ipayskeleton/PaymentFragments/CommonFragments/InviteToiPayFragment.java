@@ -103,7 +103,7 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this,true);
 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

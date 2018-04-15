@@ -461,7 +461,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         String url = GetActivityRequestBuilder.generateUri(type,
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
         mUserActivityTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
-                url, getActivity());
+                url, getActivity(),false);
         mUserActivityTask.mHttpResponseListener = this;
         mUserActivityTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -199,7 +199,7 @@ public class PaymentReviewFragment extends BaseFragment implements HttpResponseL
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity(),false);
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -192,7 +192,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         setContentShown(false);
 
         mGetTrustedPersonsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_PERSONS,
-                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_PERSONS, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_PERSONS, getActivity(), this,false);
         mGetTrustedPersonsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -209,7 +209,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         String json = gson.toJson(deleteTrustedPersonRequest);
 
         mRemoveTrustedPersonTask = new HttpDeleteWithBodyAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_PERSON,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_PERSON, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_PERSON, json, getActivity(), this,false);
         mRemoveTrustedPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

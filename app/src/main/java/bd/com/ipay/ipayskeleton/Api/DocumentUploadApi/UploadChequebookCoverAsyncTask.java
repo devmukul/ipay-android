@@ -125,6 +125,7 @@ public class UploadChequebookCoverAsyncTask extends AsyncTask<Void, Void, Generi
             mGenericHttpResponse.setStatus(status);
             mGenericHttpResponse.setApiCommand(API_COMMAND);
             mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
+            mGenericHttpResponse.setSilent(false);
 
             Logger.logE("CHECK_Result", mGenericHttpResponse.toString());
 

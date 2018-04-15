@@ -399,7 +399,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         refreshBalanceButton.startAnimation(rotation);
 
         mRefreshBalanceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_BALANCE,
-                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, null, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, null, getActivity(),true);
         mRefreshBalanceTask.mHttpResponseListener = this;
         mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -410,7 +410,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         }
 
         mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this,true);
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

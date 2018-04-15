@@ -105,7 +105,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
         mThanaEditTextProgressBar.showProgressBar();
 
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this);
+                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this,true);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -116,7 +116,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
         mDistrictEditTextProgressBar.showProgressBar();
 
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), context, this);
+                new DistrictRequestBuilder().getGeneratedUri(), context, this,true);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

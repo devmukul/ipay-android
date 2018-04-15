@@ -120,7 +120,7 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
         String mUrl = mGetEnabledPayablesRequestBuilder.getGeneratedUrl();
 
         mGetEnabledPayablesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ENABLED_PAYABLES_LIST,
-                mUrl, getActivity());
+                mUrl, getActivity(),false);
         mGetEnabledPayablesTask.mHttpResponseListener = this;
 
         mGetEnabledPayablesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

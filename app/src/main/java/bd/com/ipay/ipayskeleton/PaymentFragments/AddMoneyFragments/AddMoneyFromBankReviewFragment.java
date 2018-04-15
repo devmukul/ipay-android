@@ -153,7 +153,7 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
         mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, json, getActivity(),false);
         mAddMoneyTask.mHttpResponseListener = this;
 
         mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

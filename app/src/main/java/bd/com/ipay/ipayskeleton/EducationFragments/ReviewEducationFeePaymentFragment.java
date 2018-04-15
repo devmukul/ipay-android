@@ -226,7 +226,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
         Gson gson = new Gson();
         String json = gson.toJson(makeEducationPaymentRequest);
         mEducationPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_MAKE_PAYMENT_EDUCATION,
-                Constants.BASE_URL_EDU + Constants.URL_MAKE_PAYMENT_EDUCATION, json, getActivity());
+                Constants.BASE_URL_EDU + Constants.URL_MAKE_PAYMENT_EDUCATION, json, getActivity(),false);
         mEducationPaymentTask.mHttpResponseListener = this;
         mEducationPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

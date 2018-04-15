@@ -290,7 +290,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         setContentShown(false);
 
         mGetTicketDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_DETAILS,
-                new GetTicketDetailsRequestBuilder().generateUri(ticketId).toString(), getActivity(), this);
+                new GetTicketDetailsRequestBuilder().generateUri(ticketId).toString(), getActivity(), this,true);
         mGetTicketDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -307,7 +307,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         String json = gson.toJson(addCommentRequest);
 
         mNewCommentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_COMMENT, Constants.BASE_URL_ADMIN + Constants.URL_ADD_COMMENT,
-                json, getActivity(), this);
+                json, getActivity(), this,false);
         mNewCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

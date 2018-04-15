@@ -109,7 +109,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         String json = gson.toJson(mLogoutModel);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getApplicationContext());
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getApplicationContext(),false);
         mLogoutTask.mHttpResponseListener = this;
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -151,7 +151,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mGetRefreshTokenRequest);
         mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_TOKEN,
-                Constants.BASE_URL_MM + Constants.URL_GET_REFRESH_TOKEN, json, getApplicationContext());
+                Constants.BASE_URL_MM + Constants.URL_GET_REFRESH_TOKEN, json, getApplicationContext(),true);
         mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

@@ -9,12 +9,12 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class HttpRequestGetAsyncTask extends HttpRequestAsyncTask {
 
-    public HttpRequestGetAsyncTask(String API_COMMAND, String mUri, Context mContext) {
-        this(API_COMMAND, mUri, mContext, null);
+    public HttpRequestGetAsyncTask(String API_COMMAND, String mUri, Context mContext, boolean isSilent) {
+        this(API_COMMAND, mUri, mContext, null, isSilent);
     }
 
-    public HttpRequestGetAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
-        super(API_COMMAND, mUri, mContext, listener);
+    public HttpRequestGetAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener, boolean isSilent) {
+        super(API_COMMAND, mUri, mContext, listener, isSilent);
     }
 
     @Override

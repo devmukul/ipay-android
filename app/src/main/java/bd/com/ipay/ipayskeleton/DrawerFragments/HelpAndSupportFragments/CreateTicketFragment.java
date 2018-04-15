@@ -348,7 +348,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         String mUri = mGetTicketCategoriesRequestBuilder.generateUri().toString();
 
         mGetTicketCategoriesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_CATEGORIES,
-                mUri, getActivity());
+                mUri, getActivity(),true);
         mGetTicketCategoriesTask.mHttpResponseListener = this;
 
         mGetTicketCategoriesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -367,7 +367,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         String json = gson.toJson(createTicketRequest);
 
         mCreateTicketTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_TICKET,
-                Constants.BASE_URL_ADMIN + Constants.URL_CREATE_TICKET, json, getActivity(), this);
+                Constants.BASE_URL_ADMIN + Constants.URL_CREATE_TICKET, json, getActivity(), this,false);
         mCreateTicketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -379,7 +379,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         setContentShown(false);
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this,true);
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

@@ -117,7 +117,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         }
 
         mGetTicketsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKETS,
-                Constants.BASE_URL_ADMIN + Constants.URL_GET_TICKETS, getActivity(), this);
+                Constants.BASE_URL_ADMIN + Constants.URL_GET_TICKETS, getActivity(), this,false);
         mGetTicketsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

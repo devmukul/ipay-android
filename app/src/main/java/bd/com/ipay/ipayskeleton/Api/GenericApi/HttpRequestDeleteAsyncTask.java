@@ -10,12 +10,12 @@ import okhttp3.Request;
 
 public class HttpRequestDeleteAsyncTask extends HttpRequestAsyncTask {
 
-    public HttpRequestDeleteAsyncTask(String API_COMMAND, String mUri, Context mContext) {
-        this(API_COMMAND, mUri, mContext, null);
+    public HttpRequestDeleteAsyncTask(String API_COMMAND, String mUri, Context mContext, boolean isSilent) {
+        this(API_COMMAND, mUri, mContext, null, isSilent);
     }
 
-    public HttpRequestDeleteAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
-        super(API_COMMAND, mUri, mContext, listener);
+    public HttpRequestDeleteAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener, boolean isSilent) {
+        super(API_COMMAND, mUri, mContext, listener, isSilent);
     }
 
     @Override

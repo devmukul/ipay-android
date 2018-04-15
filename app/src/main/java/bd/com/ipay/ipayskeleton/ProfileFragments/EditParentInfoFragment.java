@@ -199,7 +199,7 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
 
         String parentInfoJson = gson.toJson(setParentInfoRequest);
         mSetParentInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PARENT_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_SET_PARENT_INFO_REQUEST, parentInfoJson, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_SET_PARENT_INFO_REQUEST, parentInfoJson, getActivity(), this,false);
         mSetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

@@ -234,7 +234,7 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity(),false);
         mSendMoneyTask.mHttpResponseListener = this;
         mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

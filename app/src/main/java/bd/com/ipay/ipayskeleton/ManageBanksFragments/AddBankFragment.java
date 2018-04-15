@@ -354,7 +354,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
         String mUri = mBankBranchRequestBuilder.getGeneratedUri();
         mGetBankBranchesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_BRANCH_LIST,
-                mUri, getActivity());
+                mUri, getActivity(),false);
         mGetBankBranchesTask.mHttpResponseListener = this;
 
         mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -368,7 +368,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(),false);
         mGetBankTask.mHttpResponseListener = this;
 
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

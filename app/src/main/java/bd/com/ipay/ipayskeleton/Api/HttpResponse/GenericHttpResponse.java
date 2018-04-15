@@ -13,6 +13,16 @@ public class GenericHttpResponse {
     private boolean isUpdateNeeded;
     private Context context;
     private Headers headers;
+    private boolean isSilent;
+
+    public boolean isSilent() {
+        return isSilent;
+    }
+
+    public void setSilent(boolean silent) {
+        isSilent = silent;
+    }
+
 
     public String getErrorMessage() {
         return errorMessage;
@@ -20,6 +30,11 @@ public class GenericHttpResponse {
 
     public GenericHttpResponse(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public GenericHttpResponse(String errorMessage, boolean isSilent) {
+        this.errorMessage = errorMessage;
+        this.isSilent = isSilent;
     }
 
     public void setErrorMessage(String errorMessage) {
@@ -80,7 +95,7 @@ public class GenericHttpResponse {
     }
 
     private String getHeaderValue(String headerName) {
-        for (int i=0;i<headers.size();i++) {
+        for (int i = 0; i < headers.size(); i++) {
             Logger.logW(headers.name(i), headers.value(i));
             if (headers.value(i).equals(headerName))
                 return headers.value(i);
