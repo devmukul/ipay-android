@@ -210,7 +210,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
     private void getDistrictList() {
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this,true);
+                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this,false);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -231,11 +231,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             mGetUserAddressTask = null;
             mGetDistrictListAsyncTask = null;
             mGetThanaListAsyncTask = null;
-
-            if (getActivity() != null) {
-                getActivity().onBackPressed();
-            }
-
+            setContentShown(true);
             return;
         }
 

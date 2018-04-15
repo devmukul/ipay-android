@@ -94,7 +94,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         else
             url = Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS_v2;
 
-        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, url, getContext(), this,false);
+        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, url, getContext(), this, false);
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         setContentShown(false);
     }
@@ -134,6 +134,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetIdentificationDocumentsTask = null;
+            setContentShown(true);
             return;
         }
 

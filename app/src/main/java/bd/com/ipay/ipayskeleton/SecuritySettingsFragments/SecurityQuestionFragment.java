@@ -222,6 +222,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
             mGetAllSecurityQuestionTask = null;
             mGetPreviousSelectedSecurityQuestionTask = null;
             mSetSecurityAnswerTask = null;
+            setContentShown(true);
             return;
         }
 

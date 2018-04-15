@@ -277,7 +277,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(mServiceChargeRequest);
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity(),true);
         mServiceChargeTask.mHttpResponseListener = this;
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -454,11 +454,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
             mGetPendingRoleManagerRequestTask = null;
+            setContentShown(true);
 
             if (isAdded()) {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-
             return;
         }
 

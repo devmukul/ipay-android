@@ -977,7 +977,7 @@ public class HomeActivity extends BaseActivity
         locationCollector.setLocationList(userLocationList);
         String body = new GsonBuilder().create().toJson(locationCollector);
         mLocationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR,
-                body, this, this,false);
+                body, this, this,true);
         mLocationUpdateRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mLocationManager.removeUpdates(this);
     }

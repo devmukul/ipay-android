@@ -10,7 +10,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class HttpErrorHandler {
 
-    public static boolean isErrorFound(GenericHttpResponse result, Context context,Dialog alertDialog) {
+    public static boolean isErrorFound(GenericHttpResponse result, Context context, Dialog alertDialog) {
         if (alertDialog != null && alertDialog instanceof CustomProgressDialog) {
             if (result == null) {
                 ((CustomProgressDialog) alertDialog).
@@ -35,8 +35,10 @@ public class HttpErrorHandler {
             }
             if (result == null) {
                 return true;
-            } else if (result.getErrorMessage() != null && !result.isSilent()) {
-                Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+            } else if (result.getErrorMessage() != null) {
+                if (!result.isSilent()) {
+                    Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+                }
                 return true;
             } else {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {

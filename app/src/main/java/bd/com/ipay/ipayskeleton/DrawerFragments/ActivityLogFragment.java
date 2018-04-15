@@ -505,7 +505,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
         if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
             mUserActivityTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
+            setContentShown(true);
             return;
         }
 

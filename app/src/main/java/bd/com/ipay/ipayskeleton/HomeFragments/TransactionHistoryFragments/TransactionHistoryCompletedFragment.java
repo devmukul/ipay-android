@@ -601,7 +601,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT, mSearchText);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                url, getActivity(),true);
+                url, getActivity(),false);
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

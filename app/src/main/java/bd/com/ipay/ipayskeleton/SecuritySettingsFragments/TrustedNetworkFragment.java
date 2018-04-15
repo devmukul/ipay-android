@@ -221,6 +221,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetTrustedPersonsTask = null;
             mRemoveTrustedPersonTask = null;
+            setContentShown(true);
             return;
         }
 

@@ -274,8 +274,6 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mProgressDialog.cancel();
             mGetBankTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
