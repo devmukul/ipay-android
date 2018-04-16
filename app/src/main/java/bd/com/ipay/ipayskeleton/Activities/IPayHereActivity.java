@@ -46,6 +46,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.Coordinate;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereRequestUrlBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereResponse;
@@ -57,11 +58,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class IPayHereActivity extends BaseActivity implements PlaceSelectionListener, OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener, HttpResponseListener,
-        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener{
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
 
     private static final int REQUEST_LOCATION = 1;
 
-    private List <NearbyBusinessResponseList> mNearByBusinessResponse;
+    private List<NearbyBusinessResponseList> mNearByBusinessResponse;
     private HttpRequestGetAsyncTask mIPayHereTask = null;
 
     private SupportMapFragment mapFragment;
@@ -111,7 +112,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         searchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LatLng initialLoc= mMap.getCameraPosition().target;
+                LatLng initialLoc = mMap.getCameraPosition().target;
                 searchLocationView.setVisibility(View.INVISIBLE);
 
                 if (initialLoc != null) {
@@ -161,10 +162,10 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             case REQUEST_LOCATION:
                 for (int i = 0; i < permissions.length; i++) {
                     String permission = permissions[i];
-                    if(Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)){
+                    if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)) {
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                             finish();
-                        }else {
+                        } else {
                             getLocation();
                         }
                     }
@@ -210,8 +211,8 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     private void getLocation() {
-        if (!Utilities.isNecessaryPermissionExists(this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION })) {
-            ActivityCompat.requestPermissions(IPayHereActivity.this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, REQUEST_LOCATION);
+        if (!Utilities.isNecessaryPermissionExists(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})) {
+            ActivityCompat.requestPermissions(IPayHereActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
         } else {
             Location location;
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -226,9 +227,9 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                 mLatitude = String.valueOf(latitude);
                 mLongitude = String.valueOf(longitude);
                 fetchNearByBusiness(this.mLatitude, this.mLongitude);
-            }else{
+            } else {
                 finish();
-                Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Unble to Trace your location", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -238,10 +239,11 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         if (mIPayHereTask != null)
             return;
 
-        mProgressDialog.show();;
+        mProgressDialog.show();
+        ;
         String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
         mIPayHereTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
-                url, IPayHereActivity.this,false);
+                url, IPayHereActivity.this, false);
         mIPayHereTask.mHttpResponseListener = this;
         mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -267,7 +269,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     void startDemo() {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(mLatitude),Double.valueOf(mLongitude)), 13f ));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(mLatitude), Double.valueOf(mLongitude)), 13f));
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         mMap.setMyLocationEnabled(true);
@@ -296,11 +298,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            hideProgressDialog();
-            mIPayHereTask = null;
-            Toast.makeText(IPayHereActivity.this, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog) {
             return;
         }
         Gson gson = new Gson();
@@ -335,7 +333,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     @Override
     public void onCameraIdle() {
 
-        if(isStartedMoving)
+        if (isStartedMoving)
             searchLocationView.setVisibility(View.VISIBLE);
         else
             searchLocationView.setVisibility(View.INVISIBLE);
@@ -347,7 +345,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     public void onCameraMoveStarted(int reason) {
 
         if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            isStartedMoving = true ;
+            isStartedMoving = true;
         }
     }
 
@@ -358,6 +356,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         boolean not_first_time_showing_info_window = false;
         private CircleImageView businessProfileImageView;
         private TextView businessNameTextView;
+
         public CustomInfoWindowAdapter() {
             view = IPayHereActivity.this.getLayoutInflater().inflate(R.layout.ipay_here_info_window_map,
                     null);
@@ -382,7 +381,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             businessNameTextView = (TextView) view.findViewById(R.id.textview_name);
             String title = infoWindowData.getBusinessName();
             businessNameTextView.setText(title);
-            if (infoWindowData.getImageUrl() != null ) {
+            if (infoWindowData.getImageUrl() != null) {
                 String imageUrl = Constants.BASE_URL_FTP_SERVER + infoWindowData.getImageUrl();
                 if (not_first_time_showing_info_window) {
                     not_first_time_showing_info_window = false;
@@ -399,13 +398,14 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                                 public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                                     return false;
                                 }
+
                                 @Override
                                 public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                     marker.showInfoWindow();
                                     return false;
                                 }
                             }).crossFade().placeholder(R.drawable.ic_business_logo_round)
-                            .error(R.drawable.ic_business_logo_round).into(businessProfileImageView);;
+                            .error(R.drawable.ic_business_logo_round).into(businessProfileImageView);
 
                 }
             }
@@ -414,6 +414,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     private void hideProgressDialog() {
-         mProgressDialog.dismiss();
+        mProgressDialog.dismiss();
     }
 }

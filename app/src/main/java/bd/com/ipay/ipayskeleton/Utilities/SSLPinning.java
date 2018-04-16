@@ -2,11 +2,6 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.content.Context;
 
-import com.squareup.okhttp.CertificatePinner;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -26,19 +21,19 @@ public class SSLPinning {
         Context context = MyApplication.getMyApplicationInstance().getApplicationContext();
         if (Constants.SERVER_TYPE == Constants.SERVER_TYPE_LIVE) {
 
-            CertificatePinner certificatePinner = new CertificatePinner.Builder()
+            okhttp3.CertificatePinner certificatePinner = new okhttp3.CertificatePinner.Builder()
                     .add(Constants.HOST_NAME, PINS[0])
                     .add(Constants.HOST_NAME, PINS[1])
                     .build();
 
-            OkHttpClient client = new OkHttpClient();
-            client.setCertificatePinner(certificatePinner);
+            okhttp3.OkHttpClient okHttpClient = new okhttp3.OkHttpClient.Builder().
+                    certificatePinner(certificatePinner).build();
 
-            Request request = new Request.Builder()
+            okhttp3.Request request = new okhttp3.Request.Builder()
                     .url(Constants.BASE_URL_WEB)
                     .build();
             try {
-                Response response = client.newCall(request).execute();
+                okhttp3.Response response = okHttpClient.newCall(request).execute();
                 if (response.isSuccessful()) {
                     return responseString = context.getString(R.string.OK);
                 } else return responseString = context.getString(R.string.service_not_available);
