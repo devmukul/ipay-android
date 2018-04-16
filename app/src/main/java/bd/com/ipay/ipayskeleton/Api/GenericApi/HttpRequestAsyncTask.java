@@ -58,7 +58,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         try {
             if (Utilities.isConnectionAvailable(mContext)) {
                 String responseFromSSL = SSLPinning.validatePinning();
-                if (responseFromSSL.equals("OK")) {
+                if (responseFromSSL.equals(mContext.getString(R.string.OK))) {
                     if (Constants.IS_API_VERSION_CHECKED && !Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND) {
                         mHttpResponse = makeRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
@@ -72,10 +72,10 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                         mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
                     }
                 } else {
-                    return new GenericHttpResponse(responseFromSSL,true);
+                    return new GenericHttpResponse(responseFromSSL, true);
                 }
             } else {
-                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection),false);
+                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection), false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,7 +129,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 if (mHttpResponseListener != null)
                     mHttpResponseListener.httpResponseReceiver(null);
             } else {
-                mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection,isSlient));
+                mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection, isSlient));
             }
         }
     }
@@ -151,7 +151,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 } catch (IOException e) {
 
                     if (e instanceof SocketException) {
-                        socketTimeOutConnection = "Network is unreachable";
+                        socketTimeOutConnection = mContext.getString(R.string.network_unreachable);
                     } else if (e instanceof SocketTimeoutException) {
                         socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
                     }
@@ -165,7 +165,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     okHttpResponse.setResponse(response);
                 } catch (IOException e) {
                     if (e instanceof SocketException) {
-                        socketTimeOutConnection = "Network is unreachable";
+                        socketTimeOutConnection = mContext.getString(R.string.network_unreachable);
                     } else if (e instanceof SocketTimeoutException) {
                         socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
                     }
@@ -206,7 +206,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 okHttpResponse.setResponse(response);
             } catch (IOException e) {
                 if (e instanceof SocketException) {
-                    socketTimeOutConnection = "Network is unreachable";
+                    socketTimeOutConnection = mContext.getString(R.string.network_unreachable);
                 } else if (e instanceof SocketTimeoutException) {
                     socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
                 }

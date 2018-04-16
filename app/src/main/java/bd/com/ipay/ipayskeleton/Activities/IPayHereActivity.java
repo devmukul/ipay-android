@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -242,7 +241,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         mProgressDialog.show();;
         String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
         mIPayHereTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
-                url, IPayHereActivity.this);
+                url, IPayHereActivity.this,false);
         mIPayHereTask.mHttpResponseListener = this;
         mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

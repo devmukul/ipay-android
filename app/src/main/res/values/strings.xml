@@ -1146,4 +1146,6 @@
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
     <string name="cheque_uploaded">Cheque successfully uploaded</string>
     <string name="connection_time_out">Connection time out</string>
+    <string name="network_unreachable">Network is unreachable</string>
+    <string name="OK">OK</string>
 </resources>
