@@ -9,6 +9,9 @@ public class OfferResponse {
     @SerializedName("expire_date")
     @Expose
     private Long expire_date;
+    @SerializedName("start_date")
+    @Expose
+    private Long start_date;
     @SerializedName("image_url")
     @Expose
     private String image_url;
@@ -22,8 +25,9 @@ public class OfferResponse {
     public OfferResponse() {
     }
 
-    public OfferResponse(Long expire_date, String image_url, String subtitle, String title) {
+    public OfferResponse(Long expire_date, Long start_date, String image_url, String subtitle, String title) {
         this.expire_date = expire_date;
+        this.start_date = start_date;
         this.image_url = image_url;
         this.subtitle = subtitle;
         this.title = title;
@@ -35,6 +39,14 @@ public class OfferResponse {
 
     public void setExpire_date(Long expire_date) {
         this.expire_date = expire_date;
+    }
+
+    public Long getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Long start_date) {
+        this.start_date = start_date;
     }
 
     public String getImage_url() {
