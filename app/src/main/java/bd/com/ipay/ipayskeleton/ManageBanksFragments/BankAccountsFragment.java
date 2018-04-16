@@ -287,7 +287,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
-        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(true)});
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
