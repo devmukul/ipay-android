@@ -147,11 +147,12 @@ public class OfferFragment extends BaseFragment {
                 final String description = transactionHistory.getTitle();
                 final String receiver = transactionHistory.getSubtitle();
                 final String status = transactionHistory.getImage_url();
+                final long start = transactionHistory.getStart_date();
                 final long expire = transactionHistory.getExpire_date();
 
                 mOfferTitleView.setText(description);
                 mOfferDetailsView.setText(receiver);
-                mExpireDateView.setText("This offer will expire in "+Utilities.formatDateWithTimeWithDevider(expire));
+                mExpireDateView.setText("This promotion is valid from "+Utilities.formatDateWithTime(start)+ " to "+Utilities.formatDateWithTime(expire));
                 mOfferImageView.setProfilePicture(status, false);
             }
         }
