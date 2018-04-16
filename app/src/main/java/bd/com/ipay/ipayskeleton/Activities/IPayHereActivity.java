@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -98,7 +97,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         autocompleteFragment.setFilter(autocompleteFilter);
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Loading Bussiness..");
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         searchLocationView = (CardView) findViewById(R.id.search_this_place);
         searchLocation = (Button) findViewById(R.id.seach_this_place_btn);
 
