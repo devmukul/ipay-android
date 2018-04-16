@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
@@ -706,12 +707,27 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 .setMessage(R.string.not_a_business_user)
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        getActivity().finish();
+                                        mIconEditMobileNumber.callOnClick();
                                     }
                                 })
                                 .setCancelable(false)
                                 .show();
+                    } else if (accountType == Constants.BUSINESS_ACCOUNT_TYPE && !mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                        MaterialDialog materialDialog;
+                        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
+                        materialDialogBuilder.positiveText(R.string.ok);
+                        materialDialogBuilder.content(getString(R.string.business_account_not_verified));
+                        materialDialogBuilder.dismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                mIconEditMobileNumber.callOnClick();
+
+                            }
+                        });
+                        materialDialog = materialDialogBuilder.build();
+                        materialDialog.show();
                     }
+
 
                     String profilePicture = null;
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {

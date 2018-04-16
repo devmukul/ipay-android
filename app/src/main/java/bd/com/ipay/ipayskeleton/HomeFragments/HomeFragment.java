@@ -27,11 +27,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -99,6 +101,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private LinearLayout mRequestMoneyButton;
     private LinearLayout mPayByQRCodeButton;
     private LinearLayout mMakePaymentButton;
+    private LinearLayout mTopUpButton;
+    private LinearLayout mIPayHereButton;
     public static ImageView refreshBalanceButton;
     private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -140,6 +144,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mRequestMoneyButton = (LinearLayout) v.findViewById(R.id.button_request_money);
         mPayByQRCodeButton = (LinearLayout) v.findViewById(R.id.button_pay_by_qr_code);
         mMakePaymentButton = (LinearLayout) v.findViewById(R.id.button_make_payment);
+        mTopUpButton = (LinearLayout) v.findViewById(R.id.button_topup);
+        mIPayHereButton = (LinearLayout) v.findViewById(R.id.button_ipay_here);
 
         mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
 
@@ -240,6 +246,33 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                     }
                 });
                 payByQCPinChecker.execute();
+            }
+        });
+
+        mTopUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mIPayHereButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent requestMoneyActivityIntent = new Intent(getActivity(), IPayHereActivity.class);
+                startActivity(requestMoneyActivityIntent);
             }
         });
 
