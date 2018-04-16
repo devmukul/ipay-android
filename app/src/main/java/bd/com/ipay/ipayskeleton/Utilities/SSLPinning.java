@@ -35,15 +35,22 @@ public class SSLPinning {
             try {
                 okhttp3.Response response = okHttpClient.newCall(request).execute();
                 if (response.isSuccessful()) {
-                    return responseString = context.getString(R.string.OK);
-                } else return responseString = context.getString(R.string.service_not_available);
+                    responseString = context.getString(R.string.OK);
+                    return responseString;
+                } else {
+                    responseString = context.getString(R.string.service_not_available);
+                    return responseString;
+                }
             } catch (IOException e) {
                 if (e instanceof SocketTimeoutException) {
-                    return responseString = context.getString(R.string.connection_time_out);
+                    responseString = context.getString(R.string.connection_time_out);
+                    return responseString;
                 } else if (e instanceof SocketException) {
-                    return responseString = context.getString(R.string.network_unreachable);
+                    responseString = context.getString(R.string.network_unreachable);
+                    return responseString;
                 } else {
-                    return responseString = context.getString(R.string.service_not_available);
+                    responseString = context.getString(R.string.service_not_available);
+                    return responseString;
                 }
             }
         } else return context.getString(R.string.OK);
