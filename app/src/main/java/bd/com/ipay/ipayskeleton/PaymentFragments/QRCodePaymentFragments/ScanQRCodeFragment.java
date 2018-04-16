@@ -61,7 +61,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
             mRootView = inflater.inflate(R.layout.fragment_scan_qr_code, container, false);
         }
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.setCancelable(false);
 
         Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);

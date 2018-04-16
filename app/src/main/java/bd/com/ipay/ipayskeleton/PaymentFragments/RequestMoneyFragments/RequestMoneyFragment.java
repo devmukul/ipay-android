@@ -389,7 +389,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,

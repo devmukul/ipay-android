@@ -68,7 +68,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_2fa_implement, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         getTwoFactorAuthSettings();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_view_two_factor_auth);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());

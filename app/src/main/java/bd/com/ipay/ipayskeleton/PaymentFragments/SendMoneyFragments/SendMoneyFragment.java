@@ -414,7 +414,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         if (mGetUserInfoTask != null) {
             return;
         }
-        mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait));
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait_loading));
         mCustomProgressDialog.showDialog();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
