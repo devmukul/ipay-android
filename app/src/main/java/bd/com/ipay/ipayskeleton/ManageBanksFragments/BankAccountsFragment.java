@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -294,17 +295,23 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
                 } else {
                     String amount = mAmountEditText.getText().toString().trim();
-                    if (Double.parseDouble(amount) <= 0) {
+                    if (InputValidator.isValidDigit(amount)) {
+                        if (Double.parseDouble(amount) <= 0) {
+                            mAmountEditText.setError(getString(R.string.please_enter_amount));
+                            mAmountEditText.requestFocus();
+                        } else if (Double.parseDouble(amount) > 0) {
+                            if (Utilities.isConnectionAvailable(getActivity())) {
+                                imm.hideSoftInputFromWindow(mAmountEditText.getWindowToken(), 0);
+                                attemptVerificationWithAmount(bankAccountID, Double.parseDouble(amount));
+                            } else
+                                Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    } else {
                         mAmountEditText.setError(getString(R.string.please_enter_amount));
                         mAmountEditText.requestFocus();
-                    } else if (Double.parseDouble(amount) > 0) {
-                        if (Utilities.isConnectionAvailable(getActivity())) {
-                            imm.hideSoftInputFromWindow(mAmountEditText.getWindowToken(), 0);
-                            attemptVerificationWithAmount(bankAccountID, Double.parseDouble(amount));
-                        } else
-                            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-                        dialog.dismiss();
                     }
+
                 }
             }
         });

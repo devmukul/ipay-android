@@ -184,6 +184,15 @@ public class InputValidator {
         else return number.length() == 13 && number.startsWith("880");
     }
 
+    public static boolean isValidDigit(String number) {
+        if (number == null)
+            return false;
+
+        if (!number.matches(".*[0-9].*"))
+            return false;
+        else return true;
+    }
+
     public static boolean isValidMobileNumberWithCountryCode(String mobileNumber, String countryCode) {
         if (countryCode.equals("BD")) {
             String formattedNumber = ContactEngine.formatMobileNumberInternational(mobileNumber, countryCode);
