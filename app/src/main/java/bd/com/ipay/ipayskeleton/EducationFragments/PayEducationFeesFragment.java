@@ -73,7 +73,7 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
             public void onClick(View v) {
                 if (mEnabledPayableItemList.size() == 0) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.please_wait, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.please_wait_loading, Toast.LENGTH_SHORT).show();
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putParcelableArrayList(EducationPaymentActivity.ARGS_ENABLED_PAYABLE_ITEMS, mEnabledPayableItemList);

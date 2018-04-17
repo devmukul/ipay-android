@@ -371,7 +371,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         this.mPin = pin;
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
             mProgressDialog.show();
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
@@ -469,7 +469,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         }
 
         if (isAdded()) {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         }
         mProgressDialog.show();
 

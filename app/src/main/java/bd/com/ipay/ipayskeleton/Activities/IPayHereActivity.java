@@ -98,7 +98,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         autocompleteFragment.setFilter(autocompleteFilter);
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Loading Bussiness..");
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         searchLocationView = (CardView) findViewById(R.id.search_this_place);
         searchLocation = (Button) findViewById(R.id.seach_this_place_btn);
 

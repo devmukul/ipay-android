@@ -114,7 +114,7 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
         uriLeaveAccount = new LeaveOrRemoveBusinessAccountRequestBuilder(id).getGeneratedUri();
         mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_LEAVE_ACCOUNT, uriLeaveAccount, getActivity(), this,false);
         mResignFromBusinessAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
     }
