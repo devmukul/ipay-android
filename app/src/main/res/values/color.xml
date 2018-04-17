@@ -75,6 +75,7 @@
     <color name="colorGrayDevider">#E0E0E0</color>
 
     <color name="colorOnBoardText">#212121</color>
+    <color name="colorAmountText">#333333</color>
 
     <color name="colorPaymentReviewPrimaryText">#212121</color>
     <color name="colorPaymentReviewSecondaryText">#666666</color>

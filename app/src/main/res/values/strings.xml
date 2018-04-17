@@ -94,7 +94,7 @@
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_list">Nothing to show right now.</string>
-    <string name="empty_list_offer">No promotional offer available right now. Please come back later.</string>
+    <string name="empty_list_offer">No promotional offer available right now.</string>
     <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
     <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network.\n\nIf you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network.\nYou will be asked to enter the codes contained in those messages.</string>
     <string name="remove_trusted_device_message">Removing device from your trusted device list</string>
@@ -405,6 +405,7 @@
     <string name="security_question_get_failed">Could not fetch security questions</string>
     <string name="security_answer_set_failed">Failed to set security answers</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
+    <string name="promotions_get_failed">Could not fetch promotions</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="events_get_failed">Could not fetch my events</string>
     <string name="recharging_balance">Processing mobile recharge…</string>
