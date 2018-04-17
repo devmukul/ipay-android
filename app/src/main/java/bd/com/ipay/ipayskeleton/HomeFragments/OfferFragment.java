@@ -23,14 +23,14 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer.OfferResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer.Promotion;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OfferFragment extends ProgressFragment implements HttpResponseListener{
+public class OfferFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mPromotionTask = null;
     private RecyclerView mPromotionsRecyclerView;
@@ -111,19 +111,19 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
         String url = "https://ipay-772e8.firebaseio.com/.json";
 
         mPromotionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROMOTIONS,
-                url, getActivity());
+                url, getActivity(), false);
         mPromotionTask.mHttpResponseListener = this;
         mPromotionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void loadPromotions(List<Promotion> promotions) {
         mPromotionList = new ArrayList<>();
-        for(int i=0; i<promotions.size();i++) {
+        for (int i = 0; i < promotions.size(); i++) {
             Promotion values = promotions.get(i);
             Calendar calendar = Calendar.getInstance();
             long currentTime = calendar.getTimeInMillis();
 
-            if(currentTime < values.getExpireDate()) {
+            if (currentTime < values.getExpireDate()) {
                 mPromotionList.add(values);
             }
         }
@@ -133,8 +133,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
             mEmptyListTextView.setVisibility(View.GONE);
             mPromotionsAdapter.notifyDataSetChanged();
             setContentShown(true);
-        }
-        else{
+        } else {
             mPromotionsRecyclerView.setVisibility(View.GONE);
             mEmptyListTextView.setVisibility(View.VISIBLE);
         }
@@ -166,14 +165,9 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     }
 
 
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mPromotionTask = null;
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             return;
         }
 
