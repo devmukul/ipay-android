@@ -749,6 +749,7 @@ public class Constants {
     public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
 
     public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
+    public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 
