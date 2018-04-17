@@ -175,7 +175,9 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
         if (!(mAmount.length() > 0 && Double.parseDouble(mAmount) > 0)) {
             errorMessage = getString(R.string.please_enter_amount);
 
-        } else if (mAmount.trim().length() > 0) {
+        } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+            errorMessage = getString(R.string.please_enter_amount);
+        } else if (mAmount.trim().length() > 0 && InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
             errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());

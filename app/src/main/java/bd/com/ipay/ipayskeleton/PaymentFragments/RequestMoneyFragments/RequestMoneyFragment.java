@@ -261,7 +261,9 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             errorMessage = getString(R.string.please_enter_amount);
-        } else if (mAmountEditText.getText().toString().trim().length() > 0) {
+        } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+            errorMessage = getString(R.string.please_enter_amount);
+        } else if (mAmountEditText.getText().toString().trim().length() > 0 && InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
 
             BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
 
@@ -355,10 +357,10 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                 } else {
                     getActivity().finish();
                 }
-            }else{
+            } else {
                 getActivity().finish();
             }
-        }else if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             String name = data.getStringExtra(Constants.NAME);
             String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);

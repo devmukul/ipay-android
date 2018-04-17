@@ -354,6 +354,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             if (TextUtils.isEmpty(mAmountEditText.getText())) {
                 errorMessage = getString(R.string.please_enter_amount);
 
+            } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+                errorMessage = getString(R.string.please_enter_amount);
             } else {
                 final BigDecimal sendMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
                 if (sendMoneyAmount.compareTo(balance) > 0) {
@@ -471,7 +473,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         if (mGetBusinessRuleTask != null) {
             return;
         }
-        mProgressDialog.setMessage("Fetching");
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,

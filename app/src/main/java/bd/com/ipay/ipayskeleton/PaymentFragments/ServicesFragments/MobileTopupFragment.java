@@ -248,7 +248,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         setDefaultUserInfo();
     }
 
-    private void setDefaultUserInfo(){
+    private void setDefaultUserInfo() {
         mMobileNumberEditText.setText(mUserMobileNumber);
 
         mProfilePicHolderView.setVisibility(View.VISIBLE);
@@ -264,6 +264,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mNameTextView.setText(mName);
         mAmountEditText.requestFocus();
     }
+
     private void setOperatorAndPackageAdapter() {
 
         int[] mIconList = getOperatorIcons();
@@ -330,6 +331,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
             //validation check of amount
             if (TextUtils.isEmpty(mAmountEditText.getText())) {
+                errorMessage = getString(R.string.please_enter_amount);
+            } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
                 errorMessage = getString(R.string.please_enter_amount);
             } else {
                 final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
