@@ -39,8 +39,8 @@
             <TextView
                 android:id="@+id/time"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:textColor="@color/colorBlackTransparent"
-                android:textSize="11sp" />
+                android:textColor="@color/colorPaymentReviewNoteText"
+                android:textSize="10sp" />
 
         </RelativeLayout>
 
@@ -52,8 +52,9 @@
                 android:id="@+id/activity_description"
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:fontFamily="sans-serif-light"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPaymentReviewPrimaryText"/>
 
             <ImageView
                 android:id="@+id/status_description_icon"
@@ -62,14 +63,15 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/value5"
-                android:layout_toRightOf="@id/activity_description" />
+                android:layout_toRightOf="@id/activity_description"/>
 
             <TextView
                 android:id="@+id/net_amount"
                 style="@style/TransactionHistoryRightTextViewStyle"
                 android:fontFamily="sans-serif-light"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorAmountText"/>
 
         </RelativeLayout>
 
@@ -81,11 +83,15 @@
             <TextView
                 android:id="@+id/receiver"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_toLeftOf="@+id/amount" />
+                android:layout_toLeftOf="@+id/amount"
+                android:textColor="@color/colorPaymentReviewNoteText"
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/amount"
-                style="@style/TransactionHistoryRightTextViewStyle" />
+                style="@style/TransactionHistoryRightTextViewStyle"
+                android:textColor="@color/colorPaymentReviewNoteText"
+                android:textSize="11sp"/>
         </RelativeLayout>
 
     </LinearLayout>

@@ -1,41 +1,45 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.devspark.progressfragment.ProgressFragment;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer.OfferResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer.Promotion;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OfferFragment extends BaseFragment {
+public class OfferFragment extends ProgressFragment implements HttpResponseListener{
 
-    private RecyclerView mOfferListRecyclerView;
-    private OfferListAdapter mOfferListAdapter;
+    private HttpRequestGetAsyncTask mPromotionTask = null;
+    private RecyclerView mPromotionsRecyclerView;
+    private PromotionsAdapter mPromotionsAdapter;
     private LinearLayoutManager mLayoutManager;
+    private List<Promotion> mPromotionList = new ArrayList<>();
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
-    private List<OfferResponse> mOfferList;
-
+    private boolean isLoading = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,52 +58,89 @@ public class OfferFragment extends BaseFragment {
         getActivity().setTitle(R.string.offer);
 
         initializeViews(v);
+        setupViewsAndActions();
 
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-
-        myRef.addValueEventListener(new ValueEventListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mOfferList = new ArrayList<OfferResponse>();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    OfferResponse value = dataSnapshot1.getValue(OfferResponse.class);
-
-                    Calendar calendar = Calendar.getInstance();
-                    long currentTime = calendar.getTimeInMillis();
-
-                    if (currentTime < value.getExpire_date()) {
-                        mOfferList.add(value);
-                    }
-                }
-
-                if (mOfferList.size() <= 0) {
-                    mEmptyListTextView.setVisibility(View.VISIBLE);
-                    mOfferListRecyclerView.setVisibility(View.GONE);
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity()) && mPromotionTask == null) {
+                    refreshPromotions();
                 } else {
-                    mEmptyListTextView.setVisibility(View.GONE);
-                    mOfferListRecyclerView.setVisibility(View.VISIBLE);
-                    setupRecyclerView();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("Hello", "Failed to read value.", error.toException());
             }
         });
+
         return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getPromotions();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.destroyDrawingCache();
+            mSwipeRefreshLayout.clearAnimation();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getView() != null) {
+            if (isVisibleToUser) {
+                refreshPromotions();
+            }
+        }
+    }
+
+    private void refreshPromotions() {
+        getPromotions();
+    }
+
+    private void getPromotions() {
+        if (mPromotionTask != null) {
+            return;
+        }
+        String url = "https://ipay-772e8.firebaseio.com/.json";
+
+        mPromotionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROMOTIONS,
+                url, getActivity());
+        mPromotionTask.mHttpResponseListener = this;
+        mPromotionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void loadPromotions(List<Promotion> promotions) {
+        mPromotionList = new ArrayList<>();
+        for(int i=0; i<promotions.size();i++) {
+            Promotion values = promotions.get(i);
+            Calendar calendar = Calendar.getInstance();
+            long currentTime = calendar.getTimeInMillis();
+
+            if(currentTime < values.getExpireDate()) {
+                mPromotionList.add(values);
+            }
+        }
+
+        if (mPromotionList != null && mPromotionList.size() > 0) {
+            mPromotionsRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyListTextView.setVisibility(View.GONE);
+            mPromotionsAdapter.notifyDataSetChanged();
+            setContentShown(true);
+        }
+        else{
+            mPromotionsRecyclerView.setVisibility(View.GONE);
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (isLoading)
+            isLoading = false;
     }
 
     @Override
@@ -109,17 +150,57 @@ public class OfferFragment extends BaseFragment {
 
     private void initializeViews(View v) {
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mOfferListRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+        mPromotionsRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+    }
+
+    private void setupViewsAndActions() {
+        setupRecyclerView();
     }
 
     private void setupRecyclerView() {
-        mOfferListAdapter = new OfferListAdapter();
+        mPromotionsAdapter = new PromotionsAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mOfferListRecyclerView.setLayoutManager(mLayoutManager);
-        mOfferListRecyclerView.setAdapter(mOfferListAdapter);
+        mPromotionsRecyclerView.setLayoutManager(mLayoutManager);
+        mPromotionsRecyclerView.setAdapter(mPromotionsAdapter);
     }
 
-    private class OfferListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mPromotionTask = null;
+            if (getActivity() != null)
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+            return;
+        }
+
+        Gson gson = new Gson();
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PROMOTIONS)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    OfferResponse mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), OfferResponse.class);
+                    loadPromotions(mTransactionHistoryResponse.getPromotions());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mPromotionsRecyclerView.setVisibility(View.GONE);
+                    mEmptyListTextView.setVisibility(View.VISIBLE);
+                    if (isLoading)
+                        isLoading = false;
+                }
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.promotions_get_failed, Toast.LENGTH_LONG).show();
+            }
+            mSwipeRefreshLayout.setRefreshing(false);
+            mPromotionTask = null;
+            if (this.isAdded()) setContentShown(true);
+        }
+    }
+
+    private class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView mOfferTitleView;
@@ -138,23 +219,23 @@ public class OfferFragment extends BaseFragment {
             }
 
             public void bindView(int pos) {
-                final OfferResponse transactionHistory = mOfferList.get(pos);
+                final Promotion promotionList = mPromotionList.get(pos);
 
-                final String description = transactionHistory.getTitle();
-                final String receiver = transactionHistory.getSubtitle();
-                final String status = transactionHistory.getImage_url();
-                final long start = transactionHistory.getStart_date();
-                final long expire = transactionHistory.getExpire_date();
+                final String title = promotionList.getTitle();
+                final String subtitle = promotionList.getSubtitle();
+                final String imageUrl = promotionList.getImageUrl();
+                final String period = promotionList.getPeriod();
+                final long expire = promotionList.getExpireDate();
 
-                mOfferTitleView.setText(description);
-                mOfferDetailsView.setText(receiver);
-                mExpireDateView.setText("This promotion is valid from " + Utilities.formatDateWithTime(start) + " to " + Utilities.formatDateWithTime(expire));
-                mOfferImageView.setProfilePicture(status, false);
+                mOfferTitleView.setText(title);
+                mOfferDetailsView.setText(subtitle);
+                mExpireDateView.setText(period);
+                mOfferImageView.setProfilePicture(imageUrl, false);
             }
         }
 
 
-        // Now define the view holder for Normal mOfferList item
+        // Now define the view holder for Normal mPromotionList item
         class NormalViewHolder extends ViewHolder {
             NormalViewHolder(View itemView) {
                 super(itemView);
@@ -185,7 +266,7 @@ public class OfferFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-            return mOfferList.size();
+            return mPromotionList.size();
         }
 
         @Override
