@@ -305,8 +305,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
-                mobileNumberView.setVisibility(View.GONE);
-                profileView.setVisibility(View.VISIBLE);
 
                 if (!imageURL.isEmpty()) {
                     mReceiverPhotoUri = imageURL;
@@ -316,6 +314,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mReceiverName = name;
                     businessNameTextView.setText(mReceiverName);
                 }
+
+                getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
 
                 mMobileNumberEditText.clearSelectedData();
             }
@@ -390,9 +390,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
 
-            mobileNumberView.setVisibility(View.GONE);
-            profileView.setVisibility(View.VISIBLE);
-
             if (!imageURL.isEmpty()) {
                 mReceiverPhotoUri = imageURL;
                 businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
@@ -400,6 +397,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             if (!name.isEmpty()) {
                 mReceiverName = name;
                 businessNameTextView.setText(mReceiverName);
+                getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber));
             }
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
