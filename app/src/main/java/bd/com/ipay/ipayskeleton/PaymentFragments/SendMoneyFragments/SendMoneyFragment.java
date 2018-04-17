@@ -354,6 +354,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             if (TextUtils.isEmpty(mAmountEditText.getText())) {
                 errorMessage = getString(R.string.please_enter_amount);
 
+            } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+                errorMessage = getString(R.string.please_enter_amount);
             } else {
                 final BigDecimal sendMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
                 if (sendMoneyAmount.compareTo(balance) > 0) {
