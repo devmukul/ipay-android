@@ -50,7 +50,7 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_invite_to_ipay) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_invite_to_ipay));
     }
 
     @Nullable
@@ -103,7 +103,7 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, getActivity(), this,true);
+                mUri, getActivity(), this, true);
 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -111,7 +111,7 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             return;
         }
         Gson gson = new Gson();

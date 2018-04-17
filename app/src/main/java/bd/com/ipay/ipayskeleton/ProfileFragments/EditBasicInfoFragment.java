@@ -235,7 +235,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
         mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, getActivity(), this, false);
         mSetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -265,7 +265,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mSetProfileInfoTask = null;
             return;
         }

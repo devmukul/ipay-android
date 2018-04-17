@@ -99,7 +99,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
 
                                     mProgressDialog.show();
                                     mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity(),false);
+                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
                                     mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
                                     mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 } else {
@@ -116,7 +116,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                 } else {
                     getActivity().finish();
                 }
-            }else{
+            } else {
                 getActivity().finish();
             }
         }
@@ -140,7 +140,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetUserInfoTask = null;
             return;
         }

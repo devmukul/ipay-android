@@ -554,7 +554,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity(), false);
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -581,7 +581,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, getContext(), this,false);
+                mUri, getContext(), this, false);
         mProgressDialog.setMessage(getActivity().getString(R.string.loading));
         mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.setCancelable(false);
@@ -600,7 +600,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this,false);
+                mUri, getActivity(), this, false);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -636,7 +636,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mProgressDialog.dismiss();
         Gson gson = new Gson();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mCustomProgressDialog.dismissDialog();
             mGetBusinessRuleTask = null;

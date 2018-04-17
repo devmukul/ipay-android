@@ -231,7 +231,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(), false);
         mGetBankTask.mHttpResponseListener = this;
 
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -270,7 +270,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this,false);
+                mUri, getActivity(), this, false);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -392,7 +392,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetBankTask = null;
             mGetBusinessRuleTask = null;

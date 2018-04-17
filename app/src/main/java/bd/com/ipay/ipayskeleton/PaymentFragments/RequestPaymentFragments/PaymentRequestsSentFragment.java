@@ -130,7 +130,7 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
         Gson gson = new Gson();
         String json = gson.toJson(mGetPendingPaymentsRequest);
         mPendingInvoicesTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT,
-                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity(), false);
         mPendingInvoicesTask.mHttpResponseListener = this;
         mPendingInvoicesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -138,7 +138,7 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mPendingInvoicesTask = null;
             mSwipeRefreshLayout.setRefreshing(false);

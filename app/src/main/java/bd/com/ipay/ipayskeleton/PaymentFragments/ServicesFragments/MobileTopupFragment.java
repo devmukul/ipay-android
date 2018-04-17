@@ -454,7 +454,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                getUserInfoRequestBuilder.getGeneratedUri(), getActivity(),false);
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
         mGetUserInfoTask.mHttpResponseListener = MobileTopupFragment.this;
         mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -470,7 +470,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this,true);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -514,7 +514,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity(), false);
         mTopupTask.mHttpResponseListener = this;
         mTopupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -540,7 +540,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         Gson gson = new Gson();
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 

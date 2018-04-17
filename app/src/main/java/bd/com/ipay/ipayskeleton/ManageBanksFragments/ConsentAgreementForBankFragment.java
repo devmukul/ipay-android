@@ -54,7 +54,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
     private BankBranch mBankBranch;
 
     private String mDocType;
-    private String [] mImageUrl;
+    private String[] mImageUrl;
 
     private boolean startedFromProfileCompletion = false;
     private boolean isSwitchedFromOnBoard = false;
@@ -143,7 +143,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
         Gson gson = new Gson();
         String json = gson.toJson(mAddBankRequest);
         mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity(), false);
         mAddBankTask.mHttpResponseListener = this;
         mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -152,14 +152,14 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
         final String url;
 
         url = Constants.BASE_URL_MM + Constants.URL_CHECKBOOK_COVOR_UPLOAD;
-        mUploadCheckbookCovorAsyncTask = new UploadChequebookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), mDocType,  mImageUrl, ConsentAgreementForBankFragment.this, bankId);
+        mUploadCheckbookCovorAsyncTask = new UploadChequebookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), mDocType, mImageUrl, ConsentAgreementForBankFragment.this, bankId);
         mUploadCheckbookCovorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.show();
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mAddBankTask = null;
             return;
@@ -174,9 +174,9 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     ProfileInfoCacheManager.addSourceOfFund(true);
-                    if(mImageUrl!=null) {
+                    if (mImageUrl != null) {
                         performIdentificationDocumentUpload(mAddBankResponse.getId());
-                    }else {
+                    } else {
                         mProgressDialog.dismiss();
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG);
@@ -201,7 +201,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
                 e.printStackTrace();
             }
             mAddBankTask = null;
-        }else if (result.getApiCommand().equals(Constants.COMMAND_UPLOAD_DOCUMENT)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_UPLOAD_DOCUMENT)) {
 
             mProgressDialog.dismiss();
 

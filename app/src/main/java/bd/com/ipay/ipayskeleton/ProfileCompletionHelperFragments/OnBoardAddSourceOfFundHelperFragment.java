@@ -44,7 +44,7 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                intent.putExtra(Constants.FROM_ON_BOARD,true);
+                intent.putExtra(Constants.FROM_ON_BOARD, true);
                 intent.putExtra(Constants.TAG, "CARD");
                 startActivity(intent);
             }

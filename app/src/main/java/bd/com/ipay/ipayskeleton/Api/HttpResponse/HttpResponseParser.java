@@ -30,13 +30,13 @@ public class HttpResponseParser {
     public GenericHttpResponse parseHttpResponse() {
         setTokenTimerAndRefreshToken(mHttpResponse.headers());
         mGenericHttpResponse = new GenericHttpResponse();
-        String jsonString="";
+        String jsonString = "";
         try {
             jsonString = mHttpResponse.body().string();
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
-        int status=mHttpResponse.code();
+        int status = mHttpResponse.code();
         mGenericHttpResponse.setJsonString(jsonString);
         mGenericHttpResponse.setApiCommand(API_COMMAND);
         mGenericHttpResponse.setHeaders(mHttpResponse.headers());
@@ -49,10 +49,10 @@ public class HttpResponseParser {
         if (headers.size() > 0) {
             for (int i = 0; i < headers.size(); i++) {
                 if (headers.name(i).equals(Constants.TOKEN)) {
-                    String k=headers.name(i);
-                    String l=headers.value(i);
-                    String p=k;
-                    String o=l;
+                    String k = headers.name(i);
+                    String l = headers.value(i);
+                    String p = k;
+                    String o = l;
                     TokenManager.setToken(l);
                     TokenManager.setiPayTokenTimeInMs(Utilities.getTimeFromBase64Token(TokenManager.getToken()));
 
@@ -63,7 +63,7 @@ public class HttpResponseParser {
                         myApplicationInstance.startTokenTimer();
                     }
 
-                } else if (headers. name(i).equals(Constants.REFRESH_TOKEN)) {
+                } else if (headers.name(i).equals(Constants.REFRESH_TOKEN)) {
                     TokenManager.setLastRefreshTokenFetchTime(Utilities.currentTime());
                     TokenManager.setRefreshToken(headers.value(i));
                     Logger.logD(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());

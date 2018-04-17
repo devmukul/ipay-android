@@ -101,7 +101,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_email) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_email));
     }
 
     @Nullable
@@ -224,7 +224,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         }
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this,true);
+                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this, true);
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -241,7 +241,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         mProgressDialog.show();
 
         mAddNewEmailTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_NEW_EMAIL,
-                Constants.BASE_URL_MM + Constants.URL_POST_EMAIL, json, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_POST_EMAIL, json, getActivity(), this, false);
         mAddNewEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -254,7 +254,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         mProgressDialog.show();
 
         mDeleteEmailTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_DELETE_EMAIL,
-                Constants.BASE_URL_MM + Constants.URL_DELETE_EMAIL + id, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_DELETE_EMAIL + id, getActivity(), this, false);
         mDeleteEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -273,7 +273,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         mMakePrimaryEmailTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_MAKE_PRIMARY,
                 Constants.BASE_URL_MM + Constants.URL_POST_EMAIL + id + Constants.URL_MAKE_PRIMARY_EMAIL,
-                json, getActivity(), this,false);
+                json, getActivity(), this, false);
         mMakePrimaryEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -283,7 +283,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetEmailsTask = null;
             mAddNewEmailTask = null;
             mAddNewEmailTask = null;

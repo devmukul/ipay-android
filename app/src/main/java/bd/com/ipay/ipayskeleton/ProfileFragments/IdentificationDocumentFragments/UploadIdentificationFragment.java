@@ -325,7 +325,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.cancel();
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mUploadIdentifierDocumentAsyncTask = null;
             return;
         }

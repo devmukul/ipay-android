@@ -128,7 +128,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         if (mGetIntroducersTask != null) return;
 
         mGetIntroducersTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity(),true);
+                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity(), true);
         mGetIntroducersTask.mHttpResponseListener = this;
         mGetIntroducersTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -137,7 +137,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         if (mGetSentRequestTask != null) return;
 
         mGetSentRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SENT_REQUEST_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity(),true);
+                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity(), true);
         mGetSentRequestTask.mHttpResponseListener = this;
         mGetSentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -148,7 +148,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
         mProgressDialog.show();
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
-                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity(), false);
         mAskForRecommendationTask.mHttpResponseListener = this;
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

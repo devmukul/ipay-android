@@ -317,7 +317,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private void getInviteInfo() {
         if (mGetInviteInfoTask == null) {
             mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    Constants.BASE_URL_MM + Constants.URL_GET_INVITE_INFO, getActivity(), this,false);
+                    Constants.BASE_URL_MM + Constants.URL_GET_INVITE_INFO, getActivity(), this, false);
             mGetInviteInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -383,7 +383,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 AddContactRequestBuilder(name, phoneNumber, relationship);
 
         mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), getActivity(), this,false);
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), getActivity(), this, false);
         mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -393,7 +393,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             mProgressDialog.dismiss();
         }
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetInviteInfoTask = null;
             mAddContactAsyncTask = null;
             return;

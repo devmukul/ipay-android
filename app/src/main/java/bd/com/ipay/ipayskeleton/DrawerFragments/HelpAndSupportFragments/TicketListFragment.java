@@ -59,7 +59,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_list) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_list));
     }
 
     @Nullable
@@ -117,7 +117,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         }
 
         mGetTicketsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKETS,
-                Constants.BASE_URL_ADMIN + Constants.URL_GET_TICKETS, getActivity(), this,false);
+                Constants.BASE_URL_ADMIN + Constants.URL_GET_TICKETS, getActivity(), this, false);
         mGetTicketsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -142,7 +142,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetTicketsTask = null;
             if (getActivity() != null) {
                 showErrorDialog();

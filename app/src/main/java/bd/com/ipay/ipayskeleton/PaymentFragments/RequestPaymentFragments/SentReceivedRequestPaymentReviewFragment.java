@@ -339,7 +339,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         Gson gson = new Gson();
         String json = gson.toJson(mRequestPaymentAcceptRejectOrCancelRequest);
         mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity(), false);
         mCancelRequestTask.mHttpResponseListener = this;
         mCancelRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -361,7 +361,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         Gson gson = new Gson();
         String json = gson.toJson(mRequestPaymentAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity(), false);
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -409,7 +409,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         Gson gson = new Gson();
         String json = gson.toJson(mRequestPaymentAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity(), false);
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -475,7 +475,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this,true);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -485,7 +485,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         super.httpResponseReceiver(result);
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mAcceptRequestTask = null;
             mCancelRequestTask = null;
             mRejectRequestTask = null;

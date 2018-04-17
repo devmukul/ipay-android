@@ -65,7 +65,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_information_edit) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_information_edit));
     }
 
     @Nullable
@@ -150,7 +150,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         String json = gson.toJson(setBusinessInformationRequest);
 
         mSetBusinessInformationRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_BUSINESS_INFORMATION,
-                Constants.BASE_URL_MM + Constants.URL_SET_BUSINESS_INFORMATION, json, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_SET_BUSINESS_INFORMATION, json, getActivity(), this, false);
         mSetBusinessInformationRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -185,7 +185,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mSetBusinessInformationRequestAsyncTask = null;
             return;
         }

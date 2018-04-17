@@ -72,7 +72,7 @@ public class IconifiedEditText extends FrameLayout {
                 mEditText.setHint(hint);
             mEditText.setInputType(inputType);
             if (maxLength != -1) {
-                mEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
+                mEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
             }
             if (maxLines != -1)
                 mEditText.setMaxLines(maxLines);
@@ -90,7 +90,7 @@ public class IconifiedEditText extends FrameLayout {
                     v.setBackgroundResource(R.drawable.background_half_lower_round_white);
                     mDivider.setVisibility(View.GONE);
                     break;
-                case 0x1|0x2:
+                case 0x1 | 0x2:
                     v.setBackgroundResource(R.drawable.background_rounded_white);
                     mDivider.setVisibility(View.GONE);
                     break;

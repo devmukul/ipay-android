@@ -15,8 +15,8 @@ public class HttpDeleteWithBodyAsyncTask extends HttpRequestAsyncTask {
     private final String mJsonString;
 
     public HttpDeleteWithBodyAsyncTask(String API_COMMAND, String mUri, String mJsonString,
-                                       Context mContext, HttpResponseListener listener,boolean isSilent) {
-        super(API_COMMAND, mUri, mContext, listener,isSilent);
+                                       Context mContext, HttpResponseListener listener, boolean isSilent) {
+        super(API_COMMAND, mUri, mContext, listener, isSilent);
         this.mJsonString = mJsonString;
     }
 

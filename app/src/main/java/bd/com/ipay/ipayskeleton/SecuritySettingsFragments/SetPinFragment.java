@@ -120,7 +120,7 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
             Gson gson = new Gson();
             String json = gson.toJson(mSetPinRequest);
             mSavePINTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN,
-                    Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getActivity(),false);
+                    Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getActivity(), false);
             mSavePINTask.mHttpResponseListener = this;
             mSavePINTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

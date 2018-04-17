@@ -99,7 +99,7 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends BaseFragment im
         String json = gson.toJson(mAddMoneyRequest);
 
         mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD, json, getActivity(),false);
+                Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD, json, getActivity(), false);
         mAddMoneyTask.mHttpResponseListener = this;
 
         mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -133,7 +133,7 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends BaseFragment im
         if (isAdded()) mProgressDialog.dismiss();
         mAddMoneyTask = null;
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             return;
         }

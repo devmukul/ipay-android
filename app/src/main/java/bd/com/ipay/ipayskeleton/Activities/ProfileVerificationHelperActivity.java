@@ -118,7 +118,7 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
         String json = gson.toJson(mLogoutModel);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, ProfileVerificationHelperActivity.this,false);
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, ProfileVerificationHelperActivity.this, false);
         mLogoutTask.mHttpResponseListener = this;
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -192,7 +192,7 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,this,mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
             return;

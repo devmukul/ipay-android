@@ -71,7 +71,7 @@ public class PinChecker implements HttpResponseListener {
         mProgressDialog.show();
 
         mGetPinInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PIN_INFO,
-                Constants.BASE_URL_MM + Constants.URL_GET_PIN_INFO, mContext, this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_PIN_INFO, mContext, this, false);
         mGetPinInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -80,7 +80,7 @@ public class PinChecker implements HttpResponseListener {
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,mContext,null)) {
+        if (HttpErrorHandler.isErrorFound(result, mContext, null)) {
             mGetPinInfoTask = null;
             return;
         }

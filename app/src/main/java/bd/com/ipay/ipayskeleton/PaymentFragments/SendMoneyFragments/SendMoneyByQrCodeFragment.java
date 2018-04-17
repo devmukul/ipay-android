@@ -198,7 +198,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this,true);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -206,7 +206,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 

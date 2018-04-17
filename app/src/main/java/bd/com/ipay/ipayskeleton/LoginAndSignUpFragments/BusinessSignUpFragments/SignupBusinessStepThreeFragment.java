@@ -264,7 +264,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity(),false);
+                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity(), false);
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -281,7 +281,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mRequestOTPTask = null;
             return;

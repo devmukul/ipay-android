@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
-public class ManagerRequestHolderFragment extends Fragment implements HttpResponseListener{
+public class ManagerRequestHolderFragment extends Fragment implements HttpResponseListener {
 
     private RadioButton mPendingTransactionRadioButton;
     private RadioButton mCompletedTransactionRadioButton;
@@ -120,7 +120,7 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
             return;
 
         mGetAllAcceptedEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCEPTED_EMPLOYEE_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this, false);
         mGetAllAcceptedEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -129,7 +129,7 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
             return;
 
         mGetAllPendingEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_EMPLOYEE_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_EMPLOYEE_LIST, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_EMPLOYEE_LIST, getActivity(), this, false);
         mGetAllPendingEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -145,7 +145,7 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetAllAcceptedEmployeeAsyncTask = null;
             mGetAllPendingEmployeeAsyncTask = null;
             return;
@@ -181,17 +181,17 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mPendingEmployeeList = mGetAllPendingEmployeesResponse.getPendingInvitationList();
 
-                    if (mAcceptedEmployeeList.size()>0) {
+                    if (mAcceptedEmployeeList.size() > 0) {
                         mLoadingLayout.setVisibility(View.GONE);
                         mBlankLayout.setVisibility(View.GONE);
                         mEmployeeListLayout.setVisibility(View.VISIBLE);
                         mCompletedTransactionRadioButton.setChecked(true);
-                    } else if (mPendingEmployeeList.size()>0) {
+                    } else if (mPendingEmployeeList.size() > 0) {
                         mLoadingLayout.setVisibility(View.GONE);
                         mBlankLayout.setVisibility(View.GONE);
                         mEmployeeListLayout.setVisibility(View.VISIBLE);
                         mPendingTransactionRadioButton.setChecked(true);
-                    }else{
+                    } else {
                         mLoadingLayout.setVisibility(View.GONE);
                         mBlankLayout.setVisibility(View.VISIBLE);
                         mEmployeeListLayout.setVisibility(View.GONE);

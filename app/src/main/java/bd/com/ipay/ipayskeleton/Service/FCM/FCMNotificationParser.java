@@ -8,7 +8,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FCMNotificationParser {
 
-    public static int parseServiceID(FCMNotificationResponse fcmNotificationResponse){
+    public static int parseServiceID(FCMNotificationResponse fcmNotificationResponse) {
         return fcmNotificationResponse.getServiceId();
     }
 

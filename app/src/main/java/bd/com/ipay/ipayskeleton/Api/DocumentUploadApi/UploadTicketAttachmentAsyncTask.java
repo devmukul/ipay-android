@@ -72,8 +72,8 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
     protected void onPostExecute(final GenericHttpResponse result) {
 
         if (socketTimeOutException != null) {
-           mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException));
-           return;
+            mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException));
+            return;
         }
 
         if (result != null) {

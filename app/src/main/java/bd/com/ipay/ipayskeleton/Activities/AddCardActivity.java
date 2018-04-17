@@ -100,7 +100,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
         if (mGetAllAddedCards != null) return;
         else {
             mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
-                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, this, this,false);
+                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, this, this, false);
             mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.show();

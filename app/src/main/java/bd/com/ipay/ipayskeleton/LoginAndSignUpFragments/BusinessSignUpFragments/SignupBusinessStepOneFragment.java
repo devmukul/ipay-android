@@ -93,7 +93,7 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_signup_business_page);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_1) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_1));
     }
 
     private void verifyUserInputs() {
@@ -145,7 +145,7 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
         CheckIfUserExistsRequestBuilder checkIfUserExistsRequestBuilder = new CheckIfUserExistsRequestBuilder(SignupOrLoginActivity.mMobileNumberBusiness);
         String mUri = checkIfUserExistsRequestBuilder.getGeneratedUri();
         mCheckIfUserExistsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_IF_USER_EXISTS,
-                mUri, null, getActivity(),false);
+                mUri, null, getActivity(), false);
         mCheckIfUserExistsTask.mHttpResponseListener = this;
         mCheckIfUserExistsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -153,7 +153,7 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mCheckIfUserExistsTask = null;
             return;

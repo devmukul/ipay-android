@@ -84,7 +84,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, this, this,true);
+                mUri, this, this, true);
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);

@@ -101,7 +101,7 @@ public class ManagerRequestAcceptedFragment extends BaseFragment implements Http
             return;
 
         mGetAllManagerAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCEPTED_EMPLOYEE_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this, false);
         mGetAllManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -110,7 +110,7 @@ public class ManagerRequestAcceptedFragment extends BaseFragment implements Http
             return;
 
         mRemoveAnManagerAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, getContext(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, getContext(), this, false);
         mRemoveAnManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

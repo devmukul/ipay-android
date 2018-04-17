@@ -82,9 +82,9 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
     private boolean mIsScrolled = false;
-    private int mTotalItemCount =0;
-    private  int mPastVisiblesItems;
-    private  int mVisibleItem;
+    private int mTotalItemCount = 0;
+    private int mPastVisiblesItems;
+    private int mVisibleItem;
 
     private Menu menu;
     private Tracker mTracker;
@@ -92,7 +92,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_activity_log) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_activity_log));
     }
 
     @Override
@@ -461,7 +461,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         String url = GetActivityRequestBuilder.generateUri(type,
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
         mUserActivityTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
-                url, getActivity(),false);
+                url, getActivity(), false);
         mUserActivityTask.mHttpResponseListener = this;
         mUserActivityTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -482,7 +482,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 super.onScrolled(recyclerView, dx, dy);
 
                 mVisibleItem = recyclerView.getChildCount();
-                mTotalItemCount =mLayoutManager.getItemCount();
+                mTotalItemCount = mLayoutManager.getItemCount();
                 mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (mIsScrolled
                         && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
@@ -503,7 +503,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mUserActivityTask = null;
             setContentShown(true);
             return;

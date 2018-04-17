@@ -102,7 +102,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_details) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_details));
     }
 
     @Nullable
@@ -290,7 +290,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         setContentShown(false);
 
         mGetTicketDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_DETAILS,
-                new GetTicketDetailsRequestBuilder().generateUri(ticketId).toString(), getActivity(), this,true);
+                new GetTicketDetailsRequestBuilder().generateUri(ticketId).toString(), getActivity(), this, true);
         mGetTicketDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -307,7 +307,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         String json = gson.toJson(addCommentRequest);
 
         mNewCommentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_COMMENT, Constants.BASE_URL_ADMIN + Constants.URL_ADD_COMMENT,
-                json, getActivity(), this,false);
+                json, getActivity(), this, false);
         mNewCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -325,7 +325,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             mProgressDialog.dismiss();
         }
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetTicketDetailsTask = null;
             if (getActivity() != null) {
                 getActivity().onBackPressed();

@@ -375,7 +375,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             }
 
             mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this,true);
+                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this, true);
             mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             mProfileCompletionStatusView.setVisibility(View.GONE);
@@ -400,7 +400,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             mProgressDialog.dismiss();
         }
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mUploadProfilePictureAsyncTask = null;
             mGetProfileCompletionStatusTask = null;
             return;

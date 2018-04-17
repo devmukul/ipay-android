@@ -420,7 +420,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait_loading));
         mCustomProgressDialog.showDialog();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                getUserInfoRequestBuilder.getGeneratedUri(), getActivity(),false);
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
         mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
         mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -465,7 +465,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity(), false);
         mSendMoneyTask.mHttpResponseListener = this;
         mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -478,7 +478,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this,true);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -495,11 +495,11 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         Gson gson = new Gson();
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mCustomProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mGetUserInfoTask = null;
             mSendMoneyTask = null;
             mGetBusinessRuleTask = null;
-            if(mOTPVerificationForTwoFactorAuthenticationServicesDialog !=null){
+            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
             }
 

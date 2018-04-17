@@ -122,12 +122,11 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String pin = mPinField.getText().toString();
-                if (pin.isEmpty()){
+                if (pin.isEmpty()) {
                     mPinField.setError(getContext().getString(R.string.failed_empty_pin));
                     View focusView = mPinField;
                     focusView.requestFocus();
-                }
-                else {
+                } else {
                     dialog.dismiss();
                     if (mServiceID == Constants.SERVICE_ID_REQUEST_MONEY)
                         acceptRequestMoney(requestId, pin);
@@ -157,7 +156,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context,false);
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context, false);
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -175,7 +174,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context,false);
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context, false);
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -183,7 +182,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mAcceptRequestTask = null;
             mAcceptPaymentTask = null;
             return;

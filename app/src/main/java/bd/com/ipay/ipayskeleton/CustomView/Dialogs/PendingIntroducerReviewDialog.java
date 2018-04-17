@@ -126,7 +126,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
         GetPendingIntroducerRequestBuilder getSecurityQuestionBuilder = new GetPendingIntroducerRequestBuilder(requestID, introducerAcceptRejectStatus);
         String url = getSecurityQuestionBuilder.getGeneratedUri();
 
-        mPendingIntroducerActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION, url, null, Context,false);
+        mPendingIntroducerActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION, url, null, Context, false);
         mPendingIntroducerActionTask.mHttpResponseListener = this;
         mPendingIntroducerActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -134,7 +134,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mPendingIntroducerActionTask = null;
             return;

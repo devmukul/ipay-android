@@ -461,7 +461,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             return;
         }
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this, false);
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -471,7 +471,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         }
 
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
-                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this,false);
+                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this, false);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -496,7 +496,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             return;
 
         mGetBusinessInformationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_INFORMATION,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_INFORMATION, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_INFORMATION, getActivity(), this, false);
         mGetBusinessInformationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

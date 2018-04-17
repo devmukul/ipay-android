@@ -58,9 +58,7 @@ public class ManageBanksActivity extends BaseActivity {
             bundle.putBoolean(Constants.FROM_ON_BOARD, switchedFromOnBoard);
             mFabAddNewBank.setVisibility(View.GONE);
             switchToAddNewBankFragment(bundle);
-        }
-
-        else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
+        } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
             if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.BANK_ACCOUNT)) {
                 switchToBankAccountsFragment();
             } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.ADD_BANK)) {

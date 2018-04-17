@@ -134,7 +134,7 @@ public class ChangePasswordFragment extends BaseFragment implements HttpResponse
             Gson gson = new Gson();
             String json = gson.toJson(mChangePasswordValidationRequest);
             mChangePasswordValidationTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD_VALIDATION,
-                    Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, getActivity(),false);
+                    Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, getActivity(), false);
             mChangePasswordValidationTask.mHttpResponseListener = this;
             mChangePasswordValidationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

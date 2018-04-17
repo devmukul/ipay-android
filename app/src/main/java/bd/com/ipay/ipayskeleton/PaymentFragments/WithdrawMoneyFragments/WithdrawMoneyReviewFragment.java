@@ -178,7 +178,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         Gson gson = new Gson();
         String json = gson.toJson(mWithdrawMoneyRequest);
         mWithdrawMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity(), false);
         mWithdrawMoneyTask.mHttpResponseListener = this;
 
         mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -227,7 +227,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         super.httpResponseReceiver(result);
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mCustomProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mWithdrawMoneyTask = null;
             return;
         }

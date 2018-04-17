@@ -18,7 +18,7 @@ public class DialogUtils {
     public static MaterialDialog showAppUpdateDialog;
 
     public static void showAppUpdateRequiredDialog(final Context mContext) {
-        if(showAppUpdateDialog!=null){
+        if (showAppUpdateDialog != null) {
             return;
         }
         showAppUpdateDialog = new MaterialDialog.Builder(mContext)
@@ -135,6 +135,7 @@ public class DialogUtils {
                 .show();
         dialog.show();
     }
+
     public static void showProfilePictureUpdateRestrictionDialog(Context context) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog

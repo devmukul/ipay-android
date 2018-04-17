@@ -160,8 +160,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         });
 
 
-
-
         return v;
     }
 
@@ -312,7 +310,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number_of_minimum_digit));
             focusView = mAccountNumberEditText;
             focusView.requestFocus();
-        } else if (mChequebookCoverImageFile!=null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
+        } else if (mChequebookCoverImageFile != null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
             mChequebookCoverPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
             mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
             focusView = null;
@@ -337,7 +335,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         bundle.putBoolean(Constants.FROM_ON_BOARD, isSwitchedFromOnBoard);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
-        if(mChequebookCoverImageFile!=null) {
+        if (mChequebookCoverImageFile != null) {
             bundle.putString(Constants.DOCUMENT_TYPE, "cheque");
             bundle.putStringArray(Constants.PHOTO_URI, getUploadFilePaths());
         }
@@ -354,7 +352,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
         String mUri = mBankBranchRequestBuilder.getGeneratedUri();
         mGetBankBranchesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_BRANCH_LIST,
-                mUri, getActivity(),false);
+                mUri, getActivity(), false);
         mGetBankBranchesTask.mHttpResponseListener = this;
 
         mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -368,7 +366,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(), false);
         mGetBankTask.mHttpResponseListener = this;
 
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -442,7 +440,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             return;
         }

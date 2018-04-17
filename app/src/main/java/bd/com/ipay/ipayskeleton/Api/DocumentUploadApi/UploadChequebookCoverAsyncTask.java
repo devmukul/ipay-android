@@ -71,7 +71,7 @@ public class UploadChequebookCoverAsyncTask extends AsyncTask<Void, Void, Generi
     @Override
     protected void onPostExecute(final GenericHttpResponse result) {
 
-        if(HttpErrorHandler.isErrorFound(result,mContext,null)){
+        if (HttpErrorHandler.isErrorFound(result, mContext, null)) {
             return;
         }
 

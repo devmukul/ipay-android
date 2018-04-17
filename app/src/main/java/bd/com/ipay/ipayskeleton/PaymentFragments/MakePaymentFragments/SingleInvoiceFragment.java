@@ -110,7 +110,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         mProgressDialog.setMessage(getString(R.string.progress_dialog_payment_request));
         mProgressDialog.show();
         mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_REQUEST_PAYMENT,
-                Constants.BASE_URL_SM + Constants.URL_GET_SINGLE_REQUEST_PAYMENT + invoiceId + "/", getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_GET_SINGLE_REQUEST_PAYMENT + invoiceId + "/", getActivity(), false);
         mGetSingleInvoiceTask.mHttpResponseListener = this;
         mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -143,7 +143,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity(), false);
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -161,7 +161,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity(), false);
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -187,7 +187,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mAcceptPaymentTask = null;
             mRejectRequestTask = null;

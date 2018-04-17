@@ -133,7 +133,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         GetAllSecurityQuestionRequestBuilder getSecurityQuestionBuilder = new GetAllSecurityQuestionRequestBuilder();
         String url = getSecurityQuestionBuilder.getGeneratedUri();
         mGetAllSecurityQuestionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ALL_SECURITY_QUESTIONS,
-                url, getActivity(),false);
+                url, getActivity(), false);
         mGetAllSecurityQuestionTask.mHttpResponseListener = this;
         mGetAllSecurityQuestionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -145,7 +145,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         GetPreviousSelectedSecurityQuestionRequestBuilder getSecurityQuestionBuilder = new GetPreviousSelectedSecurityQuestionRequestBuilder();
         String url = getSecurityQuestionBuilder.getGeneratedUri();
         mGetPreviousSelectedSecurityQuestionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SELECTED_SECURITY_QUESTIONS,
-                url, getActivity(),true);
+                url, getActivity(), true);
         mGetPreviousSelectedSecurityQuestionTask.mHttpResponseListener = this;
         mGetPreviousSelectedSecurityQuestionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -191,7 +191,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         Gson gson = new Gson();
         String json = gson.toJson(setSecurityAnswerRequest, SetSecurityAnswerRequest.class);
         mSetSecurityAnswerTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_SECURITY_ANSWERS,
-                Constants.BASE_URL_MM + Constants.URL_SET_SECURITY_ANSWERS, json, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_SET_SECURITY_ANSWERS, json, getActivity(), false);
         mSetSecurityAnswerTask.mHttpResponseListener = this;
         mSetSecurityAnswerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

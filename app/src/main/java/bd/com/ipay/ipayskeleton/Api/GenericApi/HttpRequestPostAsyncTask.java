@@ -16,13 +16,13 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
 
 
     public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString,
-                                    Context mContext, HttpResponseListener listener,boolean isSilent) {
-        super(API_COMMAND, mUri, mContext, listener,isSilent);
+                                    Context mContext, HttpResponseListener listener, boolean isSilent) {
+        super(API_COMMAND, mUri, mContext, listener, isSilent);
         this.mJsonString = mJsonString;
     }
 
     public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext, boolean isSilent) {
-        this(API_COMMAND, mUri, mJsonString, mContext, null,isSilent);
+        this(API_COMMAND, mUri, mJsonString, mContext, null, isSilent);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
                 .post(requestBody)
                 .url(mUri);
         if (TokenManager.getOnAccountId() != null && TokenManager.getOnAccountId() != "") {
-            requestBuilder.header(Constants.OPERATING_ON_ACCOUNT_ID,TokenManager.getOnAccountId());
+            requestBuilder.header(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
         }
 
         return requestBuilder.build();

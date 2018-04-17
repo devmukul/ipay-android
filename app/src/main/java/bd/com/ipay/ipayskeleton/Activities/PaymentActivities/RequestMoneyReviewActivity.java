@@ -82,7 +82,7 @@ public class RequestMoneyReviewActivity extends BaseActivity implements HttpResp
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, this, this,false);
+                mUri, this, this, false);
 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -112,7 +112,7 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
             return;
         }
         uriLeaveAccount = new LeaveOrRemoveBusinessAccountRequestBuilder(id).getGeneratedUri();
-        mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_LEAVE_ACCOUNT, uriLeaveAccount, getActivity(), this,false);
+        mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_LEAVE_ACCOUNT, uriLeaveAccount, getActivity(), this, false);
         mResignFromBusinessAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
@@ -141,7 +141,7 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
             GetBusinessDetailsRequestBuilder getBusinessDetailsRequestBuilder = new GetBusinessDetailsRequestBuilder(mBusinessAccountID);
             uriGetDetailsOfBusiness = getBusinessDetailsRequestBuilder.getGeneratedUri();
             mGetDetailsOfRoleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
-                    uriGetDetailsOfBusiness, getActivity(),false);
+                    uriGetDetailsOfBusiness, getActivity(), false);
             mGetDetailsOfRoleTask.mHttpResponseListener = this;
             mGetDetailsOfRoleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

@@ -68,7 +68,7 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_consent_agreement_for_bank) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_consent_agreement_for_bank));
     }
 
     private void setOnClickListeners() {
@@ -123,14 +123,14 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
         Gson gson = new Gson();
         String json = gson.toJson(mAddBankRequest);
         mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity(), false);
         mAddBankTask.mHttpResponseListener = this;
         mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mAddBankTask = null;
             return;
@@ -146,9 +146,9 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG);
 
-                    if(!ProfileInfoCacheManager.isIntroductionAsked() && !ProfileInfoCacheManager.isSwitchedFromSignup()){
+                    if (!ProfileInfoCacheManager.isIntroductionAsked() && !ProfileInfoCacheManager.isSwitchedFromSignup()) {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToAskedIntroductionHelperFragment();
-                    }else {
+                    } else {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                     }
 

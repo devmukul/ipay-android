@@ -288,7 +288,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
             mProgressDialog.dismiss();
         }
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mUploadProfilePictureAsyncTask = null;
             return;
         }

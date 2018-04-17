@@ -174,7 +174,7 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity(), false);
         mTopupTask.mHttpResponseListener = this;
         mTopupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -220,7 +220,7 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, getActivity(), this,false);
+                mUri, getActivity(), this, false);
 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -230,7 +230,7 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
         if (isAdded())
             mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
             mTopupTask = null;

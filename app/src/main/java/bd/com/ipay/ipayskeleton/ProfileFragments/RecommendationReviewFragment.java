@@ -264,7 +264,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mProgressDialog.setMessage(getString(R.string.processing));
         mProgressDialog.show();
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
-                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity(), false);
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -272,13 +272,13 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
     private void getDistrictList() {
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this,true);
+                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this, true);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getThanaList() {
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this,true);
+                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this, true);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -302,7 +302,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;

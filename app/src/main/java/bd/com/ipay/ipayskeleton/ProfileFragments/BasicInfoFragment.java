@@ -234,7 +234,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             setContentShown(false);
 
             mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this,false);
+                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this, false);
             mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -248,7 +248,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
                 return;
             }
             mGetParentInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PARENT_INFO_REQUEST,
-                    Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this,true);
+                    Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this, true);
             mGetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -260,7 +260,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             return;
         }
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
-                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this,true);
+                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this, true);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -268,7 +268,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetProfileInfoTask = null;
             setContentShown(true);
             mGetOccupationTask = null;

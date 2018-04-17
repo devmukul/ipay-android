@@ -139,7 +139,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     public void onResume() {
         super.onResume();
         getSentMoneyList(false);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_sent) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_sent));
     }
 
     private void getPendingRequests() {
@@ -153,7 +153,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mPendingRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
-                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity(), false);
         mPendingRequestTask.mHttpResponseListener = this;
         mPendingRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -171,7 +171,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity(), false);
         mCancelRequestTask.mHttpResponseListener = this;
         mCancelRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -180,7 +180,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (this.isAdded()) setContentShown(true);
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mProgressDialog.dismiss();
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);

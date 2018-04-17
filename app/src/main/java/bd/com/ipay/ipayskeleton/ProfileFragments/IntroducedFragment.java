@@ -63,7 +63,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_introduces) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_introduces));
     }
 
     @Nullable
@@ -110,7 +110,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
         if (mGetIntroducedTask != null) return;
 
         mGetIntroducedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity(), false);
         mGetIntroducedTask.mHttpResponseListener = this;
         mGetIntroducedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -119,7 +119,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
         if (mGetRecommendationRequestsTask != null) return;
 
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity(), false);
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -128,7 +128,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) throws RuntimeException {
         mGetRecommendationRequestsTask = null;
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             setContentShown(true);
             return;

@@ -49,7 +49,7 @@ public class PasswordRecoveryFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_password_recovery) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_password_recovery));
     }
 
     public void setTitle() {

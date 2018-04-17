@@ -146,7 +146,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
-                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity(), false);
         mGetAllNotificationsTask.mHttpResponseListener = this;
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -155,7 +155,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (this.isAdded()) setContentShown(true);
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             return;

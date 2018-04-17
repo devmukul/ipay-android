@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DBContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -302,7 +300,7 @@ public class ContactsSearchView extends FrameLayout {
                     else mName = name;
                     mImageURL = profilePictureUrlQualityMedium;
                     mCustomAutoCompleteView.clearFocus();
-                    Utilities.hideKeyboard(mContext,mCustomAutoCompleteView);
+                    Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
                 }
             });
 

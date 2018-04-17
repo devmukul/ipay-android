@@ -33,7 +33,7 @@ public class OfferFragment extends BaseFragment {
     private LinearLayoutManager mLayoutManager;
     private TextView mEmptyListTextView;
     private FirebaseDatabase database;
-    private DatabaseReference myRef ;
+    private DatabaseReference myRef;
     private List<OfferResponse> mOfferList;
 
 
@@ -62,21 +62,21 @@ public class OfferFragment extends BaseFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mOfferList = new ArrayList<OfferResponse>();
-                for(DataSnapshot dataSnapshot1 :dataSnapshot.getChildren()){
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     OfferResponse value = dataSnapshot1.getValue(OfferResponse.class);
 
                     Calendar calendar = Calendar.getInstance();
                     long currentTime = calendar.getTimeInMillis();
 
-                    if(currentTime < value.getExpire_date()) {
+                    if (currentTime < value.getExpire_date()) {
                         mOfferList.add(value);
                     }
                 }
 
-                if(mOfferList.size()<=0){
+                if (mOfferList.size() <= 0) {
                     mEmptyListTextView.setVisibility(View.VISIBLE);
                     mOfferListRecyclerView.setVisibility(View.GONE);
-                }else {
+                } else {
                     mEmptyListTextView.setVisibility(View.GONE);
                     mOfferListRecyclerView.setVisibility(View.VISIBLE);
                     setupRecyclerView();
@@ -148,7 +148,7 @@ public class OfferFragment extends BaseFragment {
 
                 mOfferTitleView.setText(description);
                 mOfferDetailsView.setText(receiver);
-                mExpireDateView.setText("This promotion is valid from "+Utilities.formatDateWithTime(start)+ " to "+Utilities.formatDateWithTime(expire));
+                mExpireDateView.setText("This promotion is valid from " + Utilities.formatDateWithTime(start) + " to " + Utilities.formatDateWithTime(expire));
                 mOfferImageView.setProfilePicture(status, false);
             }
         }

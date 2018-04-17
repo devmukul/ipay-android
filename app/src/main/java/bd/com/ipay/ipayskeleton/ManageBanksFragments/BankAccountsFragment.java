@@ -158,7 +158,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         }
 
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(),true);
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(), true);
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -179,7 +179,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         VerifyBankWithAmountRequestBuilder mVerifyBankWithAmountRequestBuilder = new VerifyBankWithAmountRequestBuilder(userBankID);
         String mUrl = mVerifyBankWithAmountRequestBuilder.getGeneratedUrl();
 
-        mSendForVerificationWithAmountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT, mUrl, json, getActivity(),false);
+        mSendForVerificationWithAmountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT, mUrl, json, getActivity(), false);
         mSendForVerificationWithAmountTask.mHttpResponseListener = this;
         mSendForVerificationWithAmountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -194,7 +194,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.removing_bank));
         mProgressDialog.show();
         mRemoveBankAccountTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_A_BANK + bankAccountID, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_A_BANK + bankAccountID, getActivity(), false);
         mRemoveBankAccountTask.mHttpResponseListener = this;
         mRemoveBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -328,7 +328,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetBankTask = null;
             mRemoveBankAccountTask = null;

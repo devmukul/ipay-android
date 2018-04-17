@@ -298,7 +298,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog) {
+        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
             return;
         }
         Gson gson = new Gson();

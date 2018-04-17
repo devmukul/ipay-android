@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ManagerRequestPendingFragment extends BaseFragment implements HttpResponseListener{
+public class ManagerRequestPendingFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetAllManagerAsyncTask;
     private PendingManagerListResponse mGetAllManagerResponse;
@@ -98,7 +98,7 @@ public class ManagerRequestPendingFragment extends BaseFragment implements HttpR
             return;
 
         mGetAllManagerAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_EMPLOYEE_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_EMPLOYEE_LIST, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_EMPLOYEE_LIST, getActivity(), this, false);
         mGetAllManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -111,14 +111,14 @@ public class ManagerRequestPendingFragment extends BaseFragment implements HttpR
         String json = gson.toJson(createEmployeeRequest);
 
         mRemoveAnManagerAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_PENDING_EMPLOYEE , json, getContext(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_PENDING_EMPLOYEE, json, getContext(), this, false);
         mRemoveAnManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetAllManagerAsyncTask = null;
             return;
         }
@@ -146,8 +146,7 @@ public class ManagerRequestPendingFragment extends BaseFragment implements HttpR
             }
 
             mGetAllManagerAsyncTask = null;
-        }
-        else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_AN_EMPLOYEE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_AN_EMPLOYEE)) {
 
             try {
                 mRemoveAnManagerResponse = gson.fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
@@ -206,7 +205,8 @@ public class ManagerRequestPendingFragment extends BaseFragment implements HttpR
             }
 
             public void bindView(final int pos) {
-                if (pos == ManagerRequestHolderFragment.mPendingEmployeeList.size() - 1) divider.setVisibility(View.GONE);
+                if (pos == ManagerRequestHolderFragment.mPendingEmployeeList.size() - 1)
+                    divider.setVisibility(View.GONE);
                 final PendingInvitationList employee = ManagerRequestHolderFragment.mPendingEmployeeList.get(pos);
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictures().get(0).getUrl(),

@@ -197,7 +197,7 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
         String json = gson.toJson(mLogoutModel);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT_from_all_device, json, getActivity(),false);
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT_from_all_device, json, getActivity(), false);
         mLogoutTask.mHttpResponseListener = this;
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -214,7 +214,7 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
             String json = gson.toJson(mLogoutModel);
 
             mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                    Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getActivity(),false);
+                    Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getActivity(), false);
             mLogoutTask.mHttpResponseListener = this;
             mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
@@ -231,7 +231,7 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
             return;

@@ -330,7 +330,7 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.cancel();
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mUploadIdentifierDocumentAsyncTask = null;
             return;
         }
