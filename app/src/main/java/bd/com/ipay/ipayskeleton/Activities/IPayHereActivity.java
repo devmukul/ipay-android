@@ -117,6 +117,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                     isStartedMoving = false;
                     mLatitude = String.valueOf(initialLoc.latitude);
                     mLongitude = String.valueOf(initialLoc.longitude);
+                    startDemo();
                     fetchNearByBusiness(mLatitude, mLongitude);
 
                 }
