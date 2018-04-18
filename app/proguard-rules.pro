@@ -40,6 +40,16 @@
 -keepattributes Signature
 -keepattributes *Annotation*
 
+-keep class com.fasterxml.jackson.databind.ObjectMapper {
+    public <methods>;
+    protected <methods>;
+}
+-keep class com.fasterxml.jackson.databind.ObjectWriter {
+    public ** writeValueAsString(**);
+}
+-keepnames class com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
+
 -dontwarn com.google.**
 -dontwarn org.apache.**
 -dontwarn android.support.**
