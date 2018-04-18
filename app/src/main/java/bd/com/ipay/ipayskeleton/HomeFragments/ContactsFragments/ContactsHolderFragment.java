@@ -303,7 +303,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private boolean verifyUserInputs() {
-
         boolean error = false;
 
         String name = nameView.getText().toString();
