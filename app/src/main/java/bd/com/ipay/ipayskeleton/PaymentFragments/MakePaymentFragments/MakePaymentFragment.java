@@ -306,7 +306,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
 
-                if (!imageURL.isEmpty()) {
+                if (imageURL != null && !imageURL.isEmpty()) {
                     mReceiverPhotoUri = imageURL;
                     businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                 }
@@ -390,7 +390,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
 
-            if (!imageURL.isEmpty()) {
+            if (imageURL != null && !imageURL.isEmpty()) {
                 mReceiverPhotoUri = imageURL;
                 businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
             }
