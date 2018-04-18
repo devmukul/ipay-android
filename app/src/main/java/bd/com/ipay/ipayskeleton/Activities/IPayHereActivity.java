@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -170,6 +171,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     private void getLocationPermission() {
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             buildAlertMessageNoGps();
@@ -179,25 +181,33 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     private void getLocationWithPermision() {
-        if (!Utilities.isNecessaryPermissionExists(this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION })) {
-            ActivityCompat.requestPermissions(IPayHereActivity.this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, REQUEST_LOCATION);
-        } else {
-            Location location;
-            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            } else {
-                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            if (location != null) {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                System.out.println("SEt up "+latitude+" "+longitude);
-                mLatitude = String.valueOf(latitude);
-                mLongitude = String.valueOf(longitude);
-                setUpMap();
-                fetchNearByBusiness(this.mLatitude, this.mLongitude);
+            if (!Utilities.isNecessaryPermissionExists(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})) {
+                ActivityCompat.requestPermissions(IPayHereActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+            } else {
+                getLocation();
             }
+        }else {
+            getLocation();
+        }
+    }
+
+    private void getLocation() {
+        Location location;
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        } else {
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+
+        if (location != null) {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            mLatitude = String.valueOf(latitude);
+            mLongitude = String.valueOf(longitude);
+            setUpMap();
+            fetchNearByBusiness(this.mLatitude, this.mLongitude);
         }
     }
 
@@ -253,14 +263,15 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
 
     protected void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("In order to show iPay enabled outlets near you, We need your location permission.")
+        builder.setTitle("Location Service Disabled")
+                .setMessage("iPay needs to access your location to show iPay enabled outlets near you.")
                 .setCancelable(false)
                 .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SETTINGS_PERMISSION_CODE);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Continue Anyway", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         getLocationWithoutPermision();
                     }
