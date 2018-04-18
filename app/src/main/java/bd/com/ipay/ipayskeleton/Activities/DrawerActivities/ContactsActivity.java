@@ -14,7 +14,7 @@ public class ContactsActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invite);
+        setContentView(R.layout.activity_contacts);
 
         switchToContactListHolderFragment();
 
