@@ -2,9 +2,11 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -60,6 +63,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupFragment extends BaseFragment implements HttpResponseListener {
@@ -86,6 +90,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private ProfileImageView mProfileImageView;
     private TextView mNameTextView;
     private CheckBox addToContactCheckBox;
+    private CustomProgressDialog mCustomProgressDialog;
 
     private List<String> mPackageList;
     private List<String> mOperatorList;
@@ -98,6 +103,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private double mAmount;
     private String mName;
     private String mProfilePicture;
+    private Context context;
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
@@ -118,7 +124,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.receiver_profile_image_view);
         mNameTextView = (TextView) view.findViewById(R.id.receiver_name_text_view);
         addToContactCheckBox = (CheckBox) view.findViewById(R.id.add_to_contact_check_box);
-
+        context = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(context);
         mProgressDialog = new ProgressDialog(getActivity());
 
         mUserMobileNumber = ProfileInfoCacheManager.getMobileNumber();
@@ -507,9 +514,9 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                 mMobileNumber, mobileNumberType, operatorCode, mAmount,
                 countryCode, mobileNumberType, Constants.DEFAULT_USER_CLASS, pin);
 
-        mProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.dialog_requesting_top_up));
+        mCustomProgressDialog.showDialog();
+
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
@@ -609,28 +616,41 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                 mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getActivity().setResult(Activity.RESULT_OK);
+                                getActivity().finish();
+                            }
+                        }, 3000);
+
 
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "TopUp Processing", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
-                        getActivity().setResult(Activity.RESULT_OK);
-                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-                        }
-                        getActivity().finish();
-
-                        //Google Analytic event
-                        Utilities.sendSuccessEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
+                    getActivity().setResult(Activity.RESULT_OK);
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().finish();
+                        }
+                    }, 3000);
+
+                    //Google Analytic event
+                    Utilities.sendSuccessEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                    if (getActivity() != null)
-                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
+                    mCustomProgressDialog.showFailureAnimationAndMessage(mTopupResponse.getMessage());
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
+                        }
+                    }, 2000);
+
                     Utilities.sendBlockedEventTracker(mTracker, "Topup", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
@@ -640,21 +660,33 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                     } else {
                         errorMessage = getString(R.string.recharge_failed);
                     }
-                    Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
+                    mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), errorMessage, Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     Toast.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    mCustomProgressDialog.dismissDialog();
                     SecuritySettingsActivity.otpDuration = mTopupResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
-                    }
-                    if (mTopupResponse.getMessage().toLowerCase().contains("wrong")) {
-                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
-                    } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mTopupResponse.getMessage());
+                        } else {
+                            Toast.makeText(context, mTopupResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                        if (mTopupResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                                mCustomProgressDialog.dismissDialog();
+                            }
+                        } else {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
+                        //Google Analytic event
                     }
 
                     //Google Analytic event
@@ -662,9 +694,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null) {
-                    Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
-                }
+                mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
                 if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                 }
