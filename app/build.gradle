@@ -32,7 +32,6 @@ android {
         versionCode 138
         versionName "1.6.3"
         multiDexEnabled true
-
     }
 
     lintOptions {
