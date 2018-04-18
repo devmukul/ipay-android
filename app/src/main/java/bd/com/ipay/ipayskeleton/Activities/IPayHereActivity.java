@@ -137,7 +137,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                             getLocationWithoutPermision();
                         }else {
-                            getLocationWithPermision();
+                            getLocationPermission();
                         }
                     }
                 }
@@ -165,40 +165,41 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             mMap.clear();
             this.mLatitude = String.valueOf(attributions.latitude);
             this.mLongitude = String.valueOf(attributions.longitude);
+            startDemo();
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
 
         }
     }
 
-    private void getLocationPermission() {
+    private void getLocationsettings() {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             buildAlertMessageNoGps();
         } else {
-            getLocationWithPermision();
+            getLocation();
         }
     }
 
-    private void getLocationWithPermision() {
+    private void getLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             if (!Utilities.isNecessaryPermissionExists(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})) {
                 ActivityCompat.requestPermissions(IPayHereActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
             } else {
-                getLocation();
+                getLocationsettings();
             }
         }else {
-            getLocation();
+            getLocationsettings();
         }
     }
 
     private void getLocation() {
         Location location;
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        } else {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } else {
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
 
         if (location != null) {
@@ -206,6 +207,9 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             double longitude = location.getLongitude();
             mLatitude = String.valueOf(latitude);
             mLongitude = String.valueOf(longitude);
+            setUpMap();
+            fetchNearByBusiness(this.mLatitude, this.mLongitude);
+        }else{
             setUpMap();
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
         }
@@ -221,7 +225,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             return;
 
         mProgressDialog.show();
-        ;
         String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
         mIPayHereTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
                 url, IPayHereActivity.this);
