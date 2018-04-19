@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
@@ -304,10 +305,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
-                mobileNumberView.setVisibility(View.GONE);
-                profileView.setVisibility(View.VISIBLE);
 
-                if (!imageURL.isEmpty()) {
+                if (imageURL != null && !imageURL.isEmpty()) {
                     mReceiverPhotoUri = imageURL;
                     businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                 }
@@ -315,6 +314,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mReceiverName = name;
                     businessNameTextView.setText(mReceiverName);
                 }
+
+                getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
 
                 mMobileNumberEditText.clearSelectedData();
             }
@@ -389,16 +390,14 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
 
-            mobileNumberView.setVisibility(View.GONE);
-            profileView.setVisibility(View.VISIBLE);
-
-            if (!imageURL.isEmpty()) {
+            if (imageURL != null && !imageURL.isEmpty()) {
                 mReceiverPhotoUri = imageURL;
                 businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
             }
             if (!name.isEmpty()) {
                 mReceiverName = name;
                 businessNameTextView.setText(mReceiverName);
+                getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber));
             }
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
@@ -435,6 +434,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
             //validation check of amount
             if (TextUtils.isEmpty(mAmountEditText.getText())) {
+                errorMessage = getString(R.string.please_enter_amount);
+            } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
                 errorMessage = getString(R.string.please_enter_amount);
             } else {
                 final BigDecimal paymentAmount = new BigDecimal(mAmountEditText.getText().toString());
@@ -560,7 +561,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private void getLocationAndLaunchReviewPage() {
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
             mProgressDialog.show();
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
         } else {
@@ -579,7 +580,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, getContext(), this);
         mProgressDialog.setMessage(getActivity().getString(R.string.loading));
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -592,7 +593,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
         mProgressDialog.show();
 
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -637,8 +638,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             mProgressDialog.dismiss();
             mGetBusinessRuleTask = null;
             mGetProfileInfoTask = null;
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -707,12 +706,27 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 .setMessage(R.string.not_a_business_user)
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        getActivity().finish();
+                                        mIconEditMobileNumber.callOnClick();
                                     }
                                 })
                                 .setCancelable(false)
                                 .show();
+                    } else if (accountType == Constants.BUSINESS_ACCOUNT_TYPE && !mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                        MaterialDialog materialDialog;
+                        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
+                        materialDialogBuilder.positiveText(R.string.ok);
+                        materialDialogBuilder.content(getString(R.string.business_account_not_verified));
+                        materialDialogBuilder.dismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                mIconEditMobileNumber.callOnClick();
+
+                            }
+                        });
+                        materialDialog = materialDialogBuilder.build();
+                        materialDialog.show();
                     }
+
 
                     String profilePicture = null;
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {

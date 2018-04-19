@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,7 +140,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
     private void getLocationAndLaunchReviewPage() {
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
             mProgressDialog.show();
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
         } else {
@@ -171,11 +172,12 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
             return false;
         }
 
-        // Check for a validation
-        if (!(mAmount.length() > 0 && Double.parseDouble(mAmount) > 0)) {
+        //validation check of amount
+        if (TextUtils.isEmpty(mAmountEditText.getText())) {
             errorMessage = getString(R.string.please_enter_amount);
-
-        } else if (mAmount.trim().length() > 0) {
+        } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+            errorMessage = getString(R.string.please_enter_amount);
+        } else if (mAmount.trim().length() > 0 && InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
             errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
@@ -233,7 +235,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
         if (mGetBusinessRuleTask != null) {
             return;
         }
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,

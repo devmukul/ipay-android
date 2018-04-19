@@ -49,7 +49,7 @@
                         android:layout_height="@dimen/value80"
                         android:layout_gravity="center_horizontal"
                         android:padding="@dimen/value15"
-                        android:src="@drawable/background_icon_topup"
+                        android:src="@drawable/background_icon_topup_home"
                         android:background="@drawable/semiround_white_default"/>
 
 
@@ -82,7 +82,7 @@
                         android:layout_height="@dimen/value80"
                         android:layout_gravity="center_horizontal"
                         android:padding="@dimen/value15"
-                        android:src="@drawable/background_icon_pay_by_qc"
+                        android:src="@drawable/background_icon_pay_by_qc_home"
                         android:background="@drawable/semiround_white_default"/>
 
 
@@ -137,7 +137,6 @@
                 android:id="@+id/scrollViewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:orientation="vertical" />
         </LinearLayout>
     </ScrollView>

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
-import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -25,23 +24,23 @@ public class DashBoardFragment extends Fragment {
     private final int HOME_TAB = 0;
     private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
-    private final int CONTACTS_TAB = 3;
+    private final int OFFER_TAB = 3;
 
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
     private PayDashBoardFragment mPayFragment;
-    private ContactsHolderFragment mContactsHolderFragment;
+    private OfferFragment mOfferHolderFragment;
     private TransactionHistoryHolderFragment mTransactionHistoryFragment;
 
     private TabLayout.Tab homeTab;
     private TabLayout.Tab payTab;
-    private TabLayout.Tab contactsTab;
+    private TabLayout.Tab offerTab;
     private TabLayout.Tab transactionHistoryTab;
 
     private View homeTabView;
     private View payTabView;
-    private View contactsTabView;
+    private View offerTabView;
     private View transactionHistoryTabView;
 
     private ViewPager viewPager;
@@ -54,7 +53,7 @@ public class DashBoardFragment extends Fragment {
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
         mPayFragment = new PayDashBoardFragment();
-        mContactsHolderFragment = new ContactsHolderFragment();
+        mOfferHolderFragment = new OfferFragment();
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
@@ -67,7 +66,7 @@ public class DashBoardFragment extends Fragment {
         homeTab = tabLayout.getTabAt(HOME_TAB);
         transactionHistoryTab = tabLayout.getTabAt(TRANSACTION_HISTORY_TAB);
         payTab = tabLayout.getTabAt(PAY_TAB);
-        contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
+        offerTab = tabLayout.getTabAt(OFFER_TAB);
 
         setupCustomViewsForTabLayout();
 
@@ -114,7 +113,7 @@ public class DashBoardFragment extends Fragment {
 
     private void setupCustomViewsForTabLayout() {
         homeTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        contactsTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        offerTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         payTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
@@ -125,7 +124,7 @@ public class DashBoardFragment extends Fragment {
         setTabIconsWithTexts();
 
         homeTab.setCustomView(homeTabView);
-        contactsTab.setCustomView(contactsTabView);
+        offerTab.setCustomView(offerTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
         payTab.setCustomView(payTabView);
     }
@@ -137,12 +136,12 @@ public class DashBoardFragment extends Fragment {
 
     private void setTabIconsWithTexts() {
         ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_wallet);
-        ((ImageView) contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
+        ((ImageView) offerTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_offer);
         ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
         ((ImageView) payTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
 
         ((TextView) homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
-        ((TextView) contactsTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.contacts));
+        ((TextView) offerTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.offer));
         ((TextView) payTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
         ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
     }
@@ -162,8 +161,8 @@ public class DashBoardFragment extends Fragment {
                     return mPayFragment;
                 case TRANSACTION_HISTORY_TAB:
                     return mTransactionHistoryFragment;
-                case CONTACTS_TAB:
-                    return mContactsHolderFragment;
+                case OFFER_TAB:
+                    return mOfferHolderFragment;
                 default:
                     return new Fragment();
             }

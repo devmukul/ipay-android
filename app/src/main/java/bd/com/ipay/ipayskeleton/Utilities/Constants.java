@@ -576,6 +576,9 @@ public class Constants {
     // User Data collector
     public static final String URL_ENDPOINT_LOCATION_COLLECTOR = "location";
 
+    // IPayHere
+    public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -744,6 +747,9 @@ public class Constants {
 
     //Data Collector
     public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
+
+    public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
+    public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 
