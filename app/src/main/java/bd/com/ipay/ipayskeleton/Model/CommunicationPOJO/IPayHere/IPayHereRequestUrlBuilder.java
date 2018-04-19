@@ -3,12 +3,6 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere;
 
 import android.net.Uri;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.security.InvalidParameterException;
-import java.util.Calendar;
-
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class IPayHereRequestUrlBuilder {
