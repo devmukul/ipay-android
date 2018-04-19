@@ -62,7 +62,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup_or_login);
 
         mDeepLinkAction = getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
-
+        isRememberMe = true;
 
         if (SharedPrefManager.ifContainsUserID()) {
             getSupportFragmentManager().beginTransaction()
@@ -147,7 +147,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public void switchToHomeActivity() {
         if (mDeepLinkAction != null)
             Utilities.performDeepLinkAction(this, mDeepLinkAction);
-        else{
+        else {
             Intent intent = new Intent(SignupOrLoginActivity.this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -196,7 +196,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 this.finish();
         }
     }
-
 
 
 }
