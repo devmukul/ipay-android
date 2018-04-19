@@ -180,7 +180,7 @@ public class DialogUtils {
         dialog.show();
     }
 
-    public static void showNecessaryDialog(final Context context, String message) {
+    public static void showNecessaryDialogForDeeplinkAction(final Context context, String message) {
         MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .cancelable(false)
                 .content(message)
@@ -188,7 +188,7 @@ public class DialogUtils {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        ((Activity) context).onBackPressed();
+                        ((Activity) context).finishAffinity();
                     }
                 })
                 .show();

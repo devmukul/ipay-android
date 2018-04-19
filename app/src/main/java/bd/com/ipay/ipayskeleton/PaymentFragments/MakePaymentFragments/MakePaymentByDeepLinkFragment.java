@@ -283,7 +283,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mGetOrderDetailsTask = null;
             mPaymentTask = null;
             if (getActivity() != null) {
-                DialogUtils.showNecessaryDialog(getActivity(), getString(R.string.service_not_available));
+                DialogUtils.showNecessaryDialogForDeeplinkAction(getActivity(), getString(R.string.service_not_available));
             }
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
@@ -327,10 +327,10 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                     verifyOrderDetails(mGetOrderDetails);
                     thirdPartyAppUrl = mGetOrderDetails.getMerchantAppUriSchemeAndroid();
                 } else {
-                    DialogUtils.showNecessaryDialog(getActivity(), mGetOrderDetails.getMessage());
+                    DialogUtils.showNecessaryDialogForDeeplinkAction(getActivity(), mGetOrderDetails.getMessage());
                 }
             } catch (Exception e) {
-                DialogUtils.showNecessaryDialog(getActivity(), mGetOrderDetails.getMessage());
+                DialogUtils.showNecessaryDialogForDeeplinkAction(getActivity(), mGetOrderDetails.getMessage());
             }
             mGetOrderDetailsTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT_BY_DEEP_LINK)) {
