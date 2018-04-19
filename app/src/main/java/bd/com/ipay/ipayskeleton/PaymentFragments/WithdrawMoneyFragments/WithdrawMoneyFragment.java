@@ -31,8 +31,8 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -59,7 +59,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     private EditText mNoteEditText;
     private EditText mAmountEditText;
 
-    private List<UserBankClass> mListUserBankClasses;
+    private List<BankAccountList> mListUserBankClasses;
 
     private ProgressDialog mProgressDialog;
 
@@ -204,10 +204,6 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
             focusView = null;
             mBankSelectorView.setError(R.string.select_a_bank);
             shouldProceed = false;
-        } else if (TextUtils.isEmpty(mNoteEditText.getText().toString().trim())) {
-            focusView = mNoteEditText;
-            mNoteEditText.setError(getString(R.string.please_write_note));
-            shouldProceed = false;
         } else {
             focusView = null;
             shouldProceed = true;
@@ -223,6 +219,9 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         final boolean isValidAmount;
         final BigDecimal amount = new BigDecimal(SharedPrefManager.getUserBalance());
         if (TextUtils.isEmpty(mAmountEditText.getText())) {
+            isValidAmount = false;
+            mAmountEditText.setError(getString(R.string.please_enter_amount));
+        }else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
             isValidAmount = false;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
         } else if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(amount) > 0) {
@@ -259,7 +258,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         intent.putExtra(Constants.AMOUNT, Double.parseDouble(amount));
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
 
-        UserBankClass selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
+        BankAccountList selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
         intent.putExtra(Constants.SELECTED_BANK_ACCOUNT, selectedBankAccount);
         startActivityForResult(intent, WITHDRAW_MONEY_REVIEW_REQUEST);
     }
@@ -295,7 +294,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                             mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
                             mListUserBankClasses = new ArrayList<>();
 
-                            for (UserBankClass bank : mBankListResponse.getBanks()) {
+                            for (BankAccountList bank : mBankListResponse.getBankAccountList()) {
                                 if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                                     mListUserBankClasses.add(bank);
                                 }
@@ -329,7 +328,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_VERIFICATION_REQUIRED)) {
+                                } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_VERIFICATION_REQUIRED)) {
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_PIN_REQUIRED)) {
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());

@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion;
 
+import android.support.annotation.IntegerRes;
+
 import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.R;
@@ -38,6 +40,7 @@ public class ProfileCompletionPropertyConstants {
     public static final HashMap<String, String> PROPERTY_NAME_TO_TITLE_MAP = new HashMap<>();
     public static final HashMap<String, Integer> PROPERTY_NAME_TO_ICON_MAP = new HashMap<>();
     public static final HashMap<String, String> PROPERTY_NAME_TO_ACTION_NAME_MAP = new HashMap<>();
+    public static final HashMap<String, Integer> PROPERTY_NAME_TO_SCORE_MAP = new HashMap<>();
 
     static {
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_PIN, "Set up PIN");

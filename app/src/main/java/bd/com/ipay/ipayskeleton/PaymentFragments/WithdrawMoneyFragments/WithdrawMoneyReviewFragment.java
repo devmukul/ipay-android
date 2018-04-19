@@ -1,11 +1,12 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -28,10 +29,11 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -39,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -47,11 +50,12 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private WithdrawMoneyRequest mWithdrawMoneyRequest;
 
     private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mCustomProgressDialog;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private double mAmount;
     private String mDescription;
-    private UserBankClass mSelectedBank;
+    private BankAccountList mSelectedBank;
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
@@ -59,6 +63,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
+
+    private Context mContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +76,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mSelectedBank = getActivity().getIntent().getParcelableExtra(Constants.SELECTED_BANK_ACCOUNT);
 
         mProgressDialog = new ProgressDialog(getActivity());
+        mContext = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(mContext);
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -163,9 +171,9 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
+        mCustomProgressDialog.showDialog();
         mWithdrawMoneyRequest = new WithdrawMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mWithdrawMoneyRequest);
@@ -201,10 +209,10 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
-            mNetAmountViewHolder.setVisibility(View.VISIBLE);
-            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-            mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
+        mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+        mNetAmountViewHolder.setVisibility(View.VISIBLE);
+        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
     }
 
     private void launchOTPVerification() {
@@ -217,10 +225,10 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             mWithdrawMoneyTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
@@ -235,38 +243,70 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                 WithdrawMoneyResponse mWithdrawMoneyResponse = gson.fromJson(result.getJsonString(), WithdrawMoneyResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    } else {
+                        mCustomProgressDialog.showSuccessAnimationAndMessage(mWithdrawMoneyResponse.getMessage());
+                    }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCustomProgressDialog.dismissDialog();
+                            getActivity().finish();
+                        }
+                    }, 2000);
 
                     //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                    if (getActivity() != null)
-                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mWithdrawMoneyResponse.getMessage());
+                    if (getActivity() != null) {
+                        mCustomProgressDialog.showFailureAnimationAndMessage(mWithdrawMoneyResponse.getMessage());
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage("");
+                    }
                     Utilities.sendBlockedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
 
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    mCustomProgressDialog.dismissDialog();
                     Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     SecuritySettingsActivity.otpDuration = mWithdrawMoneyResponse.getOtpValidFor();
                     launchOTPVerification();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    mCustomProgressDialog.dismissDialog();
                     Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     SecuritySettingsActivity.otpDuration = mWithdrawMoneyResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    if (getActivity() != null) {
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mWithdrawMoneyResponse.getMessage());
+                        } else {
+                            Toast.makeText(mContext, mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                        if (mWithdrawMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                                mCustomProgressDialog.dismissDialog();
+                            }
+                        } else {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
+                    }
 
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), mWithdrawMoneyResponse.getMessage(), Double.valueOf(mAmount).longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+                mCustomProgressDialog.showFailureAnimationAndMessage(getResources().getString(R.string.service_not_available));
             }
 
             mProgressDialog.dismiss();

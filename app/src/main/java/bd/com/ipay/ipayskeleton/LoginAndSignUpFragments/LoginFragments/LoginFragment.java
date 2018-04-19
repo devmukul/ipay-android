@@ -21,8 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -31,9 +29,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
@@ -543,6 +538,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
+                        mProfileCompletionStatusResponse.initScoreFromPropertyName();
                         ProfileInfoCacheManager.switchedFromSignup(false);
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
@@ -550,8 +546,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
 
                         if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
-                            if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                    || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                            if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
@@ -559,13 +555,13 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         } else getAddedCards();
                     } else {
                         if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                 }
                 mProgressDialog.dismiss();
                 mGetProfileCompletionStatusTask = null;
@@ -599,12 +595,12 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        if (mGetCardResponse.getUserCardList().isEmpty()) {
+                        if (!mGetCardResponse.isAnyCardVerified()) {
                             ProfileInfoCacheManager.addSourceOfFund(false);
                         } else ProfileInfoCacheManager.addSourceOfFund(true);
 
-                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();

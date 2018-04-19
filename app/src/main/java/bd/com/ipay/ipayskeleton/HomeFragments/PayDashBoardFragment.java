@@ -165,6 +165,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTrendingBusinessListTask = null;
+            trendingBusinessListRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
             }
@@ -179,6 +180,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), TrendingBusinessResponse.class);
                 mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                 for (TrendingBusiness trendingBusiness : mTrendingBusinessList) {
+
                     String mBusinessType = trendingBusiness.getBusinessType();
 
                     PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());

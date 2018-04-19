@@ -61,12 +61,8 @@
             android:value="@integer/google_play_services_version" />
 
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4" />
-
-        <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="face" />
+            android:value="face,barcode"/>
 
         <activity
             android:name=".Activities.LauncherActivity"
@@ -343,13 +339,28 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
+        <activity
+            android:name=".Activities.DrawerActivities.ContactsActivity"
+            android:label="@string/contacts"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.CardPaymentWebViewActivity"
             android:label="@string/card_payment_web_view_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity android:name=".QRScanner.BarcodeCaptureActivity"
+            android:label="Read Barcode"/>
+
+        <activity
+            android:name=".Activities.IPayHereActivity"
+            android:label="@string/ipay_here"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
@@ -363,6 +374,10 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAfsNoEC1Hdv0SMHBD1ElcFU3L_dLzeOpI"/>
 
     </application>
 </manifest>

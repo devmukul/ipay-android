@@ -28,14 +28,20 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpResponseListener {
 
@@ -44,6 +50,9 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
 
     private HttpRequestPostAsyncTask mSetUserAddressTask = null;
+
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private GetProfileInfoResponse mGetProfileInfoResponse;
 
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
     private AddressClass mPresentAddress;
@@ -117,7 +126,9 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
             }
         });
 
+        getProfileInfo();
         getOccupationList();
+
         return v;
     }
 
@@ -139,8 +150,21 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mSetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getProfileInfo() {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.show();
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void attemptSaveBasicInfo() {
         Gson gson = new Gson();
+        mProgressDialog.setMessage(getString(R.string.saving_profile_information));
         mProgressDialog.show();
 
         SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(ProfileInfoCacheManager.getUserName(), mGender, ProfileInfoCacheManager.getBirthday(),
@@ -225,6 +249,24 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
             mSetProfileInfoTask = null;
         }
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
+
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    processProfileInfoResponse(result.getJsonString());
+                } else {
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
+            }
+
+            mProgressDialog.dismiss();
+            mGetProfileInfoTask = null;
+        }
     }
 
 
@@ -268,6 +310,23 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
                 new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void processProfileInfoResponse(String json) {
+        Gson gson = new Gson();
+        mGetProfileInfoResponse = gson.fromJson(json, GetProfileInfoResponse.class);
+
+        mOrganizationName = mGetProfileInfoResponse.getOrganizationName();
+        mOccupation = mGetProfileInfoResponse.getOccupation();
+
+        setProfileInformation();
+        setOccupation();
+    }
+
+    private void setProfileInformation() {
+
+        if (mOrganizationName != null && !mOrganizationName.isEmpty())
+            mOrganizationNameEditText.setText(mOrganizationName);
     }
 
     private boolean verifyUserInputs() {

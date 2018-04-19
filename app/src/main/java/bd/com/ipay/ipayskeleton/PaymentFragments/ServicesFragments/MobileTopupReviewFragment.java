@@ -256,6 +256,9 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
                             getActivity().setResult(Activity.RESULT_OK);
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
                             getActivity().finish();
 
                             //Google Analytic event
@@ -281,14 +284,24 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
                         SecuritySettingsActivity.otpDuration = mTopupResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
+
                             Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mTopupResponse.getMessage().toLowerCase().contains("wrong")) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
 
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), getString(R.string.recharge_failed), Double.valueOf(mAmount).longValue());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    }
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
                     Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());

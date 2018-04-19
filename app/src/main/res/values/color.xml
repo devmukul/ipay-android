@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#009688</color>
-    <color name="colorPrimaryDark">#00897B</color>
+    <color name="colorPrimary">#00B2A2</color>
+    <color name="colorPrimaryDark">#00A294</color>
     <color name="colorPrimaryMediumDark">#00897B</color>
     <color name="colorPrimaryLight">#26A69A</color>
     <color name="colorPrimaryLighter">#26A69A</color>
@@ -35,6 +35,10 @@
 
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
+
+    <color name="colorAsh">#666666</color>
+    <color name="colorLightGreen">#68BC57</color>
+    <color name="colorLightRed">#F24002</color>
 
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="colorLightGray">#E5E5E5</color>
@@ -71,6 +75,7 @@
     <color name="colorGrayDevider">#E0E0E0</color>
 
     <color name="colorOnBoardText">#212121</color>
+    <color name="colorAmountText">#333333</color>
 
     <color name="colorPaymentReviewPrimaryText">#212121</color>
     <color name="colorPaymentReviewSecondaryText">#666666</color>

@@ -1,19 +1,32 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +38,9 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
@@ -36,16 +51,20 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
 public class AddBankFragment extends BaseFragment implements HttpResponseListener {
 
+    private static final int ACTION_UPLOAD_CHEQUEBOOK_COVER = 100;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
     private static final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
-
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
+
 
     private ProgressDialog mProgressDialog;
 
@@ -72,8 +91,14 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private int mSelectedDistrictId = -1;
 
     private boolean startedFromProfileCompletion = false;
-
     private boolean isSwitchedFromOnBoard = false;
+
+    private ImageView mChequebookCoverImageView;
+    private int mPickerActionId;
+    private File mChequebookCoverImageFile;
+    private Button mChequebookCoverSelectorButton;
+    private ChequebookCoverSelectorButtonClickListener chequebookCoverSelectorButtonClickListener;
+    private TextView mChequebookCoverPageErrorTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,6 +124,9 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mBranchNames = new ArrayList<>();
         List<Bank> bankNames = new ArrayList<>();
 
+        chequebookCoverSelectorButtonClickListener = new ChequebookCoverSelectorButtonClickListener();
+        mChequebookCoverSelectorButton = (Button) v.findViewById(R.id.chequebook_cover_selector_button);
+
         mBankListSelection = (EditText) v.findViewById(R.id.default_bank_accounts);
         mDistrictSelection = (EditText) v.findViewById(R.id.branch_districts);
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
@@ -106,6 +134,12 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         Button addBank = (Button) v.findViewById(R.id.button_add_bank);
         mBankBranchEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
         mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
+
+        mChequebookCoverImageView = (ImageView) v.findViewById(R.id.chequebook_cover_image_view);
+        mChequebookCoverSelectorButton.setOnClickListener(chequebookCoverSelectorButtonClickListener);
+
+        mChequebookCoverPageErrorTextView = (TextView) v.findViewById(R.id.chequebook_cover_error_text_view);
+        mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
 
         if (!CommonData.isAvailableBankListLoaded()) {
             attemptRefreshAvailableBankNames();
@@ -124,13 +158,15 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             }
         });
 
+
+
+
         return v;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         ((ManageBanksActivity) getActivity()).mSelectedBankId = mSelectedBankId;
         ((ManageBanksActivity) getActivity()).mSelectedDistrictId = mSelectedDistrictId;
         ((ManageBanksActivity) getActivity()).mSelectedBranchId = mSelectedBranchId;
@@ -251,9 +287,12 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         });
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void verifyUserInputs() {
         // The first position is "Select One"
         View focusView;
+
+        clearAllErrorMessages();
         if (mSelectedBankId < 0) {
             mBankListSelection.setError(getString(R.string.please_select_a_bank));
         } else if (mSelectedDistrictId < 0) {
@@ -272,10 +311,19 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number_of_minimum_digit));
             focusView = mAccountNumberEditText;
             focusView.requestFocus();
+        } else if (mChequebookCoverImageFile!=null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
+            mChequebookCoverPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
+            mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
+            focusView = null;
         } else {
             Utilities.hideKeyboard(getActivity());
             launchAddBankAgreementPage();
         }
+    }
+
+    private void clearAllErrorMessages() {
+        mChequebookCoverPageErrorTextView.setText("");
+        mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
     }
 
     private void launchAddBankAgreementPage() {
@@ -288,6 +336,10 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         bundle.putBoolean(Constants.FROM_ON_BOARD, isSwitchedFromOnBoard);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
+        if(mChequebookCoverImageFile!=null) {
+            bundle.putString(Constants.DOCUMENT_TYPE, "cheque");
+            bundle.putStringArray(Constants.PHOTO_URI, getUploadFilePaths());
+        }
 
         ((ManageBanksActivity) getActivity()).switchToAddBankAgreementFragment(bundle);
     }
@@ -319,6 +371,72 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mGetBankTask.mHttpResponseListener = this;
 
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case ACTION_UPLOAD_CHEQUEBOOK_COVER:
+                if (resultCode == Activity.RESULT_OK) {
+                    performFileSelectAction(resultCode, intent);
+                } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
+                    Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), "checkbook_front.jpg")));
+                    startActivityForResult(systemCameraOpenIntent, ACTION_UPLOAD_CHEQUEBOOK_COVER);
+                } else {
+                    mPickerActionId = -1;
+                }
+
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
+
+    private void performFileSelectAction(int resultCode, Intent intent) {
+        String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
+
+        if (filePath != null) {
+            String[] temp = filePath.split(File.separator);
+            final String mFileName = temp[temp.length - 1];
+
+            Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
+            final File imageFile = new File(mSelectedDocumentUri.getPath());
+            final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+            if (mChequebookCoverImageView != null) {
+                mChequebookCoverImageView.setImageBitmap(imageBitmap);
+            }
+
+            mChequebookCoverPageErrorTextView.setText("");
+            mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
+            mChequebookCoverImageFile = imageFile;
+            mPickerActionId = -1;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
+                    selectDocument(mPickerActionId);
+                else
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void selectDocument(int actionId) {
+        mPickerActionId = actionId;
+        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), actionId, Constants.CAMERA_REAR, "checkbook_front.jpg");
+        startActivityForResult(imagePickerIntent, ACTION_UPLOAD_CHEQUEBOOK_COVER);
+    }
+
+    private String[] getUploadFilePaths() {
+        final String[] files;
+        files = new String[1];
+        files[0] = mChequebookCoverImageFile.getAbsolutePath();
+        return files;
     }
 
     @Override
@@ -371,6 +489,32 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
             default:
                 break;
+        }
+    }
+
+
+    class ChequebookCoverSelectorButtonClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            if (isAdded()) {
+                CustomUploadPickerDialog customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(),
+                        getActivity().getString(R.string.select_a_document),
+                        Arrays.asList(getResources().getStringArray(R.array.upload_picker_action)));
+                customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
+                    @Override
+                    public void onResourceSelected(int actionId, String action) {
+                        if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
+                            if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
+                                selectDocument(actionId);
+                            else {
+                                mPickerActionId = actionId;
+                                Utilities.requestRequiredPermissions(AddBankFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
+                            }
+                    }
+                });
+                customUploadPickerDialog.show();
+            }
         }
     }
 

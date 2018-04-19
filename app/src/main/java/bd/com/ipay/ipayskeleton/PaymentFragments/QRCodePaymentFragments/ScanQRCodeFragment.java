@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,10 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -27,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -61,10 +61,11 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
             mRootView = inflater.inflate(R.layout.fragment_scan_qr_code, container, false);
         }
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.setCancelable(false);
 
-        Utilities.performQRCodeScan(this, REQUEST_CODE_PERMISSION);
+        Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+        startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
         return mRootView;
     }
 
@@ -76,47 +77,47 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                getActivity().finish();
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                final Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            if (Utilities.isConnectionAvailable(getActivity())) {
-                                mobileNumber = ContactEngine.formatMobileNumberBD(result);
-                                GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+        if (requestCode == Constants.RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    final String result = barcode.displayValue;
 
-                                if (mGetUserInfoTask != null) {
-                                    return;
+                    final Handler mHandler = new Handler();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (InputValidator.isValidNumber(result)) {
+                                if (Utilities.isConnectionAvailable(getActivity())) {
+                                    mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                    GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+                                    if (mGetUserInfoTask != null) {
+                                        return;
+                                    }
+
+                                    mProgressDialog.show();
+                                    mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                                    mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
+                                    mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                } else {
+                                    Toaster.makeText(getActivity(), getResources().getString(
+                                            R.string.no_internet_connection), Toast.LENGTH_SHORT);
+                                    mProgressDialog.cancel();
+                                    getActivity().finish();
                                 }
-
-                                mProgressDialog.show();
-                                mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                                        getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
-                                mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
-                                mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            } else {
-                                Toaster.makeText(getActivity(), getResources().getString(
-                                        R.string.no_internet_connection), Toast.LENGTH_SHORT);
-                                mProgressDialog.cancel();
-                                getActivity().finish();
+                            } else if (getActivity() != null) {
+                                DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                             }
-                        } else if (getActivity() != null) {
-                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                         }
-                    }
-                });
+                    });
+                } else {
+                    getActivity().finish();
+                }
+            }else{
+                getActivity().finish();
             }
-        } else {
-            getActivity().finish();
         }
     }
 
@@ -125,7 +126,8 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
+                    Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                    startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
                 } else {
                     getActivity().finish();
                     Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
@@ -145,40 +147,48 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_USER_INFO:
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Gson gson = new GsonBuilder().create();
-                    GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
-                    imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
-                    name = getUserInfoResponse.getName();
-                    if (getUserInfoResponse.getAddressList() != null) {
-                        if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
-                            address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
-                            country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                            district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
-                            thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                    try {
+                        Gson gson = new GsonBuilder().create();
+                        GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                        if (!getUserInfoResponse.getProfilePictures().isEmpty())
+                            imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                        if (!getUserInfoResponse.getName().isEmpty())
+                            name = getUserInfoResponse.getName();
+                        if (getUserInfoResponse.getAddressList() != null) {
+                            if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
+                                address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                                country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                                district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                                thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                            }
                         }
-                    }
 
-                    // We will do a check here to know if the account is a personal account or business account.
-                    // For Personal Account we have to launch the SendMoneyActivity
-                    // For Business Account we have to launch the PaymentActivity with a account status verification check
-                    if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_MONEY)) {
-                            DialogUtils.showServiceNotAllowedDialog(getContext());
-                        } else {
-                            switchActivity(SendMoneyActivity.class);
-                        }
-                    } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
-                        if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                        // We will do a check here to know if the account is a personal account or business account.
+                        // For Personal Account we have to launch the SendMoneyActivity
+                        // For Business Account we have to launch the PaymentActivity with a account status verification check
+                        if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
+                            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_MONEY)) {
                                 DialogUtils.showServiceNotAllowedDialog(getContext());
                             } else {
-                                switchActivity(PaymentActivity.class);
+                                switchActivity(SendMoneyActivity.class);
                             }
-                        } else {
-                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
+                        } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
+                            if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                } else {
+                                    switchActivity(PaymentActivity.class);
+                                }
+                            } else {
+                                DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
+                            }
                         }
-                    }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
 
+                    }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                 }
@@ -195,7 +205,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.COUNTRY, country);
         intent.putExtra(Constants.DISTRICT, district);
         intent.putExtra(Constants.ADDRESS, address);
-        intent.putExtra(Constants.THANA,thana);
+        intent.putExtra(Constants.THANA, thana);
         startActivity(intent);
         getActivity().finish();
     }

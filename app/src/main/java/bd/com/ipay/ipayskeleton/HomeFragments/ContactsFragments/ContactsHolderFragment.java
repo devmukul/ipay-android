@@ -28,6 +28,8 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -41,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -209,7 +212,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.performQRCodeScan(ContactsHolderFragment.this, REQUEST_CODE_PERMISSION);
+                Utilities.hideKeyboard(getActivity(), nameView);
+                Utilities.hideKeyboard(getActivity(), mobileNumberView);
+                Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
             }
         });
 
@@ -257,7 +263,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
+                    Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                    startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
                 } else {
                     Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
                 }
@@ -267,32 +274,35 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            if (isAddContactDialogOpen)
-                                mobileNumberView.setText(ContactEngine.formatMobileNumberBD(result));
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_qr_code), Toast.LENGTH_SHORT);
+        if (requestCode == Constants.RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    final String result = barcode.displayValue;
+                    if (result != null) {
+                        Handler mHandler = new Handler();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (InputValidator.isValidNumber(result)) {
+                                    if (isAddContactDialogOpen)
+                                        mobileNumberView.setText(ContactEngine.formatMobileNumberBD(result));
+                                } else if (getActivity() != null)
+                                    Toaster.makeText(getActivity(), getResources().getString(
+                                            R.string.scan_valid_qr_code), Toast.LENGTH_SHORT);
+                            }
+                        });
                     }
-                });
+                } else {
+                    getActivity().finish();
+                }
+            } else {
+                getActivity().finish();
             }
         }
     }
 
     private boolean verifyUserInputs() {
-
         boolean error = false;
 
         String name = nameView.getText().toString();

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +90,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Button mClearFilterButton;
     private ImageView mMoreButton;
     private ImageView mCancelButton;
+    private SearchView mSearchTransactionText;
 
     private TextView mFilterTitle;
     private TextView mEmptyListTextView;
@@ -102,6 +106,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
+    private String mSearchText;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -146,6 +151,37 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 }
             }
         });
+
+        mSearchTransactionText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mSearchText = query;
+                setContentShown(false);
+                refreshTransactionHistory();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    mSearchText = newText;
+                    setContentShown(false);
+                    refreshTransactionHistory();
+                }
+                return false;
+            }
+        });
+
+        mSearchTransactionText.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mSearchText = "";
+                setContentShown(false);
+                refreshTransactionHistory();
+                return false;
+            }
+        });
+
         return v;
     }
 
@@ -188,6 +224,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
         switch (item.getItemId()) {
             case R.id.action_filter_by_date:
+                mSearchTransactionText.setVisibility(View.INVISIBLE);
                 if (serviceFilterLayout.getVisibility() == View.VISIBLE)
                     serviceFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
@@ -198,6 +235,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mFilterTitle.setText(getString(R.string.filter_by_date));
                 return true;
             case R.id.action_filter_by_service:
+                mSearchTransactionText.setVisibility(View.INVISIBLE);
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
                 serviceFilterLayout.setVisibility(View.VISIBLE);
@@ -225,11 +263,15 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 popupMenu.show();
                 break;
             case R.id.cancel_filter:
-                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                if (serviceFilterLayout.getVisibility() == View.VISIBLE) {
+                    mSearchTransactionText.setVisibility(View.VISIBLE);
                     serviceFilterLayout.setVisibility(View.GONE);
+                }
 
-                if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                if (dateFilterLayout.getVisibility() == View.VISIBLE) {
+                    mSearchTransactionText.setVisibility(View.VISIBLE);
                     dateFilterLayout.setVisibility(View.GONE);
+                }
                 mFilterTitle.setVisibility(View.INVISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
                 mMoreButton.setVisibility(View.VISIBLE);
@@ -309,6 +351,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mCancelButton = (ImageView) v.findViewById(R.id.cancel_filter);
         mClearFilterButton = (Button) v.findViewById(R.id.filter_clear);
         mFilterTitle = (TextView) v.findViewById(R.id.filter_title);
+        mSearchTransactionText = (SearchView) v.findViewById(R.id.simpleSearchView);
     }
 
     private void setupViewsAndActions() {
@@ -559,7 +602,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             return;
         }
         String url = TransactionHistoryRequest.generateUri(type,
-                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
+                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT, mSearchText);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 url, getActivity());
@@ -630,12 +673,11 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             private final TextView mTransactionDescriptionView;
             private final TextView mTimeView;
             private final TextView mReceiverView;
-            private final TextView mAmountTextView;
-            private final TextView mStatusDescriptionView;
-            private final TextView mNetAmountView;
+            private final TextView mBalanceTextView;
+            private TextView mNetAmountView;
             private final ImageView mOtherImageView;
             private final ProfileImageView mProfileImageView;
-            private final View mBalanceView;
+            private ImageView mStatusIconView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -643,12 +685,11 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mTransactionDescriptionView = (TextView) itemView.findViewById(R.id.activity_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
                 mReceiverView = (TextView) itemView.findViewById(R.id.receiver);
-                mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
+                mBalanceTextView = (TextView) itemView.findViewById(R.id.amount);
                 mNetAmountView = (TextView) itemView.findViewById(R.id.net_amount);
-                mStatusDescriptionView = (TextView) itemView.findViewById(R.id.status_description);
+                mStatusIconView = (ImageView) itemView.findViewById(R.id.status_description_icon);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 mOtherImageView = (ImageView) itemView.findViewById(R.id.other_image);
-                mBalanceView = itemView.findViewById(R.id.balance_holder);
             }
 
             public void bindView(int pos) {
@@ -656,24 +697,38 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = Utilities.formatDateWithTime(transactionHistory.getTime());
-
+                String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
                 final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
-                final String status = transactionHistory.getStatus();
-
-                mStatusDescriptionView.setText(status);
 
                 if (balance != null) {
-                    mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
-                    mBalanceView.setVisibility(View.VISIBLE);
-                } else mBalanceView.setVisibility(View.GONE);
+                    mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
+                }
 
-                if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mStatusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
-                } else {
-                    mStatusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
+                mNetAmountView.setText(netAmountWithSign);
+
+                switch (statusCode) {
+                    case Constants.TRANSACTION_STATUS_ACCEPTED: {
+                        mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_tick_sign));
+                        break;
+                    }
+                    case Constants.TRANSACTION_STATUS_CANCELLED: {
+                        mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_cross_sign));
+                        break;
+                    }
+                    case Constants.TRANSACTION_STATUS_REJECTED: {
+                        mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_cross_sign));
+                        break;
+                    }
+                    case Constants.TRANSACTION_STATUS_FAILED: {
+                        mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_cross_sign));
+                        break;
+                    }
                 }
 
                 mTransactionDescriptionView.setText(description);
@@ -683,7 +738,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
 
-                mNetAmountView.setText(netAmountWithSign);
+                if (DateUtils.isToday(transactionHistory.getTime())) {
+                    responseTime = "Today, " + Utilities.formatTimeOnly(transactionHistory.getTime());
+                }
                 mTimeView.setText(responseTime);
 
                 if (transactionHistory.getAdditionalInfo().getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_USER)) {

@@ -2,8 +2,10 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -26,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
@@ -42,12 +45,16 @@ public class RequestMoneyReviewFragment extends BaseFragment implements HttpResp
 
     private ProgressDialog mProgressDialog;
 
+    private CustomProgressDialog mCustomProgressDialog;
+
     private BigDecimal mAmount;
     private String mReceiverName;
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private String mDescription;
     private boolean isInContacts;
+
+    private Context mContext;
 
     private Tracker mTracker;
 
@@ -59,6 +66,9 @@ public class RequestMoneyReviewFragment extends BaseFragment implements HttpResp
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+
+        mContext = getContext();
+        mCustomProgressDialog = new CustomProgressDialog(mContext);
 
         if (getArguments() != null) {
             mReceiverName = getArguments().getString(Constants.NAME);
@@ -140,9 +150,8 @@ public class RequestMoneyReviewFragment extends BaseFragment implements HttpResp
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.requesting_money));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.requesting_money));
+        mCustomProgressDialog.showDialog();
         RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(mReceiverMobileNumber,
                 mAmount.doubleValue(), mDescription);
         Gson gson = new Gson();
@@ -184,26 +193,26 @@ public class RequestMoneyReviewFragment extends BaseFragment implements HttpResp
                 RequestMoneyResponse mRequestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mCustomProgressDialog.showSuccessAnimationAndMessage(mRequestMoneyResponse.getMessage());
 
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().setResult(Activity.RESULT_OK);
+                            getActivity().finish();
+                        }
+                    }, 2000);
 
                     //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Request Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                 } else {
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
-
+                    mCustomProgressDialog.showFailureAnimationAndMessage(mRequestMoneyResponse.getMessage());
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Request Money", ProfileInfoCacheManager.getAccountId(), mRequestMoneyResponse.getMessage(), mAmount.longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT);
+                mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.failed_request_money));
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 

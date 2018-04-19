@@ -44,6 +44,8 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
     private RecyclerView mRecyclerView;
     private ProgressDialog mProgressDialog;
 
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
+
     private HttpRequestGetAsyncTask mGetTwoFactorAuthSettingsAsyncTask;
     private TwoFactorAuthServicesListResponse mTwoFaServiceResponse;
 
@@ -66,7 +68,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_2fa_implement, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         getTwoFactorAuthSettings();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_view_two_factor_auth);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -189,17 +191,25 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                         getTwoFactorAuthSettings();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null) {
                             SecuritySettingsActivity.otpDuration = twoFactorAuthSettingsSaveResponse.getOtpValidFor();
                             Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                            OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), mJsonString,
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS, mUri, Constants.METHOD_PUT);
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                         }
                     } else {
                         Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
+                        if (twoFactorAuthSettingsSaveResponse.getMessage().toLowerCase().contains("wrong")) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                     }
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);

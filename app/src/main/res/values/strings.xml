@@ -74,6 +74,7 @@
     <string name="occupation">Occupation</string>
     <string name="organization_name">Organization Name</string>
     <string name="mobile_number">Mobile Number</string>
+    <string name="name_mobile_number">Name or Mobile Number</string>
     <string name="phone_number">Phone Number</string>
     <string name="number">number</string>
     <string name="number_uppercase">Number</string>
@@ -93,6 +94,7 @@
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_list">Nothing to show right now.</string>
+    <string name="empty_list_offer">No promotional offer available right now.</string>
     <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
     <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network.\n\nIf you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network.\nYou will be asked to enter the codes contained in those messages.</string>
     <string name="remove_trusted_device_message">Removing device from your trusted device list</string>
@@ -107,6 +109,8 @@
     <string name="business_name_required">Business name is required</string>
     <string name="error_invalid_name_with_required_length">Please enter a valid name of minimum 5 characters</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
+    <string name="error_invalid_promo_code">Invalid promo code</string>
+    <string name="error_space_not_allowed">Space is not allowed</string>
     <string name="please_select_institution">Please select an institution</string>
     <string name="please_select_payment_item">Please select a fee</string>
     <string name="please_select_session">Please select a session</string>
@@ -155,7 +159,8 @@
     <string name="service_unavailable_support_message">This service is unavailable right now for you. Please try again later.</string>
     <string name="country_not_support_message">iPay is not officially supported in your country, some features may not work properly.</string>
     <string name="verification_required_message">You need to get verified to access this feature. Please complete the verification process and try again.</string>
-    <string name="please_wait">Please wait. Loading…</string>
+    <string name="please_wait_loading">Please wait. Loading…</string>
+    <string name="please_wait">Please wait...</string>
     <string name="loading">Loading…</string>
     <string name="load_more">Load more…</string>
     <string name="student_id">Student ID</string>
@@ -183,6 +188,7 @@
     <string name="role">Role</string>
     <string name="select_a_fee_item">Select a fee item</string>
     <string name="select_session">Select Session</string>
+    <string name="from_send_money">From_send_money</string>
     <string name="save">Save</string>
     <string name="update">Update</string>
     <string name="update_ipay">Please update iPay</string>
@@ -224,7 +230,7 @@
     <string name="progress_dialog_validating_promo_code">Validating invitation code…</string>
     <string name="progress_dialog_processing">Processing TopUp…</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information…</string>
-    <string name="progress_dialog_fetching">Fetching…</string>
+    <string name="progress_dialog_fetching">Please wait...</string>
     <string name="progress_dialog_cancelling">Cancelling request…</string>
     <string name="progress_dialog_fetching_bank_list">Fetching bank list…</string>
     <string name="progress_dialog_sending_invite">Sending invitation…</string>
@@ -242,6 +248,8 @@
     <string name="enter_otp">Enter Code</string>
     <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
+    <string name="promo_code">Promo Code</string>
+    <string name="enter_promo_code_optional">Promo Code (Optional)</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
@@ -270,6 +278,7 @@
     <string name="invoice">Invoice</string>
     <string name="payment_details">Payment Details</string>
     <string name="adding_bank">Bank is being added…</string>
+    <string name="uploading_cheque">Cheque is being added…</string>
     <string name="removing_bank">Bank is being removed…</string>
     <string name="sending_for_verification">Sending for verification…</string>
     <string name="sending_for_verification_with_amount">Bank verification in progress…</string>
@@ -281,11 +290,14 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
+    <string name="promotions">Promotions</string>
+    <string name="ipay_here">iPay Here</string>
     <string name="requesting_money">Money request processing…</string>
     <string name="progress_dialog_requesting">Processing request …</string>
     <string name="add_money">Add Money</string>
     <string name="add_money_history">Add Money History</string>
     <string name="title">Title</string>
+    <string name="note_optional">Note (Optional)</string>
     <string name="note">Note</string>
     <string name="additional_info">Additional Information</string>
     <string name="withdraw_money">Withdraw Money</string>
@@ -393,10 +405,12 @@
     <string name="security_question_get_failed">Could not fetch security questions</string>
     <string name="security_answer_set_failed">Failed to set security answers</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
+    <string name="promotions_get_failed">Could not fetch promotions</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="events_get_failed">Could not fetch my events</string>
     <string name="recharging_balance">Processing mobile recharge…</string>
     <string name="saving_pin">Saving PIN…</string>
+    <string name="adding_promo">Adding Promo Code...</string>
     <string name="device_name">device name</string>
     <string name="trusted_device_limit_exceed_text">You have reached the limit of your trusted device. To add a new device, please remove minimum one device from the following list.</string>
     <string name="add_trusted_device_alert">Do you want to add this device as trusted?</string>
@@ -426,7 +440,7 @@
     <string name="logout">Log Out</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
-    <string name="pay_by_QR_code">Pay by QR Code</string>
+    <string name="pay_by_QR_code">Scan to Pay</string>
     <string name="pay">Pay</string>
     <string name="transaction">Transaction</string>
     <string name="transaction_history">Transaction History</string>
@@ -538,6 +552,7 @@
     <string name="invite_to_ipay">Invite to iPay</string>
     <string name="and">and</string>
     <string name="mandatory_field">*All fields are mandatory</string>
+    <string name="mandatory_field_except_promo">*All fields are mandatory except Promo Code</string>
     <string name="invite_now">Invite Now</string>
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
@@ -563,6 +578,7 @@
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
     <string name="filter_offer">Offer from iPay</string>
+    <string name="offer">Promotions</string>
     <string name="basic_info">Basic Information</string>
     <string name="student_info">Student Information</string>
     <string name="pay_education_fee">Pay education fees</string>
@@ -607,7 +623,7 @@
     <string name="confirmation_remove_trusted_person">Are you sure you want to remove this person from your trusted network?</string>
     <string name="select_an_image">Select an Image</string>
     <string name="select_a_document">Select a Document</string>
-    <string name="mobile_topup">Mobile TopUp</string>
+    <string name="mobile_topup">Mobile Top-Up</string>
     <string name="top">Top</string>
     <string name="mobile_topup_restriction_info">Unverified users can recharge only their own mobile number</string>
     <string name="send_money_description_info">Enter the details of the recipient to send money</string>
@@ -686,6 +702,7 @@
     <string name="failed_loading_thana_list">Failed to load thana list</string>
     <string name="failed_loading_district_list">Failed to load district list</string>
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
+    <string name="dialog_prompt_add_promo">Please enter your Promo Code</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
     <string name="get_verified">Get verified first!</string>
@@ -1030,21 +1047,23 @@
 
     <string name="verification_icon">Verification Icon</string>
     <string name="document_front_side">Document Front Side/First Page</string>
+    <string name="chequebook_cover_page">Chequebook Cover Page</string>
     <string name="upload_front_page">Upload first/front page</string>
     <string name="upload_back_page">Upload second/back page</string>
+    <string name="upload_chequebook_front_page">Upload leaf of account\'s chequebook</string>
     <string name="choose_file">Choose file</string>
     <string name="maximum_file_size_message">Maximum file size is 3 MB. JPG or PNG format only.</string>
     <string name="upload_document">Upload Document</string>
     <string name="select_photo">Select photo</string>
     <string name="upload_photo">Confirm photo</string>
-    <string name="upload_photo_id">Upload photo id</string>
+    <string name="upload_photo_id">Upload photo ID</string>
     <string name="add_basic_info">Add basic info</string>
     <string name="ask_for_introduction_onboard">Ask for Introduction</string>
     <string name="add_bank_onboard">Add bank info</string>
     <string name="skip_now">Skip now</string>
 
     <string name="onboard_step_one_title">Great! you\'re almost done</string>
-    <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_photo_id_upload_title">Upload photo ID</string>
     <string name="onboard_document_title">Documents</string>
     <string name="onboard_upload_document_title">Upload document</string>
     <string name="onboard_nice_profile_photo">Nice profile photo</string>
@@ -1055,8 +1074,8 @@
     <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
-    <string name="onboard_upload_photo_id_text">Upload a copy of photo ID.\nLike: National ID, Driving License, Passport etc. Make sure all information is clearly readable and that it is fully in frame.</string>
-    <string name="onboard_upload_prifile_info_text">Add your basic information and present address to send some goodies or official doc.</string>
+    <string name="onboard_upload_photo_id_text">Your photo ID can be either your National ID, Passport or your Driving License. Make sure all information is clearly readable and that it is fully in frame.</string>
+    <string name="onboard_upload_prifile_info_text">Your basic information is your occupation, organization and present address. Add your basic information to receive some goodies or official documents.</string>
     <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
     <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
     <string name="upload_profile_photo_again">Do you want to upload a profile photo again? You have already uploaded once</string>
@@ -1069,7 +1088,7 @@
 
     <string name="please_enter_a_document_id">Please enter your document ID</string>
     <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
-    <string name="please_select_max_file_size_message">Please select a file with max size %d MB</string>
+    <string name="please_select_max_file_size_message">Please select a file with max size 3 MB</string>
     <string name="settings_not_changed">No change in settings.</string>
     <string name="credit_or_debit_card_transaction_default_header">Money Added from Credit/Debit Card</string>
     <string name="ssl_error_title">SSL Certificate Error</string>
@@ -1124,6 +1143,11 @@
     <string name="availed_service">You can currently do the following things on behalf of the business.</string>
     <string name="service_under_this_role">Services under this role</string>
     <string name="remove_account">Remove Account</string>
+    <string name="you_do_not_have_any_introducer">You do not have any introducer yet</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="cheque_uploaded">Cheque successfully uploaded</string>
     <string name="do_you_want_to_cancel_payment">Do you want to cancel payment ?</string>
     <string name="payment_success">Payment Successful</string>
     <string name="payment_failed">Payment Failed</string>

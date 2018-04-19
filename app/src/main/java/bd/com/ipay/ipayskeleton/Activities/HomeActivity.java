@@ -49,6 +49,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ContactsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
@@ -67,10 +68,12 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPromoDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
@@ -429,7 +432,7 @@ public class HomeActivity extends BaseActivity
         mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
                 Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, this, this);
         mResignFromBusinessAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
     }
 
@@ -488,6 +491,12 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = false;
     }
 
+    public void switchToContactsActivity() {
+        Intent intent = new Intent(HomeActivity.this, ContactsActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
     @ValidateAccess
     public void switchToActivityLogActivity() {
         Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
@@ -530,6 +539,23 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = false;
     }
 
+    public void showPromoCodeDialogue() {
+
+        AddPromoDialogBuilder addPromoDialogBuilder = new AddPromoDialogBuilder(HomeActivity.this, new AddPromoDialogBuilder.AddPromoListener() {
+            @Override
+            public void onPromoAddSuccess() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeFragment.refreshBalanceButton.performClick();
+                    }
+                }, 1000);
+
+            }
+        });
+        addPromoDialogBuilder.show();
+    }
+
     @ValidateAccess
     public void attemptLiveChat() {
         if (isProfileInfoAvailable()) {
@@ -543,8 +569,7 @@ public class HomeActivity extends BaseActivity
     @ValidateAccess
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
-        // Handle navigation view item clicks here.
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//         Handle navigation view item clicks here.
         if (id == R.id.nav_home) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -568,7 +593,11 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_account) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
-        } else if (id == R.id.nav_bank_account) {
+        } else if (id == R.id.nav_contact) {
+
+            switchToContactsActivity();
+
+        }else if (id == R.id.nav_bank_account) {
 
             switchToManageBanksActivity();
 
@@ -582,6 +611,14 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_invite) {
 
             switchToInviteActivity();
+
+        } else if (id == R.id.nav_promo) {
+
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+
+            showPromoCodeDialogue();
 
         } else if (id == R.id.nav_manage_account) {
 

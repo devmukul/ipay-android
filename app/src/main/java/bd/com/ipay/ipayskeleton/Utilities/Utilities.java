@@ -39,7 +39,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -84,7 +83,8 @@ import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy, h:mm a", Locale.US);
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
@@ -566,6 +566,14 @@ public class Utilities {
         return DATE_FORMAT_WITHOUT_TIME.format(time);
     }
 
+    public static String formatDayMonthYear(long time) {
+        return dateFormat.format(time);
+    }
+
+    public static String formatTimeOnly(long time) {
+        return timeFormat.format(time);
+    }
+
     public static Date formatDateFromString(String dateString) {
         Date newDate = null;
         try {
@@ -760,14 +768,18 @@ public class Utilities {
         return userAttributes;
     }
 
-    public static void performQRCodeScan(Fragment fragment, int requestCode) {
-        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
-        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
-            initiateQRCodeScan(fragment);
-        } else {
-            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
-        }
-    }
+//    public static void performQRCodeScan(Fragment fragment, int requestCode) {
+//        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
+//        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
+//            initiateQRCodeScan(fragment);
+//        } else {
+//            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
+//        }
+//    }
+//
+//    public static void initiateQRCodeScan(Fragment fragment) {
+//        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
+//    }
 
     public static String getFormattedCountryName(String countryName) {
         if (countryName.toLowerCase().equals("bd")) {
@@ -776,9 +788,6 @@ public class Utilities {
         return countryName;
     }
 
-    public static void initiateQRCodeScan(Fragment fragment) {
-        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
-    }
 
     public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {
         for (String permission : permissionList) {

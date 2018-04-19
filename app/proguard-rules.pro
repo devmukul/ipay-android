@@ -33,11 +33,22 @@
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class bd.com.ipay.ipayskeleton.Model.** { *; }
 -keep class com.afollestad.** { *; }
+-keep class com.airbnb.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.DataCollectors.Model.** { *; }
 
 -keepattributes Signature
 -keepattributes *Annotation*
+
+-keep class com.fasterxml.jackson.databind.ObjectMapper {
+    public <methods>;
+    protected <methods>;
+}
+-keep class com.fasterxml.jackson.databind.ObjectWriter {
+    public ** writeValueAsString(**);
+}
+-keepnames class com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
 
 -dontwarn com.google.**
 -dontwarn org.apache.**
@@ -47,6 +58,7 @@
 -dontwarn com.makeramen.**
 -dontwarn com.squareup.**
 -dontwarn okio.**
+-dontwarn com.airbnb.**
 
 -assumenosideeffects class android.util.Log {
     public static *** d(...);

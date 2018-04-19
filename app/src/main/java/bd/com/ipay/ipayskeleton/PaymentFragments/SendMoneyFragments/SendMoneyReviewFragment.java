@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
@@ -45,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewFragment extends BaseFragment implements HttpResponseListener {
@@ -64,6 +66,7 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
     private String mPhotoUri;
     private String mDescription;
     private boolean isInContacts;
+    private CustomProgressDialog mCustomProgressDialog;
 
     private Tracker mTracker;
 
@@ -84,6 +87,7 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
         isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
 
         mProgressDialog = new ProgressDialog(getContext());
+        mCustomProgressDialog = new CustomProgressDialog(getContext());
 
         mTracker = Utilities.getTracker(getActivity());
     }
@@ -218,9 +222,11 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        //mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
+        //mProgressDialog.show();
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
+        mCustomProgressDialog.show();
+        //mProgressDialog.setCancelable(false);
         mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
                 mAmount.toString(), mDescription, pin);
@@ -264,8 +270,13 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
                 SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                            mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
+                        }
                         launchHomeActivity();
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
@@ -282,8 +293,16 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
                         Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                         break;
                     default:
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mSendMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            } else {
+                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                }
+                            }
+                        }
 
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
@@ -292,6 +311,9 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
 
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }

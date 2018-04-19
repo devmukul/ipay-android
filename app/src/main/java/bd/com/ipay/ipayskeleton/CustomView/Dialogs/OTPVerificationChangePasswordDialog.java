@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder implements HttpResponseListener {
@@ -223,6 +224,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
 
         mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
         mProgressDialog.show();
+        view.setVisibility(View.GONE);
         ChangePasswordWithOTPRequest mChangePasswordWithOTPRequest = new ChangePasswordWithOTPRequest(mPassword, mNewPassword, mOTP);
         Gson gson = new Gson();
         String json = gson.toJson(mChangePasswordWithOTPRequest);
@@ -268,8 +270,14 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                         }
                     }
                 } else {
-                    if (context != null)
+                    if (context != null) {
                         Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mChangePasswordWithOTPResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            view.setVisibility(View.VISIBLE);
+                        } else if (mOTPInputDialog != null) {
+                            mOTPInputDialog.hide();
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

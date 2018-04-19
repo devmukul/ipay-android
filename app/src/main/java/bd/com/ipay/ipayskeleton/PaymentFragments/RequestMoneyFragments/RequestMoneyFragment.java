@@ -15,26 +15,39 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -54,6 +67,8 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+    private HttpRequestGetAsyncTask mGetUserInfoTask;
+    private HttpRequestPostAsyncTask mRequestMoneyTask = null;
 
     private Button buttonRequest;
     private ImageView buttonSelectFromContacts;
@@ -61,7 +76,18 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     private CustomContactsSearchView mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
+    private View mProfilePicHolderView;
+    private View mMobileNumberHolderView;
+    private View mIconEditMobileNumber;
+    private ProfileImageView mProfileImageView;
+    private TextView mNameTextView;
     private ProgressDialog mProgressDialog;
+    private CheckBox addToContactCheckBox;
+    private String mMobileNumber;
+    private String mAmount;
+    private String mDescription;
+    private String mName;
+    private String mProfilePicture;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +105,12 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         buttonRequest = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.receiver_profile_image_view);
+        mProfilePicHolderView = v.findViewById(R.id.profile_pic_holder);
+        mMobileNumberHolderView = v.findViewById(R.id.mobile_number_holder);
+        mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
+        mNameTextView = (TextView) v.findViewById(R.id.receiver_name_text_view);
+        addToContactCheckBox = (CheckBox) v.findViewById(R.id.add_to_contact_check_box);
 
         mMobileNumberEditText.setCurrentFragmentTag(Constants.REQUEST_MONEY);
 
@@ -103,8 +135,8 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.performQRCodeScan(RequestMoneyFragment.this, REQUEST_CODE_PERMISSION);
-
+                Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
             }
         });
 
@@ -113,9 +145,52 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     if (verifyUserInputs())
-                        launchReviewPage();
+                        attemptRequestMoney();
+                    if (addToContactCheckBox.isChecked()) {
+                        addContact(mName, mMobileNumber, null);
+                    }
                 } else if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
+            }
+        });
+
+        mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProfilePicHolderView.setVisibility(View.GONE);
+                mMobileNumberHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberEditText.requestFocus();
+
+                addToContactCheckBox.setVisibility(View.GONE);
+                addToContactCheckBox.setChecked(false);
+            }
+        });
+
+        mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
+            @Override
+            public void onTextChange(String inputText) {
+                if (mProfilePicHolderView.getVisibility() == View.GONE
+                        && Utilities.isConnectionAvailable(getActivity())
+                        && InputValidator.isValidNumber(inputText)) {
+
+                    getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
+                }
+            }
+
+            @Override
+            public void onTextChange(String inputText, String name, String imageURL) {
+                mProfilePicHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberHolderView.setVisibility(View.GONE);
+
+                if (!imageURL.isEmpty()) {
+                    mProfileImageView.setProfilePicture(imageURL,
+                            false);
+                }
+                if (!name.isEmpty()) {
+                    mNameTextView.setText(name);
+                }
+
+                mMobileNumberEditText.clearSelectedData();
             }
         });
 
@@ -168,7 +243,9 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         View focusView = null;
         String errorMessage = null;
 
-        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+        mMobileNumber = mMobileNumberEditText.getText().toString().trim();
+        mAmount = mAmountEditText.getText().toString().trim();
+        mDescription = mDescriptionEditText.getText().toString().trim();
 
         if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
@@ -184,7 +261,9 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             errorMessage = getString(R.string.please_enter_amount);
-        } else if (mAmountEditText.getText().toString().trim().length() > 0) {
+        } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+            errorMessage = getString(R.string.please_enter_amount);
+        } else if (mAmountEditText.getText().toString().trim().length() > 0 && InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
 
             BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
 
@@ -204,11 +283,11 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             cancel = true;
         }
 
-        if (!InputValidator.isValidNumber(mobileNumber)) {
+        if (!InputValidator.isValidNumber(mMobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
-        } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+        } else if (ContactEngine.formatMobileNumberBD(mMobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.you_cannot_request_money_from_your_number));
             cancel = true;
@@ -238,49 +317,88 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    final String result = barcode.displayValue;
+                    final String[] resultElements = result.split(" ");
+
+                    if (result != null) {
+                        Handler mHandler = new Handler();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (InputValidator.isValidNumber(resultElements[0])) {
+                                    mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
+                                    if (Utilities.isConnectionAvailable(getActivity())) {
+                                        String mobileNumber = ContactEngine.formatMobileNumberBD(resultElements[0]);
+                                        getUserInfo(mobileNumber);
+                                    }
+                                    if (resultElements.length > 1) {
+                                        switch (resultElements.length) {
+                                            case 2: {
+                                                mAmountEditText.setText(resultElements[1]);
+                                                break;
+                                            }
+                                            case 3: {
+                                                mAmountEditText.setText(resultElements[1]);
+                                                mDescriptionEditText.setText(resultElements[2]);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                } else if (getActivity() != null)
+                                    Toaster.makeText(getActivity(), getResources().getString(
+                                            R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                } else {
+                    getActivity().finish();
+                }
+            } else {
+                getActivity().finish();
+            }
+        } else if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
-            if (mobileNumber != null) {
+            String name = data.getStringExtra(Constants.NAME);
+            String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
+
+            if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
+
+            mProfilePicHolderView.setVisibility(View.VISIBLE);
+            mMobileNumberHolderView.setVisibility(View.GONE);
+
+            if (!imageURL.isEmpty()) {
+                mProfileImageView.setProfilePicture(imageURL,
+                        false);
+            }
+            if (!name.isEmpty()) {
+                mNameTextView.setText(name);
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            final String[] resultElements = result.split(" ");
-
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(resultElements[0])) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
-                            if (resultElements.length > 1) {
-                                switch (resultElements.length) {
-                                    case 2: {
-                                        mAmountEditText.setText(resultElements[1]);
-                                        break;
-                                    }
-                                    case 3: {
-                                        mAmountEditText.setText(resultElements[1]);
-                                        mDescriptionEditText.setText(resultElements[2]);
-                                        break;
-                                    }
-                                }
-                            }
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
-                    }
-                });
-            }
         }
+    }
+
+    private void getUserInfo(String mobileNumber) {
+        mMobileNumber = mobileNumber;
+        GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+        if (mGetUserInfoTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+        mGetUserInfoTask.mHttpResponseListener = RequestMoneyFragment.this;
+        mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     private void attemptGetBusinessRule(int serviceID) {
@@ -298,17 +416,50 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void attemptRequestMoney() {
+        if (mRequestMoneyTask != null) {
+            return;
+        }
+
+        Utilities.hideKeyboard(getActivity());
+        mProgressDialog.setMessage(getString(R.string.requesting_money));
+        mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
+        RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(ContactEngine.formatMobileNumberBD(mMobileNumber),
+                new BigDecimal(mAmount).doubleValue(), mDescription);
+        Gson gson = new Gson();
+        String json = gson.toJson(mRequestMoneyRequest);
+        mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY, json, getActivity());
+        mRequestMoneyTask.mHttpResponseListener = this;
+        mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @ValidateAccess
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
+        Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mGetUserInfoTask = null;
+            mRequestMoneyTask = null;
+            mGetBusinessRuleTask = null;
+
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    Gson gson = new Gson();
 
                     BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
@@ -319,7 +470,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                                 RequestMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
                                 RequestMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED)) {
+                            } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED)) {
                                 RequestMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED)) {
                                 RequestMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
@@ -337,6 +488,70 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                     DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
             mGetBusinessRuleTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+            try {
+                GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfilePicHolderView.setVisibility(View.VISIBLE);
+                    mMobileNumberHolderView.setVisibility(View.GONE);
+
+                    if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mMobileNumber)) {
+                        addToContactCheckBox.setVisibility(View.VISIBLE);
+                        addToContactCheckBox.setChecked(true);
+                    }
+
+                    mName = mGetUserInfoResponse.getName();
+
+                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                        mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
+                                false);
+                    }
+                    mNameTextView.setText(mName);
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            mGetUserInfoTask = null;
+            mProgressDialog.dismiss();
+        }
+        if (result.getApiCommand().equals(Constants.COMMAND_REQUEST_MONEY)) {
+
+            try {
+                RequestMoneyResponse mRequestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendSuccessEventTracker(mTracker, "Request Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                } else {
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
+
+                    //Google Analytic event
+                    Utilities.sendFailedEventTracker(mTracker, "Request Money", ProfileInfoCacheManager.getAccountId(), mRequestMoneyResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT);
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+            }
+
+            mProgressDialog.dismiss();
+            mRequestMoneyTask = null;
+
         }
     }
 

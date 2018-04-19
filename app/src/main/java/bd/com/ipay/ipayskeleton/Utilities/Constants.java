@@ -150,8 +150,11 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
-    public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+880-9638 900800";
-    public static final String OFFICE_LAND_LINE_NUMBER_EXTENSION = "1112 – 1120";
+    public static final String STATE_LOADING = "LOADING";
+    public static final String STATE_SUCCESS = "SUCCESS";
+    public static final String STATE_FAILED = "FAILED";
+
+    public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+8809638900801";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
@@ -163,6 +166,7 @@ public class Constants {
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
     public static final int MAX_FILE_MB_SIZE = 3;
+    public static final int MAX_FILE_BYTE_SIZE = 3145728;
     public static final int MINIMUM_REQUIRED_NID_LENGTH = 10;
     public static final int MAXIMUM_REQUIRED_NID_LENGTH = 17;
     public static final int BUSINESS_TIN_LENGTH = 12;
@@ -217,6 +221,7 @@ public class Constants {
     public static final String BASE_URL_WEB;
     public static final String BASE_URL_DATA_COLLECTOR;
     private static final String SERVER_NAME;
+    public static final String BASE_URL_OFFER;
 
     public static final int DEV_SERVER = 1;
     public static final int TEST_SERVER = 2;
@@ -235,6 +240,7 @@ public class Constants {
     public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
     public static final String TWO_FACTOR_AUTH_SETTINGS = "TWO_FACTOR_AUTH_SETTINGS";
     public static final String SELECTED_IDENTIFICATION_DOCUMENT = "SELECTED_IDENTIFICATION_DOCUMENT";
+    public static final String SELECTED_CHEQUEBOOK_COVER = "SELECTED_CHEQUEBOOK_COVER";
     public static final String IMAGE_VALIDATOR_REGEX = "([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
 
     public static final String ADD_MONEY_TYPE = "ADD_MONEY_TYPE";
@@ -265,6 +271,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
+            BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
 
@@ -280,6 +287,7 @@ public class Constants {
             BASE_URL_WEB = "http://test.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
+            BASE_URL_OFFER = "https://test.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
 
@@ -295,6 +303,7 @@ public class Constants {
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
+            BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
 
@@ -310,6 +319,7 @@ public class Constants {
             BASE_URL_WEB = "https://www.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
+            BASE_URL_OFFER = "https://www.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == DEMO_SERVER) {
 
@@ -325,6 +335,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "https://demo.ipay.com.bd/data-collector/v1/";
             BASE_URL_WEB = "https://demo.ipay.com.bd";
             SERVER_NAME = "demo";
+            BASE_URL_OFFER = "https://demo.ipay.com.bd/offer_v2/api/v1/";
 
         } else {
 
@@ -340,6 +351,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
+            BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
         }
     }
 
@@ -369,8 +381,12 @@ public class Constants {
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
+
     // Bank Verify Rest
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "verify";
+
+    // Check book covor upload Rest
+    public static final String URL_CHECKBOOK_COVOR_UPLOAD = "bank/document";
 
     // Card Transaction REST
     public static final String URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD = "add-money";
@@ -393,7 +409,6 @@ public class Constants {
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
-    //business rule Rest
     //business rule Rest
     public static final String URL_BUSINESS_RULE = "business-rule";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
@@ -563,8 +578,14 @@ public class Constants {
     // FCM notification
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
+    // FCM notification
+    public static final String URL_PROMO_ACTIVE = "promo/activate";
+
     // User Data collector
     public static final String URL_ENDPOINT_LOCATION_COLLECTOR = "location";
+
+    // IPayHere
+    public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -635,6 +656,7 @@ public class Constants {
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
+    public static final String COMMAND_ADD_PROMO = "COMMAND_ADD_PROMO";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
     public static final String COMMAND_CHANGE_PASSWORD_VALIDATION = "COMMAND_CHANGE_PASSWORD_VALIDATION";
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";
@@ -737,6 +759,9 @@ public class Constants {
     //Data Collector
     public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
 
+    public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
+    public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
+
     public static final int ACTIVITY_LOG_COUNT = 10;
 
     public static final int ACTIVITY_TYPE_CHANGE_PROFILE = 0;
@@ -798,6 +823,7 @@ public class Constants {
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
     public static final String DOCUMENT_NAME = "documentName";
+    public static final String BANK_ID = "bankId";
 
     public static final String ACCOUNT_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
@@ -904,5 +930,7 @@ public class Constants {
     public static final int LOCATION_REQUIRED_TRUE = 1;
     public static final String DEEP_LINK_ACTION = "DEEP_LINK_ACTION";
     public static final String ORDER_ID = "ORDER_ID";
+
+    public static final int RC_BARCODE_CAPTURE = 9001;
 
 }

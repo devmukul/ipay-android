@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,11 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -115,6 +118,18 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
             }
         });
 
+        mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
+            @Override
+            public void onTextChange(String inputText) {
+
+            }
+
+            @Override
+            public void onTextChange(String inputText, String name, String imageURL) {
+
+            }
+        });
+
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
@@ -125,7 +140,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
     private void getLocationAndLaunchReviewPage() {
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
             mProgressDialog.show();
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
         } else {
@@ -157,11 +172,12 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
             return false;
         }
 
-        // Check for a validation
-        if (!(mAmount.length() > 0 && Double.parseDouble(mAmount) > 0)) {
+        //validation check of amount
+        if (TextUtils.isEmpty(mAmountEditText.getText())) {
             errorMessage = getString(R.string.please_enter_amount);
-
-        } else if (mAmount.trim().length() > 0) {
+        } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+            errorMessage = getString(R.string.please_enter_amount);
+        } else if (mAmount.trim().length() > 0 && InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
             errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
@@ -219,7 +235,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
         if (mGetBusinessRuleTask != null) {
             return;
         }
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -234,7 +250,9 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
         switch (requestCode) {
             case Utilities.LOCATION_SETTINGS_PERMISSION_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
+
+                    Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                    startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
                 } else {
                     buttonRequestPayment.performClick();
                 }

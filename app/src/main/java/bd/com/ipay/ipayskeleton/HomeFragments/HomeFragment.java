@@ -26,16 +26,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -45,7 +43,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
@@ -103,7 +100,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private LinearLayout mRequestMoneyButton;
     private LinearLayout mPayByQRCodeButton;
     private LinearLayout mMakePaymentButton;
-    private ImageView refreshBalanceButton;
+    private LinearLayout mTopUpButton;
+    private LinearLayout mIPayHereButton;
+    public static ImageView refreshBalanceButton;
     private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -144,6 +143,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mRequestMoneyButton = (LinearLayout) v.findViewById(R.id.button_request_money);
         mPayByQRCodeButton = (LinearLayout) v.findViewById(R.id.button_pay_by_qr_code);
         mMakePaymentButton = (LinearLayout) v.findViewById(R.id.button_make_payment);
+        mTopUpButton = (LinearLayout) v.findViewById(R.id.button_topup);
+        mIPayHereButton = (LinearLayout) v.findViewById(R.id.button_ipay_here);
 
         mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
 
@@ -244,6 +245,33 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                     }
                 });
                 payByQCPinChecker.execute();
+            }
+        });
+
+        mTopUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mIPayHereButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent requestMoneyActivityIntent = new Intent(getActivity(), IPayHereActivity.class);
+                startActivity(requestMoneyActivityIntent);
             }
         });
 
@@ -386,58 +414,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 });
 
                 mProfileCompletionPromptView.setVisibility(View.VISIBLE);
-            } else {
-                // "Good to have" properties
-                List<ProfileCompletionStatusResponse.PropertyDetails> otherCompletionDetails =
-                        mProfileCompletionStatusResponse.getOtherCompletionDetails();
-                final List<ProfileCompletionStatusResponse.PropertyDetails> incompleteOtherCompletionDetails = new ArrayList<>();
-                for (ProfileCompletionStatusResponse.PropertyDetails propertyDetails : otherCompletionDetails) {
-                    if (!propertyDetails.isCompleted()) {
-                        incompleteOtherCompletionDetails.add(propertyDetails);
-                    }
-                }
-
-                if (incompleteOtherCompletionDetails.size() > 0) {
-                    Random random = new Random();
-
-                    /*
-                     * We want to show the prompt once in every five launch on average.
-                     */
-                    if (random.nextInt(5) == 0) {
-                        int index = random.nextInt(incompleteOtherCompletionDetails.size());
-                        final ProfileCompletionStatusResponse.PropertyDetails incompletePropertyDetails = incompleteOtherCompletionDetails.get(index);
-
-                        String profileCompletionMessage = "Your profile is " +
-                                mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                                + "complete.\n"
-                                + incompletePropertyDetails.getPropertyTitle()
-                                + " to improve your profile";
-
-                        mProfileCompletionMessageView.setText(profileCompletionMessage);
-
-                        /*
-                         * For ADD_PIN, we show a PIN input dialog to the user.
-                         * For other cases, we forward the user to the corresponding fragment
-                         * in the ProfileActivity.
-                         */
-                        mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (incompletePropertyDetails.getPropertyName().equals(ProfileCompletionPropertyConstants.ADD_PIN)) {
-                                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity(), null);
-                                    addPinDialogBuilder.show();
-                                } else {
-                                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                                    intent.putExtra(Constants.TARGET_FRAGMENT, incompletePropertyDetails.getPropertyName());
-                                    startActivity(intent);
-                                }
-                            }
-                        });
-
-                        mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
-                        mProfileCompletionPromptView.setVisibility(View.VISIBLE);
-                    }
-                }
             }
         }
     }
