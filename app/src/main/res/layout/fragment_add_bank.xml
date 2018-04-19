@@ -144,6 +144,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:text="@string/upload_chequebook_front_page"
+                    android:paddingRight="@dimen/value2"
                     android:textSize="@dimen/text_size_small"
                     android:layout_toLeftOf="@+id/chequebook_cover_selector_button"/>
 
