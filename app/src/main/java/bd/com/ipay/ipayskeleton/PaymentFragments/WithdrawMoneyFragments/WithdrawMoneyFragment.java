@@ -222,6 +222,9 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         if (TextUtils.isEmpty(mAmountEditText.getText())) {
             isValidAmount = false;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
+        }else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+            isValidAmount = false;
+            mAmountEditText.setError(getString(R.string.please_enter_amount));
         } else if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(amount) > 0) {
             isValidAmount = false;
             mAmountEditText.setError(getString(R.string.insufficient_balance));
