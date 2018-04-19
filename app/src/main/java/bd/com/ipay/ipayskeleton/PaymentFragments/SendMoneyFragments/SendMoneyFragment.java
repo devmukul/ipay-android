@@ -136,7 +136,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mMobileNumberEditText.setCurrentFragmentTag(Constants.SEND_MONEY);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
-            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+            mReceiver = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+            mMobileNumberEditText.setText(mReceiver);
+            getUserInfo(ContactEngine.formatMobileNumberBD(mReceiver));
         }
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
