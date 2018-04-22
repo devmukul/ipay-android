@@ -1148,4 +1148,12 @@
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
     <string name="cheque_uploaded">Cheque successfully uploaded</string>
+    <string name="do_you_want_to_cancel_payment">Do you want to cancel payment ?</string>
+    <string name="payment_success">Payment Successful</string>
+    <string name="payment_failed">Payment Failed</string>
+    <string name="cant_fetch_details">Failed to fetch order details</string>
+
+    <string name="ipay_live_host">www.ipay.com.bd</string>
+    <string name="ipay_demo_host">demo.ipay.com.bd</string>
+    <string name="ipay_dev_host">dev.ipay.com.bd</string>
 </resources>

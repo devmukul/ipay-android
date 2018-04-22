@@ -1,16 +1,10 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
@@ -26,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressC
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupOrLoginActivity extends AppCompatActivity {
@@ -56,11 +51,18 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;
 
+    private MaterialDialog.Builder mOverlayPermissionDialogBuilder;
+    private MaterialDialog mOverlayPermissionDialog;
+
+    private DeepLinkAction mDeepLinkAction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
 
+        mDeepLinkAction = getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
+        isRememberMe = true;
 
         if (SharedPrefManager.ifContainsUserID()) {
             getSupportFragmentManager().beginTransaction()
@@ -118,28 +120,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
     }
 
-    public void switchToHomeActivity() {
-        Intent intent = new Intent(SignupOrLoginActivity.this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        this.finish();
-    }
-
-    public void switchToDeviceTrustActivity() {
-        Intent intent = new Intent(SignupOrLoginActivity.this, DeviceTrustActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        this.finish();
-    }
-
-    public void switchToTourActivity() {
-        Utilities.hideKeyboard(this);
-        Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        this.finish();
-    }
-
     public void switchToBusinessStepOneFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
@@ -164,8 +144,38 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).addToBackStack(null).commit();
     }
 
+    public void switchToHomeActivity() {
+        if (mDeepLinkAction != null)
+            Utilities.performDeepLinkAction(this, mDeepLinkAction);
+        else {
+            Intent intent = new Intent(SignupOrLoginActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            this.finish();
+        }
+    }
+
+    public void switchToDeviceTrustActivity() {
+        Intent intent = new Intent(SignupOrLoginActivity.this, DeviceTrustActivity.class);
+        if (mDeepLinkAction != null)
+            intent.putExtra(Constants.DEEP_LINK_ACTION, mDeepLinkAction);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
+    public void switchToTourActivity() {
+        Utilities.hideKeyboard(this);
+        Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
     public void switchToProfileCompletionHelperActivity() {
         Intent intent = new Intent(SignupOrLoginActivity.this, ProfileVerificationHelperActivity.class);
+        if (mDeepLinkAction != null)
+            intent.putExtra(Constants.DEEP_LINK_ACTION, mDeepLinkAction);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();
@@ -186,7 +196,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 this.finish();
         }
     }
-
 
 
 }

@@ -69,6 +69,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
@@ -87,6 +88,8 @@ public class Utilities {
     private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.US);
     private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
+    private static final String TAG = Utilities.class.getSimpleName();
 
     public static boolean isConnectionAvailable(Context context) {
         if (context == null) return false;
@@ -1079,5 +1082,27 @@ public class Utilities {
                 .setCancelable(false)
                 .create();
         alertDialog.show();
+    }
+
+    public static DeepLinkAction parseUriForDeepLinkingAction(Uri uri) {
+        DeepLinkAction deepLinkAction = new DeepLinkAction();
+        List<String> pathSegments = uri.getPathSegments();
+        Logger.logD(TAG, uri.getPathSegments().toString());
+        deepLinkAction.setAction(pathSegments.get(1));
+        deepLinkAction.setOrderId(pathSegments.get(2));
+        Logger.logD(TAG, deepLinkAction.toString());
+        return deepLinkAction;
+    }
+
+
+    public static void performDeepLinkAction(Activity activity, DeepLinkAction deepLinkAction) {
+        switch (deepLinkAction.getAction()) {
+            case "pay":
+                Intent intent = new Intent(activity, PaymentActivity.class);
+                intent.putExtra(Constants.ORDER_ID, deepLinkAction.getOrderId());
+                activity.startActivity(intent);
+                activity.finish();
+                break;
+        }
     }
 }

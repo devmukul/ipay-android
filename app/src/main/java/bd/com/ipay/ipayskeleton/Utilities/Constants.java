@@ -211,6 +211,7 @@ public class Constants {
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
+    public static final String BASE_URL_PG;
     public static final String BASE_URL_CARD;
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_CONTACT;
@@ -260,6 +261,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
+            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
             BASE_URL_CARD = "http://10.10.10.11:5665/api/v1/card/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
@@ -275,6 +277,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
+            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
             BASE_URL_CARD = "http://10.15.40.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
@@ -290,6 +293,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
+            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
             BASE_URL_CARD = "http://10.10.40.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
@@ -305,6 +309,7 @@ public class Constants {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
+            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
             BASE_URL_CARD = "https://www.ipay.com.bd/api/v1/card/";
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
@@ -320,6 +325,7 @@ public class Constants {
 
             BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
+            BASE_URL_PG = "https://demo.ipay.com.bd/api/pg/order/";
             BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
             BASE_URL_CARD = "https://demo.ipay.com.bd/api/v1/card/";
             BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
@@ -335,6 +341,7 @@ public class Constants {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
+            BASE_URL_PG = "http://192.168.1.105:8085/api/pg/order/";
             BASE_URL_CARD = "http://192.168.1.215:2202/api/v1/card/";
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
@@ -471,7 +478,8 @@ public class Constants {
     // SM Payment REST
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
     public static final String URL_GET_SINGLE_REQUEST_PAYMENT = "payment/invoice/get/";
-
+    public static final String URL_GET_ORDER_DETAILS = "orderId/info";
+    public static final String URL_PAY_BY_DEEP_LINK = "orderId/pay";
 
     public static final String URL_PAYMENT = "payment/v2";
 
@@ -617,6 +625,8 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_CANCEL_ORDER = "COMMAND_CANCEL_ORDER";
+    public static final String COMMAND_PAYMENT_BY_DEEP_LINK = "COMMAND_PAYMENT_BY_DEEP_LINK";
     public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
     public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
@@ -733,6 +743,7 @@ public class Constants {
     public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
     public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
     public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
+    public static final String COMMAND_GET_ORDER_DETAILS = "COMMAND_GET_ORDER_DETAILS";
 
     // Education
     public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
@@ -917,6 +928,8 @@ public class Constants {
     public static final String QUALITY_HIGH = "High";
 
     public static final int LOCATION_REQUIRED_TRUE = 1;
+    public static final String DEEP_LINK_ACTION = "DEEP_LINK_ACTION";
+    public static final String ORDER_ID = "ORDER_ID";
 
     public static final int RC_BARCODE_CAPTURE = 9001;
 

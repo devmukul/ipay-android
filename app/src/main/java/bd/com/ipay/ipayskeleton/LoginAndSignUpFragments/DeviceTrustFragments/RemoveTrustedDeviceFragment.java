@@ -358,7 +358,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else getAddedCards();
                 } else {

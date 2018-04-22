@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -41,12 +42,13 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
     private LogoutResponse mLogOutResponse;
     private ProgressDialog mProgressDialog;
     public Uri mProfilePhotoUri;
-
+    private DeepLinkAction mDeepLinkAction;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_verification_helper);
+        mDeepLinkAction = getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
         SharedPrefManager.setFirstLaunch(false);
         mProgressDialog = new ProgressDialog(ProfileVerificationHelperActivity.this);
         if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
@@ -124,11 +126,15 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
 
 
     public void switchToHomeActivity() {
-        Utilities.hideKeyboard(this);
-        Intent intent = new Intent(ProfileVerificationHelperActivity.this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        if (mDeepLinkAction != null)
+            Utilities.performDeepLinkAction(this, mDeepLinkAction);
+        else {
+            Utilities.hideKeyboard(this);
+            Intent intent = new Intent(ProfileVerificationHelperActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void switchToProfilePictureFragment() {
