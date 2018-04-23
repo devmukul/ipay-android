@@ -11,8 +11,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -23,8 +23,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
@@ -34,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -47,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PayOrderRequ
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -84,6 +84,8 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private LocationManager locationManager;
     private Location userLocation;
 
+    private CustomProgressDialog mCustomProgressDialog;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mProgressDialog = new ProgressDialog(getActivity());
         attemptGetBusinessRules(Constants.SERVICE_ID_MAKE_PAYMENT);
         SharedPrefManager.setFirstLaunch(false);
+        mCustomProgressDialog = new CustomProgressDialog(getContext());
         setUpViews(view);
         return view;
     }
@@ -125,7 +128,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
         mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -140,7 +142,12 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     Utilities.hideKeyboard(getContext(), getView());
-                    attemptPaymentWithPinCheck();
+                    if (PaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() &&
+                            !ProfileInfoCacheManager.isAccountVerified()) {
+                        DialogUtils.showDialogVerificationRequired(getContext());
+                    } else {
+                        attemptPaymentWithPinCheck();
+                    }
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -198,9 +205,8 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
-        mProgressDialog.show();
-        mProgressDialog.setCancelable(false);
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_payment));
+        mCustomProgressDialog.showDialog();
         mPaymentRequestByDeepLink = new PaymentRequestByDeepLink(pin);
 
         String mUri = new PayOrderRequestBuilder(orderID).getGeneratedUri();
@@ -238,19 +244,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     public void showDialogAndLaunchThirdPartyApp(final String message) {
-        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .cancelable(false)
-                .content(message)
-                .positiveText(R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        appendSuccesOrFailureMessageAndLaunchThirdPartyApp(message);
-                    }
-                })
-                .show();
-        dialog.show();
-
+        appendSuccesOrFailureMessageAndLaunchThirdPartyApp(message);
     }
 
     private void launchParentThirdPartyApp() {
@@ -340,10 +334,22 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             }
             mGetOrderDetailsTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT_BY_DEEP_LINK)) {
-            GetPayByDeepLinkResponse getPayByDeepLinkResponse = new Gson().
+            final GetPayByDeepLinkResponse getPayByDeepLinkResponse = new Gson().
                     fromJson(result.getJsonString(), GetPayByDeepLinkResponse.class);
             try {
-                showDialogAndLaunchThirdPartyApp(getPayByDeepLinkResponse.getMessage());
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mCustomProgressDialog.showSuccessAnimationAndMessage(getPayByDeepLinkResponse.getMessage());
+                } else {
+                    mCustomProgressDialog.showFailureAnimationAndMessage(getPayByDeepLinkResponse.getMessage());
+                }
+                if (!getPayByDeepLinkResponse.getMessage().toLowerCase().contains(Constants.invalid_credential)) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            appendSuccesOrFailureMessageAndLaunchThirdPartyApp(getPayByDeepLinkResponse.getMessage());
+                        }
+                    }, 2000);
+                }
 
             } catch (Exception e) {
                 Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
@@ -353,7 +359,8 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mCancelOrderResponse = new Gson().fromJson(result.getJsonString(),
                     CancelOrderResponse.class);
             try {
-                showDialogAndLaunchThirdPartyApp(mCancelOrderResponse.getMessage());
+                Toast.makeText(getContext(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
+                appendSuccesOrFailureMessageAndLaunchThirdPartyApp(mCancelOrderResponse.getMessage());
             } catch (Exception e) {
                 Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
             }
