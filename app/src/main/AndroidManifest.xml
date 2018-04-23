@@ -353,7 +353,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity android:name=".QRScanner.BarcodeCaptureActivity"
-            android:label="Read Barcode"/>
+            android:label="Scan QR Code"/>
 
         <activity
             android:name=".Activities.IPayHereActivity"
