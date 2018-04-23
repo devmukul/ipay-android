@@ -69,6 +69,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
@@ -1096,10 +1097,16 @@ public class Utilities {
 
 
     public static void performDeepLinkAction(Activity activity, DeepLinkAction deepLinkAction) {
+        Intent intent;
         switch (deepLinkAction.getAction()) {
             case "pay":
-                Intent intent = new Intent(activity, PaymentActivity.class);
+                intent = new Intent(activity, PaymentActivity.class);
                 intent.putExtra(Constants.ORDER_ID, deepLinkAction.getOrderId());
+                activity.startActivity(intent);
+                activity.finish();
+                break;
+            default:
+                intent = new Intent(activity, HomeActivity.class);
                 activity.startActivity(intent);
                 activity.finish();
                 break;
