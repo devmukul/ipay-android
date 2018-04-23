@@ -202,6 +202,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utilities.hideKeyboard(getActivity(), nameView);
+                Utilities.hideKeyboard(getActivity(), mobileNumberView);
                 mResourceSelectorDialog.show();
             }
         });
