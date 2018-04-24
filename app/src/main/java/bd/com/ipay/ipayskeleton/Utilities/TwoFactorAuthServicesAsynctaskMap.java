@@ -97,7 +97,7 @@ public class TwoFactorAuthServicesAsynctaskMap {
                     paymentRequestByDeepLink.setOtp(otp);
                 }
                 json = gson.toJson(paymentRequestByDeepLink);
-                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK, uri, json, context);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK, uri, json, context,false);
                 return mHttpPostAsyncTask;
 
             case Constants.COMMAND_SEND_PAYMENT_REQUEST:
