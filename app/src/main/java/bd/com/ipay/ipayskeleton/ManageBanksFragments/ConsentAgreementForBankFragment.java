@@ -117,9 +117,9 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
         mBankBranch = bundle.getParcelable(Constants.BANK_BRANCH);
         mBranchName = mBankBranch.getName();
         mBankAccountNumber = bundle.getString(Constants.BANK_ACCOUNT_NUMBER);
+        mAccountName = bundle.getString(Constants.BANK_ACCOUNT_NAME);
         mDocType = bundle.getString(Constants.DOCUMENT_TYPE);
         mImageUrl = bundle.getStringArray(Constants.PHOTO_URI);
-        mAccountName = ProfileInfoCacheManager.getUserName();
 
         startedFromProfileCompletion = bundle.getBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION);
     }
