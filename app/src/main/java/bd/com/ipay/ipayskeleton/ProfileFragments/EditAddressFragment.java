@@ -97,6 +97,7 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
             @Override
             public void onClick(View v) {
                 if (mAddressInputView.verifyUserInputs()) {
+                    Utilities.hideKeyboard(getActivity());
                     mAddress = mAddressInputView.getInformation();
                     setUserAddress();
                 }

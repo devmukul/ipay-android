@@ -199,6 +199,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             mSwipeRefreshLayout.destroyDrawingCache();
             mSwipeRefreshLayout.clearAnimation();
         }
+        mSearchTransactionText.clearFocus();
+
     }
 
     @Override

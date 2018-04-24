@@ -384,11 +384,7 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         Utilities.hideKeyboard(this);
-        try {
-            drawer.closeDrawer(GravityCompat.START);
-        } catch (Exception e) {
 
-        }
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         }
@@ -586,7 +582,11 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
+        try {
+            drawer.closeDrawer(GravityCompat.START);
+        } catch (Exception e) {
 
+        }
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
