@@ -248,9 +248,13 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void launchParentThirdPartyApp() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
-        startActivity(intent);
-        getActivity().finish();
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
+            startActivity(intent);
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getOrderDetails(String orderID) {
