@@ -44,6 +44,7 @@ public class HttpErrorHandler {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     return true;
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+                    Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
                     return true;
                 }
                 return false;
