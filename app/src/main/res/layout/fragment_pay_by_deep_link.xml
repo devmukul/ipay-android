@@ -183,35 +183,8 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:id="@+id/divider"
-                style="@style/Divider" />
+            <View style="@style/Divider" />
 
-            <LinearLayout
-                android:id="@+id/reference_number_view_holder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/reference_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/TextViewInfoLabelPaymentReview"
-                        android:text="@string/reference_number" />
-
-                    <TextView
-                        android:id="@+id/reference_number_text_view"
-                        style="@style/ReferenceNoTextViewPaymentReview" />
-
-                </LinearLayout>
-
-                <View style="@style/Divider" />
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -234,13 +207,34 @@
                 android:paddingRight="@dimen/activity_horizontal_margin" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/make_payment_button"
-            style="@style/ButtonPrimaryWithNote"
+        <View style="@style/Divider" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="@string/confirm" />
+            android:layout_marginTop="@dimen/value40"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/cancel_button"
+                style="@style/ButtonReject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/make_payment_button"
+                style="@style/ButtonPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/confirm" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

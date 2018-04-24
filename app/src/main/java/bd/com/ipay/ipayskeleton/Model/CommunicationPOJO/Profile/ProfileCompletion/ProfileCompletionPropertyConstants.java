@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion;
 
-import android.support.annotation.IntegerRes;
-
 import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.R;

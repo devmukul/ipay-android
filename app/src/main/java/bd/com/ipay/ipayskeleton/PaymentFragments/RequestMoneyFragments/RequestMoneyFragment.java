@@ -112,6 +112,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
         mNameTextView = (TextView) v.findViewById(R.id.receiver_name_text_view);
         addToContactCheckBox = (CheckBox) v.findViewById(R.id.add_to_contact_check_box);
+        mProgressDialog = new ProgressDialog(getActivity());
 
         mMobileNumberEditText.setCurrentFragmentTag(Constants.REQUEST_MONEY);
 
@@ -119,10 +120,12 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
-            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+            mMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+            mMobileNumberEditText.setText(mMobileNumber);
+            getUserInfo(ContactEngine.formatMobileNumberBD(mMobileNumber));
         }
 
-        mProgressDialog = new ProgressDialog(getActivity());
+
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override

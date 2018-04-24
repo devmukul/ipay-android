@@ -73,6 +73,31 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="launch"
+                    android:scheme="ipay" />
+
+                <data
+                    android:host="@string/ipay_dev_host"
+                    android:scheme="https" />
+
+                <data
+                    android:host="@string/ipay_demo_host"
+                    android:scheme="https" />
+
+                <data
+                    android:host="@string/ipay_live_host"
+                    android:scheme="https" />
+
+            </intent-filter>
+
         </activity>
 
         <activity
