@@ -22,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.PreviousSecurityQuestionClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerResponse;
@@ -188,7 +189,7 @@ public class UpdateSecurityQuestionFragment extends BaseFragment implements Http
         Gson gson = new Gson();
         String json = gson.toJson(updateSecurityAnswerRequest, UpdateSecurityAnswerRequest.class);
         mUpdateSecurityAnswerTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_SECURITY_ANSWERS,
-                Constants.BASE_URL_MM + Constants.URL_SET_SECURITY_ANSWERS, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_SET_SECURITY_ANSWERS, json, getActivity(), false);
         mUpdateSecurityAnswerTask.mHttpResponseListener = this;
         mUpdateSecurityAnswerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -197,12 +198,8 @@ public class UpdateSecurityQuestionFragment extends BaseFragment implements Http
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mUpdateSecurityAnswerTask = null;
-
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.security_answer_set_failed, Toast.LENGTH_LONG).show();
             return;
         }
 

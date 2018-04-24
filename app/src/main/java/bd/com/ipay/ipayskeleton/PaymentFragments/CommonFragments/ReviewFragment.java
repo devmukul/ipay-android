@@ -69,7 +69,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         Gson gson = new Gson();
         String json = gson.toJson(mServiceChargeRequest);
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity(), false);
         mServiceChargeTask.mHttpResponseListener = this;
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
@@ -320,7 +321,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private void getInviteInfo() {
         if (mGetInviteInfoTask == null) {
             mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    Constants.BASE_URL_MM + Constants.URL_GET_INVITE_INFO, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_GET_INVITE_INFO, getActivity(), this, false);
             mGetInviteInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -386,7 +387,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 AddContactRequestBuilder(name, phoneNumber, relationship);
 
         mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), getActivity(), this);
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), getActivity(), this, false);
         mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -396,12 +397,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             mProgressDialog.dismiss();
         }
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetInviteInfoTask = null;
             mAddContactAsyncTask = null;
-            if (getContext() != null)
-                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 

@@ -271,7 +271,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                         if (businessName != null && !businessName.isEmpty())
                             intent.putExtra(Constants.BUSINESS_NAME, businessName);
                         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
-                        intent.putExtra(Constants.PROFILE_PICTURE,  mCursor.getString(profilePictureUrlIndex));
+                        intent.putExtra(Constants.PROFILE_PICTURE, mCursor.getString(profilePictureUrlIndex));
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }

@@ -37,7 +37,7 @@ class BarcodeGraphicTracker extends Tracker<Barcode> {
      */
     @Override
     public void onNewItem(int id, Barcode item) {
-        if(mBarcodeDetectorListener == null) return;
+        if (mBarcodeDetectorListener == null) return;
         mBarcodeDetectorListener.onObjectDetected(item);
     }
 
@@ -65,7 +65,7 @@ class BarcodeGraphicTracker extends Tracker<Barcode> {
     public void onDone() {
     }
 
-    interface BarcodeDetectorListener{
+    interface BarcodeDetectorListener {
         /**
          * Multiple events can be fired depending the number of barcodes identified,
          * So you may want to build a Map<K,V> to add the detected objects and finish the

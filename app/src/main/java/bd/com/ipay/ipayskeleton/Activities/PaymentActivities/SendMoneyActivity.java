@@ -19,8 +19,8 @@ public class SendMoneyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new SendMoneyFragment()).commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new SendMoneyFragment()).commit();
 
 
         if (getSupportActionBar() != null)

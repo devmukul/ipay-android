@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyn
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestTrustedDevice;
@@ -185,7 +186,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         Gson gson = new Gson();
         String json = gson.toJson(mOTPRequestTrustedDevice);
         mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                Constants.BASE_URL_MM + Constants.URL_LOGIN, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_LOGIN, json, getActivity(), false);
         mRequestOTPTask.mHttpResponseListener = this;
         mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -207,7 +208,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
-                    Constants.BASE_URL_MM + Constants.URL_LOGIN, json, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_LOGIN, json, getActivity(), false);
             mLoginTask.mHttpResponseListener = this;
             mLoginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -217,23 +218,19 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         if (mGetAllAddedCards != null) return;
         else {
             mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
-                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity(), this, true);
             mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             hideProgressDialog();
-
             mLoginTask = null;
             mGetAllAddedCards = null;
             mGetProfileCompletionStatusTask = null;
             mGetProfileInfoTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -467,7 +464,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity(), true);
         mAddTrustedDeviceTask.mHttpResponseListener = this;
         mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -477,7 +474,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             return;
         }
         mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this, true);
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -486,7 +483,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             return;
         }
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), true);
         mGetProfileInfoTask.mHttpResponseListener = this;
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

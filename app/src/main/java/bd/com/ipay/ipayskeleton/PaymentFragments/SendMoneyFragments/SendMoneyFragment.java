@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDial
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
@@ -421,7 +422,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait_loading));
         mCustomProgressDialog.showDialog();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
         mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
         mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -466,7 +467,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity(), false);
         mSendMoneyTask.mHttpResponseListener = this;
         mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -479,7 +480,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -496,12 +497,13 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         Gson gson = new Gson();
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mGetUserInfoTask = null;
             mSendMoneyTask = null;
             mGetBusinessRuleTask = null;
-            mCustomProgressDialog.dismissDialog();
+            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+            }
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mCustomProgressDialog.dismissDialog();

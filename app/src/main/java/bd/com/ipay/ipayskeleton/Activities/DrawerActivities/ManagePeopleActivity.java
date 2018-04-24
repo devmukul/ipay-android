@@ -17,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments.ManagerRequestHolderFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -88,7 +89,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
             return;
         }
         mGetRolesAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ALL_ROLES,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS, ManagePeopleActivity.this, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS, ManagePeopleActivity.this, this, false);
         mGetRolesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -100,12 +101,9 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-            mGetRolesAsyncTask = null;
-            Toaster.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
+        if (HttpErrorHandler.isErrorFound(result, this, null)) {
             return;
         }
-
         Gson gson = new Gson();
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_ALL_ROLES:
@@ -114,7 +112,6 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
                     mGetRolesResponse = gson.fromJson(result.getJsonString(), BusinessRoleResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                         mAllRoleList = (ArrayList<BusinessRole>) mGetRolesResponse.getBusinessRoleList();
                     } else {
                         finish();

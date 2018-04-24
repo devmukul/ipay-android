@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -122,7 +123,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         String json = gson.toJson(setPinRequest);
 
         mSavePINTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN,
-                Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getContext(), this);
+                Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getContext(), this, false);
         mSavePINTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -131,11 +132,8 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mSavePINTask = null;
-            if (getContext() != null)
-                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 

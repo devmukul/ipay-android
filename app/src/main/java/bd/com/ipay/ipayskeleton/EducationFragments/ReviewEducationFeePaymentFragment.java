@@ -27,17 +27,16 @@ import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EducationInvoice;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.InvoicePayableAccountRelation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.MakeEducationPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.MakeEducationPaymentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.PayableItem;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -227,7 +226,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
         Gson gson = new Gson();
         String json = gson.toJson(makeEducationPaymentRequest);
         mEducationPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_MAKE_PAYMENT_EDUCATION,
-                Constants.BASE_URL_EDU + Constants.URL_MAKE_PAYMENT_EDUCATION, json, getActivity());
+                Constants.BASE_URL_EDU + Constants.URL_MAKE_PAYMENT_EDUCATION, json, getActivity(),false);
         mEducationPaymentTask.mHttpResponseListener = this;
         mEducationPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -293,12 +292,9 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mProgressDialog.dismiss();
             mEducationPaymentTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.payment_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
             return;
         }
 

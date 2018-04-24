@@ -133,6 +133,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-vision:11.2.0'
     compile 'com.google.android.gms:play-services-analytics:11.2.0'
     compile 'com.google.android.gms:play-services:11.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.firebase:firebase-client-android:2.4.0'
 

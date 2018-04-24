@@ -47,6 +47,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.Coordinate;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereRequestUrlBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereResponse;
@@ -63,7 +64,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     private static final int REQUEST_LOCATION = 1;
     public static final int LOCATION_SETTINGS_PERMISSION_CODE = 9876;
 
-    private List<NearbyBusinessResponseList> mNearByBusinessResponse;
+    private List <NearbyBusinessResponseList> mNearByBusinessResponse;
     private HttpRequestGetAsyncTask mIPayHereTask = null;
 
     private SupportMapFragment mapFragment;
@@ -227,7 +228,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         mProgressDialog.show();
         String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
         mIPayHereTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
-                url, IPayHereActivity.this);
+                url, IPayHereActivity.this,false);
         mIPayHereTask.mHttpResponseListener = this;
         mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -286,11 +287,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            hideProgressDialog();
-            mIPayHereTask = null;
-            Toast.makeText(IPayHereActivity.this, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
             return;
         }
         Gson gson = new Gson();
@@ -376,7 +373,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                                     return false;
                                 }
                             }).crossFade().placeholder(R.drawable.ic_business_logo_round)
-                            .error(R.drawable.ic_business_logo_round).into(businessProfileImageView);;
+                            .error(R.drawable.ic_business_logo_round).into(businessProfileImageView);
 
                 }
             }
@@ -427,6 +424,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     private void hideProgressDialog() {
-         mProgressDialog.dismiss();
+        mProgressDialog.dismiss();
     }
 }

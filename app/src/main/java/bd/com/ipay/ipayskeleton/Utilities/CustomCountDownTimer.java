@@ -74,7 +74,7 @@ public abstract class CustomCountDownTimer {
                         mNextTime += mCountdownInterval;
                     } while (currentTime > mNextTime);
                     // Make sure this interval doesn't exceed the stop time
-                    if(mNextTime < mStopTimeInFuture)
+                    if (mNextTime < mStopTimeInFuture)
                         sendMessageAtTime(obtainMessage(MSG), mNextTime);
                     else
                         sendMessageAtTime(obtainMessage(MSG), mStopTimeInFuture);

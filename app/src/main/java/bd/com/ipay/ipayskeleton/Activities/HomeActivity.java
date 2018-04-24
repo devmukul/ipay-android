@@ -75,6 +75,7 @@ import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
@@ -340,7 +341,7 @@ public class HomeActivity extends BaseActivity
             return;
 
         mGetBusinessAccountsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS,
-                Constants.BASE_URL_MM + Constants.URL_SWITCH_ACCOUNT, this, this);
+                Constants.BASE_URL_MM + Constants.URL_SWITCH_ACCOUNT, this, this, true);
         mGetBusinessAccountsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -430,7 +431,7 @@ public class HomeActivity extends BaseActivity
         }
 
         mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, this, this);
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, this, this, false);
         mResignFromBusinessAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
@@ -597,7 +598,7 @@ public class HomeActivity extends BaseActivity
 
             switchToContactsActivity();
 
-        }else if (id == R.id.nav_bank_account) {
+        } else if (id == R.id.nav_bank_account) {
 
             switchToManageBanksActivity();
 
@@ -712,7 +713,7 @@ public class HomeActivity extends BaseActivity
             String json = gson.toJson(mLogoutModel);
 
             mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                    Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
+                    Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this, false);
             mLogoutTask.mHttpResponseListener = this;
             mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
@@ -728,7 +729,7 @@ public class HomeActivity extends BaseActivity
         }
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, HomeActivity.this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, HomeActivity.this, true);
         mGetProfileInfoTask.mHttpResponseListener = this;
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -738,7 +739,7 @@ public class HomeActivity extends BaseActivity
             return;
 
         mGetBusinessInformationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_INFORMATION,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_INFORMATION, HomeActivity.this, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_INFORMATION, HomeActivity.this, this, true);
         mGetBusinessInformationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -781,15 +782,14 @@ public class HomeActivity extends BaseActivity
             return;
 
         mGetAccessControlTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCESS_CONTROL_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, HomeActivity.this);
+                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, HomeActivity.this, true);
         mGetAccessControlTask.mHttpResponseListener = this;
         mGetAccessControlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
+        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
@@ -987,7 +987,8 @@ public class HomeActivity extends BaseActivity
         locationCollector.setMobileNumber(ProfileInfoCacheManager.getMobileNumber());
         locationCollector.setLocationList(userLocationList);
         String body = new GsonBuilder().create().toJson(locationCollector);
-        mLocationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR, body, this, this);
+        mLocationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR,
+                body, this, this, true);
         mLocationUpdateRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mLocationManager.removeUpdates(this);
     }

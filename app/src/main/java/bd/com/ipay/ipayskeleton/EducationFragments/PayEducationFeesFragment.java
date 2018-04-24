@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetEnabledPayablesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.R;
@@ -119,7 +120,7 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
         String mUrl = mGetEnabledPayablesRequestBuilder.getGeneratedUrl();
 
         mGetEnabledPayablesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ENABLED_PAYABLES_LIST,
-                mUrl, getActivity());
+                mUrl, getActivity(),false);
         mGetEnabledPayablesTask.mHttpResponseListener = this;
 
         mGetEnabledPayablesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -128,11 +129,8 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
             mGetEnabledPayablesTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

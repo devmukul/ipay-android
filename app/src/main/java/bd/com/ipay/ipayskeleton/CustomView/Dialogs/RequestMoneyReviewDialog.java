@@ -16,9 +16,10 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
@@ -121,12 +122,11 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String pin = mPinField.getText().toString();
-                if (pin.isEmpty()){
+                if (pin.isEmpty()) {
                     mPinField.setError(getContext().getString(R.string.failed_empty_pin));
                     View focusView = mPinField;
                     focusView.requestFocus();
-                }
-                else {
+                } else {
                     dialog.dismiss();
                     if (mServiceID == Constants.SERVICE_ID_REQUEST_MONEY)
                         acceptRequestMoney(requestId, pin);
@@ -156,7 +156,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context);
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context, false);
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -174,7 +174,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context);
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context, false);
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -182,13 +182,9 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.show();
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mAcceptRequestTask = null;
             mAcceptPaymentTask = null;
-            if (context != null)
-                Toaster.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 

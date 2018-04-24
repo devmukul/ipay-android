@@ -27,10 +27,10 @@ public class CustomSelectorDialogWithIcon extends AlertDialog {
     private View view, viewTitle;
     private TextView textViewTitle;
     private ListView popUpList;
-    private int [] mIconList;
+    private int[] mIconList;
 
 
-    public CustomSelectorDialogWithIcon(Context context, String mTitle, List<String> resources , int[] mIconList) {
+    public CustomSelectorDialogWithIcon(Context context, String mTitle, List<String> resources, int[] mIconList) {
         super(context);
 
         this.context = context;

@@ -44,6 +44,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomDrawable;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.TicketCategory;
@@ -347,7 +348,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         String mUri = mGetTicketCategoriesRequestBuilder.generateUri().toString();
 
         mGetTicketCategoriesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_CATEGORIES,
-                mUri, getActivity());
+                mUri, getActivity(),true);
         mGetTicketCategoriesTask.mHttpResponseListener = this;
 
         mGetTicketCategoriesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -366,7 +367,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         String json = gson.toJson(createTicketRequest);
 
         mCreateTicketTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_TICKET,
-                Constants.BASE_URL_ADMIN + Constants.URL_CREATE_TICKET, json, getActivity(), this);
+                Constants.BASE_URL_ADMIN + Constants.URL_CREATE_TICKET, json, getActivity(), this,false);
         mCreateTicketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -378,7 +379,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         setContentShown(false);
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this,true);
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -394,17 +395,10 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         if (getActivity() != null)
             mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mCreateTicketTask = null;
             mGetEmailsTask = null;
             mGetTicketCategoriesTask = null;
-
-            if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
-                mProgressDialog.dismiss();
-            }
-
             return;
         }
 

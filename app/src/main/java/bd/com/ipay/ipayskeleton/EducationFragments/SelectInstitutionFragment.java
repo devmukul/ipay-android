@@ -21,9 +21,10 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EventParticipant;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetSessionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetStudentInfoByStudentIDRequestBuilder;
@@ -188,7 +189,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         }
 
         mGetAllInstitutionsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INSTITUTION_LIST,
-                Constants.BASE_URL_EDU + Constants.URL_GET_ALL_INSTITUTIONS_LIST, getActivity(), this);
+                Constants.BASE_URL_EDU + Constants.URL_GET_ALL_INSTITUTIONS_LIST, getActivity(), this,false);
         mGetAllInstitutionsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -218,7 +219,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         String mUrl = mGetSessionRequestBuilder.getGeneratedUrl();
 
         mGetSessionsByInstitutionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SESSION_LIST,
-                mUrl, getActivity());
+                mUrl, getActivity(),false);
         mGetSessionsByInstitutionTask.mHttpResponseListener = this;
 
         mGetSessionsByInstitutionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -234,7 +235,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         String mUrl = mGetStudentInfoByStudentIDRequestBuilder.getGeneratedUrl();
 
         mGetStudentInfoByStudentIDTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID,
-                mUrl, getActivity());
+                mUrl, getActivity(),false);
         mGetStudentInfoByStudentIDTask.mHttpResponseListener = this;
 
         mGetStudentInfoByStudentIDTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -244,12 +245,10 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
             mGetAllInstitutionsTask = null;
             mGetSessionsByInstitutionTask = null;
             mGetStudentInfoByStudentIDTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

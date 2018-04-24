@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -28,11 +27,11 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivi
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Ticket;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketListFragment extends ProgressFragment implements HttpResponseListener {
@@ -60,7 +59,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_list) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_list));
     }
 
     @Nullable
@@ -118,7 +117,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         }
 
         mGetTicketsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKETS,
-                Constants.BASE_URL_ADMIN + Constants.URL_GET_TICKETS, getActivity(), this);
+                Constants.BASE_URL_ADMIN + Constants.URL_GET_TICKETS, getActivity(), this, false);
         mGetTicketsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -143,10 +142,9 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetTicketsTask = null;
             if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 showErrorDialog();
             }
             return;

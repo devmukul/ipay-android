@@ -6,21 +6,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseParser;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.OkHttpResponse;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Configuration.ApiVersionResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -29,25 +23,31 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.SSLPinning;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
     public HttpResponseListener mHttpResponseListener;
 
-    final String mUri;
+    final public String mUri;
     private final Context mContext;
     private final String API_COMMAND;
-    private HttpResponse mHttpResponse;
+    private OkHttpResponse mHttpResponse;
+    private String socketTimeOutConnection;
+    private boolean isSlient;
 
     private boolean error = false;
 
-    HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
+    HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener, boolean isSilent) {
         this.API_COMMAND = API_COMMAND;
         this.mUri = mUri;
         this.mContext = mContext;
         this.mHttpResponseListener = listener;
+        socketTimeOutConnection = null;
+        this.isSlient = isSilent;
     }
 
     @Override
@@ -56,26 +56,26 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         GenericHttpResponse mGenericHttpResponse = null;
 
         try {
-            if (SSLPinning.validatePinning()) {
-                if (Utilities.isConnectionAvailable(mContext)) {
+            if (Utilities.isConnectionAvailable(mContext)) {
+                String responseFromSSL = SSLPinning.validatePinning();
+                if (responseFromSSL.equals(mContext.getString(R.string.OK))) {
                     if (Constants.IS_API_VERSION_CHECKED && !Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND) {
                         mHttpResponse = makeRequest();
-                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
                         mGenericHttpResponse.setUpdateNeeded(false);
                     } else {
                         mHttpResponse = makeApiVersionCheckRequest();
-                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
                         Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
 
                         // Validate the Api version and set whether the update is required or not
                         mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
                     }
-
                 } else {
-                    Logger.logD(Constants.ERROR, API_COMMAND);
-                    error = true;
-                    return null;
+                    return new GenericHttpResponse(responseFromSSL, true);
                 }
+            } else {
+                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection), false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,8 +125,12 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             }
 
         } else {
-            if (mHttpResponseListener != null)
-                mHttpResponseListener.httpResponseReceiver(null);
+            if (socketTimeOutConnection == null) {
+                if (mHttpResponseListener != null)
+                    mHttpResponseListener.httpResponseReceiver(null);
+            } else {
+                mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection, isSlient));
+            }
         }
     }
 
@@ -135,59 +139,96 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         mHttpResponseListener.httpResponseReceiver(null);
     }
 
-    private HttpResponse makeRequest() {
+    private OkHttpResponse makeRequest() {
+
+        final OkHttpResponse okHttpResponse = new OkHttpResponse();
         try {
-            HttpRequestBase httpRequest = getRequest();
+            Request request = getRequest();
+            if (MyApplication.getMyApplicationInstance().getOkHttpClient() != null) {
+                try {
+                    Response response = MyApplication.getMyApplicationInstance().getOkHttpClient().newCall(request).execute();
+                    okHttpResponse.setResponse(response);
+                } catch (IOException e) {
 
-            if (TokenManager.getToken().length() > 0)
-                httpRequest.setHeader(Constants.TOKEN, TokenManager.getToken());
-            if (TokenManager.isEmployerAccountActive())
-                httpRequest.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
-            httpRequest.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
-            httpRequest.setHeader("Accept", "application/json");
-            httpRequest.setHeader("Content-type", "application/json");
+                    if (e instanceof SocketException) {
+                        socketTimeOutConnection = mContext.getString(R.string.network_unreachable);
+                    } else if (e instanceof SocketTimeoutException) {
+                        socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
+                    }
 
-            HttpParams httpParams = new BasicHttpParams();
-            HttpProtocolParams.setContentCharset(httpParams, HTTP.UTF_8);
-            HttpProtocolParams.setHttpElementCharset(httpParams, HTTP.UTF_8);
-            HttpClient client = new DefaultHttpClient(httpParams);
+                }
+            } else {
+                OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
+                        .connectTimeout(30, TimeUnit.SECONDS).build();
+                try {
+                    Response response = okHttpClient.newCall(request).execute();
+                    okHttpResponse.setResponse(response);
+                } catch (IOException e) {
+                    if (e instanceof SocketException) {
+                        socketTimeOutConnection = mContext.getString(R.string.network_unreachable);
+                    } else if (e instanceof SocketTimeoutException) {
+                        socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
+                    }
 
-            return client.execute(httpRequest);
-        } catch (IOException e) {
+                }
+            }
+            return okHttpResponse;
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+
+        return okHttpResponse;
+
     }
 
-    private HttpResponse makeApiVersionCheckRequest() {
+    private OkHttpResponse makeApiVersionCheckRequest() {
+        final OkHttpResponse okHttpResponse = new OkHttpResponse();
         try {
-            HttpRequestBase httpRequest = new HttpGet(Constants.BASE_URL_MM + Constants.URL_GET_MIN_API_VERSION_REQUIRED);
+            Request request = new Request.Builder().
+                    header(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID)
+                    .header("Accept", "application/json")
+                    .header("Content-type", "application/json")
+                    .get()
+                    .url(Constants.BASE_URL_MM + Constants.URL_GET_MIN_API_VERSION_REQUIRED)
+                    .build();
+            OkHttpClient okHttpClient;
+            Response response;
+            if (MyApplication.getMyApplicationInstance().getOkHttpClient() != null) {
+                okHttpClient = MyApplication.getMyApplicationInstance().getOkHttpClient();
+            } else {
+                okHttpClient = new OkHttpClient.Builder().
+                        readTimeout(30, TimeUnit.SECONDS)
+                        .connectTimeout(30, TimeUnit.SECONDS)
+                        .build();
+            }
+            try {
+                response = okHttpClient.newCall(request).execute();
+                okHttpResponse.setResponse(response);
+            } catch (IOException e) {
+                if (e instanceof SocketException) {
+                    socketTimeOutConnection = mContext.getString(R.string.network_unreachable);
+                } else if (e instanceof SocketTimeoutException) {
+                    socketTimeOutConnection = mContext.getString(R.string.connection_time_out);
+                }
+            }
 
-            httpRequest.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
-            httpRequest.setHeader("Accept", "application/json");
-            httpRequest.setHeader("Content-type", "application/json");
+            return okHttpResponse;
 
-            HttpParams httpParams = new BasicHttpParams();
-            HttpProtocolParams.setContentCharset(httpParams, HTTP.UTF_8);
-            HttpProtocolParams.setHttpElementCharset(httpParams, HTTP.UTF_8);
-            HttpClient client = new DefaultHttpClient(httpParams);
+        } catch (Exception e) {
 
-            return client.execute(httpRequest);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return null;
+        return okHttpResponse;
     }
 
-    private GenericHttpResponse parseHttpResponse(HttpResponse mHttpResponse) {
+    private GenericHttpResponse parseHttpResponse(Response response) {
         GenericHttpResponse mGenericHttpResponse = null;
 
-        if (mHttpResponse == null)
+        if (response == null)
             return mGenericHttpResponse;
 
         HttpResponseParser mHttpResponseParser = new HttpResponseParser();
         mHttpResponseParser.setAPI_COMMAND(API_COMMAND);
-        mHttpResponseParser.setHttpResponse(mHttpResponse);
+        mHttpResponseParser.setHttpResponse(response);
         mHttpResponseParser.setContext(mContext);
 
         mGenericHttpResponse = mHttpResponseParser.parseHttpResponse();
@@ -216,7 +257,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                         Constants.IS_API_VERSION_CHECKED = true;
                         Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
                         mHttpResponse = makeRequest();
-                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        mGenericHttpResponse = parseHttpResponse(mHttpResponse.getResponse());
                         mGenericHttpResponse.setUpdateNeeded(false);
                     }
                 }
@@ -232,5 +273,5 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         return mContext;
     }
 
-    abstract protected HttpRequestBase getRequest();
+    abstract protected Request getRequest();
 }

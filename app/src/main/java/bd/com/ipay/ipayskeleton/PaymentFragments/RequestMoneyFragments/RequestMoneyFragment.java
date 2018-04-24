@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
@@ -398,7 +399,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
         mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
         mGetUserInfoTask.mHttpResponseListener = RequestMoneyFragment.this;
         mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -414,7 +415,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -433,7 +434,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mRequestMoneyRequest);
         mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY, json, getActivity(), false);
         mRequestMoneyTask.mHttpResponseListener = this;
         mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -452,11 +453,11 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         Gson gson = new Gson();
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetUserInfoTask = null;
             mRequestMoneyTask = null;
             mGetBusinessRuleTask = null;
+            return;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 

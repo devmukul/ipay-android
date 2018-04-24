@@ -46,6 +46,6 @@ public class SelectAccountTypeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_select_account_type_page);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_select_account_type) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_select_account_type));
     }
 }
