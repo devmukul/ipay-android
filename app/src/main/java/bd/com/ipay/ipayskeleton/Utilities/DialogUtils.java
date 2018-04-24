@@ -18,7 +18,7 @@ public class DialogUtils {
     public static MaterialDialog showAppUpdateDialog;
 
     public static void showAppUpdateRequiredDialog(final Context mContext) {
-        if(showAppUpdateDialog!=null){
+        if (showAppUpdateDialog != null) {
             return;
         }
         showAppUpdateDialog = new MaterialDialog.Builder(mContext)
@@ -174,6 +174,21 @@ public class DialogUtils {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         ((Activity) context).onBackPressed();
+                    }
+                })
+                .show();
+        dialog.show();
+    }
+
+    public static void showNecessaryDialogForDeeplinkAction(final Context context, String message) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(message)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((Activity) context).finishAffinity();
                     }
                 })
                 .show();

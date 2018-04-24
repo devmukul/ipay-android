@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentByDeepLinkFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestsReceivedFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -55,9 +56,14 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
         mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
         mProgressDialog = new ProgressDialog(this);
 
-        if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
-
-            switchToMakePaymentFragment(null);
+        if (getIntent().getStringExtra("ORDER_ID") != null)
+            switchToMakePaymentByDeepLinkFragment();
+        else if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+            if (getIntent().getStringExtra(Constants.MOBILE_NUMBER) != null) {
+                getProfileInfo(getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+            } else {
+                switchToMakePaymentFragment(null);
+            }
         } else {
             switchToReceivedPaymentRequestsFragment();
         }
@@ -138,6 +144,14 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
             mFabMakingPayment.setVisibility(View.GONE);
             switchedToPendingList = false;
         }
+    }
+
+    public void switchToMakePaymentByDeepLinkFragment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new MakePaymentByDeepLinkFragment()).commit();
+
+        mFabMakingPayment.setVisibility(View.GONE);
+        switchedToPendingList = false;
     }
 
     public void switchToReceivedPaymentRequestsFragment() {
