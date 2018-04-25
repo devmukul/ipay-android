@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -87,7 +87,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
     private HttpRequestGetAsyncTask mGetAllAddedCards = null;
     private GetCardResponse mGetCardResponse;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -150,10 +150,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             @Override
             public void onClick(View v) {
                 try {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(Constants.BASE_URL_WEB + Constants.URL_FORGET_PASSWORD));
+                    Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                    intent.putExtra("url", Constants.BASE_URL_WEB + Constants.URL_FORGET_PASSWORD);
                     startActivity(intent);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();

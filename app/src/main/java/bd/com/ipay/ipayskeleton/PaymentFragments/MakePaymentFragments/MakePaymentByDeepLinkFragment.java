@@ -287,6 +287,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mCustomProgressDialog.dismissDialog();
             mGetOrderDetailsTask = null;
             mPaymentTask = null;
+            getActivity().finish();
             return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
