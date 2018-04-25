@@ -34,11 +34,18 @@ public class LauncherActivity extends AppCompatActivity {
                 Uri uri = getIntent().getData();
                 if (uri != null)
                     Logger.logD(TAG, uri.toString());
+                Intent intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra("url", uri.toString());
+                startActivity(intent);
+
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
-                if (SharedPrefManager.isRememberMeActive() && loggedIn) {
-                    Utilities.performDeepLinkAction(this, deepLinkAction);
-                } else {
-                    launchSigninOrLoginActivity(deepLinkAction);
+                if (deepLinkAction != null) {
+
+                    if (SharedPrefManager.isRememberMeActive() && loggedIn) {
+                        Utilities.performDeepLinkAction(this, deepLinkAction);
+                    } else {
+                        launchSigninOrLoginActivity(deepLinkAction);
+                    }
                 }
                 break;
             case Intent.ACTION_MAIN:
