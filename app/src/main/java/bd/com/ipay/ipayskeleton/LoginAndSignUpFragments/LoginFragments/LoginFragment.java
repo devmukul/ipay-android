@@ -87,7 +87,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
     private HttpRequestGetAsyncTask mGetAllAddedCards = null;
     private GetCardResponse mGetCardResponse;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -153,6 +153,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setPackage("com.android.chrome");
                     intent.setData(Uri.parse(Constants.BASE_URL_WEB + Constants.URL_FORGET_PASSWORD));
                     startActivity(intent);
                 } catch (Exception e) {
