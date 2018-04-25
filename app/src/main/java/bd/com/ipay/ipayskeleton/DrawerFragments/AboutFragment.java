@@ -64,7 +64,6 @@ public class AboutFragment extends BaseFragment {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setPackage("com.android.chrome");
                     intent.setData(Uri.parse(getContext().getString(R.string.term_link)));
                     startActivity(intent);
                 } catch (Exception e) {
@@ -79,7 +78,6 @@ public class AboutFragment extends BaseFragment {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setPackage("com.android.chrome");
                     intent.setData(Uri.parse(getContext().getString(R.string.privacy_link)));
                     startActivity(intent);
                 } catch (Exception e) {

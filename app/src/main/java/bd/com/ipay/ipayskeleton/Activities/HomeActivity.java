@@ -165,6 +165,21 @@ public class HomeActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+        if (getIntent() != null) {
+            if (getIntent().getData() != null && getIntent().getData().toString().contains("www.ipay.com.bd")) {
+                try {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(getIntent().getData());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(this, R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+        }
 
         mProgressDialog = new ProgressDialog(HomeActivity.this);
 
