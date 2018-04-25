@@ -616,7 +616,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     }
 
     private void hideProgressDialog() {
-        if (isAdded()) mProgressDialog.dismiss();
+        mProgressDialog.dismiss();
     }
 
     private void attemptAddTrustedDevice() {
