@@ -97,7 +97,7 @@ public class BusinessContactsSearchView extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-            if (userInput.length() > 0) {
+            if (userInput.length() > 2) {
 
                 mQuery = userInput.toString();
 
@@ -236,7 +236,7 @@ public class BusinessContactsSearchView extends FrameLayout {
 
             businessNameView = (TextView) view.findViewById(R.id.business_name);
             businessTypeView = (TextView) view.findViewById(R.id.business_type);
-            mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
+            //   mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
             profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
 
             return bindView(view, position);
@@ -261,7 +261,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                 businessTypeView.setText(businessType);
                 businessTypeView.setVisibility(VISIBLE);
             }
-            mobileNumberView.setText(mobileNumber);
+            //   mobileNumberView.setText(mobileNumber);
             profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
 
             view.setOnClickListener(new View.OnClickListener() {

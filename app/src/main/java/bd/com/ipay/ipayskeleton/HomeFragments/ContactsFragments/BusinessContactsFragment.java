@@ -118,7 +118,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
                     businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
-                    businessAddressIndex= cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
+                    businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_BUSINESS_URI);
                 }
@@ -144,8 +144,13 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mQuery = newText;
-        getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
+        if (newText.isEmpty()) {
+            mQuery = newText;
+            getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
+        } else if (!newText.isEmpty() && newText.length() > 2) {
+            mQuery = newText;
+            getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
+        }
 
         return true;
     }
@@ -274,7 +279,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                         if (businessName != null && !businessName.isEmpty())
                             intent.putExtra(Constants.BUSINESS_NAME, businessName);
                         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
-                        intent.putExtra(Constants.PROFILE_PICTURE,  mCursor.getString(profilePictureUrlIndex));
+                        intent.putExtra(Constants.PROFILE_PICTURE, mCursor.getString(profilePictureUrlIndex));
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }
