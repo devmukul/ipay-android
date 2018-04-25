@@ -111,7 +111,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
 
-                Cursor cursor = dataHelper.searchBusinessContacts(mQuery);
+                Cursor cursor = dataHelper.searchBusinessAccounts(mQuery);
 
                 if (cursor != null) {
                     businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
@@ -261,7 +261,9 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                     businessNameView.setText(businessName);
                 }
 
-                businessAddressView.setText(businessAddress);
+                if (businessAddress != null && !businessAddress.isEmpty()) {
+                    businessAddressView.setText(businessAddress);
+                }
                 profilePictureView.setProfilePicture(profilePictureUrl, false);
 
                 if (CommonData.getBusinessTypes() != null) {

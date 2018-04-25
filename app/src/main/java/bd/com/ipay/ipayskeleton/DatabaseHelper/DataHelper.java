@@ -296,7 +296,7 @@ public class DataHelper {
         return cursor;
     }
 
-    public Cursor searchBusinessContacts(String query) {
+    public Cursor searchBusinessAccounts(String query) {
         Cursor cursor = null;
 
         try {
