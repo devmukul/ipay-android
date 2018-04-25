@@ -65,6 +65,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 "(_id integer primary key autoincrement, " +
                 DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " text unique not null, " +
                 DBConstants.KEY_BUSINESS_NAME + " text, " +
+                DBConstants.KEY_BUSINESS_ADDRESS + " text, " +
                 DBConstants.BUSINESS_EMAIL + " text, " +
                 DBConstants.KEY_BUSINESS_TYPE + " integer default 0, " +
                 DBConstants.KEY_PROFILE_PICTURE + " text, " +
@@ -87,6 +88,9 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 createBusinessAccountsTable(db);
             case 10:
                 dropTable(db, DBConstants.DB_TABLE_CONTACTS);
+                createContactsTable(db);
+            case 11:
+                dropTable(db, DBConstants.DB_TABLE_BUSINESS_ACCOUNTS);
                 createContactsTable(db);
                 break;
         }

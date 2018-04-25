@@ -47,6 +47,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int businessTypeIndex;
+    private int businessAddressIndex;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -117,6 +118,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
                     businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
+                    businessAddressIndex= cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_BUSINESS_URI);
                 }
@@ -228,7 +230,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
             private final TextView businessNameView;
             private final TextView businessTypeView;
             private final ProfileImageView profilePictureView;
-            private final TextView mobileNumberView;
+            private final TextView businessAddressView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -237,7 +239,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
 
                 businessNameView = (TextView) itemView.findViewById(R.id.business_name);
                 businessTypeView = (TextView) itemView.findViewById(R.id.business_type);
-                mobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
+                businessAddressView = (TextView) itemView.findViewById(R.id.business_address);
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }
 
@@ -248,12 +250,13 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                 final String mobileNumber = mCursor.getString(phoneNumberIndex);
                 final int businessTypeID = mCursor.getInt(businessTypeIndex);
                 final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
+                final String businessAddress = mCursor.getString(businessAddressIndex);
 
                 if (businessName != null && !businessName.isEmpty()) {
                     businessNameView.setText(businessName);
                 }
 
-                mobileNumberView.setText(mobileNumber);
+                businessAddressView.setText(businessAddress);
                 profilePictureView.setProfilePicture(profilePictureUrl, false);
 
                 if (CommonData.getBusinessTypes() != null) {
