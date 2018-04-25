@@ -103,13 +103,13 @@
                     android:layout_margin="@dimen/activity_horizontal_margin_card"
                     android:elevation="@dimen/value2"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
 
 
                     <ImageView
-                        android:layout_width="@dimen/value80"
-                        android:layout_height="@dimen/value80"
+                        android:layout_width="@dimen/value70"
+                        android:layout_height="@dimen/value70"
                         android:layout_gravity="center_horizontal"
                         android:padding="@dimen/value15"
                         android:src="@drawable/background_icon_request_payment"
