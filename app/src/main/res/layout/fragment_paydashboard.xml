@@ -13,18 +13,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_card">
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
-                android:singleLine="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin_card"
                 android:paddingRight="@dimen/value5"
                 android:paddingTop="@dimen/activity_horizontal_margin"
+                android:singleLine="true"
                 android:text="@string/top"
                 android:textAllCaps="true"
                 android:textSize="@dimen/text_size_small" />
@@ -43,15 +43,13 @@
                     android:orientation="vertical">
 
 
-
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:background="@drawable/semiround_white_default"
                         android:padding="@dimen/value15"
-                        android:src="@drawable/background_icon_topup_home"
-                        android:background="@drawable/semiround_white_default"/>
-
+                        android:src="@drawable/background_icon_topup_home" />
 
 
                     <TextView
@@ -63,8 +61,8 @@
                         android:gravity="center_horizontal"
                         android:singleLine="true"
                         android:text="@string/mobile_topup"
-                        android:textSize="@dimen/text_size_extra_smaller_value11"
-                        android:textColor="@color/colorBlack"/>
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_extra_smaller_value11" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -79,9 +77,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:background="@drawable/semiround_white_default"
                         android:padding="@dimen/value15"
-                        android:src="@drawable/background_icon_pay_by_qc_home"
-                        android:background="@drawable/semiround_white_default"/>
+                        android:src="@drawable/background_icon_pay_by_qc_home" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -92,8 +90,8 @@
                         android:gravity="center_horizontal"
                         android:singleLine="true"
                         android:text="@string/pay_by_QR_code"
-                        android:textSize="@dimen/text_size_extra_smaller_value11"
-                        android:textColor="@color/colorBlack"/>
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_extra_smaller_value11" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -105,15 +103,13 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-
-
                     <ImageView
-                        android:layout_width="@dimen/value80"
-                        android:layout_height="@dimen/value80"
+                        android:layout_width="@dimen/value70"
+                        android:layout_height="@dimen/value70"
                         android:layout_gravity="center_horizontal"
+                        android:background="@drawable/semiround_white_default"
                         android:padding="@dimen/value15"
-                        android:src="@drawable/background_icon_request_payment"
-                        android:background="@drawable/semiround_white_default"/>
+                        android:src="@drawable/background_icon_request_payment" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -124,8 +120,8 @@
                         android:gravity="center_horizontal"
                         android:singleLine="true"
                         android:text="@string/request_payment"
-                        android:textSize="@dimen/text_size_extra_smaller_value11"
-                        android:textColor="@color/colorBlack"/>
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_extra_smaller_value11" />
                 </LinearLayout>
             </LinearLayout>
 
