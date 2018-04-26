@@ -149,6 +149,9 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         }
 
         mAccountNameEditText.setText(ProfileInfoCacheManager.getUserName());
+        if (!ProfileInfoCacheManager.isBusinessAccount()) {
+            mAccountNameEditText.setFocusable(true);
+        }
 
         addBank.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,8 +160,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 verifyUserInputs();
             }
         });
-
-
 
 
         return v;
@@ -311,7 +312,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number_of_minimum_digit));
             focusView = mAccountNumberEditText;
             focusView.requestFocus();
-        } else if (mChequebookCoverImageFile!=null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
+        } else if (mChequebookCoverImageFile != null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
             mChequebookCoverPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
             mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
             focusView = null;
@@ -338,7 +339,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         bundle.putString(Constants.BANK_ACCOUNT_NAME, accountName);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
-        if(mChequebookCoverImageFile!=null) {
+        if (mChequebookCoverImageFile != null) {
             bundle.putString(Constants.DOCUMENT_TYPE, "cheque");
             bundle.putStringArray(Constants.PHOTO_URI, getUploadFilePaths());
         }
