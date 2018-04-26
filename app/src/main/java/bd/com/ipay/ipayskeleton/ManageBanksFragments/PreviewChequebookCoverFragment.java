@@ -224,20 +224,29 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
         String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
 
         if (filePath != null) {
-            String[] temp = filePath.split(File.separator);
-            final String mFileName = temp[temp.length - 1];
+            String type = filePath.substring(filePath.lastIndexOf(".") + 1);
 
-            Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
-            final File imageFile = new File(mSelectedDocumentUri.getPath());
-            final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            if(type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
+                    || type.equalsIgnoreCase("jpeg")) {
 
-            if (mChequebookCoverImageView != null) {
-                mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                String[] temp = filePath.split(File.separator);
+                final String mFileName = temp[temp.length - 1];
+
+                Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
+                final File imageFile = new File(mSelectedDocumentUri.getPath());
+                final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+                if (mChequebookCoverImageView != null) {
+                    mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                }
+                mChequebookCoverPageErrorTextView.setText("");
+                mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
+                mChequebookCoverImageFile = imageFile;
+                mPickerActionId = -1;
+
+            }else {
+                Toaster.makeText(getContext(), "Invalid image type. Only JPG or PNG are allowed", Toast.LENGTH_LONG);
             }
-            mChequebookCoverPageErrorTextView.setText("");
-            mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
-            mChequebookCoverImageFile = imageFile;
-            mPickerActionId = -1;
         }
     }
 

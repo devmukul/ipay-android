@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,7 +67,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private static final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
-
 
     private ProgressDialog mProgressDialog;
 
@@ -158,8 +159,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 verifyUserInputs();
             }
         });
-
-
         return v;
     }
 
@@ -393,24 +392,32 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     }
 
     private void performFileSelectAction(int resultCode, Intent intent) {
+
         String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
-
         if (filePath != null) {
-            String[] temp = filePath.split(File.separator);
-            final String mFileName = temp[temp.length - 1];
+            String type = filePath.substring(filePath.lastIndexOf(".") + 1);
 
-            Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
-            final File imageFile = new File(mSelectedDocumentUri.getPath());
-            final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            if(type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
+                    || type.equalsIgnoreCase("jpeg")) {
 
-            if (mChequebookCoverImageView != null) {
-                mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                String[] temp = filePath.split(File.separator);
+                final String mFileName = temp[temp.length - 1];
+
+                Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
+                final File imageFile = new File(mSelectedDocumentUri.getPath());
+                final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+                if (mChequebookCoverImageView != null) {
+                    mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                }
+
+                mChequebookCoverPageErrorTextView.setText("");
+                mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
+                mChequebookCoverImageFile = imageFile;
+                mPickerActionId = -1;
+            }else {
+                Toaster.makeText(getContext(), "Invalid image type. Only JPG or PNG are allowed", Toast.LENGTH_LONG);
             }
-
-            mChequebookCoverPageErrorTextView.setText("");
-            mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
-            mChequebookCoverImageFile = imageFile;
-            mPickerActionId = -1;
         }
     }
 
