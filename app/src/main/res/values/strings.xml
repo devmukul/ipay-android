@@ -1159,4 +1159,5 @@
     <string name="connection_time_out">Connection time out</string>
     <string name="network_unreachable">Network is unreachable</string>
     <string name="OK">OK</string>
+    <string name="invalid_image_type">Invalid image type. Only JPG or PNG are allowed</string>
 </resources>
