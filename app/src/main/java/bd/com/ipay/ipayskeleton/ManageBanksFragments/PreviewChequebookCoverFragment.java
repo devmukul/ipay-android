@@ -245,7 +245,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
                 mPickerActionId = -1;
 
             }else {
-                Toaster.makeText(getContext(), "Invalid image type. Only JPG or PNG are allowed", Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.invalid_image_type, Toast.LENGTH_LONG);
             }
         }
     }
