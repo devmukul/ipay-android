@@ -58,6 +58,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -306,8 +307,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
             public void onClick(View v) {
-                initProfilePicHelperDialog();
-                photoSelectionHelperDialog.show();
+                if (ProfileInfoCacheManager.isAccountVerified()) {
+                    DialogUtils.showProfilePictureUpdateRestrictionDialog(getContext());
+                } else {
+                    initProfilePicHelperDialog();
+                    photoSelectionHelperDialog.show();
+                }
             }
         });
     }

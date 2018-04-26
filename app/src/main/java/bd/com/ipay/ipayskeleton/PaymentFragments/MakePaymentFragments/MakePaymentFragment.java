@@ -574,7 +574,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         if (mGetProfileInfoTask != null) {
             return;
         }
-
         GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
@@ -607,6 +606,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     public void onLocationChanged(Location location) {
         longitude = location.getLongitude();
         latitude = location.getLatitude();
+        mProgressDialog.dismiss();
 
         attemptPaymentWithPinCheck();
 
@@ -634,11 +634,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mProgressDialog.dismiss();
         Gson gson = new Gson();
 
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mProgressDialog.dismiss();
-            mCustomProgressDialog.dismissDialog();
             mGetBusinessRuleTask = null;
             mGetProfileInfoTask = null;
+            mPaymentTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -734,7 +734,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
                         businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
-
 
                     if (!TextUtils.isEmpty(profilePicture) && mReceiverPhotoUri == null) {
                         mReceiverPhotoUri = profilePicture;
@@ -857,5 +856,4 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 Constants.BASE_URL_SM + Constants.URL_PAYMENT, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
-
 }

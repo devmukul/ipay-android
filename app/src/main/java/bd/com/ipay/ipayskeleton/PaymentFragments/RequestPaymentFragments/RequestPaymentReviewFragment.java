@@ -221,8 +221,10 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mProgressDialog.dismiss();
+            mSendPaymentRequestTask=null;
+
             return;
         }
 

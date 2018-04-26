@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
+import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
@@ -61,10 +61,8 @@ public class AboutFragment extends BaseFragment {
         mTermView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(getContext().getString(R.string.term_link)));
+                    Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                    intent.putExtra("url", getString(R.string.term_link));
                     startActivity(intent);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
@@ -75,10 +73,8 @@ public class AboutFragment extends BaseFragment {
         mPrivacyView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(getContext().getString(R.string.privacy_link)));
+                    Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                    intent.putExtra("url", getString(R.string.privacy_link));
                     startActivity(intent);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();

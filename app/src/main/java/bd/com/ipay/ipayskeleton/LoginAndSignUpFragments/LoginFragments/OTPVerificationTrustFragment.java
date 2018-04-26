@@ -94,7 +94,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
-        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCancelable(false);
 
         //enable broadcast receiver to get the text message to get the OTP
         mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
@@ -225,7 +225,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             hideProgressDialog();
             mLoginTask = null;
             mGetAllAddedCards = null;
@@ -362,8 +362,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device));
                 }
-
-                mProgressDialog.dismiss();
                 mAddTrustedDeviceTask = null;
                 break;
 
@@ -390,14 +388,15 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     } else {
                         if (getActivity() != null)
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        hideProgressDialog();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    hideProgressDialog();
                 }
-                mProgressDialog.dismiss();
                 mGetProfileCompletionStatusTask = null;
                 break;
 
@@ -453,7 +452,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
     }
 
     private void hideProgressDialog() {
-        if (isAdded()) mProgressDialog.dismiss();
+        mProgressDialog.dismiss();
     }
 
     private void attemptTrustedDeviceAdd() {
