@@ -106,6 +106,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, this, null)) {
             mGetProfileInfoTask = null;
+            mProgressBar.setVisibility(View.GONE);
             return;
         }
 

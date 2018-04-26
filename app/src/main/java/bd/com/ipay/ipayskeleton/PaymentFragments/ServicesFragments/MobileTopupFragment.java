@@ -547,8 +547,14 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         Gson gson = new Gson();
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
-            mProgressDialog.dismiss();
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
+            mGetUserInfoTask = null;
+            mTopupTask = null;
+            mGetBusinessRuleTask = null;
+            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+            }
+
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
