@@ -48,7 +48,7 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
 
     private void matchOTP(String message) {
 
-        String makePattern = ".*" + Constants.ApplicationTag +".*(\\d{6}).*";
+        String makePattern = ".*" + Constants.ApplicationTitle +".*(\\d{6}).*";
         Pattern pattern = Pattern.compile(makePattern);
         Matcher matcher = pattern.matcher(message);
         if (matcher.find()) {
