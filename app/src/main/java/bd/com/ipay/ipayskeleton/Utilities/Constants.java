@@ -10,6 +10,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 public class Constants {
     public static final String ApplicationTag = "iPayV2";
     public static final String ApplicationPackage = "bd.com.ipay.android";
+    public static final String ApplicationTitle = "iPay";
 
     public static final String ERROR = "ERROR";
     public static final String USER_AGENT = "User-Agent";
