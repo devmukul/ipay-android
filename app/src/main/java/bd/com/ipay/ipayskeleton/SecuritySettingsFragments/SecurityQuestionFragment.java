@@ -101,10 +101,8 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         mProgressDialog = new ProgressDialog(getActivity());
 
         mPreviousQuestionClassList = new ArrayList<>();
+        getAllSecurityQuestions();
 
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getAllSecurityQuestions();
-        }
         return v;
     }
 

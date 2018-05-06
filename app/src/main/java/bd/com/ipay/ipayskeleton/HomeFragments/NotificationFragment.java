@@ -133,9 +133,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshNotificationLists(getActivity());
-                }
+                refreshNotificationLists(getActivity());
+
             }
         });
 
@@ -148,9 +147,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         notificationBroadcastReceiver = new NotificationBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(notificationBroadcastReceiver,
                 new IntentFilter(Constants.NOTIFICATION_UPDATE_BROADCAST));
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            refreshNotificationLists(getActivity());
-        }
+        refreshNotificationLists(getActivity());
+
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_notifications));
     }
 
@@ -745,9 +743,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                 new PendingIntroducerReviewDialog.ActionCheckerListener() {
                                     @Override
                                     public void ifFinishNeeded() {
-                                        if (Utilities.isConnectionAvailable(getActivity())) {
-                                            refreshNotificationLists(getActivity());
-                                        }
+                                        refreshNotificationLists(getActivity());
+
                                     }
                                 });
                     }

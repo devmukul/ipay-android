@@ -168,6 +168,8 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
+            mPromotionTask = null;
+            setContentShown(true);
             return;
         }
 

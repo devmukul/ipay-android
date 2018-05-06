@@ -104,10 +104,8 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    getIntroducerList();
-                    getSentRequestList();
-                }
+                getIntroducerList();
+                getSentRequestList();
             }
         });
 
@@ -117,11 +115,10 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            setContentShown(false);
-            getIntroducerList();
-            getSentRequestList();
-        }
+        setContentShown(false);
+        getIntroducerList();
+        getSentRequestList();
+
     }
 
     private void getIntroducerList() {
