@@ -90,7 +90,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, this, this, true);
+                mUri, this, this, false);
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
@@ -164,6 +164,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
+            mGetProfileInfoTask = null;
             return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
 

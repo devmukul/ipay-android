@@ -166,9 +166,6 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetTrendingBusinessListTask = null;
             trendingBusinessListRefreshLayout.setRefreshing(false);
-            if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
-            }
             return;
         }
         try {

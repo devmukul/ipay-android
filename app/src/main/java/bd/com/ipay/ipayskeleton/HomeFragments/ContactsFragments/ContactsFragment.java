@@ -509,7 +509,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             } else {
-                Toast.makeText(getContext(), "Sending invitation failed", Toast.LENGTH_LONG).show();
+                if (Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "Sending invitation failed", Toast.LENGTH_LONG).show();
+                }
             }
         } catch (Exception e) {
             Logger.logD(TAG, e.getMessage());
