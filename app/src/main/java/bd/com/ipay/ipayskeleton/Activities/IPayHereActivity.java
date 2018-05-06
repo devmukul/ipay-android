@@ -59,12 +59,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class IPayHereActivity extends BaseActivity implements PlaceSelectionListener, OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener, HttpResponseListener,
-        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener{
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
 
     private static final int REQUEST_LOCATION = 1;
     public static final int LOCATION_SETTINGS_PERMISSION_CODE = 9876;
 
-    private List <NearbyBusinessResponseList> mNearByBusinessResponse;
+    private List<NearbyBusinessResponseList> mNearByBusinessResponse;
     private HttpRequestGetAsyncTask mIPayHereTask = null;
 
     private SupportMapFragment mapFragment;
@@ -119,7 +119,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                     mLongitude = String.valueOf(initialLoc.longitude);
                     startDemo();
                     fetchNearByBusiness(mLatitude, mLongitude);
-
                 }
 
             }
@@ -137,7 +136,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                     if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission) || Manifest.permission.ACCESS_COARSE_LOCATION.equals(permission)) {
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                             getLocationWithoutPermision();
-                        }else {
+                        } else {
                             getLocationPermission();
                         }
                     }
@@ -189,7 +188,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             } else {
                 getLocationsettings();
             }
-        }else {
+        } else {
             getLocationsettings();
         }
     }
@@ -210,7 +209,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             mLongitude = String.valueOf(longitude);
             setUpMap();
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
-        }else{
+        } else {
             setUpMap();
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
         }
@@ -228,7 +227,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         mProgressDialog.show();
         String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
         mIPayHereTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
-                url, IPayHereActivity.this,false);
+                url, IPayHereActivity.this, false);
         mIPayHereTask.mHttpResponseListener = this;
         mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -257,7 +256,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         mMap.getUiSettings().setZoomControlsEnabled(true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(false);
-        }else {
+        } else {
             mMap.setMyLocationEnabled(true);
         }
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
@@ -288,6 +287,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
+            mIPayHereTask = null;
             return;
         }
         Gson gson = new Gson();
@@ -326,6 +326,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         boolean not_first_time_showing_info_window = false;
         private CircleImageView businessProfileImageView;
         private TextView businessNameTextView;
+
         public CustomInfoWindowAdapter() {
             view = IPayHereActivity.this.getLayoutInflater().inflate(R.layout.ipay_here_info_window_map,
                     null);
@@ -350,7 +351,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
             businessNameTextView = (TextView) view.findViewById(R.id.textview_name);
             String title = infoWindowData.getBusinessName();
             businessNameTextView.setText(title);
-            if (infoWindowData.getImageUrl() != null ) {
+            if (infoWindowData.getImageUrl() != null) {
                 String imageUrl = Constants.BASE_URL_FTP_SERVER + infoWindowData.getImageUrl();
                 if (not_first_time_showing_info_window) {
                     not_first_time_showing_info_window = false;
@@ -367,6 +368,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                                 public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                                     return false;
                                 }
+
                                 @Override
                                 public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                     marker.showInfoWindow();
@@ -383,7 +385,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
 
     @Override
     public void onCameraIdle() {
-        if(isStartedMoving)
+        if (isStartedMoving)
             searchLocationView.setVisibility(View.VISIBLE);
         else
             searchLocationView.setVisibility(View.INVISIBLE);
@@ -392,7 +394,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     @Override
     public void onCameraMoveStarted(int reason) {
         if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            isStartedMoving = true ;
+            isStartedMoving = true;
         }
     }
 
