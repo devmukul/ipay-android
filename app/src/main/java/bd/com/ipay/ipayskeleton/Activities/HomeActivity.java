@@ -571,7 +571,11 @@ public class HomeActivity extends BaseActivity
     @ValidateAccess
     public void attemptLiveChat() {
         if (isProfileInfoAvailable()) {
-            Utilities.initIntercomLogin();
+            if (Utilities.isConnectionAvailable(this)) {
+                Utilities.initIntercomLogin();
+            } else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+            }
         } else {
             DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
         }

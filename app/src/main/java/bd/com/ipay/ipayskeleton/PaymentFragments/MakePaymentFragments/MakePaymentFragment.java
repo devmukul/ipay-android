@@ -635,10 +635,10 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         Gson gson = new Gson();
 
         if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
-            mProgressDialog.dismiss();
             mGetBusinessRuleTask = null;
             mGetProfileInfoTask = null;
             mPaymentTask = null;
+            return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

@@ -56,8 +56,12 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
 
         GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
 
-        if (Utilities.isConnectionAvailable(mContext))
+        if (Utilities.isConnectionAvailable(mContext)) {
             mGenericHttpResponse = uploadDocument(mImagePath);
+        }
+        else{
+            mGenericHttpResponse=new GenericHttpResponse(mContext.getString(R.string.no_internet_connection));
+        }
 
         Logger.logW("Document Upload", "Finished");
 

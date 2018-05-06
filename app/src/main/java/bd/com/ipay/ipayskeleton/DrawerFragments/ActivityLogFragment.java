@@ -176,10 +176,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 }
             }
         });
+        getUserActivities();
 
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getUserActivities();
-        }
 
         implementScrollListener();
         setActionsForEventTypeFilter();

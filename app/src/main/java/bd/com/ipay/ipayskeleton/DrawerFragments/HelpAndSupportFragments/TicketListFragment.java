@@ -91,8 +91,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity()))
-                    getTickets();
+                getTickets();
             }
         });
 
@@ -144,9 +143,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetTicketsTask = null;
-            if (getActivity() != null) {
-                showErrorDialog();
-            }
+            setContentShown(true);
             return;
         }
 

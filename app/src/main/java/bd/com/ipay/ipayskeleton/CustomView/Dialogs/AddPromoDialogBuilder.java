@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class AddPromoDialogBuilder extends MaterialDialog.Builder implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAddPromoTask = null;
+    private Context context;
     private AddPromoResponse mAddPromoResponse;
     private ProgressDialog mProgressDialog;
     private EditText mPromoField;
@@ -33,6 +34,7 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
 
     public AddPromoDialogBuilder(Context context, AddPromoListener addPromoListener) {
         super(context);
+        this.context = context;
         initializeView();
         this.mAddPromoListener = addPromoListener;
     }
@@ -110,7 +112,7 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
 
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, context, mProgressDialog)) {
             mAddPromoTask = null;
             return;
         }
