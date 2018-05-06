@@ -332,6 +332,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_UPLOAD_DOCUMENT:
+                mUploadIdentifierDocumentAsyncTask = null;
                 Gson gson = new GsonBuilder().create();
                 UploadDocumentResponse uploadDocumentResponse = gson.fromJson(result.getJsonString(), UploadDocumentResponse.class);
                 switch (result.getStatus()) {
