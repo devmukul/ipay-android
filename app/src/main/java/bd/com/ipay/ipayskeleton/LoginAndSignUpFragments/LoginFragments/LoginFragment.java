@@ -210,7 +210,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
-        Utilities.showKeyboard(getActivity());
+     //   Utilities.showKeyboard(getActivity());
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_login));
 
         /**
