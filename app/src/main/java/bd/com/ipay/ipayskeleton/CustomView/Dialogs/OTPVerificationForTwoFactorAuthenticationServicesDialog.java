@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthServicesAsynctaskMap;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends MaterialDialog.Builder implements HttpResponseListener {
+public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends AlertDialog implements HttpResponseListener {
 
     private Activity context;
 

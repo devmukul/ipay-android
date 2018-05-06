@@ -147,6 +147,7 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetAllAcceptedEmployeeAsyncTask = null;
+            mLoadingLayout.setVisibility(View.GONE);
             mGetAllPendingEmployeeAsyncTask = null;
             return;
         }
