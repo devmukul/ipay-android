@@ -208,7 +208,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.UPDATE_BUSINESS_INFO)
             public void onClick(View v) {
-                launchEditBusinessInformationFragment();
+                if (!Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    launchEditBusinessInformationFragment();
+                }
             }
         });
 
@@ -216,7 +220,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.UPDATE_BUSINESS_INFO)
             public void onClick(View v) {
-                launchEditContactInformationFragment();
+                if (!Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    launchEditContactInformationFragment();
+                }
             }
         });
 
@@ -255,12 +263,17 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         if (mPresentAddress != null) {
             presentAddressBundle.putSerializable(Constants.ADDRESS, mPresentAddress);
         }
+        mPresentAddressEditButton.setVisibility(View.VISIBLE);
 
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_ADDRESS)
             public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+                if (!Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+                }
             }
         });
     }
@@ -589,7 +602,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             mGetUserAddressTask = null;
             mGetDistrictListAsyncTask = null;
             mGetThanaListAsyncTask = null;
-
+            setContentShown(true);
             return;
         }
 
