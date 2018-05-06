@@ -271,6 +271,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetProfileInfoTask = null;
             setContentShown(true);
+            mProgressDialog.dismiss();
             mGetOccupationTask = null;
             return;
         }

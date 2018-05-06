@@ -77,7 +77,7 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
     protected void onPostExecute(final GenericHttpResponse result) {
 
         if (socketTimeOutException != null) {
-            mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException));
+            mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException,false));
             return;
         }
 
@@ -145,8 +145,11 @@ public class UploadMultipleIdentifierDocumentAsyncTask extends AsyncTask<Void, V
                 genericHttpResponse.setJsonString(jsonString);
                 genericHttpResponse.setSilent(false);
             } catch (IOException e) {
-                if (e instanceof SocketTimeoutException || e instanceof SocketException) {
+                if (e instanceof SocketTimeoutException) {
                     socketTimeOutException = mContext.getString(R.string.connection_time_out);
+                }
+                else if( e instanceof SocketException){
+                    socketTimeOutException=mContext.getString(R.string.network_unreachable);
                 }
             }
 

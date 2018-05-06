@@ -111,7 +111,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_create_ticket) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_create_ticket));
     }
 
     @Nullable
@@ -348,7 +348,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         String mUri = mGetTicketCategoriesRequestBuilder.generateUri().toString();
 
         mGetTicketCategoriesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_CATEGORIES,
-                mUri, getActivity(),true);
+                mUri, getActivity(), false);
         mGetTicketCategoriesTask.mHttpResponseListener = this;
 
         mGetTicketCategoriesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -367,7 +367,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         String json = gson.toJson(createTicketRequest);
 
         mCreateTicketTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_TICKET,
-                Constants.BASE_URL_ADMIN + Constants.URL_CREATE_TICKET, json, getActivity(), this,false);
+                Constants.BASE_URL_ADMIN + Constants.URL_CREATE_TICKET, json, getActivity(), this, false);
         mCreateTicketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -379,7 +379,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         setContentShown(false);
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this,true);
+                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this, true);
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -395,10 +395,13 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         if (getActivity() != null)
             mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mCreateTicketTask = null;
             mGetEmailsTask = null;
             mGetTicketCategoriesTask = null;
+            setContentShown(true);
+            mCategoryEditText.hideProgressBar();
+
             return;
         }
 

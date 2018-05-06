@@ -79,6 +79,8 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     private String mProfilePicture = "";
     private String mSelectedImagePath = "";
 
+    private Uri uri;
+
     private List<String> mOptionsForImageSelectionList;
     private int mSelectedOptionForImage = -1;
 
@@ -330,7 +332,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         switch (requestCode) {
             case ACTION_PICK_PROFILE_PICTURE:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
+                    uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
                     if (uri == null) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(),
@@ -339,7 +341,6 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     } else {
                         // Check for a valid profile picture
                         if (isSelectedProfilePictureValid(uri)) {
-                            mProfilePictureView.setAccountPhoto(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
                     }
@@ -412,6 +413,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             try {
                 mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfilePictureView.setAccountPhoto(uri.getPath(), true);
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
