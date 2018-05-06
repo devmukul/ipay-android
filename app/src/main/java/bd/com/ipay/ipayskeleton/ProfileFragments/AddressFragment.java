@@ -81,7 +81,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_address) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_address));
     }
 
 
@@ -158,6 +158,8 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mPermanentAddressEditButton.setVisibility(View.GONE);
+        } else {
+            mPermanentAddressEditButton.setVisibility(View.VISIBLE);
         }
 
         final Bundle presentAddressBundle = new Bundle();
@@ -204,13 +206,13 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
     private void getThanaList() {
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this,true);
+                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this, true);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getDistrictList() {
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this,false);
+                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this, false);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -220,14 +222,14 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         }
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this,false);
+                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this, false);
         mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetUserAddressTask = null;
             mGetDistrictListAsyncTask = null;
             mGetThanaListAsyncTask = null;

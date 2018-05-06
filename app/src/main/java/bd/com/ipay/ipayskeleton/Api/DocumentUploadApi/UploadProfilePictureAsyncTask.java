@@ -46,10 +46,12 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
 
         GenericHttpResponse mGenericHttpResponse;
 
-        if (Utilities.isConnectionAvailable(mContext))
+        if (Utilities.isConnectionAvailable(mContext)) {
             mGenericHttpResponse = uploadImage(imagePath);
-        else
-            return null;
+        }
+        else{
+            mGenericHttpResponse=new GenericHttpResponse(mContext.getString(R.string.no_internet_connection));
+        }
 
         return mGenericHttpResponse;
     }
@@ -62,7 +64,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
     @Override
     protected void onPostExecute(final GenericHttpResponse result) {
         if (socketTimeOutException != null) {
-            mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException));
+            mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException,false));
             return;
         }
 
@@ -125,9 +127,12 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
                 genericHttpResponse.setStatus(response.code());
                 genericHttpResponse.setJsonString(jsonString);
                 genericHttpResponse.setSilent(false);
-            } catch (IOException e) {
-                if (e instanceof SocketTimeoutException || e instanceof SocketException) {
+            }  catch (IOException e) {
+                if (e instanceof SocketTimeoutException) {
                     socketTimeOutException = mContext.getString(R.string.connection_time_out);
+                }
+                else if( e instanceof SocketException){
+                    socketTimeOutException=mContext.getString(R.string.network_unreachable);
                 }
             }
 
