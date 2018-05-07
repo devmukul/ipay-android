@@ -2,12 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.HttpResponse;
 
 import android.content.Context;
 
-import org.apache.http.HttpEntity;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -70,32 +64,6 @@ public class HttpResponseParser {
                 }
             }
         }
-    }
-
-    private String getResponseBody(HttpEntity entity) {
-        InputStream inputStream = null;
-        StringBuilder sb = new StringBuilder();
-
-        try {
-            inputStream = entity.getContent();
-            // json is UTF-8 by default
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) inputStream.close();
-            } catch (Exception squish) {
-                squish.printStackTrace();
-            }
-        }
-
-        return sb.toString();
     }
 
     public void setAPI_COMMAND(String API_COMMAND) {

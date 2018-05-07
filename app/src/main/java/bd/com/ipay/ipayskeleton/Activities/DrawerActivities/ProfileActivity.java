@@ -83,7 +83,7 @@ public class ProfileActivity extends BaseActivity {
                     getSupportFragmentManager().popBackStackImmediate();
                 }
             } else {
-                if (!emailFragment.isContentShown) {
+                if (emailFragment != null && !emailFragment.isContentShown) {
                     emailFragment.setContentShown(true);
                     emailFragment.isContentShown = true;
                     emailFragment.mSwipeRefreshLayout.setRefreshing(false);
@@ -107,7 +107,7 @@ public class ProfileActivity extends BaseActivity {
                 getSupportFragmentManager().popBackStackImmediate();
             }
         } else {
-            if (!emailFragment.isContentShown) {
+            if (emailFragment != null && !emailFragment.isContentShown) {
                 emailFragment.setContentShown(true);
                 emailFragment.isContentShown = true;
                 emailFragment.mSwipeRefreshLayout.setRefreshing(false);
