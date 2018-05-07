@@ -248,7 +248,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                         mPresentAddress = mGetUserAddressResponse.getPresentAddress();
                         mPermanentAddress = mGetUserAddressResponse.getPermanentAddress();
                         mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
-
+                        mPresentAddressEditButton.setVisibility(View.VISIBLE);
                         loadAddresses();
                         if (this.isAdded()) setContentShown(true);
                     } else {
