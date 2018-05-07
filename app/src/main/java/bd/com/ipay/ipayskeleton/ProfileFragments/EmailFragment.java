@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -79,7 +80,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
     private RecyclerView mEmailListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    public SwipeRefreshLayout mSwipeRefreshLayout;
 
     private FloatingActionButton mFabAddNewEmail;
     private ProgressDialog mProgressDialog;
@@ -92,9 +93,12 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private TextView mEmptyListTextView;
     private Tracker mTracker;
 
+    public boolean isContentShown;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isContentShown = false;
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -138,9 +142,21 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
+                if (Utilities.isConnectionAvailable(getContext())) {
                     getEmails();
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            setContentShown(true);
+                            isContentShown = true;
+                        }
+                    }, 200);
+
                 }
+
             }
         });
 
@@ -151,6 +167,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
+        isContentShown = false;
         getEmails();
     }
 
@@ -282,14 +299,15 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         mProgressDialog.dismiss();
-
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetEmailsTask = null;
             mAddNewEmailTask = null;
             mAddNewEmailTask = null;
             mEmailVerificationTask = null;
             mMakePrimaryEmailTask = null;
+            mSwipeRefreshLayout.setRefreshing(false);
             setContentShown(true);
+            isContentShown = true;
             return;
         }
 
@@ -384,7 +402,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 mMakePrimaryEmailTask = null;
                 break;
         }
-
     }
 
     private void processGetEmailListResponse(String json) {
@@ -431,8 +448,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 mOtherEmailViewHeader.setVisibility(View.VISIBLE);
             else
                 mOtherEmailViewHeader.setVisibility(View.GONE);
-
             setContentShown(true);
+            isContentShown = true;
 
             mEmailListAdapter.notifyDataSetChanged();
 

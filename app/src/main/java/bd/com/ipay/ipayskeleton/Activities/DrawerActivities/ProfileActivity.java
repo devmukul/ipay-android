@@ -53,6 +53,7 @@ public class ProfileActivity extends BaseActivity {
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
     PreviewIdentificationDocumentFragment mPreviewIdentificationDocumentFragment;
+    EmailFragment emailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +82,15 @@ public class ProfileActivity extends BaseActivity {
                 } else {
                     getSupportFragmentManager().popBackStackImmediate();
                 }
-            } else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-                getSupportFragmentManager().popBackStack();
-            else {
-                finish();
+            } else {
+                if (!emailFragment.isContentShown) {
+                    emailFragment.setContentShown(true);
+                    emailFragment.isContentShown = true;
+                    emailFragment.mSwipeRefreshLayout.setRefreshing(false);
+                } else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+                    getSupportFragmentManager().popBackStack();
+                else
+                    super.onBackPressed();
             }
             return true;
         } else {
@@ -100,10 +106,16 @@ public class ProfileActivity extends BaseActivity {
             } else {
                 getSupportFragmentManager().popBackStackImmediate();
             }
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-            getSupportFragmentManager().popBackStack();
-        else
-            super.onBackPressed();
+        } else {
+            if (!emailFragment.isContentShown) {
+                emailFragment.setContentShown(true);
+                emailFragment.isContentShown = true;
+                emailFragment.mSwipeRefreshLayout.setRefreshing(false);
+            } else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+                getSupportFragmentManager().popBackStack();
+            else
+                super.onBackPressed();
+        }
     }
 
     private Bundle setBundle(String targetFragment) {
@@ -165,6 +177,7 @@ public class ProfileActivity extends BaseActivity {
                 break;
             case VERIFIED_EMAIL:
                 fragment = new EmailFragment();
+
                 break;
             case BUSINESS_DOCUMENTS:
             case VERIFICATION_DOCUMENT:
@@ -275,7 +288,8 @@ public class ProfileActivity extends BaseActivity {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EmailFragment()).addToBackStack(null).commit();
+        emailFragment = new EmailFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, emailFragment).addToBackStack(null).commit();
     }
 
     public void switchToIdentificationDocumentListFragment() {

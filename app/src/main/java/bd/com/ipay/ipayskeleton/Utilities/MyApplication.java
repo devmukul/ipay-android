@@ -66,9 +66,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         TokenManager.initialize(this);
         Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
         Utilities.resetIntercomInformation();
-
         sAnalytics = GoogleAnalytics.getInstance(this);
-
     }
 
     public OkHttpClient getOkHttpClient() {
