@@ -8,9 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
@@ -199,34 +201,22 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     private class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private final TextView mOfferTitleView;
-            private final TextView mOfferDetailsView;
-            private final TextView mExpireDateView;
-            private final ProfileImageView mOfferImageView;
+            private final ImageView mPromoImageView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-
-                mOfferTitleView = (TextView) itemView.findViewById(R.id.title);
-                mOfferDetailsView = (TextView) itemView.findViewById(R.id.sub_title);
-                mExpireDateView = (TextView) itemView.findViewById(R.id.offer_expire);
-                mOfferImageView = (ProfileImageView) itemView.findViewById(R.id.offer_image);
-                mOfferImageView.setBusinessLogoPlaceHolder();
+                mPromoImageView = (ImageView) itemView.findViewById(R.id.offer_image);
             }
 
             public void bindView(int pos) {
                 final Promotion promotionList = mPromotionList.get(pos);
-
-                final String title = promotionList.getTitle();
-                final String subtitle = promotionList.getSubtitle();
                 final String imageUrl = promotionList.getImageUrl();
-                final String period = promotionList.getPeriod();
                 final long expire = promotionList.getExpireDate();
 
-                mOfferTitleView.setText(title);
-                mOfferDetailsView.setText(subtitle);
-                mExpireDateView.setText(period);
-                mOfferImageView.setProfilePicture(imageUrl, false);
+                Glide.with(getContext())
+                        .load(imageUrl)
+                        .crossFade()
+                        .into(mPromoImageView);
             }
         }
 
