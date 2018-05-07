@@ -127,6 +127,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             setContentShown(true);
+            mGetIntroducedTask = null;
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
 

@@ -155,6 +155,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetIntroducersTask = null;
+            mSwipeRefreshLayout.setRefreshing(false);
             setContentShown(true);
             return;
         }
@@ -195,6 +196,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         }
                         mIntroduceAdapter.notifyDataSetChanged();
 
+                        mSwipeRefreshLayout.setRefreshing(false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
