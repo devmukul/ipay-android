@@ -281,10 +281,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void refreshMoneyAndPaymentRequestList(Context context) {
-        if (Utilities.isConnectionAvailable(context)) {
-            mMoneyAndPaymentRequests = null;
-            getMoneyAndPaymentRequest(context);
-        }
+        mMoneyAndPaymentRequests = null;
+        getMoneyAndPaymentRequest(context);
+
     }
 
     private void refreshIntroductionRequestList(Context context) {
@@ -445,131 +444,140 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        try {
 
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+            if (HttpErrorHandler.isErrorFound(result, getActivity(), mProgressDialog)) {
+                mGetMoneyAndPaymentRequestTask = null;
+                mServiceChargeTask = null;
+                mGetIntroductionRequestTask = null;
+                mGetPendingIntroducerListTask = null;
+                mGetPendingRoleManagerRequestTask = null;
+                setContentShown(true);
+
+                if (isAdded()) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+                return;
+            }
+
+            Gson gson = new Gson();
+
+            switch (result.getApiCommand()) {
+                case Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS:
+                    try {
+                        mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            try {
+                                mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                if (getActivity() != null)
+                                    Toaster.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG);
+                            }
+
+                        } else {
+                            if (getActivity() != null)
+                                Toaster.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    mGetMoneyAndPaymentRequestTask = null;
+                    postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
+                    try {
+                        mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
+                        } else {
+                            if (getActivity() != null)
+                                Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    }
+
+                    mGetIntroductionRequestTask = null;
+                    postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_GET_PENDING_INTRODUCER_LIST:
+                    try {
+                        mPendingIntroducerListResponse = gson.fromJson(result.getJsonString(), GetPendingIntroducerListResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            mPendingIntroducerList = mPendingIntroducerListResponse.getWantToBeIntroducers();
+                        } else {
+                            if (getActivity() != null)
+                                Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    }
+
+                    mGetPendingIntroducerListTask = null;
+                    postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_GET_SERVICE_CHARGE:
+                    mProgressDialog.dismiss();
+                    try {
+                        mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            if (mGetServiceChargeResponse != null) {
+                                mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
+
+                                if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
+                                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                                } else {
+                                    launchReceivedRequestFragment();
+                                }
+
+                            } else {
+                                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                                return;
+                            }
+                        } else {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    }
+
+                    mServiceChargeTask = null;
+                    break;
+                case Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS:
+                    try {
+                        mGetPendingRoleManagerInvitationResponse = gson.fromJson(result.getJsonString(),
+                                GetPendingRoleManagerInvitationResponse.class);
+                        mBusinessRoleManagerRequestsList = mGetPendingRoleManagerInvitationResponse.getInvitationList();
+                    } catch (Exception e) {
+
+                    }
+                    mGetPendingRoleManagerRequestTask = null;
+                    postProcessNotificationList();
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
             mGetMoneyAndPaymentRequestTask = null;
             mServiceChargeTask = null;
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
             mGetPendingRoleManagerRequestTask = null;
             setContentShown(true);
-
-            if (isAdded()) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-            return;
-        }
-
-        Gson gson = new Gson();
-
-        switch (result.getApiCommand()) {
-            case Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS:
-                try {
-                    mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        try {
-                            mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            if (getActivity() != null)
-                                Toaster.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG);
-                        }
-
-                    } else {
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                mGetMoneyAndPaymentRequestTask = null;
-                postProcessNotificationList();
-                break;
-
-            case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
-                try {
-                    mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
-                    } else {
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-
-                mGetIntroductionRequestTask = null;
-                postProcessNotificationList();
-                break;
-
-            case Constants.COMMAND_GET_PENDING_INTRODUCER_LIST:
-                try {
-                    mPendingIntroducerListResponse = gson.fromJson(result.getJsonString(), GetPendingIntroducerListResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mPendingIntroducerList = mPendingIntroducerListResponse.getWantToBeIntroducers();
-                    } else {
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-
-                mGetPendingIntroducerListTask = null;
-                postProcessNotificationList();
-                break;
-
-            case Constants.COMMAND_GET_SERVICE_CHARGE:
-                mProgressDialog.dismiss();
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (mGetServiceChargeResponse != null) {
-                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
-
-                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                            } else {
-                                launchReceivedRequestFragment();
-                            }
-
-                        } else {
-                            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                            return;
-                        }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-
-                mServiceChargeTask = null;
-                break;
-            case Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS:
-                try {
-                    mGetPendingRoleManagerInvitationResponse = gson.fromJson(result.getJsonString(),
-                            GetPendingRoleManagerInvitationResponse.class);
-                    mBusinessRoleManagerRequestsList = mGetPendingRoleManagerInvitationResponse.getInvitationList();
-                } catch (Exception e) {
-
-                }
-                mGetPendingRoleManagerRequestTask = null;
-                postProcessNotificationList();
-                break;
-            default:
-                break;
         }
     }
 

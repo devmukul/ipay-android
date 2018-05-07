@@ -38,8 +38,11 @@ public class HttpErrorHandler {
             } else if (result.getErrorMessage() != null) {
                 if (!result.isSilent()) {
                     Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    return true;
                 }
-                return true;
+                else {
+                    return true;
+                }
             } else {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();

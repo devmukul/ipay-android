@@ -403,15 +403,13 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mAcceptRequestTask = null;
             mRejectRequestTask = null;
             return;
         }
 
-
         Gson gson = new Gson();
-
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_BUSINESS_RULE:

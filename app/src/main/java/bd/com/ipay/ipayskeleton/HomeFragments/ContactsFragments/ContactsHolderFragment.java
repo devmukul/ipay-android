@@ -127,7 +127,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                     isAddContactDialogOpen = true;
                     showAddContactDialog();
                 } else {
-                    DialogUtils.showAlertDialog(getContext(), getString(R.string.add_contact_dialog_not_available));
+                    if (!Utilities.isConnectionAvailable(getContext())) {
+                        Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                    } else {
+                        DialogUtils.showAlertDialog(getContext(), getString(R.string.add_contact_dialog_not_available));
+                    }
                 }
             }
         });

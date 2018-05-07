@@ -661,7 +661,7 @@ public class HomeActivity extends BaseActivity
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
                 attemptLogout();
             } else {
-                ((MyApplication) this.getApplication()).launchLoginPage(null);
+                Toast.makeText(this,getString(R.string.no_internet_connection),Toast.LENGTH_LONG).show();
             }
         }
     }
