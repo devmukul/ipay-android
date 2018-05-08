@@ -11,10 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
@@ -203,15 +207,17 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
     private class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        String offerUrl;
-        String imageUrl;
+        private String offerUrl;
+        private String imageUrl;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final ImageView mPromoImageView;
+            private final ProgressBar progressBar;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
                 mPromoImageView = (ImageView) itemView.findViewById(R.id.offer_image);
+                progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
             }
 
             public void bindView(int pos) {
@@ -222,6 +228,19 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
                 Glide.with(getContext())
                         .load(imageUrl)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String s, Target<GlideDrawable> target, boolean b) {
+                                progressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable glideDrawable, String s, Target<GlideDrawable> target, boolean b, boolean b1) {
+                                progressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
                         .crossFade()
                         .into(mPromoImageView);
             }
