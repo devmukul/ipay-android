@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -200,6 +203,9 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
     private class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        String offerUrl;
+        String imageUrl;
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final ImageView mPromoImageView;
 
@@ -210,7 +216,8 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
             public void bindView(int pos) {
                 final Promotion promotionList = mPromotionList.get(pos);
-                final String imageUrl = promotionList.getImageUrl();
+                imageUrl = promotionList.getImageUrl();
+                offerUrl = promotionList.getUrl();
                 final long expire = promotionList.getExpireDate();
 
                 Glide.with(getContext())
@@ -229,7 +236,13 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Do whatever you want on clicking the normal items
+                        try {
+                            Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                            intent.putExtra("url", "https://www.ipay.com.bd/promotions?link="+offerUrl);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
