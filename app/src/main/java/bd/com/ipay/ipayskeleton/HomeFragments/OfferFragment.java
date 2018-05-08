@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -207,9 +208,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
     private class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private String offerUrl;
-        private String imageUrl;
-
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final ImageView mPromoImageView;
             private final ProgressBar progressBar;
@@ -222,9 +220,23 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
             public void bindView(int pos) {
                 final Promotion promotionList = mPromotionList.get(pos);
-                imageUrl = promotionList.getImageUrl();
-                offerUrl = promotionList.getUrl();
+                final String imageUrl = promotionList.getImageUrl();
+                final String offerUrl = promotionList.getUrl();
                 final long expire = promotionList.getExpireDate();
+                mPromoImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!TextUtils.isEmpty(offerUrl)) {
+                            try {
+                                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                                intent.putExtra("url", "https://www.ipay.com.bd/promotions?link=" + offerUrl);
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
 
                 Glide.with(getContext())
                         .load(imageUrl)
@@ -244,6 +256,8 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                         .crossFade()
                         .into(mPromoImageView);
             }
+
+
         }
 
 
@@ -255,13 +269,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try {
-                            Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                            intent.putExtra("url", "https://www.ipay.com.bd/promotions?link="+offerUrl);
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
             }
