@@ -63,6 +63,7 @@ android {
         }
     }
 
+    useLibrary 'org.apache.http.legacy'
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/fonts'] } }
 }
 
@@ -96,8 +97,6 @@ configurations.all {
         force 'com.android.support:design:25.3.1'
         force 'com.android.support:support-v4:25.3.1'
         force 'com.android.support:appcompat-v7:25.3.1'
-        force 'com.android.support:animated-vector-drawable:25.3.1'
-        force 'com.android.support:mediarouter-v7:25.3.1'
     }
 }
 
@@ -117,7 +116,11 @@ dependencies {
     compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
         transitive = true
     }
-
+    compile('org.apache.httpcomponents:httpmime:4.3.6') {
+        exclude module: 'httpclient'
+    }
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+    compile 'org.apache.commons:commons-lang3:3.0'
 
     // Bottom Sheet
     compile 'com.flipboard:bottomsheet-core:1.5.0'
@@ -130,7 +133,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-vision:11.2.0'
     compile 'com.google.android.gms:play-services-analytics:11.2.0'
     compile 'com.google.android.gms:play-services:11.2.0'
-    compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.firebase:firebase-client-android:2.4.0'
 
