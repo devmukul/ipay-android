@@ -17,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
@@ -106,7 +107,7 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
         mThanaEditTextProgressBar.showProgressBar();
 
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this);
+                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this,true);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -117,7 +118,7 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
         mThanaEditTextProgressBar.hideProgressBar();
 
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), context, this);
+                new DistrictRequestBuilder().getGeneratedUri(), context, this,true);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -290,18 +291,15 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
         mProgressDialog.setMessage(context.getString(R.string.loading));
         mProgressDialog.show();
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, context, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, context, this,false);
         mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result,context,mProgressDialog)) {
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
-            if (context != null)
-                Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
@@ -173,7 +174,7 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity(), false);
         mTopupTask.mHttpResponseListener = this;
         mTopupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -219,7 +220,7 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this, false);
 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -229,7 +230,7 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
         if (isAdded())
             mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
             mTopupTask = null;

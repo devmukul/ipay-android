@@ -19,7 +19,7 @@ public class TokenManager {
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final String REFRESH_TOKEN_FETCH_TIME = "REFRESH_TOKEN_FETCH_TIME";
     // This field will be set when a personal user switches to an employer's account
-    private static String onAccountId;
+    private static String onAccountId = "";
 
     private static String token = "";
     private static String refreshToken = "";
@@ -31,6 +31,7 @@ public class TokenManager {
     public static String getOnAccountId() {
         return onAccountId;
     }
+
     private static SharedPreferences preferences;
 
     public static void initialize(Context context) {

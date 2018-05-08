@@ -12,11 +12,13 @@ import com.google.gson.Gson;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshTokenRequest;
@@ -26,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
+import okhttp3.OkHttpClient;
 
 public class MyApplication extends MultiDexApplication implements HttpResponseListener {
 
@@ -45,6 +48,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
     private LogoutResponse mLogOutResponse;
+    private OkHttpClient okHttpClient;
 
     public static MyApplication getMyApplicationInstance() {
         return myApplicationInstance;
@@ -54,16 +58,19 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
     public void onCreate() {
         super.onCreate();
         myApplicationInstance = this;
-
+        okHttpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS).build();
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize(this);
         TokenManager.initialize(this);
         Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
         Utilities.resetIntercomInformation();
-
         sAnalytics = GoogleAnalytics.getInstance(this);
+    }
 
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
     }
 
     public void startUserInactivityDetectorTimer() {
@@ -100,7 +107,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         String json = gson.toJson(mLogoutModel);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getApplicationContext());
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getApplicationContext(), false);
         mLogoutTask.mHttpResponseListener = this;
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -142,7 +149,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mGetRefreshTokenRequest);
         mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_TOKEN,
-                Constants.BASE_URL_MM + Constants.URL_GET_REFRESH_TOKEN, json, getApplicationContext());
+                Constants.BASE_URL_MM + Constants.URL_GET_REFRESH_TOKEN, json, getApplicationContext(), true);
         mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -208,8 +215,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getApplicationContext(), null)) {
             mLogoutTask = null;
             mRefreshTokenAsyncTask = null;
             return;

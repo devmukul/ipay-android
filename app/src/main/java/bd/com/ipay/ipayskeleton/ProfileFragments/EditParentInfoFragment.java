@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -199,7 +200,7 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
 
         String parentInfoJson = gson.toJson(setParentInfoRequest);
         mSetParentInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PARENT_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_SET_PARENT_INFO_REQUEST, parentInfoJson, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_SET_PARENT_INFO_REQUEST, parentInfoJson, getActivity(), this, false);
         mSetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -214,11 +215,8 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
 
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mSetParentInfoTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

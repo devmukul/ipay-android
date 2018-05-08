@@ -26,7 +26,7 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
     public GetAvailableBankAsyncTask(Context context, final BankLoadListener listener) {
         super(Constants.COMMAND_GET_AVAILABLE_BANK_LIST,
                 new BankRequestBuilder().getGeneratedUri(),
-                context);
+                context, true);
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override

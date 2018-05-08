@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.GetActivityRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivityClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivityResponse;
@@ -81,9 +82,9 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
     private boolean mIsScrolled = false;
-    private int mTotalItemCount =0;
-    private  int mPastVisiblesItems;
-    private  int mVisibleItem;
+    private int mTotalItemCount = 0;
+    private int mPastVisiblesItems;
+    private int mVisibleItem;
 
     private Menu menu;
     private Tracker mTracker;
@@ -91,7 +92,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_activity_log) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_activity_log));
     }
 
     @Override
@@ -175,10 +176,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 }
             }
         });
+        getUserActivities();
 
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getUserActivities();
-        }
 
         implementScrollListener();
         setActionsForEventTypeFilter();
@@ -460,7 +459,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         String url = GetActivityRequestBuilder.generateUri(type,
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
         mUserActivityTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
-                url, getActivity());
+                url, getActivity(), false);
         mUserActivityTask.mHttpResponseListener = this;
         mUserActivityTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -481,7 +480,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 super.onScrolled(recyclerView, dx, dy);
 
                 mVisibleItem = recyclerView.getChildCount();
-                mTotalItemCount =mLayoutManager.getItemCount();
+                mTotalItemCount = mLayoutManager.getItemCount();
                 mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (mIsScrolled
                         && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
@@ -502,13 +501,9 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mUserActivityTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
-
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+            setContentShown(true);
             return;
         }
 

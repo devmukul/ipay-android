@@ -74,7 +74,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
     private View mRootView;
-    private boolean autoFocus=true, useFlash=false, autoCapture=true;
+    private boolean autoFocus = true, useFlash = false, autoCapture = true;
 
     /**
      * Initializes the UI and creates the detector pipeline.
@@ -125,7 +125,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             if (hasFocus) {
                 getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -174,7 +174,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
      * to other detection examples to enable the barcode detector to detect small barcodes
      * at long distances.
-     *
+     * <p>
      * Suppressing InlinedApi since there is a check that the minimum version is met before using
      * the constant.
      */
@@ -187,7 +187,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory( autoCapture?this:null);
+        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(autoCapture ? this : null);
         barcodeDetector.setProcessor(
                 new MultiProcessor.Builder<>(barcodeFactory).build());
 

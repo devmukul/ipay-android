@@ -14,6 +14,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
@@ -91,7 +92,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         AddContactRequestBuilder addContactRequestBuilder = new AddContactRequestBuilder(contactList);
         mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this);
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this, true);
         mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -105,13 +106,13 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         UpdateContactRequestBuilder updateContactRequestBuilder = new UpdateContactRequestBuilder(contactList);
         mUpdateContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_CONTACTS,
-                updateContactRequestBuilder.generateUri(), updateContactRequestBuilder.getUpdateContactRequest(), context, this);
+                updateContactRequestBuilder.generateUri(), updateContactRequestBuilder.getUpdateContactRequest(), context, this, true);
         mUpdateContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, context, null)) {
             mAddContactAsyncTask = null;
             mUpdateContactAsyncTask = null;
             return;

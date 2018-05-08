@@ -4,28 +4,28 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
 import java.io.File;
-import java.nio.charset.Charset;
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.OkHttpResponse;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
@@ -35,6 +35,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
     private long ticketId;
     private long commentId;
     private String comment;
+    private String socketTimeOutException;
 
     public HttpResponseListener mHttpResponseListener;
 
@@ -43,6 +44,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
         this.filePath = filePath;
         this.API_COMMAND = API_COMMAND;
         this.commentId = commentId;
+        socketTimeOutException = null;
     }
 
     @Override
@@ -69,6 +71,11 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
     @Override
     protected void onPostExecute(final GenericHttpResponse result) {
 
+        if (socketTimeOutException != null) {
+            mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutException));
+            return;
+        }
+
         if (result != null) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
@@ -81,49 +88,66 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
     }
 
     private GenericHttpResponse uploadDocument(String selectedImagePath) {
+        File file = new File(selectedImagePath);
+        String extension = selectedImagePath.substring(selectedImagePath.lastIndexOf("."));
+        MediaType MEDIA_TYPE;
+        if (extension.toLowerCase().equals("pdf")) {
+            MEDIA_TYPE = MediaType.parse("application/pdf");
+        } else {
+            MEDIA_TYPE = MediaType.parse("image/png");
+        }
+        GenericHttpResponse genericHttpResponse = new GenericHttpResponse();
 
         try {
-            HttpClient client = new DefaultHttpClient();
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM);
+            builder.addFormDataPart("file", file.getName(), okhttp3.RequestBody.create(MEDIA_TYPE, file))
+                    .addFormDataPart(Constants.TICKET_COMMENT_ID, commentId + "");
 
-            File file = new File(selectedImagePath);
-            HttpPost post = null;
+            Request.Builder requestBuilder = new Request.Builder().
+                    header("Accept", "application/json")
+                    .header("Content-Type", "multipart/form-data");
+            if (TokenManager.getToken() != null) {
+                requestBuilder.header(Constants.TOKEN, TokenManager.getToken());
+            }
+            if (TokenManager.getOnAccountId() != null && TokenManager.getOnAccountId() != "") {
+                requestBuilder.header(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
+            }
+            RequestBody requestBody = builder.build();
+            Request request = requestBuilder.url(Constants.BASE_URL_ADMIN + Constants.URL_UPLOAD_TICKET_ATTACHMENT)
+                    .post(requestBody)
+                    .build();
+            OkHttpClient okHttpClient;
+            if (MyApplication.getMyApplicationInstance().getOkHttpClient() != null) {
+                okHttpClient = MyApplication.getMyApplicationInstance().getOkHttpClient();
 
-            post = new HttpPost(Constants.BASE_URL_ADMIN + Constants.URL_UPLOAD_TICKET_ATTACHMENT);
-
-            MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
-                    Constants.BOUNDARY, Charset.defaultCharset());
-
-            entity.addPart(Constants.TICKET_COMMENT_ID, new StringBody(commentId + ""));
-
-            if (file.exists())
-                entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
-            post.setEntity(entity);
-
-            Logger.logE("POST", entity.toString());
-
-            if (TokenManager.isTokenExists())
-                post.setHeader(Constants.TOKEN, TokenManager.getToken());
-            post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
-
-            HttpResponse response = client.execute(post);
-            HttpEntity httpEntity = response.getEntity();
-
-            Logger.logE("POST", post.toString());
-
-            int status = response.getStatusLine().getStatusCode();
-
-            GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
-            mGenericHttpResponse.setStatus(status);
-            mGenericHttpResponse.setApiCommand(API_COMMAND);
-            mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
-
-            Logger.logE("Result", mGenericHttpResponse.toString());
-
-            return mGenericHttpResponse;
+            } else {
+                okHttpClient = new OkHttpClient.Builder()
+                        .readTimeout(15, TimeUnit.SECONDS)
+                        .connectTimeout(15, TimeUnit.SECONDS)
+                        .build();
+            }
+            try {
+                Response response = okHttpClient.newCall(request).execute();
+                OkHttpResponse okHttpResponse = new OkHttpResponse();
+                okHttpResponse.setResponse(response);
+                String jsonString;
+                jsonString = response.body().string();
+                genericHttpResponse.setApiCommand(API_COMMAND);
+                genericHttpResponse.setStatus(response.code());
+                genericHttpResponse.setJsonString(jsonString);
+                genericHttpResponse.setSilent(false);
+            } catch (IOException e) {
+                if (e instanceof SocketTimeoutException || e instanceof SocketException) {
+                    socketTimeOutException = mContext.getString(R.string.connection_time_out);
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+
         }
+        return genericHttpResponse;
     }
+
 }

@@ -135,6 +135,7 @@ public class DialogUtils {
                 .show();
         dialog.show();
     }
+
     public static void showProfilePictureUpdateRestrictionDialog(Context context) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog

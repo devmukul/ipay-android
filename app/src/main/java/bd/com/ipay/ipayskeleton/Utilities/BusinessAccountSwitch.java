@@ -15,6 +15,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
@@ -58,7 +59,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             getAccessControlList();
         } else {
             mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
-                    Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this);
+                    Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this, false);
 
             mSwitchAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.setMessage(context.getResources().getString(R.string.switching));
@@ -71,7 +72,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             return;
 
         mGetAccessControlTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCESS_CONTROL_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, context, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, context, this, false);
         mGetAccessControlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setMessage(context.getString(R.string.switching));
         mProgressDialog.show();
@@ -94,9 +95,8 @@ public class BusinessAccountSwitch implements HttpResponseListener {
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, context, mProgressDialog)) {
             mSwitchAccountAsyncTask = null;
-            Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         } else {
             Gson gson = new Gson();

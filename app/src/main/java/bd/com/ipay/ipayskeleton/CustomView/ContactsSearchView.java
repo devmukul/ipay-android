@@ -300,7 +300,7 @@ public class ContactsSearchView extends FrameLayout {
                     else mName = name;
                     mImageURL = profilePictureUrlQualityMedium;
                     mCustomAutoCompleteView.clearFocus();
-                    Utilities.hideKeyboard(mContext,mCustomAutoCompleteView);
+                    Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
                 }
             });
 

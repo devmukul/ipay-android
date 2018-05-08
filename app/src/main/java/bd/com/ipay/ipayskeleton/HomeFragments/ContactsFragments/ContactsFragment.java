@@ -47,6 +47,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
@@ -484,7 +485,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_introduction));
         mProgressDialog.show();
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
-                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity(), false);
         mAskForRecommendationTask.mHttpResponseListener = this;
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -504,8 +505,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     Gson gson = new Gson();
                     String json = gson.toJson(inviteContactNode, InviteContactNode.class);
                     mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                            Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
+                            Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this, false);
                     mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            } else {
+                if (!Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "Sending invitation failed", Toast.LENGTH_LONG).show();
                 }
             }
         } catch (Exception e) {
@@ -515,15 +522,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mSendInviteTask = null;
             mAskForRecommendationTask = null;
-
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
-
             return;
         }
 

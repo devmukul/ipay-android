@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
@@ -111,7 +112,7 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
             return;
         }
         uriLeaveAccount = new LeaveOrRemoveBusinessAccountRequestBuilder(id).getGeneratedUri();
-        mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_LEAVE_ACCOUNT, uriLeaveAccount, getActivity(), this);
+        mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_LEAVE_ACCOUNT, uriLeaveAccount, getActivity(), this, false);
         mResignFromBusinessAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setMessage(getString(R.string.please_wait_loading));
         mProgressDialog.show();
@@ -140,7 +141,7 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
             GetBusinessDetailsRequestBuilder getBusinessDetailsRequestBuilder = new GetBusinessDetailsRequestBuilder(mBusinessAccountID);
             uriGetDetailsOfBusiness = getBusinessDetailsRequestBuilder.getGeneratedUri();
             mGetDetailsOfRoleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
-                    uriGetDetailsOfBusiness, getActivity());
+                    uriGetDetailsOfBusiness, getActivity(), false);
             mGetDetailsOfRoleTask.mHttpResponseListener = this;
             mGetDetailsOfRoleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -156,11 +157,8 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
-            Toast.makeText(getContext(), getActivity().getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
         } else {
             if (result.getApiCommand().equals(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE)) {
                 try {
@@ -219,8 +217,7 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
             holder.privilege.setText(privilegeList.get(position));
             if (position == privilegeList.size() - 1) {
                 holder.dividerEnd.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 holder.dividerEnd.setVisibility(View.GONE);
             }
 

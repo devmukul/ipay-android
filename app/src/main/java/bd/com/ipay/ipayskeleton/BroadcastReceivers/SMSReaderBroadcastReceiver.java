@@ -31,15 +31,14 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
                 try {
                     Object[] pdus = (Object[]) bundle.get(Constants.SMS_READER_BROADCAST_RECEIVER_PDUS);
                     SmsMessage[] message = new SmsMessage[pdus.length];
-                    for(int i = 0; i < message.length; i++){
+                    for (int i = 0; i < message.length; i++) {
                         message[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                         OtpMessage = message[i].getMessageBody();
 
                         matchOTP(OtpMessage);
 
                     }
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     Logger.logD("Exception caught", e.getMessage());
                 }
             }

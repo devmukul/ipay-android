@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetRecommendationRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Introducer;
@@ -103,10 +104,8 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    getIntroducerList();
-                    getSentRequestList();
-                }
+                getIntroducerList();
+                getSentRequestList();
             }
         });
 
@@ -116,18 +115,17 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            setContentShown(false);
-            getIntroducerList();
-            getSentRequestList();
-        }
+        setContentShown(false);
+        getIntroducerList();
+        getSentRequestList();
+
     }
 
     private void getIntroducerList() {
         if (mGetIntroducersTask != null) return;
 
         mGetIntroducersTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity(), true);
         mGetIntroducersTask.mHttpResponseListener = this;
         mGetIntroducersTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -136,7 +134,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         if (mGetSentRequestTask != null) return;
 
         mGetSentRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SENT_REQUEST_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity(), true);
         mGetSentRequestTask.mHttpResponseListener = this;
         mGetSentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -147,20 +145,18 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
         mProgressDialog.show();
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
-                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity(), false);
         mAskForRecommendationTask.mHttpResponseListener = this;
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) throws RuntimeException {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetIntroducersTask = null;
-
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            mSwipeRefreshLayout.setRefreshing(false);
+            setContentShown(true);
             return;
         }
 
@@ -200,6 +196,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         }
                         mIntroduceAdapter.notifyDataSetChanged();
 
+                        mSwipeRefreshLayout.setRefreshing(false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();

@@ -29,6 +29,9 @@ public class Promotion {
     @SerializedName("title")
     @Expose
     private String title;
+    @SerializedName("url")
+    @Expose
+    private String url;
 
     /**
      * No args constructor for use in serialization
@@ -46,9 +49,10 @@ public class Promotion {
      * @param subtitle
      * @param termsConditions
      * @param period
+     * @param url
      */
-    public Promotion(Long expireDate, String imageUrl, List<Merchant> merchants, String period, String subtitle, List<String> termsConditions, String title) {
-        super();
+
+    public Promotion(Long expireDate, String imageUrl, List<Merchant> merchants, String period, String subtitle, List<String> termsConditions, String title, String url) {
         this.expireDate = expireDate;
         this.imageUrl = imageUrl;
         this.merchants = merchants;
@@ -56,7 +60,9 @@ public class Promotion {
         this.subtitle = subtitle;
         this.termsConditions = termsConditions;
         this.title = title;
+        this.url = url;
     }
+
 
     public Long getExpireDate() {
         return expireDate;
@@ -114,6 +120,14 @@ public class Promotion {
         this.title = title;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public String toString() {
         return "Promotion{" +
@@ -124,6 +138,7 @@ public class Promotion {
                 ", subtitle='" + subtitle + '\'' +
                 ", termsConditions=" + termsConditions +
                 ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

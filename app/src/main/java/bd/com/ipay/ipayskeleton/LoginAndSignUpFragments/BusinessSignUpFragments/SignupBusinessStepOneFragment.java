@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -92,7 +93,7 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_signup_business_page);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_1) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_1));
     }
 
     private void verifyUserInputs() {
@@ -144,7 +145,7 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
         CheckIfUserExistsRequestBuilder checkIfUserExistsRequestBuilder = new CheckIfUserExistsRequestBuilder(SignupOrLoginActivity.mMobileNumberBusiness);
         String mUri = checkIfUserExistsRequestBuilder.getGeneratedUri();
         mCheckIfUserExistsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_IF_USER_EXISTS,
-                mUri, null, getActivity());
+                mUri, null, getActivity(), false);
         mCheckIfUserExistsTask.mHttpResponseListener = this;
         mCheckIfUserExistsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -152,12 +153,9 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mCheckIfUserExistsTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

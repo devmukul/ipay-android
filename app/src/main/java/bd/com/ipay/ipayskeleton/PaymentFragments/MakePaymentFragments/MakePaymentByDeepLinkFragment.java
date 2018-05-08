@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDial
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderRequestBuilder;
@@ -131,7 +132,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -176,7 +177,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.show();
             mCancelOrderTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_CANCEL_ORDER,
-                    new CancelOrderRequestBuilder(orderID).getGeneratedUri(), getActivity());
+                    new CancelOrderRequestBuilder(orderID).getGeneratedUri(), getActivity(), false);
             mCancelOrderTask.mHttpResponseListener = this;
             mCancelOrderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -211,7 +212,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
         String mUri = new PayOrderRequestBuilder(orderID).getGeneratedUri();
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK,
-                mUri, new Gson().toJson(mPaymentRequestByDeepLink), getActivity());
+                mUri, new Gson().toJson(mPaymentRequestByDeepLink), getActivity(), false);
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -267,7 +268,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mProgressDialog.show();
             String mUri = new GetOrderDetailsRequestBuilder(orderID).getGeneratedUri();
             mGetOrderDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ORDER_DETAILS,
-                    mUri, getActivity(), this);
+                    mUri, getActivity(), this, false);
             mGetOrderDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -282,17 +283,15 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
+            mCustomProgressDialog.dismissDialog();
             mGetOrderDetailsTask = null;
             mPaymentTask = null;
-            if (getActivity() != null) {
-                DialogUtils.showNecessaryDialogForDeeplinkAction(getActivity(), getString(R.string.service_not_available));
-            }
+            getActivity().finish();
+            return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                 try {
                     Gson gson = new Gson();
 

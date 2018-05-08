@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomDrawable;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
@@ -101,7 +102,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_details) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_details));
     }
 
     @Nullable
@@ -289,7 +290,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         setContentShown(false);
 
         mGetTicketDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_DETAILS,
-                new GetTicketDetailsRequestBuilder().generateUri(ticketId).toString(), getActivity(), this);
+                new GetTicketDetailsRequestBuilder().generateUri(ticketId).toString(), getActivity(), this, true);
         mGetTicketDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -306,7 +307,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         String json = gson.toJson(addCommentRequest);
 
         mNewCommentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_COMMENT, Constants.BASE_URL_ADMIN + Constants.URL_ADD_COMMENT,
-                json, getActivity(), this);
+                json, getActivity(), this, false);
         mNewCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -324,11 +325,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             mProgressDialog.dismiss();
         }
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetTicketDetailsTask = null;
             if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 getActivity().onBackPressed();
             }
             return;

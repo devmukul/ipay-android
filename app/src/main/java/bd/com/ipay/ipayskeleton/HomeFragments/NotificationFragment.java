@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetPendingRoleManagerInvitationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
@@ -132,9 +133,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshNotificationLists(getActivity());
-                }
+                refreshNotificationLists(getActivity());
+
             }
         });
 
@@ -147,9 +147,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         notificationBroadcastReceiver = new NotificationBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(notificationBroadcastReceiver,
                 new IntentFilter(Constants.NOTIFICATION_UPDATE_BROADCAST));
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            refreshNotificationLists(getActivity());
-        }
+        refreshNotificationLists(getActivity());
+
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_notifications));
     }
 
@@ -194,7 +193,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             return;
         else {
             mGetPendingRoleManagerRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS,
-                    Constants.BASE_URL_MM + Constants.URL_GET_ROLE_MANAGER_REQUESTS, context, this);
+                    Constants.BASE_URL_MM + Constants.URL_GET_ROLE_MANAGER_REQUESTS, context, this, true);
             mGetPendingRoleManagerRequestTask.mHttpResponseListener = this;
             mGetPendingRoleManagerRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -230,7 +229,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(mGetMoneyAndPaymentRequest);
         mGetMoneyAndPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS,
-                Constants.BASE_URL_SM + Constants.URL_GET_All_NOTIFICATIONS, json, context, this);
+                Constants.BASE_URL_SM + Constants.URL_GET_All_NOTIFICATIONS, json, context, this, true);
         mGetMoneyAndPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -243,7 +242,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
 
         mGetIntroductionRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, context, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, context, this, true);
         mGetIntroductionRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -256,7 +255,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
 
         mGetPendingIntroducerListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_INTRODUCER_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_INTRODUCER, context, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_INTRODUCER, context, this, false);
         mGetPendingIntroducerListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -276,16 +275,15 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(mServiceChargeRequest);
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity(), true);
         mServiceChargeTask.mHttpResponseListener = this;
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void refreshMoneyAndPaymentRequestList(Context context) {
-        if (Utilities.isConnectionAvailable(context)) {
-            mMoneyAndPaymentRequests = null;
-            getMoneyAndPaymentRequest(context);
-        }
+        mMoneyAndPaymentRequests = null;
+        getMoneyAndPaymentRequest(context);
+
     }
 
     private void refreshIntroductionRequestList(Context context) {
@@ -446,134 +444,140 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        try {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            if (HttpErrorHandler.isErrorFound(result, getActivity(), mProgressDialog)) {
+                mGetMoneyAndPaymentRequestTask = null;
+                mServiceChargeTask = null;
+                mGetIntroductionRequestTask = null;
+                mGetPendingIntroducerListTask = null;
+                mGetPendingRoleManagerRequestTask = null;
+                setContentShown(true);
+
+                if (isAdded()) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+                return;
+            }
+
+            Gson gson = new Gson();
+
+            switch (result.getApiCommand()) {
+                case Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS:
+                    try {
+                        mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            try {
+                                mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                if (getActivity() != null)
+                                    Toaster.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG);
+                            }
+
+                        } else {
+                            if (getActivity() != null)
+                                Toaster.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    mGetMoneyAndPaymentRequestTask = null;
+                    postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
+                    try {
+                        mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
+                        } else {
+                            if (getActivity() != null)
+                                Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    }
+
+                    mGetIntroductionRequestTask = null;
+                    postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_GET_PENDING_INTRODUCER_LIST:
+                    try {
+                        mPendingIntroducerListResponse = gson.fromJson(result.getJsonString(), GetPendingIntroducerListResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            mPendingIntroducerList = mPendingIntroducerListResponse.getWantToBeIntroducers();
+                        } else {
+                            if (getActivity() != null)
+                                Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    }
+
+                    mGetPendingIntroducerListTask = null;
+                    postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_GET_SERVICE_CHARGE:
+                    mProgressDialog.dismiss();
+                    try {
+                        mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
+
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            if (mGetServiceChargeResponse != null) {
+                                mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
+
+                                if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
+                                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                                } else {
+                                    launchReceivedRequestFragment();
+                                }
+
+                            } else {
+                                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                                return;
+                            }
+                        } else {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    }
+
+                    mServiceChargeTask = null;
+                    break;
+                case Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS:
+                    try {
+                        mGetPendingRoleManagerInvitationResponse = gson.fromJson(result.getJsonString(),
+                                GetPendingRoleManagerInvitationResponse.class);
+                        mBusinessRoleManagerRequestsList = mGetPendingRoleManagerInvitationResponse.getInvitationList();
+                    } catch (Exception e) {
+
+                    }
+                    mGetPendingRoleManagerRequestTask = null;
+                    postProcessNotificationList();
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
             mGetMoneyAndPaymentRequestTask = null;
             mServiceChargeTask = null;
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
             mGetPendingRoleManagerRequestTask = null;
-
-            if (isAdded()) {
-                mSwipeRefreshLayout.setRefreshing(false);
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
-            }
-
-            return;
-        }
-
-        Gson gson = new Gson();
-
-        switch (result.getApiCommand()) {
-            case Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS:
-                try {
-                    mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        try {
-                            mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            if (getActivity() != null)
-                                Toaster.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG);
-                        }
-
-                    } else {
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                mGetMoneyAndPaymentRequestTask = null;
-                postProcessNotificationList();
-                break;
-
-            case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
-                try {
-                    mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
-                    } else {
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-
-                mGetIntroductionRequestTask = null;
-                postProcessNotificationList();
-                break;
-
-            case Constants.COMMAND_GET_PENDING_INTRODUCER_LIST:
-                try {
-                    mPendingIntroducerListResponse = gson.fromJson(result.getJsonString(), GetPendingIntroducerListResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mPendingIntroducerList = mPendingIntroducerListResponse.getWantToBeIntroducers();
-                    } else {
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-
-                mGetPendingIntroducerListTask = null;
-                postProcessNotificationList();
-                break;
-
-            case Constants.COMMAND_GET_SERVICE_CHARGE:
-                mProgressDialog.dismiss();
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (mGetServiceChargeResponse != null) {
-                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
-
-                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                            } else {
-                                launchReceivedRequestFragment();
-                            }
-
-                        } else {
-                            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                            return;
-                        }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-
-                mServiceChargeTask = null;
-                break;
-            case Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS:
-                try {
-                    mGetPendingRoleManagerInvitationResponse = gson.fromJson(result.getJsonString(),
-                            GetPendingRoleManagerInvitationResponse.class);
-                    mBusinessRoleManagerRequestsList = mGetPendingRoleManagerInvitationResponse.getInvitationList();
-                } catch (Exception e) {
-
-                }
-                mGetPendingRoleManagerRequestTask = null;
-                postProcessNotificationList();
-                break;
-            default:
-                break;
+            setContentShown(true);
         }
     }
 
@@ -747,9 +751,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                 new PendingIntroducerReviewDialog.ActionCheckerListener() {
                                     @Override
                                     public void ifFinishNeeded() {
-                                        if (Utilities.isConnectionAvailable(getActivity())) {
-                                            refreshNotificationLists(getActivity());
-                                        }
+                                        refreshNotificationLists(getActivity());
+
                                     }
                                 });
                     }

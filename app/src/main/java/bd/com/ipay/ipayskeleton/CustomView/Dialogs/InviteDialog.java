@@ -18,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
@@ -167,7 +168,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                 AddContactRequestBuilder(name, phoneNumber, relationship);
 
         mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this);
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this, false);
         mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -186,19 +187,17 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             Gson gson = new Gson();
             String json = gson.toJson(inviteContactNode, InviteContactNode.class);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, context, this);
+                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, context, this, false);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mAddContactAsyncTask = null;
             mSendInviteTask = null;
 
-            Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
