@@ -65,7 +65,7 @@
             android:layout_below="@+id/business_type"
             android:gravity="left"
             android:paddingBottom="12dp"
-            android:maxLines="4"
+            android:maxLines="1"
             android:textColor="@color/colorTextPrimary"
             android:textSize="14sp" />
     </RelativeLayout>
