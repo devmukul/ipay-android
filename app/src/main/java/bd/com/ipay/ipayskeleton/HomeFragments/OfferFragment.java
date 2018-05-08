@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,9 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
@@ -18,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -198,35 +207,42 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
     private class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        private String offerUrl;
+        private String imageUrl;
+
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private final TextView mOfferTitleView;
-            private final TextView mOfferDetailsView;
-            private final TextView mExpireDateView;
-            private final ProfileImageView mOfferImageView;
+            private final ImageView mPromoImageView;
+            private final ProgressBar progressBar;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-
-                mOfferTitleView = (TextView) itemView.findViewById(R.id.title);
-                mOfferDetailsView = (TextView) itemView.findViewById(R.id.sub_title);
-                mExpireDateView = (TextView) itemView.findViewById(R.id.offer_expire);
-                mOfferImageView = (ProfileImageView) itemView.findViewById(R.id.offer_image);
-                mOfferImageView.setBusinessLogoPlaceHolder();
+                mPromoImageView = (ImageView) itemView.findViewById(R.id.offer_image);
+                progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
             }
 
             public void bindView(int pos) {
                 final Promotion promotionList = mPromotionList.get(pos);
-
-                final String title = promotionList.getTitle();
-                final String subtitle = promotionList.getSubtitle();
-                final String imageUrl = promotionList.getImageUrl();
-                final String period = promotionList.getPeriod();
+                imageUrl = promotionList.getImageUrl();
+                offerUrl = promotionList.getUrl();
                 final long expire = promotionList.getExpireDate();
 
-                mOfferTitleView.setText(title);
-                mOfferDetailsView.setText(subtitle);
-                mExpireDateView.setText(period);
-                mOfferImageView.setProfilePicture(imageUrl, false);
+                Glide.with(getContext())
+                        .load(imageUrl)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String s, Target<GlideDrawable> target, boolean b) {
+                                progressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable glideDrawable, String s, Target<GlideDrawable> target, boolean b, boolean b1) {
+                                progressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .crossFade()
+                        .into(mPromoImageView);
             }
         }
 
@@ -239,7 +255,13 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Do whatever you want on clicking the normal items
+                        try {
+                            Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                            intent.putExtra("url", "https://www.ipay.com.bd/promotions?link="+offerUrl);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
