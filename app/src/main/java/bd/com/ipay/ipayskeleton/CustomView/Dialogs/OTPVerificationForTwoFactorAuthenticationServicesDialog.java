@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -34,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthServicesAsynctaskMap;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends MaterialDialog.Builder implements HttpResponseListener {
+public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends AlertDialog implements HttpResponseListener {
 
     private Activity context;
 
@@ -232,14 +234,10 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mHttpPutAsyncTask = null;
             mHttpPostAsyncTask = null;
-            if (context != null) {
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            }
-            mCustomProgressDialog.dismissDialog();
+            mOTPInputDialog.dismiss();
             return;
         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
             TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =

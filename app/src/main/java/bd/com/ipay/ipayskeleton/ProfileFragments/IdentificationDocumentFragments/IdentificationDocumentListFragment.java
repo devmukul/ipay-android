@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.R;
@@ -93,7 +94,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         else
             url = Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS_v2;
 
-        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, url, getContext(), this);
+        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, url, getContext(), this, false);
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         setContentShown(false);
     }
@@ -131,11 +132,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetIdentificationDocumentsTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            setContentShown(true);
             return;
         }
 

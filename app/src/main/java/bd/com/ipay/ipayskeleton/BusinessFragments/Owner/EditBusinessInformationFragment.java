@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.SetBusinessInformationRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.SetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
@@ -64,7 +65,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_information_edit) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_information_edit));
     }
 
     @Nullable
@@ -149,7 +150,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         String json = gson.toJson(setBusinessInformationRequest);
 
         mSetBusinessInformationRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_BUSINESS_INFORMATION,
-                Constants.BASE_URL_MM + Constants.URL_SET_BUSINESS_INFORMATION, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_SET_BUSINESS_INFORMATION, json, getActivity(), this, false);
         mSetBusinessInformationRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -184,9 +185,9 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mSetBusinessInformationRequestAsyncTask = null;
+            return;
         }
 
         Gson gson = new Gson();

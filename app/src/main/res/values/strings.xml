@@ -1156,4 +1156,8 @@
     <string name="ipay_live_host">www.ipay.com.bd</string>
     <string name="ipay_demo_host">demo.ipay.com.bd</string>
     <string name="ipay_dev_host">dev.ipay.com.bd</string>
+    <string name="connection_time_out">Connection time out</string>
+    <string name="network_unreachable">Network is unreachable</string>
+    <string name="OK">OK</string>
+    <string name="invalid_image_type">Invalid image type. Only JPG or PNG are allowed</string>
 </resources>

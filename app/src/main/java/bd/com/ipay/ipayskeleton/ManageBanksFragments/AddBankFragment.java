@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +45,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranchRequestBuilder;
@@ -64,7 +67,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private static final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
-
 
     private ProgressDialog mProgressDialog;
 
@@ -356,7 +358,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
         String mUri = mBankBranchRequestBuilder.getGeneratedUri();
         mGetBankBranchesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_BRANCH_LIST,
-                mUri, getActivity());
+                mUri, getActivity(), false);
         mGetBankBranchesTask.mHttpResponseListener = this;
 
         mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -370,7 +372,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(), false);
         mGetBankTask.mHttpResponseListener = this;
 
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -397,24 +399,32 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     }
 
     private void performFileSelectAction(int resultCode, Intent intent) {
+
         String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
-
         if (filePath != null) {
-            String[] temp = filePath.split(File.separator);
-            final String mFileName = temp[temp.length - 1];
+            String type = filePath.substring(filePath.lastIndexOf(".") + 1);
 
-            Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
-            final File imageFile = new File(mSelectedDocumentUri.getPath());
-            final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            if(type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
+                    || type.equalsIgnoreCase("jpeg")) {
 
-            if (mChequebookCoverImageView != null) {
-                mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                String[] temp = filePath.split(File.separator);
+                final String mFileName = temp[temp.length - 1];
+
+                Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
+                final File imageFile = new File(mSelectedDocumentUri.getPath());
+                final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+                if (mChequebookCoverImageView != null) {
+                    mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                }
+
+                mChequebookCoverPageErrorTextView.setText("");
+                mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
+                mChequebookCoverImageFile = imageFile;
+                mPickerActionId = -1;
+            }else {
+                Toaster.makeText(getActivity(), R.string.invalid_image_type, Toast.LENGTH_LONG);
             }
-
-            mChequebookCoverPageErrorTextView.setText("");
-            mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
-            mChequebookCoverImageFile = imageFile;
-            mPickerActionId = -1;
         }
     }
 
@@ -444,11 +454,8 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

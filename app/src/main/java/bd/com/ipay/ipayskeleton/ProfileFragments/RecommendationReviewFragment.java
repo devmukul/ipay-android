@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
@@ -263,7 +264,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mProgressDialog.setMessage(getString(R.string.processing));
         mProgressDialog.show();
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
-                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity(), false);
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -271,13 +272,13 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
     private void getDistrictList() {
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this);
+                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this, true);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getThanaList() {
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this);
+                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this, true);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -301,15 +302,11 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             mRecommendActionTask = null;
-
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

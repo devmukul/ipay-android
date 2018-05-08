@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PhotoSelectionHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfilePictureResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -77,6 +78,8 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     private String mMobileNumber = "";
     private String mProfilePicture = "";
     private String mSelectedImagePath = "";
+
+    private Uri uri;
 
     private List<String> mOptionsForImageSelectionList;
     private int mSelectedOptionForImage = -1;
@@ -329,7 +332,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         switch (requestCode) {
             case ACTION_PICK_PROFILE_PICTURE:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
+                    uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
                     if (uri == null) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(),
@@ -338,7 +341,6 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     } else {
                         // Check for a valid profile picture
                         if (isSelectedProfilePictureValid(uri)) {
-                            mProfilePictureView.setAccountPhoto(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
                     }
@@ -374,7 +376,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             }
 
             mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this, true);
             mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             mProfileCompletionStatusView.setVisibility(View.GONE);
@@ -399,8 +401,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             mProgressDialog.dismiss();
         }
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mUploadProfilePictureAsyncTask = null;
             mGetProfileCompletionStatusTask = null;
             return;
@@ -412,6 +413,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             try {
                 mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfilePictureView.setAccountPhoto(uri.getPath(), true);
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 

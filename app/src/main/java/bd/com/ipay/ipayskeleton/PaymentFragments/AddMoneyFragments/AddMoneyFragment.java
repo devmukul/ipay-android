@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.CustomView.AbstractSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.SelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.ServiceSelectorView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -230,7 +231,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(), false);
         mGetBankTask.mHttpResponseListener = this;
 
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -269,7 +270,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this, false);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -393,13 +394,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetBankTask = null;
             mGetBusinessRuleTask = null;
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+
             return;
         }
 

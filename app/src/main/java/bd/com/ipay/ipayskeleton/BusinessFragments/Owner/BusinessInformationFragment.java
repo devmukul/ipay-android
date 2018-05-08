@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PhotoSelectionHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
@@ -57,6 +58,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -206,7 +208,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.UPDATE_BUSINESS_INFO)
             public void onClick(View v) {
-                launchEditBusinessInformationFragment();
+                if (!Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    launchEditBusinessInformationFragment();
+                }
             }
         });
 
@@ -214,7 +220,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.UPDATE_BUSINESS_INFO)
             public void onClick(View v) {
-                launchEditContactInformationFragment();
+                if (!Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    launchEditContactInformationFragment();
+                }
             }
         });
 
@@ -253,25 +263,30 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         if (mPresentAddress != null) {
             presentAddressBundle.putSerializable(Constants.ADDRESS, mPresentAddress);
         }
+        mPresentAddressEditButton.setVisibility(View.VISIBLE);
 
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_ADDRESS)
             public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+                if (!Utilities.isConnectionAvailable(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+                }
             }
         });
     }
 
     private void getThanaList() {
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this);
+                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this, false);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getDistrictList() {
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this);
+                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this, false);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -281,7 +296,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         }
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this, false);
         mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -305,8 +320,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
             public void onClick(View v) {
-                initProfilePicHelperDialog();
-                photoSelectionHelperDialog.show();
+                if (ProfileInfoCacheManager.isAccountVerified()) {
+                    DialogUtils.showProfilePictureUpdateRestrictionDialog(getContext());
+                } else {
+                    initProfilePicHelperDialog();
+                    photoSelectionHelperDialog.show();
+                }
             }
         });
     }
@@ -460,7 +479,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             return;
         }
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this, false);
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -470,7 +489,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         }
 
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
-                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
+                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this, false);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -495,7 +514,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             return;
 
         mGetBusinessInformationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_INFORMATION,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_INFORMATION, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_INFORMATION, getActivity(), this, false);
         mGetBusinessInformationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -576,21 +595,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         if (getActivity() != null) {
             mProgressDialog.dismiss();
         }
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetBusinessInformationAsyncTask = null;
             mGetProfileInfoTask = null;
             mGetOccupationTask = null;
             mGetUserAddressTask = null;
             mGetDistrictListAsyncTask = null;
             mGetThanaListAsyncTask = null;
-
-            if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
-                ((ProfileActivity) getActivity()).switchToProfileFragment();
-            }
-
+            setContentShown(true);
             return;
         }
 

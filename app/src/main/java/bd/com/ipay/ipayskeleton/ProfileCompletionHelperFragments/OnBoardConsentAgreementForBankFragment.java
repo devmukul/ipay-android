@@ -18,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
@@ -67,7 +68,7 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_consent_agreement_for_bank) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_consent_agreement_for_bank));
     }
 
     private void setOnClickListeners() {
@@ -122,18 +123,16 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
         Gson gson = new Gson();
         String json = gson.toJson(mAddBankRequest);
         mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity(), false);
         mAddBankTask.mHttpResponseListener = this;
         mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mAddBankTask = null;
-            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -147,9 +146,9 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG);
 
-                    if(!ProfileInfoCacheManager.isIntroductionAsked() && !ProfileInfoCacheManager.isSwitchedFromSignup()){
+                    if (!ProfileInfoCacheManager.isIntroductionAsked() && !ProfileInfoCacheManager.isSwitchedFromSignup()) {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToAskedIntroductionHelperFragment();
-                    }else {
+                    } else {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                     }
 

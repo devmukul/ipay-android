@@ -10,6 +10,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 public class Constants {
     public static final String ApplicationTag = "iPayV2";
     public static final String ApplicationPackage = "bd.com.ipay.android";
+    public static final String ApplicationTitle = "iPay";
 
     public static final String ERROR = "ERROR";
     public static final String USER_AGENT = "User-Agent";
@@ -311,7 +312,7 @@ public class Constants {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
-            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
+            BASE_URL_PG = "https://www.ipay.com.bd/api/pg/order/";
             BASE_URL_CARD = "https://www.ipay.com.bd/api/v1/card/";
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";

@@ -13,9 +13,10 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
@@ -100,7 +101,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         mThanaEditTextProgressBar.showProgressBar();
 
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this);
+                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this, true);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -111,7 +112,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         mThanaEditTextProgressBar.hideProgressBar();
 
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                new DistrictRequestBuilder().getGeneratedUri(), context, this);
+                new DistrictRequestBuilder().getGeneratedUri(), context, this, true);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -281,12 +282,9 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
-            if (context != null)
-                Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

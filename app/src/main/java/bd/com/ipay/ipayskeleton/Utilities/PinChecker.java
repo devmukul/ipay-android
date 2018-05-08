@@ -12,6 +12,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -70,7 +71,7 @@ public class PinChecker implements HttpResponseListener {
         mProgressDialog.show();
 
         mGetPinInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PIN_INFO,
-                Constants.BASE_URL_MM + Constants.URL_GET_PIN_INFO, mContext, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PIN_INFO, mContext, this, false);
         mGetPinInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -79,12 +80,8 @@ public class PinChecker implements HttpResponseListener {
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, mContext, null)) {
             mGetPinInfoTask = null;
-            if (mContext != null)
-                Toast.makeText(mContext, R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
-
             return;
         }
 

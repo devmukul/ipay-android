@@ -236,6 +236,7 @@
                         android:id="@+id/button_edit_present_address"
                         style="@style/EditIconButton"
                         android:padding="@dimen/activity_vertical_margin_card"
+                        android:visibility="gone"
                         android:src="@drawable/ic_editgrey" />
                 </LinearLayout>
 

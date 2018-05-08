@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/payByQCView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_horizontal_margin_card"
     android:orientation="vertical">
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/imageView"
             android:layout_width="@dimen/value80"
             android:layout_height="@dimen/value80"
             android:scaleType="centerCrop"
             android:elevation="@dimen/value2"
+            card_view:riv_corner_radius="@dimen/value2"
             android:src="@drawable/background_icon_pay_by_qc"
             android:background="@drawable/semiround_white_default" />
 

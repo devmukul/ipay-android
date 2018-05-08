@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.CreateEmployeeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.CreateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
@@ -193,7 +194,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         String json = gson.toJson(createEmployeeRequest);
 
         mCreateEmployeeAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_CREATE_EMPLOYEE, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_CREATE_EMPLOYEE, json, getActivity(), this, false);
         mCreateEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -249,7 +250,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             mProgressDialog.setMessage(getString(R.string.preparing));
             mProgressDialog.show();
             mRoleDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
-                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + mSelectedRoleID, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + mSelectedRoleID, getActivity(), false);
             mRoleDetailsAsyncTask.mHttpResponseListener = this;
             mRoleDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -301,9 +302,8 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetProfileInfoTask = null;
-            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 

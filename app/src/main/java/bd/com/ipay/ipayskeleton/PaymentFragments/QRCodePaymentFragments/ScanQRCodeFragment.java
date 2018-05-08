@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
@@ -98,7 +99,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
 
                                     mProgressDialog.show();
                                     mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
                                     mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
                                     mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 } else {
@@ -115,7 +116,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                 } else {
                     getActivity().finish();
                 }
-            }else{
+            } else {
                 getActivity().finish();
             }
         }
@@ -139,9 +140,8 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
-        if (result == null) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mGetUserInfoTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
         switch (result.getApiCommand()) {

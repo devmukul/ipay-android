@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.PromoCode.AddPromoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.PromoCode.AddPromoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -25,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class AddPromoDialogBuilder extends MaterialDialog.Builder implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAddPromoTask = null;
+    private Context context;
     private AddPromoResponse mAddPromoResponse;
     private ProgressDialog mProgressDialog;
     private EditText mPromoField;
@@ -32,6 +34,7 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
 
     public AddPromoDialogBuilder(Context context, AddPromoListener addPromoListener) {
         super(context);
+        this.context = context;
         initializeView();
         this.mAddPromoListener = addPromoListener;
     }
@@ -100,7 +103,7 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
         String json = gson.toJson(addPromoRequest);
 
         mAddPromoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_PROMO,
-                Constants.BASE_URL_OFFER + Constants.URL_PROMO_ACTIVE, json, getContext(), this);
+                Constants.BASE_URL_OFFER + Constants.URL_PROMO_ACTIVE, json, getContext(), this, false);
         mAddPromoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -109,11 +112,8 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
 
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, context, mProgressDialog)) {
             mAddPromoTask = null;
-            if (getContext() != null)
-                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 

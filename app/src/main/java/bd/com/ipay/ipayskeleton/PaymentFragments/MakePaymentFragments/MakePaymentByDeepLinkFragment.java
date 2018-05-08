@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDial
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderRequestBuilder;
@@ -131,7 +132,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this);
+                mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -176,7 +177,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.show();
             mCancelOrderTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_CANCEL_ORDER,
-                    new CancelOrderRequestBuilder(orderID).getGeneratedUri(), getActivity());
+                    new CancelOrderRequestBuilder(orderID).getGeneratedUri(), getActivity(), false);
             mCancelOrderTask.mHttpResponseListener = this;
             mCancelOrderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -211,7 +212,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
         String mUri = new PayOrderRequestBuilder(orderID).getGeneratedUri();
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK,
-                mUri, new Gson().toJson(mPaymentRequestByDeepLink), getActivity());
+                mUri, new Gson().toJson(mPaymentRequestByDeepLink), getActivity(), false);
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -248,9 +249,13 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void launchParentThirdPartyApp() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
-        startActivity(intent);
-        getActivity().finish();
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
+            startActivity(intent);
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getOrderDetails(String orderID) {
@@ -263,14 +268,14 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mProgressDialog.show();
             String mUri = new GetOrderDetailsRequestBuilder(orderID).getGeneratedUri();
             mGetOrderDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ORDER_DETAILS,
-                    mUri, getActivity(), this);
+                    mUri, getActivity(), this, false);
             mGetOrderDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
     }
 
     private void appendSuccesOrFailureMessageAndLaunchThirdPartyApp(String message) {
-        thirdPartyAppUrl += "ipay://callbackactivity/" + message;
+        thirdPartyAppUrl = "ipay" + thirdPartyAppUrl + "://callbackhost/" + message;
         launchParentThirdPartyApp();
     }
 
@@ -278,17 +283,15 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
+            mCustomProgressDialog.dismissDialog();
             mGetOrderDetailsTask = null;
             mPaymentTask = null;
-            if (getActivity() != null) {
-                DialogUtils.showNecessaryDialogForDeeplinkAction(getActivity(), getString(R.string.service_not_available));
-            }
+            getActivity().finish();
+            return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                 try {
                     Gson gson = new Gson();
 
@@ -339,18 +342,25 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mCustomProgressDialog.showSuccessAnimationAndMessage(getPayByDeepLinkResponse.getMessage());
-                } else {
-                    mCustomProgressDialog.showFailureAnimationAndMessage(getPayByDeepLinkResponse.getMessage());
-                }
-                if (!getPayByDeepLinkResponse.getMessage().toLowerCase().contains(Constants.invalid_credential)) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            appendSuccesOrFailureMessageAndLaunchThirdPartyApp(getPayByDeepLinkResponse.getMessage());
+                            appendSuccesOrFailureMessageAndLaunchThirdPartyApp("success");
                         }
                     }, 2000);
-                }
 
+                } else {
+                    mCustomProgressDialog.showFailureAnimationAndMessage(getPayByDeepLinkResponse.getMessage());
+                    if (!getPayByDeepLinkResponse.getMessage().toLowerCase().contains(Constants.invalid_credential)) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                appendSuccesOrFailureMessageAndLaunchThirdPartyApp("failed");
+                            }
+                        }, 2000);
+                    }
+
+                }
             } catch (Exception e) {
                 Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
             }
@@ -360,7 +370,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                     CancelOrderResponse.class);
             try {
                 Toast.makeText(getContext(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
-                appendSuccesOrFailureMessageAndLaunchThirdPartyApp(mCancelOrderResponse.getMessage());
+                appendSuccesOrFailureMessageAndLaunchThirdPartyApp("cancelled");
             } catch (Exception e) {
                 Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
             }

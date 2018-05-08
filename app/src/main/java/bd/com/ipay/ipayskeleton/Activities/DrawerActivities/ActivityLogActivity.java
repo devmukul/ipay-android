@@ -45,6 +45,7 @@ public class ActivityLogActivity extends BaseActivity {
         else
             super.onBackPressed();
     }
+
     @Override
     public Context setContext() {
         return ActivityLogActivity.this;

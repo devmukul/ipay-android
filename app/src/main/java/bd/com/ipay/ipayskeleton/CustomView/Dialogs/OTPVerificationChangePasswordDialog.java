@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordWithOTPRequest;
@@ -214,7 +215,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         Gson gson = new Gson();
         String json = gson.toJson(mChangePasswordRequest);
         mRequestOTPTask = new HttpRequestPutAsyncTask(Constants.COMMAND_RESEND_OTP,
-                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context);
+                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context, false);
         mRequestOTPTask.mHttpResponseListener = this;
         mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -229,19 +230,16 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         Gson gson = new Gson();
         String json = gson.toJson(mChangePasswordWithOTPRequest);
         mChangePasswordWithOTPTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
-                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context);
+                Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context, false);
         mChangePasswordWithOTPTask.mHttpResponseListener = this;
         mChangePasswordWithOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, context, mProgressDialog)) {
             mChangePasswordWithOTPTask = null;
             mRequestOTPTask = null;
-            if (context != null)
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

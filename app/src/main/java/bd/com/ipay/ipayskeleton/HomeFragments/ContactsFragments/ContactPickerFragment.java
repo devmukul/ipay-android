@@ -1,7 +1,7 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
 public class ContactPickerFragment extends ContactsFragment {
-  @Override
+    @Override
     protected boolean isDialogFragment() {
         return true;
     }

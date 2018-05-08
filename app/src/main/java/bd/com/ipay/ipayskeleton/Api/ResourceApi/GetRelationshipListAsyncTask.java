@@ -19,7 +19,7 @@ public class GetRelationshipListAsyncTask extends HttpRequestGetAsyncTask {
     public GetRelationshipListAsyncTask(Context context, final RelationshipLoadListener listener) {
         super(Constants.COMMAND_GET_RELATIONSHIP_LIST,
                 new GetRelationshipRequestBuilder().getGeneratedUri(),
-                context);
+                context, true);
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override

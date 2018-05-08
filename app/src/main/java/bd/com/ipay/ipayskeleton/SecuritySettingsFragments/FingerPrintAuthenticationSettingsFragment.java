@@ -48,7 +48,7 @@ public class FingerPrintAuthenticationSettingsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_fingerprint_authentication) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_fingerprint_authentication));
     }
 
     public void setTitle() {

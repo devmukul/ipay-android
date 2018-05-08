@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupRequestBusiness;
@@ -153,7 +154,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new
                     HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity()
+                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity(), false
 
             );
             mRequestOTPTask.mHttpResponseListener = this;
@@ -193,7 +194,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
             Gson gson = new Gson();
             String json = gson.toJson(mSignupBusinessRequest);
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,
-                    Constants.BASE_URL_MM + Constants.URL_SIGN_UP_BUSINESS, json, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_SIGN_UP_BUSINESS, json, getActivity(), false);
             mSignUpTask.mHttpResponseListener = this;
             mSignUpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -202,14 +203,12 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             hideProgressDialog();
 
             mSignUpTask = null;
             mRequestOTPTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+
             return;
         }
 
@@ -360,7 +359,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity(), true);
         mAddTrustedDeviceTask.mHttpResponseListener = this;
         mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

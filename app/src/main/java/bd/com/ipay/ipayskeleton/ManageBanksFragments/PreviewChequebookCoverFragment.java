@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -69,7 +70,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
 
     private UploadChequebookCoverAsyncTask mUploadCheckbookCovorAsyncTask;
     private ProgressDialog mProgressDialog;
-    private String [] mImageUrl;
+    private String[] mImageUrl;
     private View uploadImageView;
     private TextView mChequebookCoverPageErrorTextView;
 
@@ -118,7 +119,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
             Drawable icon = getResources().getDrawable(mSelectedChequebookCover.getBankIcon(getContext()));
             bankIcon.setImageDrawable(icon);
             mChequebookCoverImageView.setImageResource(R.drawable.cheque);
-            if(mSelectedChequebookCover.getBankDocuments()!=null && mSelectedChequebookCover.getBankDocuments().size()>0) {
+            if (mSelectedChequebookCover.getBankDocuments() != null && mSelectedChequebookCover.getBankDocuments().size() > 0) {
                 if (!TextUtils.isEmpty(mSelectedChequebookCover.getBankDocuments().get(0).getDocumentPages().get(0).getUrl())) {
                     Glide.with(getContext()).load(Constants.BASE_URL_FTP_SERVER + mSelectedChequebookCover.getBankDocuments().get(0).getDocumentPages().get(0).getUrl())
                             .listener(new RequestListener<String, GlideDrawable>() {
@@ -165,7 +166,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
             mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
             isValidInput = false;
-        }  else if (mChequebookCoverImageFile!=null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
+        } else if (mChequebookCoverImageFile != null && mChequebookCoverImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
             mChequebookCoverPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
             mChequebookCoverPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
@@ -189,7 +190,7 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
         final String url;
         url = Constants.BASE_URL_MM + Constants.URL_CHECKBOOK_COVOR_UPLOAD;
         mImageUrl = getUploadFilePaths();
-        mUploadCheckbookCovorAsyncTask = new UploadChequebookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), "cheque",  mImageUrl, PreviewChequebookCoverFragment.this, mSelectedChequebookCover.getBankAccountId());
+        mUploadCheckbookCovorAsyncTask = new UploadChequebookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), "cheque", mImageUrl, PreviewChequebookCoverFragment.this, mSelectedChequebookCover.getBankAccountId());
         mUploadCheckbookCovorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.show();
     }
@@ -223,20 +224,29 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
         String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
 
         if (filePath != null) {
-            String[] temp = filePath.split(File.separator);
-            final String mFileName = temp[temp.length - 1];
+            String type = filePath.substring(filePath.lastIndexOf(".") + 1);
 
-            Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
-            final File imageFile = new File(mSelectedDocumentUri.getPath());
-            final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            if(type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
+                    || type.equalsIgnoreCase("jpeg")) {
 
-            if (mChequebookCoverImageView != null) {
-                mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                String[] temp = filePath.split(File.separator);
+                final String mFileName = temp[temp.length - 1];
+
+                Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
+                final File imageFile = new File(mSelectedDocumentUri.getPath());
+                final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+                if (mChequebookCoverImageView != null) {
+                    mChequebookCoverImageView.setImageBitmap(imageBitmap);
+                }
+                mChequebookCoverPageErrorTextView.setText("");
+                mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
+                mChequebookCoverImageFile = imageFile;
+                mPickerActionId = -1;
+
+            }else {
+                Toaster.makeText(getActivity(), R.string.invalid_image_type, Toast.LENGTH_LONG);
             }
-            mChequebookCoverPageErrorTextView.setText("");
-            mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
-            mChequebookCoverImageFile = imageFile;
-            mPickerActionId = -1;
         }
     }
 
@@ -266,10 +276,8 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
-            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -293,8 +301,6 @@ public class PreviewChequebookCoverFragment extends BaseFragment implements Http
             ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
         }
     }
-
-
 
 
     class ChequebookCoverSelectorButtonClickListener implements View.OnClickListener {

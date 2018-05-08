@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -16,6 +15,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
@@ -25,7 +25,6 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentReq
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentActivity extends BaseActivity implements HttpResponseListener {
@@ -91,7 +90,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, this, this);
+                mUri, this, this, false);
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
@@ -164,11 +163,9 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
-            if (this != null)
-                Toaster.makeText(this, R.string.service_not_available, Toast.LENGTH_SHORT);
+        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
+            mGetProfileInfoTask = null;
+            return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

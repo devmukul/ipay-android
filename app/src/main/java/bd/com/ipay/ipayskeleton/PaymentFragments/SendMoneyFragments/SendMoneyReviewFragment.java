@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDial
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
@@ -233,7 +234,7 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity(), false);
         mSendMoneyTask.mHttpResponseListener = this;
         mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -254,11 +255,8 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mSendMoneyTask = null;
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 

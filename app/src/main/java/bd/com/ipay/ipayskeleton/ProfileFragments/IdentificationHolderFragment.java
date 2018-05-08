@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IdentificationHolderFragment extends Fragment {
     private ViewPager viewPager;
@@ -50,6 +51,12 @@ public class IdentificationHolderFragment extends Fragment {
         mSentRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         mReceivedRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         setTabViews();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utilities.hideKeyboard(getActivity());
     }
 
     private void setTabViews() {

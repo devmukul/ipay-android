@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Introduced;
@@ -62,7 +63,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_introduces) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_introduces));
     }
 
     @Nullable
@@ -85,10 +86,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    getIntroducedList();
-                    getRecommendationRequestsList();
-                }
+                getIntroducedList();
+                getRecommendationRequestsList();
             }
         });
 
@@ -98,18 +97,16 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            setContentShown(false);
-            getIntroducedList();
-            getRecommendationRequestsList();
-        }
+        setContentShown(false);
+        getIntroducedList();
+        getRecommendationRequestsList();
     }
 
     private void getIntroducedList() {
         if (mGetIntroducedTask != null) return;
 
         mGetIntroducedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity(), false);
         mGetIntroducedTask.mHttpResponseListener = this;
         mGetIntroducedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -118,7 +115,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
         if (mGetRecommendationRequestsTask != null) return;
 
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity(), false);
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -127,12 +124,11 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) throws RuntimeException {
         mGetRecommendationRequestsTask = null;
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
-
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            setContentShown(true);
+            mGetIntroducedTask = null;
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
 

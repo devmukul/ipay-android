@@ -10,6 +10,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactResponse;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -20,15 +21,15 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
     private Context context;
 
     public GetAllBusinessListAsyncTask(Context context, String mUri) {
-        super(Constants.COMMAND_GET_ALL_BUSINESS_LIST, mUri, context);
+        super(Constants.COMMAND_GET_ALL_BUSINESS_LIST, mUri, context, true);
         mHttpResponseListener = this;
         this.context = context;
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (HttpErrorHandler.isErrorFound(result, context, null)) {
+            return;
         }
         try {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

@@ -122,7 +122,7 @@ public class ServiceAccessValidatorAspect {
                 hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SIGN_OUT);
                 break;
             case R.id.nav_manage_account:
-                hasNavigationAccess=ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS);
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS);
                 break;
             case R.id.nav_home:
             case R.id.nav_account:

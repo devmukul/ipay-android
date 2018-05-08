@@ -28,7 +28,7 @@ public class GetBusinessTypesAsyncTask extends HttpRequestGetAsyncTask {
     public GetBusinessTypesAsyncTask(Context context, final BusinessTypeLoadListener listener) {
         super(Constants.COMMAND_GET_BUSINESS_TYPE_LIST,
                 new BusinessTypeRequestBuilder().getGeneratedUri(),
-                context);
+                context, true);
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override
