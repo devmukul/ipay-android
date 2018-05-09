@@ -5,6 +5,7 @@ public class BusinessContact {
     private String businessType;
     private String mobileNumber;
     private String profilePictureUrl;
+    private String AddressString;
 
     public String getBusinessName() {
         return businessName;
@@ -36,5 +37,13 @@ public class BusinessContact {
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public String getAddressString() {
+        return AddressString;
+    }
+
+    public void setAddressString(String addressString) {
+        AddressString = addressString;
     }
 }
