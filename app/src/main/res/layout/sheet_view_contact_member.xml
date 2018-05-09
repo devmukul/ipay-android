@@ -49,6 +49,13 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_askfor_introduction"
             android:text="@string/ask_for_introduction" />
+        <Button
+            android:id="@+id/button_introduce"
+            style="@style/SheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_introduce_user"
+            android:text="@string/introduce_user" />
 
     </LinearLayout>
 

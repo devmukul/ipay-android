@@ -1160,4 +1160,6 @@
     <string name="network_unreachable">Network is unreachable</string>
     <string name="OK">OK</string>
     <string name="invalid_image_type">Invalid image type. Only JPG or PNG are allowed</string>
+    <string name="introduce_user">Introduce user</string>
+    <string name="are_you_sure_to_introduce">Are you sure you want to introduce the person ?</string>
 </resources>

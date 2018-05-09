@@ -52,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndI
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
+import bd.com.ipay.ipayskeleton.Model.IntroduceRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -98,6 +99,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
     private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
+    private HttpRequestPostAsyncTask mIntroduceTask = null;
     private AskForIntroductionResponse mAskForIntroductionResponse;
     private ProgressDialog mProgressDialog;
 
@@ -402,6 +404,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             }
         });
+        Button introduceUserButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_introduce);
+        introduceUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mBottomSheetLayout.isSheetShowing()) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+                showIntroduceDialog(mSelectedName, mSelectedNumber);
+            }
+        });
 
         Button mRequestMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_request_money);
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
@@ -525,6 +537,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mSendInviteTask = null;
+            mIntroduceTask = null;
             mAskForRecommendationTask = null;
             return;
         }
@@ -580,6 +593,18 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
             mProgressDialog.dismiss();
             mAskForRecommendationTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_INTRODUCE_ACTION)) {
+            mIntroduceTask = null;
+            mProgressDialog.dismiss();
+            try {
+                AskForIntroductionResponse askForIntroductionResponse = gson.fromJson(result.getJsonString(),
+                        AskForIntroductionResponse.class);
+                Toast.makeText(getContext(), askForIntroductionResponse.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                if (getContext() != null) {
+                    Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_LONG);
+                }
+            }
         }
     }
 
@@ -657,7 +682,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                 boolean wantToIntroduce = introduceCheckbox.isChecked();
-
                 sendInvite(mobileNumber, wantToIntroduce);
                 dialog.dismiss();
             }
@@ -669,6 +693,58 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 dialog.dismiss();
             }
         });
+    }
+
+
+    public void showIntroduceDialog(String name, final String mobileNumber) {
+        mInviteMessage = getString(R.string.are_you_sure_to_introduce);
+        if (!name.isEmpty())
+            mInviteMessage = mInviteMessage.replace(getString(R.string.this_person), name);
+
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.introduce_this_person)
+                .customView(R.layout.dialog_invite_contact_with_introduction, true)
+                .positiveText(R.string.yes)
+                .negativeText(R.string.no)
+                .show();
+
+        View view = dialog.getCustomView();
+        final TextView mInviteText = (TextView) view.findViewById(R.id.textviewInviteMessage);
+        final CheckBox introduceCheckbox = (CheckBox) view.findViewById(R.id.introduceCheckbox);
+        introduceCheckbox.setVisibility(View.GONE);
+
+        mInviteText.setText(mInviteMessage);
+
+        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_INVITATIONS)
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                attemptSendIntroductionRequest(mobileNumber);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void attemptSendIntroductionRequest(String mobileNumber) {
+        if (mIntroduceTask != null) {
+            return;
+        } else {
+            IntroduceRequest introduceRequest = new IntroduceRequest(mobileNumber);
+            String json = new Gson().toJson(introduceRequest);
+            mIntroduceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
+                    Constants.BASE_URL_MM + Constants.URL_INTRODUCE_USER + "/" + mobileNumber, json, getActivity(), this, false);
+            mIntroduceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
+        }
+
     }
 
 
