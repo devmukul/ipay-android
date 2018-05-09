@@ -42,6 +42,9 @@ public class Constants {
     public static final String TOP_UP = "TOP_UP";
     public static final String SEND_MONEY = "SEND_MONEY";
     public static final String REQUEST_MONEY = "REQUEST_MONEY";
+    public static final String ADD_MONEY = "ADD_MONEY";
+    public static final String WITHDRAW_MONEY = "WITHDRAW_MONEY";
+    public static final String MAKE_PAYMENT = "MAKE_PAYMENT";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
     public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 

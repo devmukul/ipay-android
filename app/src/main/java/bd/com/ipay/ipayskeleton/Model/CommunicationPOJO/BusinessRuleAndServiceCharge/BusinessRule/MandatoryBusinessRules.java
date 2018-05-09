@@ -2,6 +2,9 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceC
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
 public class MandatoryBusinessRules {
 
     private BigDecimal MAX_AMOUNT_PER_PAYMENT;
@@ -9,13 +12,37 @@ public class MandatoryBusinessRules {
     private boolean PIN_REQUIRED;
     private boolean VERIFICATION_REQUIRED;
     private boolean LOCATION_REQUIRED;
+    private String tag;
 
-    public MandatoryBusinessRules() {
-        MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
+    public MandatoryBusinessRules(String tag) {
+        /*MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
         MIN_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
         PIN_REQUIRED = true;
         VERIFICATION_REQUIRED = false;
-        LOCATION_REQUIRED = false;
+        LOCATION_REQUIRED = false;*/
+        this.tag = tag;
+    }
+
+    public void setDefaultRules() {
+        switch (tag) {
+            case Constants.SEND_MONEY:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_SEND_MONEY_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_SEND_MONEY_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
+                break;
+            case Constants.REQUEST_MONEY:
+                break;
+            case Constants.ADD_MONEY:
+                break;
+            case Constants.WITHDRAW_MONEY:
+                break;
+            case Constants.MAKE_PAYMENT:
+                break;
+            case Constants.REQUEST_PAYMENT:
+                break;
+        }
     }
 
     public BigDecimal getMAX_AMOUNT_PER_PAYMENT() {
