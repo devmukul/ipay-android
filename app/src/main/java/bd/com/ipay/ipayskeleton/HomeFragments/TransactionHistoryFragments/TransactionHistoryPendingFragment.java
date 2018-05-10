@@ -673,7 +673,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
                 String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
-                final String netAmount = String.valueOf(Utilities.formatTaka(transactionHistory.getNetAmount()));
+                final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final int serviceId = transactionHistory.getServiceId();
 
                 mTransactionDescriptionView.setText(description);
@@ -682,7 +682,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
 
-                mNetAmountView.setText(netAmount);
+                mNetAmountView.setText(netAmountWithSign);
                 if (DateUtils.isToday(transactionHistory.getTime())) {
                     responseTime = "Today, " + Utilities.formatTimeOnly(transactionHistory.getTime());
                 }
