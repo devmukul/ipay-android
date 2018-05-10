@@ -48,11 +48,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -153,8 +155,10 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 switch (availableAddMoneyOptions.get(selectedItemPosition).getServiceId()) {
                     case ServiceIdConstants.ADD_MONEY_BY_BANK:
                         setupAddMoneyFromBank();
+                        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_BANK);
                         break;
                     case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+                        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_CARD);
                         setupAddMoneyFromCreditOrDebitCard();
                         break;
                 }
@@ -200,6 +204,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 getBankInformation();
             }
         } else {
+            AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_BANK);
             attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_BANK);
         }
     }
@@ -474,6 +479,14 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                                 }
                             }
 
+                            switch (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId()) {
+                                case ServiceIdConstants.ADD_MONEY_BY_BANK:
+                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_BANK, AddMoneyActivity.mMandatoryBusinessRules);
+                                    break;
+                                case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_CARD, AddMoneyActivity.mMandatoryBusinessRules);
+                                    break;
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)

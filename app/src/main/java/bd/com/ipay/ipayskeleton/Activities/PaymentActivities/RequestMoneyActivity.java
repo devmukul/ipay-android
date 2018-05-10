@@ -23,7 +23,7 @@ public class RequestMoneyActivity extends BaseActivity {
      * you would be taken directly to the new request page
      */
     public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.REQUEST_MONEY);
+    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.REQUEST_MONEY);
     private FloatingActionButton mFabRequestMoney;
     private boolean switchedToPendingList = true;
 

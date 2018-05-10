@@ -35,14 +35,33 @@ public class MandatoryBusinessRules {
                 LOCATION_REQUIRED = false;
                 break;
             case Constants.REQUEST_MONEY:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_REQUEST_MONEY_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_REQUEST_MONEY_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
                 break;
-            case Constants.ADD_MONEY:
+            case Constants.ADD_MONEY_BY_BANK:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_BANK_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_BANK_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_BANK_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_BANK_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
+                break;
+            case Constants.ADD_MONEY_BY_CARD:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_CARD_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_CARD_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_CARD_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_ADD_MONEY_BY_CARD_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
                 break;
             case Constants.WITHDRAW_MONEY:
                 break;
             case Constants.MAKE_PAYMENT:
                 break;
             case Constants.REQUEST_PAYMENT:
+                break;
+            case Constants.TOP_UP:
                 break;
         }
     }

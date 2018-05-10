@@ -50,6 +50,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -116,6 +117,8 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
         mMobileNumberEditText.setCurrentFragmentTag(Constants.REQUEST_MONEY);
 
+        RequestMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_MONEY);
+
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
@@ -124,7 +127,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             mMobileNumberEditText.setText(mMobileNumber);
             getUserInfo(ContactEngine.formatMobileNumberBD(mMobileNumber));
         }
-
 
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
@@ -480,6 +482,8 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                                 RequestMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                             }
                         }
+
+                        BusinessRuleCacheManager.setBusinessRules(Constants.REQUEST_MONEY, RequestMoneyActivity.mMandatoryBusinessRules);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

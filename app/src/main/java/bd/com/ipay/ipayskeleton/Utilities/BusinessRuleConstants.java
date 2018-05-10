@@ -50,13 +50,36 @@ public class BusinessRuleConstants {
     public static final String SERVICE_RULE_ADD_CARDMONEY_VERIFICATION_REQUIRED = "ADD_CARDMONEY_VERIFICATION_REQUIRED";
 
 
-
+    // Send Money Default values
     public static final int DEFAULT_VALUE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = 200;
     public static final boolean DEFAULT_VALUE_SEND_MONEY_VERIFICATION_REQUIRED = true;
     public static final boolean DEFAULT_VALUE_SEND_MONEY_PIN_REQUIRED = false;
 
-    public static String[] SERVICE_BUSINESS_RULE_TAGS = new String[]{Constants.SEND_MONEY};
+    // Request Money Default values
+    public static final int DEFAULT_VALUE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT = 200;
+    public static final boolean DEFAULT_VALUE_REQUEST_MONEY_VERIFICATION_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_REQUEST_MONEY_PIN_REQUIRED = false;
+
+    // Add Money by Bank Default values
+    public static final int DEFAULT_VALUE_ADD_MONEY_BY_BANK_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_ADD_MONEY_BY_BANK_MAX_AMOUNT_PER_PAYMENT = 200;
+    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_BANK_VERIFICATION_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_BANK_PIN_REQUIRED = false;
+
+    // Add Money by Card Default values
+    public static final int DEFAULT_VALUE_ADD_MONEY_BY_CARD_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_ADD_MONEY_BY_CARD_MAX_AMOUNT_PER_PAYMENT = 200;
+    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_CARD_VERIFICATION_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_CARD_PIN_REQUIRED = false;
+
+    public static String[] SERVICE_BUSINESS_RULE_TAGS = new String[]{
+            Constants.SEND_MONEY,
+            Constants.REQUEST_MONEY,
+            Constants.ADD_MONEY_BY_BANK,
+            Constants.ADD_MONEY_BY_CARD
+    };
 
     public static String SET_IS_DEFAULT_BUSINESS_RULES = "SET_IS_DEFAULT_BUSINESS_RULES";
 }
