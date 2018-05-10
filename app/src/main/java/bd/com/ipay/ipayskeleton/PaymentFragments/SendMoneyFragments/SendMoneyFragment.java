@@ -72,7 +72,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class SendMoneyFragment extends BaseFragment implements HttpResponseListener {
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
-    public MandatoryBusinessRules mMandatoryBusinessRules;
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
@@ -133,7 +132,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         addToContactCheckBox = (CheckBox) v.findViewById(R.id.add_to_contact_check_box);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
         mProgressDialog = new ProgressDialog(mContext);
-        mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
+        SendMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
@@ -346,11 +345,11 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mDescription = mDescriptionEditText.getText().toString().trim();
         mSenderMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
-        if (!Utilities.isValueAvailable(mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                || !Utilities.isValueAvailable(mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+        if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             return false;
-        } else if (mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+        } else if (SendMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
             return false;
         }
@@ -368,8 +367,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 if (sendMoneyAmount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
                 } else {
-                    final BigDecimal minimumSendMoneyAmount = mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumSendMoneyAmount = mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+                    final BigDecimal minimumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
 
                     errorMessage = InputValidator.isValidAmount(getActivity(), sendMoneyAmount, minimumSendMoneyAmount, maximumSendMoneyAmount);
                 }
@@ -402,7 +401,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
     private void attemptSendMoneyWithPinCheck() {
 
-        if (mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+        if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -480,8 +479,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         if (mGetBusinessRuleTask != null) {
             return;
         }
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, true);
@@ -510,7 +507,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
-            mCustomProgressDialog.dismissDialog();
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -522,16 +518,16 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
                         for (BusinessRule rule : businessRuleArray) {
                             if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                               mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_VERIFICATION_REQUIRED)) {
-                                mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                SendMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_PIN_REQUIRED)) {
-                                mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                                SendMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                             }
                         }
-                        BusinessRuleCacheManager.setBusinessRules(Constants.SEND_MONEY,mMandatoryBusinessRules);
+                        BusinessRuleCacheManager.setBusinessRules(Constants.SEND_MONEY, SendMoneyActivity.mMandatoryBusinessRules);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

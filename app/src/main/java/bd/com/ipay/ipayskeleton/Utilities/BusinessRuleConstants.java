@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import java.lang.reflect.Array;
+
 public class BusinessRuleConstants {
     public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = "SENDMONEY_MAX_AMOUNT_SINGLE";
@@ -52,5 +54,9 @@ public class BusinessRuleConstants {
     public static final int DEFAULT_VALUE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = 200;
     public static final boolean DEFAULT_VALUE_SEND_MONEY_VERIFICATION_REQUIRED = true;
-    public static final boolean DEFAULT_VALUE_SEND_MONEY_PIN_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_SEND_MONEY_PIN_REQUIRED = false;
+
+    public static String[] SERVICE_BUSINESS_RULE_TAGS = new String[]{Constants.SEND_MONEY};
+
+    public static String SET_IS_DEFAULT_BUSINESS_RULES = "SET_IS_DEFAULT_BUSINESS_RULES";
 }

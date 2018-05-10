@@ -60,7 +60,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implements LocationListener, HttpResponseListener {
 
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.REQUEST_PAYMENT);
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
 

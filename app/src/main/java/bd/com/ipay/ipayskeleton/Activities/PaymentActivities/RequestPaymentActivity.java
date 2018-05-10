@@ -10,13 +10,14 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentActivity extends BaseActivity {
 
     public FloatingActionButton mFabNewRequestPayment;
 
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.REQUEST_PAYMENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

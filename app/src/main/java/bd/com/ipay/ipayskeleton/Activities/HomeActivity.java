@@ -93,6 +93,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessAccountSwitch;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -315,12 +316,8 @@ public class HomeActivity extends BaseActivity
 
         getAllBusinessAccountsList();
 
-        //****/
         BusinessRuleCacheManager.initialize(getApplicationContext());
-
-        MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(Constants.SEND_MONEY);
-        mandatoryBusinessRules.setDefaultRules();
-        BusinessRuleCacheManager.setBusinessRules(Constants.SEND_MONEY,mandatoryBusinessRules);
+        setDefaultBusinessRules();
 
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
@@ -380,6 +377,21 @@ public class HomeActivity extends BaseActivity
             getBusinessInformation();
         }
     }
+
+    /**
+     * set Default Business Rules is to cache the offline business rules
+     */
+    private void setDefaultBusinessRules() {
+        if (!BusinessRuleCacheManager.ifContainsDefaultBusinessRules()) {
+            for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
+                MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
+                mandatoryBusinessRules.setDefaultRules();
+                BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
+            }
+        }
+        BusinessRuleCacheManager.setIsDefaultBusinessRulesAvailable(true);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -670,7 +682,7 @@ public class HomeActivity extends BaseActivity
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
                 attemptLogout();
             } else {
-                Toast.makeText(this,getString(R.string.no_internet_connection),Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
             }
         }
     }

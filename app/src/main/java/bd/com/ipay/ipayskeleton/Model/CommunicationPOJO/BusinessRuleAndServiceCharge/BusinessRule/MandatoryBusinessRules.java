@@ -15,11 +15,13 @@ public class MandatoryBusinessRules {
     private String tag;
 
     public MandatoryBusinessRules(String tag) {
-        /*MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
-        MIN_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
-        PIN_REQUIRED = true;
-        VERIFICATION_REQUIRED = false;
-        LOCATION_REQUIRED = false;*/
+        if (!tag.equals(Constants.SEND_MONEY)) {
+            MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
+            MIN_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
+            PIN_REQUIRED = true;
+            VERIFICATION_REQUIRED = false;
+            LOCATION_REQUIRED = false;
+        }
         this.tag = tag;
     }
 
