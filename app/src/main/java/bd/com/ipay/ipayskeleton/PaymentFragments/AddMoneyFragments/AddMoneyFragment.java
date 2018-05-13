@@ -154,8 +154,8 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             public boolean onItemSelected(int selectedItemPosition) {
                 switch (availableAddMoneyOptions.get(selectedItemPosition).getServiceId()) {
                     case ServiceIdConstants.ADD_MONEY_BY_BANK:
-                        setupAddMoneyFromBank();
                         AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_BANK);
+                        setupAddMoneyFromBank();
                         break;
                     case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
                         AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_CARD);
@@ -204,7 +204,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 getBankInformation();
             }
         } else {
-            AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_BANK);
             attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_BANK);
         }
     }

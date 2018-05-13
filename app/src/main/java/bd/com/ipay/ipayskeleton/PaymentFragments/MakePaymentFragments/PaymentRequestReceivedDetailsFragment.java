@@ -473,11 +473,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             return;
         }
 
-        if (isAdded()) {
-            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
-        }
-        mProgressDialog.show();
-
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, false);
