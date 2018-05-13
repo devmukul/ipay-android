@@ -15,13 +15,6 @@ public class MandatoryBusinessRules {
     private String tag;
 
     public MandatoryBusinessRules(String tag) {
-        if (!tag.equals(Constants.SEND_MONEY)) {
-            MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
-            MIN_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
-            PIN_REQUIRED = true;
-            VERIFICATION_REQUIRED = false;
-            LOCATION_REQUIRED = false;
-        }
         this.tag = tag;
     }
 
@@ -56,12 +49,39 @@ public class MandatoryBusinessRules {
                 LOCATION_REQUIRED = false;
                 break;
             case Constants.WITHDRAW_MONEY:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_WITHDRAW_MONEY_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_WITHDRAW_MONEY_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
                 break;
             case Constants.MAKE_PAYMENT:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_MAKE_PAYMENT_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_MAKE_PAYMENT_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
                 break;
             case Constants.REQUEST_PAYMENT:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_REQUEST_PAYMENT_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_REQUEST_PAYMENT_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
                 break;
             case Constants.TOP_UP:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_TOP_UP_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_TOP_UP_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_TOP_UP_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_TOP_UP_VERIFICATION_REQUIRED;
+                LOCATION_REQUIRED = false;
+                break;
+            default:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal("0");
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal("10000");
+                PIN_REQUIRED = true;
+                VERIFICATION_REQUIRED = false;
+                LOCATION_REQUIRED = false;
                 break;
         }
     }

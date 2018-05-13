@@ -31,7 +31,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
 
     private FloatingActionButton mFabMakingPayment;
     private boolean switchedToPendingList = true;
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.MAKE_PAYMENT);
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 

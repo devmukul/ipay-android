@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
-import java.lang.reflect.Array;
-
 public class BusinessRuleConstants {
     public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = "SENDMONEY_MAX_AMOUNT_SINGLE";
@@ -74,11 +72,39 @@ public class BusinessRuleConstants {
     public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_CARD_VERIFICATION_REQUIRED = true;
     public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_CARD_PIN_REQUIRED = false;
 
+    // Withdraw Money Default values
+    public static final int DEFAULT_VALUE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT = 200;
+    public static final boolean DEFAULT_VALUE_WITHDRAW_MONEY_VERIFICATION_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_WITHDRAW_MONEY_PIN_REQUIRED = false;
+
+    // Make Payment Default values
+    public static final int DEFAULT_VALUE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = 200;
+    public static final boolean DEFAULT_VALUE_MAKE_PAYMENT_VERIFICATION_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_MAKE_PAYMENT_PIN_REQUIRED = false;
+
+    // Request Payment Default values
+    public static final int DEFAULT_VALUE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT = 200;
+    public static final boolean DEFAULT_VALUE_REQUEST_PAYMENT_VERIFICATION_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_REQUEST_PAYMENT_PIN_REQUIRED = false;
+
+    // Top Up Default values
+    public static final int DEFAULT_VALUE_TOP_UP_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_TOP_UP_MAX_AMOUNT_PER_PAYMENT = 200;
+    public static final boolean DEFAULT_VALUE_TOP_UP_VERIFICATION_REQUIRED = true;
+    public static final boolean DEFAULT_VALUE_TOP_UP_PIN_REQUIRED = false;
+
     public static String[] SERVICE_BUSINESS_RULE_TAGS = new String[]{
             Constants.SEND_MONEY,
             Constants.REQUEST_MONEY,
             Constants.ADD_MONEY_BY_BANK,
-            Constants.ADD_MONEY_BY_CARD
+            Constants.ADD_MONEY_BY_CARD,
+            Constants.WITHDRAW_MONEY,
+            Constants.MAKE_PAYMENT,
+            Constants.REQUEST_PAYMENT,
+            Constants.TOP_UP
     };
 
     public static String SET_IS_DEFAULT_BUSINESS_RULES = "SET_IS_DEFAULT_BUSINESS_RULES";

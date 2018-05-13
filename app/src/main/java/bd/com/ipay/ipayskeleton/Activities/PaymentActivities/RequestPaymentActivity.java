@@ -17,7 +17,7 @@ public class RequestPaymentActivity extends BaseActivity {
 
     public FloatingActionButton mFabNewRequestPayment;
 
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.REQUEST_PAYMENT);
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

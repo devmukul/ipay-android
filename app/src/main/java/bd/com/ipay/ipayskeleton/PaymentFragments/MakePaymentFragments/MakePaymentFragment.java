@@ -62,6 +62,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -179,6 +180,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mBalanceView = (TextView) v.findViewById(R.id.balance_view);
 
         mBalanceView.setText(SharedPrefManager.getUserBalance());
+
+        PaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mobileNumberView.setVisibility(View.GONE);
@@ -590,11 +593,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         if (mGetBusinessRuleTask != null)
             return;
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.show();
-
-        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
-        mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, false);
@@ -662,6 +660,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             }
                         }
                     }
+                    BusinessRuleCacheManager.setBusinessRules(Constants.MAKE_PAYMENT, PaymentActivity.mMandatoryBusinessRules);
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)

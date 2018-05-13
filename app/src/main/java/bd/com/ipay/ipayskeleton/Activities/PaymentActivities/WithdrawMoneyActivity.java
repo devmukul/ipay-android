@@ -13,7 +13,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyActivity extends BaseActivity {
 
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.WITHDRAW_MONEY);
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
