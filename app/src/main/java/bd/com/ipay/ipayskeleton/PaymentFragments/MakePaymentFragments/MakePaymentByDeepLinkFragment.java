@@ -275,7 +275,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void appendSuccesOrFailureMessageAndLaunchThirdPartyApp(String message) {
-        thirdPartyAppUrl = "ipay" + thirdPartyAppUrl + "://callbackhost/" + message;
+        thirdPartyAppUrl = "ipay" + thirdPartyAppUrl + "://" + orderID + "/" + message;
         launchParentThirdPartyApp();
     }
 
