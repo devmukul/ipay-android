@@ -130,7 +130,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mProgressDialog = new ProgressDialog(getActivity());
         TopUpActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.TOP_UP);
 
-        mUserMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         setOperatorAndPackageAdapter();
 
         int mobileNumberType = SharedPrefManager.getMobileNumberType(Constants.MOBILE_TYPE_PREPAID);
