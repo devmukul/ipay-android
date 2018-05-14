@@ -83,12 +83,9 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private Button mLogOutButton;
     private Tracker mTracker;
 
-    private boolean isFirstTimeLoad;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isFirstTimeLoad = true;
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -263,7 +260,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     processTrustedDeviceList(result.getJsonString());
-
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -290,9 +286,9 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
                     mProgressDialog.show();
-                    getTrustedDeviceList();
-                    // Add the device as trusted immediately after removing any device
 
+                    // Add the device as trusted immediately after removing any device
+                    attemptTrustedDeviceAdd();
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -358,7 +354,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                         if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
-                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                            ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
@@ -428,11 +424,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         mLayoutManager = new LinearLayoutManager(getActivity());
         mTrustedDevicesRecyclerView.setLayoutManager(mLayoutManager);
         mTrustedDevicesRecyclerView.setAdapter(mTrustedDeviceAdapter);
-        if (!isFirstTimeLoad) {
-            attemptTrustedDeviceAdd();
-        } else {
-            isFirstTimeLoad = false;
-        }
 
         setContentShown(true);
     }
@@ -440,7 +431,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private class TrustedDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public TrustedDeviceAdapter() {
-
         }
 
         public class TrustedDeviceViewHolder extends RecyclerView.ViewHolder {
