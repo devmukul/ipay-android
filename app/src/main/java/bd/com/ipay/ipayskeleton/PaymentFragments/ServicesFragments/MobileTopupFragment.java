@@ -100,7 +100,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private CustomSelectorDialogWithIcon mOperatorSelectorDialog;
     private int mSelectedPackageTypeId = -1;
     private int mSelectedOperatorTypeId = 0;
-    private String mUserMobileNumber;
     private String mMobileNumber;
     private double mAmount;
     private String mName;
@@ -159,7 +158,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         });
 
         setMobileNumber();
-        setOperator(mUserMobileNumber);
 
         mRechargeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,25 +252,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                 mMobileNumberEditText.clearSelectedData();
             }
         });
-
-        setDefaultUserInfo();
-    }
-
-    private void setDefaultUserInfo() {
-        mMobileNumberEditText.setText(mUserMobileNumber);
-
-        mProfilePicHolderView.setVisibility(View.VISIBLE);
-        mMobileNumberHolderView.setVisibility(View.GONE);
-
-        mName = ProfileInfoCacheManager.getUserName();
-
-        if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
-            mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
-            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
-                    false);
-        }
-        mNameTextView.setText(mName);
-        mAmountEditText.requestFocus();
     }
 
     private void setOperatorAndPackageAdapter() {
@@ -391,8 +370,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                 String name = data.getStringExtra(Constants.NAME);
                 String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
 
-                if (mobileNumber != null)
+                if (mobileNumber != null) {
                     mMobileNumberEditText.setText(mobileNumber);
+                    setOperator(mobileNumber);
+                }
 
                 mProfilePicHolderView.setVisibility(View.VISIBLE);
                 mMobileNumberHolderView.setVisibility(View.GONE);
@@ -694,7 +675,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                         }
                         //Google Analytic event
                     }
-
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), getString(R.string.recharge_failed), Double.valueOf(mAmount).longValue());
                 }

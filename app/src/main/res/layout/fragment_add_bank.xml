@@ -10,8 +10,8 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:paddingTop="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/activity_horizontal_margin">
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/bank_name"
@@ -70,10 +70,10 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
                 android:hint="@string/account_name"
                 android:inputType="text"
                 android:maxLines="1"
+                android:focusable="false"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
@@ -102,9 +102,9 @@
             android:id="@+id/chequebook_cover_upload_option_view_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin">
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/chequebook_cover_image_view_holder"
@@ -121,7 +121,7 @@
                     android:layout_weight="1"
                     android:contentDescription="@string/chequebook_cover_page"
                     android:scaleType="fitStart"
-                    android:src="@drawable/cheque"/>
+                    android:src="@drawable/cheque" />
 
             </LinearLayout>
 
@@ -143,10 +143,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:text="@string/upload_chequebook_front_page"
+                    android:layout_toLeftOf="@+id/chequebook_cover_selector_button"
                     android:paddingRight="@dimen/value2"
-                    android:textSize="@dimen/text_size_small"
-                    android:layout_toLeftOf="@+id/chequebook_cover_selector_button"/>
+                    android:text="@string/upload_chequebook_front_page"
+                    android:textSize="@dimen/text_size_small" />
 
                 <Button
                     android:id="@+id/chequebook_cover_selector_button"
@@ -162,9 +162,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value5"
                 android:text="@string/maximum_file_size_message"
-                android:textSize="@dimen/text_size_extra_small"
-                android:layout_marginTop="@dimen/value5"/>
+                android:textSize="@dimen/text_size_extra_small" />
         </LinearLayout>
 
         <Button
@@ -172,9 +172,9 @@
             style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/submit"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="@string/submit" />
 
     </LinearLayout>
 </ScrollView>

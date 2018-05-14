@@ -151,6 +151,9 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         }
 
         mAccountNameEditText.setText(ProfileInfoCacheManager.getUserName());
+        if (!ProfileInfoCacheManager.isBusinessAccount()) {
+            mAccountNameEditText.setFocusable(true);
+        }
 
         addBank.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +162,8 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 verifyUserInputs();
             }
         });
+
+
         return v;
     }
 
@@ -327,11 +332,13 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private void launchAddBankAgreementPage() {
         BankBranch bankBranch = mBranches.get(mSelectedBranchId);
         String bankAccountNumber = mAccountNumberEditText.getText().toString().trim();
+        String accountName = mAccountNameEditText.getText().toString().trim();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BANK_NAME, mSelectedBankName);
         bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
         bundle.putBoolean(Constants.FROM_ON_BOARD, isSwitchedFromOnBoard);
+        bundle.putString(Constants.BANK_ACCOUNT_NAME, accountName);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
         if (mChequebookCoverImageFile != null) {

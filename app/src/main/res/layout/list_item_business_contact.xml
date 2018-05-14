@@ -52,19 +52,20 @@
             android:layout_below="@+id/business_name"
             android:paddingBottom="2dp"
             android:singleLine="true"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="@color/colorAsh"
             android:textSize="14sp"
-            android:visibility="gone"/>
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
-            android:id="@+id/mobile_number"
+            android:id="@+id/business_address"
             style="@style/TextStyleSecondaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/business_type"
             android:gravity="left"
             android:paddingBottom="12dp"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/colorTextPrimary"
             android:textSize="14sp" />
     </RelativeLayout>
