@@ -11,11 +11,11 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 
 public class BusinessRuleCacheManager {
     private static SharedPreferences pref;
-    private static Context context;
+    private static Context mContext;
 
     public static void initialize(Context context) {
-        context = context;
-        pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        mContext = context;
+        pref = mContext.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
     public static boolean ifContainsDefaultBusinessRules() {
