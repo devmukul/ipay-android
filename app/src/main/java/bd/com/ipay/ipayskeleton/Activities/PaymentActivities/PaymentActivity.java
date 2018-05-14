@@ -106,6 +106,8 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
             }
             if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
                 super.onBackPressed();
+            } else if (getIntent().getStringExtra("ORDER_ID") != null) {
+                this.finishAffinity();
             } else {
                 switchToReceivedPaymentRequestsFragment();
             }
@@ -120,6 +122,8 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
             finish();
         } else if (switchedToPendingList) {
             super.onBackPressed();
+        } else if (getIntent().getStringExtra("ORDER_ID") != null) {
+            this.finishAffinity();
         } else {
             switchToReceivedPaymentRequestsFragment();
         }

@@ -252,7 +252,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
             startActivity(intent);
-            getActivity().finish();
+            getActivity().finishAffinity();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -275,7 +275,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void appendSuccesOrFailureMessageAndLaunchThirdPartyApp(String message) {
-        thirdPartyAppUrl = "ipay" + thirdPartyAppUrl + "://callbackhost/" + message;
+        thirdPartyAppUrl = "ipay" + thirdPartyAppUrl + "://" + orderID + "/" + message;
         launchParentThirdPartyApp();
     }
 
@@ -287,7 +287,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mCustomProgressDialog.dismissDialog();
             mGetOrderDetailsTask = null;
             mPaymentTask = null;
-            getActivity().finish();
+            getActivity().finishAffinity();
             return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
