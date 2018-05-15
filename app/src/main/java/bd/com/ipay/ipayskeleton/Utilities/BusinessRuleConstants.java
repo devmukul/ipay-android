@@ -52,49 +52,53 @@ public class BusinessRuleConstants {
     public static final int DEFAULT_VALUE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_SEND_MONEY_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_SEND_MONEY_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_SEND_MONEY_PIN_REQUIRED = true;
 
     // Request Money Default values
     public static final int DEFAULT_VALUE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_REQUEST_MONEY_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_REQUEST_MONEY_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_REQUEST_MONEY_PIN_REQUIRED = true;
 
     // Add Money by Bank Default values
     public static final int DEFAULT_VALUE_ADD_MONEY_BY_BANK_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_ADD_MONEY_BY_BANK_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_BANK_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_BANK_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_BANK_PIN_REQUIRED = true;
 
     // Add Money by Card Default values
     public static final int DEFAULT_VALUE_ADD_MONEY_BY_CARD_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_ADD_MONEY_BY_CARD_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_CARD_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_CARD_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_ADD_MONEY_BY_CARD_PIN_REQUIRED = true;
 
     // Withdraw Money Default values
     public static final int DEFAULT_VALUE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_WITHDRAW_MONEY_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_WITHDRAW_MONEY_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_WITHDRAW_MONEY_PIN_REQUIRED = true;
 
     // Make Payment Default values
     public static final int DEFAULT_VALUE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_MAKE_PAYMENT_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_MAKE_PAYMENT_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_MAKE_PAYMENT_PIN_REQUIRED = true;
 
     // Request Payment Default values
     public static final int DEFAULT_VALUE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_REQUEST_PAYMENT_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_REQUEST_PAYMENT_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_REQUEST_PAYMENT_PIN_REQUIRED = true;
 
     // Top Up Default values
     public static final int DEFAULT_VALUE_TOP_UP_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_TOP_UP_MAX_AMOUNT_PER_PAYMENT = 10000;
     public static final boolean DEFAULT_VALUE_TOP_UP_VERIFICATION_REQUIRED = false;
-    public static final boolean DEFAULT_VALUE_TOP_UP_PIN_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_TOP_UP_PIN_REQUIRED = true;
+
+
+    // Location Required Default for all services
+    public static final boolean DEFAULT_VALUE_LOCATION_REQUIRED = false;
 
     public static String[] SERVICE_BUSINESS_RULE_TAGS = new String[]{
             Constants.SEND_MONEY,
