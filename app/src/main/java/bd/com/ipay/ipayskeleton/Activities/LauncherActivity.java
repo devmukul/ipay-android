@@ -34,10 +34,6 @@ public class LauncherActivity extends AppCompatActivity {
                 Uri uri = getIntent().getData();
                 if (uri != null)
                     Logger.logD(TAG, uri.toString());
-                Intent intent = new Intent(this, WebViewActivity.class);
-                intent.putExtra("url", uri.toString());
-                startActivity(intent);
-
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
 

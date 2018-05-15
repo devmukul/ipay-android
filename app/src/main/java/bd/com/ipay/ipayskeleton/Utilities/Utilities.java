@@ -1103,8 +1103,9 @@ public class Utilities {
             case "pay":
                 intent = new Intent(activity, PaymentActivity.class);
                 intent.putExtra(Constants.ORDER_ID, deepLinkAction.getOrderId());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 activity.startActivity(intent);
-                activity.finish();
+                activity.finishAffinity();
                 break;
             default:
                 intent = new Intent(activity, HomeActivity.class);
@@ -1113,5 +1114,5 @@ public class Utilities {
                 break;
         }
     }
-    
+
 }
