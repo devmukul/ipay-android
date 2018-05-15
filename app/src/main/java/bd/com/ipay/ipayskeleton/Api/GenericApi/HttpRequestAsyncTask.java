@@ -75,7 +75,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     return new GenericHttpResponse(responseFromSSL, true);
                 }
             } else {
-                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection), false);
+                return new GenericHttpResponse(mContext.getString(R.string.no_internet_connection), isSlient);
             }
         } catch (Exception e) {
             e.printStackTrace();
