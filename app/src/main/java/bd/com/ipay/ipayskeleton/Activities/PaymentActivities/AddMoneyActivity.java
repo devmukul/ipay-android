@@ -18,7 +18,7 @@ public class AddMoneyActivity extends BaseActivity {
     public static final int ADD_MONEY_REVIEW_REQUEST = 101;
     public static boolean FROM_ON_BOARD;
 
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

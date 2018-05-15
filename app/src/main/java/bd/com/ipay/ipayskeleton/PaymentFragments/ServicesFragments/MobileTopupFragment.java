@@ -52,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
@@ -127,6 +128,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         context = getContext();
         mCustomProgressDialog = new CustomProgressDialog(context);
         mProgressDialog = new ProgressDialog(getActivity());
+        TopUpActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.TOP_UP);
+
         setOperatorAndPackageAdapter();
 
         int mobileNumberType = SharedPrefManager.getMobileNumberType(Constants.MOBILE_TYPE_PREPAID);
@@ -451,9 +454,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.show();
-
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, true);
@@ -553,6 +553,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                             TopUpActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                         }
                     }
+                    BusinessRuleCacheManager.setBusinessRules(Constants.TOP_UP, TopUpActivity.mMandatoryBusinessRules);
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
