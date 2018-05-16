@@ -59,7 +59,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
 
     public void dismissDialog() {
         this.clearAnimation();
-        this.dismiss();
+        this.hide();
     }
 
     private void setUpAnimationAction() {

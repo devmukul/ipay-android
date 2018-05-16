@@ -301,6 +301,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         && Utilities.isConnectionAvailable(getActivity())
                         && InputValidator.isValidNumber(inputText)) {
                     getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
+                    mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
                 }
             }
 
@@ -315,7 +316,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mReceiverName = name;
                     businessNameTextView.setText(mReceiverName);
                 }
-
+                mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
                 getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
 
                 mMobileNumberEditText.clearSelectedData();
@@ -336,6 +337,18 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     public void onResume() {
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
     }
 
     @Override

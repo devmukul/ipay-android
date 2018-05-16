@@ -644,6 +644,17 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
 
     private void switchActivity(Class tClass) {
         Intent intent = new Intent(getActivity(), tClass);

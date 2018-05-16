@@ -137,6 +137,18 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
+
     private void setButtonActions() {
         mConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

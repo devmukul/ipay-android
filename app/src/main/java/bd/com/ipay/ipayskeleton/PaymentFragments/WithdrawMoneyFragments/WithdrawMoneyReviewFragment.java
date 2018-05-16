@@ -153,6 +153,18 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         return (T) getView().findViewById(id);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
+
     private void attemptWithdrawMoneyWithPinCheck() {
         if (WithdrawMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
@@ -170,7 +182,6 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         if (mWithdrawMoneyTask != null) {
             return;
         }
-
 
         mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
         mCustomProgressDialog.showDialog();
