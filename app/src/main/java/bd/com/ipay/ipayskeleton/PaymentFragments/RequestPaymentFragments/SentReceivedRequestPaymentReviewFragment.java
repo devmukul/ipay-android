@@ -244,6 +244,17 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
         return v;
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

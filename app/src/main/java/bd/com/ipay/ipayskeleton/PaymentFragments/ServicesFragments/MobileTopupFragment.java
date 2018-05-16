@@ -217,6 +217,18 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup));
@@ -635,14 +647,18 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                         Utilities.sendSuccessEventTracker(mTracker, "TopUp Processing", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getActivity().setResult(Activity.RESULT_OK);
+
                     if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    } else {
+                        mCustomProgressDialog.showSuccessAnimationAndMessage(mTopupResponse.getMessage());
                     }
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
+
                         }
                     }, 3000);
 

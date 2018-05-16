@@ -339,6 +339,18 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
         switch (requestCode) {
