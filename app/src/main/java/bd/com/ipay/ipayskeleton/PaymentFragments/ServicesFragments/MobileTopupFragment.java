@@ -176,26 +176,14 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             }
         });
 
-        if (!ProfileInfoCacheManager.isAccountVerified()) {
-            mMobileNumberEditText.setEnabledStatus(false);
-            mMobileNumberEditText.setFocusableStatus(false);
-
-            mOperatorEditText.setEnabled(false);
-            mSelectReceiverButton.setVisibility(View.GONE);
-
-        } else {
-            mMobileNumberEditText.setEnabledStatus(true);
-            mMobileNumberEditText.setFocusableStatus(true);
-            mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
-                    startActivityForResult(intent, PICK_CONTACT_REQUEST);
-                }
-            });
-
-        }
+        mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+            }
+        });
 
         mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
             @Override
