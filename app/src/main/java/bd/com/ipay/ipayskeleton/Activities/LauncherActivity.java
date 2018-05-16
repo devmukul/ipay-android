@@ -32,15 +32,18 @@ public class LauncherActivity extends AppCompatActivity {
         switch (activityAction) {
             case Intent.ACTION_VIEW:
                 Uri uri = getIntent().getData();
-                if (uri != null)
-                    Logger.logD(TAG, uri.toString());
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
-
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
                         Utilities.performDeepLinkAction(this, deepLinkAction);
                     } else {
                         launchSigninOrLoginActivity(deepLinkAction);
+                    }
+                }else{
+                    if (SharedPrefManager.isRememberMeActive() && loggedIn) {
+                        launchHomeActivity();
+                    } else {
+                        launchSigninOrLoginActivity(null);
                     }
                 }
                 break;
