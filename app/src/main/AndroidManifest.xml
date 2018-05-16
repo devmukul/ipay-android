@@ -96,6 +96,10 @@
                     android:host="@string/ipay_live_host"
                     android:scheme="https" />
 
+                <data
+                    android:host="@string/ipay_live_host_without_www"
+                    android:scheme="https" />
+
             </intent-filter>
 
         </activity>
