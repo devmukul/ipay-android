@@ -301,6 +301,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         && Utilities.isConnectionAvailable(getActivity())
                         && InputValidator.isValidNumber(inputText)) {
                     getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
+                    mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
                 }
             }
 
@@ -315,7 +316,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mReceiverName = name;
                     businessNameTextView.setText(mReceiverName);
                 }
-
+                mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
                 getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
 
                 mMobileNumberEditText.clearSelectedData();
