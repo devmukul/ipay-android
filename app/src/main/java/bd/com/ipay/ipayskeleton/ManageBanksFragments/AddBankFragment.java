@@ -153,6 +153,8 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mAccountNameEditText.setText(ProfileInfoCacheManager.getUserName());
         if (!ProfileInfoCacheManager.isBusinessAccount()) {
             mAccountNameEditText.setFocusable(true);
+        } else {
+            mAccountNameEditText.setFocusable(false);
         }
 
         addBank.setOnClickListener(new View.OnClickListener() {
@@ -404,7 +406,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         if (filePath != null) {
             String type = filePath.substring(filePath.lastIndexOf(".") + 1);
 
-            if(type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
+            if (type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
                     || type.equalsIgnoreCase("jpeg")) {
 
                 String[] temp = filePath.split(File.separator);
@@ -422,7 +424,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
                 mChequebookCoverImageFile = imageFile;
                 mPickerActionId = -1;
-            }else {
+            } else {
                 Toaster.makeText(getActivity(), R.string.invalid_image_type, Toast.LENGTH_LONG);
             }
         }
