@@ -484,13 +484,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            if (getActivity() != null)
-                                DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         }
                         break;
                     default:
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         break;
                 }
                 break;

@@ -514,17 +514,11 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                     }
 
                     mProgressDialog.dismiss();
                     mGetBusinessRuleTask = null;
-                } else {
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
-
                 mGetBusinessRuleTask = null;
                 break;
             case Constants.COMMAND_CANCEL_PAYMENT_REQUEST:
