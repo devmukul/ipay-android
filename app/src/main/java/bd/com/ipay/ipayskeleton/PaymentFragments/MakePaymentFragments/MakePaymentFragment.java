@@ -663,14 +663,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     BusinessRuleCacheManager.setBusinessRules(Constants.MAKE_PAYMENT, PaymentActivity.mMandatoryBusinessRules);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
-            } else {
-                if (getActivity() != null)
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
-
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
 
