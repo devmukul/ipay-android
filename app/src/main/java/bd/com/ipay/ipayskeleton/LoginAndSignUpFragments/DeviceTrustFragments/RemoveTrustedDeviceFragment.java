@@ -287,6 +287,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     mProgressDialog.show();
 
                     // Add the device as trusted immediately after removing any device
+                    getTrustedDeviceList();
                     attemptTrustedDeviceAdd();
                 } else {
                     mProgressDialog.dismiss();
