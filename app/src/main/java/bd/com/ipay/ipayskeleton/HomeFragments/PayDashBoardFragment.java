@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CustomDashboardItemView;
 import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardHorizontalScrollView;
+import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusiness;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusinessResponse;
@@ -180,13 +183,21 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 
                     String mBusinessType = trendingBusiness.getBusinessType();
 
-                    PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());
-                    payDashBoardHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);
+                    /*PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());
+                    payDashBoardHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);*/
 
-                    mScrollViewHolder.setVisibility(View.VISIBLE);
+                    //  mScrollViewHolder.setVisibility(View.VISIBLE);
+                    RecyclerView recyclerView = new RecyclerView(getContext());
+                    RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    recyclerView.setLayoutParams(params);
 
                     List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
-                    for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
+                    PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
+                    recyclerView.setAdapter(payDashBoardItemAdapter);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                    payDashBoardItemAdapter.notifyDataSetChanged();
+
+                    /*for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
                         CustomDashboardItemView customDashboardItemView = payDashBoardHorizontalScrollView.addBusinessEntryView(businessAccountEntry);
                         customDashboardItemView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -210,7 +221,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                             }
                         });
                         Logger.logD("trend", businessAccountEntry.getBusinessName());
-                    }
+                    }*/
                 }
 
             } else {
