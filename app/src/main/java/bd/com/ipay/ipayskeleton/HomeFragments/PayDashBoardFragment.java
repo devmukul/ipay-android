@@ -196,6 +196,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     recyclerView.setAdapter(payDashBoardItemAdapter);
                     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                     payDashBoardItemAdapter.notifyDataSetChanged();
+                    mScrollViewHolder.addView(recyclerView);
 
                     /*for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
                         CustomDashboardItemView customDashboardItemView = payDashBoardHorizontalScrollView.addBusinessEntryView(businessAccountEntry);
