@@ -1160,4 +1160,9 @@
     <string name="network_unreachable">Network is unreachable</string>
     <string name="OK">OK</string>
     <string name="invalid_image_type">Invalid image type. Only JPG or PNG are allowed</string>
+    <string name="send_money_helper_text">You can send money from your iPay account to another iPay member\'s account.To send money,you just have to follow following steps</string>
+    <string name="send_money_step_one">Search Name/Mobile number or select the person from the list</string>
+    <string name="ok_got_it">Ok,I got it !</string>
+    <string name="send_money_step_three">Write some Note, Done !</string>
+    <string name="send_money_step_two">Insert amount you want to send</string>
 </resources>

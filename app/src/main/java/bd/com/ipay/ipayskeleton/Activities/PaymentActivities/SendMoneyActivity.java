@@ -7,8 +7,8 @@ import android.view.MenuItem;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyHelperFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyActivity extends BaseActivity {
@@ -21,7 +21,7 @@ public class SendMoneyActivity extends BaseActivity {
         setContentView(R.layout.activity_send_money);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new SendMoneyFragment()).commit();
+                .add(R.id.fragment_container, new SendMoneyHelperFragment()).commit();
 
 
         if (getSupportActionBar() != null)
@@ -38,6 +38,22 @@ public class SendMoneyActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void switchToSendMoneyFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new SendMoneyFragment()).commit();
+    }
+
+    public void switchToSendMoneyHelperFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new SendMoneyHelperFragment()).commit();
     }
 
     @Override

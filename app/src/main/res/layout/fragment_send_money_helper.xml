@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_transaction"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/send_money_helper_image" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/value20"
+        android:text="@string/send_money_helper_text"
+        android:textColor="@color/colorWhite" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/value40"
+        android:layout_marginRight="@dimen/value40"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/value5"
+            android:layout_marginTop="@dimen/value2"
+            android:src="@drawable/drawable_left_tick"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_money_step_one"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/value40"
+        android:layout_marginRight="@dimen/value40"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/value5"
+            android:layout_marginTop="@dimen/value2"
+            android:src="@drawable/drawable_left_tick"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_money_step_two"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/value40"
+        android:layout_marginRight="@dimen/value40"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/value5"
+            android:layout_marginTop="@dimen/value2"
+            android:src="@drawable/drawable_left_tick"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_money_step_three"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/value20"
+        android:layout_marginRight="@dimen/value20"
+        android:layout_marginTop="@dimen/value50"
+        style="@style/ButtonPrimary"
+        android:id="@+id/ok_button"
+        android:text="@string/ok_got_it"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
