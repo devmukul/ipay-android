@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.StringSignature;
 
 import java.util.List;
 
@@ -18,8 +19,7 @@ import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-
-public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PayDashBoardItemAdapter extends RecyclerView.Adapter<PayDashBoardItemAdapter.CardViewHolder> {
 
     private List<BusinessAccountEntry> mBusinessAccountEntryList;
     Context context;
@@ -29,69 +29,37 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
         this.context = context;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView mImageView;
-        private TextView mTextView;
-
-        public ViewHolder(final View itemView) {
-            super(itemView);
-            mImageView = (ImageView) itemView.findViewById(R.id.imageView);
-            mTextView = (TextView) itemView.findViewById(R.id.nameView);
-
-        }
-
-        public void bindView(int pos) {
-            BusinessAccountEntry businessAccountEntry = mBusinessAccountEntryList.get(pos);
-            final String name = businessAccountEntry.getBusinessName();
-            final String imageUrl = Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl();
-            mTextView.setText(name);
-
-            try {
-                final DrawableTypeRequest<String> glide = Glide.with(context).load(imageUrl);
-
-                glide
-                        .diskCacheStrategy(DiskCacheStrategy.ALL);
-
-
-                glide
-                        .placeholder(R.drawable.ic_business_logo_round)
-                        .error(R.drawable.ic_business_logo_round)
-                        .crossFade()
-                        .dontAnimate()
-                        .into(mImageView);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    }
-
-
-    // Now define the view holder for Normal  item
-    class NormalViewHolder extends PayDashBoardItemAdapter.ViewHolder {
-        NormalViewHolder(View itemView) {
-            super(itemView);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-        }
+    @Override
+    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_dashboard_item, parent, false);
+        return new CardViewHolder(view);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_dashboard_item, parent, false));
+    public void onBindViewHolder(CardViewHolder holder, int position) {
+        holder.mTextView.setText(mBusinessAccountEntryList.get(position).getBusinessName());
+        setImageView(holder.mImageView, Constants.BASE_URL_FTP_SERVER + mBusinessAccountEntryList.get(position).getProfilePictureUrl(), true);
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    private void setImageView(ImageView imageView, String attachmentUri, boolean forceLoad) {
         try {
-            NormalViewHolder vh = (NormalViewHolder) holder;
-            vh.bindView(position);
+            final DrawableTypeRequest<String> glide = Glide.with(context).load(attachmentUri);
+
+            glide
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+            if (forceLoad) {
+                glide
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
+            }
+
+            glide
+                    .placeholder(R.drawable.ic_business_logo_round)
+                    .error(R.drawable.ic_business_logo_round)
+                    .crossFade()
+                    .dontAnimate()
+                    .into(imageView);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,15 +67,24 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return mBusinessAccountEntryList.size();
+        if (mBusinessAccountEntryList != null) {
+            return mBusinessAccountEntryList.size();
+        } else {
+            return 0;
+        }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+    public class CardViewHolder extends RecyclerView.ViewHolder {
+        private ImageView mImageView;
+        private TextView mTextView;
+
+        public CardViewHolder(View itemView) {
+            super(itemView);
+            mImageView = (ImageView) itemView.findViewById(R.id.imageView);
+            mTextView = (TextView) itemView.findViewById(R.id.nameView);
+
+        }
+
     }
-
-
 }
-
 

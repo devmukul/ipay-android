@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.CustomDashBoardTitleView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomDashboardItemView;
 import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardHorizontalScrollView;
 import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
@@ -182,11 +183,10 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 for (TrendingBusiness trendingBusiness : mTrendingBusinessList) {
 
                     String mBusinessType = trendingBusiness.getBusinessType();
+                    CustomDashBoardTitleView customDashBoardTitleView = new CustomDashBoardTitleView(getContext());
+                    customDashBoardTitleView.setTitleView(mBusinessType);
+                    mScrollViewHolder.addView(customDashBoardTitleView);
 
-                    /*PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());
-                    payDashBoardHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);*/
-
-                    //  mScrollViewHolder.setVisibility(View.VISIBLE);
                     RecyclerView recyclerView = new RecyclerView(getContext());
                     RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     recyclerView.setLayoutParams(params);
@@ -197,6 +197,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                     payDashBoardItemAdapter.notifyDataSetChanged();
                     mScrollViewHolder.addView(recyclerView);
+                    mScrollViewHolder.setVisibility(View.VISIBLE);
 
                     /*for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
                         CustomDashboardItemView customDashboardItemView = payDashBoardHorizontalScrollView.addBusinessEntryView(businessAccountEntry);
