@@ -154,7 +154,7 @@
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.SingleInvoiceActivity"

@@ -18,6 +18,7 @@ public class SendMoneyHelperFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_helper, container, false);
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
         okButton = (Button) view.findViewById(R.id.ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override

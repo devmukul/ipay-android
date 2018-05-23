@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -30,6 +29,7 @@ import com.flipboard.bottomsheet.BottomSheetLayout;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -122,6 +122,7 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contact_send_money, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
 
         // If the fragment is a dialog fragment, we are using the searchview at the bottom.
         // Otherwise, we are using the searchview from the action bar.
@@ -462,7 +463,7 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
                 button_ask = (Button) itemView.findViewById(R.id.button_ask);
             }
 
-            public void bindView( final int pos) {
+            public void bindView(final int pos) {
 
                 mCursor.moveToPosition(pos);
 
@@ -532,7 +533,10 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getContext(), Integer.toString(pos), Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("name", name);
+                        bundle.putString("imageUrl", profilePictureUrlQualityMedium);
+                        ((SendMoneyActivity) getActivity()).switchToSendMoneyConfirmFragment(profilePictureView, bundle);
                     }
                 });
             }
