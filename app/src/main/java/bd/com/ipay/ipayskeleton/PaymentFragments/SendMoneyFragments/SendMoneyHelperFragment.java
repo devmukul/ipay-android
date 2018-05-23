@@ -22,7 +22,7 @@ public class SendMoneyHelperFragment extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((SendMoneyActivity) getActivity()).switchToSendMoneyFragment();
+                ((SendMoneyActivity) getActivity()).switchToSendMoneyContactFragment();
             }
         });
         return view;

@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyContactFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyHelperFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -22,7 +23,6 @@ public class SendMoneyActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new SendMoneyHelperFragment()).commit();
-
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -54,6 +54,14 @@ public class SendMoneyActivity extends BaseActivity {
         }
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new SendMoneyHelperFragment()).commit();
+    }
+
+    public void switchToSendMoneyContactFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
+            getSupportFragmentManager().popBackStack();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new SendMoneyContactFragment()).commit();
     }
 
     @Override

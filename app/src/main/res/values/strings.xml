@@ -1165,4 +1165,5 @@
     <string name="ok_got_it">Ok,I got it !</string>
     <string name="send_money_step_three">Write some Note, Done !</string>
     <string name="send_money_step_two">Insert amount you want to send</string>
+    <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
 </resources>
