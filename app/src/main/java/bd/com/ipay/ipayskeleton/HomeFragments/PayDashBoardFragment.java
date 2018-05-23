@@ -188,42 +188,15 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     mScrollViewHolder.addView(customDashBoardTitleView);
 
                     RecyclerView recyclerView = new RecyclerView(getContext());
-                    RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(GridLayoutManager.LayoutParams.MATCH_PARENT, GridLayoutManager.LayoutParams.WRAP_CONTENT);
                     recyclerView.setLayoutParams(params);
 
                     List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
                     PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
                     recyclerView.setAdapter(payDashBoardItemAdapter);
                     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                    payDashBoardItemAdapter.notifyDataSetChanged();
                     mScrollViewHolder.addView(recyclerView);
                     mScrollViewHolder.setVisibility(View.VISIBLE);
-
-                    /*for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
-                        CustomDashboardItemView customDashboardItemView = payDashBoardHorizontalScrollView.addBusinessEntryView(businessAccountEntry);
-                        customDashboardItemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
-                                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                                } else {
-                                    pinChecker = new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
-                                        @Override
-                                        public void ifPinAdded() {
-                                            Intent intent;
-                                            intent = new Intent(getActivity(), PaymentActivity.class);
-                                            intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
-                                            intent.putExtra(Constants.NAME, businessAccountEntry.getBusinessName());
-                                            intent.putExtra(Constants.PHOTO_URI, businessAccountEntry.getProfilePictureUrl());
-                                            getContext().startActivity(intent);
-                                        }
-                                    });
-                                    pinChecker.execute();
-                                }
-                            }
-                        });
-                        Logger.logD("trend", businessAccountEntry.getBusinessName());
-                    }*/
                 }
 
             } else {
