@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,7 +189,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     mScrollViewHolder.addView(customDashBoardTitleView);
 
                     RecyclerView recyclerView = new RecyclerView(getContext());
-                    RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(GridLayoutManager.LayoutParams.MATCH_PARENT, GridLayoutManager.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER;
+                    RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(layoutParams);
                     recyclerView.setLayoutParams(params);
 
                     List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
