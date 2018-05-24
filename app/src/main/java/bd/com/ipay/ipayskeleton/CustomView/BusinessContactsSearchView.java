@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class BusinessContactsSearchView extends FrameLayout {
 
     private CustomAutoCompleteView mCustomAutoCompleteView;
+    private BusinessContactListAdapter mBusinessContactsAdapter;
 
     private List<BusinessContact> mBusinessContactList;
     private String mQuery = "";
@@ -97,16 +98,18 @@ public class BusinessContactsSearchView extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
+            mQuery = userInput.toString();
+
             if (userInput.length() > 2) {
-
-                mQuery = userInput.toString();
-
                 try {
                     // Query the database based on the user input
                     readBusinessContactsFromDB();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                mBusinessContactList.clear();
+                setBusinessContactAdapter(mBusinessContactList);
             }
         }
     }
@@ -213,7 +216,7 @@ public class BusinessContactsSearchView extends FrameLayout {
     }
 
     private void setBusinessContactAdapter(List<BusinessContact> businessContactList) {
-        BusinessContactListAdapter mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
+        mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
         mCustomAutoCompleteView.setAdapter(mBusinessContactsAdapter);
     }
 
