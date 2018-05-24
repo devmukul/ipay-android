@@ -536,7 +536,7 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
                         Bundle bundle = new Bundle();
                         bundle.putString("name", name);
                         bundle.putString("imageUrl", profilePictureUrlQualityMedium);
-                        ((SendMoneyActivity) getActivity()).switchToSendMoneyConfirmFragment(profilePictureView, bundle);
+                        ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(profilePictureView, bundle);
                     }
                 });
             }

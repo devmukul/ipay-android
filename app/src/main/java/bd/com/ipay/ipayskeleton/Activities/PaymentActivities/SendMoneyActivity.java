@@ -15,13 +15,14 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyCon
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyContactFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyHelperFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyRecheckFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyActivity extends BaseActivity {
 
     public static MandatoryBusinessRules mMandatoryBusinessRules;
-    private Toolbar toolbar;
+    public Toolbar toolbar;
     public TextView mToolbarHelpText;
 
     @Override
@@ -38,7 +39,6 @@ public class SendMoneyActivity extends BaseActivity {
         });
         mToolbarHelpText.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         switchToSendMoneyHelperFragment();
     }
 
@@ -77,14 +77,23 @@ public class SendMoneyActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new SendMoneyContactFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToSendMoneyConfirmFragment(ProfileImageView imageView, Bundle bundle) {
+    public void switchToSendMoneyRecheckFragment(ProfileImageView imageView, Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+        SendMoneyRecheckFragment sendMoneyRecheckFragment = new SendMoneyRecheckFragment();
+        sendMoneyRecheckFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .addSharedElement(imageView, ViewCompat.getTransitionName(imageView))
+                .replace(R.id.fragment_container, sendMoneyRecheckFragment).addToBackStack(null).commit();
+    }
+    public void switchToSendMoneyConfirmFragment(Bundle bundle){
+        while(getSupportFragmentManager().getBackStackEntryCount()>3){
             getSupportFragmentManager().popBackStackImmediate();
         }
         SendMoneyConfirmFragment sendMoneyConfirmFragment = new SendMoneyConfirmFragment();
         sendMoneyConfirmFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .addSharedElement(imageView, ViewCompat.getTransitionName(imageView))
                 .replace(R.id.fragment_container, sendMoneyConfirmFragment).addToBackStack(null).commit();
     }
 
