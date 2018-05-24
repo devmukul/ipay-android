@@ -154,11 +154,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             public boolean onItemSelected(int selectedItemPosition) {
                 switch (availableAddMoneyOptions.get(selectedItemPosition).getServiceId()) {
                     case ServiceIdConstants.ADD_MONEY_BY_BANK:
-                        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_BANK);
                         setupAddMoneyFromBank();
                         break;
                     case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-                        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_CARD);
                         setupAddMoneyFromCreditOrDebitCard();
                         break;
                 }
@@ -197,6 +195,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     @ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_BANK)
     private void setupAddMoneyFromBank() {
+        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_BANK);
         mMessageTextView.setText(R.string.add_money_from_bank_info);
         mBankSelectorViewHolder.setVisibility(View.VISIBLE);
         if (mListUserBankClasses == null || mListUserBankClasses.isEmpty()) {
@@ -210,6 +209,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     //@ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
     private void setupAddMoneyFromCreditOrDebitCard() {
+        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_CARD);
         mMessageTextView.setText(R.string.add_money_from_credit_or_debit_card_info);
         mBankSelectorViewHolder.setVisibility(View.GONE);
         attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
