@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_transaction">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/send_money_to"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/value15" />
+
+        <TextView
+            android:id="@+id/name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_description"
+            android:layout_marginTop="@dimen/value10"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/value18"
+            android:textStyle="bold" />
+
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/profile_image_view"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:transitionName="profile_image"
+            android:layout_below="@id/name_text_view"
+            android:layout_centerHorizontal="true"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+
+        <EditText
+            android:id="@+id/amount_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_image_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/value20"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:inputType="number"
+            android:paddingLeft="@dimen/value20"
+            android:paddingRight="@dimen/value20"
+            android:text="00.00"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/value40" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/amount_edit_text"
+            android:layout_alignTop="@id/amount_edit_text"
+            android:layout_marginTop="@dimen/value10"
+            android:text="Tk"
+            android:textColor="@color/colorWhite" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/amount_edit_text"
+            android:layout_marginLeft="@dimen/value40"
+            android:layout_marginRight="@dimen/value40"
+            android:background="@color/colorWhite"></View>
+
+        <TextView
+            android:id="@+id/ipay_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
+            android:layout_margin="@dimen/value20"
+            android:gravity="center"
+            android:text="@string/your_ipay_balance"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/ipay_balance_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ipay_balance"
+            android:gravity="center"
+            android:textColor="@color/colorWhite" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#009E91"
+        android:text="continue"
+        android:textColor="@color/colorWhite" />
+</RelativeLayout>
