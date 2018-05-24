@@ -247,6 +247,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                 final String businessName = mCursor.getString(businessNameIndex);
                 final String mobileNumber = mCursor.getString(phoneNumberIndex);
                 final int businessTypeID = mCursor.getInt(businessTypeIndex);
+                final String businessPictureUrl = mCursor.getString(profilePictureUrlIndex);
                 final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
 
                 if (businessName != null && !businessName.isEmpty()) {
@@ -271,7 +272,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                         if (businessName != null && !businessName.isEmpty())
                             intent.putExtra(Constants.BUSINESS_NAME, businessName);
                         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
-                        intent.putExtra(Constants.PROFILE_PICTURE, mCursor.getString(profilePictureUrlIndex));
+                        intent.putExtra(Constants.PROFILE_PICTURE, businessPictureUrl);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }
