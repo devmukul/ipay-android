@@ -1088,14 +1088,14 @@ public class Utilities {
     public static DeepLinkAction parseUriForDeepLinkingAction(Uri uri) {
         DeepLinkAction deepLinkAction = new DeepLinkAction();
         List<String> pathSegments = uri.getPathSegments();
-        Logger.logD(TAG, uri.getPathSegments().toString());
-        deepLinkAction.setAction(pathSegments.get(1));
-        deepLinkAction.setOrderId(pathSegments.get(2));
-        Logger.logD(TAG, deepLinkAction.toString());
+        if(pathSegments.size()<3){
+            return null;
+        }else {
+            deepLinkAction.setAction(pathSegments.get(1));
+            deepLinkAction.setOrderId(pathSegments.get(2));
+        }
         return deepLinkAction;
-
     }
-
 
     public static void performDeepLinkAction(Activity activity, DeepLinkAction deepLinkAction) {
         Intent intent;

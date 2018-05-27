@@ -172,6 +172,18 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
             mAddMoneyTask = null;
