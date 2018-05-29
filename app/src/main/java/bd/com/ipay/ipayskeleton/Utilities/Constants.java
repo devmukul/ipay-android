@@ -7,7 +7,7 @@ import com.google.android.gms.vision.CameraSource;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 
-public class Constants {
+public class  Constants {
     public static final String ApplicationTag = "iPayV2";
     public static final String ApplicationPackage = "bd.com.ipay.android";
     public static final String ApplicationTitle = "iPay";

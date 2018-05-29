@@ -4,7 +4,6 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:windowContentTransitions">true</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
@@ -26,7 +25,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="Theme.ActionBar.ZeroElevation" parent="style/Widget.AppCompat.Light.ActionBar.Solid">
+    <style name="Theme.ActionBar.ZeroElevation" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="elevation">0dp</item>
     </style>
 

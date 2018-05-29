@@ -534,8 +534,9 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("name", name);
+                        bundle.putString("name", originalName);
                         bundle.putString("imageUrl", profilePictureUrlQualityMedium);
+                        bundle.putString("number",mobileNumber);
                         ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(profilePictureView, bundle);
                     }
                 });

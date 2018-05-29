@@ -6,6 +6,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
@@ -16,6 +17,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyCon
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyHelperFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyRecheckFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneySuccessFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -24,6 +26,7 @@ public class SendMoneyActivity extends BaseActivity {
     public static MandatoryBusinessRules mMandatoryBusinessRules;
     public Toolbar toolbar;
     public TextView mToolbarHelpText;
+    public ImageView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,13 @@ public class SendMoneyActivity extends BaseActivity {
         setContentView(R.layout.activity_send_money);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbarHelpText = (TextView) toolbar.findViewById(R.id.help_text_view);
+        backButton = (ImageView) toolbar.findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,8 +97,9 @@ public class SendMoneyActivity extends BaseActivity {
                 .addSharedElement(imageView, ViewCompat.getTransitionName(imageView))
                 .replace(R.id.fragment_container, sendMoneyRecheckFragment).addToBackStack(null).commit();
     }
-    public void switchToSendMoneyConfirmFragment(Bundle bundle){
-        while(getSupportFragmentManager().getBackStackEntryCount()>3){
+
+    public void switchToSendMoneyConfirmFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3) {
             getSupportFragmentManager().popBackStackImmediate();
         }
         SendMoneyConfirmFragment sendMoneyConfirmFragment = new SendMoneyConfirmFragment();
@@ -100,7 +111,11 @@ public class SendMoneyActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
+            if (getSupportFragmentManager().getBackStackEntryCount() == 4) {
+
+            } else {
+                getSupportFragmentManager().popBackStackImmediate();
+            }
         } else {
             super.onBackPressed();
         }
@@ -109,5 +124,15 @@ public class SendMoneyActivity extends BaseActivity {
     @Override
     public Context setContext() {
         return SendMoneyActivity.this;
+    }
+
+    public void switchToSendMoneySuccessFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 4) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+        SendMoneySuccessFragment sendMoneySuccessFragment = new SendMoneySuccessFragment();
+        sendMoneySuccessFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, sendMoneySuccessFragment).addToBackStack(null).commit();
     }
 }

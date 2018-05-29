@@ -1168,4 +1168,5 @@
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
+    <string name="send_money_success_description">We will notify receiver that you  sent money. You can see the details in your transaction in case you need them further</string>
 </resources>
