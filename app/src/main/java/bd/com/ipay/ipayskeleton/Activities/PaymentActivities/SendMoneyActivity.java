@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyConfirmFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyContactFragment;
@@ -26,6 +24,7 @@ public class SendMoneyActivity extends BaseActivity {
     public static MandatoryBusinessRules mMandatoryBusinessRules;
     public Toolbar toolbar;
     public TextView mToolbarHelpText;
+    public TextView mTitle;
     public ImageView backButton;
 
     @Override
@@ -34,6 +33,7 @@ public class SendMoneyActivity extends BaseActivity {
         setContentView(R.layout.activity_send_money);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbarHelpText = (TextView) toolbar.findViewById(R.id.help_text_view);
+        mTitle = (TextView) toolbar.findViewById(R.id.title);
         backButton = (ImageView) toolbar.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,16 +41,19 @@ public class SendMoneyActivity extends BaseActivity {
                 onBackPressed();
             }
         });
-        mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switchToSendMoneyHelperFragment();
-            }
-        });
         mToolbarHelpText.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
         switchToSendMoneyHelperFragment();
     }
+
+    public void showTitle() {
+        mTitle.setVisibility(View.VISIBLE);
+    }
+
+    public void hideTitle() {
+        mTitle.setVisibility(View.GONE);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -72,11 +75,24 @@ public class SendMoneyActivity extends BaseActivity {
     }
 
     public void switchToSendMoneyHelperFragment() {
+        switchToSendMoneyHelperFragment(false);
+    }
+
+    public void switchToSendMoneyHelperFragment(boolean isBackPresent) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SendMoneyHelperFragment()).commit();
+        if (isBackPresent) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isBackPresent", isBackPresent);
+            SendMoneyHelperFragment sendMoneyHelperFragment = new SendMoneyHelperFragment();
+            sendMoneyHelperFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, sendMoneyHelperFragment).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new SendMoneyHelperFragment()).commit();
+        }
     }
 
     public void switchToSendMoneyContactFragment() {
@@ -87,14 +103,13 @@ public class SendMoneyActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new SendMoneyContactFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToSendMoneyRecheckFragment(ProfileImageView imageView, Bundle bundle) {
+    public void switchToSendMoneyRecheckFragment(Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
             getSupportFragmentManager().popBackStackImmediate();
         }
         SendMoneyRecheckFragment sendMoneyRecheckFragment = new SendMoneyRecheckFragment();
         sendMoneyRecheckFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .addSharedElement(imageView, ViewCompat.getTransitionName(imageView))
                 .replace(R.id.fragment_container, sendMoneyRecheckFragment).addToBackStack(null).commit();
     }
 

@@ -9,10 +9,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,10 +64,12 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         attemptGetBusinessRule(ServiceIdConstants.SEND_MONEY);
         SendMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
         ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorToolbarSendMoney));
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
         Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
         mBackButtonIcon.setColorFilter(new
                 PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
         ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
+        ((SendMoneyActivity) getActivity()).hideTitle();
         setUpViews(view);
         return view;
     }
@@ -79,30 +80,15 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
         mAmountEditText = (EditText) view.findViewById(R.id.amount_edit_text);
-
-        mAmountEditText.setText("00.00");
-        Selection.setSelection(mAmountEditText.getText(), mAmountEditText.getText().length());
-        mAmountEditText.addTextChangedListener(new TextWatcher() {
+        mAmountEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                if (editable.toString().equals(".0") || editable.toString().equals(".00") ||
-                        editable.toString().equals(".") || editable.toString().equals("") || editable.toString().matches("^*[0].$")) {
-                    mAmountEditText.setText("00.00");
-                    Selection.setSelection(mAmountEditText.getText(), mAmountEditText.getText().length());
-                }
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                
+                return false;
             }
         });
+
+        Selection.setSelection(mAmountEditText.getText(), mAmountEditText.getText().length());
 
         if (getArguments() != null) {
             bundle = getArguments();
@@ -116,9 +102,9 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (verifyUserInputs()) {
+                if (true) {
                     String amount = Utilities.formatTakaFromString(mAmountEditText.getText().toString());
-                    amount= amount.replaceAll("[^\\d.]", "");
+                    amount = amount.replaceAll("[^\\d.]", "");
                     bundle.putString("name", mNameTextView.getText().toString());
                     bundle.putString("imageUrl", imageUrl);
                     bundle.putString("amount", amount);

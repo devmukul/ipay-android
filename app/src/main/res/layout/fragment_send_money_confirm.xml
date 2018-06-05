@@ -2,18 +2,24 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/send_money_button"
-        android:fillViewport="true">
+        android:fadingEdge="none"
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite">
+            android:layout_marginBottom="@dimen/value50"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/textview_description"
@@ -21,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-                android:textColor="@color/colorGray"
+                android:textColor="#666666"
                 android:textSize="@dimen/value15" />
 
             <TextView
@@ -30,53 +36,42 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textview_description"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/value18"
+                android:textColor="#212121"
+                android:textSize="@dimen/value14"
                 android:textStyle="bold" />
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_image_view"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_below="@+id/name_text_view"
                 android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+                android:layout_gravity="center"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/note"
+            <EditText
+                android:id="@+id/note_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profile_image_view">
+                android:layout_below="@id/profile_image_view"
+                android:layout_marginTop="@dimen/value28"
+                android:backgroundTint="#e5e5e5"
+                android:gravity="center"
+                android:hint="Enter a short note"
+                android:paddingBottom="18dp"
+                android:textSize="@dimen/value18" />
 
-                <EditText
-                    android:id="@+id/note_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/activity_horizontal_margin"
-                    android:gravity="center"
-                    android:hint="Enter a note" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/pin"
+            <EditText
+                android:id="@+id/pin_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/note"
-                android:hint="Enter pin">
-
-                <EditText
-                    android:id="@+id/pin_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/send_money_button"
-                    android:layout_margin="@dimen/activity_horizontal_margin"
-                    android:gravity="center"
-                    android:inputType="numberPassword" />
-            </android.support.design.widget.TextInputLayout>
+                android:layout_below="@id/note_edit_text"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                android:backgroundTint="#e5e5e5"
+                android:gravity="center"
+                android:hint="Enter pin"
+                android:inputType="numberPassword"
+                android:paddingBottom="18dp" />
         </RelativeLayout>
     </ScrollView>
 
@@ -85,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryButton"
+        android:background="#00c0af"
         android:text="Send Money"
         android:textColor="@color/colorWhite" />
 </RelativeLayout>

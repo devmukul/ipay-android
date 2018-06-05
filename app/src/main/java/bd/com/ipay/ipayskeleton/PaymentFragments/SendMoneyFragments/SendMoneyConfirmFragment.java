@@ -79,6 +79,7 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
         Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
         mBackButtonIcon.setColorFilter(new
                 PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY));
+        ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
         setUpViews(view);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
         return view;
@@ -90,14 +91,13 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
-        pinLayout = (TextInputLayout) view.findViewById(R.id.pin);
         mDescriptionTextView = (TextView) view.findViewById(R.id.textview_description);
         ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(Color.WHITE);
         mSendMoneyButton = (Button) view.findViewById(R.id.send_money_button);
         if (!SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            pinLayout.setVisibility(View.GONE);
+            mPinEditText.setVisibility(View.GONE);
         } else {
-            pinLayout.setVisibility(View.GONE);
+            mPinEditText.setVisibility(View.VISIBLE);
         }
         getDataFromBundle();
 
@@ -105,7 +105,7 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
             @Override
             public void onClick(View view) {
                 Utilities.hideKeyboard(getActivity());
-                if (pinLayout.getVisibility() == View.VISIBLE) {
+                if (mPinEditText.getVisibility() == View.VISIBLE) {
                     if (verifyInput()) {
                         attemptSendMoney(mPin);
                     }
@@ -151,7 +151,7 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
     private void setUpTextViews() {
         String setString = "YOU ARE SENDING TK " + mAmount + " TO";
         mDescriptionTextView.setText(setString, TextView.BufferType.SPANNABLE);
-        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary));
+        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney));
         ((Spannable) mDescriptionTextView.getText()).setSpan(span, 16, 16 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 

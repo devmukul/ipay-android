@@ -9,13 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/continue_button"
-        android:background="@drawable/background_transaction"
-        android:fillViewport="true">
+        android:fadingEdge="none"
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_transaction">
+            android:layout_marginBottom="@dimen/value50"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/textview_description"
@@ -24,7 +28,7 @@
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center"
                 android:text="@string/send_money_to"
-                android:textColor="@color/colorWhite"
+                android:textColor="#ccf3f0"
                 android:textSize="@dimen/value15" />
 
             <TextView
@@ -32,38 +36,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textview_description"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
                 android:gravity="center"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/value18"
-                android:textStyle="bold" />
+                android:textSize="@dimen/value14" />
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_image_view"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_below="@+id/name_text_view"
                 android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+                android:layout_gravity="center"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
-
-            <EditText
+            <TextView
                 android:id="@+id/amount_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profile_image_view"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/value20"
+                android:layout_marginTop="@dimen/value12"
                 android:background="@android:color/transparent"
+                android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:inputType="numberDecimal"
+                android:paddingBottom="-9dp"
                 android:paddingLeft="@dimen/value20"
                 android:paddingRight="@dimen/value20"
                 android:text="00.00"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/value40" />
+                android:textColorHint="@color/colorWhite"
+                android:textSize="@dimen/value64" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -79,19 +82,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_below="@id/amount_edit_text"
-                android:layout_marginLeft="@dimen/value40"
-                android:layout_marginRight="@dimen/value40"
-                android:background="@color/colorWhite"></View>
+                android:background="#66d8cd"></View>
 
             <TextView
                 android:id="@+id/ipay_balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/divider"
-                android:layout_margin="@dimen/value20"
+                android:layout_marginTop="@dimen/value12"
                 android:gravity="center"
                 android:text="@string/your_ipay_balance"
-                android:textColor="@color/colorWhite" />
+                android:textColor="#ccf3f0"
+                android:textSize="@dimen/value12" />
 
             <TextView
                 android:id="@+id/ipay_balance_text_view"
@@ -99,16 +101,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ipay_balance"
                 android:gravity="center"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp" />
         </RelativeLayout>
     </ScrollView>
 
     <Button
         android:id="@+id/continue_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimaryButton"
-        android:text="Send Money"
+        android:text="Continue"
         android:textColor="@color/colorWhite" />
 </RelativeLayout>

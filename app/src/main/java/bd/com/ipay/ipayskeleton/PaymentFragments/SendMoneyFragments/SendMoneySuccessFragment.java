@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -48,7 +46,6 @@ public class SendMoneySuccessFragment extends BaseFragment {
     private void setUpViews(View view) {
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mAmountTextView = (TextView) view.findViewById(R.id.amount_text_view);
-        mCancelButton = (ImageView) view.findViewById(R.id.cancel_button);
         mSenderProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_picture_sender);
         mReceiverProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_picture_receiver);
         mDescriptionTextView = (TextView) view.findViewById(R.id.success_description_text_view);
@@ -67,23 +64,15 @@ public class SendMoneySuccessFragment extends BaseFragment {
     }
 
     private void setUpTextViewsAndButtonActions() {
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        });
         mNameTextView.setText(mName);
 
         String setString = "SUCCESSFULLY SENT TK." + mAmount + " TO";
         mAmountTextView.setText(setString, TextView.BufferType.SPANNABLE);
-        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary));
+        ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney));
         ((Spannable) mAmountTextView.getText()).setSpan(span, 18, 18 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mSenderProfileImageView.setProfilePicture(mSenderImageUrl, false);
         mReceiverProfileImageView.setProfilePicture(mReceiverImageUrl, false);
-        mDescriptionTextView.setText(mDescriptionTextView.getText().toString().replace("receiver", mName));
+
     }
 }

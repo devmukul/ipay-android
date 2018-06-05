@@ -22,6 +22,46 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
+    <LinearLayout
+        android:id="@+id/number_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/value32"
+        android:layout_marginRight="@dimen/value32"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Send Money To"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/number_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value1"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
+            android:text="01500000001"
+            android:textColor="#212121"
+            android:textSize="@dimen/value32" />
+
+        <Button
+            android:id="@+id/button_send_money"
+            style="@style/ButtonPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value10"
+            android:backgroundTint="#00c0af"
+            android:text="@string/continue_send_money"
+            android:textSize="14sp" />
+    </LinearLayout>
+
     <SearchView
         android:id="@+id/search_contacts"
         android:layout_width="match_parent"
@@ -36,11 +76,11 @@
 
     <LinearLayout
         android:id="@+id/divider"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/search_contacts"
-        android:background="#E0E0E0">
+        android:background="#E0E0E0"
+        android:orientation="vertical">
 
     </LinearLayout>
 

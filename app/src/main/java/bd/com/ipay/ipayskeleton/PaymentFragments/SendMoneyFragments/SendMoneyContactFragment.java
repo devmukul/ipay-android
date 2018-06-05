@@ -16,32 +16,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.google.gson.Gson;
 
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.AskForIntroductionResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
@@ -54,7 +59,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
  * verified iPay users and (Constants.IPAY_MEMBERS_ONLY, true) to show member users only.
  */
 public class SendMoneyContactFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener, HttpResponseListener {
 
     private static final String TAG = SendMoneyContactFragment.class.getSimpleName();
 
@@ -65,21 +70,13 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
     private RecyclerView.LayoutManager mLayoutManager;
     private SearchView mSearchView;
     private TextView mEmptyContactsTextView;
-    private View mSheetViewNonIpayMember;
-    private View mSheetViewIpayMember;
-    private View selectedBottomSheetView;
+    private TextView mNumberTextView;
 
     private String mQuery = "";
-    // When a contact item is clicked, we need to access its name and number from the sheet view.
-    // So saving these in these two variables.
-    private String mSelectedName;
-    private String mSelectedNumber;
-    private String mInviteMessage;
 
-    private HttpRequestPostAsyncTask mSendInviteTask = null;
-    private SendInviteResponse mSendInviteResponse;
-    private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
-    private AskForIntroductionResponse mAskForIntroductionResponse;
+    private String mPhoneNumber;
+
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private ProgressDialog mProgressDialog;
 
     private ContactListAdapter mAdapter;
@@ -103,6 +100,10 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
     private int accountTypeIndex;
     private int isMemberIndex;
 
+    private Button mSendMoneyButton;
+
+    private LinearLayout mNumberLayout;
+
     private ContactLoadFinishListener contactLoadFinishListener;
 
     @Override
@@ -121,12 +122,30 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contact_send_money, container, false);
+        mNumberTextView = (TextView) v.findViewById(R.id.number_text_view);
+        mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
+        ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
+        mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPhoneNumber = mQuery;
+                getProfileInfo(mQuery);
+            }
+        });
         mProgressDialog = new ProgressDialog(getActivity());
         ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((SendMoneyActivity) getActivity()).switchToSendMoneyHelperFragment(true);
+            }
+        });
+        ((SendMoneyActivity) getActivity()).showTitle();
 
         // If the fragment is a dialog fragment, we are using the searchview at the bottom.
         // Otherwise, we are using the searchview from the action bar.
         mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
+        mNumberLayout = (LinearLayout) v.findViewById(R.id.number_layout);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
 
@@ -152,6 +171,21 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
         return v;
+    }
+
+    private void getProfileInfo(String mobileNumber) {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(ContactEngine.formatMobileNumberBD(mobileNumber));
+
+        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                mUri, getContext(), this, false);
+        mProgressDialog.setMessage(getString(R.string.fetching_user_info));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void setContactLoadFinishListener(ContactLoadFinishListener contactLoadFinishListener) {
@@ -227,8 +261,23 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        populateList(data, mShowVerifiedUsersOnly ?
-                getString(R.string.no_verified_contacts) : getString(R.string.no_contacts));
+        if (data != null && !(data.getCount() > 0)) {
+            if (InputValidator.isValidNumber(mQuery)) {
+                mNumberLayout.setVisibility(View.VISIBLE);
+                mNumberTextView.setText(mQuery);
+                mRecyclerView.setVisibility(View.GONE);
+            } else {
+                mNumberLayout.setVisibility(View.GONE);
+                mNumberTextView.setText("");
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mNumberLayout.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mNumberTextView.setText("");
+            populateList(data, mShowVerifiedUsersOnly ?
+                    getString(R.string.no_verified_contacts) : getString(R.string.no_contacts));
+        }
     }
 
     @Override
@@ -269,62 +318,6 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
     /**
      * Must be called after show(Non)SubscriberSheet
      */
-    private void setContactInformationInSheet(String contactName,
-                                              String imageUrl, final int backgroundColor, boolean isMember, boolean isVerified, int accountType) {
-        if (selectedBottomSheetView == null)
-            return;
-
-        final TextView contactNameView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_contact_name);
-        final ImageView contactImage = (ImageView) selectedBottomSheetView.findViewById(R.id.image_contact);
-        TextView isVerifiedView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_is_verified);
-        TextView accountTypeView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_account_type);
-
-        contactImage.setBackgroundResource(backgroundColor);
-        contactNameView.setText(contactName);
-
-        if (isMember) {
-            if (isVerified) {
-                isVerifiedView.setText(getString(R.string.verified).toUpperCase());
-                isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_verified);
-            } else {
-                isVerifiedView.setText(getString(R.string.unverified).toUpperCase());
-                isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_unverified);
-            }
-
-            if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
-                accountTypeView.setText(R.string.business_account);
-            } else {
-                accountTypeView.setText(R.string.personal_account);
-            }
-
-        } else {
-            isVerifiedView.setVisibility(View.GONE);
-            accountTypeView.setVisibility(View.GONE);
-        }
-
-        if (imageUrl != null && !imageUrl.equals("")) {
-            Glide.with(getActivity())
-                    .load(imageUrl)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            setPlaceHolderImage(contactImage, backgroundColor);
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model,
-                                                       Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .centerCrop()
-                    .into(contactImage);
-        } else {
-            contactImage.setBackgroundResource(backgroundColor);
-            setPlaceHolderImage(contactImage, backgroundColor);
-        }
-    }
 
     private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
         contactImage.setBackgroundResource(backgroundColor);
@@ -361,13 +354,6 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
                 getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void setSelectedName(String name) {
-        this.mSelectedName = name;
-    }
-
-    private void setSelectedNumber(String contactNumber) {
-        this.mSelectedNumber = contactNumber;
-    }
 
     public interface ContactLoadFinishListener {
         void onContactLoadFinish(int contactCount);
@@ -536,10 +522,39 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
                         Bundle bundle = new Bundle();
                         bundle.putString("name", originalName);
                         bundle.putString("imageUrl", profilePictureUrlQualityMedium);
-                        bundle.putString("number",mobileNumber);
-                        ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(profilePictureView, bundle);
+                        bundle.putString("number", mobileNumber);
+                        ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(bundle);
                     }
                 });
+            }
+        }
+    }
+
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+            mProgressDialog.dismiss();
+            mGetProfileInfoTask = null;
+            return;
+        } else {
+            try {
+                if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+                    mGetProfileInfoTask = null;
+                    mProgressDialog.dismiss();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        GetUserInfoResponse getUserInfoResponse = new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("name", getUserInfoResponse.getName());
+                        bundle.putString("imageUrl", getUserInfoResponse.getProfilePictures().get(0).getUrl());
+                        bundle.putString("number", mPhoneNumber);
+                        ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(bundle);
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.user_has_no_ipay_account), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                mProgressDialog.dismiss();
+                mGetProfileInfoTask = null;
             }
         }
     }
