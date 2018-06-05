@@ -41,6 +41,7 @@ public class DBConstants {
     public static final String KEY_BUSINESS_PROFILE_PICTURE = "profile_picture";
     public static final String KEY_BUSINESS_PROFILE_PICTURE_QUALITY_MEDIUM = "profile_picture_quality_medium";
     public static final String KEY_BUSINESS_PROFILE_PICTURE_QUALITY_HIGH = "profile_picture_quality_high";
+    public static final String KEY_BUSINESS_ADDRESS = "business_address";
 
     // Push events table
     public static final String KEY_TAG_NAME = "tag_name";

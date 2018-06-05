@@ -12,6 +12,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -22,7 +23,7 @@ public class RequestMoneyActivity extends BaseActivity {
      * you would be taken directly to the new request page
      */
     public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.REQUEST_MONEY);
     private FloatingActionButton mFabRequestMoney;
     private boolean switchedToPendingList = true;
 

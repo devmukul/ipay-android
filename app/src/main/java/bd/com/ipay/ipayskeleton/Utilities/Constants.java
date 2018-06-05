@@ -42,6 +42,11 @@ public class Constants {
     public static final String TOP_UP = "TOP_UP";
     public static final String SEND_MONEY = "SEND_MONEY";
     public static final String REQUEST_MONEY = "REQUEST_MONEY";
+    public static final String ADD_MONEY = "ADD_MONEY";
+    public static final String ADD_MONEY_BY_BANK = "ADD_MONEY_BY_BANK";
+    public static final String ADD_MONEY_BY_CARD = "ADD_MONEY_BY_CARD";
+    public static final String WITHDRAW_MONEY = "WITHDRAW_MONEY";
+    public static final String MAKE_PAYMENT = "MAKE_PAYMENT";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
     public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 
@@ -146,6 +151,7 @@ public class Constants {
     public static final String BANK_NAME = "bank_name";
     public static final String BANK_BRANCH = "bank_branch";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
+    public static final String BANK_ACCOUNT_NAME = "bank_account_name";
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
     public static final String BANK_CODE = "bank_code";
     public static final String PHOTO_URI = "photo_uri";

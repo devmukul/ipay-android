@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -136,6 +136,7 @@ public class DataHelper {
                     values.put(DBConstants.KEY_BUSINESS_PROFILE_PICTURE_QUALITY_MEDIUM, mBusinessAccountEntry.getProfilePictureUrlMedium());
                     values.put(DBConstants.KEY_BUSINESS_PROFILE_PICTURE_QUALITY_HIGH, mBusinessAccountEntry.getProfilePictureUrlHigh());
                     values.put(DBConstants.KEY_BUSINESS_ACCOUNT_ID, mBusinessAccountEntry.getBusinessId());
+                    values.put(DBConstants.KEY_BUSINESS_ADDRESS, mBusinessAccountEntry.getAddressString());
 
                     db.insertWithOnConflict(DBConstants.DB_TABLE_BUSINESS_ACCOUNTS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
@@ -295,7 +296,7 @@ public class DataHelper {
         return cursor;
     }
 
-    public Cursor searchBusinessContacts(String query) {
+    public Cursor searchBusinessAccounts(String query) {
         Cursor cursor = null;
 
         try {
@@ -303,8 +304,7 @@ public class DataHelper {
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
                     + " WHERE (" + DBConstants.KEY_BUSINESS_NAME + " LIKE '%" + query + "%'"
-                    + " OR " + DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " LIKE '%"
-                    + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
+                    +  ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
                     + " COLLATE NOCASE";
 
             Logger.logW("Query", queryString);

@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -260,6 +261,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                         @Override
                         public void run() {
                             mCustomProgressDialog.dismissDialog();
+                            getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
                         }
                     }, 2000);
