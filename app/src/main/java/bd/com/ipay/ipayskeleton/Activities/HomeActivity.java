@@ -82,7 +82,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
@@ -92,8 +91,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessAccountSwitch;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -316,9 +313,6 @@ public class HomeActivity extends BaseActivity
 
         getAllBusinessAccountsList();
 
-        BusinessRuleCacheManager.initialize(getApplicationContext());
-        setDefaultBusinessRules();
-
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         } else {
@@ -377,21 +371,6 @@ public class HomeActivity extends BaseActivity
             getBusinessInformation();
         }
     }
-
-    /**
-     * set Default Business Rules is to cache the offline business rules
-     */
-    private void setDefaultBusinessRules() {
-        if (!BusinessRuleCacheManager.ifContainsDefaultBusinessRules()) {
-            for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
-                MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
-                mandatoryBusinessRules.setDefaultRules();
-                BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
-            }
-        }
-        BusinessRuleCacheManager.setIsDefaultBusinessRulesAvailable(true);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
