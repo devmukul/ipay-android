@@ -66,6 +66,8 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " text unique not null, " +
                 DBConstants.KEY_BUSINESS_NAME + " text, " +
                 DBConstants.KEY_BUSINESS_ADDRESS + " text, " +
+                DBConstants.KEY_BUSINESS_THANA + " text, " +
+                DBConstants.KEY_BUSINESS_DISTRICT + " text, " +
                 DBConstants.BUSINESS_EMAIL + " text, " +
                 DBConstants.KEY_BUSINESS_TYPE + " integer default 0, " +
                 DBConstants.KEY_PROFILE_PICTURE + " text, " +

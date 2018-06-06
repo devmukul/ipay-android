@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,18 +19,26 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -43,6 +52,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetUserInfoTask;
+    private List<BusinessContact> mBusinessContactList;
 
     private View mRootView;
     private ProgressDialog mProgressDialog;
@@ -89,25 +99,42 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                         @Override
                         public void run() {
                             if (InputValidator.isValidNumber(result)) {
-                                if (Utilities.isConnectionAvailable(getActivity())) {
-                                    mobileNumber = ContactEngine.formatMobileNumberBD(result);
-                                    GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+                                Cursor mCursor;
+                                DataHelper dataHelper = DataHelper.getInstance(getContext());
+                                mCursor = dataHelper.searchBusinessAccountsByMobile(result.replaceAll("[^0-9]", ""));
 
-                                    if (mGetUserInfoTask != null) {
-                                        return;
+                                try {
+                                    if (mCursor != null) {
+                                        mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                        mBusinessContactList = getBusinessContactList(mCursor);
+                                        if (!mBusinessContactList.get(0).getProfilePictureUrl().isEmpty())
+                                            imageUrl = mBusinessContactList.get(0).getProfilePictureUrl();
+                                        if (!mBusinessContactList.get(0).getBusinessName().isEmpty())
+                                            name = mBusinessContactList.get(0).getBusinessName();
+                                        if (!mBusinessContactList.get(0).getAddressString().isEmpty())
+                                            address = mBusinessContactList.get(0).getAddressString();
+                                        if (!mBusinessContactList.get(0).getDistrictString().isEmpty())
+                                            district = mBusinessContactList.get(0).getDistrictString();
+                                        if (!mBusinessContactList.get(0).getThanaString().isEmpty())
+                                            thana = mBusinessContactList.get(0).getThanaString();
+
+                                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                                        } else {
+                                            switchActivity(PaymentActivity.class);
+                                        }
+                                    }else {
+                                        fetchUserInfo(result);
                                     }
-
-                                    mProgressDialog.show();
-                                    mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
-                                    mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
-                                    mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                } else {
-                                    Toaster.makeText(getActivity(), getResources().getString(
-                                            R.string.no_internet_connection), Toast.LENGTH_SHORT);
-                                    mProgressDialog.cancel();
-                                    getActivity().finish();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    fetchUserInfo(result);
+                                } finally {
+                                    if (mCursor != null) {
+                                        mCursor.close();
+                                    }
                                 }
+
                             } else if (getActivity() != null) {
                                 DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                             }
@@ -119,6 +146,29 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
             } else {
                 getActivity().finish();
             }
+        }
+    }
+
+
+    public void fetchUserInfo(String result){
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            mobileNumber = ContactEngine.formatMobileNumberBD(result);
+            GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+            if (mGetUserInfoTask != null) {
+                return;
+            }
+
+            mProgressDialog.show();
+            mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                    getUserInfoRequestBuilder.getGeneratedUri(), getActivity(), false);
+            mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
+            mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            Toaster.makeText(getActivity(), getResources().getString(
+                    R.string.no_internet_connection), Toast.LENGTH_SHORT);
+            mProgressDialog.cancel();
+            getActivity().finish();
         }
     }
 
@@ -208,5 +258,61 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.THANA, thana);
         startActivity(intent);
         getActivity().finish();
+    }
+
+
+    private List<BusinessContact> getBusinessContactList(Cursor cursor) {
+        List<BusinessContact> mBusinessContacts;
+        int businessNameIndex;
+        int phoneNumberIndex;
+        int profilePictureUrlIndex;
+        int businessTypeIndex;
+        int businessAddressIndex;
+        int businessThanaIndex;
+        int businessDistrictIndex;
+
+
+        mBusinessContacts = new ArrayList<>();
+
+        if (cursor != null) {
+            mBusinessContacts.clear();
+            businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
+            phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
+            profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
+            businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
+            businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
+            businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
+            businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
+
+            if (cursor.moveToFirst())
+                do {
+                    String businessName = cursor.getString(businessNameIndex);
+                    String mobileNumber = cursor.getString(phoneNumberIndex);
+                    String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
+                    int businessTypeID = cursor.getInt(businessTypeIndex);
+                    String businessAddress = cursor.getString(businessAddressIndex);
+                    String businessThana = cursor.getString(businessThanaIndex);
+                    String businessDistrict = cursor.getString(businessDistrictIndex);
+
+                    BusinessContact businessContact = new BusinessContact();
+                    businessContact.setBusinessName(businessName);
+                    businessContact.setMobileNumber(mobileNumber);
+                    businessContact.setProfilePictureUrl(profilePictureUrl);
+                    businessContact.setAddressString(businessAddress);
+                    businessContact.setThanaString(businessThana);
+                    businessContact.setDistrictString(businessDistrict);
+
+                    if (CommonData.getBusinessTypes() != null) {
+                        BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
+                        if (businessType != null)
+                            businessContact.setBusinessType(businessType.getName());
+                    }
+
+                    mBusinessContacts.add(businessContact);
+
+                } while (cursor.moveToNext());
+        }
+
+        return mBusinessContacts;
     }
 }
