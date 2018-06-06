@@ -490,6 +490,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
         if (mTopupTask != null)
             return;
+
         mMobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumber);
         mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
                 mMobileNumber, mobileNumberType, operatorCode, mAmount,
