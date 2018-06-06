@@ -304,6 +304,9 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mMobileNumberEditText.setCustomTextChangeListener(new BusinessContactsSearchView.CustomTextChangeListener() {
             @Override
             public void onTextChange(String inputText) {
+
+                System.out.println("Test  "+profileView.getVisibility() + " "+ inputText);
+
                 if (profileView.getVisibility() == GONE
                         && Utilities.isConnectionAvailable(getActivity())
                         && InputValidator.isValidNumber(inputText)) {
@@ -313,7 +316,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
 
             @Override
-            public void onTextChange(String inputText, String name, String imageURL) {
+            public void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict) {
 
                 if (imageURL != null && !imageURL.isEmpty()) {
                     mReceiverPhotoUri = imageURL;
@@ -325,10 +328,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
                 profileView.setVisibility(View.VISIBLE);
                 mobileNumberView.setVisibility(GONE);
-                mThanaAndDistrictTextView.setText("");
-                mAddressTextView.setText("");
+                mAddressTextView.setVisibility(View.VISIBLE);
+                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                mThanaAndDistrictTextView.setText(thanaDistrict);
+                mAddressTextView.setText(address);
                 mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
-                getProfileInfo(ContactEngine.formatMobileNumberBD(inputText), false);
+                //getProfileInfo(ContactEngine.formatMobileNumberBD(inputText), false);
 
                 mMobileNumberEditText.clearSelectedData();
             }
@@ -408,14 +413,17 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 getActivity().finish();
             }
         } else if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+            mMobileNumberEditText.setText("");
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             String name = data.getStringExtra(Constants.BUSINESS_NAME);
             String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
-            getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber), false);
-            mThanaAndDistrictTextView.setText("");
-            mAddressTextView.setText("");
+            String address = data.getStringExtra(Constants.ADDRESS);
+            String thanaDistrict = data.getStringExtra(Constants.THANA) +", "+data.getStringExtra(Constants.DISTRICT);
+            //getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber), false);
             mobileNumberView.setVisibility(View.GONE);
             profileView.setVisibility(View.VISIBLE);
+            mAddressTextView.setVisibility(View.VISIBLE);
+            mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
 
             if (imageURL != null && !imageURL.isEmpty()) {
                 mReceiverPhotoUri = imageURL;
@@ -425,8 +433,19 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 mReceiverName = name;
                 businessNameTextView.setText(mReceiverName);
             }
-            if (mobileNumber != null)
+            if (!address.isEmpty()) {
+                mAddressString = address;
+                mAddressTextView.setText(mAddressString);
+            }
+            if (!thanaDistrict.isEmpty()) {
+                mThanaAndDistrictTextView.setText(thanaDistrict);
+            }
+
+            if (mobileNumber != null) {
                 mMobileNumberEditText.setText(mobileNumber);
+            }
+
+
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         } else if (requestCode == Utilities.LOCATION_SETTINGS_RESULT_CODE || requestCode == Utilities.LOCATION_SOURCE_SETTINGS_RESULT_CODE) {

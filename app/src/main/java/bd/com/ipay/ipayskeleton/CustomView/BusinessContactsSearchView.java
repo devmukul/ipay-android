@@ -34,6 +34,8 @@ public class BusinessContactsSearchView extends FrameLayout {
     private String mQuery = "";
     private String mImageURL = "";
     private String mName = "";
+    private String mAddress = "";
+    private String mThanaDistrict = "";
 
     private Context mContext;
 
@@ -73,7 +75,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     if (mName.isEmpty() && mImageURL.isEmpty())
                         customTextChangeListener.onTextChange(inputString);
                     else
-                        customTextChangeListener.onTextChange(inputString, mName, mImageURL);
+                        customTextChangeListener.onTextChange(inputString, mName, mImageURL, mAddress, mThanaDistrict);
                 }
             }
         });
@@ -121,12 +123,14 @@ public class BusinessContactsSearchView extends FrameLayout {
     public interface CustomTextChangeListener {
         void onTextChange(String inputText);
 
-        void onTextChange(String inputText, String name, String imageURL);
+        void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict);
     }
 
     public void clearSelectedData() {
         mName = "";
         mImageURL = "";
+        mAddress ="";
+        mThanaDistrict = "";
     }
 
     public Editable getText() {
@@ -157,6 +161,9 @@ public class BusinessContactsSearchView extends FrameLayout {
         int profilePictureUrlIndex;
         int businessTypeIndex;
         int businessAddressIndex;
+        int businessThanaIndex;
+        int businessDistrictIndex;
+
 
         mBusinessContacts = new ArrayList<>();
 
@@ -167,6 +174,8 @@ public class BusinessContactsSearchView extends FrameLayout {
             profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
             businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
             businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
+            businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
+            businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
 
             if (cursor.moveToFirst())
                 do {
@@ -175,12 +184,16 @@ public class BusinessContactsSearchView extends FrameLayout {
                     String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
                     int businessTypeID = cursor.getInt(businessTypeIndex);
                     String businessAddress = cursor.getString(businessAddressIndex);
+                    String businessThana = cursor.getString(businessThanaIndex);
+                    String businessDistrict = cursor.getString(businessDistrictIndex);
 
                     BusinessContact businessContact = new BusinessContact();
                     businessContact.setBusinessName(businessName);
                     businessContact.setMobileNumber(mobileNumber);
                     businessContact.setProfilePictureUrl(profilePictureUrl);
                     businessContact.setAddressString(businessAddress);
+                    businessContact.setThanaString(businessThana);
+                    businessContact.setDistrictString(businessDistrict);
 
                     if (CommonData.getBusinessTypes() != null) {
                         BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
@@ -261,6 +274,8 @@ public class BusinessContactsSearchView extends FrameLayout {
             final String businessType = businessContact.getBusinessType();
             final String profilePictureUrl = businessContact.getProfilePictureUrl();
             final String businessAddress = businessContact.getAddressString();
+            final String businessThana = businessContact.getThanaString();
+            final String businessDistrict = businessContact.getDistrictString();
 
             if (businessName != null && !businessName.isEmpty())
                 businessNameView.setText(businessName);
@@ -281,6 +296,8 @@ public class BusinessContactsSearchView extends FrameLayout {
 
                     mName = businessName;
                     mImageURL = profilePictureUrl;
+                    mAddress = businessAddress;
+                    mThanaDistrict = businessThana+", "+businessDistrict;
                     mCustomAutoCompleteView.clearFocus();
                     Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
                 }
