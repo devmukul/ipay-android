@@ -102,7 +102,7 @@ public class BusinessContactsSearchView extends FrameLayout {
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
             mQuery = userInput.toString();
 
-            if (userInput.length() > 2) {
+            if (!mQuery.matches("[0-9+]+") && userInput.length() > 2) {
                 try {
                     // Query the database based on the user input
                     readBusinessContactsFromDB();

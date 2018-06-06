@@ -324,6 +324,33 @@ public class DataHelper {
         return cursor;
     }
 
+
+    public Cursor searchBusinessAccountsByMobile(String query) {
+        Cursor cursor = null;
+
+        try {
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
+                    + " WHERE (" + DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " LIKE '%" + query + "%'"
+                    +  ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
+                    + " COLLATE NOCASE";
+
+            Logger.logW("Query", queryString);
+
+            cursor = db.rawQuery(queryString, null);
+
+            if (cursor != null) {
+                cursor.getCount();
+                Logger.logW("Query", cursor.getCount() + "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cursor;
+    }
+
     public int getLastAddedBusinessId() {
         Cursor cursor;
         int columnIndexForMaxBusinessId = 0;
