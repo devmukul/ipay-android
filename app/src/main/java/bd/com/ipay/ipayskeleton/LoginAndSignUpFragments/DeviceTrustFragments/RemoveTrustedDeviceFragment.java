@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -288,20 +287,23 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     mProgressDialog.show();
 
                     // Add the device as trusted immediately after removing any device
+                    getTrustedDeviceList();
                     attemptTrustedDeviceAdd();
                 } else {
+                    mProgressDialog.dismiss();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             } catch (Exception e) {
+                mProgressDialog.dismiss();
                 e.printStackTrace();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 
-            mProgressDialog.cancel();
+
             mRemoveTrustedDeviceTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
@@ -313,7 +315,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     ProfileInfoCacheManager.setUUID(UUID);
                     getProfileInfo();
                 } else {
-                    mProgressDialog.dismiss();
+                    getTrustedDeviceList();
                     Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
@@ -356,18 +358,18 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
                         }
                     } else getAddedCards();
                 } else {
                     if (getActivity() != null)
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
             }
             mProgressDialog.dismiss();
             mGetProfileCompletionStatusTask = null;

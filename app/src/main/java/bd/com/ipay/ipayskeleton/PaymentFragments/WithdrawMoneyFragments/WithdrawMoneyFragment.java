@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -69,6 +70,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         super.onCreate(savedInstanceState);
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
+        WithdrawMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.WITHDRAW_MONEY);
 
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_WITHDRAW_MONEY);
@@ -137,9 +139,6 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         if (mGetBusinessRuleTask != null) {
             return;
         }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.show();
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -332,15 +331,12 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                                     WithdrawMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                                 }
                             }
+                            BusinessRuleCacheManager.setBusinessRules(Constants.WITHDRAW_MONEY, WithdrawMoneyActivity.mMandatoryBusinessRules);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            if (getActivity() != null)
-                                DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         }
                         break;
                     default:
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         break;
                 }
                 break;

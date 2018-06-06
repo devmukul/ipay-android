@@ -42,6 +42,11 @@ public class Constants {
     public static final String TOP_UP = "TOP_UP";
     public static final String SEND_MONEY = "SEND_MONEY";
     public static final String REQUEST_MONEY = "REQUEST_MONEY";
+    public static final String ADD_MONEY = "ADD_MONEY";
+    public static final String ADD_MONEY_BY_BANK = "ADD_MONEY_BY_BANK";
+    public static final String ADD_MONEY_BY_CARD = "ADD_MONEY_BY_CARD";
+    public static final String WITHDRAW_MONEY = "WITHDRAW_MONEY";
+    public static final String MAKE_PAYMENT = "MAKE_PAYMENT";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
     public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 
@@ -156,6 +161,7 @@ public class Constants {
     public static final String STATE_SUCCESS = "SUCCESS";
     public static final String STATE_FAILED = "FAILED";
 
+    public static final String OFFICE_HOTLINE_NUMBER = "16542";
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+8809638900801";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";

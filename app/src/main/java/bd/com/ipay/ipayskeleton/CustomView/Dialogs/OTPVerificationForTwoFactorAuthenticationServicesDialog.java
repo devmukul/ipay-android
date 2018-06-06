@@ -111,6 +111,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         this.dismiss();
     }
 
+
     private void setButtonActions() {
         mActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override

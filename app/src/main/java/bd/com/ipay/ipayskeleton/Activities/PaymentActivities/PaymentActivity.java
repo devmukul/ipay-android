@@ -31,7 +31,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
 
     private FloatingActionButton mFabMakingPayment;
     private boolean switchedToPendingList = true;
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
@@ -58,7 +58,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
         if (getIntent().getStringExtra("ORDER_ID") != null)
             switchToMakePaymentByDeepLinkFragment();
         else if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
-            if (getIntent().getStringExtra(Constants.MOBILE_NUMBER) != null) {
+            if (getIntent().getStringExtra(Constants.MOBILE_NUMBER) != null && getIntent().getStringExtra(Constants.PHOTO_URI) == null) {
                 getProfileInfo(getIntent().getStringExtra(Constants.MOBILE_NUMBER));
             } else {
                 switchToMakePaymentFragment(null);

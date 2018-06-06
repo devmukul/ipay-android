@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -66,6 +67,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.receiver_profile_image_view);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
+        SendMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
         try {
 
             if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
@@ -226,6 +228,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
                                 SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             }
                         }
+                        BusinessRuleCacheManager.setBusinessRules(Constants.SEND_MONEY, SendMoneyActivity.mMandatoryBusinessRules);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

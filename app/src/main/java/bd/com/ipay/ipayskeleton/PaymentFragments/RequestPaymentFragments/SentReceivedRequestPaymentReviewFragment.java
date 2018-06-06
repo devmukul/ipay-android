@@ -47,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAccep
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -58,7 +59,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment implements LocationListener, HttpResponseListener {
 
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
 
@@ -166,6 +167,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
         getActivity().setTitle(R.string.request_payment);
 
+        mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_PAYMENT);
+
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
@@ -243,6 +246,17 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
         return v;
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
     }
 
     @Override
@@ -468,11 +482,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
             return;
         }
 
-        if (isAdded()) {
-            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
-        }
-        mProgressDialog.show();
-
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, true);
@@ -516,17 +525,11 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                     }
 
                     mProgressDialog.dismiss();
                     mGetBusinessRuleTask = null;
-                } else {
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
-
                 mGetBusinessRuleTask = null;
                 break;
             case Constants.COMMAND_CANCEL_PAYMENT_REQUEST:

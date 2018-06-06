@@ -52,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
@@ -127,6 +128,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         context = getContext();
         mCustomProgressDialog = new CustomProgressDialog(context);
         mProgressDialog = new ProgressDialog(getActivity());
+        TopUpActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.TOP_UP);
+
         setOperatorAndPackageAdapter();
 
         int mobileNumberType = SharedPrefManager.getMobileNumberType(Constants.MOBILE_TYPE_PREPAID);
@@ -173,26 +176,14 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             }
         });
 
-        if (!ProfileInfoCacheManager.isAccountVerified()) {
-            mMobileNumberEditText.setEnabledStatus(false);
-            mMobileNumberEditText.setFocusableStatus(false);
-
-            mOperatorEditText.setEnabled(false);
-            mSelectReceiverButton.setVisibility(View.GONE);
-
-        } else {
-            mMobileNumberEditText.setEnabledStatus(true);
-            mMobileNumberEditText.setFocusableStatus(true);
-            mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
-                    startActivityForResult(intent, PICK_CONTACT_REQUEST);
-                }
-            });
-
-        }
+        mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+            }
+        });
 
         mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +201,18 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         attemptGetBusinessRule(Constants.SERVICE_ID_TOP_UP);
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
     }
 
     @Override
@@ -451,9 +454,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.show();
-
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, true);
@@ -490,6 +490,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
         if (mTopupTask != null)
             return;
+
+        mMobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumber);
         mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
                 mMobileNumber, mobileNumberType, operatorCode, mAmount,
                 countryCode, mobileNumberType, Constants.DEFAULT_USER_CLASS, pin);
@@ -553,17 +555,12 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                             TopUpActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                         }
                     }
+                    BusinessRuleCacheManager.setBusinessRules(Constants.TOP_UP, TopUpActivity.mMandatoryBusinessRules);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
 
-            } else {
-                if (getActivity() != null)
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
-
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             try {
@@ -614,14 +611,18 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                         Utilities.sendSuccessEventTracker(mTracker, "TopUp Processing", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getActivity().setResult(Activity.RESULT_OK);
+
                     if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    } else {
+                        mCustomProgressDialog.showSuccessAnimationAndMessage(mTopupResponse.getMessage());
                     }
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
+
                         }
                     }, 3000);
 

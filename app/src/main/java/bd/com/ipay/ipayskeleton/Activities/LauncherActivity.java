@@ -36,11 +36,16 @@ public class LauncherActivity extends AppCompatActivity {
                     Logger.logD(TAG, uri.toString());
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
-
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
                         Utilities.performDeepLinkAction(this, deepLinkAction);
                     } else {
                         launchSigninOrLoginActivity(deepLinkAction);
+                    }
+                }else{
+                    if (SharedPrefManager.isRememberMeActive() && loggedIn) {
+                        launchHomeActivity();
+                    } else {
+                        launchSigninOrLoginActivity(null);
                     }
                 }
                 break;
