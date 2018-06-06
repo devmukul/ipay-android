@@ -91,6 +91,9 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
             case 10:
                 dropTable(db, DBConstants.DB_TABLE_CONTACTS);
                 createContactsTable(db);
+            case 11:
+                dropTable(db, DBConstants.DB_TABLE_BUSINESS_ACCOUNTS);
+                createBusinessAccountsTable(db);
             case 12:
                 dropTable(db, DBConstants.DB_TABLE_BUSINESS_ACCOUNTS);
                 createBusinessAccountsTable(db);
