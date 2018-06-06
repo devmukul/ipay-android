@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Selection;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -47,7 +48,8 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     private TextView mNameTextView;
     private ProfileImageView mProfileImageView;
     private TextView mIpayBalanceTextView;
-    private EditText mAmountEditText;
+    private TextView mAmountTextView;
+    private EditText mDummy;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -56,6 +58,11 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     private String imageUrl;
     private String name;
     private String mMobileNumber;
+
+    private String before;
+    private String after;
+
+    int l = 0;
 
     @Nullable
     @Override
@@ -75,20 +82,101 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     }
 
     private void setUpViews(View view) {
+        before = "00.00";
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mIpayBalanceTextView = (TextView) view.findViewById(R.id.ipay_balance_text_view);
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
-        mAmountEditText = (EditText) view.findViewById(R.id.amount_edit_text);
-        mAmountEditText.setOnKeyListener(new View.OnKeyListener() {
+        mAmountTextView = (TextView) view.findViewById(R.id.amount_edit_text);
+        mDummy = (EditText) view.findViewById(R.id.amount_dummy_edit_text);
+        String setString = "";
+        mDummy.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                
-                return false;
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                before = charSequence.toString();
+                l = i;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                double set = Double.parseDouble(mAmountTextView.getText().toString());
+                if (editable.toString().length() < before.length()) {
+                    set = Double.parseDouble((mAmountTextView.getText().toString()));
+                    set = set / 10.00;
+                    if (set < 10) {
+                        BigDecimal bigDecimal = new BigDecimal(set);
+                        bigDecimal = bigDecimal.setScale(2, RoundingMode.DOWN);
+
+                        mAmountTextView.setText("0" + String.valueOf(bigDecimal));
+                    } else {
+                        BigDecimal bigDecimal = new BigDecimal(set);
+                        bigDecimal = bigDecimal.setScale(2, RoundingMode.DOWN);
+
+                        mAmountTextView.setText(String.valueOf(bigDecimal));
+                    }
+                } else {
+                    char inserted = editable.toString().charAt(l);
+                    if (inserted == '1') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 1.0 / 100.00;
+                    }
+                    if (inserted == '2') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 2.0 / 100.00;
+                    }
+                    if (inserted == '3') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 3.0 / 100.00;
+                    }
+                    if (inserted == '4') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 4.0 / 100.00;
+                    }
+                    if (inserted == '5') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 5.0 / 100.00;
+                    }
+                    if (inserted == '0') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 0.0 / 100.00;
+                    }
+                    if (inserted == '6') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 6.0 / 100.00;
+                    }
+                    if (inserted == '7') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 7.0 / 100.00;
+                    }
+                    if (inserted == '8') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 8.0 / 100.00;
+                    }
+                    if (inserted == '9') {
+                        set = Double.parseDouble((mAmountTextView.getText().toString()));
+                        set = set * 10.00 + 9.0 / 100.00;
+                    }
+                    if (set < 10) {
+                        String setString = "0" + String.format("%.2f", set);
+
+                            mAmountTextView.setText(setString);
+
+                    } else {
+                        String setString = String.format("%.2f", set);
+
+                            mAmountTextView.setText(setString);
+
+
+                    }
+                }
+
             }
         });
-
-        Selection.setSelection(mAmountEditText.getText(), mAmountEditText.getText().length());
 
         if (getArguments() != null) {
             bundle = getArguments();
@@ -102,8 +190,8 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (true) {
-                    String amount = Utilities.formatTakaFromString(mAmountEditText.getText().toString());
+                if (verifyUserInputs()) {
+                    String amount = Utilities.formatTakaFromString(mAmountTextView.getText().toString());
                     amount = amount.replaceAll("[^\\d.]", "");
                     bundle.putString("name", mNameTextView.getText().toString());
                     bundle.putString("imageUrl", imageUrl);
@@ -127,7 +215,7 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     }
 
     private boolean verifyUserInputs() {
-        mAmountEditText.setError(null);
+        mDummy.setError(null);
         boolean cancel = false;
         View focusView = null;
         String errorMessage;
@@ -144,13 +232,13 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         if (SharedPrefManager.ifContainsUserBalance()) {
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
-            if (TextUtils.isEmpty(mAmountEditText.getText())) {
+            if (TextUtils.isEmpty(mAmountTextView.getText())) {
                 errorMessage = getString(R.string.please_enter_amount);
 
-            } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
+            } else if (!InputValidator.isValidDigit(mAmountTextView.getText().toString().trim())) {
                 errorMessage = getString(R.string.please_enter_amount);
             } else {
-                final BigDecimal sendMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
+                final BigDecimal sendMoneyAmount = new BigDecimal(mAmountTextView.getText().toString());
                 if (sendMoneyAmount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
                 } else {
@@ -165,8 +253,8 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         }
 
         if (errorMessage != null) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(errorMessage);
+            focusView = mAmountTextView;
+            mDummy.setError(errorMessage);
             cancel = true;
         }
         if (cancel) {
