@@ -405,6 +405,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
         Button introduceUserButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_introduce);
+        if (!ProfileInfoCacheManager.isAccountVerified()) {
+            introduceUserButton.setVisibility(View.GONE);
+        } else {
+            introduceUserButton.setVisibility(View.VISIBLE);
+        }
         introduceUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
