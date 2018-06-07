@@ -112,14 +112,36 @@ public class BusinessAccountEntry {
 
                     if (!office.get(0).getAddressLine2().isEmpty())
                         addressString += office.get(0).getAddressLine2();
-                    String mDistrict = office.get(0).getDistrict();
-                    String mThana = office.get(0).getThana();
-                    addressString += "\n" + mThana + " , " + mDistrict;
-
                 }
             }
         }
         return addressString;
+    }
+
+    public String getThanaString() {
+        String thanaString = null;
+        if (addressList != null) {
+            if (addressList.getOFFICE() != null) {
+                List<UserAddress> office = addressList.getOFFICE();
+                if (office != null) {
+                    thanaString = office.get(0).getThana();
+                }
+            }
+        }
+        return thanaString;
+    }
+
+    public String getDistrictString() {
+        String districtString = null;
+        if (addressList != null) {
+            if (addressList.getOFFICE() != null) {
+                List<UserAddress> office = addressList.getOFFICE();
+                if (office != null) {
+                    districtString = office.get(0).getDistrict();
+                }
+            }
+        }
+        return districtString;
     }
 
     @Override

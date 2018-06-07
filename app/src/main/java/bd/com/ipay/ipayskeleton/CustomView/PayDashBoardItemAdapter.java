@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -74,18 +75,28 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                         DialogUtils.showServiceNotAllowedDialog(context);
                     } else {
-                        PinChecker pinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
+//                        PinChecker pinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
+//                            @Override
+//                            public void ifPinAdded() {
+//                                Intent intent;
+//                                intent = new Intent(context, PaymentActivity.class);
+//                                intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
+//                                intent.putExtra(Constants.NAME, businessAccountEntry.getBusinessName());
+//                                intent.putExtra(Constants.PHOTO_URI, businessAccountEntry.getProfilePictureUrl());
+//                                context.startActivity(intent);
+//                            }
+//                        });
+//                        pinChecker.execute();
+
+                        PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
                             @Override
                             public void ifPinAdded() {
                                 Intent intent;
-                                intent = new Intent(context, PaymentActivity.class);
-                                intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
-                                intent.putExtra(Constants.NAME, businessAccountEntry.getBusinessName());
-                                intent.putExtra(Constants.PHOTO_URI, businessAccountEntry.getProfilePictureUrl());
+                                intent = new Intent(context, QRCodePaymentActivity.class);
                                 context.startActivity(intent);
                             }
                         });
-                        pinChecker.execute();
+                        payByQCPinChecker.execute();
                     }
                 }
             });
