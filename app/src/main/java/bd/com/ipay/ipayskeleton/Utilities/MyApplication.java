@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshTokenRequest;
@@ -65,6 +66,8 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         ACLManager.initialize(this);
         TokenManager.initialize(this);
         Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
+        BusinessRuleCacheManager.initialize(this);
+        setDefaultBusinessRules();
         Utilities.resetIntercomInformation();
         sAnalytics = GoogleAnalytics.getInstance(this);
     }
@@ -93,6 +96,20 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
             this.mUserInactiveTimer.cancel();
             this.mUserInactiveTimer = null;
         }
+    }
+
+    /**
+     * set Default Business Rules is to cache the offline business rules
+     */
+    private void setDefaultBusinessRules() {
+        if (!BusinessRuleCacheManager.ifContainsDefaultBusinessRules()) {
+            for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
+                MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
+                mandatoryBusinessRules.setDefaultRules();
+                BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
+            }
+        }
+        BusinessRuleCacheManager.setIsDefaultBusinessRulesAvailable(true);
     }
 
     public void attemptLogout() {
