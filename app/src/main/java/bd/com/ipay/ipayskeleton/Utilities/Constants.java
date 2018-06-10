@@ -262,7 +262,7 @@ public class Constants {
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String Business_role = "BUSINESS_ROLE";
-    public static String invalid_credential="invalid credential";
+    public static String invalid_credential = "invalid credential";
 
 
     static {
@@ -434,6 +434,7 @@ public class Constants {
     public static final String URL_INTRODUCE_ACTION = "introducer/";
     public static final String URL_GET_PENDING_INTRODUCER = "introducer/pending";
     public static final String URL_PENDING_INTRODUCER_ACTION = "introducer/pending";
+    public static final String URL_INTRODUCE_USER = "introducer/introduce/";
 
     // Invite Rest
     public static final String URL_GET_INVITE_INFO = "invitation";

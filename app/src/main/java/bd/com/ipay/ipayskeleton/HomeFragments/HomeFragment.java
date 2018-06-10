@@ -179,6 +179,13 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 }
             }
         });
+        if (SharedPrefManager.getUserBalance() != null) {
+            if (SharedPrefManager.getUserBalance().equals("0.0")) {
+                balanceView.setText("Loading…");
+            } else {
+                balanceView.setText(Utilities.takaWithComma(Double.parseDouble(SharedPrefManager.getUserBalance())) + " " + getString(R.string.bdt));
+            }
+        }
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

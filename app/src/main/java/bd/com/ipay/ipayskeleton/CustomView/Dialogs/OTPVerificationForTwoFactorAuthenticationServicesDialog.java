@@ -244,6 +244,10 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
             TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =
                     new Gson().fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
             mCustomProgressDialog.showSuccessAnimationAndMessage(twoFactorAuthSettingsSaveResponse.getMessage());
+        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+            TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =
+                    new Gson().fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
+            mCustomProgressDialog.showSuccessAnimationAndMessage(twoFactorAuthSettingsSaveResponse.getMessage());
         } else {
             mCustomProgressDialog.dismissDialog();
         }
