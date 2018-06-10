@@ -41,7 +41,6 @@
             android:layout_below="@+id/amount_text_view"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:gravity="center"
-            android:text="Tasnim alam shovon"
             android:textColor="@color/colorBlack87"
             android:textSize="@dimen/text_size_button_small" />
 
@@ -83,13 +82,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/picture_layout"
             android:gravity="center"
-            android:text="@string/send_money_success_description"
+            android:text="@string/request_money_success_description"
             android:textSize="@dimen/text_size_small" />
 
         <Button
+            android:id="@+id/go_to_wallet_button"
             style="@style/ButtonPrimary"
             android:layout_width="match_parent"
-            android:id="@+id/go_to_wallet_button"
             android:layout_height="wrap_content"
             android:layout_below="@id/success_description_text_view"
             android:layout_marginTop="@dimen/value24"

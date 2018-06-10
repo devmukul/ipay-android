@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_transaction">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/continue_button"
+        android:fadingEdge="none"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/value50"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textview_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:text="@string/request_money_from"
+                android:textColor="#ccf3f0"
+                android:textSize="@dimen/value15" />
+
+            <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textview_description"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/value14" />
+
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_image_view"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_below="@+id/name_text_view"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+
+            <TextView
+                android:id="@+id/amount_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_image_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/value12"
+                android:background="@android:color/transparent"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:paddingBottom="-9dp"
+                android:paddingLeft="@dimen/value20"
+                android:paddingRight="@dimen/value20"
+                android:text="00.00"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="@dimen/value60" />
+
+            <EditText
+                android:id="@+id/amount_dummy_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_image_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/value12"
+                android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:paddingBottom="-9dp"
+                android:paddingLeft="@dimen/value20"
+                android:paddingRight="@dimen/value20"
+                android:text="00.00"
+                android:textColor="@android:color/transparent"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="@dimen/value64"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/amount_edit_text"
+                android:layout_alignTop="@id/amount_edit_text"
+                android:layout_marginTop="@dimen/value10"
+                android:text="Tk"
+                android:textColor="@color/colorWhite" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@id/amount_edit_text"
+                android:background="#66d8cd"></View>
+
+            <TextView
+                android:id="@+id/ipay_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider"
+                android:layout_marginTop="@dimen/value12"
+                android:gravity="center"
+                android:text="@string/your_ipay_balance"
+                android:textColor="#ccf3f0"
+                android:textSize="@dimen/value12" />
+
+            <TextView
+                android:id="@+id/ipay_balance_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ipay_balance"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryButton"
+        android:text="Continue"
+        android:textColor="@color/colorWhite" />
+</RelativeLayout>

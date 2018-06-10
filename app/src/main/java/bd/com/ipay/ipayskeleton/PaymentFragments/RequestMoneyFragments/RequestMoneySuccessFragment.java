@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 
 import android.content.Intent;
@@ -14,12 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
 
-public class SendMoneySuccessFragment extends BaseFragment {
+public class RequestMoneySuccessFragment extends BaseFragment {
 
     private TextView mNameTextView;
     private TextView mAmountTextView;
@@ -39,8 +39,8 @@ public class SendMoneySuccessFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_send_money_success, container, false);
-        ((SendMoneyActivity) getActivity()).toolbar.setVisibility(View.GONE);
+        View view = inflater.inflate(R.layout.fragment_request_money_success, container, false);
+        ((RequestMoneyActivity) getActivity()).toolbar.setVisibility(View.GONE);
         setUpViews(view);
         return view;
     }
@@ -77,13 +77,12 @@ public class SendMoneySuccessFragment extends BaseFragment {
     private void setUpTextViewsAndButtonActions() {
         mNameTextView.setText(mName);
 
-        String setString = "SUCCESSFULLY SENT TK." + mAmount + " TO";
+        String setString = "SUCCESSFULLY REQUESTED TK." + mAmount + " TO";
         mAmountTextView.setText(setString, TextView.BufferType.SPANNABLE);
         ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney));
         ((Spannable) mAmountTextView.getText()).setSpan(span, 18, 18 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mSenderProfileImageView.setProfilePicture(mSenderImageUrl, false);
         mReceiverProfileImageView.setProfilePicture(mReceiverImageUrl, false);
-
     }
 }

@@ -1169,5 +1169,9 @@
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
     <string name="send_money_success_description">We will notify receiver that you  sent money. You can see the details in your transaction in case you need them further</string>
+    <string name="request_money_success_description">We will notify receiver that you requested money. We will notify you when he accepts or rejects your request</string>
     <string name="fetching_user_info">Fetching user info</string>
+    <string name="request_money_helper_text">Running low balance in your iPay wallet? Request other members to transfer money to your iPay wallet</string>
+    <string name="request_money_step_two">insert <b>amount</b> you want to request</string>
+    <string name="request_money_from">You are requesting money from</string>
 </resources>

@@ -62,7 +62,7 @@
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="face,barcode"/>
+            android:value="face,barcode" />
 
         <activity
             android:name=".Activities.LauncherActivity"
@@ -202,8 +202,8 @@
             android:name=".Activities.PaymentActivities.RequestMoneyActivity"
             android:label="@string/request_money"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.ManagedBusinessAccountSettingsActivity"
             android:screenOrientation="portrait"
@@ -357,8 +357,9 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <activity android:name=".QRScanner.BarcodeCaptureActivity"
-            android:label="Scan QR Code"/>
+        <activity
+            android:name=".QRScanner.BarcodeCaptureActivity"
+            android:label="Scan QR Code" />
 
         <activity
             android:name=".Activities.IPayHereActivity"
@@ -382,7 +383,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAfsNoEC1Hdv0SMHBD1ElcFU3L_dLzeOpI"/>
+            android:value="AIzaSyAfsNoEC1Hdv0SMHBD1ElcFU3L_dLzeOpI" />
 
     </application>
 </manifest>

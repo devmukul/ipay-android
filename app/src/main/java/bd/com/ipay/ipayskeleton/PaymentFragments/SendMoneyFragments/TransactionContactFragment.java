@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -58,10 +60,10 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
  * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
  * verified iPay users and (Constants.IPAY_MEMBERS_ONLY, true) to show member users only.
  */
-public class SendMoneyContactFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class TransactionContactFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener, HttpResponseListener {
 
-    private static final String TAG = SendMoneyContactFragment.class.getSimpleName();
+    private static final String TAG = TransactionContactFragment.class.getSimpleName();
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
@@ -71,8 +73,10 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
     private SearchView mSearchView;
     private TextView mEmptyContactsTextView;
     private TextView mNumberTextView;
+    private TextView mActionNameTextView;
 
     private String mQuery = "";
+    private String mActionName = "";
 
     private String mPhoneNumber;
 
@@ -104,6 +108,8 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
 
     private LinearLayout mNumberLayout;
 
+    private String sourceActivityName = "";
+
     private ContactLoadFinishListener contactLoadFinishListener;
 
     @Override
@@ -124,7 +130,10 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
         View v = inflater.inflate(R.layout.fragment_contact_send_money, container, false);
         mNumberTextView = (TextView) v.findViewById(R.id.number_text_view);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
-        ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
+        mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
+        if (getArguments() != null) {
+            sourceActivityName = getArguments().getString(Constants.SOURCE);
+        }
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,14 +142,27 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
             }
         });
         mProgressDialog = new ProgressDialog(getActivity());
-        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
-        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((SendMoneyActivity) getActivity()).switchToSendMoneyHelperFragment(true);
-            }
-        });
-        ((SendMoneyActivity) getActivity()).showTitle();
+        if (sourceActivityName.equals(Constants.SEND_MONEY)) {
+            ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+            ((SendMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((SendMoneyActivity) getActivity()).switchToSendMoneyHelperFragment(true);
+                }
+            });
+            ((SendMoneyActivity) getActivity()).showTitle();
+            ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
+        } else if (sourceActivityName.equals(Constants.REQUEST_MONEY)) {
+            ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+            ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((RequestMoneyActivity) getActivity()).switchToRequestMoneyHelperFragment(true);
+                }
+            });
+            ((RequestMoneyActivity) getActivity()).showTitle();
+            ((RequestMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
+        }
 
         // If the fragment is a dialog fragment, we are using the searchview at the bottom.
         // Otherwise, we are using the searchview from the action bar.
@@ -171,6 +193,16 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
         return v;
+    }
+
+    private Activity getParentActivity() {
+        if (getArguments().getString(Constants.SOURCE).equals(Constants.SEND_MONEY)) {
+            return (SendMoneyActivity) getActivity();
+        } else if (getArguments().getString(Constants.SOURCE).equals(Constants.REQUEST_MONEY)) {
+            return (RequestMoneyActivity) getActivity();
+        } else {
+            return null;
+        }
     }
 
     private void getProfileInfo(String mobileNumber) {
@@ -265,6 +297,13 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
             if (InputValidator.isValidNumber(mQuery)) {
                 mNumberLayout.setVisibility(View.VISIBLE);
                 mNumberTextView.setText(mQuery);
+                if (getArguments() != null) {
+                    if (getArguments().getString(Constants.SOURCE) != null) {
+                        mActionName = getArguments().getString(Constants.SOURCE);
+                        mActionName = mActionName.replaceAll("[^A-Z]", " ");
+                        mActionNameTextView.setText(mActionName + " TO");
+                    }
+                }
                 mRecyclerView.setVisibility(View.GONE);
             } else {
                 mNumberLayout.setVisibility(View.GONE);
@@ -523,10 +562,24 @@ public class SendMoneyContactFragment extends Fragment implements LoaderManager.
                         bundle.putString("name", originalName);
                         bundle.putString("imageUrl", profilePictureUrlQualityMedium);
                         bundle.putString("number", mobileNumber);
-                        ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(bundle);
+                        switchToDesiredFragment(bundle);
                     }
                 });
             }
+        }
+    }
+
+    private void switchToDesiredFragment(Bundle bundle) {
+        try {
+            if (getArguments() != null) {
+                if (getArguments().getString(Constants.SOURCE).equals(Constants.SEND_MONEY)) {
+                    ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(bundle);
+                } else if (getArguments().getString(Constants.SOURCE).equals(Constants.REQUEST_MONEY)) {
+                    ((RequestMoneyActivity) getActivity()).switchToRequestMoneyRecheckFragment(bundle);
+                }
+            }
+        } catch (Exception e) {
+
         }
     }
 
