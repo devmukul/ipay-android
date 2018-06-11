@@ -1164,4 +1164,5 @@
     <string name="introduce_user">Introduce member</string>
     <string name="are_you_sure_to_introduce">Are you sure you want to introduce the person ?</string>
     <string name="accepted_in">Accepted in number location</string>
+    <string name="merchants">Merchants</string>
 </resources>

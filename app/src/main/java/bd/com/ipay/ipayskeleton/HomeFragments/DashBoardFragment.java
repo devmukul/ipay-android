@@ -144,7 +144,7 @@ public class DashBoardFragment extends Fragment {
 
         ((TextView) homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
         ((TextView) offerTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.offer));
-        ((TextView) merchantTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
+        ((TextView) merchantTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.merchants));
         ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
     }
 
