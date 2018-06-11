@@ -77,4 +77,7 @@
     <dimen name="onboard_page_vertical_margin">35dp</dimen>
     <dimen name="negative_value5">-5dp</dimen>
     <dimen name="value14">14dp</dimen>
+    <dimen name="value16">16dp</dimen>
+    <dimen name="value56">56dp</dimen>
+    <dimen name="value32">32dp</dimen>
 </resources>
