@@ -53,7 +53,6 @@ public class DashBoardFragment extends Fragment {
         setTitle();
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
-        //mPayFragment = new PayDashBoardFragment();
         mOfferHolderFragment = new OfferFragment();
         mMerchantDashBoardFragment = new MerchantsDashBoardFragment();
 
