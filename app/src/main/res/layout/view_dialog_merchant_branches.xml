@@ -15,7 +15,7 @@
             android:layout_height="@dimen/value50"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/value32"
-            android:layout_marginRight="@dimen/value32"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+            android:layout_marginRight="@dimen/value32" />
 
         <TextView
             android:id="@+id/merchant_name"
@@ -31,7 +31,7 @@
         android:id="@+id/address_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/value30"
+        android:layout_marginLeft="@dimen/value32"
         android:layout_marginRight="@dimen/value32"></android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
