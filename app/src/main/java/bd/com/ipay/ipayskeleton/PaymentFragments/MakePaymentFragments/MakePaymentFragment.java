@@ -254,7 +254,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null &&
                             getActivity().getIntent().getStringExtra(Constants.THANA) != null) {
                         mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
-                        //mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
                         mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
                         mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
                         mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
@@ -269,7 +268,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     } else if (getArguments() != null) {
                         try {
                             mAddressString = getArguments().getString(Constants.ADDRESS);
-                            //mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
                             mDistrict = getArguments().getString(Constants.DISTRICT);
                             mThana = getArguments().getString(Constants.THANA);
 
