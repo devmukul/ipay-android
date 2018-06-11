@@ -140,6 +140,8 @@ public class Constants {
     public static final String THANA = "THANA";
     public static final String ID = "ID";
     public static final String BUSINESS_ACCOUNT_ID = "BUSINESS_ACCOUNT_ID";
+    public static final String COMMAND_GET_ALL_MERCHANTS = "COMMAND_GET_ALL_MERCHANTS";
+    public static final String FROM_BRANCHING = "FROM_BRANCHING";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -435,6 +437,7 @@ public class Constants {
     public static final String URL_GET_PENDING_INTRODUCER = "introducer/pending";
     public static final String URL_PENDING_INTRODUCER_ACTION = "introducer/pending";
     public static final String URL_INTRODUCE_USER = "introducer/introduce/";
+    public static final String URL_GET_ALL_MERCHANTS = "business/branch/all";
 
     // Invite Rest
     public static final String URL_GET_INVITE_INFO = "invitation";

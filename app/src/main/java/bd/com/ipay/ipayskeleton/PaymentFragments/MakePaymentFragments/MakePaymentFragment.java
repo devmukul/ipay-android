@@ -70,7 +70,6 @@ import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -80,7 +79,6 @@ import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -193,8 +191,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mBalanceView.setText(SharedPrefManager.getUserBalance());
 
         PaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
-
-        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+        if (getActivity().getIntent().hasExtra(Constants.FROM_BRANCHING)) {
             mobileNumberView.setVisibility(GONE);
             profileView.setVisibility(View.VISIBLE);
             if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
@@ -211,54 +208,84 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     businessNameTextView.setVisibility(View.VISIBLE);
                     businessNameTextView.setText(mReceiverName);
                 }
-                if (getActivity().getIntent().getStringExtra(Constants.ADDRESS) != null &&
-                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null &&
-                        getActivity().getIntent().getStringExtra(Constants.THANA) != null) {
-                    mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
-                    //mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
-                    mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
-                    mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
-                    mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+            }
+            if (getActivity().getIntent().hasExtra(Constants.ADDRESS)) {
+                mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
+                if (mAddressString != null) {
                     mAddressTextView.setVisibility(View.VISIBLE);
-                    mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
-                    mThanaAndDistrictTextView.setText(mThana + ", " + mDistrict);
-                    if (mReceiverPhotoUri != null) {
-                        businessProfileImageView.setBusinessProfilePicture
-                                (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                } else {
+                    mAddressTextView.setVisibility(View.GONE);
+                }
+            }
+        } else {
+
+            if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+                mobileNumberView.setVisibility(GONE);
+                profileView.setVisibility(View.VISIBLE);
+                if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
+                    mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+                    businessProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                }
+                mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+                mMobileNumberEditText.setText(mReceiverMobileNumber);
+                if (getActivity().getIntent().hasExtra(Constants.NAME)) {
+                    mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
+                    if (TextUtils.isEmpty(mReceiverName)) {
+                        businessNameTextView.setVisibility(GONE);
+                    } else {
+                        businessNameTextView.setVisibility(View.VISIBLE);
+                        businessNameTextView.setText(mReceiverName);
                     }
-                } else if (getArguments() != null) {
-                    try {
-                        mAddressString = getArguments().getString(Constants.ADDRESS);
-                        //mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
-                        mDistrict = getArguments().getString(Constants.DISTRICT);
-                        mThana = getArguments().getString(Constants.THANA);
-
-                        if (mAddressString != null) {
-                            mAddressTextView.setText(mAddressString);
-                            mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
-                            mAddressTextView.setVisibility(View.VISIBLE);
-                            mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
-
-                        }
-                        if (getArguments().getString(Constants.PHOTO_URI) != null) {
-                            mReceiverPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+                    if (getActivity().getIntent().getStringExtra(Constants.ADDRESS) != null &&
+                            getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null &&
+                            getActivity().getIntent().getStringExtra(Constants.THANA) != null) {
+                        mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
+                        //mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
+                        mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
+                        mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
+                        mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+                        mAddressTextView.setVisibility(View.VISIBLE);
+                        mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                        mAddressTextView.setText(mAddressString);
+                        mThanaAndDistrictTextView.setText(mThana + ", " + mDistrict);
+                        if (mReceiverPhotoUri != null) {
                             businessProfileImageView.setBusinessProfilePicture
                                     (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                         }
-                    } catch (Exception e) {
+                    } else if (getArguments() != null) {
+                        try {
+                            mAddressString = getArguments().getString(Constants.ADDRESS);
+                            //mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
+                            mDistrict = getArguments().getString(Constants.DISTRICT);
+                            mThana = getArguments().getString(Constants.THANA);
+
+                            if (mAddressString != null) {
+                                mAddressTextView.setText(mAddressString);
+                                mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                                mAddressTextView.setVisibility(View.VISIBLE);
+                                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+
+                            }
+                            if (getArguments().getString(Constants.PHOTO_URI) != null) {
+                                mReceiverPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+                                businessProfileImageView.setBusinessProfilePicture
+                                        (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                            }
+                        } catch (Exception e) {
+                            getProfileInfo(ContactEngine.formatMobileNumberBD(mReceiverMobileNumber), false);
+                        }
+
+                    } else {
                         getProfileInfo(ContactEngine.formatMobileNumberBD(mReceiverMobileNumber), false);
                     }
-
                 } else {
                     getProfileInfo(ContactEngine.formatMobileNumberBD(mReceiverMobileNumber), false);
                 }
             } else {
-                getProfileInfo(ContactEngine.formatMobileNumberBD(mReceiverMobileNumber), false);
+                profileView.setVisibility(GONE);
+                mobileNumberView.setVisibility(View.VISIBLE);
             }
-        } else {
-            profileView.setVisibility(GONE);
-            mobileNumberView.setVisibility(View.VISIBLE);
         }
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
@@ -318,9 +345,9 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     Cursor mCursor = searchContact(inputText);
                     try {
                         if (mCursor != null) {
-                            System.out.println(">> "+mCursor.getCount());
+                            System.out.println(">> " + mCursor.getCount());
                             setValueFromCursor(mCursor);
-                        }else {
+                        } else {
                             getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
                             mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
                         }
@@ -391,7 +418,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           int[] grantResults) {
 
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
@@ -425,7 +453,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                     try {
                                         if (mCursor != null) {
                                             setValueFromCursor(mCursor);
-                                        }else {
+                                        } else {
                                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                                             getProfileInfo(ContactEngine.formatMobileNumberBD(result));
                                         }
@@ -456,7 +484,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             String name = data.getStringExtra(Constants.BUSINESS_NAME);
             String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
             String address = data.getStringExtra(Constants.ADDRESS);
-            String thanaDistrict = data.getStringExtra(Constants.THANA) +", "+data.getStringExtra(Constants.DISTRICT);
+            String thanaDistrict = data.getStringExtra(Constants.THANA) + ", " + data.getStringExtra(Constants.DISTRICT);
             //getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber), false);
             mobileNumberView.setVisibility(View.GONE);
             profileView.setVisibility(View.VISIBLE);
@@ -996,14 +1024,14 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         return mBusinessContacts;
     }
 
-    private Cursor searchContact(String query){
+    private Cursor searchContact(String query) {
         Cursor mCursor;
         DataHelper dataHelper = DataHelper.getInstance(getContext());
         mCursor = dataHelper.searchBusinessAccountsByMobile(query.replaceAll("[^0-9]", ""));
         return mCursor;
     }
 
-    private void setValueFromCursor(Cursor cursor){
+    private void setValueFromCursor(Cursor cursor) {
         mMobileNumberEditText.setText("");
         List<BusinessContact> mBusinessContactList = getBusinessContactList(cursor);
         BusinessContact mBussinessContact = mBusinessContactList.get(0);

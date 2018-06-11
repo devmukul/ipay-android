@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/value80"
+        android:background="@color/colorPrimary">
+
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/merchant_logo"
+            android:layout_width="@dimen/value50"
+            android:layout_height="@dimen/value50"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+
+        <TextView
+            android:id="@+id/merchant_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/value32"
+            android:text="gloria"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/address_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/value32"
+        android:layout_marginRight="@dimen/value32"></android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
