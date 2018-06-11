@@ -31,7 +31,7 @@
         android:id="@+id/address_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/value32"
-        android:layout_marginRight="@dimen/value32"></android.support.v7.widget.RecyclerView>
+        android:layout_marginLeft="@dimen/value25"
+        android:layout_marginRight="@dimen/value25"></android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
