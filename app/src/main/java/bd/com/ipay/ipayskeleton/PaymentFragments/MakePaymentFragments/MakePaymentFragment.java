@@ -192,34 +192,47 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         PaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
         if (getActivity().getIntent().hasExtra(Constants.FROM_BRANCHING)) {
-            mobileNumberView.setVisibility(GONE);
-            profileView.setVisibility(View.VISIBLE);
-            if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
-                mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
-                businessProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
-            }
-            mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
-            mMobileNumberEditText.setText(mReceiverMobileNumber);
-            if (getActivity().getIntent().hasExtra(Constants.NAME)) {
-                mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
-                if (TextUtils.isEmpty(mReceiverName)) {
-                    businessNameTextView.setVisibility(GONE);
-                } else {
-                    businessNameTextView.setVisibility(View.VISIBLE);
-                    businessNameTextView.setText(mReceiverName);
+            try {
+                mobileNumberView.setVisibility(GONE);
+                profileView.setVisibility(View.VISIBLE);
+                if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
+                    mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+                    businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                 }
-            }
-            if (getActivity().getIntent().hasExtra(Constants.ADDRESS)) {
-                mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
-                if (mAddressString != null) {
-                    mAddressTextView.setVisibility(View.VISIBLE);
-                    mAddressTextView.setText(mAddressString);
-                } else {
-                    mAddressTextView.setVisibility(View.GONE);
+                mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+                mMobileNumberEditText.setText(mReceiverMobileNumber);
+                if (getActivity().getIntent().hasExtra(Constants.NAME)) {
+                    mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
+                    if (TextUtils.isEmpty(mReceiverName)) {
+                        businessNameTextView.setVisibility(GONE);
+                    } else {
+                        businessNameTextView.setVisibility(View.VISIBLE);
+                        businessNameTextView.setText(mReceiverName);
+                    }
                 }
+                if (getActivity().getIntent().hasExtra(Constants.ADDRESS_ONE)) {
+                    mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS_ONE);
+                    if (mAddressString != null) {
+                        mAddressTextView.setVisibility(View.VISIBLE);
+                        mAddressTextView.setText(mAddressString);
+                    } else {
+                        mAddressTextView.setVisibility(View.GONE);
+                    }
+                }
+                if (getActivity().getIntent().hasExtra(Constants.ADDRESS_TWO)) {
+                    mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS_TWO);
+                    if (mAddressString != null) {
+                        mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                        mThanaAndDistrictTextView.setText(mAddressString);
+                    } else {
+                        mThanaAndDistrictTextView.setVisibility(View.GONE);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } else {
 
+        } else {
             if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
                 mobileNumberView.setVisibility(GONE);
                 profileView.setVisibility(View.VISIBLE);

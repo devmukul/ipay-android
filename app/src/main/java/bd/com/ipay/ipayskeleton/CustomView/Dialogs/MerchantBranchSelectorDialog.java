@@ -44,7 +44,6 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
         merchantAddressListRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         merchantAddressListRecyclerView.setAdapter(mMerchantBranchAdapter);
         this.setView(view);
-        this.setCanceledOnTouchOutside(false);
     }
 
     public void showDialog() {
@@ -52,7 +51,7 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
     }
 
     private void supportViewsWithData() {
-        this.mMerchantLogoView.setProfilePicture(merchantDetails.getBusinessLogo(), false);
+        this.mMerchantLogoView.setBusinessProfilePicture(merchantDetails.getBusinessLogo(), false);
         this.merchantNameTextView.setText(merchantDetails.getMerchantName());
     }
 
@@ -65,22 +64,34 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
         }
 
         @Override
-        public void onBindViewHolder(MerchantBranchAddressViewHolder holder, final int position) {
-            holder.addressRadioButton.setText(merchantDetails.getBranches().get(position).getBranchAddress());
-            holder.addressRadioButton.setSelected(false);
+        public void onBindViewHolder(final MerchantBranchAddressViewHolder holder, final int position) {
+            holder.mAddressLineOneTextView.setText(merchantDetails.getBranches().get(position).getBranchAddress1());
+            holder.mAddressLineTwoTextView.setText(merchantDetails.getBranches().get(position).getBranchAddress2());
+            holder.addressRadioButton.setChecked(false);
+            holder.mainView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switchToMakePaymentActivity(holder, position);
+                }
+            });
             holder.addressRadioButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, PaymentActivity.class);
-                    intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-                    intent.putExtra(Constants.ADDRESS, merchantDetails.getBranches().get(position).getBranchAddress());
-                    intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getBranches().get(position).getMobileNumber());
-                    intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
-                    intent.putExtra(Constants.FROM_BRANCHING, true);
-                    context.startActivity(intent);
-                    MerchantBranchSelectorDialog.this.dismiss();
+                    switchToMakePaymentActivity(holder, position);
                 }
             });
+        }
+
+        private void switchToMakePaymentActivity(MerchantBranchAddressViewHolder holder, int position) {
+            holder.addressRadioButton.setChecked(true);
+            Intent intent = new Intent(context, PaymentActivity.class);
+            intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
+            intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getBranches().get(position).getBranchAddress1());
+            intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getBranches().get(position).getBranchAddress2());
+            intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getBranches().get(position).getMobileNumber());
+            intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
+            intent.putExtra(Constants.FROM_BRANCHING, true);
+            context.startActivity(intent);
         }
 
         @Override
@@ -90,10 +101,16 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
 
         public class MerchantBranchAddressViewHolder extends RecyclerView.ViewHolder {
             private RadioButton addressRadioButton;
+            private TextView mAddressLineOneTextView;
+            private TextView mAddressLineTwoTextView;
+            private View mainView;
 
             public MerchantBranchAddressViewHolder(View itemView) {
                 super(itemView);
                 addressRadioButton = (RadioButton) itemView.findViewById(R.id.address_radio_button);
+                mAddressLineOneTextView = (TextView) itemView.findViewById(R.id.address_line_1);
+                mAddressLineTwoTextView = (TextView) itemView.findViewById(R.id.address_line_2);
+                mainView = itemView;
             }
         }
     }

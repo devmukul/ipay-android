@@ -142,6 +142,8 @@ public class Constants {
     public static final String BUSINESS_ACCOUNT_ID = "BUSINESS_ACCOUNT_ID";
     public static final String COMMAND_GET_ALL_MERCHANTS = "COMMAND_GET_ALL_MERCHANTS";
     public static final String FROM_BRANCHING = "FROM_BRANCHING";
+    public static final String ADDRESS_ONE = "ADDRESS_ONE";
+    public static final String ADDRESS_TWO = "ADDRESS_TWO";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";

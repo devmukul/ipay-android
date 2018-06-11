@@ -33,6 +33,7 @@ public class MerchantsDashBoardFragment extends BaseFragment implements HttpResp
     private MerchantsListAdapter mMerchantListAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mUri;
+    private MerchantBranchSelectorDialog merchantBranchSelectorDialog;
 
     @Nullable
     @Override
@@ -58,6 +59,14 @@ public class MerchantsDashBoardFragment extends BaseFragment implements HttpResp
             mGetAllMerchantsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ALL_MERCHANTS, mUri, getContext(), true);
             mGetAllMerchantsAsyncTask.mHttpResponseListener = this;
             mGetAllMerchantsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (merchantBranchSelectorDialog != null) {
+            merchantBranchSelectorDialog.dismiss();
         }
     }
 
@@ -95,7 +104,7 @@ public class MerchantsDashBoardFragment extends BaseFragment implements HttpResp
 
         @Override
         public void onBindViewHolder(MerchantsListViewHolder holder, final int position) {
-            holder.mMerchantLogoView.setProfilePicture(
+            holder.mMerchantLogoView.setBusinessProfilePicture(
                     mGetAllMerchantsResponse.getBranchResponseList().get(position).getBusinessLogo(), false);
             holder.mMerchantNameTextView.setText
                     (mGetAllMerchantsResponse.getBranchResponseList().get(position).getMerchantName());
@@ -105,7 +114,7 @@ public class MerchantsDashBoardFragment extends BaseFragment implements HttpResp
             holder.mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MerchantBranchSelectorDialog merchantBranchSelectorDialog = new
+                    merchantBranchSelectorDialog = new
                             MerchantBranchSelectorDialog(getContext(), mGetAllMerchantsResponse.getBranchResponseList().get(position));
                     merchantBranchSelectorDialog.showDialog();
                 }
