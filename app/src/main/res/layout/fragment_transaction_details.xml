@@ -220,5 +220,13 @@
                 android:textSize="@dimen/text_size_small_medium" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button_revert"
+            style="@style/ButtonPrimaryWithNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/revert"
+            android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

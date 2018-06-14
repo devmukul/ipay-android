@@ -102,14 +102,13 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
      * set Default Business Rules is to cache the offline business rules
      */
     private void setDefaultBusinessRules() {
-        if (!BusinessRuleCacheManager.ifContainsDefaultBusinessRules()) {
             for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
-                MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
-                mandatoryBusinessRules.setDefaultRules();
-                BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
+                if(!BusinessRuleCacheManager.ifContainsBusinessRule(serviceTag)) {
+                    MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
+                    mandatoryBusinessRules.setDefaultRules();
+                    BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
+                }
             }
-        }
-        BusinessRuleCacheManager.setIsDefaultBusinessRulesAvailable(true);
     }
 
     public void attemptLogout() {

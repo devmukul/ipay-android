@@ -47,6 +47,7 @@ public class Constants {
     public static final String ADD_MONEY_BY_CARD = "ADD_MONEY_BY_CARD";
     public static final String WITHDRAW_MONEY = "WITHDRAW_MONEY";
     public static final String MAKE_PAYMENT = "MAKE_PAYMENT";
+    public static final String PAYMENT_REVERT = "PAYMENT_REVERT";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
     public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 
@@ -490,6 +491,7 @@ public class Constants {
     public static final String URL_GET_SINGLE_REQUEST_PAYMENT = "payment/invoice/get/";
     public static final String URL_GET_ORDER_DETAILS = "orderId/info";
     public static final String URL_PAY_BY_DEEP_LINK = "orderId/pay";
+    public static final String URL_PAYMENT_REVERT = "payment-revert";
 
     public static final String URL_PAYMENT = "payment/v2";
 
@@ -635,6 +637,7 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_PAYMENT_REVERT = "COMMAND_PAYMENT_REVERT";
     public static final String COMMAND_CANCEL_ORDER = "COMMAND_CANCEL_ORDER";
     public static final String COMMAND_PAYMENT_BY_DEEP_LINK = "COMMAND_PAYMENT_BY_DEEP_LINK";
     public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
@@ -822,6 +825,7 @@ public class Constants {
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
     public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
+    public static final int SERVICE_ID_TRANSACTION_REVERT = 966002;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";
