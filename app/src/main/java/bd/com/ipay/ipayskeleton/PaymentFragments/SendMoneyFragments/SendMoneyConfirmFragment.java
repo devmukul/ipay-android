@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyConfirmActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -75,11 +76,11 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_confirm, container, false);
-        ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        ((SendMoneyConfirmActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorWhite));
         Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
         mBackButtonIcon.setColorFilter(new
                 PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY));
-        ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
+        ((SendMoneyConfirmActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
         setUpViews(view);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
         return view;
@@ -92,7 +93,7 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mDescriptionTextView = (TextView) view.findViewById(R.id.textview_description);
-        ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(Color.WHITE);
+        ((SendMoneyConfirmActivity) getActivity()).toolbar.setBackgroundColor(Color.WHITE);
         mSendMoneyButton = (Button) view.findViewById(R.id.send_money_button);
         if (!SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             mPinEditText.setVisibility(View.GONE);

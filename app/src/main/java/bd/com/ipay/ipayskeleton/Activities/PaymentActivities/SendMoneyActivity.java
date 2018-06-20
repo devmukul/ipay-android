@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyConfirmFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyHelperFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyRecheckFragment;
@@ -27,6 +26,8 @@ public class SendMoneyActivity extends BaseActivity {
     public TextView mToolbarHelpText;
     public TextView mTitle;
     public ImageView backButton;
+
+    public Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,10 @@ public class SendMoneyActivity extends BaseActivity {
         mTitle.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,7 +109,7 @@ public class SendMoneyActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.SOURCE, Constants.SEND_MONEY);
         transactionContactFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in_enter, R.anim.up_to_down_exit)
                 .replace(R.id.fragment_container, transactionContactFragment).addToBackStack(null).commit();
     }
 
@@ -112,30 +117,17 @@ public class SendMoneyActivity extends BaseActivity {
         while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
             getSupportFragmentManager().popBackStackImmediate();
         }
+        this.bundle = bundle;
         SendMoneyRecheckFragment sendMoneyRecheckFragment = new SendMoneyRecheckFragment();
         sendMoneyRecheckFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter, R.anim.right_to_left_exit)
                 .replace(R.id.fragment_container, sendMoneyRecheckFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToSendMoneyConfirmFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 3) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        SendMoneyConfirmFragment sendMoneyConfirmFragment = new SendMoneyConfirmFragment();
-        sendMoneyConfirmFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, sendMoneyConfirmFragment).addToBackStack(null).commit();
     }
 
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 4) {
-
-            } else {
-                getSupportFragmentManager().popBackStackImmediate();
-            }
+            getSupportFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
         }

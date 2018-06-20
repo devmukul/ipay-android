@@ -20,6 +20,7 @@ public class SendMoneyHelperFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_send_money_helper, container, false);
         ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
         ((SendMoneyActivity) getActivity()).hideTitle();
+        getActivity().overridePendingTransition(R.anim.right_to_left_enter,R.anim.right_to_left_exit);
         okButton = (Button) view.findViewById(R.id.ok_button);
         if (getArguments() != null) {
             Bundle bundle = getArguments();

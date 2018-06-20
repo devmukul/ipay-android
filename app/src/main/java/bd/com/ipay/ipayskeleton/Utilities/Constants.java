@@ -7,7 +7,7 @@ import com.google.android.gms.vision.CameraSource;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 
-public class  Constants {
+public class Constants {
     public static final String ApplicationTag = "iPayV2";
     public static final String ApplicationPackage = "bd.com.ipay.android";
     public static final String ApplicationTitle = "iPay";
@@ -262,7 +262,7 @@ public class  Constants {
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String Business_role = "BUSINESS_ROLE";
-    public static String invalid_credential="invalid credential";
+    public static String invalid_credential = "invalid credential";
 
 
     static {
@@ -291,7 +291,7 @@ public class  Constants {
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
-            BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
+            BASE_URL_ADMIN = "http://10.10.10.169:8080/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";

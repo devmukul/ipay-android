@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyConfirmActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -76,10 +78,27 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
         mBackButtonIcon.setColorFilter(new
                 PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
+        ((SendMoneyActivity) getActivity()).backButton.setImageDrawable(null);
+        ((SendMoneyActivity) getActivity()).backButton.setImageDrawable(mBackButtonIcon);
         ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
         ((SendMoneyActivity) getActivity()).hideTitle();
         setUpViews(view);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SendMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
+        ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorToolbarSendMoney));
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+        Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
+        mBackButtonIcon.setColorFilter(new
+                PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
+        ((SendMoneyActivity) getActivity()).backButton.setImageDrawable(null);
+        ((SendMoneyActivity) getActivity()).backButton.setImageDrawable(mBackButtonIcon);
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
+        ((SendMoneyActivity) getActivity()).hideTitle();
     }
 
     private void setUpViews(View view) {
@@ -95,6 +114,9 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if (keyEvent.getAction() != keyEvent.ACTION_DOWN) {
+                    if (keyEvent.getKeyCode() == keyEvent.KEYCODE_BACK) {
+                        getActivity().onBackPressed();
+                    }
                     return true;
                 } else {
                     if (i == keyEvent.KEYCODE_DEL) {
@@ -111,7 +133,7 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
                             mAmountTextView.setText(String.valueOf(bigDecimal));
                         }
                     }
-                    return true;
+                    return false;
                 }
             }
         });
@@ -203,11 +225,12 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
                 if (verifyUserInputs()) {
                     String amount = Utilities.formatTakaFromString(mAmountTextView.getText().toString());
                     amount = amount.replaceAll("[^\\d.]", "");
-                    bundle.putString("name", mNameTextView.getText().toString());
-                    bundle.putString("imageUrl", imageUrl);
-                    bundle.putString("amount", amount);
-                    bundle.putString("number", mMobileNumber);
-                    ((SendMoneyActivity) getActivity()).switchToSendMoneyConfirmFragment(bundle);
+                    Intent intent = new Intent(getActivity(), SendMoneyConfirmActivity.class);
+                    intent.putExtra("name", mNameTextView.getText().toString());
+                    intent.putExtra("imageUrl", imageUrl);
+                    intent.putExtra("amount", amount);
+                    intent.putExtra("number", mMobileNumber);
+                    startActivity(intent);
                 }
             }
         });

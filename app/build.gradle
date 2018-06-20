@@ -155,6 +155,7 @@ dependencies {
     // Singapore
     compile 'com.hbb20:ccp:1.7.8'
 
+    compile 'com.android.support.constraint:constraint-layout:1.1.2'
     testCompile 'junit:junit:4.12'
 }
 
