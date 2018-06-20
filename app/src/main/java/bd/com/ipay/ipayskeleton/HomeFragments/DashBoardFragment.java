@@ -22,7 +22,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class DashBoardFragment extends Fragment {
 
     private final int HOME_TAB = 0;
-    private final int MERCHANT_TAB = 1;
+    private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
     private final int OFFER_TAB = 3;
 
@@ -31,16 +31,15 @@ public class DashBoardFragment extends Fragment {
     private HomeFragment mHomeFragment;
     private PayDashBoardFragment mPayFragment;
     private OfferFragment mOfferHolderFragment;
-    private MerchantsDashBoardFragment mMerchantDashBoardFragment;
     private TransactionHistoryHolderFragment mTransactionHistoryFragment;
 
     private TabLayout.Tab homeTab;
-    private TabLayout.Tab merchantTab;
+    private TabLayout.Tab payTab;
     private TabLayout.Tab offerTab;
     private TabLayout.Tab transactionHistoryTab;
 
     private View homeTabView;
-    private View merchantTabView;
+    private View payTabView;
     private View offerTabView;
     private View transactionHistoryTabView;
 
@@ -54,7 +53,7 @@ public class DashBoardFragment extends Fragment {
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
         mOfferHolderFragment = new OfferFragment();
-        mMerchantDashBoardFragment = new MerchantsDashBoardFragment();
+        mPayFragment = new PayDashBoardFragment();
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
@@ -66,7 +65,7 @@ public class DashBoardFragment extends Fragment {
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
         transactionHistoryTab = tabLayout.getTabAt(TRANSACTION_HISTORY_TAB);
-        merchantTab = tabLayout.getTabAt(MERCHANT_TAB);
+        payTab = tabLayout.getTabAt(PAY_TAB);
         offerTab = tabLayout.getTabAt(OFFER_TAB);
 
         setupCustomViewsForTabLayout();
@@ -116,8 +115,7 @@ public class DashBoardFragment extends Fragment {
         homeTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         offerTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        merchantTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-
+        payTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         setTabViews();
     }
 
@@ -127,7 +125,7 @@ public class DashBoardFragment extends Fragment {
         homeTab.setCustomView(homeTabView);
         offerTab.setCustomView(offerTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
-        merchantTab.setCustomView(merchantTabView);
+        payTab.setCustomView(payTabView);
     }
 
     private void setTitle() {
@@ -139,11 +137,11 @@ public class DashBoardFragment extends Fragment {
         ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_wallet);
         ((ImageView) offerTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_offer);
         ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
-        ((ImageView) merchantTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
+        ((ImageView) payTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
 
         ((TextView) homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
         ((TextView) offerTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.offer));
-        ((TextView) merchantTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.merchants));
+        ((TextView) payTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.merchants));
         ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
     }
 
@@ -158,8 +156,8 @@ public class DashBoardFragment extends Fragment {
             switch (pos) {
                 case HOME_TAB:
                     return mHomeFragment;
-                case MERCHANT_TAB:
-                    return mMerchantDashBoardFragment;
+                case PAY_TAB:
+                    return mPayFragment;
                 case TRANSACTION_HISTORY_TAB:
                     return mTransactionHistoryFragment;
                 case OFFER_TAB:

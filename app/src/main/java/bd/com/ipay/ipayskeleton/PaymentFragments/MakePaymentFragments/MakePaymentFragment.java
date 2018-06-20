@@ -192,6 +192,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         PaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
         if (getActivity().getIntent().hasExtra(Constants.FROM_BRANCHING)) {
+            mIconEditMobileNumber.setVisibility(GONE);
             try {
                 mobileNumberView.setVisibility(GONE);
                 profileView.setVisibility(View.VISIBLE);
@@ -234,6 +235,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         } else {
             if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+                mIconEditMobileNumber.setVisibility(View.VISIBLE);
                 mobileNumberView.setVisibility(GONE);
                 profileView.setVisibility(View.VISIBLE);
                 if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {

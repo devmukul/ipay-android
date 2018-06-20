@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusiness;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusinessResponse;
-import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -157,7 +157,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         }
 
         mGetTrendingBusinessListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity(), false);
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING_BRANCHED, getActivity(), false);
         mGetTrendingBusinessListTask.mHttpResponseListener = this;
         mGetTrendingBusinessListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -189,8 +189,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER;
                     RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(layoutParams);
                     recyclerView.setLayoutParams(params);
+                    recyclerView.setNestedScrollingEnabled(false);
 
-                    List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
+                    List<MerchantDetails> mBusinessAccountEntryList = trendingBusiness.getBranchResponseList();
                     PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
                     recyclerView.setAdapter(payDashBoardItemAdapter);
                     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
