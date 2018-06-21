@@ -561,6 +561,7 @@ public class Constants {
     public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
 
     public static final String URL_GET_BUSINESS_LIST_TRENDING = "trending";
+    public static final String URL_GET_BUSINESS_LIST_TRENDING_BRANCHED = "trending/branched";
 
     // Business Information (Owner)
     public static final String URL_CREATE_EMPLOYEE = "business-manager-invitation";

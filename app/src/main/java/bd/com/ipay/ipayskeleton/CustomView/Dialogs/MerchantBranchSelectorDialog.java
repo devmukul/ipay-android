@@ -71,19 +71,32 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
             holder.mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switchToMakePaymentActivity(holder, position);
+                    holder.addressRadioButton.setChecked(true);
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            switchToMakePaymentActivity(holder, position);
+                        }
+                    }, 500);
+
                 }
             });
             holder.addressRadioButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switchToMakePaymentActivity(holder, position);
+                    holder.addressRadioButton.setChecked(true);
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            switchToMakePaymentActivity(holder, position);
+                        }
+                    }, 500);
+
                 }
             });
         }
 
         private void switchToMakePaymentActivity(MerchantBranchAddressViewHolder holder, int position) {
-            holder.addressRadioButton.setChecked(true);
             Intent intent = new Intent(context, PaymentActivity.class);
             intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
             intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getBranches().get(position).getBranchAddress1());
@@ -92,6 +105,7 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
             intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
             intent.putExtra(Constants.FROM_BRANCHING, true);
             context.startActivity(intent);
+            MerchantBranchSelectorDialog.this.dismiss();
         }
 
         @Override

@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
-import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.MerchantBranchSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -28,10 +26,11 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<BusinessAccountEntry> mBusinessAccountEntryList;
+    private List<MerchantDetails> mBusinessAccountEntryList;
+    private MerchantBranchSelectorDialog mMerchantBranchSelectorDialog;
     Context context;
 
-    public PayDashBoardItemAdapter(List<BusinessAccountEntry> mBusinessAccountEntryList, Context context) {
+    public PayDashBoardItemAdapter(List<MerchantDetails> mBusinessAccountEntryList, Context context) {
         this.mBusinessAccountEntryList = mBusinessAccountEntryList;
         this.context = context;
     }
@@ -46,10 +45,10 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
             mTextView = (TextView) itemView.findViewById(R.id.nameView);
         }
 
-        public void bindView(int pos) {
-            final BusinessAccountEntry businessAccountEntry = mBusinessAccountEntryList.get(pos);
-            final String name = businessAccountEntry.getBusinessName();
-            final String imageUrl = Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl();
+        public void bindView(final int pos) {
+            final MerchantDetails merchantDetails = mBusinessAccountEntryList.get(pos);
+            final String name = merchantDetails.getMerchantName();
+            final String imageUrl = Constants.BASE_URL_FTP_SERVER + merchantDetails.getBusinessLogo();
             mTextView.setText(name);
 
             try {
@@ -91,9 +90,8 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
                         PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
                             @Override
                             public void ifPinAdded() {
-                                Intent intent;
-                                intent = new Intent(context, QRCodePaymentActivity.class);
-                                context.startActivity(intent);
+                                mMerchantBranchSelectorDialog = new MerchantBranchSelectorDialog(context, mBusinessAccountEntryList.get(pos));
+                                mMerchantBranchSelectorDialog.showDialog();
                             }
                         });
                         payByQCPinChecker.execute();
