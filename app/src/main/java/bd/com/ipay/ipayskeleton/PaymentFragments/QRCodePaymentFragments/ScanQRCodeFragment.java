@@ -123,7 +123,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                         } else {
                                             switchActivity(PaymentActivity.class);
                                         }
-                                    }else {
+                                    } else {
                                         fetchUserInfo(result);
                                     }
                                 } catch (Exception e) {
@@ -150,7 +150,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     }
 
 
-    public void fetchUserInfo(String result){
+    public void fetchUserInfo(String result) {
         if (Utilities.isConnectionAvailable(getActivity())) {
             mobileNumber = ContactEngine.formatMobileNumberBD(result);
             GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
@@ -256,6 +256,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.DISTRICT, district);
         intent.putExtra(Constants.ADDRESS, address);
         intent.putExtra(Constants.THANA, thana);
+        intent.putExtra(Constants.FROM_QR_SCAN, true);
         startActivity(intent);
         getActivity().finish();
     }
