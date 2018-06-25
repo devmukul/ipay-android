@@ -94,6 +94,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
         mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
