@@ -242,6 +242,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                     businessProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                 }
+                if (getActivity().getIntent().hasExtra(Constants.FROM_QR_SCAN)) {
+                    if (getActivity().getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+                        mIconEditMobileNumber.setVisibility(GONE);
+                    }
+                }
                 mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
                 mMobileNumberEditText.setText(mReceiverMobileNumber);
                 if (getActivity().getIntent().hasExtra(Constants.NAME)) {
@@ -655,11 +660,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
     private void attemptPayment(String pin) {
 
-        if (TextUtils.isEmpty(mReceiverMobileNumber)) {
-            mReceiver = mMobileNumberEditText.getText().toString().trim();
-        } else {
-            mReceiver = mReceiverMobileNumber;
-        }
+        mReceiver = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString().trim());
         mAmount = mAmountEditText.getText().toString().trim();
         String referenceNumber = mRefNumberEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
