@@ -48,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAccep
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -60,7 +61,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implements LocationListener, HttpResponseListener {
 
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
 
@@ -168,6 +169,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         mProgressDialog.setCancelable(false);
 
         getActivity().setTitle(R.string.request_payment);
+
+        mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_PAYMENT);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 
@@ -482,11 +485,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             return;
         }
 
-        if (isAdded()) {
-            mProgressDialog.setMessage(getString(R.string.please_wait_loading));
-        }
-        mProgressDialog.show();
-
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, false);
@@ -528,17 +526,11 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                     }
 
                     mProgressDialog.dismiss();
                     mGetBusinessRuleTask = null;
-                } else {
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
-
                 mGetBusinessRuleTask = null;
                 break;
             case Constants.COMMAND_CANCEL_PAYMENT_REQUEST:

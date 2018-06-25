@@ -78,6 +78,7 @@ import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
@@ -158,6 +159,7 @@ public class HomeActivity extends BaseActivity
     private DrawerLayout drawer;
 
     private ManagedBusinessAcountAdapter mManageBusinessAcountAdapter;
+    private HttpRequestPostAsyncTask mRefreshBalanceTask;
 
 
     @Override
@@ -180,7 +182,7 @@ public class HomeActivity extends BaseActivity
             }
 
         }
-
+        refreshBalance();
         mProgressDialog = new ProgressDialog(HomeActivity.this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -661,7 +663,7 @@ public class HomeActivity extends BaseActivity
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
                 attemptLogout();
             } else {
-                Toast.makeText(this,getString(R.string.no_internet_connection),Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -740,6 +742,19 @@ public class HomeActivity extends BaseActivity
         } catch (Exception e) {
 
         }
+    }
+
+    private void refreshBalance() {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+            return;
+        }
+        if (mRefreshBalanceTask != null || this == null)
+            return;
+
+        mRefreshBalanceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_BALANCE,
+                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, null, this, true);
+        mRefreshBalanceTask.mHttpResponseListener = this;
+        mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getProfileInfo() {
@@ -891,6 +906,19 @@ public class HomeActivity extends BaseActivity
                 mGetProfileInfoTask = null;
 
                 break;
+
+            case Constants.COMMAND_REFRESH_BALANCE:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        RefreshBalanceResponse mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
+                        String balance = mRefreshBalanceResponse.getBalance() + "";
+                        SharedPrefManager.setUserBalance(balance);
+                    }
+                } catch (Exception e) {
+
+                }
+                break;
+
             case Constants.COMMAND_GET_ACCESS_CONTROL_LIST:
 
                 try {

@@ -1,5 +1,10 @@
 package bd.com.ipay.ipayskeleton.Model.SqLiteDatabase;
 
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddressList;
+
 public class BusinessAccountEntry {
     public String mobileNumber;
     public String businessName;
@@ -9,10 +14,11 @@ public class BusinessAccountEntry {
     public String profilePictureUrlMedium;
     public String profilePictureUrlHigh;
     public int businessId;
+    private UserAddressList addressList;
 
     public BusinessAccountEntry(String mobileNumber, String businessName, String email,
                                 int businessType, String profilePictureUrl, String profilePictureUrlMedium,
-                                String profilePictureUrlHigh, int businessId) {
+                                String profilePictureUrlHigh, int businessId, UserAddressList addressList) {
         this.mobileNumber = mobileNumber;
         this.businessName = businessName;
         this.email = email;
@@ -21,6 +27,7 @@ public class BusinessAccountEntry {
         this.profilePictureUrlMedium = profilePictureUrlMedium;
         this.profilePictureUrlHigh = profilePictureUrlHigh;
         this.businessId = businessId;
+        this.addressList = addressList;
     }
 
     public String getMobileNumber() {
@@ -85,6 +92,56 @@ public class BusinessAccountEntry {
 
     public void setProfilePictureUrlHigh(String profilePictureUrlHigh) {
         this.profilePictureUrlHigh = profilePictureUrlHigh;
+    }
+
+    public UserAddressList getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(UserAddressList addressList) {
+        this.addressList = addressList;
+    }
+
+    public String getAddressString() {
+        String addressString = null;
+        if (addressList != null) {
+            if (addressList.getOFFICE() != null) {
+                List<UserAddress> office = addressList.getOFFICE();
+                if (office != null) {
+                    addressString = office.get(0).getAddressLine1();
+
+                    if (!office.get(0).getAddressLine2().isEmpty())
+                        addressString += office.get(0).getAddressLine2();
+                }
+            }
+        }
+        return addressString;
+    }
+
+    public String getThanaString() {
+        String thanaString = null;
+        if (addressList != null) {
+            if (addressList.getOFFICE() != null) {
+                List<UserAddress> office = addressList.getOFFICE();
+                if (office != null) {
+                    thanaString = office.get(0).getThana();
+                }
+            }
+        }
+        return thanaString;
+    }
+
+    public String getDistrictString() {
+        String districtString = null;
+        if (addressList != null) {
+            if (addressList.getOFFICE() != null) {
+                List<UserAddress> office = addressList.getOFFICE();
+                if (office != null) {
+                    districtString = office.get(0).getDistrict();
+                }
+            }
+        }
+        return districtString;
     }
 
     @Override

@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +16,6 @@ import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -151,6 +149,11 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         }
 
         mAccountNameEditText.setText(ProfileInfoCacheManager.getUserName());
+        if (!ProfileInfoCacheManager.isBusinessAccount()) {
+            mAccountNameEditText.setFocusable(true);
+        } else {
+            mAccountNameEditText.setFocusable(false);
+        }
 
         addBank.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +162,8 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 verifyUserInputs();
             }
         });
+
+
         return v;
     }
 
@@ -327,11 +332,13 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private void launchAddBankAgreementPage() {
         BankBranch bankBranch = mBranches.get(mSelectedBranchId);
         String bankAccountNumber = mAccountNumberEditText.getText().toString().trim();
+        String accountName = mAccountNameEditText.getText().toString().trim();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BANK_NAME, mSelectedBankName);
         bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
         bundle.putBoolean(Constants.FROM_ON_BOARD, isSwitchedFromOnBoard);
+        bundle.putString(Constants.BANK_ACCOUNT_NAME, accountName);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
         if (mChequebookCoverImageFile != null) {
@@ -397,7 +404,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         if (filePath != null) {
             String type = filePath.substring(filePath.lastIndexOf(".") + 1);
 
-            if(type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
+            if (type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("png")
                     || type.equalsIgnoreCase("jpeg")) {
 
                 String[] temp = filePath.split(File.separator);
@@ -415,7 +422,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 mChequebookCoverPageErrorTextView.setVisibility(View.INVISIBLE);
                 mChequebookCoverImageFile = imageFile;
                 mPickerActionId = -1;
-            }else {
+            } else {
                 Toaster.makeText(getActivity(), R.string.invalid_image_type, Toast.LENGTH_LONG);
             }
         }

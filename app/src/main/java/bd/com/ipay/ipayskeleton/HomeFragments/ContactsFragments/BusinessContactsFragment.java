@@ -47,6 +47,9 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int businessTypeIndex;
+    private int businessAddressIndex;
+    private int businessThanaIndex;
+    private int businessDistrictIndex;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -110,13 +113,16 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
 
-                Cursor cursor = dataHelper.searchBusinessContacts(mQuery);
+                Cursor cursor = dataHelper.searchBusinessAccounts(mQuery);
 
                 if (cursor != null) {
                     businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
                     businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
+                    businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
+                    businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
+                    businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_BUSINESS_URI);
                 }
@@ -142,8 +148,13 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mQuery = newText;
-        getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
+        if (newText.isEmpty()) {
+            mQuery = newText;
+            getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
+        } else if (!newText.isEmpty() && newText.length() > 2) {
+            mQuery = newText;
+            getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
+        }
 
         return true;
     }
@@ -228,7 +239,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
             private final TextView businessNameView;
             private final TextView businessTypeView;
             private final ProfileImageView profilePictureView;
-            private final TextView mobileNumberView;
+            private final TextView businessAddressView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -237,7 +248,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
 
                 businessNameView = (TextView) itemView.findViewById(R.id.business_name);
                 businessTypeView = (TextView) itemView.findViewById(R.id.business_type);
-                mobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
+                businessAddressView = (TextView) itemView.findViewById(R.id.business_address);
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }
 
@@ -249,12 +260,17 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                 final int businessTypeID = mCursor.getInt(businessTypeIndex);
                 final String businessPictureUrl = mCursor.getString(profilePictureUrlIndex);
                 final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
+                final String businessAddress = mCursor.getString(businessAddressIndex);
+                final String businessThana = mCursor.getString(businessThanaIndex);
+                final String businessDistrict = mCursor.getString(businessDistrictIndex);
 
                 if (businessName != null && !businessName.isEmpty()) {
                     businessNameView.setText(businessName);
                 }
 
-                mobileNumberView.setText(mobileNumber);
+                if (businessAddress != null && !businessAddress.isEmpty()) {
+                    businessAddressView.setText(businessAddress);
+                }
                 profilePictureView.setProfilePicture(profilePictureUrl, false);
 
                 if (CommonData.getBusinessTypes() != null) {
@@ -273,6 +289,9 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                             intent.putExtra(Constants.BUSINESS_NAME, businessName);
                         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
                         intent.putExtra(Constants.PROFILE_PICTURE, businessPictureUrl);
+                        intent.putExtra(Constants.ADDRESS, businessAddress);
+                        intent.putExtra(Constants.THANA, businessThana);
+                        intent.putExtra(Constants.DISTRICT, businessDistrict);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }

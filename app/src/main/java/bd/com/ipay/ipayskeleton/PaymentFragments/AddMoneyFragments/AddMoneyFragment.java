@@ -48,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -193,6 +194,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     @ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_BANK)
     private void setupAddMoneyFromBank() {
+        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_BANK);
         mMessageTextView.setText(R.string.add_money_from_bank_info);
         mBankSelectorViewHolder.setVisibility(View.VISIBLE);
         if (mListUserBankClasses == null || mListUserBankClasses.isEmpty()) {
@@ -206,6 +208,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     //@ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
     private void setupAddMoneyFromCreditOrDebitCard() {
+        AddMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.ADD_MONEY_BY_CARD);
         mMessageTextView.setText(R.string.add_money_from_credit_or_debit_card_info);
         mBankSelectorViewHolder.setVisibility(View.GONE);
         attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
@@ -263,10 +266,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         if (mGetBusinessRuleTask != null) {
             return;
         }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -474,15 +473,19 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                                 }
                             }
 
+                            switch (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId()) {
+                                case ServiceIdConstants.ADD_MONEY_BY_BANK:
+                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_BANK, AddMoneyActivity.mMandatoryBusinessRules);
+                                    break;
+                                case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_CARD, AddMoneyActivity.mMandatoryBusinessRules);
+                                    break;
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            if (getActivity() != null)
-                                DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         }
                         break;
                     default:
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         break;
                 }
                 break;

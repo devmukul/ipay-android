@@ -52,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
@@ -99,7 +100,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private CustomSelectorDialogWithIcon mOperatorSelectorDialog;
     private int mSelectedPackageTypeId = -1;
     private int mSelectedOperatorTypeId = 0;
-    private String mUserMobileNumber;
     private String mMobileNumber;
     private double mAmount;
     private String mName;
@@ -128,8 +128,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         context = getContext();
         mCustomProgressDialog = new CustomProgressDialog(context);
         mProgressDialog = new ProgressDialog(getActivity());
+        TopUpActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.TOP_UP);
 
-        mUserMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         setOperatorAndPackageAdapter();
 
         int mobileNumberType = SharedPrefManager.getMobileNumberType(Constants.MOBILE_TYPE_PREPAID);
@@ -157,7 +157,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         });
 
         setMobileNumber();
-        setOperator(mUserMobileNumber);
 
         mRechargeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,26 +176,14 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             }
         });
 
-        if (!ProfileInfoCacheManager.isAccountVerified()) {
-            mMobileNumberEditText.setEnabledStatus(false);
-            mMobileNumberEditText.setFocusableStatus(false);
-
-            mOperatorEditText.setEnabled(false);
-            mSelectReceiverButton.setVisibility(View.GONE);
-
-        } else {
-            mMobileNumberEditText.setEnabledStatus(true);
-            mMobileNumberEditText.setFocusableStatus(true);
-            mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
-                    startActivityForResult(intent, PICK_CONTACT_REQUEST);
-                }
-            });
-
-        }
+        mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+            }
+        });
 
         mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,8 +376,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                 String name = data.getStringExtra(Constants.NAME);
                 String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
 
-                if (mobileNumber != null)
+                if (mobileNumber != null) {
                     mMobileNumberEditText.setText(mobileNumber);
+                    setOperator(mobileNumber);
+                }
 
                 mProfilePicHolderView.setVisibility(View.VISIBLE);
                 mMobileNumberHolderView.setVisibility(View.GONE);
@@ -472,9 +461,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
-        mProgressDialog.show();
-
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this, true);
@@ -511,6 +497,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
         if (mTopupTask != null)
             return;
+
+        mMobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumber);
         mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
                 mMobileNumber, mobileNumberType, operatorCode, mAmount,
                 countryCode, mobileNumberType, Constants.DEFAULT_USER_CLASS, pin);
@@ -574,17 +562,12 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                             TopUpActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                         }
                     }
+                    BusinessRuleCacheManager.setBusinessRules(Constants.TOP_UP, TopUpActivity.mMandatoryBusinessRules);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
 
-            } else {
-                if (getActivity() != null)
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
-
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             try {
@@ -698,7 +681,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                         }
                         //Google Analytic event
                     }
-
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), getString(R.string.recharge_failed), Double.valueOf(mAmount).longValue());
                 }

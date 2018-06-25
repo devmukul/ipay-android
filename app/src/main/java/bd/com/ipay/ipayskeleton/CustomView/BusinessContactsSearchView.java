@@ -28,11 +28,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class BusinessContactsSearchView extends FrameLayout {
 
     private CustomAutoCompleteView mCustomAutoCompleteView;
+    private BusinessContactListAdapter mBusinessContactsAdapter;
 
     private List<BusinessContact> mBusinessContactList;
     private String mQuery = "";
     private String mImageURL = "";
     private String mName = "";
+    private String mAddress = "";
+    private String mThanaDistrict = "";
 
     private Context mContext;
 
@@ -72,7 +75,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     if (mName.isEmpty() && mImageURL.isEmpty())
                         customTextChangeListener.onTextChange(inputString);
                     else
-                        customTextChangeListener.onTextChange(inputString, mName, mImageURL);
+                        customTextChangeListener.onTextChange(inputString, mName, mImageURL, mAddress, mThanaDistrict);
                 }
             }
         });
@@ -97,16 +100,18 @@ public class BusinessContactsSearchView extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-            if (userInput.length() > 0) {
+            mQuery = userInput.toString();
 
-                mQuery = userInput.toString();
-
+            if (!mQuery.matches("[0-9+]+") && userInput.length() > 2) {
                 try {
                     // Query the database based on the user input
                     readBusinessContactsFromDB();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                mBusinessContactList.clear();
+                setBusinessContactAdapter(mBusinessContactList);
             }
         }
     }
@@ -118,12 +123,14 @@ public class BusinessContactsSearchView extends FrameLayout {
     public interface CustomTextChangeListener {
         void onTextChange(String inputText);
 
-        void onTextChange(String inputText, String name, String imageURL);
+        void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict);
     }
 
     public void clearSelectedData() {
         mName = "";
         mImageURL = "";
+        mAddress ="";
+        mThanaDistrict = "";
     }
 
     public Editable getText() {
@@ -153,6 +160,10 @@ public class BusinessContactsSearchView extends FrameLayout {
         int phoneNumberIndex;
         int profilePictureUrlIndex;
         int businessTypeIndex;
+        int businessAddressIndex;
+        int businessThanaIndex;
+        int businessDistrictIndex;
+
 
         mBusinessContacts = new ArrayList<>();
 
@@ -162,6 +173,9 @@ public class BusinessContactsSearchView extends FrameLayout {
             phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
             profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
             businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
+            businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
+            businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
+            businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
 
             if (cursor.moveToFirst())
                 do {
@@ -169,11 +183,17 @@ public class BusinessContactsSearchView extends FrameLayout {
                     String mobileNumber = cursor.getString(phoneNumberIndex);
                     String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
                     int businessTypeID = cursor.getInt(businessTypeIndex);
+                    String businessAddress = cursor.getString(businessAddressIndex);
+                    String businessThana = cursor.getString(businessThanaIndex);
+                    String businessDistrict = cursor.getString(businessDistrictIndex);
 
                     BusinessContact businessContact = new BusinessContact();
                     businessContact.setBusinessName(businessName);
                     businessContact.setMobileNumber(mobileNumber);
                     businessContact.setProfilePictureUrl(profilePictureUrl);
+                    businessContact.setAddressString(businessAddress);
+                    businessContact.setThanaString(businessThana);
+                    businessContact.setDistrictString(businessDistrict);
 
                     if (CommonData.getBusinessTypes() != null) {
                         BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
@@ -192,7 +212,7 @@ public class BusinessContactsSearchView extends FrameLayout {
     private void readBusinessContactsFromDB() {
         Cursor mCursor;
         DataHelper dataHelper = DataHelper.getInstance(mContext);
-        mCursor = dataHelper.searchBusinessContacts(mQuery);
+        mCursor = dataHelper.searchBusinessAccounts(mQuery);
 
         try {
             if (mCursor != null) {
@@ -209,7 +229,7 @@ public class BusinessContactsSearchView extends FrameLayout {
     }
 
     private void setBusinessContactAdapter(List<BusinessContact> businessContactList) {
-        BusinessContactListAdapter mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
+        mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
         mCustomAutoCompleteView.setAdapter(mBusinessContactsAdapter);
     }
 
@@ -218,8 +238,8 @@ public class BusinessContactsSearchView extends FrameLayout {
 
         private TextView businessNameView;
         private TextView businessTypeView;
-        private TextView mobileNumberView;
         private ProfileImageView profilePictureView;
+        private TextView businessAddressView;
 
         BusinessContactListAdapter(Context context, List<BusinessContact> objects) {
             super(context, 0, objects);
@@ -236,8 +256,8 @@ public class BusinessContactsSearchView extends FrameLayout {
 
             businessNameView = (TextView) view.findViewById(R.id.business_name);
             businessTypeView = (TextView) view.findViewById(R.id.business_type);
-            mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
             profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
+            businessAddressView = (TextView) view.findViewById(R.id.business_address);
 
             return bindView(view, position);
         }
@@ -253,6 +273,9 @@ public class BusinessContactsSearchView extends FrameLayout {
             final String mobileNumber = businessContact.getMobileNumber();
             final String businessType = businessContact.getBusinessType();
             final String profilePictureUrl = businessContact.getProfilePictureUrl();
+            final String businessAddress = businessContact.getAddressString();
+            final String businessThana = businessContact.getThanaString();
+            final String businessDistrict = businessContact.getDistrictString();
 
             if (businessName != null && !businessName.isEmpty())
                 businessNameView.setText(businessName);
@@ -261,7 +284,9 @@ public class BusinessContactsSearchView extends FrameLayout {
                 businessTypeView.setText(businessType);
                 businessTypeView.setVisibility(VISIBLE);
             }
-            mobileNumberView.setText(mobileNumber);
+            if (businessAddress != null && !businessAddress.isEmpty()) {
+                businessAddressView.setText(businessAddress);
+            }
             profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +296,8 @@ public class BusinessContactsSearchView extends FrameLayout {
 
                     mName = businessName;
                     mImageURL = profilePictureUrl;
+                    mAddress = businessAddress;
+                    mThanaDistrict = businessThana+", "+businessDistrict;
                     mCustomAutoCompleteView.clearFocus();
                     Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
                 }
