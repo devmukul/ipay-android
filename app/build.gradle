@@ -128,11 +128,11 @@ dependencies {
 
     compile files('libs/libphonenumber-7.2.8.jar')
     compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
-    compile 'com.google.firebase:firebase-messaging:10.2.1'
-    compile 'com.google.android.gms:play-services-places:10.2.1'
-    compile 'com.google.android.gms:play-services-vision:10.2.1'
-    compile 'com.google.android.gms:play-services-analytics:10.2.1'
-    compile 'com.google.android.gms:play-services:10.2.1'
+    compile 'com.google.firebase:firebase-messaging:11.2.0'
+    compile 'com.google.android.gms:play-services-places:11.2.0'
+    compile 'com.google.android.gms:play-services-vision:11.2.0'
+    compile 'com.google.android.gms:play-services-analytics:11.2.0'
+    compile 'com.google.android.gms:play-services:11.2.0'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.firebase:firebase-client-android:2.4.0'
