@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.MerchantBranchSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
 import bd.com.ipay.ipayskeleton.R;
@@ -74,24 +76,23 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                         DialogUtils.showServiceNotAllowedDialog(context);
                     } else {
-//                        PinChecker pinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
-//                            @Override
-//                            public void ifPinAdded() {
-//                                Intent intent;
-//                                intent = new Intent(context, PaymentActivity.class);
-//                                intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
-//                                intent.putExtra(Constants.NAME, businessAccountEntry.getBusinessName());
-//                                intent.putExtra(Constants.PHOTO_URI, businessAccountEntry.getProfilePictureUrl());
-//                                context.startActivity(intent);
-//                            }
-//                        });
-//                        pinChecker.execute();
 
                         PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
                             @Override
                             public void ifPinAdded() {
-                                mMerchantBranchSelectorDialog = new MerchantBranchSelectorDialog(context, mBusinessAccountEntryList.get(pos));
-                                mMerchantBranchSelectorDialog.showDialog();
+                                if (mBusinessAccountEntryList.get(pos).getBranches().size() > 1) {
+                                    mMerchantBranchSelectorDialog = new MerchantBranchSelectorDialog(context, mBusinessAccountEntryList.get(pos));
+                                    mMerchantBranchSelectorDialog.showDialog();
+                                } else {
+                                    Intent intent = new Intent(context, PaymentActivity.class);
+                                    intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
+                                    intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getBranches().get(0).getBranchAddress1());
+                                    intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getBranches().get(0).getBranchAddress2());
+                                    intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getBranches().get(0).getMobileNumber());
+                                    intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
+                                    intent.putExtra(Constants.FROM_BRANCHING, true);
+                                    context.startActivity(intent);
+                                }
                             }
                         });
                         payByQCPinChecker.execute();
