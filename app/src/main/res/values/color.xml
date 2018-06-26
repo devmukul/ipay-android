@@ -81,4 +81,6 @@
     <color name="colorPaymentReviewSecondaryText">#666666</color>
     <color name="colorPaymentReviewNoteText">#888888</color>
     <color name="colorPaymentReviewServiceCharge">#FF6565</color>
+
+    <color name="scanner_line">#00ceff</color>
 </resources>
