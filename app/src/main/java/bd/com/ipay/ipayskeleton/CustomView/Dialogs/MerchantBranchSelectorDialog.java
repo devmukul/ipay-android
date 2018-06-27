@@ -51,7 +51,7 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
     }
 
     private void supportViewsWithData() {
-        this.mMerchantLogoView.setBusinessProfilePicture(merchantDetails.getBusinessLogo(), false);
+        this.mMerchantLogoView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + merchantDetails.getBusinessLogo(), false);
         this.merchantNameTextView.setText(merchantDetails.getMerchantName());
     }
 
