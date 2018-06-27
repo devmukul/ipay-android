@@ -16,8 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
-import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.MerchantBranchSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -28,10 +28,11 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<BusinessAccountEntry> mBusinessAccountEntryList;
+    private List<MerchantDetails> mBusinessAccountEntryList;
+    private MerchantBranchSelectorDialog mMerchantBranchSelectorDialog;
     Context context;
 
-    public PayDashBoardItemAdapter(List<BusinessAccountEntry> mBusinessAccountEntryList, Context context) {
+    public PayDashBoardItemAdapter(List<MerchantDetails> mBusinessAccountEntryList, Context context) {
         this.mBusinessAccountEntryList = mBusinessAccountEntryList;
         this.context = context;
     }
@@ -46,10 +47,10 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
             mTextView = (TextView) itemView.findViewById(R.id.nameView);
         }
 
-        public void bindView(int pos) {
-            final BusinessAccountEntry businessAccountEntry = mBusinessAccountEntryList.get(pos);
-            final String name = businessAccountEntry.getBusinessName();
-            final String imageUrl = Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl();
+        public void bindView(final int pos) {
+            final MerchantDetails merchantDetails = mBusinessAccountEntryList.get(pos);
+            final String name = merchantDetails.getMerchantName();
+            final String imageUrl = Constants.BASE_URL_FTP_SERVER + merchantDetails.getBusinessLogo();
             mTextView.setText(name);
 
             try {
@@ -75,25 +76,23 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                         DialogUtils.showServiceNotAllowedDialog(context);
                     } else {
-//                        PinChecker pinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
-//                            @Override
-//                            public void ifPinAdded() {
-//                                Intent intent;
-//                                intent = new Intent(context, PaymentActivity.class);
-//                                intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
-//                                intent.putExtra(Constants.NAME, businessAccountEntry.getBusinessName());
-//                                intent.putExtra(Constants.PHOTO_URI, businessAccountEntry.getProfilePictureUrl());
-//                                context.startActivity(intent);
-//                            }
-//                        });
-//                        pinChecker.execute();
 
                         PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
                             @Override
                             public void ifPinAdded() {
-                                Intent intent;
-                                intent = new Intent(context, QRCodePaymentActivity.class);
-                                context.startActivity(intent);
+                                if (mBusinessAccountEntryList.get(pos).getBranches().size() > 1) {
+                                    mMerchantBranchSelectorDialog = new MerchantBranchSelectorDialog(context, mBusinessAccountEntryList.get(pos));
+                                    mMerchantBranchSelectorDialog.showDialog();
+                                } else {
+                                    Intent intent = new Intent(context, PaymentActivity.class);
+                                    intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
+                                    intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getBranches().get(0).getBranchAddress1());
+                                    intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getBranches().get(0).getBranchAddress2());
+                                    intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getBranches().get(0).getMobileNumber());
+                                    intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
+                                    intent.putExtra(Constants.FROM_BRANCHING, true);
+                                    context.startActivity(intent);
+                                }
                             }
                         });
                         payByQCPinChecker.execute();
