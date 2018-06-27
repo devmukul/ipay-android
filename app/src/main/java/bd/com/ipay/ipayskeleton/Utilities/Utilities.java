@@ -881,6 +881,10 @@ public class Utilities {
 
     }
 
+    public static void sendCancelEventTracker(Tracker tracker, String category, int accountID,String errorMessage){
+        
+    }
+
     public static void sendFailedEventTracker(Tracker tracker, String category, int accountId, String serverErrorMessage) {
         sendFailedEventTracker(tracker, category, accountId, serverErrorMessage, 0);
     }

@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -22,12 +22,16 @@ import android.widget.ProgressBar;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.math.BigDecimal;
+
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class CardPaymentWebViewActivity extends AppCompatActivity {
+public class CardPaymentWebViewActivity extends BaseActivity {
 
     public static final int CARD_TRANSACTION_FAILED = -1;
     public static final int CARD_TRANSACTION_CANCELED = 0;
@@ -41,6 +45,7 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
 
     private MaterialDialog transactionCancelDialog;
     private WebView mWebView;
+    private double mAmount = 0.0;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -49,6 +54,9 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_credit_or_debit_card_payment_web_view);
         mWebView = (WebView) findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        if (getIntent().hasExtra(Constants.AMOUNT)) {
+            mAmount = getIntent().getDoubleExtra(Constants.AMOUNT, 0.0);
+        }
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -187,11 +195,13 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
                 break;
             case CARD_TRANSACTION_FAILED:
                 showTransactionErrorDialog(intent, getString(R.string.add_money_from_credit_or_debit_card_failed_title), getString(R.string.add_money_from_credit_or_debit_card_failed_message));
+                Utilities.sendFailedEventTracker(mTracker, "Add money by card", ProfileInfoCacheManager.getAccountId(), getString(R.string.add_money_from_credit_or_debit_card_failed_message), new BigDecimal(mAmount).longValue());
                 break;
             case CARD_TRANSACTION_SUCCESSFUL:
                 ProfileInfoCacheManager.addSourceOfFund(true);
                 data.putString(Constants.TRANSACTION_ID, transactionId);
                 setResult(RESULT_OK, intent);
+                Utilities.sendSuccessEventTracker(mTracker, "Add money by card", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                 finish();
                 break;
         }
@@ -211,5 +221,10 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
                     }
                 }).cancelable(false).build();
         transactionErrorDialog.show();
+    }
+
+    @Override
+    protected Context setContext() {
+        return this;
     }
 }

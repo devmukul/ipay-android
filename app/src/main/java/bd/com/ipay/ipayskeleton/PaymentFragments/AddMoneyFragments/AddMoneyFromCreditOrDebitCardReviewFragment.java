@@ -146,6 +146,7 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends BaseFragment im
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         Intent intent = new Intent(getActivity(), CardPaymentWebViewActivity.class);
                         intent.putExtra(Constants.CARD_PAYMENT_URL, mAddMoneyByCreditOrDebitResponse.getForwardUrl());
+                        intent.putExtra(Constants.AMOUNT, mAmount);
                         startActivityForResult(intent, CARD_PAYMENT_WEB_VIEW_REQUEST);
                         break;
                     case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
