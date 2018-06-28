@@ -1112,13 +1112,6 @@ public class Utilities {
                 activity.startActivity(intent);
                 activity.finishAffinity();
                 break;
-            case "signup":
-                intent = new Intent(activity, SignupOrLoginActivity.class);
-                intent.putExtra(Constants.INVITATION_CODE, deepLinkAction.getInvitationCode());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                activity.startActivity(intent);
-                activity.finishAffinity();
-                break;
             default:
                 intent = new Intent(activity, HomeActivity.class);
                 activity.startActivity(intent);

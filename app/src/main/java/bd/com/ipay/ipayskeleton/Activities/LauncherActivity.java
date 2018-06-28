@@ -39,8 +39,6 @@ public class LauncherActivity extends AppCompatActivity {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
                         Utilities.performDeepLinkAction(this, deepLinkAction);
                     } else {
-                        System.out.println("Test Invite "+deepLinkAction.getAction()+" "+deepLinkAction.getInvitationCode());
-
                         launchSigninOrLoginActivity(deepLinkAction);
                     }
                 }else{
