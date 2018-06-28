@@ -97,6 +97,9 @@
                     android:scheme="https" />
 
                 <data
+                    android:host="@string/ipay_live_host" />
+
+                <data
                     android:host="@string/ipay_live_host_without_www"
                     android:scheme="https" />
 
@@ -208,6 +211,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Activities.InviteFriendActivity"
+            android:label="@string/invite_people_to_ipay"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".Activities.ManagedBusinessAccountSettingsActivity"
             android:screenOrientation="portrait"

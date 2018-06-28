@@ -249,7 +249,7 @@
     <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="promo_code">Promo Code</string>
-    <string name="enter_promo_code_optional">Promo Code (Optional)</string>
+    <string name="enter_promo_code_optional">Promo/Invitation Code (Optional)</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
@@ -1165,4 +1165,7 @@
     <string name="are_you_sure_to_introduce">Are you sure you want to introduce the person ?</string>
     <string name="accepted_in">Accepted in number location</string>
     <string name="merchants">Merchants</string>
+    <string name="invite_people_to_ipay">Invite People</string>
+    <string name="invite_a_friend">Invite a Friend</string>
+    <string name="invite_peple_text">Invite your friends to iPay and you\'ll both get 100tk and surprise gifts.</string>
 </resources>

@@ -71,6 +71,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
@@ -1088,8 +1089,12 @@ public class Utilities {
     public static DeepLinkAction parseUriForDeepLinkingAction(Uri uri) {
         DeepLinkAction deepLinkAction = new DeepLinkAction();
         List<String> pathSegments = uri.getPathSegments();
-        if(pathSegments.size()<3){
+        if(pathSegments.size()<2){
             return null;
+        }if(pathSegments.size()==2){
+            System.out.println("Test Invite "+pathSegments.get(0)+" "+uri.getQueryParameter("code"));
+            deepLinkAction.setAction(pathSegments.get(0));
+            deepLinkAction.setInvitationCode(uri.getQueryParameter("code"));
         }else {
             deepLinkAction.setAction(pathSegments.get(1));
             deepLinkAction.setOrderId(pathSegments.get(2));
@@ -1103,6 +1108,13 @@ public class Utilities {
             case "pay":
                 intent = new Intent(activity, PaymentActivity.class);
                 intent.putExtra(Constants.ORDER_ID, deepLinkAction.getOrderId());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                activity.startActivity(intent);
+                activity.finishAffinity();
+                break;
+            case "signup":
+                intent = new Intent(activity, SignupOrLoginActivity.class);
+                intent.putExtra(Constants.INVITATION_CODE, deepLinkAction.getInvitationCode());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 activity.startActivity(intent);
                 activity.finishAffinity();
