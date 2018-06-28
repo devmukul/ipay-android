@@ -137,10 +137,6 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         View v = inflater.inflate(R.layout.fragment_signup_personal_step_one, container, false);
 
         mDeepLinkAction = getActivity().getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
-
-        System.out.println("Test Invite "+mDeepLinkAction.getAction()+" "+mDeepLinkAction.getInvitationCode());
-
-
         mNameView = (EditText) v.findViewById(R.id.user_name);
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
@@ -181,7 +177,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             }
         });
 
-        if(!StringUtils.isEmpty(mDeepLinkAction.getInvitationCode())){
+        if(mDeepLinkAction !=null && !StringUtils.isEmpty(mDeepLinkAction.getInvitationCode())){
             mPromoCodeEditText.setText(mDeepLinkAction.getInvitationCode());
             mPromoCodeEditText.setEnabled(false);
         }

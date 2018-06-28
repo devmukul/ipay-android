@@ -29,6 +29,8 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.math.BigDecimal;
 
@@ -61,6 +63,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
@@ -82,7 +85,6 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -104,7 +106,15 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
             }
         });
 
-        getInvitationCode();
+        mInvitationCode = SharedPrefManager.getInvitationCode();
+
+        if(StringUtils.isEmpty(mInvitationCode)){
+            getInvitationCode();
+        }else {
+            mInvitationCodeEditText.setText(mInvitationCode);
+        }
+
+
 
         return v;
     }
@@ -178,6 +188,7 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
                 GetPromoResponse mInvitationCodeResponse = gson.fromJson(result.getJsonString(), GetPromoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mInvitationCode = mInvitationCodeResponse.getInvitationCode();
+                    SharedPrefManager.setInvitationCode(mInvitationCode);
                     mInvitationCodeEditText.setText(mInvitationCode);
                 }else{
                     Toast.makeText(getContext(), mInvitationCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
