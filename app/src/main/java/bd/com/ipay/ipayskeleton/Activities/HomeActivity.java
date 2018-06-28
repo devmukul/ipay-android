@@ -548,7 +548,7 @@ public class HomeActivity extends BaseActivity
 
     @ValidateAccess
     public void switchToInviteActivity() {
-        Intent intent = new Intent(HomeActivity.this, InviteActivity.class);
+        Intent intent = new Intent(HomeActivity.this, InviteFriendActivity.class);
         startActivity(intent);
         switchedToHomeFragment = false;
     }

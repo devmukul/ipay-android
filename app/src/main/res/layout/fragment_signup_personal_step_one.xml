@@ -178,7 +178,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/enter_promo_code_optional"
-                        android:maxLength="6"
                         android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
 

@@ -23,6 +23,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,6 +42,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
@@ -77,6 +81,8 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
     private int mMonth;
     private int mDay;
     private String mDayName;
+
+    private DeepLinkAction mDeepLinkAction;
 
     private final DatePickerDialog.OnDateSetListener mDateSetListener =
         new DatePickerDialog.OnDateSetListener() {
@@ -130,6 +136,11 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_personal_step_one, container, false);
 
+        mDeepLinkAction = getActivity().getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
+
+        System.out.println("Test Invite "+mDeepLinkAction.getAction()+" "+mDeepLinkAction.getInvitationCode());
+
+
         mNameView = (EditText) v.findViewById(R.id.user_name);
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
@@ -170,31 +181,10 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             }
         });
 
-        mPromoCodeEditText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                String str = s.toString();
-                if(str.length() > 0 && str.contains(" "))
-                {
-                    mPromoCodeEditText.setError(getString(R.string.error_invalid_promo_code));
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-
-            }
-        });
+        if(!StringUtils.isEmpty(mDeepLinkAction.getInvitationCode())){
+            mPromoCodeEditText.setText(mDeepLinkAction.getInvitationCode());
+            mPromoCodeEditText.setEnabled(false);
+        }
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,12 +303,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             focusView = mBirthdayEditText;
             cancel = true;
 
-        } else if (SignupOrLoginActivity.mPromoCode.length()>0 && (SignupOrLoginActivity.mPromoCode.length()< 6 || SignupOrLoginActivity.mPromoCode.contains(" "))) {
-            mPromoCodeEditText.setError(getString(R.string.error_invalid_promo_code));
-            focusView = mPromoCodeEditText;
-            cancel = true;
-
-        } else if (!mAgreementCheckBox.isChecked()) {
+        }else if (!mAgreementCheckBox.isChecked()) {
             cancel = true;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
