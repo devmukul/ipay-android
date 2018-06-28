@@ -48,10 +48,6 @@ public class InviteFriendActivity extends BaseActivity {
     public void switchToRequestMoneyFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new InviteFriendFragment()).commit();
-
-//        setTitle(R.string.request_money);
-//        mFabRequestMoney.setVisibility(View.GONE);
-//        switchedToPendingList = false;
     }
 
     @Override

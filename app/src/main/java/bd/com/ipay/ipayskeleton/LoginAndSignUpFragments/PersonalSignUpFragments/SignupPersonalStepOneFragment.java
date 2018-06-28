@@ -181,34 +181,6 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             }
         });
 
-
-
-//        mPromoCodeEditText.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // TODO Auto-generated method stub
-//                String str = s.toString();
-//                if(str.length() > 0 && str.contains(" "))
-//                {
-//                    mPromoCodeEditText.setError(getString(R.string.error_invalid_promo_code));
-//                }
-//            }
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count,
-//                                          int after) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//        });
-
         if(!StringUtils.isEmpty(mDeepLinkAction.getInvitationCode())){
             mPromoCodeEditText.setText(mDeepLinkAction.getInvitationCode());
             mPromoCodeEditText.setEnabled(false);
@@ -331,14 +303,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             focusView = mBirthdayEditText;
             cancel = true;
 
-        }
-//        else if (SignupOrLoginActivity.mPromoCode.length()>0 && (SignupOrLoginActivity.mPromoCode.length()< 6 || SignupOrLoginActivity.mPromoCode.contains(" "))) {
-//            mPromoCodeEditText.setError(getString(R.string.error_invalid_promo_code));
-//            focusView = mPromoCodeEditText;
-//            cancel = true;
-//
-//        }
-        else if (!mAgreementCheckBox.isChecked()) {
+        }else if (!mAgreementCheckBox.isChecked()) {
             cancel = true;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();

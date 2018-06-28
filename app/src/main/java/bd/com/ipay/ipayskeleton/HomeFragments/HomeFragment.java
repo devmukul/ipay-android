@@ -101,7 +101,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private LinearLayout mSendMoneyButton;
     private LinearLayout mRequestMoneyButton;
     private LinearLayout mPayByQRCodeButton;
-    //private LinearLayout mMakePaymentButton;
     private LinearLayout mInviteFriendButton;
     private LinearLayout mTopUpButton;
     private LinearLayout mIPayHereButton;
@@ -145,7 +144,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mSendMoneyButton = (LinearLayout) v.findViewById(R.id.button_send_money);
         mRequestMoneyButton = (LinearLayout) v.findViewById(R.id.button_request_money);
         mPayByQRCodeButton = (LinearLayout) v.findViewById(R.id.button_pay_by_qr_code);
-        //mMakePaymentButton = (LinearLayout) v.findViewById(R.id.button_make_payment);
         mInviteFriendButton = (LinearLayout) v.findViewById(R.id.button_invite_friend);
         mTopUpButton = (LinearLayout) v.findViewById(R.id.button_topup);
         mIPayHereButton = (LinearLayout) v.findViewById(R.id.button_ipay_here);
