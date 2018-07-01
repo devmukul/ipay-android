@@ -71,25 +71,32 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         if (SharedPrefManager.ifContainsUserID()) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new LoginFragment()).commit();
-        } else {
-            Utilities.hideKeyboard(this);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
         }
-
-        if (getIntent().hasExtra(Constants.MESSAGE)) {
-            String message = getIntent().getStringExtra(Constants.MESSAGE);
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            switchToLoginFragment();
-        } else if (getIntent().hasExtra(Constants.TARGET_FRAGMENT)) {
-            attemptRequestForPermission();
-            String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
-            if (targetFragment.equals(Constants.SIGN_IN)) {
+        else if (mDeepLinkAction != null && mDeepLinkAction.getAction().trim().equalsIgnoreCase("signup")) {
+            switchToSignupPersonalStepOneFragment();
+        }
+        else {
+            if (getIntent().hasExtra(Constants.MESSAGE)) {
+                String message = getIntent().getStringExtra(Constants.MESSAGE);
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 switchToLoginFragment();
-            } else if (targetFragment.equals(Constants.SIGN_UP)) {
-                switchToAccountSelectionFragment();
+            } else if (getIntent().hasExtra(Constants.TARGET_FRAGMENT)) {
+                attemptRequestForPermission();
+                String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
+                if (targetFragment.equals(Constants.SIGN_IN)) {
+                    switchToLoginFragment();
+                } else if (targetFragment.equals(Constants.SIGN_UP)) {
+                    switchToAccountSelectionFragment();
+                }
+            }else {
+
+                Utilities.hideKeyboard(this);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
             }
         }
+
+
 
     }
 
@@ -207,7 +214,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Utilities.hideKeyboard(this);
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (mDeepLinkAction != null && mDeepLinkAction.getAction().trim().equalsIgnoreCase("signup")) {
+            Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            this.finish();
+        }else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
             if (!SharedPrefManager.ifContainsUserID()) {

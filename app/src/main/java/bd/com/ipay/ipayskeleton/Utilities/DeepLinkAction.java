@@ -7,19 +7,26 @@ public class DeepLinkAction implements Parcelable {
     private String action;
     private String orderId;
 
+    private String actionType;
+    private String invitationCode;
+
     public DeepLinkAction() {
-        this("", "");
+        this("", "", "","");
     }
 
-    public DeepLinkAction(String action, String orderId) {
 
+    public DeepLinkAction(String action, String orderId, String actionType, String invitationCode) {
         this.action = action;
         this.orderId = orderId;
+        this.actionType = actionType;
+        this.invitationCode = invitationCode;
     }
 
     protected DeepLinkAction(Parcel in) {
         action = in.readString();
         orderId = in.readString();
+        actionType = in.readString();
+        invitationCode = in.readString();
     }
 
     public static final Creator<DeepLinkAction> CREATOR = new Creator<DeepLinkAction>() {
@@ -51,11 +58,29 @@ public class DeepLinkAction implements Parcelable {
         this.orderId = orderId;
     }
 
+    public String getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(String actionType) {
+        this.actionType = actionType;
+    }
+
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
+    }
+
     @Override
     public String toString() {
         return "DeepLinkAction{" +
                 "action='" + action + '\'' +
-                ", orderId=" + orderId +
+                ", orderId='" + orderId + '\'' +
+                ", actionType='" + actionType + '\'' +
+                ", invitationCode='" + invitationCode + '\'' +
                 '}';
     }
 
@@ -68,5 +93,7 @@ public class DeepLinkAction implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(action);
         dest.writeString(orderId);
+        dest.writeString(actionType);
+        dest.writeString(invitationCode);
     }
 }

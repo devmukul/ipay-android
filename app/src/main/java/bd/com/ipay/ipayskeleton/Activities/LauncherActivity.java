@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -37,7 +39,11 @@ public class LauncherActivity extends AppCompatActivity {
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
-                        Utilities.performDeepLinkAction(this, deepLinkAction);
+                        if(StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
+                            Utilities.performDeepLinkAction(this, deepLinkAction);
+                        }else{
+                            launchHomeActivity();
+                        }
                     } else {
                         launchSigninOrLoginActivity(deepLinkAction);
                     }

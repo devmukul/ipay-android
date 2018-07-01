@@ -444,6 +444,7 @@ public class Constants {
     // Invite Rest
     public static final String URL_GET_INVITE_INFO = "invitation";
     public static final String URL_SEND_INVITE = "invitation/invite/";
+    public static final String URL_GET_INVITATION_CODE = "promo/invitation-code";
 
 
     // Mobile Topup Request REST
@@ -733,6 +734,7 @@ public class Constants {
     // Invite
     public static final String COMMAND_GET_INVITE_INFO = "COMMAND_GET_INVITE_INFO";
     public static final String COMMAND_SEND_INVITE = "COMMAND_SEND_INVITE";
+    public static final String COMMAND_GET_INVITATION_CODE = "COMMAND_GET_INVITATION_CODE";
 
     // Email
     public static final String COMMAND_GET_EMAILS = "COMMAND_GET_EMAILS";
@@ -946,6 +948,7 @@ public class Constants {
     public static final int LOCATION_REQUIRED_TRUE = 1;
     public static final String DEEP_LINK_ACTION = "DEEP_LINK_ACTION";
     public static final String ORDER_ID = "ORDER_ID";
+    public static final String INVITATION_CODE = "INVITATION_CODE";
 
     public static final int RC_BARCODE_CAPTURE = 9001;
 
