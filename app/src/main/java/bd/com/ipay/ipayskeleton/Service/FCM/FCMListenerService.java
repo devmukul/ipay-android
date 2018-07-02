@@ -45,7 +45,9 @@ public class FCMListenerService extends FirebaseMessagingService {
         serviceId = FCMNotificationParser.parseServiceID(mFcmNotificationResponse);
 
         // Check if message contains a notification payload.
-        if (!(AppInstanceUtilities.isUserActive(this)) || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION) {
+        if (!(AppInstanceUtilities.isUserActive(this))
+                || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION
+                || serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
             if (notification != null) {
                 Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
 
@@ -65,8 +67,12 @@ public class FCMListenerService extends FirebaseMessagingService {
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {
-        new CreateCustomNotificationAsyncTask(context, title,
-                message, imageUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
+            new CreateCustomNotificationAsyncTask(context, title,
+                    message, imageUrl, mFcmNotificationResponse.getDeepLink()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new CreateCustomNotificationAsyncTask(context, title,
+                    message, imageUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
-
 }

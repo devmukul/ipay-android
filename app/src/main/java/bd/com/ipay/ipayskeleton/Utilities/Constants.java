@@ -830,6 +830,7 @@ public class Constants {
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
     public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
+    public static final int SERVICE_ID_DEEP_LINK_NOTIFICATION = 1234;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";
@@ -951,5 +952,6 @@ public class Constants {
     public static final String INVITATION_CODE = "INVITATION_CODE";
 
     public static final int RC_BARCODE_CAPTURE = 9001;
+    public static final String PATH = "PATH";
 
 }

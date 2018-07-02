@@ -20,8 +20,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.LauncherActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -77,12 +80,24 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
     protected void onPostExecute(Bitmap result) {
 
         int notificationID = new Random().nextInt();
-        Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
-
-        if (deepLink != null || !deepLink.isEmpty())
-            intent.putExtra(Constants.DEEP_LINK_ACTION, getDeepLinkAction());
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent;
+        if (deepLink != null || !deepLink.isEmpty()) {
+            /*if (ProfileInfoCacheManager.getLoggedInStatus(false)) {
+                intent = new Intent(mContext, HomeActivity.class);
+                intent.putExtra(Constants.DEEP_LINK_ACTION, getDeepLinkAction());
+            } else {
+                intent = new Intent(mContext, SignupOrLoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra(Constants.DEEP_LINK_ACTION, getDeepLinkAction());
+            }*/
+            intent = new Intent(mContext, LauncherActivity.class);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(deepLink));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        } else {
+            intent = new Intent(mContext, SignupOrLoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 

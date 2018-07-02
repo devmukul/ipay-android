@@ -1091,11 +1091,12 @@ public class Utilities {
         List<String> pathSegments = uri.getPathSegments();
         if (pathSegments.size() < 2) {
             return null;
-        }
-        if (pathSegments.size() == 2) {
+        } else if (pathSegments.size() == 2 && pathSegments.get(0).contains("signup")) {
             System.out.println("Test Invite " + pathSegments.get(0) + " " + uri.getQueryParameter("code"));
             deepLinkAction.setAction(pathSegments.get(0));
             deepLinkAction.setInvitationCode(uri.getQueryParameter("code"));
+        } else if (pathSegments.size() == 2 && pathSegments.get(0).contains("app")) {
+            deepLinkAction.setAction(pathSegments.get(1));
         } else {
             deepLinkAction.setAction(pathSegments.get(1));
             deepLinkAction.setOrderId(pathSegments.get(2));
@@ -1112,6 +1113,12 @@ public class Utilities {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 activity.startActivity(intent);
                 activity.finishAffinity();
+                break;
+            case "promotions":
+                intent = new Intent(activity, HomeActivity.class);
+                intent.putExtra(Constants.PATH, deepLinkAction.getAction());
+                activity.startActivity(intent);
+                activity.finish();
                 break;
             default:
                 intent = new Intent(activity, HomeActivity.class);
