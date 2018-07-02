@@ -81,6 +81,8 @@
     <color name="colorPaymentReviewSecondaryText">#666666</color>
     <color name="colorPaymentReviewNoteText">#888888</color>
     <color name="colorPaymentReviewServiceCharge">#FF6565</color>
+    <color name="invite_people_text_color">#858585</color>
+    <color name="invite_code_text_color">#212121</color>
 
     <color name="scanner_line">#00ceff</color>
 </resources>

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
@@ -49,6 +50,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private LinearLayout mScrollViewHolder;
     private View mTopUpView;
     private View mPayByQCView;
+    private View mMakePaymentView;
     private View mRequestPaymentView;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -72,6 +74,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mScrollViewHolder = (LinearLayout) v.findViewById(R.id.scrollViewHolder);
         mTopUpView = v.findViewById(R.id.topUpView);
         mPayByQCView = v.findViewById(R.id.payByQCView);
+        mMakePaymentView = v.findViewById(R.id.makePaymentView);
         mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
@@ -106,6 +109,22 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     public void ifPinAdded() {
                         Intent intent;
                         intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mMakePaymentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                        intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
                         startActivity(intent);
                     }
                 });

@@ -93,4 +93,12 @@ public class SharedPrefManager {
     public static boolean isBangladesh() {
         return getUserCountry().equalsIgnoreCase("BD");
     }
+
+    public static String getInvitationCode() {
+        return pref.getString(SharedPrefConstants.INVITATION_CODE, null);
+    }
+
+    public static void setInvitationCode(String value) {
+        pref.edit().putString(SharedPrefConstants.INVITATION_CODE, value).apply();
+    }
 }
