@@ -2,6 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/topLayout"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -13,6 +14,18 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
+      <bd.com.ipay.ipayskeleton.QRScanner.ScannerOverlay
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="#44000000"
+          app:line_color="#7323DC"
+          app:line_speed="6"
+          app:line_width="4"
+          app:square_height="200"
+          app:square_width="200" />
+
   </bd.com.ipay.ipayskeleton.QRScanner.camera.CameraSourcePreview>
+
+
 
 </LinearLayout>
