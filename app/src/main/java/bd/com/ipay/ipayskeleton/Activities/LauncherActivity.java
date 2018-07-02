@@ -107,4 +107,5 @@ public class LauncherActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    
 }

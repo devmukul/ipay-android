@@ -1168,4 +1168,7 @@
     <string name="invite_people_to_ipay">Invite Friends</string>
     <string name="invite_a_friend">Invite a Friend</string>
     <string name="invite_peple_text">Invite your friends to iPay and get attractive bonus and surprise gifts.</string>
+
+    <string name="facebook_app_id">269331673611619</string>
+    <string name="fb_login_protocol_scheme">fb269331673611619</string>
 </resources>
