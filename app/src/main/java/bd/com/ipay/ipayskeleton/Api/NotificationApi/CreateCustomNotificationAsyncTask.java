@@ -22,17 +22,34 @@ import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
     private Context mContext;
-    private String title, message, imageUrl;
+    private String title, message, imageUrl, deepLink;
 
     public CreateCustomNotificationAsyncTask(Context context, String title, String message, String imageUrl) {
         this.mContext = context;
         this.title = title;
         this.message = message;
         this.imageUrl = imageUrl;
+    }
+
+    public CreateCustomNotificationAsyncTask(Context mContext, String title, String message, String imageUrl, String deepLink) {
+        this.mContext = mContext;
+        this.title = title;
+        this.message = message;
+        this.imageUrl = imageUrl;
+        this.deepLink = deepLink;
+    }
+
+    public DeepLinkAction getDeepLinkAction() {
+        Uri uri = Uri.parse(deepLink);
+        DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
+        return deepLinkAction;
     }
 
     @Override
@@ -61,6 +78,9 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
 
         int notificationID = new Random().nextInt();
         Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
+
+        if (deepLink != null || !deepLink.isEmpty())
+            intent.putExtra(Constants.DEEP_LINK_ACTION, getDeepLinkAction());
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,

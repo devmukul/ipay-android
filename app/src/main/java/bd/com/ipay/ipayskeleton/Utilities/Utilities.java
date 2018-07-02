@@ -1089,13 +1089,14 @@ public class Utilities {
     public static DeepLinkAction parseUriForDeepLinkingAction(Uri uri) {
         DeepLinkAction deepLinkAction = new DeepLinkAction();
         List<String> pathSegments = uri.getPathSegments();
-        if(pathSegments.size()<2){
+        if (pathSegments.size() < 2) {
             return null;
-        }if(pathSegments.size()==2){
-            System.out.println("Test Invite "+pathSegments.get(0)+" "+uri.getQueryParameter("code"));
+        }
+        if (pathSegments.size() == 2) {
+            System.out.println("Test Invite " + pathSegments.get(0) + " " + uri.getQueryParameter("code"));
             deepLinkAction.setAction(pathSegments.get(0));
             deepLinkAction.setInvitationCode(uri.getQueryParameter("code"));
-        }else {
+        } else {
             deepLinkAction.setAction(pathSegments.get(1));
             deepLinkAction.setOrderId(pathSegments.get(2));
         }

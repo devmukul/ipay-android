@@ -7,6 +7,7 @@ public class FCMNotificationResponse {
     private boolean isReceiver;
     private String changed_data;
     private String icon;
+    private String deepLink;
 
     public int getServiceId() {
         return serviceId;
@@ -18,6 +19,10 @@ public class FCMNotificationResponse {
 
     public String getIcon() {
         return icon;
+    }
+
+    public String getDeepLink() {
+        return deepLink;
     }
 
     public FCMNotificationData getNotificationData() {
