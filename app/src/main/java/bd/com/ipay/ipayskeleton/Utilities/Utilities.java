@@ -71,7 +71,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
@@ -1094,9 +1094,12 @@ public class Utilities {
         } else if (pathSegments.size() == 2 && pathSegments.get(0).contains("signup")) {
             System.out.println("Test Invite " + pathSegments.get(0) + " " + uri.getQueryParameter("code"));
             deepLinkAction.setAction(pathSegments.get(0));
-            deepLinkAction.setInvitationCode(uri.getQueryParameter("code"));
+            deepLinkAction.setQueryParameter(uri.getQueryParameter("code"));
         } else if (pathSegments.size() == 2 && pathSegments.get(0).contains("app")) {
             deepLinkAction.setAction(pathSegments.get(1));
+            if (uri.getQueryParameter("link") != null) {
+                deepLinkAction.setQueryParameter(uri.getQueryParameter("link"));
+            }
         } else {
             deepLinkAction.setAction(pathSegments.get(1));
             deepLinkAction.setOrderId(pathSegments.get(2));
@@ -1115,10 +1118,17 @@ public class Utilities {
                 activity.finishAffinity();
                 break;
             case "promotions":
-                intent = new Intent(activity, HomeActivity.class);
-                intent.putExtra(Constants.PATH, deepLinkAction.getAction());
-                activity.startActivity(intent);
-                activity.finish();
+                if (deepLinkAction.getQueryParameter() != null) {
+                    intent = new Intent(activity, WebViewActivity.class);
+                    intent.putExtra("url", "https://www.ipay.com.bd/promotions?link=" + deepLinkAction.getQueryParameter());
+                    activity.startActivity(intent);
+                    activity.finish();
+                } else {
+                    intent = new Intent(activity, HomeActivity.class);
+                    intent.putExtra(Constants.PATH, deepLinkAction.getAction());
+                    activity.startActivity(intent);
+                    activity.finish();
+                }
                 break;
             default:
                 intent = new Intent(activity, HomeActivity.class);
