@@ -20,14 +20,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.LauncherActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
@@ -47,12 +42,6 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
         this.message = message;
         this.imageUrl = imageUrl;
         this.deepLink = deepLink;
-    }
-
-    public DeepLinkAction getDeepLinkAction() {
-        Uri uri = Uri.parse(deepLink);
-        DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
-        return deepLinkAction;
     }
 
     @Override
@@ -82,14 +71,6 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
         int notificationID = new Random().nextInt();
         Intent intent;
         if (deepLink != null || !deepLink.isEmpty()) {
-            /*if (ProfileInfoCacheManager.getLoggedInStatus(false)) {
-                intent = new Intent(mContext, HomeActivity.class);
-                intent.putExtra(Constants.DEEP_LINK_ACTION, getDeepLinkAction());
-            } else {
-                intent = new Intent(mContext, SignupOrLoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra(Constants.DEEP_LINK_ACTION, getDeepLinkAction());
-            }*/
             intent = new Intent(mContext, LauncherActivity.class);
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(deepLink));
