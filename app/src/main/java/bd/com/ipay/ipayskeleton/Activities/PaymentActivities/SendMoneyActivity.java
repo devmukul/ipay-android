@@ -16,6 +16,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyRec
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneySuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionContactFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyActivity extends BaseActivity {

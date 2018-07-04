@@ -51,7 +51,6 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ContactsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
