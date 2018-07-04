@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetails;
@@ -92,6 +93,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pay_by_deep_link, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
+        if (PaymentActivity.mMandatoryBusinessRules == null) {
+            PaymentActivity.mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.MAKE_PAYMENT);
+        }
         attemptGetBusinessRules(Constants.SERVICE_ID_MAKE_PAYMENT);
         SharedPrefManager.setFirstLaunch(false);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
@@ -132,6 +136,18 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                 mUri, getActivity(), this, true);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
     }
 
     private void setButtonActions() {

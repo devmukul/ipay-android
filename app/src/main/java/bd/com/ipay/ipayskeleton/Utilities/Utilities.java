@@ -71,6 +71,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
@@ -1088,14 +1089,18 @@ public class Utilities {
     public static DeepLinkAction parseUriForDeepLinkingAction(Uri uri) {
         DeepLinkAction deepLinkAction = new DeepLinkAction();
         List<String> pathSegments = uri.getPathSegments();
-        Logger.logD(TAG, uri.getPathSegments().toString());
-        deepLinkAction.setAction(pathSegments.get(1));
-        deepLinkAction.setOrderId(pathSegments.get(2));
-        Logger.logD(TAG, deepLinkAction.toString());
+        if(pathSegments.size()<2){
+            return null;
+        }if(pathSegments.size()==2){
+            System.out.println("Test Invite "+pathSegments.get(0)+" "+uri.getQueryParameter("code"));
+            deepLinkAction.setAction(pathSegments.get(0));
+            deepLinkAction.setInvitationCode(uri.getQueryParameter("code"));
+        }else {
+            deepLinkAction.setAction(pathSegments.get(1));
+            deepLinkAction.setOrderId(pathSegments.get(2));
+        }
         return deepLinkAction;
-
     }
-
 
     public static void performDeepLinkAction(Activity activity, DeepLinkAction deepLinkAction) {
         Intent intent;

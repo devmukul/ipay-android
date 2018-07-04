@@ -4,29 +4,31 @@
     android:id="@+id/payByQCView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/activity_horizontal_margin_card"
-    android:orientation="vertical">
+    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin_card">
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/imageView"
-            android:layout_width="@dimen/value80"
-            android:layout_height="@dimen/value80"
-            android:scaleType="centerCrop"
-            android:elevation="@dimen/value2"
-            card_view:riv_corner_radius="@dimen/value2"
-            android:src="@drawable/background_icon_pay_by_qc"
-            android:background="@drawable/semiround_white_default" />
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/value80"
+        android:layout_height="@dimen/value80"
+        android:background="@drawable/semiround_white_default"
+        android:elevation="@dimen/value2"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_icon_pay_by_qc"
+        card_view:riv_corner_radius="@dimen/value2" />
 
-        <TextView
-            android:id="@+id/nameView"
-            android:layout_width="@dimen/value80"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_horizontal"
-            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:gravity="center_horizontal"
-            android:text="@string/pay_by_QR_code"
-            android:textSize="@dimen/text_size_extra_smaller_value11"
-            android:textColor="@color/colorBlack"/>
+    <TextView
+        android:id="@+id/nameView"
+        android:layout_width="@dimen/value80"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal"
+        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+        android:ellipsize="marquee"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
+        android:text="@string/pay_by_QR_code"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_extra_smaller_value11" />
 </LinearLayout>

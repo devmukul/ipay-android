@@ -69,8 +69,8 @@
             android:animateLayoutChanges="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:paddingBottom="@dimen/activity_horizontal_margin_semi_double">
+            android:paddingBottom="@dimen/activity_horizontal_margin_semi_double"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/edit_icon_mobile_number"
@@ -87,17 +87,18 @@
                 android:id="@+id/profile_picture"
                 style="@style/PaymentReviewImageStyleLarge"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="@dimen/activity_horizontal_margin"/>
+                android:layout_margin="@dimen/activity_horizontal_margin" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@id/profile_picture"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:layout_below="@id/profile_picture">
+                android:orientation="vertical">
 
-            <TextView
+
+                <TextView
                     android:id="@+id/textview_name"
                     style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
@@ -110,23 +111,32 @@
                     android:gravity="center_horizontal"
                     android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/textview_address_line_1"
-                    style="@style/TextViewUserInfoPaymentReviewSecondary"
-                    android:gravity="center_horizontal"
-                    android:visibility="gone" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/textview_address_line_2"
-                    style="@style/TextViewUserInfoPaymentReviewSecondary"
-                    android:gravity="center_horizontal"
-                    android:visibility="gone" />
+                    <ProgressBar
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/address_progress_bar"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/textview_address_line_3"
-                    style="@style/TextViewUserInfoPaymentReviewSecondary"
-                    android:gravity="center_horizontal"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/textview_address_line_1"
+                        style="@style/TextViewUserInfoPaymentReviewSecondary"
+                        android:gravity="center_horizontal"
+                        android:singleLine="true"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/textview_address_line_2"
+                        style="@style/TextViewUserInfoPaymentReviewSecondary"
+                        android:layout_below="@id/textview_address_line_1"
+                        android:gravity="center_horizontal"
+                        android:singleLine="true"
+                        android:visibility="invisible" />
+                </RelativeLayout>
 
             </LinearLayout>
         </RelativeLayout>

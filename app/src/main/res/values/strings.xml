@@ -249,7 +249,7 @@
     <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="promo_code">Promo Code</string>
-    <string name="enter_promo_code_optional">Promo Code (Optional)</string>
+    <string name="enter_promo_code_optional">Promo/Invitation Code (Optional)</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
@@ -1154,12 +1154,23 @@
     <string name="cant_fetch_details">Failed to fetch order details</string>
 
     <string name="ipay_live_host">www.ipay.com.bd</string>
+    <string name="ipay_live_host_without_www">ipay.com.bd</string>
     <string name="ipay_demo_host">demo.ipay.com.bd</string>
     <string name="ipay_dev_host">dev.ipay.com.bd</string>
     <string name="connection_time_out">Connection time out</string>
     <string name="network_unreachable">Network is unreachable</string>
     <string name="OK">OK</string>
     <string name="invalid_image_type">Invalid image type. Only JPG or PNG are allowed</string>
+    <string name="introduce_user">Introduce member</string>
+    <string name="are_you_sure_to_introduce">Are you sure you want to introduce the person ?</string>
+    <string name="accepted_in">Accepted in number location</string>
+    <string name="merchants">Merchants</string>
+    <string name="invite_people_to_ipay">Invite Friends</string>
+    <string name="invite_a_friend">Invite a Friend</string>
+    <string name="invite_peple_text">Invite your friends to iPay and get attractive bonus and surprise gifts.</string>
+
+    <string name="facebook_app_id">269331673611619</string>
+    <string name="fb_login_protocol_scheme">fb269331673611619</string>
     <string name="send_money_helper_text">You can send money from your iPay account to another iPay member\'s account.To send money, you just have to follow following steps</string>
     <string name="send_money_step_one">Search <b>Name/Mobile number</b> or select the person from the list</string>
     <string name="ok_got_it">Ok, I got it !</string>

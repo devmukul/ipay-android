@@ -484,13 +484,8 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
 
-            } else {
-                if (getActivity() != null)
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {

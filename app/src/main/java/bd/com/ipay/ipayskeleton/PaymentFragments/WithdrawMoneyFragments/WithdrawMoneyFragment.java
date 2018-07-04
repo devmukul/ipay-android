@@ -334,13 +334,9 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                             BusinessRuleCacheManager.setBusinessRules(Constants.WITHDRAW_MONEY, WithdrawMoneyActivity.mMandatoryBusinessRules);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            if (getActivity() != null)
-                                DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         }
                         break;
                     default:
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         break;
                 }
                 break;

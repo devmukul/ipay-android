@@ -85,6 +85,17 @@ public class RequestMoneyReviewFragment extends BaseFragment implements HttpResp
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_review));
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

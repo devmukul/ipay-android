@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;

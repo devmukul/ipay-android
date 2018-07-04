@@ -46,7 +46,6 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
@@ -531,15 +530,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
 
-            } else {
-                if (getActivity() != null)
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
-
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             mCustomProgressDialog.dismissDialog();
@@ -645,6 +638,17 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
 
     private void switchActivity(Class tClass) {
         Intent intent = new Intent(getActivity(), tClass);

@@ -52,8 +52,8 @@ public class DashBoardFragment extends Fragment {
         setTitle();
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
-        mPayFragment = new PayDashBoardFragment();
         mOfferHolderFragment = new OfferFragment();
+        mPayFragment = new PayDashBoardFragment();
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
@@ -116,7 +116,6 @@ public class DashBoardFragment extends Fragment {
         offerTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         payTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-
         setTabViews();
     }
 

@@ -48,6 +48,8 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
     private int profilePictureUrlIndex;
     private int businessTypeIndex;
     private int businessAddressIndex;
+    private int businessThanaIndex;
+    private int businessDistrictIndex;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -119,6 +121,8 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
                     businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
                     businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
+                    businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
+                    businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_BUSINESS_URI);
                 }
@@ -254,8 +258,11 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                 final String businessName = mCursor.getString(businessNameIndex);
                 final String mobileNumber = mCursor.getString(phoneNumberIndex);
                 final int businessTypeID = mCursor.getInt(businessTypeIndex);
+                final String businessPictureUrl = mCursor.getString(profilePictureUrlIndex);
                 final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
                 final String businessAddress = mCursor.getString(businessAddressIndex);
+                final String businessThana = mCursor.getString(businessThanaIndex);
+                final String businessDistrict = mCursor.getString(businessDistrictIndex);
 
                 if (businessName != null && !businessName.isEmpty()) {
                     businessNameView.setText(businessName);
@@ -281,7 +288,10 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                         if (businessName != null && !businessName.isEmpty())
                             intent.putExtra(Constants.BUSINESS_NAME, businessName);
                         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
-                        intent.putExtra(Constants.PROFILE_PICTURE, mCursor.getString(profilePictureUrlIndex));
+                        intent.putExtra(Constants.PROFILE_PICTURE, businessPictureUrl);
+                        intent.putExtra(Constants.ADDRESS, businessAddress);
+                        intent.putExtra(Constants.THANA, businessThana);
+                        intent.putExtra(Constants.DISTRICT, businessDistrict);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }

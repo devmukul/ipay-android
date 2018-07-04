@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -137,6 +137,8 @@ public class DataHelper {
                     values.put(DBConstants.KEY_BUSINESS_PROFILE_PICTURE_QUALITY_HIGH, mBusinessAccountEntry.getProfilePictureUrlHigh());
                     values.put(DBConstants.KEY_BUSINESS_ACCOUNT_ID, mBusinessAccountEntry.getBusinessId());
                     values.put(DBConstants.KEY_BUSINESS_ADDRESS, mBusinessAccountEntry.getAddressString());
+                    values.put(DBConstants.KEY_BUSINESS_THANA, mBusinessAccountEntry.getThanaString());
+                    values.put(DBConstants.KEY_BUSINESS_DISTRICT, mBusinessAccountEntry.getDistrictString());
 
                     db.insertWithOnConflict(DBConstants.DB_TABLE_BUSINESS_ACCOUNTS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
@@ -304,6 +306,33 @@ public class DataHelper {
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
                     + " WHERE (" + DBConstants.KEY_BUSINESS_NAME + " LIKE '%" + query + "%'"
+                    +  ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
+                    + " COLLATE NOCASE";
+
+            Logger.logW("Query", queryString);
+
+            cursor = db.rawQuery(queryString, null);
+
+            if (cursor != null) {
+                cursor.getCount();
+                Logger.logW("Query", cursor.getCount() + "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cursor;
+    }
+
+
+    public Cursor searchBusinessAccountsByMobile(String query) {
+        Cursor cursor = null;
+
+        try {
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
+                    + " WHERE (" + DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " LIKE '%" + query + "%'"
                     +  ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
                     + " COLLATE NOCASE";
 

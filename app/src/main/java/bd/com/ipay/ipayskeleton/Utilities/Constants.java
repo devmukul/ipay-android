@@ -140,6 +140,10 @@ public class Constants {
     public static final String THANA = "THANA";
     public static final String ID = "ID";
     public static final String BUSINESS_ACCOUNT_ID = "BUSINESS_ACCOUNT_ID";
+    public static final String COMMAND_GET_ALL_MERCHANTS = "COMMAND_GET_ALL_MERCHANTS";
+    public static final String FROM_BRANCHING = "FROM_BRANCHING";
+    public static final String ADDRESS_ONE = "ADDRESS_ONE";
+    public static final String ADDRESS_TWO = "ADDRESS_TWO";
     public static final String SOURCE = "SOURCE";
     public static String ROLEID = "ROLEID";
 
@@ -162,6 +166,7 @@ public class Constants {
     public static final String STATE_SUCCESS = "SUCCESS";
     public static final String STATE_FAILED = "FAILED";
 
+    public static final String OFFICE_HOTLINE_NUMBER = "16542";
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+8809638900801";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
@@ -434,10 +439,13 @@ public class Constants {
     public static final String URL_INTRODUCE_ACTION = "introducer/";
     public static final String URL_GET_PENDING_INTRODUCER = "introducer/pending";
     public static final String URL_PENDING_INTRODUCER_ACTION = "introducer/pending";
+    public static final String URL_INTRODUCE_USER = "introducer/introduce/";
+    public static final String URL_GET_ALL_MERCHANTS = "business/branch/all";
 
     // Invite Rest
     public static final String URL_GET_INVITE_INFO = "invitation";
     public static final String URL_SEND_INVITE = "invitation/invite/";
+    public static final String URL_GET_INVITATION_CODE = "promo/invitation-code";
 
 
     // Mobile Topup Request REST
@@ -555,6 +563,7 @@ public class Constants {
     public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
 
     public static final String URL_GET_BUSINESS_LIST_TRENDING = "trending";
+    public static final String URL_GET_BUSINESS_LIST_TRENDING_BRANCHED = "trending/branched";
 
     // Business Information (Owner)
     public static final String URL_CREATE_EMPLOYEE = "business-manager-invitation";
@@ -726,6 +735,7 @@ public class Constants {
     // Invite
     public static final String COMMAND_GET_INVITE_INFO = "COMMAND_GET_INVITE_INFO";
     public static final String COMMAND_SEND_INVITE = "COMMAND_SEND_INVITE";
+    public static final String COMMAND_GET_INVITATION_CODE = "COMMAND_GET_INVITATION_CODE";
 
     // Email
     public static final String COMMAND_GET_EMAILS = "COMMAND_GET_EMAILS";
@@ -939,6 +949,7 @@ public class Constants {
     public static final int LOCATION_REQUIRED_TRUE = 1;
     public static final String DEEP_LINK_ACTION = "DEEP_LINK_ACTION";
     public static final String ORDER_ID = "ORDER_ID";
+    public static final String INVITATION_CODE = "INVITATION_CODE";
 
     public static final int RC_BARCODE_CAPTURE = 9001;
 

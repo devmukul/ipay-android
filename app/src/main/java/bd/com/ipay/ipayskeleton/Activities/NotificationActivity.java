@@ -52,8 +52,10 @@ public class NotificationActivity extends BaseActivity {
 
     public void switchToNotificationFragment(String tag) {
         if (tag.equals("")) {
+            HomeActivity.mNotificationFragment = new NotificationFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
+
         } else if (tag.equals(Constants.RELOAD)) {
             HomeActivity.mNotificationFragment = new NotificationFragment();
             Bundle bundle = new Bundle();

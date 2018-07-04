@@ -247,6 +247,17 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
         return v;
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCustomProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomProgressDialog.dismiss();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -514,17 +525,11 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                     }
 
                     mProgressDialog.dismiss();
                     mGetBusinessRuleTask = null;
-                } else {
-                    if (getActivity() != null)
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
-
                 mGetBusinessRuleTask = null;
                 break;
             case Constants.COMMAND_CANCEL_PAYMENT_REQUEST:

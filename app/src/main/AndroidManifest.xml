@@ -36,6 +36,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}"
@@ -54,12 +55,14 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="face,barcode" />
+            android:value="face,barcode"/>
 
         <activity
             android:name=".Activities.LauncherActivity"
@@ -70,6 +73,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -79,17 +83,27 @@
                 <data
                     android:host="launch"
                     android:scheme="ipay" />
+
                 <data
                     android:host="@string/ipay_dev_host"
                     android:scheme="https" />
+
                 <data
                     android:host="@string/ipay_demo_host"
                     android:scheme="https" />
+
                 <data
                     android:host="@string/ipay_live_host"
                     android:scheme="https" />
+
+                <data
+                    android:host="@string/ipay_live_host_without_www"
+                    android:scheme="https" />
+
             </intent-filter>
+
         </activity>
+
         <activity
             android:name=".Activities.ProfileVerificationHelperActivity"
             android:label="@string/welcome_to_ipay"
@@ -191,8 +205,16 @@
             android:name=".Activities.PaymentActivities.RequestMoneyActivity"
             android:label="@string/request_money"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Activities.InviteFriendActivity"
+            android:label="@string/invite_people_to_ipay"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".Activities.ManagedBusinessAccountSettingsActivity"
             android:screenOrientation="portrait"
@@ -324,6 +346,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".Activities.PaymentActivities.QRCodePaymentActivity"
             android:label="@string/pay_by_QR_code"
@@ -352,7 +375,7 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <!-- FCM -->
+        <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -367,6 +390,26 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAfsNoEC1Hdv0SMHBD1ElcFU3L_dLzeOpI" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".Activities.PaymentActivities.SendMoneyConfirmActivity"

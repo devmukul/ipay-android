@@ -78,11 +78,11 @@ import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
@@ -92,8 +92,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessAccountSwitch;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -161,6 +159,7 @@ public class HomeActivity extends BaseActivity
     private DrawerLayout drawer;
 
     private ManagedBusinessAcountAdapter mManageBusinessAcountAdapter;
+    private HttpRequestPostAsyncTask mRefreshBalanceTask;
 
 
     @Override
@@ -183,7 +182,7 @@ public class HomeActivity extends BaseActivity
             }
 
         }
-
+        refreshBalance();
         mProgressDialog = new ProgressDialog(HomeActivity.this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -316,9 +315,6 @@ public class HomeActivity extends BaseActivity
 
         getAllBusinessAccountsList();
 
-        BusinessRuleCacheManager.initialize(getApplicationContext());
-        setDefaultBusinessRules();
-
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         } else {
@@ -377,21 +373,6 @@ public class HomeActivity extends BaseActivity
             getBusinessInformation();
         }
     }
-
-    /**
-     * set Default Business Rules is to cache the offline business rules
-     */
-    private void setDefaultBusinessRules() {
-        if (!BusinessRuleCacheManager.ifContainsDefaultBusinessRules()) {
-            for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
-                MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
-                mandatoryBusinessRules.setDefaultRules();
-                BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
-            }
-        }
-        BusinessRuleCacheManager.setIsDefaultBusinessRulesAvailable(true);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -567,7 +548,7 @@ public class HomeActivity extends BaseActivity
 
     @ValidateAccess
     public void switchToInviteActivity() {
-        Intent intent = new Intent(HomeActivity.this, InviteActivity.class);
+        Intent intent = new Intent(HomeActivity.this, InviteFriendActivity.class);
         startActivity(intent);
         switchedToHomeFragment = false;
     }
@@ -763,6 +744,19 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    private void refreshBalance() {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+            return;
+        }
+        if (mRefreshBalanceTask != null || this == null)
+            return;
+
+        mRefreshBalanceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_BALANCE,
+                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, null, this, true);
+        mRefreshBalanceTask.mHttpResponseListener = this;
+        mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void getProfileInfo() {
         if (mGetProfileInfoTask != null) {
             return;
@@ -912,6 +906,19 @@ public class HomeActivity extends BaseActivity
                 mGetProfileInfoTask = null;
 
                 break;
+
+            case Constants.COMMAND_REFRESH_BALANCE:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        RefreshBalanceResponse mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
+                        String balance = mRefreshBalanceResponse.getBalance() + "";
+                        SharedPrefManager.setUserBalance(balance);
+                    }
+                } catch (Exception e) {
+
+                }
+                break;
+
             case Constants.COMMAND_GET_ACCESS_CONTROL_LIST:
 
                 try {

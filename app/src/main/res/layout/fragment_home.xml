@@ -334,21 +334,6 @@
 
                 </LinearLayout>
 
-
-                <LinearLayout
-                    android:id="@+id/button_make_payment"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_make_payment"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/make_payment" />
-
-                </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/button_pay_by_qr_code"
                     style="@style/HomeImageLinearLayoutStyleHorizontal"
@@ -362,6 +347,21 @@
                         android:text="@string/pay_by_QR_code" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/button_topup"
+                    style="@style/HomeImageLinearLayoutStyleHorizontal"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                        android:drawableTop="@drawable/background_icon_topup_home"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:text="@string/mobile_topup" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -384,20 +384,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/button_topup"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_topup_home"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/mobile_topup" />
-
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/button_ipay_here"
                     style="@style/HomeImageLinearLayoutStyleHorizontal"
                     android:layout_weight="1">
@@ -408,6 +394,20 @@
                         android:ellipsize="marquee"
                         android:singleLine="true"
                         android:text="@string/ipay_here" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/button_invite_friend"
+                    style="@style/HomeImageLinearLayoutStyleHorizontal"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                        android:drawableTop="@drawable/invite_icon"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:text="@string/invite_people_to_ipay" />
 
                 </LinearLayout>
             </LinearLayout>
