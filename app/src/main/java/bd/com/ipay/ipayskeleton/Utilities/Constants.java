@@ -234,6 +234,7 @@ public class Constants {
     public static final String BASE_URL_DATA_COLLECTOR;
     private static final String SERVER_NAME;
     public static final String BASE_URL_OFFER;
+    public static final String BASE_URL_UTILITY;
 
     public static final int DEV_SERVER = 1;
     public static final int TEST_SERVER = 2;
@@ -285,6 +286,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
             BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
 
@@ -301,6 +303,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
             BASE_URL_OFFER = "https://test.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://test.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
 
@@ -317,6 +320,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
             BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://stage.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
 
@@ -333,6 +337,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
             BASE_URL_OFFER = "https://www.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://www.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == DEMO_SERVER) {
 
@@ -349,6 +354,7 @@ public class Constants {
             BASE_URL_WEB = "https://demo.ipay.com.bd";
             SERVER_NAME = "demo";
             BASE_URL_OFFER = "https://demo.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://demo.ipay.com.bd/api/utility/";
 
         } else {
 
@@ -365,6 +371,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
             BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
         }
     }
 
@@ -603,6 +610,9 @@ public class Constants {
 
     // IPayHere
     public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
+
+    // Utilities Bill
+    public static final String URL_GET_PROVIDER = "providers";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;

@@ -25,6 +25,7 @@ public class ServiceIdConstants {
     // Payment
     public static final int MAKE_PAYMENT = 6002;
     public static final int REQUEST_PAYMENT = 6005;
+    public static final int UTILITY_BILL_PAYMENT = 6010;
 
     // Transaction Details
     public static final int ALL_TRANSACTION = 1008;
