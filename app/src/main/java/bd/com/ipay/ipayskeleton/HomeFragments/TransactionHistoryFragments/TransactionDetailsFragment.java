@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -182,14 +183,16 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         }
 
         if (ProfileInfoCacheManager.isBusinessAccount()
+                && ProfileInfoCacheManager.isAccountVerified()
+                && ACLManager.hasServicesAccessibility(ServiceIdConstants.PAYMENT_REVERT)
                 && (serviceId == Constants.TRANSACTION_HISTORY_MAKE_PAYMENT
                 || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT)
-                && statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
+                && statusCode == Constants.HTTP_RESPONSE_STATUS_OK
+                && transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
 
             mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.PAYMENT_REVERT);
             mRevertTransactionButton.setVisibility(View.VISIBLE);
             attemptGetBusinessRule(Constants.SERVICE_ID_TRANSACTION_REVERT);
-
         }
 
         mRevertTransactionButton.setOnClickListener(new View.OnClickListener() {
