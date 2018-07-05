@@ -144,6 +144,7 @@ public class Constants {
     public static final String FROM_BRANCHING = "FROM_BRANCHING";
     public static final String ADDRESS_ONE = "ADDRESS_ONE";
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
+    public static final String COMMAND_GET_NOTIFICATION = "COMMAND_GET_NOTIFICATION";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -464,6 +465,7 @@ public class Constants {
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept/v2";
     public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
+    public static final String URL_PULL_NOTIFICATION = "v2/pull";
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password/v2";

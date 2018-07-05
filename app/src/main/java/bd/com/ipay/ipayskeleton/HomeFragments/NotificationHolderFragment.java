@@ -69,7 +69,7 @@ public class NotificationHolderFragment extends Fragment {
     }
 
     private void switchToPendingTransactionsFragment() {
-        NotificationFragment notificationFragment = new NotificationFragment();
+        NotificationDeeplinkedFragment notificationFragment = new NotificationDeeplinkedFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, notificationFragment).commit();
     }
 }
