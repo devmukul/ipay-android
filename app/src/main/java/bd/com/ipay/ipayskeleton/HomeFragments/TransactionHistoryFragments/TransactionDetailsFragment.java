@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -32,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -199,8 +200,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             @Override
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    // For now, we are directly sending the money without going through any send money query
-                    // sendMoneyQuery();
                     if (verifyUserInputs()) {
                         attemptPaymentRevertWithPinCheck();
                     }
@@ -230,7 +229,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         }
 
         if (cancel) {
-
             return false;
         } else {
             return true;
@@ -267,7 +265,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             return;
         }
 
-        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.processing));
         mCustomProgressDialog.showDialog();
 
         mPaymentRevertRequest = new PaymentRevertRequest(null, transactionHistory.getTransactionID(), pin);
@@ -328,31 +326,37 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT_REVERT)) {
 
             try {
-                SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
+                PaymentRevertResponse mPaymentRevertResponse = gson.fromJson(result.getJsonString(), PaymentRevertResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
 
-                        mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
+                        mCustomProgressDialog.showSuccessAnimationAndMessage(mPaymentRevertResponse.getMessage());
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mCustomProgressDialog.dismissDialog();
+                                getActivity().finish();
+                            }
+                        }, 2000);
+
 
                         break;
                     case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                     case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
                         mCustomProgressDialog.dismissDialog();
-                        Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), mPaymentRevertResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
                         break;
                     case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
                         if (getActivity() != null) {
-                            mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mPaymentRevertResponse.getMessage());
                             ((MyApplication) getActivity().getApplication()).launchLoginPage("");
 
                         }
                         break;
                     default:
                         if (getActivity() != null) {
-
-
-                            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mPaymentRevertResponse.getMessage());
                         }
 
                         break;
