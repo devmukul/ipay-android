@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.devspark.progressfragment.ProgressFragment;
@@ -39,11 +42,20 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
 
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressDialog mProgressDialog;
     private TextView mEmptyListTextView;
     private List<DeepLinkedNotification> mDeepLinkedNotifications;
+
+    private boolean hasNext = false;
+    private boolean isLoading = false;
+    private boolean clearListAfterLoading;
+    private boolean mIsScrolled = false;
+    private int mTotalItemCount = 0;
+    private int mPastVisibleItems;
+    private int mVisibleItem;
+    private long historyPageCount = -1;
 
     private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
 
@@ -77,7 +89,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                 getNotifications();
             }
         });
-
+        implementScrollListener();
         return v;
     }
 
@@ -95,10 +107,39 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
         if (mGetNotificationAsyncTask != null) {
             return;
         } else {
+            String url = Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_PULL_NOTIFICATION;
+            Uri.Builder uri = Uri.parse(url)
+                    .buildUpon();
+            uri.appendQueryParameter("limit", Integer.toString(10));
+            if (historyPageCount != -1) {
+                uri.appendQueryParameter("afterTime", Long.toString(historyPageCount));
+            }
             mGetNotificationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NOTIFICATION,
-                    Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_PULL_NOTIFICATION, getContext(), this, false);
+                    uri.build().toString(), getContext(), this, false);
             mGetNotificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    private void loadNotifications(List<DeepLinkedNotification> notifications, boolean hasNext) {
+        if (clearListAfterLoading || mDeepLinkedNotifications == null || mDeepLinkedNotifications.size() == 0) {
+            mDeepLinkedNotifications = notifications;
+            clearListAfterLoading = false;
+        } else {
+            List<DeepLinkedNotification> tempNotifications;
+            tempNotifications = notifications;
+            mDeepLinkedNotifications.addAll(tempNotifications);
+        }
+
+        this.hasNext = hasNext;
+        if (mDeepLinkedNotifications != null && mDeepLinkedNotifications.size() > 0)
+            mEmptyListTextView.setVisibility(View.GONE);
+        else
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+
+        if (isLoading)
+            isLoading = false;
+        mNotificationListAdapter.notifyDataSetChanged();
+        setContentShown(true);
     }
 
     @Override
@@ -131,26 +172,62 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
                                 fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
-                        mDeepLinkedNotifications = getDeepLinkedNotificationResponse.getNotificationList();
-                        mNotificationListAdapter.notifyDataSetChanged();
+                        List<DeepLinkedNotification> deepLinkedNotifications = getDeepLinkedNotificationResponse.getNotificationList();
+                        loadNotifications(deepLinkedNotifications, true);
                     }
                     setContentShown(true);
                     mSwipeRefreshLayout.setRefreshing(false);
                     mGetNotificationAsyncTask = null;
             }
         } catch (Exception e) {
-
             setContentShown(true);
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
+    private void implementScrollListener() {
+        mNotificationsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount = mLayoutManager.getItemCount();
+                mPastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisibleItems) == mTotalItemCount && hasNext && mGetNotificationAsyncTask == null) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    historyPageCount = mDeepLinkedNotifications.get(mDeepLinkedNotifications.size() - 1).getTime();
+                    mNotificationListAdapter.notifyDataSetChanged();
+                    getNotifications();
+                }
+
+            }
+
+        });
+
+    }
+
     private class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
+
+        public int FOOTER_VIEW = 1;
 
         public class NotificationViewHolder extends RecyclerView.ViewHolder {
             private final TextView mNameView;
             private final TextView mTimeView;
             private final ProfileImageView mProfileImageView;
+            private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
 
             public NotificationViewHolder(final View itemView) {
                 super(itemView);
@@ -158,39 +235,81 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                 mNameView = (TextView) itemView.findViewById(R.id.textview_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+
+            }
+
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
             }
 
             public void bindView(int pos) {
+                if (pos == mDeepLinkedNotifications.size()) {
+                    setItemVisibilityOfFooterView();
+                } else {
+                    DeepLinkedNotification notification = mDeepLinkedNotifications.get(pos);
 
-                DeepLinkedNotification notification = mDeepLinkedNotifications.get(pos);
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getIcon(), false);
+                    mNameView.setText(notification.getMessage());
 
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getIcon(), false);
-                mNameView.setText(notification.getMessage());
-
-                mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
+                    mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
+                }
             }
         }
-
 
         @Override
         public NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View v = LayoutInflater.from(getContext()).inflate(R.layout.view_notification_description, parent, false);
-            return new NotificationViewHolder(v);
+            if (viewType == FOOTER_VIEW) {
+                View v = LayoutInflater.from(getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
+                return new NotificationViewHolder(v);
+            } else {
+                View v = LayoutInflater.from(getContext()).inflate(R.layout.view_notification_description, parent, false);
+                return new NotificationViewHolder(v);
+            }
         }
 
         @Override
         public void onBindViewHolder(NotificationViewHolder holder, int position) {
             try {
-                holder.bindView(position);
+                if (position == mDeepLinkedNotifications.size()) {
+                    holder.bindView(position);
+                } else {
+                    holder.bindView(position);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         @Override
+        public int getItemViewType(int position) {
+            if (position == mDeepLinkedNotifications.size()) {
+                return FOOTER_VIEW;
+            }
+
+            return super.getItemViewType(position);
+        }
+
+        @Override
         public int getItemCount() {
-            return mDeepLinkedNotifications.size();
+            if (mDeepLinkedNotifications != null || !mDeepLinkedNotifications.isEmpty())
+                return mDeepLinkedNotifications.size();
+            else {
+                return 0;
+            }
         }
 
     }

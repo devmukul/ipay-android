@@ -750,7 +750,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                     @Override
                                     public void ifFinishNeeded() {
                                         refreshNotificationLists(getActivity());
-
                                     }
                                 });
                     }
