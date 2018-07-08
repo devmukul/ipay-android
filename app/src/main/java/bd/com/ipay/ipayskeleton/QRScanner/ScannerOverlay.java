@@ -24,6 +24,7 @@ public class ScannerOverlay extends ViewGroup {
     private int frames;
     private boolean revAnimation;
     private int lineColor, lineWidth;
+    private int border_length;
 
     public ScannerOverlay(Context context) {
         super(context);
@@ -44,6 +45,7 @@ public class ScannerOverlay extends ViewGroup {
         lineColor = a.getColor(R.styleable.ScannerOverlay_line_color, ContextCompat.getColor(context, R.color.scanner_line));
         lineWidth = a.getInteger(R.styleable.ScannerOverlay_line_width, getResources().getInteger(R.integer.line_width));
         frames = a.getInteger(R.styleable.ScannerOverlay_line_speed, getResources().getInteger(R.integer.line_width));
+        border_length = 30;
     }
 
     @Override
@@ -95,6 +97,18 @@ public class ScannerOverlay extends ViewGroup {
         Paint line = new Paint();
         line.setColor(lineColor);
         line.setStrokeWidth(Float.valueOf(lineWidth));
+
+        canvas.drawLine(left, top, left + dpToPx(border_length), top, line);
+        canvas.drawLine(left, top, left, top + dpToPx(border_length), line);
+
+        canvas.drawLine(left + dpToPx(rectWidth) - dpToPx(border_length), top, left + dpToPx(rectWidth), top, line);
+        canvas.drawLine(left + dpToPx(rectWidth), top, left + dpToPx(rectWidth), top + dpToPx(border_length), line);
+
+        canvas.drawLine(left, top + dpToPx(rectHeight), left + dpToPx(border_length), top + dpToPx(rectHeight), line);
+        canvas.drawLine(left, top + dpToPx(rectHeight), left, top + dpToPx(rectHeight) - dpToPx(border_length), line);
+
+        canvas.drawLine(left + dpToPx(rectWidth) - dpToPx(border_length), top + dpToPx(rectHeight), left + dpToPx(rectWidth), top + dpToPx(rectHeight), line);
+        canvas.drawLine(left + dpToPx(rectWidth), top + dpToPx(rectHeight), left + dpToPx(rectWidth), top + dpToPx(rectHeight) - dpToPx(border_length), line);
 
         // draw the line to product animation
         if (endY >= top + dpToPx(rectHeight) + frames) {
