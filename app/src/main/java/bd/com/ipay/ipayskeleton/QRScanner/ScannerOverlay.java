@@ -110,6 +110,11 @@ public class ScannerOverlay extends ViewGroup {
         canvas.drawLine(left + dpToPx(rectWidth) - dpToPx(border_length), top + dpToPx(rectHeight), left + dpToPx(rectWidth), top + dpToPx(rectHeight), line);
         canvas.drawLine(left + dpToPx(rectWidth), top + dpToPx(rectHeight), left + dpToPx(rectWidth), top + dpToPx(rectHeight) - dpToPx(border_length), line);
 
+        canvas.drawPoint(left, top, line);
+        canvas.drawPoint(left + dpToPx(rectWidth), top, line);
+        canvas.drawPoint(left, top + dpToPx(rectHeight), line);
+        canvas.drawPoint(left + dpToPx(rectWidth), top + dpToPx(rectHeight), line);
+
         // draw the line to product animation
         if (endY >= top + dpToPx(rectHeight) + frames) {
             revAnimation = true;
