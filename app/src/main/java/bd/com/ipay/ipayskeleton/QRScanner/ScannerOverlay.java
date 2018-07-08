@@ -117,15 +117,24 @@ public class ScannerOverlay extends ViewGroup {
         canvas.drawPoint(left, top + dpToPx(rectHeight), line);
         canvas.drawPoint(left + dpToPx(rectWidth), top + dpToPx(rectHeight), line);
 
+        String qr_code_text = "Align QR code with in the frame,to Scan fast without any problem";
+        String[] str = qr_code_text.split(",");
+
         TextPaint textPaint = new TextPaint();
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(40);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        float textHeight = textPaint.descent() - textPaint.ascent();
-        float textOffset = (textHeight / 2) - textPaint.descent();
+        float textHeight = -textPaint.ascent();
+        // float textOffset = (textHeight / 2) - textPaint.descent();
 
         RectF bounds = new RectF(0, 0, getWidth(), getHeight());
-        canvas.drawText("Align QR code with in the frame", bounds.centerX(), bounds.centerY() + textOffset + + dpToPx(200), textPaint);
+        for (int i = str.length - 1; i >= 0; i--) {
+            //Center text here
+            float textOffset = (canvas.getWidth() - textPaint.measureText((str[i]))) / 2;
+            canvas.drawText(str[i], bounds.centerX(), bounds.centerY() + ((i + 1) * textHeight) + dpToPx(200), textPaint);
+            // canvas.drawText(str[i], bounds.centerX(), bounds.centerY() + ((i + 5) * textHeight) + textOffset + dpToPx(100), textPaint);
+        }
+        // canvas.drawText("Align QR code with in the frame", bounds.centerX(), bounds.centerY() + textOffset + + dpToPx(200), textPaint);
 
         // draw the line to product animation
         if (endY >= top + dpToPx(rectHeight) + frames) {
