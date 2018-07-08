@@ -125,16 +125,12 @@ public class ScannerOverlay extends ViewGroup {
         textPaint.setTextSize(40);
         textPaint.setTextAlign(Paint.Align.CENTER);
         float textHeight = -textPaint.ascent();
-        // float textOffset = (textHeight / 2) - textPaint.descent();
 
         RectF bounds = new RectF(0, 0, getWidth(), getHeight());
         for (int i = str.length - 1; i >= 0; i--) {
             //Center text here
-            float textOffset = (canvas.getWidth() - textPaint.measureText((str[i]))) / 2;
             canvas.drawText(str[i], bounds.centerX(), bounds.centerY() + ((i + 1) * textHeight) + dpToPx(200), textPaint);
-            // canvas.drawText(str[i], bounds.centerX(), bounds.centerY() + ((i + 5) * textHeight) + textOffset + dpToPx(100), textPaint);
         }
-        // canvas.drawText("Align QR code with in the frame", bounds.centerX(), bounds.centerY() + textOffset + + dpToPx(200), textPaint);
 
         // draw the line to product animation
         if (endY >= top + dpToPx(rectHeight) + frames) {
