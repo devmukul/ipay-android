@@ -6,6 +6,7 @@ import java.util.List;
 public class GetDeepLinkedNotificationResponse {
     private List<DeepLinkedNotification> notificationList;
     private String message;
+    private boolean hasNext;
 
     public List<DeepLinkedNotification> getNotificationList() {
         return notificationList;
@@ -13,5 +14,9 @@ public class GetDeepLinkedNotificationResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public boolean isHasNext() {
+        return hasNext;
     }
 }

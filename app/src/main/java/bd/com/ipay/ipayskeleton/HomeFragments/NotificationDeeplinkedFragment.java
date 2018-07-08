@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DeepLinkedNotification;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GetDeepLinkedNotificationResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationDeeplinkedFragment extends ProgressFragment implements HttpResponseListener {
@@ -55,6 +56,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
     private int mTotalItemCount = 0;
     private int mPastVisibleItems;
     private int mVisibleItem;
+    private long lastTime;
     private long historyPageCount = -1;
 
     private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
@@ -66,6 +68,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        lastTime = 0;
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -111,8 +114,8 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
             Uri.Builder uri = Uri.parse(url)
                     .buildUpon();
             uri.appendQueryParameter("limit", Integer.toString(10));
-            if (historyPageCount != -1) {
-                uri.appendQueryParameter("afterTime", Long.toString(historyPageCount));
+            if (lastTime != 0) {
+                uri.appendQueryParameter("beforeTime", Long.toString(lastTime));
             }
             mGetNotificationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NOTIFICATION,
                     uri.build().toString(), getContext(), this, false);
@@ -153,7 +156,6 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
         super.onActivityCreated(savedInstanceState);
     }
 
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         try {
@@ -173,7 +175,8 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
                                 fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
                         List<DeepLinkedNotification> deepLinkedNotifications = getDeepLinkedNotificationResponse.getNotificationList();
-                        loadNotifications(deepLinkedNotifications, true);
+                        lastTime = deepLinkedNotifications.get(deepLinkedNotifications.size() - 1).getTime();
+                        loadNotifications(deepLinkedNotifications, getDeepLinkedNotificationResponse.isHasNext());
                     }
                     setContentShown(true);
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -207,7 +210,6 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         && (mVisibleItem + mPastVisibleItems) == mTotalItemCount && hasNext && mGetNotificationAsyncTask == null) {
                     isLoading = true;
                     mIsScrolled = false;
-                    historyPageCount = mDeepLinkedNotifications.get(mDeepLinkedNotifications.size() - 1).getTime();
                     mNotificationListAdapter.notifyDataSetChanged();
                     getNotifications();
                 }
@@ -228,6 +230,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
             private final ProfileImageView mProfileImageView;
             private TextView mLoadMoreTextView;
             private ProgressBar mLoadMoreProgressBar;
+            private TextView titleView;
 
             public NotificationViewHolder(final View itemView) {
                 super(itemView);
@@ -237,7 +240,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
                 mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-
+                titleView = (TextView) itemView.findViewById(R.id.textview_title);
             }
 
             private void setItemVisibilityOfFooterView() {
@@ -255,17 +258,30 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                 }
             }
 
-            public void bindView(int pos) {
+            public void bindView(final int pos) {
                 if (pos == mDeepLinkedNotifications.size()) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
                     setItemVisibilityOfFooterView();
                 } else {
                     DeepLinkedNotification notification = mDeepLinkedNotifications.get(pos);
-
                     mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getIcon(), false);
                     mNameView.setText(notification.getMessage());
-
                     mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
+                    titleView.setText(notification.getTitle());
                 }
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Uri uri = Uri.parse(mDeepLinkedNotifications.get(pos).getDeepLink());
+                        DeepLinkAction deepLinkAction;
+                        try {
+                            deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
+                            Utilities.performDeepLinkAction(getActivity(), deepLinkAction);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         }
 
@@ -305,10 +321,10 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
 
         @Override
         public int getItemCount() {
-            if (mDeepLinkedNotifications != null || !mDeepLinkedNotifications.isEmpty())
-                return mDeepLinkedNotifications.size();
-            else {
+            if (mDeepLinkedNotifications == null || mDeepLinkedNotifications.isEmpty())
                 return 0;
+            else {
+                return mDeepLinkedNotifications.size() + 1;
             }
         }
 
