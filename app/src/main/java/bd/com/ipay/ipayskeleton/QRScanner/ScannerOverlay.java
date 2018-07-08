@@ -3,11 +3,13 @@ package bd.com.ipay.ipayskeleton.QRScanner;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
@@ -114,6 +116,16 @@ public class ScannerOverlay extends ViewGroup {
         canvas.drawPoint(left + dpToPx(rectWidth), top, line);
         canvas.drawPoint(left, top + dpToPx(rectHeight), line);
         canvas.drawPoint(left + dpToPx(rectWidth), top + dpToPx(rectHeight), line);
+
+        TextPaint textPaint = new TextPaint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(40);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        float textHeight = textPaint.descent() - textPaint.ascent();
+        float textOffset = (textHeight / 2) - textPaint.descent();
+
+        RectF bounds = new RectF(0, 0, getWidth(), getHeight());
+        canvas.drawText("Align QR code with in the frame", bounds.centerX(), bounds.centerY() + textOffset + + dpToPx(200), textPaint);
 
         // draw the line to product animation
         if (endY >= top + dpToPx(rectHeight) + frames) {
