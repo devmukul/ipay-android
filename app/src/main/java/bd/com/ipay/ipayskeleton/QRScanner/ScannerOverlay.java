@@ -122,30 +122,15 @@ public class ScannerOverlay extends ViewGroup {
 
         TextPaint textPaint = new TextPaint();
         textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(40);
+        textPaint.setTextSize(dpToPx(16));
         textPaint.setTextAlign(Paint.Align.CENTER);
         float textHeight = -textPaint.ascent();
 
         RectF bounds = new RectF(0, 0, getWidth(), getHeight());
         for (int i = str.length - 1; i >= 0; i--) {
             //Center text here
-            canvas.drawText(str[i], bounds.centerX(), bounds.centerY() + ((i + 1) * textHeight) + dpToPx(200), textPaint);
+            canvas.drawText(str[i], bounds.centerX(), bounds.centerY() + ((i + 3) * textHeight) + dpToPx(150), textPaint);
         }
-
-        // draw the line to product animation
-        if (endY >= top + dpToPx(rectHeight) + frames) {
-            revAnimation = true;
-        } else if (endY == top + frames) {
-            revAnimation = false;
-        }
-
-        // check if the line has reached to bottom
-        if (revAnimation) {
-            endY -= frames;
-        } else {
-            endY += frames;
-        }
-        canvas.drawLine(left, endY, left + dpToPx(rectWidth), endY, line);
         invalidate();
     }
 }
