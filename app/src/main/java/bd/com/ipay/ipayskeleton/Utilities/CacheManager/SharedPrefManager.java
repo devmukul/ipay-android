@@ -101,4 +101,12 @@ public class SharedPrefManager {
     public static void setInvitationCode(String value) {
         pref.edit().putString(SharedPrefConstants.INVITATION_CODE, value).apply();
     }
+
+    public static int getNotificationCount() {
+        return pref.getInt("Notification", 0);
+    }
+
+    public static void setNotificationCount(int count) {
+        pref.edit().putInt("Notification", count).apply();
+    }
 }

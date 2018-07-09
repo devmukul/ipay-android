@@ -7,6 +7,11 @@ public class GetDeepLinkedNotificationResponse {
     private List<DeepLinkedNotification> notificationList;
     private String message;
     private boolean hasNext;
+    private int unseenCount;
+
+    public int getUnseenCount() {
+        return unseenCount;
+    }
 
     public List<DeepLinkedNotification> getNotificationList() {
         return notificationList;

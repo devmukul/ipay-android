@@ -40,10 +40,10 @@ public class NotificationHolderFragment extends Fragment {
 
                 switch (checkedId) {
                     case R.id.radio_button_general:
-                        switchToPendingTransactionsFragment();
+                        switchToNotificationFragment();
                         break;
                     case R.id.radio_button_deep_linked:
-                        switchToProcessedTransactionsFragment();
+                        switchToPendingNotificationsFragment();
                         break;
                 }
             }
@@ -63,12 +63,12 @@ public class NotificationHolderFragment extends Fragment {
     }
 
 
-    private void switchToProcessedTransactionsFragment() {
+    private void switchToNotificationFragment() {
         NotificationFragment notificationFragment = new NotificationFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, notificationFragment).commit();
     }
 
-    private void switchToPendingTransactionsFragment() {
+    private void switchToPendingNotificationsFragment() {
         NotificationDeeplinkedFragment notificationFragment = new NotificationDeeplinkedFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, notificationFragment).commit();
     }

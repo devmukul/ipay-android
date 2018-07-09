@@ -82,6 +82,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GetDeepLinkedNotificationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
@@ -133,6 +134,8 @@ public class HomeActivity extends BaseActivity
     private HttpRequestDeleteAsyncTask mResignFromBusinessAsyncTask;
     private RemoveEmployeeResponse mResignFromBusinessResponse;
 
+    private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
+
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
@@ -182,6 +185,7 @@ public class HomeActivity extends BaseActivity
 
         }
         refreshBalance();
+        getNotifications();
         mProgressDialog = new ProgressDialog(HomeActivity.this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -407,6 +411,18 @@ public class HomeActivity extends BaseActivity
 
     }
 
+    private void getNotifications() {
+        if (mGetNotificationAsyncTask != null) {
+            return;
+        } else {
+            String url = Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_PULL_NOTIFICATION;
+
+            mGetNotificationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NOTIFICATION,
+                    url, this, this, false);
+            mGetNotificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
@@ -486,13 +502,17 @@ public class HomeActivity extends BaseActivity
 
     private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
-
         Logger.logD("Notification Count", badgeCount + "");
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
-                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY,
+                        badgeCount + SharedPrefManager.getNotificationCount());
             } else {
-                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
+                if (SharedPrefManager.getNotificationCount() != 0) {
+                    ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, SharedPrefManager.getNotificationCount());
+                } else {
+                    ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
+                }
             }
         }
     }
@@ -936,6 +956,12 @@ public class HomeActivity extends BaseActivity
                 mGetAccessControlTask = null;
 
                 break;
+            case Constants.COMMAND_GET_NOTIFICATION:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
+                            fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
+                    SharedPrefManager.setNotificationCount(getDeepLinkedNotificationResponse.getUnseenCount());
+                }
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:
                 try {
                     mGetBusinessInformationResponse = gson.fromJson(result.getJsonString(), GetBusinessInformationResponse.class);

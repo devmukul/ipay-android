@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,11 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
@@ -33,7 +36,9 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DeepLinkedNotification;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GetDeepLinkedNotificationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationStateRequest;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -57,9 +62,9 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
     private int mPastVisibleItems;
     private int mVisibleItem;
     private long lastTime;
-    private long historyPageCount = -1;
 
     private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
+    private HttpRequestPutAsyncTask mUpdateNotificationStateTask;
 
     private NotificationBroadcastReceiver notificationBroadcastReceiver;
     private Tracker mTracker;
@@ -108,6 +113,8 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
 
     private void getNotifications() {
         if (mGetNotificationAsyncTask != null) {
+            setContentShown(true);
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         } else {
             String url = Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_PULL_NOTIFICATION;
@@ -163,12 +170,12 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
             if (HttpErrorHandler.isErrorFound(result, getActivity(), mProgressDialog)) {
                 setContentShown(true);
                 mSwipeRefreshLayout.setRefreshing(false);
+                mGetNotificationAsyncTask = null;
                 if (isAdded()) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
                 return;
             }
-
             switch (result.getApiCommand()) {
                 case Constants.COMMAND_GET_NOTIFICATION:
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -177,10 +184,19 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         List<DeepLinkedNotification> deepLinkedNotifications = getDeepLinkedNotificationResponse.getNotificationList();
                         lastTime = deepLinkedNotifications.get(deepLinkedNotifications.size() - 1).getTime();
                         loadNotifications(deepLinkedNotifications, getDeepLinkedNotificationResponse.isHasNext());
+                        SharedPrefManager.setNotificationCount(getDeepLinkedNotificationResponse.getUnseenCount());
                     }
                     setContentShown(true);
                     mSwipeRefreshLayout.setRefreshing(false);
                     mGetNotificationAsyncTask = null;
+                    break;
+                case Constants.COMMAND_UPDATE_NOTIFICATION_STATE:
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Log.d("update notification", result.getJsonString());
+                        getNotifications();
+                    } else {
+
+                    }
             }
         } catch (Exception e) {
             setContentShown(true);
@@ -218,6 +234,18 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
 
         });
 
+    }
+
+    private void updateNotificationState(List<Long> timeList) {
+        if (mUpdateNotificationStateTask != null) {
+            return;
+        } else {
+            UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList);
+            mUpdateNotificationStateTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_NOTIFICATION_STATE,
+                    Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
+                    new Gson().toJson(updateNotificationStateRequest), getContext(), this, true);
+            mUpdateNotificationStateTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
@@ -277,6 +305,9 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         try {
                             deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                             Utilities.performDeepLinkAction(getActivity(), deepLinkAction);
+                            List<Long> timeList = new ArrayList<>();
+                            timeList.add(mDeepLinkedNotifications.get(pos).getTime());
+                            updateNotificationState(timeList);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

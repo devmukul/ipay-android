@@ -145,6 +145,7 @@ public class Constants {
     public static final String ADDRESS_ONE = "ADDRESS_ONE";
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
     public static final String COMMAND_GET_NOTIFICATION = "COMMAND_GET_NOTIFICATION";
+    public static final String COMMAND_UPDATE_NOTIFICATION_STATE = "COMMAND_UPDATE_NOTIFICATION_STATE";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
