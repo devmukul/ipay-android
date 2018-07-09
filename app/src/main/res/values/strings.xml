@@ -1168,4 +1168,6 @@
     <string name="invite_people_to_ipay">Invite Friends</string>
     <string name="invite_a_friend">Invite a Friend</string>
     <string name="invite_peple_text">Invite your friends to iPay and get attractive bonus and surprise gifts.</string>
+    <string name="offers">Offers</string>
+    <string name="requests">Requests</string>
 </resources>

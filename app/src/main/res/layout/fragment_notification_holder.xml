@@ -47,7 +47,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/background_right_round_checkbox"
-                        android:text="@string/completed"
+                        android:text="@string/notification"
                         android:textColor="@color/radio_button_text_color" />
 
                 </RadioGroup>
