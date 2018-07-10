@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:background="@android:color/white">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/add_money_proceed_button">
+        android:layout_above="@+id/add_money_proceed_button"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,8 +23,7 @@
                 android:id="@+id/customer_id_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -37,7 +35,7 @@
                         style="@style/CustomEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/enter_amount"
+                        android:hint="Account ID"
                         android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:layout_marginLeft="0dp"
@@ -53,7 +51,7 @@
                     style="@style/CustomNoteTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/add_money_from_bank_info"
+                    android:text="Insert your Banglalion Account ID number"
                     android:gravity="left"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"/>
@@ -61,7 +59,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/add_money_option_selector_view_holder"
+                android:id="@+id/bill_pay_option_selector_view_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -70,7 +68,8 @@
                     android:id="@+id/user_info_view_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -124,7 +123,7 @@
                         android:theme="@style/CustomTextInputLayout">
 
                         <EditText
-                            android:id="@+id/amount_edit_text"
+                            android:id="@+id/postpaid_amount_edit_text"
                             style="@style/CustomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -146,20 +145,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="25dp">
+                    android:layout_marginTop="25dp"
+                    android:visibility="gone">
 
-                    <bd.com.ipay.ipayskeleton.CustomView.BankSelectorView
-                        android:id="@+id/bank_selector_view"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:hint="@string/bank_account"
-                        custom:selectorDialogTitle="@string/bank_account" />
+                        android:theme="@style/CustomTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/package_selector_edit_text"
+                            style="@style/CustomEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Choose Your Package"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="0dp"
+                            android:drawableRight="@drawable/dropdown_arrow"
+                            android:paddingRight="10dp"
+                            android:enabled="false"/>
+                    </android.support.design.widget.TextInputLayout>
 
                     <View style="@style/Divider"
                         android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp" />
+                        android:layout_marginRight="0dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/package_amount_view"
+                        android:visibility="gone">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:theme="@style/CustomTextInputLayout">
+
+                            <EditText
+                                android:id="@+id/prepaid_amount_edit_text"
+                                style="@style/CustomEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_amount"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1"
+                                android:layout_marginLeft="0dp"
+                                android:layout_marginRight="0dp"
+                                android:enabled="false"/>
+                        </android.support.design.widget.TextInputLayout>
+
+                        <View style="@style/Divider"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="0dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>]
@@ -168,7 +210,7 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/add_money_proceed_button"
+        android:id="@+id/bill_pay_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/continue_add_money"
