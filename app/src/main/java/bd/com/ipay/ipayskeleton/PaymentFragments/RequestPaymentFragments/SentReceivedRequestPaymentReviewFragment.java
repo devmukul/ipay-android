@@ -247,6 +247,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
         return v;
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -598,8 +599,11 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                                 mCustomProgressDialog.showFailureAnimationAndMessage
                                         (mRequestPaymentAcceptRejectOrCancelResponse.getMessage());
                             } else {
-                                Toast.makeText(mContext,
-                                        mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                if (mCustomProgressDialog != null) {
+                                    mCustomProgressDialog.showFailureAnimationAndMessage(mRequestPaymentAcceptRejectOrCancelResponse.getMessage());
+                                } else {
+                                    Toast.makeText(mContext, mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
 
                             if (mRequestPaymentAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains

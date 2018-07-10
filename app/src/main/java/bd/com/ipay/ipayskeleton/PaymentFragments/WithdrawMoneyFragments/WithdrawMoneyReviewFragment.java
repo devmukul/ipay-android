@@ -292,7 +292,11 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mWithdrawMoneyResponse.getMessage());
                         } else {
-                            Toast.makeText(mContext, mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            if (mCustomProgressDialog != null) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mWithdrawMoneyResponse.getMessage());
+                            } else {
+                                Toast.makeText(mContext, mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
 
                         if (mWithdrawMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
