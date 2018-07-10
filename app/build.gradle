@@ -9,8 +9,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.0'
 
     signingConfigs {
         iPaySigningConfig {
@@ -29,8 +29,8 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 159
-        versionName "1.8.0"
+        versionCode 161
+        versionName "1.8.2"
         multiDexEnabled true
     }
 
@@ -94,18 +94,18 @@ repositories {
 
 configurations.all {
     resolutionStrategy {
-        force 'com.android.support:design:25.3.1'
-        force 'com.android.support:support-v4:25.3.1'
-        force 'com.android.support:appcompat-v7:25.3.1'
+        force 'com.android.support:design:27.1.1'
+        force 'com.android.support:support-v4:27.1.1'
+        force 'com.android.support:appcompat-v7:27.1.1'
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':camera')
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:design:27.1.1'
+    compile 'com.android.support:cardview-v7:27.1.1'
+    compile 'com.android.support:recyclerview-v7:27.1.1'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.journeyapps:zxing-android-embedded:3.0.1@aar'
     compile 'com.google.zxing:core:3.2.0'
@@ -128,11 +128,11 @@ dependencies {
 
     compile files('libs/libphonenumber-7.2.8.jar')
     compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
-    compile 'com.google.firebase:firebase-messaging:11.2.0'
-    compile 'com.google.android.gms:play-services-places:11.2.0'
-    compile 'com.google.android.gms:play-services-vision:11.2.0'
-    compile 'com.google.android.gms:play-services-analytics:11.2.0'
-    compile 'com.google.android.gms:play-services:11.2.0'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
+    compile 'com.google.android.gms:play-services-places:11.8.0'
+    compile 'com.google.android.gms:play-services-vision:11.8.0'
+    compile 'com.google.android.gms:play-services-analytics:11.8.0'
+    compile 'com.google.android.gms:play-services:11.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.firebase:firebase-client-android:2.4.0'
@@ -151,13 +151,13 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.1.0'
 
     //Intercom
-    compile 'io.intercom.android:intercom-sdk-base:3.+'
-    compile 'io.intercom.android:intercom-sdk-fcm:3.+'
+    compile 'io.intercom.android:intercom-sdk-base:5.+'
+    compile 'io.intercom.android:intercom-sdk-fcm:5.+'
 
     // Singapore
     compile 'com.hbb20:ccp:1.7.8'
-
-    testCompile 'junit:junit:4.12'
+    //facebook sdk
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 
 final def log = project.logger

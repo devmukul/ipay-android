@@ -39,7 +39,7 @@ public class LauncherActivity extends AppCompatActivity {
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
-                        if(!StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equalsIgnoreCase("signup")) {
+                        if(!StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
                             Utilities.performDeepLinkAction(this, deepLinkAction);
                         } else{
                             launchHomeActivity();
@@ -107,4 +107,5 @@ public class LauncherActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }
