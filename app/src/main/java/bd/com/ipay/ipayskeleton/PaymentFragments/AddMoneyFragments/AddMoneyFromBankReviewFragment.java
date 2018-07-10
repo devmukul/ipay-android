@@ -231,7 +231,11 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mAddMoneyByBankResponse.getMessage());
                         } else {
-                            Toast.makeText(context, mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            if (mCustomProgressDialog != null) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mAddMoneyByBankResponse.getMessage());
+                            } else {
+                                Toast.makeText(getContext(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
                         if (mAddMoneyByBankResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
