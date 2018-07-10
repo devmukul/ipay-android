@@ -30,7 +30,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -129,6 +128,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         View v = inflater.inflate(R.layout.fragment_sent_received_request_review, container, false);
 
         Bundle bundle = getArguments();
+        mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
 
         bundle.putBoolean(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
 
@@ -240,7 +240,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             }
         });
 
-        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
+        attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
 
         return v;
     }
@@ -267,7 +267,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     }
 
     private void getLocationAndAttemptAcceptRequestWithPinCheck() {
-        if (RequestPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+        if (mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -280,7 +280,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     }
 
     private void attemptAcceptRequestWithPinCheck() {
-        if (RequestPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+        if (mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -595,7 +595,11 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
                                 mCustomProgressDialog.showFailureAnimationAndMessage
                                         (mRequestPaymentAcceptRejectOrCancelResponse.getMessage());
                             } else {
-                                Toast.makeText(mContext, mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                if (mCustomProgressDialog != null) {
+                                    mCustomProgressDialog.showFailureAnimationAndMessage(mRequestPaymentAcceptRejectOrCancelResponse.getMessage());
+                                } else {
+                                    Toast.makeText(mContext, mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
 
                             if (mRequestPaymentAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
