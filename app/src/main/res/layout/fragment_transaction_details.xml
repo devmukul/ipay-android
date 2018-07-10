@@ -226,7 +226,8 @@
             style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorRed"
             android:text="@string/revert"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>
