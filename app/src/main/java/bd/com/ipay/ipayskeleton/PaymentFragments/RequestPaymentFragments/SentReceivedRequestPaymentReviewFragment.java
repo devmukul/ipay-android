@@ -167,7 +167,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
         getActivity().setTitle(R.string.request_payment);
 
-        mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_PAYMENT);
+        mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 
@@ -405,16 +405,16 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         if (mAcceptRequestTask != null) {
             return;
         }
-
+        mCustomProgressDialog = new CustomProgressDialog(getContext());
         mCustomProgressDialog.setLoadingMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mCustomProgressDialog.showDialog();
 
         if (!switchedFromTransactionHistory) {
             mRequestPaymentAcceptRejectOrCancelRequest =
-                    new PaymentAcceptRejectOrCancelRequest(mRequestID, mPin);
+                    new PaymentAcceptRejectOrCancelRequest(mRequestID, pin);
         } else {
             mRequestPaymentAcceptRejectOrCancelRequest =
-                    new PaymentAcceptRejectOrCancelRequest(mTransactionID, mPin);
+                    new PaymentAcceptRejectOrCancelRequest(mTransactionID, pin);
         }
 
         if (location != null) {
@@ -512,7 +512,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
                     try {
                         BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
-
                         if (businessRuleArray != null) {
                             for (BusinessRule rule : businessRuleArray) {
                                 if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_LOCATION_REQUIRED)) {
@@ -601,9 +600,9 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                             } else {
                                 if (mCustomProgressDialog != null) {
                                     mCustomProgressDialog.showFailureAnimationAndMessage(mRequestPaymentAcceptRejectOrCancelResponse.getMessage());
-                                } else {
-                                    Toast.makeText(mContext, mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
                                 }
+                                Toast.makeText(mContext, mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+
                             }
 
                             if (mRequestPaymentAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains

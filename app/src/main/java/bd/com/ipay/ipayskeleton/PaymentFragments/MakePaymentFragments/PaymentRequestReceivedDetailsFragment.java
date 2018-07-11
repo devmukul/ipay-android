@@ -169,9 +169,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         mProgressDialog.setCancelable(false);
 
         getActivity().setTitle(R.string.request_payment);
-
-        mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_PAYMENT);
-
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
