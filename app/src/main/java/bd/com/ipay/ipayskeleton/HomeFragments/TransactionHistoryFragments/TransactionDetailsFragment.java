@@ -208,7 +208,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             }
         });
 
-
         return v;
     }
 
@@ -221,10 +220,11 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
 
-            final BigDecimal amount = new BigDecimal(transactionHistory.getAmount());
+            final BigDecimal amount = new BigDecimal(transactionHistory.getNetAmount());
             if (amount.compareTo(balance) > 0) {
                 String errorMessage = getString(R.string.insufficient_balance);
                 Toaster.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG);
+                cancel = true;
             }
         }
 
@@ -296,7 +296,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         Gson gson = new Gson();
-        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mCustomProgressDialog)) {
 
             mGetBusinessRuleTask = null;
 

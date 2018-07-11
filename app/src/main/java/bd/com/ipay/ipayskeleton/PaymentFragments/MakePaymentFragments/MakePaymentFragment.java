@@ -928,7 +928,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mPaymentResponse.getMessage());
                         } else {
-                            Toast.makeText(mContext, mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            if (mCustomProgressDialog != null) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mPaymentResponse.getMessage());
+                            } else {
+                                Toast.makeText(mContext, mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
 
                         if (mPaymentResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
