@@ -30,7 +30,6 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -491,8 +490,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    promptForProfileCompletion();
-                    mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                    if (!ProfileInfoCacheManager.isAccountVerified()) {
+                        promptForProfileCompletion();
+                        mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                    }
                 }
 
             } catch (Exception e) {
