@@ -1,78 +1,32 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
-import android.text.InputFilter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.math.BigDecimal;
-
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
-import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
-import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
-import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.InvitationCode.GetPromoResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
-import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
-import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
 public class InviteFriendFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetInvitationCodeTask= null;
@@ -165,7 +119,7 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
 
 
     private void shareQrCode(String code) {
-        String share_qr_code_message = "Hi, iPay Cricket Campaign going on! Let’s win & fly to WI/ USA to watch the match LIVE! Sign Up & get Verified with iPay using this code "+code+" - https://www.ipay.com.bd/signup/personal?code="+code;
+        String share_qr_code_message = "Signup with this invitation code and get 50 taka after you get verified "+code+" - https://www.ipay.com.bd/signup/personal?code="+code;
         Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
