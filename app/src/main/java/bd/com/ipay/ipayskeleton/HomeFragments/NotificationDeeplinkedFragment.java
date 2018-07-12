@@ -292,7 +292,11 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                     setItemVisibilityOfFooterView();
                 } else {
                     DeepLinkedNotification notification = mDeepLinkedNotifications.get(pos);
-                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getIcon(), false);
+                    if (notification.getIcon() != null) {
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getIcon(), false);
+                    } else {
+                        mProfileImageView.setProfilePicture(R.drawable.ic_ipay_verifiedmember);
+                    }
                     mNameView.setText(notification.getMessage());
                     mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
                     titleView.setText(notification.getTitle());

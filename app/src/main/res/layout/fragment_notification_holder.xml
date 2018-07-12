@@ -9,58 +9,16 @@
         android:background="@color/colorBackground"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/transaction_history_header"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="12dp"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/background_contact_selector_background"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <RadioGroup
-                    android:id="@+id/notification_type_radio_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/radio_button_general"
-                        style="@style/ContactsSelectorStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_left_round_checkbox"
-                        android:text="@string/pending"
-                        android:textColor="@color/radio_button_text_color" />
-
-                    <RadioButton
-                        android:id="@+id/radio_button_deep_linked"
-                        style="@style/ContactsSelectorStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_right_round_checkbox"
-                        android:text="@string/notification"
-                        android:textColor="@color/radio_button_text_color" />
-
-                </RadioGroup>
-
-            </LinearLayout>
-        </RelativeLayout>
-
-
-        <FrameLayout
-            android:id="@+id/fragment_container_notification"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager_notification"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/transaction_history_header" />
+            android:layout_below="@+id/sliding_tabs"></android.support.v4.view.ViewPager>
 
     </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>
