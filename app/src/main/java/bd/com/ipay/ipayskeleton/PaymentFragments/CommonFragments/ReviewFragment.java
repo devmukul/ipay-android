@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
@@ -26,8 +24,6 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
  * super.httpResponseReceiver() first.
  */
 public abstract class ReviewFragment extends Fragment implements HttpResponseListener {
-
-    private ProgressDialog mProgressDialog;
 
     private HttpRequestPostAsyncTask mServiceChargeTask = null;
 
@@ -54,17 +50,6 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         int accountType = ProfileInfoCacheManager.getAccountType();
         int accountClass = Constants.DEFAULT_USER_CLASS;
 
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
-        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (getActivity() != null)
-                    getActivity().finish();
-            }
-        });
-        mProgressDialog.show();
 
         GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(getServiceID(), accountType, accountClass);
         Gson gson = new Gson();
@@ -78,9 +63,6 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
-        if (mProgressDialog != null && isAdded())
-            mProgressDialog.dismiss();
 
         if (result == null) {
             mServiceChargeTask = null;
