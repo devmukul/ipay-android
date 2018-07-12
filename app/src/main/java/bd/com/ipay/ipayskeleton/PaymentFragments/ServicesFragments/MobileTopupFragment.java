@@ -668,7 +668,11 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mTopupResponse.getMessage());
                         } else {
-                            Toast.makeText(context, mTopupResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            if (mCustomProgressDialog != null) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mTopupResponse.getMessage());
+                            } else {
+                                Toast.makeText(getContext(), mTopupResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
 
                         if (mTopupResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
