@@ -58,7 +58,7 @@
                             android:scaleType="centerCrop"
                             card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_topup_home"/>
+                            android:src="@drawable/ic_home_topup"/>
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -90,7 +90,7 @@
                             android:scaleType="centerCrop"
                             card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_pay_by_qc_home"/>
+                            android:src="@drawable/ic_home_pay_by_qr"/>
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -122,7 +122,7 @@
                             android:scaleType="centerCrop"
                             card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_make_payment"/>
+                            android:src="@drawable/ic_home_payment"/>
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -162,7 +162,7 @@
                             android:scaleType="centerCrop"
                             card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_pay_by_qc_home"/>
+                            android:src="@drawable/utility_icon"/>
 
                         <TextView
                             android:layout_width="@dimen/value80"

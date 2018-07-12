@@ -22,6 +22,7 @@ public class BanglalionPackageSelectorDialog extends AlertDialog {
     private RecyclerView packageListRecyclerView;
     private MerchantBranchAdapter mPackageAdapter;
     private List<AllowablePackage> allowablePackages ;
+    private OnResourceSelectedListener onResourceSelectedListener;
 
     public BanglalionPackageSelectorDialog(@NonNull Context context, List<AllowablePackage> allowablePackages) {
         super(context);
@@ -43,6 +44,14 @@ public class BanglalionPackageSelectorDialog extends AlertDialog {
         this.show();
     }
 
+    public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
+        this.onResourceSelectedListener = onResourceSelectedListener;
+    }
+
+    public interface OnResourceSelectedListener {
+        void onResourceSelected(AllowablePackage allowablePackage);
+    }
+
     public class MerchantBranchAdapter extends RecyclerView.Adapter<MerchantBranchAdapter.MerchantBranchAddressViewHolder> {
 
         @Override
@@ -54,52 +63,50 @@ public class BanglalionPackageSelectorDialog extends AlertDialog {
         @Override
         public void onBindViewHolder(final MerchantBranchAddressViewHolder holder, final int position) {
             holder.mPackageNameTextView.setText(allowablePackages.get(position).getPackageName());
-            holder.mPackageDetailsTextView.setText(allowablePackages.get(position).getAmount().toString());
+            holder.mPackageDetailsTextView.setText(allowablePackages.get(position).getAmount().toString()+" Tk, "+allowablePackages.get(position).getValidity());
             holder.addressRadioButton.setChecked(false);
-//            holder.mainView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    holder.addressRadioButton.setChecked(true);
-//                    new android.os.Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            switchToMakePaymentActivity(holder, position);
-//                        }
-//                    }, 500);
-//
-//                }
-//            });
-//            holder.addressRadioButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    holder.addressRadioButton.setChecked(true);
-//                    new android.os.Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            switchToMakePaymentActivity(holder, position);
-//                        }
-//                    }, 500);
-//
-//                }
-//            });
+            holder.mainView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.addressRadioButton.setChecked(true);
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            switchToMakePaymentActivity(holder, position);
+                        }
+                    }, 500);
+
+                }
+            });
+            holder.addressRadioButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.addressRadioButton.setChecked(true);
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            switchToMakePaymentActivity(holder, position);
+                        }
+                    }, 500);
+
+                }
+            });
         }
 
-//        private void switchToMakePaymentActivity(MerchantBranchAddressViewHolder holder, int position) {
-//            Intent intent = new Intent(context, PaymentActivity.class);
-//            intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-//            intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getBranches().get(position).getBranchAddress1());
-//            intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getBranches().get(position).getBranchAddress2());
-//            intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getBranches().get(position).getMobileNumber());
-//            intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
-//            intent.putExtra(Constants.FROM_BRANCHING, true);
-//            context.startActivity(intent);
-//            BanglalionPackageSelectorDialog.this.dismiss();
-//        }
+        private void switchToMakePaymentActivity(MerchantBranchAddressViewHolder holder, int position) {
+
+            AllowablePackage allowablePackage = allowablePackages.get(position);
+
+            if (onResourceSelectedListener != null)
+                onResourceSelectedListener.onResourceSelected(allowablePackage);
+            BanglalionPackageSelectorDialog.this.dismiss();
+        }
 
         @Override
         public int getItemCount() {
             return allowablePackages.size();
         }
+
 
         public class MerchantBranchAddressViewHolder extends RecyclerView.ViewHolder {
             private RadioButton addressRadioButton;

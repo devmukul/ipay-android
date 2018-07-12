@@ -40,6 +40,9 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AbstractSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BanglalionPackageSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.MerchantBranchSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.SelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.ServiceSelectorView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -91,11 +94,15 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
     private List<AllowablePackage> mAllowedPackage;
     private ProgressDialog mProgressDialog;
 
+    private BanglalionPackageSelectorDialog mBanglalionPackageSelectorDialog;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
+
+
     }
 
     @Nullable
@@ -109,63 +116,93 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
         super.onViewCreated(view, savedInstanceState);
 
 
-        if (getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD"))
-            isOnlyByCard = true;
-        else
-            isOnlyByCard = false;
-        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isOnlyByCard);
+//        if (getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD"))
+//            isOnlyByCard = true;
+//        else
+//            isOnlyByCard = false;
+//        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isOnlyByCard);
+//
+//        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+//
+//        mAddMoneyProceedButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (Utilities.isConnectionAvailable(getActivity())) {
+//                    if (verifyUserInputs()) {
+//                        launchReviewPage(mAddMoneyOptionSelectorView.getSelectedItem().getServiceId());
+//                    }
+//                } else
+//                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        mAddMoneyOptionSelectorView.setSelectorDialogTitle(getString(R.string.add_money_from));
+//        mAddMoneyOptionSelectorView.setOnItemAccessValidation(new SelectorView.OnItemAccessValidation() {
+//            @Override
+//            public boolean hasItemAccessAbility(int id, String name) {
+//                switch (name) {
+//                    case Constants.ADD_MONEY_BY_BANK_TITLE:
+//                        return ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK);
+//                    case Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE:
+//                        return true;
+//                    default:
+//                        return false;
+//                }
+//            }
+//        });
+//
+//        mAddMoneyOptionSelectorView.setItems(availableAddMoneyOptions);
+//        mAddMoneyOptionSelectorView.setOnItemSelectListener(new AbstractSelectorView.OnItemSelectListener() {
+//
+//            @Override
+//            public boolean onItemSelected(int selectedItemPosition) {
+//                switch (availableAddMoneyOptions.get(selectedItemPosition).getServiceId()) {
+//                    case ServiceIdConstants.ADD_MONEY_BY_BANK:
+//                        setupAddMoneyFromBank();
+//                        break;
+//                    case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+//                        setupAddMoneyFromCreditOrDebitCard();
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+//        if (availableAddMoneyOptions.size() == 1) {
+//            mAddMoneyOptionSelectorView.selectedItem(0);
+//            mAddMoneyOptionSelectorViewHolder.setVisibility(View.GONE);
+//        } else {
+//            mAddMoneyOptionSelectorViewHolder.setVisibility(View.VISIBLE);
+//        }
 
-        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+        initView(view);
 
-        mAddMoneyProceedButton.setOnClickListener(new View.OnClickListener() {
+        mPayBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    if (verifyUserInputs()) {
-                        launchReviewPage(mAddMoneyOptionSelectorView.getSelectedItem().getServiceId());
-                    }
-                } else
-                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            public void onClick(View view) {
+                getBankInformation();
             }
         });
 
-        mAddMoneyOptionSelectorView.setSelectorDialogTitle(getString(R.string.add_money_from));
-        mAddMoneyOptionSelectorView.setOnItemAccessValidation(new SelectorView.OnItemAccessValidation() {
+        mPrepaidPackageSelectEditText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean hasItemAccessAbility(int id, String name) {
-                switch (name) {
-                    case Constants.ADD_MONEY_BY_BANK_TITLE:
-                        return ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK);
-                    case Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE:
-                        return true;
-                    default:
-                        return false;
+            public void onClick(View view) {
+                System.out.println("Test "+mAllowedPackage.size());
+                if (mAllowedPackage.size() > 0) {
+                    mBanglalionPackageSelectorDialog = new BanglalionPackageSelectorDialog(getContext(), mAllowedPackage);
+                    mBanglalionPackageSelectorDialog.setOnResourceSelectedListener(new BanglalionPackageSelectorDialog.OnResourceSelectedListener() {
+                        @Override
+                        public void onResourceSelected(AllowablePackage allowablePackage) {
+                            mPrepaidPackageSelectEditText.setText(allowablePackage.getPackageName());
+                            mPrepaidAmmountView.setVisibility(View.VISIBLE);
+                            mPrepaidAmountEditText.setText(allowablePackage.getAmount().toString());
+                        }
+                    });
+                    mBanglalionPackageSelectorDialog.showDialog();
                 }
             }
         });
 
-        mAddMoneyOptionSelectorView.setItems(availableAddMoneyOptions);
-        mAddMoneyOptionSelectorView.setOnItemSelectListener(new AbstractSelectorView.OnItemSelectListener() {
 
-            @Override
-            public boolean onItemSelected(int selectedItemPosition) {
-                switch (availableAddMoneyOptions.get(selectedItemPosition).getServiceId()) {
-                    case ServiceIdConstants.ADD_MONEY_BY_BANK:
-                        setupAddMoneyFromBank();
-                        break;
-                    case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-                        setupAddMoneyFromCreditOrDebitCard();
-                        break;
-                }
-                return true;
-            }
-        });
-        if (availableAddMoneyOptions.size() == 1) {
-            mAddMoneyOptionSelectorView.selectedItem(0);
-            mAddMoneyOptionSelectorViewHolder.setVisibility(View.GONE);
-        } else {
-            mAddMoneyOptionSelectorViewHolder.setVisibility(View.VISIBLE);
-        }
     }
 
     private <T extends View> T findViewById(@IdRes int viewId) {
@@ -222,7 +259,7 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(), false);
+                Constants.BASE_URL_UTILITY + Constants.URL_GET_CUSTOMER_INFO +mCustomerIdEditText.getText().toString(), getActivity(), false);
         mGetCustomerInfoTask.mHttpResponseListener = this;
 
         mGetCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -400,18 +437,32 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         try {
                             mCustomerInfoResponse = gson.fromJson(result.getJsonString(), GetCustomerInfoResponse.class);
-                            mListUserBankClasses = new ArrayList<>();
+                            mAllowedPackage = mCustomerInfoResponse.getAllowablePackages();
+                            System.out.println("Test "+mAllowedPackage.size());
 
-                            for (BankAccountList bank : mBankListResponse.getBankAccountList()) {
-                                if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
-                                    mListUserBankClasses.add(bank);
-                                }
+                            mCustomerIdView.setVisibility(View.GONE);
+                            mBillPayOptionView.setVisibility(View.VISIBLE);
+                            mUserInfoView.setVisibility(View.VISIBLE);
+                            if(mCustomerInfoResponse.getUserType().equals("POSTPAID")){
+                                mPostPaidBillPayView.setVisibility(View.VISIBLE);
+                                mPrepaidBillPayView.setVisibility(View.GONE);
+                            }else {
+                                mPostPaidBillPayView.setVisibility(View.GONE);
+                                mPrepaidBillPayView.setVisibility(View.VISIBLE);
                             }
-                            mBankSelectorView.setItems(mListUserBankClasses);
-                            mBankSelectorView.setSelectable(true);
-                            if (mBankSelectorView.isBankAdded() && mBankSelectorView.isVerifiedBankAdded()) {
-                                attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_BANK);
-                            }
+
+//                            mListUserBankClasses = new ArrayList<>();
+//
+//                            for (BankAccountList bank : mBankListResponse.getBankAccountList()) {
+//                                if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+//                                    mListUserBankClasses.add(bank);
+//                                }
+//                            }
+//                            mBankSelectorView.setItems(mListUserBankClasses);
+//                            mBankSelectorView.setSelectable(true);
+//                            if (mBankSelectorView.isBankAdded() && mBankSelectorView.isVerifiedBankAdded()) {
+//                                attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_BANK);
+//                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)
@@ -461,14 +512,14 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                                 }
                             }
 
-                            switch (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId()) {
-                                case ServiceIdConstants.ADD_MONEY_BY_BANK:
-                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_BANK, AddMoneyActivity.mMandatoryBusinessRules);
-                                    break;
-                                case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_CARD, AddMoneyActivity.mMandatoryBusinessRules);
-                                    break;
-                            }
+//                            switch (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId()) {
+//                                case ServiceIdConstants.ADD_MONEY_BY_BANK:
+//                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_BANK, AddMoneyActivity.mMandatoryBusinessRules);
+//                                    break;
+//                                case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+//                                    BusinessRuleCacheManager.setBusinessRules(Constants.ADD_MONEY_BY_CARD, AddMoneyActivity.mMandatoryBusinessRules);
+//                                    break;
+//                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

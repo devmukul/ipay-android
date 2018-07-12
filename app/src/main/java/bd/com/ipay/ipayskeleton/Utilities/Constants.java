@@ -613,6 +613,7 @@ public class Constants {
 
     // Utilities Bill
     public static final String URL_GET_PROVIDER = "providers";
+    public static final String URL_GET_CUSTOMER_INFO = "banglalion/customer/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;

@@ -36,7 +36,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Account ID"
-                        android:inputType="numberDecimal"
+                        android:inputType="text"
                         android:maxLines="1"
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"/>
@@ -151,21 +151,24 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:theme="@style/CustomTextInputLayout">
+                        android:visibility="visible">
 
                         <EditText
                             android:id="@+id/package_selector_edit_text"
                             style="@style/CustomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:focusable="false"
                             android:hint="Choose Your Package"
-                            android:inputType="numberDecimal"
+                            android:inputType="text"
                             android:maxLines="1"
+                            android:singleLine="true"
                             android:layout_marginLeft="0dp"
                             android:layout_marginRight="0dp"
                             android:drawableRight="@drawable/dropdown_arrow"
-                            android:paddingRight="10dp"
-                            android:enabled="false"/>
+                            android:paddingRight="10dp"/>
+
                     </android.support.design.widget.TextInputLayout>
 
                     <View style="@style/Divider"

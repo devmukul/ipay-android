@@ -22,13 +22,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/value16"
-            android:layout_toRightOf="@+id/package_radio_button" />
+            android:layout_toRightOf="@+id/package_radio_button"
+            android:textSize="13sp"
+            android:textColor="#212121"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/package_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/package_name"
-            android:layout_toRightOf="@id/package_radio_button" />
+            android:layout_toRightOf="@id/package_radio_button"
+            android:textSize="13sp"
+            android:textColor="#212121"/>
     </RelativeLayout>
 </LinearLayout>

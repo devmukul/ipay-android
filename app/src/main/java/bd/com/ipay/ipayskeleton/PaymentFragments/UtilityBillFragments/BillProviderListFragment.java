@@ -44,16 +44,19 @@ import java.util.Locale;
 import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.MerchantBranchSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Provider;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -189,25 +192,6 @@ public class BillProviderListFragment extends ProgressFragment implements HttpRe
                 Constants.BASE_URL_UTILITY+Constants.URL_GET_PROVIDER, getActivity(), false);
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
-        if (clearListAfterLoading || userTransactionHistories == null || userTransactionHistories.size() == 0) {
-            userTransactionHistories = transactionHistories;
-            clearListAfterLoading = false;
-        } else {
-            List<TransactionHistory> tempTransactionHistories;
-            tempTransactionHistories = transactionHistories;
-            userTransactionHistories.addAll(tempTransactionHistories);
-        }
-
-        if (userTransactionHistories != null && userTransactionHistories.size() > 0)
-            mEmptyListTextView.setVisibility(View.GONE);
-        else
-            mEmptyListTextView.setVisibility(View.VISIBLE);
-
-        mTransactionHistoryAdapter.notifyDataSetChanged();
-        setContentShown(true);
     }
 
     private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

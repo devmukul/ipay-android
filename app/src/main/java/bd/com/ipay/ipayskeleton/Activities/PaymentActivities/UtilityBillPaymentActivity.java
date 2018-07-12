@@ -1,32 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.view.MenuItem;
-import android.view.View;
-
-import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentByDeepLinkFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestsReceivedFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BillProviderListFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class UtilityBillPaymentActivity extends BaseActivity{
 
@@ -37,33 +17,21 @@ public class UtilityBillPaymentActivity extends BaseActivity{
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        switchToMakePaymentFragment();
+        switchToBillProviderListFragment();
+
+        //switchToBanglalionBillPayFragment();
     }
 
-    public void switchToMakePaymentFragment() {
+    public void switchToBillProviderListFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new BillProviderListFragment()).commit();
+                .replace(R.id.fragment_container, new UtilityProviderListFragment()).commit();
     }
 
-    public void switchToMakePaymentFragment(Bundle bundle) {
-        if (bundle == null) {
-            switchToMakePaymentFragment();
-        } else {
-            MakePaymentFragment makePaymentFragment = new MakePaymentFragment();
-            makePaymentFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, makePaymentFragment).commit();
-        }
-    }
 
-    public void switchToMakePaymentByDeepLinkFragment() {
+
+    public void switchToBanglalionBillPayFragment() {
         getSupportFragmentManager().beginTransaction().
-                replace(R.id.fragment_container, new MakePaymentByDeepLinkFragment()).commit();
-    }
-
-    public void switchToReceivedPaymentRequestsFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PaymentRequestsReceivedFragment()).commit();
+                replace(R.id.fragment_container, new BanglalionBillPayFragment()).commit();
     }
 
     @Override
