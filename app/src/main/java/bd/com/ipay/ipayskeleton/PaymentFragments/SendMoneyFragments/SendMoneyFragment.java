@@ -607,7 +607,11 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
                                 mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
                             } else {
-                                Toast.makeText(mContext, mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                if (mCustomProgressDialog != null) {
+                                    mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
+                                } else {
+                                    Toast.makeText(mContext, mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
 
                             if (mSendMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
