@@ -5,21 +5,26 @@ public class DeepLinkedNotification {
     private String accountId;
     private String deepLink;
     private String icon;
-    private boolean isSeen;
+    private String body;
+    private String status;
     private String message;
     private int serviceId;
     private long time;
     private String title;
 
-    public DeepLinkedNotification(String accountId, String deepLink, String icon, boolean isSeen, String message, int serviceId, int time, String title) {
+    public DeepLinkedNotification(String accountId, String deepLink, String icon, String status, String message, int serviceId, int time, String title) {
         this.accountId = accountId;
         this.deepLink = deepLink;
         this.icon = icon;
-        this.isSeen = isSeen;
+        this.status = status;
         this.message = message;
         this.serviceId = serviceId;
         this.time = time;
         this.title = title;
+    }
+
+    public String getBody() {
+        return body;
     }
 
     public String getAccountId() {
@@ -34,8 +39,8 @@ public class DeepLinkedNotification {
         return icon;
     }
 
-    public boolean isSeen() {
-        return isSeen;
+    public String getStatus() {
+        return status;
     }
 
     public String getMessage() {

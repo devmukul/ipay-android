@@ -28,6 +28,7 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
 
     private Context mContext;
     private String title, message, imageUrl, deepLink;
+    private long time;
 
     public CreateCustomNotificationAsyncTask(Context context, String title, String message, String imageUrl) {
         this.mContext = context;
@@ -42,6 +43,15 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
         this.message = message;
         this.imageUrl = imageUrl;
         this.deepLink = deepLink;
+    }
+
+    public CreateCustomNotificationAsyncTask(Context mContext, String title, String message, String imageUrl, String deepLink, long time) {
+        this.mContext = mContext;
+        this.title = title;
+        this.message = message;
+        this.imageUrl = imageUrl;
+        this.deepLink = deepLink;
+        this.time = time;
     }
 
     @Override
@@ -75,6 +85,7 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(deepLink));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("time", this.time);
         } else {
             intent = new Intent(mContext, SignupOrLoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

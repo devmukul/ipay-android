@@ -2,11 +2,19 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationStateRequest;
 import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -39,15 +47,24 @@ public class LauncherActivity extends AppCompatActivity {
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
-                        if(!StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
+                        if (!StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
                             Utilities.performDeepLinkAction(this, deepLinkAction);
-                        } else{
+                            if (getIntent().hasExtra("time")) {
+                                List<Long> timeList = new ArrayList<>();
+                                timeList.add(getIntent().getLongExtra("time", 0));
+                                UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList, "VISITED");
+                                new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_NOTIFICATION_STATE,
+                                        Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
+                                        new Gson().toJson(updateNotificationStateRequest), this, true).
+                                        executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            }
+                        } else {
                             launchHomeActivity();
                         }
                     } else {
                         launchSigninOrLoginActivity(deepLinkAction);
                     }
-                }else{
+                } else {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
                         launchHomeActivity();
                     } else {

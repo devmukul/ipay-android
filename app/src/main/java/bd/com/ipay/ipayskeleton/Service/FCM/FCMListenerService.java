@@ -69,7 +69,7 @@ public class FCMListenerService extends FirebaseMessagingService {
     private void createNotification(Context context, String title, String message, String imageUrl) {
         if (serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
             new CreateCustomNotificationAsyncTask(context, title,
-                    message, imageUrl, mFcmNotificationResponse.getDeepLink()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    message, imageUrl, mFcmNotificationResponse.getDeepLink(), mFcmNotificationResponse.getTime()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             new CreateCustomNotificationAsyncTask(context, title,
                     message, imageUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
