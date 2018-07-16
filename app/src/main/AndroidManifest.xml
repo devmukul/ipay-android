@@ -379,6 +379,13 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
+        <activity
+            android:name=".Activities.PaymentActivities.UtilityBillPaymentActivity"
+            android:label="@string/ipay_here"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
             <intent-filter>

@@ -22,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -52,6 +53,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mPayByQCView;
     private View mMakePaymentView;
     private View mRequestPaymentView;
+    private View mBillPayView;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
     private PinChecker pinChecker;
@@ -76,6 +78,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mPayByQCView = v.findViewById(R.id.payByQCView);
         mMakePaymentView = v.findViewById(R.id.makePaymentView);
         mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
+        mBillPayView = v.findViewById(R.id.billPayView);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
@@ -100,6 +103,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker.execute();
             }
         });
+
 
         mPayByQCView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +148,24 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     public void ifPinAdded() {
                         Intent intent;
                         intent = new Intent(getActivity(), RequestPaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         startActivity(intent);
                     }
                 });

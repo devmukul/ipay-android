@@ -241,6 +241,8 @@
     <string name="progress_dialog_accepted">Accepting request…</string>
     <string name="progress_dialog_signing_out">Signing out…</string>
     <string name="progress_dialog_adding_trusted_device">Adding this device as trusted…</string>
+    <string name="progress_dialog_fetching_customer_info">Fetching customer info…</string>
+    <string name="progress_dialog_bill_payment_in_progress">Bill payment in progress. Please wait…</string>
     <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
@@ -1172,4 +1174,12 @@
 
     <string name="facebook_app_id">269331673611619</string>
     <string name="fb_login_protocol_scheme">fb269331673611619</string>
+    <string name="utility_bill">Utility Bill</string>
+    <string name="utility">Utility</string>
+    <string name="banglalion">Banglalion</string>
+    <string name="bill_pay_help_message">Enter your Banglalion CustomerID or CustomerNumber or MSISDN number.</string>
+    <string name="prepaid_amount_bill_pay_help_message">Enter amount to pay your Banglalion bill.</string>
+    <string name="choose_your_package">Choose Your Package</string>
+    <string name="pay_bill">Pay Bill</string>
+    <string name="please_select_package">Please select a package.</string>
 </resources>
