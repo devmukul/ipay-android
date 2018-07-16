@@ -22,6 +22,7 @@ import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
@@ -39,6 +40,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DeepLinkedNotification;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GetDeepLinkedNotificationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationStateRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -223,6 +225,11 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                     break;
                 case Constants.COMMAND_UPDATE_NOTIFICATION_STATE:
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (!result.isSilent()) {
+                            UpdateNotificationResponse updateNotificationResponse = new Gson().
+                                    fromJson(result.getJsonString(), UpdateNotificationResponse.class);
+                            Toast.makeText(getContext(), updateNotificationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                         Log.d("update notification", result.getJsonString());
                     } else {
 
@@ -271,11 +278,15 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
         if (mUpdateNotificationStateTask != null) {
             return;
         } else {
+            boolean isSilent = true;
+            if (state.toUpperCase().equals("CLEARED")) {
+                isSilent = false;
+            }
             UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList, state.toUpperCase());
             mUpdateNotificationStateTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_NOTIFICATION_STATE,
                     Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
-                    new Gson().toJson(updateNotificationStateRequest), getContext(), this, true);
-            if (state.toUpperCase().equals("DELETE")) {
+                    new Gson().toJson(updateNotificationStateRequest), getContext(), this, isSilent);
+            if (state.toUpperCase().equals("CLEARED")) {
                 mProgressDialog.setMessage("Please wait");
                 mProgressDialog.show();
             }
@@ -370,7 +381,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         List<Long> timeList = new ArrayList<>();
                                         timeList.add(mDeepLinkedNotifications.get(pos).getTime());
-                                        updateNotificationState(timeList, "DELETED");
+                                        updateNotificationState(timeList, "CLEARED");
                                     }
                                 }).show();
                         return false;
