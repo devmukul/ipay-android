@@ -48,6 +48,7 @@ public class Constants {
     public static final String WITHDRAW_MONEY = "WITHDRAW_MONEY";
     public static final String MAKE_PAYMENT = "MAKE_PAYMENT";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
+    public static final String UTILITY_BILL_PAYMENT = "UTILITY_BILL_PAYMENT";
     public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
@@ -431,6 +432,7 @@ public class Constants {
 
     //business rule Rest
     public static final String URL_BUSINESS_RULE = "business-rule";
+    public static final String URL_BUSINESS_RULE_V2 = "business-rule/v2";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
 
     // Introducer REST
@@ -614,6 +616,7 @@ public class Constants {
     // Utilities Bill
     public static final String URL_GET_PROVIDER = "providers";
     public static final String URL_GET_CUSTOMER_INFO = "banglalion/customer/";
+    public static final String URL_BANGLALION_BILL_PAY = "banglalion/billpay";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -725,6 +728,8 @@ public class Constants {
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
     public static final String COMMAND_UPDATE_SECURITY_ANSWERS = "COMMAND_UPDATE_SECURITY_ANSWERS";
     public static final String COMMAND_GET_ACCESS_CONTROL_LIST = "COMMAND_GET_ACCESS_CONTROL_LIST";
+    public static final String COMMAND_BANGLALION_BILL_PAY = "COMMAND_BANGLALION_BILL_PAY";
+    public static final String COMMAND_GET_BANGLALION_CUSTOMER_INFO = "COMMAND_GET_BANGLALION_CUSTOMER_INFO";
 
     // Ticket
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
@@ -841,6 +846,7 @@ public class Constants {
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
     public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
+    public static final int SERVICE_ID_UTILITY_BILL = 6010;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";

@@ -48,6 +48,12 @@ public class BusinessRuleConstants {
     public static final String SERVICE_RULE_ADD_CARDMONEY_VERIFICATION_REQUIRED = "ADD_CARDMONEY_VERIFICATION_REQUIRED";
 
 
+    public static final String SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED = "VERIFICATION_REQUIRED";
+    public static final String SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED = "PIN_REQUIRED";
+
+
     // Send Money Default values
     public static final int DEFAULT_VALUE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = 0;
     public static final int DEFAULT_VALUE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = 10000;
@@ -96,6 +102,11 @@ public class BusinessRuleConstants {
     public static final boolean DEFAULT_VALUE_TOP_UP_VERIFICATION_REQUIRED = false;
     public static final boolean DEFAULT_VALUE_TOP_UP_PIN_REQUIRED = true;
 
+    // Make Payment Default values
+    public static final int DEFAULT_VALUE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT = 0;
+    public static final int DEFAULT_VALUE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT = 10000;
+    public static final boolean DEFAULT_VALUE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED = false;
+    public static final boolean DEFAULT_VALUE_UTILITY_BILL_PAYMENT_PIN_REQUIRED = true;
 
     // Location Required Default for all services
     public static final boolean DEFAULT_VALUE_LOCATION_REQUIRED = false;
@@ -108,7 +119,8 @@ public class BusinessRuleConstants {
             Constants.WITHDRAW_MONEY,
             Constants.MAKE_PAYMENT,
             Constants.REQUEST_PAYMENT,
-            Constants.TOP_UP
+            Constants.TOP_UP,
+            Constants.UTILITY_BILL_PAYMENT
     };
 
     public static String SET_IS_DEFAULT_BUSINESS_RULES = "SET_IS_DEFAULT_BUSINESS_RULES";

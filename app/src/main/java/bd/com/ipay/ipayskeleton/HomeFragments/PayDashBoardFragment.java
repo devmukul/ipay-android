@@ -158,6 +158,10 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mBillPayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
                     public void ifPinAdded() {
