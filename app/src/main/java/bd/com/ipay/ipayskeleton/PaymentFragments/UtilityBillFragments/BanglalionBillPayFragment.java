@@ -115,7 +115,6 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
         mPayBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mErrorTextView.setVisibility(View.GONE);
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     if (verifyUserInputs(mCunnectionType)) {
                         attemptBillPayPinCheck();
@@ -149,6 +148,10 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                             mPrepaidPackageSelectEditText.setText(allowablePackage.getPackageName());
                             mPrepaidAmmountView.setVisibility(View.VISIBLE);
                             mPrepaidAmountEditText.setText(allowablePackage.getAmount().toString());
+
+                            mErrorTextView.setVisibility(View.GONE);
+                            mPrepaidPackageSelectEditText.setError(null);
+                            mPrepaidPackageSelectEditText.clearFocus();
                         }
                     });
                     mBanglalionPackageSelectorDialog.showDialog();
@@ -347,10 +350,11 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                     //validation check of amount
                     if (TextUtils.isEmpty(mPrepaidPackageSelectEditText.getText())) {
                         mErrorTextView.setVisibility(View.VISIBLE);
-                    } else if (!InputValidator.isValidDigit(mPrepaidPackageSelectEditText.getText().toString().trim())) {
-                        mErrorTextView.setVisibility(View.VISIBLE);
+                        errorMessage = getString(R.string.please_select_package);
+                        focusView = mPrepaidPackageSelectEditText;
+                        mPrepaidPackageSelectEditText.setError(errorMessage);
+                        cancel = true;
                     } else {
-                        mErrorTextView.setVisibility(View.GONE);
                         final BigDecimal topUpAmount = new BigDecimal(mPrepaidAmountEditText.getText().toString());
                         if (topUpAmount.compareTo(balance) > 0) {
                             errorMessage = getString(R.string.insufficient_balance);
