@@ -1123,7 +1123,6 @@ public class Utilities {
                     intent = new Intent(activity, WebViewActivity.class);
                     intent.putExtra("url", "https://www.ipay.com.bd/promotions?link=" + deepLinkAction.getQueryParameter());
                     activity.startActivity(intent);
-                    activity.finish();
                 } else {
                     intent = new Intent(activity, HomeActivity.class);
                     intent.putExtra(Constants.PATH, deepLinkAction.getAction());

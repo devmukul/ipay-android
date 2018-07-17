@@ -37,6 +37,7 @@ public class LauncherActivity extends AppCompatActivity {
         loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
         String activityAction = getIntent().getAction();
+        System.out.println("NOTIFICATION TEST - "+getIntent().getExtras().toString());
         if (activityAction == null)
             activityAction = Intent.ACTION_MAIN;
         switch (activityAction) {
@@ -48,16 +49,21 @@ public class LauncherActivity extends AppCompatActivity {
                 if (deepLinkAction != null) {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
                         if (!StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
-                            Utilities.performDeepLinkAction(this, deepLinkAction);
-                            if (getIntent().hasExtra("time")) {
-                                List<Long> timeList = new ArrayList<>();
-                                timeList.add(getIntent().getLongExtra("time", 0));
-                                UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList, "VISITED");
-                                new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_NOTIFICATION_STATE,
-                                        Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
-                                        new Gson().toJson(updateNotificationStateRequest), this, true).
-                                        executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            }
+                           if(deepLinkAction.getAction().contains("promotions")) {
+                               Intent intent = new Intent(this, HomeActivity.class);
+                               intent.putExtra("from_notification",true);
+                               intent.putExtra("deepLinkAction",new Gson().toJson(deepLinkAction));
+                               startActivity(intent);
+                               if (getIntent().hasExtra("time")) {
+                                   List<Long> timeList = new ArrayList<>();
+                                   timeList.add(getIntent().getLongExtra("time", 0));
+                                   UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList, "VISITED");
+                                   new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_NOTIFICATION_STATE,
+                                           Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
+                                           new Gson().toJson(updateNotificationStateRequest), this, true).
+                                           executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                               }
+                           }
                         } else {
                             launchHomeActivity();
                         }

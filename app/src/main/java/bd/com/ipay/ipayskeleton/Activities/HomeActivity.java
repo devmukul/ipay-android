@@ -96,6 +96,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -170,6 +171,14 @@ public class HomeActivity extends BaseActivity
 
         setContentView(R.layout.activity_home);
         if (getIntent() != null) {
+            if (getIntent().hasExtra("from_notification")) {
+                try {
+                    DeepLinkAction deepLinkAction = new Gson().fromJson(getIntent().getStringExtra("deepLinkAction"), DeepLinkAction.class);
+                    Utilities.performDeepLinkAction(this, deepLinkAction);
+                } catch (Exception e) {
+
+                }
+            }
             if (getIntent().getData() != null && getIntent().getData().toString().contains("www.ipay.com.bd")) {
                 try {
                     Intent intent = new Intent();
@@ -185,7 +194,6 @@ public class HomeActivity extends BaseActivity
 
         }
         refreshBalance();
-        getNotifications();
         mProgressDialog = new ProgressDialog(HomeActivity.this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -404,6 +412,7 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         Utilities.hideKeyboard(this);
+        getNotifications();
 
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
@@ -960,8 +969,10 @@ public class HomeActivity extends BaseActivity
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
                             fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
-                    SharedPrefManager.setNotificationCount(getDeepLinkedNotificationResponse.getUnseenCount());
+                    SharedPrefManager.setNotificationCount(getDeepLinkedNotificationResponse.getNotSeenCount());
+                    updateNotificationBadgeCount(mBadgeCount);
                 }
+                mGetNotificationAsyncTask = null;
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:
                 try {
                     mGetBusinessInformationResponse = gson.fromJson(result.getJsonString(), GetBusinessInformationResponse.class);

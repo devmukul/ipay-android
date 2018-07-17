@@ -16,7 +16,6 @@
         <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/value10"
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.RecyclerView

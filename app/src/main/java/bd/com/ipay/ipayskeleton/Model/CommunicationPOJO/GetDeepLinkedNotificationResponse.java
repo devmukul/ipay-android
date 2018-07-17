@@ -7,10 +7,10 @@ public class GetDeepLinkedNotificationResponse {
     private List<DeepLinkedNotification> notificationList;
     private String message;
     private boolean hasNext;
-    private int unseenCount;
+    private int notSeenCount;
 
-    public int getUnseenCount() {
-        return unseenCount;
+    public int getNotSeenCount() {
+        return notSeenCount;
     }
 
     public List<DeepLinkedNotification> getNotificationList() {

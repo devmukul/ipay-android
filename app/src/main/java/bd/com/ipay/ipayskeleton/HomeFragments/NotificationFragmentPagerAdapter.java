@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+
 public class NotificationFragmentPagerAdapter extends FragmentPagerAdapter {
     public NotificationFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -12,11 +14,11 @@ public class NotificationFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 return new NotificationDeeplinkedFragment();
             case 1:
-                return new NotificationFragment();
+                return HomeActivity.mNotificationFragment;
         }
         return null;
     }
@@ -29,7 +31,7 @@ public class NotificationFragmentPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 return "Notifications";
             case 1:

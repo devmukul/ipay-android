@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -19,10 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
@@ -43,7 +43,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GetDeepLinkedNotificatio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationStateRequest;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -66,6 +65,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
     private int mPastVisibleItems;
     private int mVisibleItem;
     private long lastTime;
+    private int rowToDelete;
 
     private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
     private HttpRequestPutAsyncTask mUpdateNotificationStateTask;
@@ -81,6 +81,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
         setHasOptionsMenu(true);
         lastTime = 0;
         mTracker = Utilities.getTracker(getActivity());
+        rowToDelete = -1;
     }
 
     @Override
@@ -170,6 +171,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
             List<DeepLinkedNotification> tempNotifications;
             tempNotifications = notifications;
             mDeepLinkedNotifications.addAll(tempNotifications);
+            lastTime = mDeepLinkedNotifications.get(mDeepLinkedNotifications.size() - 1).getTime();
         }
 
         this.hasNext = hasNext;
@@ -203,6 +205,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                 setContentShown(true);
                 mSwipeRefreshLayout.setRefreshing(false);
                 mGetNotificationAsyncTask = null;
+                mUpdateNotificationStateTask = null;
                 if (isAdded()) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
@@ -215,9 +218,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                                 fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
                         List<DeepLinkedNotification> deepLinkedNotifications = getDeepLinkedNotificationResponse.getNotificationList();
                         checkNotificationStatusAndUpdate(deepLinkedNotifications);
-                        lastTime = deepLinkedNotifications.get(deepLinkedNotifications.size() - 1).getTime();
                         loadNotifications(deepLinkedNotifications, getDeepLinkedNotificationResponse.isHasNext());
-                        SharedPrefManager.setNotificationCount(getDeepLinkedNotificationResponse.getUnseenCount());
                     }
                     setContentShown(true);
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -225,14 +226,18 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                     break;
                 case Constants.COMMAND_UPDATE_NOTIFICATION_STATE:
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (rowToDelete != -1) {
+                            mDeepLinkedNotifications.remove(rowToDelete);
+                            mNotificationListAdapter.notifyDataSetChanged();
+                            rowToDelete = -1;
+                        }
                         if (!result.isSilent()) {
                             UpdateNotificationResponse updateNotificationResponse = new Gson().
                                     fromJson(result.getJsonString(), UpdateNotificationResponse.class);
-                            Toast.makeText(getContext(), updateNotificationResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
                         Log.d("update notification", result.getJsonString());
                     } else {
-
+                        rowToDelete = -1;
                     }
                     mUpdateNotificationStateTask = null;
             }
@@ -276,20 +281,19 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
 
     private void updateNotificationState(List<Long> timeList, String state) {
         if (mUpdateNotificationStateTask != null) {
+            rowToDelete = -1;
             return;
         } else {
             boolean isSilent = true;
             if (state.toUpperCase().equals("CLEARED")) {
                 isSilent = false;
+                mProgressDialog.setMessage("Please wait");
+                mProgressDialog.show();
             }
             UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList, state.toUpperCase());
             mUpdateNotificationStateTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_NOTIFICATION_STATE,
                     Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
                     new Gson().toJson(updateNotificationStateRequest), getContext(), this, isSilent);
-            if (state.toUpperCase().equals("CLEARED")) {
-                mProgressDialog.setMessage("Please wait");
-                mProgressDialog.show();
-            }
             mUpdateNotificationStateTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -305,7 +309,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
             private TextView mLoadMoreTextView;
             private ProgressBar mLoadMoreProgressBar;
             private TextView titleView;
-            private RelativeLayout notificationHolderLayout;
+            private LinearLayout notificationHolderLayout;
 
             public NotificationViewHolder(final View itemView) {
                 super(itemView);
@@ -316,7 +320,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                 mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
                 mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 titleView = (TextView) itemView.findViewById(R.id.textview_title);
-                notificationHolderLayout = (RelativeLayout) itemView.findViewById(R.id.notification_holder);
+                notificationHolderLayout = (LinearLayout) itemView.findViewById(R.id.notification_holder);
             }
 
             private void setItemVisibilityOfFooterView() {
@@ -366,6 +370,13 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                             updateNotificationState(timeList, "VISITED");
                             deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                             Utilities.performDeepLinkAction(getActivity(), deepLinkAction);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    notificationHolderLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                                }
+                            }, 500);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -379,8 +390,10 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        rowToDelete = -1;
                                         List<Long> timeList = new ArrayList<>();
                                         timeList.add(mDeepLinkedNotifications.get(pos).getTime());
+                                        rowToDelete = pos;
                                         updateNotificationState(timeList, "CLEARED");
                                     }
                                 }).show();

@@ -27,6 +27,9 @@ public class FCMListenerService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage message) {
         parseRemoteMessage(message);
+        System.out.println("Sagid "+message.getNotification().getBody());
+        System.out.println("Sagid "+message.getNotification().getTitle());
+        System.out.println("Sagid "+message.getNotification().getTag());
     }
 
     private void parseRemoteMessage(RemoteMessage message) {
