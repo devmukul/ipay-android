@@ -58,12 +58,11 @@
                             android:scaleType="centerCrop"
                             card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_topup_home"/>
+                            android:src="@drawable/ic_home_topup"/>
 
                         <TextView
                             android:layout_width="@dimen/value80"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center|center_horizontal"
                             android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
@@ -91,12 +90,11 @@
                             android:scaleType="centerCrop"
                             card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_pay_by_qc_home"/>
+                            android:src="@drawable/ic_home_pay_by_qr"/>
 
                         <TextView
                             android:layout_width="@dimen/value80"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center|center_horizontal"
                             android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
@@ -124,12 +122,11 @@
                             android:scaleType="centerCrop"
                             card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_make_payment"/>
+                            android:src="@drawable/ic_home_payment"/>
 
                         <TextView
                             android:layout_width="@dimen/value80"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center|center_horizontal"
                             android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
@@ -142,39 +139,108 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/requestPaymentView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                    android:orientation="vertical"
-                    android:padding="@dimen/activity_horizontal_margin_card"
-                    android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="@dimen/value80"
-                        android:layout_height="@dimen/value80"
-                        android:background="@drawable/semiround_white_default"
-                        android:elevation="@dimen/value2"
-                        android:scaleType="centerCrop"
-                        card_view:riv_corner_radius="@dimen/value2"
-                        android:padding="@dimen/value15"
-                        android:src="@drawable/background_icon_request_payment"/>
-
-                    <TextView
-                        android:id="@+id/nameView"
-                        android:layout_width="@dimen/value80"
+                    <LinearLayout
+                        android:id="@+id/requestPaymentView"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center|center_horizontal"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                        android:ellipsize="marquee"
-                        android:gravity="center_horizontal"
-                        android:singleLine="true"
-                        android:text="@string/request_payment"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_extra_smaller_value11" />
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:orientation="vertical"
+                        android:padding="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
+                        android:visibility="gone">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="@dimen/value80"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:scaleType="centerCrop"
+                            card_view:riv_corner_radius="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:src="@drawable/background_icon_request_payment"/>
+
+                        <TextView
+                            android:id="@+id/nameView"
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/request_payment"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11" />
+                    </LinearLayout>
+
                 </LinearLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingRight="@dimen/value5"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:singleLine="true"
+                android:text="@string/utility"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_small" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:id="@+id/billPayView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:orientation="vertical"
+                        android:padding="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="@dimen/value80"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:scaleType="centerCrop"
+                            card_view:riv_corner_radius="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:src="@drawable/blion"/>
+
+                        <TextView
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/banglalion"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout
