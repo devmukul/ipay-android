@@ -46,19 +46,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card"
-                        android:layout_weight="1">
+                        android:padding="@dimen/activity_horizontal_margin_card">
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:layout_width="@dimen/value80"
                             android:layout_height="@dimen/value80"
                             android:background="@drawable/semiround_white_default"
                             android:elevation="@dimen/value2"
-                            android:scaleType="centerCrop"
-                            card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/ic_home_topup"/>
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_home_topup"
+                            card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -78,19 +78,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card"
-                        android:layout_weight="1">
+                        android:padding="@dimen/activity_horizontal_margin_card">
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:layout_width="@dimen/value80"
                             android:layout_height="@dimen/value80"
                             android:background="@drawable/semiround_white_default"
                             android:elevation="@dimen/value2"
-                            android:scaleType="centerCrop"
-                            card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/ic_home_pay_by_qr"/>
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_home_pay_by_qr"
+                            card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -110,19 +110,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card"
-                        android:layout_weight="1">
+                        android:padding="@dimen/activity_horizontal_margin_card">
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:layout_width="@dimen/value80"
                             android:layout_height="@dimen/value80"
                             android:background="@drawable/semiround_white_default"
                             android:elevation="@dimen/value2"
-                            android:scaleType="centerCrop"
-                            card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/ic_home_payment"/>
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_home_payment"
+                            card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -150,9 +150,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card"
-                        android:layout_weight="1"
                         android:visibility="gone">
 
                         <com.makeramen.roundedimageview.RoundedImageView
@@ -161,10 +161,10 @@
                             android:layout_height="@dimen/value80"
                             android:background="@drawable/semiround_white_default"
                             android:elevation="@dimen/value2"
-                            android:scaleType="centerCrop"
-                            card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/background_icon_request_payment"/>
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/background_icon_request_payment"
+                            card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
                             android:id="@+id/nameView"
@@ -213,19 +213,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card"
-                        android:layout_weight="1">
+                        android:padding="@dimen/activity_horizontal_margin_card">
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:layout_width="@dimen/value80"
                             android:layout_height="@dimen/value80"
                             android:background="@drawable/semiround_white_default"
                             android:elevation="@dimen/value2"
-                            android:scaleType="centerCrop"
-                            card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/blion"/>
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/blion"
+                            card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -238,25 +238,26 @@
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/linkThreeBill"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card"
-                        android:layout_weight="1">
+                        android:padding="@dimen/activity_horizontal_margin_card">
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:layout_width="@dimen/value80"
                             android:layout_height="@dimen/value80"
                             android:background="@drawable/semiround_white_default"
                             android:elevation="@dimen/value2"
-                            android:scaleType="centerCrop"
-                            card_view:riv_corner_radius="@dimen/value2"
                             android:padding="@dimen/value15"
-                            android:src="@drawable/ic_link3"/>
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_link3"
+                            card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
                             android:layout_width="@dimen/value80"

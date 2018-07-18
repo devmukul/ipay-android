@@ -146,6 +146,10 @@ public class Constants {
     public static final String FROM_BRANCHING = "FROM_BRANCHING";
     public static final String ADDRESS_ONE = "ADDRESS_ONE";
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
+    public static final String SERVICE = "SERVICE";
+    public static final String BANGLALION = "BANGLALION";
+    public static final String LINK3 = "LINK3";
+    public static final String COMMAND_LINK_THREE_BILL_PAY = "COMMAND_LINK_THREE_BILL_PAY";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -617,8 +621,10 @@ public class Constants {
 
     // Utilities Bill
     public static final String URL_GET_PROVIDER = "providers";
-    public static final String URL_GET_CUSTOMER_INFO = "banglalion/customer/";
+    public static final String URL_GET_BANGLALION_CUSTOMER_INFO = "banglalion/customer/";
+    public static final String URL_GET_LINK_THREE_CUSTOMER_INFO = "link3/subscriber/";
     public static final String URL_BANGLALION_BILL_PAY = "banglalion/billpay";
+    public static final String URL_LINK_THREE_BILL_PAY = "link3/billpay";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -733,6 +739,7 @@ public class Constants {
     public static final String COMMAND_GET_ACCESS_CONTROL_LIST = "COMMAND_GET_ACCESS_CONTROL_LIST";
     public static final String COMMAND_BANGLALION_BILL_PAY = "COMMAND_BANGLALION_BILL_PAY";
     public static final String COMMAND_GET_BANGLALION_CUSTOMER_INFO = "COMMAND_GET_BANGLALION_CUSTOMER_INFO";
+    public static final String COMMAND_GET_LINK_THREE_CUSTOMER_INFO = "COMMAND_GET_LINK_THREE_CUSTOMER_INFO";
 
     // Ticket
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";

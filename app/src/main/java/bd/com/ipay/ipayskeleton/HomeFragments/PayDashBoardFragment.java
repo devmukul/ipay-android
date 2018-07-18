@@ -168,6 +168,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     @Override
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.BANGLALION);
                         startActivity(intent);
                     }
                 });
@@ -185,6 +186,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     @Override
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.LINK3);
                         startActivity(intent);
                     }
                 });

@@ -12,7 +12,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UtilityBillPaymentActivity extends BaseActivity{
+public class UtilityBillPaymentActivity extends BaseActivity {
 
     public static MandatoryBusinessRules mMandatoryBusinessRules;
 
@@ -22,8 +22,19 @@ public class UtilityBillPaymentActivity extends BaseActivity{
         setContentView(R.layout.activity_utility_bill_payment);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            if (getIntent().hasExtra(Constants.SERVICE)) {
+                String service = getIntent().getStringExtra(Constants.SERVICE);
+                if (service.equals(Constants.BANGLALION)) {
+                    switchToBanglalionBillPayFragment();
+                } else if (service.equals(Constants.LINK3)) {
 
-        switchToBanglalionBillPayFragment();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -40,6 +51,12 @@ public class UtilityBillPaymentActivity extends BaseActivity{
     public void switchToBillProviderListFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new UtilityProviderListFragment()).commit();
+    }
+
+    public void switchToLink3BillPayment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new BanglalionBillPayFragment()).commit();
+
     }
 
     public void switchToBanglalionBillPayFragment() {
