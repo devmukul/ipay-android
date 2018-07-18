@@ -552,7 +552,6 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }
                 }
-
                 mBanglalionBillPayTask = null;
                 break;
 

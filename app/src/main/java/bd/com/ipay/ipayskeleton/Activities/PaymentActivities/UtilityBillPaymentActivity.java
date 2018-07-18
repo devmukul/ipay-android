@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -28,7 +29,7 @@ public class UtilityBillPaymentActivity extends BaseActivity {
                 if (service.equals(Constants.BANGLALION)) {
                     switchToBanglalionBillPayFragment();
                 } else if (service.equals(Constants.LINK3)) {
-
+                    switchToLink3BillPayment();
                 }
             }
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class UtilityBillPaymentActivity extends BaseActivity {
 
     public void switchToLink3BillPayment() {
         getSupportFragmentManager().beginTransaction().
-                replace(R.id.fragment_container, new BanglalionBillPayFragment()).commit();
+                replace(R.id.fragment_container, new Link3BillPaymentFragment()).commit();
 
     }
 
