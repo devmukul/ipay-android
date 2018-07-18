@@ -52,6 +52,7 @@
                     style="@style/Divider"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp" />
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,116 +66,14 @@
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
                         android:hint="Amount"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/bill_pay_option_selector_view_holder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/user_info_view_holder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/name_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:text=""
-                            android:textColor="@color/colorOnBoardText"
-                            android:textSize="@dimen/text_size_small"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/package_type_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/value5"
-                            android:gravity="left"
-                            android:text=""
-                            android:textColor="@color/cunnection_type"
-                            android:textSize="@dimen/text_size_mini" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/acount_id_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text=""
-                        android:textColor="@color/colorOnBoardText"
-                        android:textSize="@dimen/text_size_mini" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/postpaid_bill_view_holder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/CustomTextInputLayout">
-
-                        <EditText
-                            android:id="@+id/postpaid_amount_edit_text"
-                            style="@style/CustomEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="0dp"
-                            android:layout_marginRight="0dp"
-                            android:hint="@string/enter_amount"
-                            android:inputType="number"
-                            android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <View
-                        style="@style/Divider"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp" />
-
-                    <TextView
-                        style="@style/CustomNoteTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"
-                        android:gravity="left"
-                        android:text="@string/prepaid_amount_bill_pay_help_message" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/errortext"
-                    style="@style/CustomNoteTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <View
+                    style="@style/Divider"
                     android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"
-                    android:gravity="left"
-                    android:text="@string/please_select_package"
-                    android:textColor="#FF0000"
-                    android:visibility="gone" />
-
+                    android:layout_marginRight="0dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -187,14 +86,4 @@
         android:background="@color/colorPrimaryButton"
         android:text="@string/continue_add_money"
         android:textColor="@color/colorPrimaryButtonText" />
-
-    <Button
-        android:id="@+id/bill_pay_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryButton"
-        android:text="@string/pay_bill"
-        android:textColor="@color/colorPrimaryButtonText"
-        android:visibility="gone" />
 </RelativeLayout>

@@ -150,6 +150,8 @@ public class Constants {
     public static final String BANGLALION = "BANGLALION";
     public static final String LINK3 = "LINK3";
     public static final String COMMAND_LINK_THREE_BILL_PAY = "COMMAND_LINK_THREE_BILL_PAY";
+    public static final String COMMAND_BRILLIANT_RECHARGE = "COMMAND_BRILLIANT_RECHARGE";
+    public static final String BRILLIANT = "BRILLIANT";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -625,6 +627,7 @@ public class Constants {
     public static final String URL_GET_LINK_THREE_CUSTOMER_INFO = "link3/subscriber/";
     public static final String URL_BANGLALION_BILL_PAY = "banglalion/billpay";
     public static final String URL_LINK_THREE_BILL_PAY = "link3/billpay";
+    public static final String URL_BRILLIANT_RECHARGE = "brilliant/recharge";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
