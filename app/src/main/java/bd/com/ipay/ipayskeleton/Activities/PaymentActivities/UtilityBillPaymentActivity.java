@@ -10,6 +10,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Banglalion
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.WestzoneBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -33,6 +34,8 @@ public class UtilityBillPaymentActivity extends BaseActivity {
                     switchToLink3BillPayment();
                 } else if (service.equals(Constants.BRILLIANT)) {
                     switchToBrilliantRechargeFragment();
+                } else if (service.equals(Constants.WESTZONE)) {
+                    switchToWestZoneBillPayFragment();
                 }
             }
         } catch (Exception e) {
@@ -64,12 +67,16 @@ public class UtilityBillPaymentActivity extends BaseActivity {
     public void switchToLink3BillPayment() {
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.fragment_container, new Link3BillPaymentFragment()).commit();
-
     }
 
     public void switchToBanglalionBillPayFragment() {
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.fragment_container, new BanglalionBillPayFragment()).commit();
+    }
+
+    public void switchToWestZoneBillPayFragment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new WestzoneBillPaymentFragment()).commit();
     }
 
     @Override

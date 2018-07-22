@@ -1186,4 +1186,11 @@
     <string name="link_three">Link3</string>
     <string name="bill_pay_help_message_link3">Enter your link3 subscriber ID</string>
     <string name="brilliant">Brilliant</string>
+    <string name="west_zone_bill_pay_message">Please enter your westzone account number</string>
+    <string name="bill_month">Bill Month</string>
+    <string name="principal_amount">Principal Amount</string>
+    <string name="vat_amount">Vat Amount</string>
+    <string name="bill_status">Bill Status</string>
+    <string name="enter_customer_id">Please enter a customer ID</string>
+    <string name="bill_number">Bill Number</string>
 </resources>
