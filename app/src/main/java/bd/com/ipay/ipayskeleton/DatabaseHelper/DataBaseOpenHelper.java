@@ -68,6 +68,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_BUSINESS_ADDRESS + " text, " +
                 DBConstants.KEY_BUSINESS_THANA + " text, " +
                 DBConstants.KEY_BUSINESS_DISTRICT + " text, " +
+                DBConstants.KEY_BUSINESS_OUTLET + " text, " +
                 DBConstants.BUSINESS_EMAIL + " text, " +
                 DBConstants.KEY_BUSINESS_TYPE + " integer default 0, " +
                 DBConstants.KEY_PROFILE_PICTURE + " text, " +
@@ -94,7 +95,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
             case 11:
                 dropTable(db, DBConstants.DB_TABLE_BUSINESS_ACCOUNTS);
                 createBusinessAccountsTable(db);
-            case 12:
+            case 13:
                 dropTable(db, DBConstants.DB_TABLE_BUSINESS_ACCOUNTS);
                 createBusinessAccountsTable(db);
                 break;

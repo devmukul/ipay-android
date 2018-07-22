@@ -44,6 +44,7 @@ public class DBConstants {
     public static final String KEY_BUSINESS_ADDRESS = "business_address";
     public static final String KEY_BUSINESS_THANA = "business_thana";
     public static final String KEY_BUSINESS_DISTRICT = "business_district";
+    public static final String KEY_BUSINESS_OUTLET = "business_outlet";
 
     // Push events table
     public static final String KEY_TAG_NAME = "tag_name";

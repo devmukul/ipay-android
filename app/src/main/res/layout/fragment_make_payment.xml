@@ -141,6 +141,7 @@
             </LinearLayout>
         </RelativeLayout>
 
+
         <LinearLayout
             android:id="@+id/mobile_number_holder"
             android:layout_width="match_parent"
@@ -196,6 +197,35 @@
                 style="@style/Divider"
                 android:layout_alignParentBottom="true" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/outlet_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <EditText
+                    android:id="@+id/outlet_selector_edit_text"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="Select Outlet"
+                    android:inputType=""
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:drawableRight="@drawable/dropdown_arrow"/>
+
+            </android.support.design.widget.TextInputLayout>
+            <View style="@style/Divider"/>
+
+        </LinearLayout>
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

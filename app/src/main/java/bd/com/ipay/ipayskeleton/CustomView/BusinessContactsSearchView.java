@@ -163,6 +163,7 @@ public class BusinessContactsSearchView extends FrameLayout {
         int businessAddressIndex;
         int businessThanaIndex;
         int businessDistrictIndex;
+        int businessOutletIndex;
 
 
         mBusinessContacts = new ArrayList<>();
@@ -176,6 +177,7 @@ public class BusinessContactsSearchView extends FrameLayout {
             businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
             businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
             businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
+            businessOutletIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_OUTLET);
 
             if (cursor.moveToFirst())
                 do {
@@ -186,6 +188,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     String businessAddress = cursor.getString(businessAddressIndex);
                     String businessThana = cursor.getString(businessThanaIndex);
                     String businessDistrict = cursor.getString(businessDistrictIndex);
+                    String businessOutlet = cursor.getString(businessOutletIndex);
 
                     BusinessContact businessContact = new BusinessContact();
                     businessContact.setBusinessName(businessName);
@@ -194,6 +197,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     businessContact.setAddressString(businessAddress);
                     businessContact.setThanaString(businessThana);
                     businessContact.setDistrictString(businessDistrict);
+                    businessContact.setOutletString(businessOutlet);
 
                     if (CommonData.getBusinessTypes() != null) {
                         BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);

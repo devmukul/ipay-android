@@ -16,7 +16,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.MerchantBranchSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -28,11 +31,11 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<MerchantDetails> mBusinessAccountEntryList;
-    private MerchantBranchSelectorDialog mMerchantBranchSelectorDialog;
+    private List<BusinessList> mBusinessAccountEntryList;
+    private TrendingBusinessOutletSelectorDialog mMerchantBranchSelectorDialog;
     Context context;
 
-    public PayDashBoardItemAdapter(List<MerchantDetails> mBusinessAccountEntryList, Context context) {
+    public PayDashBoardItemAdapter(List<BusinessList> mBusinessAccountEntryList, Context context) {
         this.mBusinessAccountEntryList = mBusinessAccountEntryList;
         this.context = context;
     }
@@ -48,7 +51,7 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         public void bindView(final int pos) {
-            final MerchantDetails merchantDetails = mBusinessAccountEntryList.get(pos);
+            final BusinessList merchantDetails = mBusinessAccountEntryList.get(pos);
             final String name = merchantDetails.getMerchantName();
             final String imageUrl = Constants.BASE_URL_FTP_SERVER + merchantDetails.getBusinessLogo();
             mTextView.setText(name);
@@ -80,15 +83,15 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
                         PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
                             @Override
                             public void ifPinAdded() {
-                                if (mBusinessAccountEntryList.get(pos).getBranches().size() > 1) {
-                                    mMerchantBranchSelectorDialog = new MerchantBranchSelectorDialog(context, mBusinessAccountEntryList.get(pos));
+                                if (mBusinessAccountEntryList.get(pos).getOutlets().size() > 1) {
+                                    mMerchantBranchSelectorDialog = new TrendingBusinessOutletSelectorDialog(context, mBusinessAccountEntryList.get(pos));
                                     mMerchantBranchSelectorDialog.showDialog();
                                 } else {
                                     Intent intent = new Intent(context, PaymentActivity.class);
                                     intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-                                    intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getBranches().get(0).getBranchAddress1());
-                                    intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getBranches().get(0).getBranchAddress2());
-                                    intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getBranches().get(0).getMobileNumber());
+                                    intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getAddressList().getOFFICE().get(0).getAddressLine1());
+                                    intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getAddressList().getOFFICE().get(0).getAddressLine2());
+                                    intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
                                     intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
                                     intent.putExtra(Constants.FROM_BRANCHING, true);
                                     context.startActivity(intent);

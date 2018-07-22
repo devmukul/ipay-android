@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/main_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/outlet_radio_button"
+            android:layout_width="40dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:id="@+id/outlet_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/value16"
+            android:layout_toRightOf="@+id/outlet_radio_button"
+            android:textSize="13sp"
+            android:textColor="#212121"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/outlet_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/outlet_name"
+            android:layout_toRightOf="@id/outlet_radio_button"
+            android:textSize="13sp"
+            android:textColor="#212121"/>
+    </RelativeLayout>
+</LinearLayout>

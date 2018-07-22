@@ -33,7 +33,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BanglalionPackageSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -58,6 +62,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
@@ -66,6 +71,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AllowablePackage;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -105,10 +111,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private BusinessContactsSearchView mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
+    private EditText mOutletEditText;
     private EditText mRefNumberEditText;
     private TextView mBalanceView;
     private View profileView;
     private View mobileNumberView;
+    private View outletView;
     private ProgressDialog mProgressDialog;
     private ProgressBar mAddressProgressBar;
 
@@ -132,6 +140,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private String mThana;
     private String mAmount;
     private String mReceiver;
+    private Long mOutletId;
 
     private double latitude = 0.0;
     private double longitude = 0.0;
@@ -142,6 +151,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private LocationManager locationManager;
+    private BusinessOutletSelectorDialog moutletSelectorDialog;
+    List<Outlets> outlets;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -165,9 +176,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
         mAddressProgressBar = (ProgressBar) v.findViewById(R.id.address_progress_bar);
         profileView = v.findViewById(R.id.profile);
+        outletView = v.findViewById(R.id.outlet_holder);
         mobileNumberView = v.findViewById(R.id.mobile_number_holder);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
+        mOutletEditText = (EditText) v.findViewById(R.id.outlet_selector_edit_text);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
         mAddressTextView = (TextView) v.findViewById(R.id.textview_address_line_1);
         mThanaAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
@@ -202,6 +215,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
                 mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
                 mMobileNumberEditText.setText(mReceiverMobileNumber);
+                mOutletId = getActivity().getIntent().getLongExtra(Constants.OUTLET_ID, 0);
                 if (getActivity().getIntent().hasExtra(Constants.NAME)) {
                     mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
                     if (TextUtils.isEmpty(mReceiverName)) {
@@ -234,6 +248,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
 
         } else {
+            System.out.println("Test  from contact");
             if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
                 mIconEditMobileNumber.setVisibility(View.VISIBLE);
                 mobileNumberView.setVisibility(GONE);
@@ -250,6 +265,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
                 mMobileNumberEditText.setText(mReceiverMobileNumber);
                 if (getActivity().getIntent().hasExtra(Constants.NAME)) {
+
                     mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
                     if (TextUtils.isEmpty(mReceiverName)) {
                         businessNameTextView.setVisibility(GONE);
@@ -264,6 +280,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
                         mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
                         mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+                        mOutletId = getActivity().getIntent().getLongExtra(Constants.OUTLET_ID, 0);
                         mAddressTextView.setVisibility(View.VISIBLE);
                         mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
                         mAddressTextView.setText(mAddressString);
@@ -277,6 +294,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             mAddressString = getArguments().getString(Constants.ADDRESS);
                             mDistrict = getArguments().getString(Constants.DISTRICT);
                             mThana = getArguments().getString(Constants.THANA);
+                            mOutletId = getArguments().getLong(Constants.OUTLET_ID);
 
                             if (mAddressString != null) {
                                 mAddressTextView.setText(mAddressString);
@@ -350,6 +368,25 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 mobileNumberView.setVisibility(View.VISIBLE);
                 profileView.setVisibility(GONE);
                 mMobileNumberEditText.requestFocus();
+            }
+        });
+
+        outletView.setVisibility(GONE);
+        mOutletEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (outlets.size()>0) {
+                    moutletSelectorDialog = new BusinessOutletSelectorDialog(getContext(), mReceiverName, mReceiverPhotoUri, outlets);
+                    moutletSelectorDialog.setOnResourceSelectedListener(new BusinessOutletSelectorDialog.OnResourceSelectedListener() {
+                        @Override
+                        public void onResourceSelected(Outlets allowablePackage) {
+                            mOutletEditText.setText(allowablePackage.getOutletName());
+                            outletView.setVisibility(View.VISIBLE);
+                            mOutletId = allowablePackage.getOutletId();
+                        }
+                    });
+                    moutletSelectorDialog.showDialog();
+                }
             }
         });
 
@@ -461,24 +498,30 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     final String result = barcode.displayValue;
-                    if (result != null) {
+                    String [] stringArray = result.split("-");
+                    final String mobile = stringArray[0];
+                    if(stringArray.length>1) {
+                        mOutletId = Long.parseLong(stringArray[1]);
+                    }
+
+                    if (mobile != null) {
                         Handler mHandler = new Handler();
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (InputValidator.isValidNumber(result)) {
-                                    Cursor mCursor = searchContact(result);
+                                if (InputValidator.isValidNumber(mobile)) {
+                                    Cursor mCursor = searchContact(mobile);
                                     try {
                                         if (mCursor != null) {
                                             setValueFromCursor(mCursor);
                                         } else {
-                                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
-                                            getProfileInfo(ContactEngine.formatMobileNumberBD(result));
+                                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(mobile));
+                                            getProfileInfo(ContactEngine.formatMobileNumberBD(mobile));
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
-                                        getProfileInfo(ContactEngine.formatMobileNumberBD(result));
+                                        mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(mobile));
+                                        getProfileInfo(ContactEngine.formatMobileNumberBD(mobile));
                                     } finally {
                                         if (mCursor != null) {
                                             mCursor.close();
@@ -503,6 +546,15 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
             String address = data.getStringExtra(Constants.ADDRESS);
             String thanaDistrict = data.getStringExtra(Constants.THANA) + ", " + data.getStringExtra(Constants.DISTRICT);
+            String outletString = data.getStringExtra(Constants.OUTLET);
+
+            if(!TextUtils.isEmpty(outletString)){
+                Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
+                outlets = new Gson().fromJson(outletString, outletListType);
+                outletView.setVisibility(View.VISIBLE);
+            }else{
+                outletView.setVisibility(View.GONE);
+            }
             //getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber), false);
             mobileNumberView.setVisibility(View.GONE);
             profileView.setVisibility(View.VISIBLE);
@@ -673,7 +725,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mCustomProgressDialog.showDialog();
         mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiver),
-                mAmount, description, pin, referenceNumber, latitude, longitude);
+                mAmount, description, pin, referenceNumber, mOutletId, latitude, longitude);
 
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
@@ -996,6 +1048,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         int businessAddressIndex;
         int businessThanaIndex;
         int businessDistrictIndex;
+        int businessOutletIndex;
 
 
         mBusinessContacts = new ArrayList<>();
@@ -1009,6 +1062,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
             businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
             businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
+            businessOutletIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_OUTLET);
 
             if (cursor.moveToFirst())
                 do {
@@ -1019,6 +1073,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     String businessAddress = cursor.getString(businessAddressIndex);
                     String businessThana = cursor.getString(businessThanaIndex);
                     String businessDistrict = cursor.getString(businessDistrictIndex);
+                    String businessOutlet = cursor.getString(businessOutletIndex);
 
                     BusinessContact businessContact = new BusinessContact();
                     businessContact.setBusinessName(businessName);
@@ -1027,6 +1082,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     businessContact.setAddressString(businessAddress);
                     businessContact.setThanaString(businessThana);
                     businessContact.setDistrictString(businessDistrict);
+                    businessContact.setOutletString(businessOutlet);
 
                     if (CommonData.getBusinessTypes() != null) {
                         BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
@@ -1054,6 +1110,14 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         List<BusinessContact> mBusinessContactList = getBusinessContactList(cursor);
         BusinessContact mBussinessContact = mBusinessContactList.get(0);
 
+        if(!TextUtils.isEmpty(mBussinessContact.getOutletString())){
+            Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
+            outlets = new Gson().fromJson(mBussinessContact.getOutletString(), outletListType);
+            outletView.setVisibility(View.VISIBLE);
+        }else{
+            outletView.setVisibility(View.GONE);
+        }
+
         mAddressProgressBar.setVisibility(View.GONE);
         mobileNumberView.setVisibility(GONE);
         profileView.setVisibility(View.VISIBLE);
@@ -1067,6 +1131,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
         mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(mBussinessContact.getMobileNumber());
         mMobileNumberEditText.setText(mBussinessContact.getMobileNumber());
+
+        System.out.println("Test Outlet "+mBussinessContact.getOutletString());
 
         if (TextUtils.isEmpty(mReceiverName)) {
             businessNameTextView.setVisibility(GONE);
