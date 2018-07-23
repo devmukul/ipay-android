@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -35,8 +35,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AllowablePackage;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetLinkThreeSubscriberInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Link3BillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LinkThreeBillPayRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -51,13 +51,13 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class Link3BillPaymentFragment extends Fragment implements HttpResponseListener {
+public class Link3BillPaymentFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetCustomerInfoTask = null;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
     private HttpRequestPostAsyncTask mLink3PayBillTask = null;
 
-    private BanglalionBillPayResponse mBanglalionBillPayResponse;
+    private Link3BillPayResponse mLink3BillPayResponse;
     private LinkThreeBillPayRequest mLinkThreeBillPayRequest;
 
     private View mCustomerIdView;
@@ -164,7 +164,7 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
         mProgressDialog.show();
         mCustomerId = mCustomerIdEditText.getText().toString().trim();
-        mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANGLALION_CUSTOMER_INFO,
+        mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LINK_THREE_CUSTOMER_INFO,
                 Constants.BASE_URL_UTILITY + Constants.URL_GET_LINK_THREE_CUSTOMER_INFO + mCustomerId, getActivity(), false);
         mGetCustomerInfoTask.mHttpResponseListener = this;
         mGetCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -183,7 +183,7 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mLinkThreeBillPayRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
+                Constants.BASE_URL_UTILITY + Constants.URL_LINK_THREE_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
@@ -297,6 +297,7 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
+            mCustomProgressDialog.dismissDialog();
             mGetCustomerInfoTask = null;
             mGetBusinessRuleTask = null;
             mLink3PayBillTask = null;
@@ -336,6 +337,7 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
                             Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                         break;
                 }
+                mGetCustomerInfoTask = null;
                 break;
             case Constants.COMMAND_GET_BUSINESS_RULE:
                 mGetBusinessRuleTask = null;
@@ -372,10 +374,11 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
                     default:
                         break;
                 }
+                mGetBusinessRuleTask = null;
                 break;
-            case Constants.COMMAND_BANGLALION_BILL_PAY:
+            case Constants.COMMAND_LINK_THREE_BILL_PAY:
                 try {
-                    mBanglalionBillPayResponse = gson.fromJson(result.getJsonString(), BanglalionBillPayResponse.class);
+                    mLink3BillPayResponse = gson.fromJson(result.getJsonString(), Link3BillPayResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                         if (getActivity() != null) {
                             new Handler().postDelayed(new Runnable() {
@@ -391,7 +394,7 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         } else {
-                            mCustomProgressDialog.showSuccessAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
+                            mCustomProgressDialog.showSuccessAnimationAndMessage(mLink3BillPayResponse.getMessage());
                         }
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -401,38 +404,41 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
 
                             }
                         }, 3000);
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                        mCustomProgressDialog.showFailureAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
+                        mCustomProgressDialog.showFailureAnimationAndMessage(mLink3BillPayResponse.getMessage());
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                ((MyApplication) getActivity().getApplication()).launchLoginPage(mBanglalionBillPayResponse.getMessage());
+                                ((MyApplication) getActivity().getApplication()).launchLoginPage(mLink3BillPayResponse.getMessage());
                             }
                         }, 2000);
 
+                        Utilities.sendBlockedEventTracker(mTracker,Constants.LINK_THREE_BILL_PAY,ProfileInfoCacheManager.getAccountId());
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
-                        if (!TextUtils.isEmpty(mBanglalionBillPayResponse.getMessage())) {
-                            errorMessage = mBanglalionBillPayResponse.getMessage();
+                        if (!TextUtils.isEmpty(mLink3BillPayResponse.getMessage())) {
+                            errorMessage = mLink3BillPayResponse.getMessage();
                         } else {
                             errorMessage = getString(R.string.recharge_failed);
                         }
                         mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        Toast.makeText(getActivity(), mBanglalionBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), mLink3BillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         mCustomProgressDialog.dismissDialog();
-                        SecuritySettingsActivity.otpDuration = mBanglalionBillPayResponse.getOtpValidFor();
+                        SecuritySettingsActivity.otpDuration = mLink3BillPayResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
                         if (getActivity() != null) {
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
-                                mCustomProgressDialog.showFailureAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mLink3BillPayResponse.getMessage());
                             } else {
-                                Toast.makeText(getContext(), mBanglalionBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), mLink3BillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
                             }
 
-                            if (mBanglalionBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            if (mLink3BillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                                 if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
                                     mCustomProgressDialog.dismissDialog();
@@ -442,8 +448,9 @@ public class Link3BillPaymentFragment extends Fragment implements HttpResponseLi
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                                 }
                             }
-                            //Google Analytic event
                         }
+                        Utilities.sendFailedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mLink3BillPayResponse.getMessage());
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -337,7 +337,7 @@
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
                             android:singleLine="true"
-                            android:text="@string/banglalion"
+                            android:text="@string/WestZone"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11" />
                     </LinearLayout>

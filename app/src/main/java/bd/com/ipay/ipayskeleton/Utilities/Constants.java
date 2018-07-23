@@ -157,6 +157,10 @@ public class Constants {
     public static final String COMMAND_WEST_ZONE_BILL_PAY = "COMMAND_WEST_ZONE_BILL_PAY";
     public static final String COMMAND_GET_WEST_ZONE_CUSTOMER = "COMMAND_GET_WEST_ZONE_CUSTOMER";
     public static final String URL_WEST_ZONE_BILL_PAY = "wzone/billpay";
+    public static final String WESTZONE_BILL_PAY = "WESTZONE BILL PAY";
+    public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
+    public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
+    public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";

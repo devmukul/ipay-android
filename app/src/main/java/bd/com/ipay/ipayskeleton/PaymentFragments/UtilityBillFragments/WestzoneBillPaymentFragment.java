@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneCust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -48,7 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class WestzoneBillPaymentFragment extends Fragment implements HttpResponseListener {
+public class WestzoneBillPaymentFragment extends BaseFragment implements HttpResponseListener {
     private TextView mNameTextView;
     private TextView mAccountIDTextView;
     private TextView mPrimaryAmountTextView;
@@ -59,7 +60,8 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
     private TextView mBillNumberTextView;
     private EditText mAccountIDEditText;
     private Button mContinueButton;
-
+    private View infoView;
+    private View customerIDView;
     private ProgressDialog mProgressDialog;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
@@ -72,7 +74,6 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
     private WestZoneBillPayRequest mWestZoneBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
     private WestZoneBillPayResponse mWestZoneBillPayResponse;
-
     private CustomProgressDialog mCustomProgressDialog;
 
     @Nullable
@@ -100,6 +101,8 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
         mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
         mBillMonthTextView = (TextView) view.findViewById(R.id.bill_month_view);
         mBillStatusTextView = (TextView) view.findViewById(R.id.bill_status_view);
+        customerIDView = view.findViewById(R.id.customer_id_view);
+        infoView = view.findViewById(R.id.info_view);
         mAccountIDEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
         mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number);
@@ -214,12 +217,15 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
         mTotalAmountTextView.setText(westZoneCustomerInfoResponse.getTotalAmount());
         mBillNumberTextView.setText(westZoneCustomerInfoResponse.getBillNumber());
         mContinueButton.setText("Pay bill");
+        infoView.setVisibility(View.VISIBLE);
+        customerIDView.setVisibility(View.GONE);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
+            mCustomProgressDialog.dismissDialog();
             mWestZoneCustomerInfoTask = null;
             mWestZoneBillPayTask = null;
             return;
@@ -233,6 +239,7 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
                     } else {
                         Toast.makeText(getContext(), westZoneCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
+                    mWestZoneCustomerInfoTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         gson = new Gson();
@@ -259,6 +266,7 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
                             BusinessRuleCacheManager.setBusinessRules(Constants.UTILITY_BILL_PAYMENT, UtilityBillPaymentActivity.mMandatoryBusinessRules);
                         }
                     }
+                    mGetBusinessRuleTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_WEST_ZONE_BILL_PAY)) {
                     try {
                         mWestZoneBillPayResponse = gson.fromJson(result.getJsonString(), WestZoneBillPayResponse.class);
@@ -287,6 +295,7 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
 
                                 }
                             }, 3000);
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mWestZoneBillPayResponse.getMessage());
@@ -296,7 +305,7 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
                                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mWestZoneBillPayResponse.getMessage());
                                 }
                             }, 2000);
-
+                            Utilities.sendBlockedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                             final String errorMessage;
                             if (!TextUtils.isEmpty(mWestZoneBillPayResponse.getMessage())) {
@@ -330,6 +339,7 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
                                 }
                                 //Google Analytic event
                             }
+                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mWestZoneBillPayResponse.getMessage());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -338,11 +348,13 @@ public class WestzoneBillPaymentFragment extends Fragment implements HttpRespons
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }
                     }
+                    mWestZoneBillPayTask = null;
                 }
             } catch (Exception e) {
                 mProgressDialog.dismiss();
                 mWestZoneCustomerInfoTask = null;
                 mWestZoneBillPayTask = null;
+                mGetBusinessRuleTask = null;
                 e.printStackTrace();
             }
         }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -49,7 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class BrilliantBillPayFragment extends Fragment implements HttpResponseListener {
+public class BrilliantBillPayFragment extends BaseFragment implements HttpResponseListener {
     private EditText mCustomerIdEditText;
     private EditText amountEditText;
     private Button mContinueButton;
@@ -269,6 +269,7 @@ public class BrilliantBillPayFragment extends Fragment implements HttpResponseLi
 
                             }
                         }, 3000);
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         mCustomProgressDialog.showFailureAnimationAndMessage(brilliantRechargeResponse.getMessage());
@@ -278,6 +279,8 @@ public class BrilliantBillPayFragment extends Fragment implements HttpResponseLi
                                 ((MyApplication) getActivity().getApplication()).launchLoginPage(brilliantRechargeResponse.getMessage());
                             }
                         }, 2000);
+
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
@@ -310,7 +313,7 @@ public class BrilliantBillPayFragment extends Fragment implements HttpResponseLi
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                                 }
                             }
-                            //Google Analytic event
+                            Utilities.sendFailedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(), brilliantRechargeResponse.getMessage());
                         }
                     }
                 } catch (Exception e) {
