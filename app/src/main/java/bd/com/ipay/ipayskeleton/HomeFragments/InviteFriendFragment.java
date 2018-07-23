@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InviteFriendFragment extends BaseFragment implements HttpResponseListener {
-    private HttpRequestGetAsyncTask mGetInvitationCodeTask= null;
+    private HttpRequestGetAsyncTask mGetInvitationCodeTask = null;
 
     private Button buttonInvitePeople;
     private EditText mInvitationCodeEditText;
@@ -62,12 +62,11 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
 
         mInvitationCode = SharedPrefManager.getInvitationCode();
 
-        if(StringUtils.isEmpty(mInvitationCode)){
+        if (StringUtils.isEmpty(mInvitationCode)) {
             getInvitationCode();
-        }else {
+        } else {
             mInvitationCodeEditText.setText(mInvitationCode);
         }
-
 
 
         return v;
@@ -110,21 +109,20 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
         mGetInvitationCodeTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITATION_CODE,
-                Constants.BASE_URL_OFFER+Constants.URL_GET_INVITATION_CODE, getActivity(), false);
+                Constants.BASE_URL_OFFER + Constants.URL_GET_INVITATION_CODE, getActivity(), false);
         mGetInvitationCodeTask.mHttpResponseListener = InviteFriendFragment.this;
         mGetInvitationCodeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
 
-
     private void shareQrCode(String code) {
-        String share_qr_code_message = "Hi, iPay Cricket Campaign going on! Let’s win & fly to WI/ USA to watch the match LIVE! Sign Up & get Verified with iPay using this code "+code+" - https://www.ipay.com.bd/signup/personal?code="+code;
+        String share_qr_code_message = "Signup with this invitation code " + code + " and get 50 taka after you get verified  - https://www.ipay.com.bd/signup/personal?code=" + code;
         Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, share_qr_code_message);
-                startActivity(Intent.createChooser(shareIntent, "Choose an app to share"));
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, share_qr_code_message);
+        startActivity(Intent.createChooser(shareIntent, "Choose an app to share"));
     }
 
 
@@ -144,7 +142,7 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
                     mInvitationCode = mInvitationCodeResponse.getInvitationCode();
                     SharedPrefManager.setInvitationCode(mInvitationCode);
                     mInvitationCodeEditText.setText(mInvitationCode);
-                }else{
+                } else {
                     Toast.makeText(getContext(), mInvitationCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
