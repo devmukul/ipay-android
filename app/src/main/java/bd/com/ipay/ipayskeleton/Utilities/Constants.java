@@ -47,7 +47,9 @@ public class Constants {
     public static final String ADD_MONEY_BY_CARD = "ADD_MONEY_BY_CARD";
     public static final String WITHDRAW_MONEY = "WITHDRAW_MONEY";
     public static final String MAKE_PAYMENT = "MAKE_PAYMENT";
+    public static final String PAYMENT_REVERT = "PAYMENT_REVERT";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
+    public static final String UTILITY_BILL_PAYMENT = "UTILITY_BILL_PAYMENT";
     public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
@@ -235,6 +237,7 @@ public class Constants {
     public static final String BASE_URL_DATA_COLLECTOR;
     private static final String SERVER_NAME;
     public static final String BASE_URL_OFFER;
+    public static final String BASE_URL_UTILITY;
 
     public static final int DEV_SERVER = 1;
     public static final int TEST_SERVER = 2;
@@ -286,6 +289,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
             BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
 
@@ -302,6 +306,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
             BASE_URL_OFFER = "https://test.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://test.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
 
@@ -318,6 +323,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
             BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://stage.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
 
@@ -334,6 +340,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
             BASE_URL_OFFER = "https://www.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://www.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == DEMO_SERVER) {
 
@@ -350,6 +357,7 @@ public class Constants {
             BASE_URL_WEB = "https://demo.ipay.com.bd";
             SERVER_NAME = "demo";
             BASE_URL_OFFER = "https://demo.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://demo.ipay.com.bd/api/utility/";
 
         } else {
 
@@ -366,6 +374,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
             BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
         }
     }
 
@@ -425,6 +434,7 @@ public class Constants {
 
     //business rule Rest
     public static final String URL_BUSINESS_RULE = "business-rule";
+    public static final String URL_BUSINESS_RULE_V2 = "business-rule/v2";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
 
     // Introducer REST
@@ -497,6 +507,7 @@ public class Constants {
     public static final String URL_GET_SINGLE_REQUEST_PAYMENT = "payment/invoice/get/";
     public static final String URL_GET_ORDER_DETAILS = "orderId/info";
     public static final String URL_PAY_BY_DEEP_LINK = "orderId/pay";
+    public static final String URL_PAYMENT_REVERT = "payment-revert";
 
     public static final String URL_PAYMENT = "payment/v2";
 
@@ -605,6 +616,11 @@ public class Constants {
     // IPayHere
     public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
 
+    // Utilities Bill
+    public static final String URL_GET_PROVIDER = "providers";
+    public static final String URL_GET_CUSTOMER_INFO = "banglalion/customer/";
+    public static final String URL_BANGLALION_BILL_PAY = "banglalion/billpay";
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -643,6 +659,7 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_PAYMENT_REVERT = "COMMAND_PAYMENT_REVERT";
     public static final String COMMAND_CANCEL_ORDER = "COMMAND_CANCEL_ORDER";
     public static final String COMMAND_PAYMENT_BY_DEEP_LINK = "COMMAND_PAYMENT_BY_DEEP_LINK";
     public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
@@ -715,6 +732,8 @@ public class Constants {
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
     public static final String COMMAND_UPDATE_SECURITY_ANSWERS = "COMMAND_UPDATE_SECURITY_ANSWERS";
     public static final String COMMAND_GET_ACCESS_CONTROL_LIST = "COMMAND_GET_ACCESS_CONTROL_LIST";
+    public static final String COMMAND_BANGLALION_BILL_PAY = "COMMAND_BANGLALION_BILL_PAY";
+    public static final String COMMAND_GET_BANGLALION_CUSTOMER_INFO = "COMMAND_GET_BANGLALION_CUSTOMER_INFO";
 
     // Ticket
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
@@ -831,6 +850,8 @@ public class Constants {
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
     public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
+    public static final int SERVICE_ID_TRANSACTION_REVERT = 966002;
+    public static final int SERVICE_ID_UTILITY_BILL = 6010;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";

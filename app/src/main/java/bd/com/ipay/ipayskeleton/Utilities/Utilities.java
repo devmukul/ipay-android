@@ -80,6 +80,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.UserAttributes;
 import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
@@ -738,7 +739,7 @@ public class Utilities {
 
     public static void initIntercomLogin() {
         Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
-        Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
+        UserAttributes userAttributes = Utilities.getUserAttributesForIntercom();
         registration.withUserAttributes(userAttributes);
 
         Intercom.client().registerIdentifiedUser(registration);
@@ -750,22 +751,22 @@ public class Utilities {
         Intercom.client().hideMessenger();
     }
 
-    private static Map<String, Object> getUserAttributesForIntercom() {
+    private static UserAttributes getUserAttributesForIntercom() {
         Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
-
-        Map<String, Object> userAttributes = new HashMap<>();
-        userAttributes.put(IntercomConstants.ATTR_NAME, ProfileInfoCacheManager.getUserName());
-        userAttributes.put(IntercomConstants.ATTR_PHONE, ProfileInfoCacheManager.getMobileNumber());
-        userAttributes.put(IntercomConstants.ATTR_EMAIL, ProfileInfoCacheManager.getPrimaryEmail());
-        userAttributes.put(IntercomConstants.ATTR_MOBILE, DeviceInfoFactory.getDeviceName());
+        Map<String, Object> avatar = new HashMap<>();
         if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
-            Map<String, Object> avatar = new HashMap<>();
             avatar.put(IntercomConstants.ATTR_TYPE, "avatar");
             avatar.put(IntercomConstants.ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
-            userAttributes.put(IntercomConstants.ATTR_AVATAR, avatar);
         }
 
-        userAttributes.put(IntercomConstants.ATTR_CUSTOM_ATTRIBUTES, customAttributes);
+        UserAttributes userAttributes = new UserAttributes.Builder()
+                .withName(ProfileInfoCacheManager.getUserName())
+                .withPhone(ProfileInfoCacheManager.getMobileNumber())
+                .withEmail(ProfileInfoCacheManager.getPrimaryEmail())
+                .withPhone(DeviceInfoFactory.getDeviceName())
+                .withCustomAttributes(customAttributes)
+                .withCustomAttribute(IntercomConstants.ATTR_AVATAR, avatar)
+                .build();
         return userAttributes;
     }
 

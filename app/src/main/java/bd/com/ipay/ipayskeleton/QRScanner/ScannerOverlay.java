@@ -3,11 +3,13 @@ package bd.com.ipay.ipayskeleton.QRScanner;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ public class ScannerOverlay extends ViewGroup {
     private int frames;
     private boolean revAnimation;
     private int lineColor, lineWidth;
+    private int border_length;
 
     public ScannerOverlay(Context context) {
         super(context);
@@ -44,6 +47,7 @@ public class ScannerOverlay extends ViewGroup {
         lineColor = a.getColor(R.styleable.ScannerOverlay_line_color, ContextCompat.getColor(context, R.color.scanner_line));
         lineWidth = a.getInteger(R.styleable.ScannerOverlay_line_width, getResources().getInteger(R.integer.line_width));
         frames = a.getInteger(R.styleable.ScannerOverlay_line_speed, getResources().getInteger(R.integer.line_width));
+        border_length = 30;
     }
 
     @Override
@@ -96,20 +100,37 @@ public class ScannerOverlay extends ViewGroup {
         line.setColor(lineColor);
         line.setStrokeWidth(Float.valueOf(lineWidth));
 
-        // draw the line to product animation
-        if (endY >= top + dpToPx(rectHeight) + frames) {
-            revAnimation = true;
-        } else if (endY == top + frames) {
-            revAnimation = false;
-        }
+        canvas.drawLine(left, top, left + dpToPx(border_length), top, line);
+        canvas.drawLine(left, top, left, top + dpToPx(border_length), line);
 
-        // check if the line has reached to bottom
-        if (revAnimation) {
-            endY -= frames;
-        } else {
-            endY += frames;
+        canvas.drawLine(left + dpToPx(rectWidth) - dpToPx(border_length), top, left + dpToPx(rectWidth), top, line);
+        canvas.drawLine(left + dpToPx(rectWidth), top, left + dpToPx(rectWidth), top + dpToPx(border_length), line);
+
+        canvas.drawLine(left, top + dpToPx(rectHeight), left + dpToPx(border_length), top + dpToPx(rectHeight), line);
+        canvas.drawLine(left, top + dpToPx(rectHeight), left, top + dpToPx(rectHeight) - dpToPx(border_length), line);
+
+        canvas.drawLine(left + dpToPx(rectWidth) - dpToPx(border_length), top + dpToPx(rectHeight), left + dpToPx(rectWidth), top + dpToPx(rectHeight), line);
+        canvas.drawLine(left + dpToPx(rectWidth), top + dpToPx(rectHeight), left + dpToPx(rectWidth), top + dpToPx(rectHeight) - dpToPx(border_length), line);
+
+        canvas.drawPoint(left, top, line);
+        canvas.drawPoint(left + dpToPx(rectWidth), top, line);
+        canvas.drawPoint(left, top + dpToPx(rectHeight), line);
+        canvas.drawPoint(left + dpToPx(rectWidth), top + dpToPx(rectHeight), line);
+
+        String qr_code_text = "Align QR code with in the frame,to Scan fast without any problem";
+        String[] str = qr_code_text.split(",");
+
+        TextPaint textPaint = new TextPaint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(dpToPx(16));
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        float textHeight = -textPaint.ascent();
+
+        RectF bounds = new RectF(0, 0, getWidth(), getHeight());
+        for (int i = str.length - 1; i >= 0; i--) {
+            //Center text here
+            canvas.drawText(str[i], bounds.centerX(), bounds.centerY() + ((i + 3) * textHeight) + dpToPx(150), textPaint);
         }
-        canvas.drawLine(left, endY, left + dpToPx(rectWidth), endY, line);
         invalidate();
     }
 }

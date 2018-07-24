@@ -490,8 +490,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    promptForProfileCompletion();
-                    mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                    if (!ProfileInfoCacheManager.isAccountVerified()) {
+                        promptForProfileCompletion();
+                        mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                    }
                 }
 
             } catch (Exception e) {
