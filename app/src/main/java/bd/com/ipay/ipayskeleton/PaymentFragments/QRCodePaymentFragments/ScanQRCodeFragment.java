@@ -118,12 +118,12 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                         mBusinessContactList = getBusinessContactList(mCursor);
                                         if (!mBusinessContactList.get(0).getBusinessName().isEmpty())
                                             brandName = mBusinessContactList.get(0).getBusinessName();
-
                                         if(outletId>0){
                                             if (!mBusinessContactList.get(0).getOutletString().isEmpty()){
                                                 Outlets[] outlets = new Gson().fromJson(mBusinessContactList.get(0).getOutletString(), Outlets[].class);
                                                 for(Outlets outlet: outlets){
                                                     if(outlet.getOutletId() == outletId){
+                                                        outletName = outlet.getOutletName();
                                                         imageUrl = outlet.getOutletLogoUrl();
                                                         address = outlet.getAddressString();
                                                         district = outlet.getOutletAddress().getDistrictName();
@@ -225,16 +225,30 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     try {
                         Gson gson = new GsonBuilder().create();
                         GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
-                        if (!getUserInfoResponse.getProfilePictures().isEmpty())
-                            imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
                         if (!getUserInfoResponse.getName().isEmpty())
                             brandName = getUserInfoResponse.getName();
-                        if (getUserInfoResponse.getAddressList() != null) {
-                            if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
-                                address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
-                                country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                                district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
-                                thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+
+                        if (outletId>0 && getUserInfoResponse.getOutlets().size()>0 && getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
+                            for (Outlets outlets: getUserInfoResponse.getOutlets()) {
+                                if(outlets.getOutletId()==outletId){
+                                    imageUrl = outlets.getOutletLogoUrl();
+                                    address = outlets.getAddressString();
+                                    district = outlets.getOutletAddress().getDistrictName();
+                                    thana = outlets.getOutletAddress().getThanaName();
+                                    outletName = outlets.getOutletName();
+                                    break;
+                                }
+                            }
+                        }else {
+                            if (!getUserInfoResponse.getProfilePictures().isEmpty())
+                                imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                            if (getUserInfoResponse.getAddressList() != null) {
+                                if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
+                                    address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                                    country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                                    district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                                    thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                                }
                             }
                         }
 
@@ -283,6 +297,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.THANA, thana);
         intent.putExtra(Constants.FROM_QR_SCAN, true);
         intent.putExtra(Constants.OUTLET_ID, outletId);
+        intent.putExtra(Constants.OUTLET_NAME, outletName);
 
         startActivity(intent);
         getActivity().finish();

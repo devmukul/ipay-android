@@ -3,10 +3,13 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddressList;
 
 public class BusinessList
@@ -74,6 +77,49 @@ public class BusinessList
 
     public void setOutlets(List<Outlets> outlets) {
         this.outlets = outlets;
+    }
+
+
+    public String getAddressString() {
+        String addressString = null;
+        if (businessAddress != null) {
+            if (businessAddress.getOFFICE() != null) {
+                List<UserAddress> office = businessAddress.getOFFICE();
+                if (office != null) {
+                    addressString = office.get(0).getAddressLine1();
+
+                    if (!office.get(0).getAddressLine2().isEmpty())
+                        addressString += office.get(0).getAddressLine2();
+                }
+            }
+        }
+        return addressString;
+    }
+
+    public String getThanaString() {
+        String thanaString = null;
+        if (businessAddress != null) {
+            if (businessAddress.getOFFICE() != null) {
+                List<UserAddress> office = businessAddress.getOFFICE();
+                if (office != null) {
+                    thanaString = office.get(0).getThana();
+                }
+            }
+        }
+        return thanaString;
+    }
+
+    public String getDistrictString() {
+        String districtString = null;
+        if (businessAddress != null) {
+            if (businessAddress.getOFFICE() != null) {
+                List<UserAddress> office = businessAddress.getOFFICE();
+                if (office != null) {
+                    districtString = office.get(0).getDistrict();
+                }
+            }
+        }
+        return districtString;
     }
 
 }

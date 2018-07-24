@@ -100,11 +100,13 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog {
         private void switchToMakePaymentActivity(MerchantBranchAddressViewHolder holder, int position) {
             Intent intent = new Intent(context, PaymentActivity.class);
             intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-            intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getAddressList().getOFFICE().get(0).getAddressLine1());
-            intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getAddressList().getOFFICE().get(0).getAddressLine2());
+            intent.putExtra(Constants.ADDRESS, merchantDetails.getOutlets().get(position).getAddressString());
+            intent.putExtra(Constants.DISTRICT, merchantDetails.getOutlets().get(position).getOutletAddress().getDistrictName());
+            intent.putExtra(Constants.THANA, merchantDetails.getOutlets().get(position).getOutletAddress().getThanaName());
             intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
             intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
             intent.putExtra(Constants.OUTLET_ID, outlets.get(position).getOutletId());
+            intent.putExtra(Constants.OUTLET_NAME, outlets.get(position).getOutletName());
             intent.putExtra(Constants.FROM_BRANCHING, true);
             context.startActivity(intent);
             TrendingBusinessOutletSelectorDialog.this.dismiss();

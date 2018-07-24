@@ -148,6 +148,7 @@ public class Constants {
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
+    public static final String OUTLET_NAME = "OUTLET_NAME";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";

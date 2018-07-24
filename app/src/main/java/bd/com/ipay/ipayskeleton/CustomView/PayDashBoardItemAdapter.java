@@ -16,18 +16,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BusinessOutletSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.MerchantBranchSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-
 
 public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -83,14 +79,29 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
                         PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
                             @Override
                             public void ifPinAdded() {
-                                if (mBusinessAccountEntryList.get(pos).getOutlets().size() > 1) {
-                                    mMerchantBranchSelectorDialog = new TrendingBusinessOutletSelectorDialog(context, mBusinessAccountEntryList.get(pos));
-                                    mMerchantBranchSelectorDialog.showDialog();
+                                if (mBusinessAccountEntryList.get(pos).getOutlets()!=null && mBusinessAccountEntryList.get(pos).getOutlets().size() > 0) {
+                                    if (mBusinessAccountEntryList.get(pos).getOutlets().size() > 1) {
+                                        mMerchantBranchSelectorDialog = new TrendingBusinessOutletSelectorDialog(context, mBusinessAccountEntryList.get(pos));
+                                        mMerchantBranchSelectorDialog.showDialog();
+                                    } else {
+                                        Intent intent = new Intent(context, PaymentActivity.class);
+                                        intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
+                                        intent.putExtra(Constants.ADDRESS, merchantDetails.getOutlets().get(0).getAddressString());
+                                        intent.putExtra(Constants.DISTRICT, merchantDetails.getOutlets().get(0).getOutletAddress().getDistrictName());
+                                        intent.putExtra(Constants.THANA, merchantDetails.getOutlets().get(0).getOutletAddress().getThanaName());
+                                        intent.putExtra(Constants.OUTLET_NAME, merchantDetails.getOutlets().get(0).getOutletName());
+                                        intent.putExtra(Constants.OUTLET_ID, merchantDetails.getOutlets().get(0).getOutletId());
+                                        intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
+                                        intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
+                                        intent.putExtra(Constants.FROM_BRANCHING, true);
+                                        context.startActivity(intent);
+                                    }
                                 } else {
                                     Intent intent = new Intent(context, PaymentActivity.class);
                                     intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-                                    intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getAddressList().getOFFICE().get(0).getAddressLine1());
-                                    intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getAddressList().getOFFICE().get(0).getAddressLine2());
+                                    intent.putExtra(Constants.ADDRESS, merchantDetails.getAddressString());
+                                    intent.putExtra(Constants.DISTRICT, merchantDetails.getDistrictString());
+                                    intent.putExtra(Constants.THANA, merchantDetails.getThanaString());
                                     intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
                                     intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
                                     intent.putExtra(Constants.FROM_BRANCHING, true);
