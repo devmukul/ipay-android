@@ -1090,14 +1090,26 @@ public class Utilities {
     public static DeepLinkAction parseUriForDeepLinkingAction(Uri uri) {
         DeepLinkAction deepLinkAction = new DeepLinkAction();
         List<String> pathSegments = uri.getPathSegments();
-        if (pathSegments.size() < 2) {
-            return null;
+        if (pathSegments.size() < 2 && pathSegments.size() != 0) {
+            if (pathSegments.get(0).toLowerCase().contains("promotions")) {
+                deepLinkAction.setAction(pathSegments.get(0));
+                if (uri.getQueryParameter("link") != null) {
+                    deepLinkAction.setQueryParameter(uri.getQueryParameter("link"));
+                }
+                return deepLinkAction;
+            } else {
+                return null;
+            }
         } else if (pathSegments.size() == 2 && pathSegments.get(0).contains("signup")) {
             System.out.println("Test Invite " + pathSegments.get(0) + " " + uri.getQueryParameter("code"));
             deepLinkAction.setAction(pathSegments.get(0));
             deepLinkAction.setQueryParameter(uri.getQueryParameter("code"));
-        } else if (pathSegments.size() == 2 && pathSegments.get(0).contains("app")) {
-            deepLinkAction.setAction(pathSegments.get(1));
+        } else if (pathSegments.size() == 2) {
+            if (pathSegments.get(0).contains("app")) {
+                deepLinkAction.setAction(pathSegments.get(1));
+            } else {
+                deepLinkAction.setAction(pathSegments.get(0));
+            }
             if (uri.getQueryParameter("link") != null) {
                 deepLinkAction.setQueryParameter(uri.getQueryParameter("link"));
             }
@@ -1123,6 +1135,7 @@ public class Utilities {
                     intent = new Intent(activity, WebViewActivity.class);
                     intent.putExtra("url", "https://www.ipay.com.bd/promotions?link=" + deepLinkAction.getQueryParameter());
                     activity.startActivity(intent);
+                    activity.finish();
                 } else {
                     intent = new Intent(activity, HomeActivity.class);
                     intent.putExtra(Constants.PATH, deepLinkAction.getAction());

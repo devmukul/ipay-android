@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -229,6 +230,11 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         if (rowToDelete != -1) {
                             mDeepLinkedNotifications.remove(rowToDelete);
                             mNotificationListAdapter.notifyDataSetChanged();
+                            try {
+                                lastTime = mDeepLinkedNotifications.get(mDeepLinkedNotifications.size() - 1).getTime();
+                            }catch (Exception e){
+
+                            }
                             rowToDelete = -1;
                         }
                         if (!result.isSilent()) {
@@ -368,8 +374,9 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                             timeList.clear();
                             timeList.add(mDeepLinkedNotifications.get(pos).getTime());
                             updateNotificationState(timeList, "VISITED");
-                            deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
-                            Utilities.performDeepLinkAction(getActivity(), deepLinkAction);
+                            Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                            intent.putExtra("url", mDeepLinkedNotifications.get(pos).getDeepLink());
+                            startActivity(intent);
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
