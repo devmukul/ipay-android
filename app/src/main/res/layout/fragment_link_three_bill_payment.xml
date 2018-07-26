@@ -22,7 +22,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/blion" />
+                android:src="@drawable/link3_icon" />
 
             <LinearLayout
                 android:id="@+id/customer_id_view"
@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
-                        android:hint="Account ID"
+                        android:hint="Subscriber ID"
                         android:inputType="text"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
@@ -61,7 +61,7 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:gravity="left"
-                    android:text="@string/bill_pay_help_message" />
+                    android:text="@string/bill_pay_help_message_link3" />
 
             </LinearLayout>
 
@@ -158,90 +158,19 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/prepaid_package_selector_view_holder"
+                <TextView
+                    android:id="@+id/errortext"
+                    style="@style/CustomNoteTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:gravity="left"
+                    android:text="@string/please_select_package"
+                    android:textColor="#FF0000"
+                    android:visibility="gone" />
 
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="visible">
-
-                        <EditText
-                            android:id="@+id/package_selector_edit_text"
-                            style="@style/CustomEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="0dp"
-                            android:layout_marginRight="0dp"
-                            android:drawableRight="@drawable/dropdown_arrow"
-                            android:focusable="false"
-                            android:hint="@string/choose_your_package"
-                            android:inputType=""
-                            android:maxLines="1"
-                            android:paddingRight="10dp"
-                            android:singleLine="true" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <View
-                        style="@style/Divider"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp" />
-
-                    <TextView
-                        android:id="@+id/errortext"
-                        style="@style/CustomNoteTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"
-                        android:gravity="left"
-                        android:text="@string/please_select_package"
-                        android:textColor="#FF0000"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:id="@+id/package_amount_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:theme="@style/CustomTextInputLayout">
-
-                            <EditText
-                                android:id="@+id/prepaid_amount_edit_text"
-                                style="@style/CustomEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="0dp"
-                                android:layout_marginRight="0dp"
-                                android:enabled="false"
-                                android:hint="@string/enter_amount"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1"
-                                android:textColor="@color/colorOnBoardText" />
-                        </android.support.design.widget.TextInputLayout>
-
-                        <View
-                            style="@style/Divider"
-                            android:layout_marginLeft="0dp"
-                            android:layout_marginRight="0dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
             </LinearLayout>
-            ]
-
         </LinearLayout>
     </ScrollView>
 
