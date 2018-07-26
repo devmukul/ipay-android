@@ -316,6 +316,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:visibility="gone"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">

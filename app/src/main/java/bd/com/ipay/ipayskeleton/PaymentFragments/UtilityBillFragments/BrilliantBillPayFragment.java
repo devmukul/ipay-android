@@ -95,6 +95,7 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
                 }
             }
         });
+        getActivity().setTitle("Brilliant");
         return view;
     }
 
