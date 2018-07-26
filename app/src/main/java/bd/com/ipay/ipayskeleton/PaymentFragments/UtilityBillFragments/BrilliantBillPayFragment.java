@@ -252,10 +252,12 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
                                     getActivity().setResult(Activity.RESULT_OK);
                                     getActivity().finish();
                                 }
-                            }, 3000);
+                            }, 2000);
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
+                        if (mContinueButton != null) {
+                            mContinueButton.setClickable(false);
+                        }
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         } else {
@@ -268,7 +270,7 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
                                 getActivity().finish();
 
                             }
-                        }, 3000);
+                        }, 2000);
                         Utilities.sendSuccessEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {

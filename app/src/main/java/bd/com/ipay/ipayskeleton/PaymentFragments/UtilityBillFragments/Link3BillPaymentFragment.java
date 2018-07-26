@@ -387,10 +387,12 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                                     getActivity().setResult(Activity.RESULT_OK);
                                     getActivity().finish();
                                 }
-                            }, 3000);
+                            }, 2000);
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
+                        if(mPayBillButton != null){
+                            mPayBillButton.setClickable(false);
+                        }
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         } else {
@@ -403,7 +405,7 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                                 getActivity().finish();
 
                             }
-                        }, 3000);
+                        }, 2000);
                         Utilities.sendSuccessEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
 
 
@@ -416,7 +418,7 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                             }
                         }, 2000);
 
-                        Utilities.sendBlockedEventTracker(mTracker,Constants.LINK_THREE_BILL_PAY,ProfileInfoCacheManager.getAccountId());
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
                         if (!TextUtils.isEmpty(mLink3BillPayResponse.getMessage())) {
