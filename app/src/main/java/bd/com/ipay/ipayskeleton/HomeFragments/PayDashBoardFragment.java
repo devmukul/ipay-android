@@ -57,6 +57,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mMakePaymentView;
     private View mRequestPaymentView;
     private View mBillPayView;
+    private View mLink3BillPayView;
+    private View mBrilliantRechargeView;
+    private View mWestZoneBillPayView;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
     private PinChecker pinChecker;
@@ -82,6 +85,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mMakePaymentView = v.findViewById(R.id.makePaymentView);
         mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
         mBillPayView = v.findViewById(R.id.billPayView);
+        mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
+        mWestZoneBillPayView = v.findViewById(R.id.west_zone);
+        mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
@@ -169,6 +175,61 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     @Override
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.BANGLALION);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mLink3BillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.LINK3);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mBrilliantRechargeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.BRILLIANT);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mWestZoneBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.WESTZONE);
                         startActivity(intent);
                     }
                 });
