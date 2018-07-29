@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,12 +13,12 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillP
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.WestzoneBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class UtilityBillPaymentActivity extends BaseActivity {
 
     public static MandatoryBusinessRules mMandatoryBusinessRules;
+    private ProgressDialog  mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,9 @@ public class UtilityBillPaymentActivity extends BaseActivity {
         setContentView(R.layout.activity_utility_bill_payment);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        try {
+
+        switchToBillProviderListFragment();
+        /*try {
             if (getIntent().hasExtra(Constants.SERVICE)) {
                 String service = getIntent().getStringExtra(Constants.SERVICE);
                 if (service.equals(Constants.BANGLALION)) {
@@ -40,7 +43,7 @@ public class UtilityBillPaymentActivity extends BaseActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -48,7 +51,7 @@ public class UtilityBillPaymentActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Utilities.hideKeyboard(this);
-            finish();
+            onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -61,22 +64,32 @@ public class UtilityBillPaymentActivity extends BaseActivity {
     }
 
     public void switchToBrilliantRechargeFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BrilliantBillPayFragment()).commit();
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).
+                replace(R.id.fragment_container, new BrilliantBillPayFragment()).commit();
     }
 
     public void switchToLink3BillPayment() {
-        getSupportFragmentManager().beginTransaction().
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).
                 replace(R.id.fragment_container, new Link3BillPaymentFragment()).commit();
     }
 
     public void switchToBanglalionBillPayFragment() {
-        getSupportFragmentManager().beginTransaction().
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).
                 replace(R.id.fragment_container, new BanglalionBillPayFragment()).commit();
     }
 
     public void switchToWestZoneBillPayFragment() {
-        getSupportFragmentManager().beginTransaction().
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).
                 replace(R.id.fragment_container, new WestzoneBillPaymentFragment()).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
