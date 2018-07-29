@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/value36"
+    android:layout_height="36dp">
+
+    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical|center_horizontal">
+
+    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+    
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:src="@drawable/ic_varified_actionbar"
+        android:layout_gravity="bottom|right"/>
+    
+    
+</FrameLayout>

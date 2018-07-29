@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="45"
+        android:layout_weight="30"
         android:orientation="vertical"
         android:background="@drawable/background_all_layout">
 
@@ -18,15 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_button"
-            android:orientation="vertical"
-            android:weightSum="5">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:animateLayoutChanges="true"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/profile_info"
@@ -34,7 +34,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:paddingLeft="@dimen/activity_horizontal_margin_double"
-                    android:paddingRight="@dimen/activity_horizontal_margin">
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:id="@+id/profile_picture_holder"
@@ -81,8 +82,6 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:layout_toLeftOf="@+id/show_qr_code_button"
-                            android:layout_toStartOf="@+id/show_qr_code_button"
                             android:gravity="start"
                             android:orientation="horizontal">
 
@@ -107,18 +106,6 @@
                             android:layout_marginBottom="@dimen/value2"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/text_size_small" />
-
-                        <ImageView
-                            android:id="@+id/show_qr_code_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:background="@android:color/transparent"
-                            android:clickable="true"
-                            android:padding="@dimen/activity_horizontal_margin_card"
-                            android:src="@drawable/ic_qr_code_home" />
 
                     </RelativeLayout>
 
@@ -181,10 +168,11 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:paddingLeft="@dimen/activity_horizontal_margin_double"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -199,36 +187,52 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:fontFamily="sans-serif-light"
                         android:text="@string/ipay_balance"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="@dimen/text_size_small"
+                        android:fontFamily="sans-serif"/>
 
-                    <TextView
-                        android:id="@+id/balance"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/balance_label"
-                        android:fontFamily="sans-serif-thin"
-                        android:paddingBottom="@dimen/activity_horizontal_margin_card"
-                        android:text="@string/loading"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/balance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/balance_label"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                            android:text="@string/loading"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_extra_extra_large"/>
+
+                        <ImageView
+                            android:id="@+id/refresh_balance_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/transparent"
+                            android:backgroundTint="@android:color/white"
+                            android:clickable="true"
+                            android:padding="@dimen/activity_horizontal_margin_card"
+                            android:src="@drawable/reload_icon" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
-
                 <ImageView
-                    android:id="@+id/refresh_balance_button"
+                    android:id="@+id/show_qr_code_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@android:color/transparent"
-                    android:backgroundTint="@android:color/white"
                     android:clickable="true"
-                    android:padding="@dimen/activity_horizontal_margin_card"
-                    android:src="@drawable/ic_home_refresh" />
+                    android:src="@drawable/db_qr_icon" />
+
             </RelativeLayout>
         </LinearLayout>
 
@@ -249,8 +253,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <LinearLayout
                     android:id="@+id/button_add_money"
@@ -301,118 +306,182 @@
     </RelativeLayout>
 
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="55"
+        android:layout_weight="70"
         android:layout_margin="@dimen/activity_horizontal_margin_card"
-        android:background="@color/colorWhite"
-        apps:cardElevation="3dp"
-        apps:cardCornerRadius="5dp">
+        android:orientation="vertical">
 
-        <LinearLayout
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="@color/colorWhite"
+            apps:cardElevation="3dp"
+            apps:cardCornerRadius="5dp">
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/colorWhite"
+            apps:cardElevation="3dp"
+            apps:cardCornerRadius="5dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/button_send_money"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1">
 
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_send_money"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/send_money" />
+                    <LinearLayout
+                        android:id="@+id/button_send_money"
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_send_money"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/send_money" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#edeeef"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/button_pay_by_qr_code"
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_pay_by_qc_home"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/pay_by_QR_code" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#edeeef"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/button_topup"
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_topup_home"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/mobile_topup" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/button_pay_by_qr_code"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_pay_by_qc_home"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/pay_by_QR_code" />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#edeeef"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_card">
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/button_topup"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1">
 
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_topup_home"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/mobile_topup" />
+                    <LinearLayout
+                        android:id="@+id/button_request_money"
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
 
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_request_money"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/request_money" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#edeeef"
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/button_ipay_here"
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_ipay_here"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/ipay_here" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#edeeef"
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/button_invite_friend"
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/invite_icon"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/invite_people_to_ipay" />
+
+                    </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+        </android.support.v7.widget.CardView>
 
-                <LinearLayout
-                    android:id="@+id/button_request_money"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
+    </LinearLayout>
 
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_request_money"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/request_money" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/button_ipay_here"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_ipay_here"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/ipay_here" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/button_invite_friend"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/invite_icon"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/invite_people_to_ipay" />
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
 </LinearLayout>
 
 

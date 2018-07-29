@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +18,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,12 +33,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +80,8 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPromoDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
+import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.BottomSheetFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
@@ -107,6 +117,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener, HttpResponseListener {
+
+    private static final String TAG = HomeActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -160,6 +172,9 @@ public class HomeActivity extends BaseActivity
 
     private ManagedBusinessAcountAdapter mManageBusinessAcountAdapter;
     private HttpRequestPostAsyncTask mRefreshBalanceTask;
+
+    private BottomSheetBehavior mBottomSheetBehavior;
+    View testView;
 
 
     @Override
@@ -337,7 +352,65 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+
+
+        //Find bottom Sheet ID
+
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        testView = findViewById(R.id.test_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        //If you want to handle callback of Sheet Behavior you can use below code
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+//                        Animation fadeIn = new AlphaAnimation(1, 0);
+//                        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+//                        fadeIn.setDuration(300);
+//                        testView.startAnimation(fadeIn);
+                        testView.animate().scaleX(1).scaleY(1).start();
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        //testView.startAnimation(new AlphaAnimation(1,0));
+                        testView.animate().scaleX(0).scaleY(0).setDuration(300).start();
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                Animation fadeIn = new AlphaAnimation(1-slideOffset, 0);
+                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+                fadeIn.setDuration(300);
+                testView.startAnimation(fadeIn);
+            }
+        });
+
+
+
     }
+
+//    private void animateBottomSheetArrows(float slideOffset) {
+//        testView.animate()
+//                .translationY(slideOffset)
+//                .alpha(0.0f)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        super.onAnimationEnd(animation);
+//                        testView.setVisibility(View.GONE);
+//                    }
+//                });
+//    }
 
     @SuppressWarnings("MissingPermission")
     private void startLocationCollection() {
