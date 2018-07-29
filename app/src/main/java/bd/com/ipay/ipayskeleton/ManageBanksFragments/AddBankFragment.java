@@ -104,7 +104,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_bank, container, false);
-        getActivity().setTitle(R.string.add_bank);
+        getActivity().setTitle(R.string.link_bank);
         getActivity().setTitleColor(Color.WHITE);
         isSwitchedFromOnBoard = false;
 
