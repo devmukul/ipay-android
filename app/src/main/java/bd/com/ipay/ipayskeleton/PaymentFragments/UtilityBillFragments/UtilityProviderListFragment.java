@@ -67,7 +67,7 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
         View v = inflater.inflate(R.layout.fragment_utility_provider, container, false);
         mScrollViewHolder = (LinearLayout) v.findViewById(R.id.scrollViewHolder);
         utilityProviderListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
-        getActivity().setTitle(R.string.utility_bill);
+        getActivity().setTitle(R.string.bill_pay);
         getTrendingBusinessList();
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage(getString(R.string.please_wait));

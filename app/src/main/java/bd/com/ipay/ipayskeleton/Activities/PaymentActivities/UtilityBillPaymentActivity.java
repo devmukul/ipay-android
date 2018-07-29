@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class UtilityBillPaymentActivity extends BaseActivity {
 
     public static MandatoryBusinessRules mMandatoryBusinessRules;
-    private ProgressDialog  mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +24,6 @@ public class UtilityBillPaymentActivity extends BaseActivity {
         setContentView(R.layout.activity_utility_bill_payment);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         switchToBillProviderListFragment();
         /*try {
             if (getIntent().hasExtra(Constants.SERVICE)) {
