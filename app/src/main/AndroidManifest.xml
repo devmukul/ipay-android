@@ -381,7 +381,7 @@
 
         <activity
             android:name=".Activities.PaymentActivities.UtilityBillPaymentActivity"
-            android:label="@string/ipay_here"
+            android:label="@string/bill_pay"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />

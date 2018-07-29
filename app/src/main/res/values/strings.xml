@@ -1194,4 +1194,5 @@
     <string name="enter_customer_id">Please enter a customer ID</string>
     <string name="bill_number">Bill Number</string>
     <string name="WestZone">WestZone</string>
+    <string name="bill_pay">Bill Pay</string>
 </resources>
