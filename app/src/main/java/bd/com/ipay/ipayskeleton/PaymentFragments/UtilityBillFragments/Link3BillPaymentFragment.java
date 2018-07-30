@@ -27,7 +27,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BanglalionPackageSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -36,9 +35,9 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AllowablePackage;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetCustomerInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetLinkThreeSubscriberInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Link3BillPayResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LinkThreeBillPayRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
@@ -52,29 +51,25 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class BanglalionBillPayFragment extends BaseFragment implements HttpResponseListener {
+public class Link3BillPaymentFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetCustomerInfoTask = null;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
-    private HttpRequestPostAsyncTask mBanglalionBillPayTask = null;
+    private HttpRequestPostAsyncTask mLink3PayBillTask = null;
 
-    private BanglalionBillPayResponse mBanglalionBillPayResponse;
-    private BanglalionBillPayRequest mBanglalionBillPayRequestModel;
+    private Link3BillPayResponse mLink3BillPayResponse;
+    private LinkThreeBillPayRequest mLinkThreeBillPayRequest;
 
     private View mCustomerIdView;
     private View mBillPayOptionView;
     private View mUserInfoView;
     private View mPostPaidBillPayView;
-    private View mPrepaidBillPayView;
-    private View mPrepaidAmmountView;
 
     private EditText mCustomerIdEditText;
     private EditText mPostpaidAmountEditText;
     private EditText mPrepaidAmountEditText;
-    private EditText mPrepaidPackageSelectEditText;
 
     private TextView mCustomerNameTextView;
-    private TextView mPackageTypeTextView;
     private TextView mCustomerIdTextView;
     private TextView mErrorTextView;
 
@@ -85,11 +80,10 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
     private ProgressDialog mProgressDialog;
     private CustomProgressDialog mCustomProgressDialog;
 
-    private String mCunnectionType = "";
+    private String mConnectionType = "";
     private int mAmount;
     private String mCustomerId;
 
-    private BanglalionPackageSelectorDialog mBanglalionPackageSelectorDialog;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
 
@@ -104,15 +98,15 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_banglalion_bill_pay, container, false);
-        getActivity().setTitle(R.string.banglalion);
+        View view = inflater.inflate(R.layout.fragment_link_three_bill_payment, container, false);
+        getActivity().setTitle(getString(R.string.link_three));
         initView(view);
 
         mPayBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    if (verifyUserInputs(mCunnectionType)) {
+                    if (verifyUserInputs(mConnectionType)) {
                         attemptBillPayPinCheck();
                     }
                 } else if (getActivity() != null)
@@ -133,29 +127,6 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
             }
         });
 
-        mPrepaidPackageSelectEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mAllowedPackage.size() > 0) {
-                    mBanglalionPackageSelectorDialog = new BanglalionPackageSelectorDialog(getContext(), mAllowedPackage);
-                    mBanglalionPackageSelectorDialog.setOnResourceSelectedListener(new BanglalionPackageSelectorDialog.OnResourceSelectedListener() {
-                        @Override
-                        public void onResourceSelected(AllowablePackage allowablePackage) {
-                            mPrepaidPackageSelectEditText.setText(allowablePackage.getPackageName());
-                            mPrepaidAmmountView.setVisibility(View.VISIBLE);
-                            mPrepaidAmountEditText.setText(allowablePackage.getAmount().toString());
-
-                            mErrorTextView.setVisibility(View.GONE);
-                            mPrepaidPackageSelectEditText.setError(null);
-                            mPrepaidPackageSelectEditText.clearFocus();
-                        }
-                    });
-                    mBanglalionPackageSelectorDialog.showDialog();
-                }
-            }
-        });
-
-        // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_UTILITY_BILL);
 
         return view;
@@ -170,16 +141,12 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
         mBillPayOptionView = v.findViewById(R.id.bill_pay_option_selector_view_holder);
         mUserInfoView = v.findViewById(R.id.user_info_view_holder);
         mPostPaidBillPayView = v.findViewById(R.id.postpaid_bill_view_holder);
-        mPrepaidBillPayView = v.findViewById(R.id.prepaid_package_selector_view_holder);
-        mPrepaidAmmountView = v.findViewById(R.id.package_amount_view);
 
         mCustomerIdEditText = v.findViewById(R.id.customer_id_edit_text);
         mPostpaidAmountEditText = v.findViewById(R.id.postpaid_amount_edit_text);
         mPrepaidAmountEditText = v.findViewById(R.id.prepaid_amount_edit_text);
-        mPrepaidPackageSelectEditText = v.findViewById(R.id.package_selector_edit_text);
 
         mCustomerNameTextView = v.findViewById(R.id.name_text_view);
-        mPackageTypeTextView = v.findViewById(R.id.package_type_text_view);
         mCustomerIdTextView = v.findViewById(R.id.acount_id_text_view);
         mErrorTextView = v.findViewById(R.id.errortext);
 
@@ -196,9 +163,9 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
         }
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
         mProgressDialog.show();
-        mCustomerId = mCustomerIdEditText.getText().toString();
-        mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANGLALION_CUSTOMER_INFO,
-                Constants.BASE_URL_UTILITY + Constants.URL_GET_BANGLALION_CUSTOMER_INFO + mCustomerId, getActivity(), false);
+        mCustomerId = mCustomerIdEditText.getText().toString().trim();
+        mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LINK_THREE_CUSTOMER_INFO,
+                Constants.BASE_URL_UTILITY + Constants.URL_GET_LINK_THREE_CUSTOMER_INFO + mCustomerId, getActivity(), false);
         mGetCustomerInfoTask.mHttpResponseListener = this;
         mGetCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -214,9 +181,9 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
     }
 
     private void launchOTPVerification() {
-        String jsonString = new Gson().toJson(mBanglalionBillPayRequestModel);
+        String jsonString = new Gson().toJson(mLinkThreeBillPayRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
+                Constants.BASE_URL_UTILITY + Constants.URL_LINK_THREE_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
@@ -234,24 +201,21 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
     }
 
     private void attemptBillPay(String pin) {
-        if (mCunnectionType.equals("POSTPAID")) {
-            mAmount = Integer.parseInt(mPostpaidAmountEditText.getText().toString().trim());
-        } else {
-            mAmount = Integer.parseInt(mPrepaidAmountEditText.getText().toString().trim());
-        }
+        mAmount = Integer.parseInt(mPostpaidAmountEditText.getText().toString().trim());
 
-        if (mBanglalionBillPayTask != null)
+
+        if (mLink3PayBillTask != null)
             return;
-        mBanglalionBillPayRequestModel = new BanglalionBillPayRequest(mCustomerId, mAmount, pin);
+        mLinkThreeBillPayRequest = new LinkThreeBillPayRequest(mCustomerId, mAmount, pin);
 
         mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_bill_payment_in_progress));
         mCustomProgressDialog.showDialog();
         Gson gson = new Gson();
-        String json = gson.toJson(mBanglalionBillPayRequestModel);
-        mBanglalionBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BANGLALION_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, json, getActivity(), false);
-        mBanglalionBillPayTask.mHttpResponseListener = this;
-        mBanglalionBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        String json = gson.toJson(mLinkThreeBillPayRequest);
+        mLink3PayBillTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LINK_THREE_BILL_PAY,
+                Constants.BASE_URL_UTILITY + Constants.URL_LINK_THREE_BILL_PAY, json, getActivity(), false);
+        mLink3PayBillTask.mHttpResponseListener = this;
+        mLink3PayBillTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private boolean verifyUserInputs(String key) {
@@ -325,61 +289,6 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                 } else {
                     return true;
                 }
-            case "PREPAID":
-                mPrepaidAmountEditText.setError(null);
-                mPrepaidPackageSelectEditText.setError(null);
-
-                if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-                    return false;
-                }
-
-                if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
-                    DialogUtils.showDialogVerificationRequired(getActivity());
-                    return false;
-                }
-
-                if (SharedPrefManager.ifContainsUserBalance()) {
-                    final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-
-                    //validation check of amount
-                    if (TextUtils.isEmpty(mPrepaidPackageSelectEditText.getText())) {
-                        mErrorTextView.setVisibility(View.VISIBLE);
-                        errorMessage = getString(R.string.please_select_package);
-                        focusView = mPrepaidPackageSelectEditText;
-                        mPrepaidPackageSelectEditText.setError(errorMessage);
-                        cancel = true;
-                    } else {
-                        final BigDecimal topUpAmount = new BigDecimal(mPrepaidAmountEditText.getText().toString());
-                        if (topUpAmount.compareTo(balance) > 0) {
-                            errorMessage = getString(R.string.insufficient_balance);
-                        } else {
-                            final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                            final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
-                            errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
-                        }
-
-                        if (errorMessage != null) {
-                            focusView = mPrepaidAmountEditText;
-                            mPrepaidAmountEditText.setError(errorMessage);
-                            cancel = true;
-                        }
-                    }
-                } else {
-                    focusView = mPrepaidAmountEditText;
-                    errorMessage = getString(R.string.balance_not_available);
-                    cancel = true;
-                }
-
-
-                if (cancel) {
-                    focusView.requestFocus();
-                    return false;
-                } else {
-                    return true;
-                }
         }
         return false;
     }
@@ -388,9 +297,10 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
+            mCustomProgressDialog.dismissDialog();
             mGetCustomerInfoTask = null;
             mGetBusinessRuleTask = null;
-            mBanglalionBillPayTask = null;
+            mLink3PayBillTask = null;
             return;
         }
 
@@ -399,32 +309,23 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
         Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
-            case Constants.COMMAND_GET_BANGLALION_CUSTOMER_INFO:
-                GetCustomerInfoResponse mCustomerInfoResponse;
+            case Constants.COMMAND_GET_LINK_THREE_CUSTOMER_INFO:
+                GetLinkThreeSubscriberInfoResponse linkThreeSubscriberInfoResponse;
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         try {
-                            mCustomerInfoResponse = gson.fromJson(result.getJsonString(), GetCustomerInfoResponse.class);
-                            mAllowedPackage = mCustomerInfoResponse.getAllowablePackages();
+                            linkThreeSubscriberInfoResponse = gson.fromJson(result.getJsonString(), GetLinkThreeSubscriberInfoResponse.class);
                             mCustomerIdView.setVisibility(View.GONE);
                             mBillPayOptionView.setVisibility(View.VISIBLE);
                             mUserInfoView.setVisibility(View.VISIBLE);
                             mPayBillButton.setVisibility(View.VISIBLE);
                             mContinue.setVisibility(View.GONE);
-                            mCustomerNameTextView.setText(mCustomerInfoResponse.getUserName());
+                            mCustomerNameTextView.setText(linkThreeSubscriberInfoResponse.getSubscriberName());
                             mCustomerIdTextView.setText("Customer ID: " + mCustomerId);
-                            mPackageTypeTextView.setText("( " + mCustomerInfoResponse.getUserType() + " )");
-                            if (mCustomerInfoResponse.getUserType().equals("POSTPAID")) {
-                                mCunnectionType = "POSTPAID";
-                                mPostPaidBillPayView.setVisibility(View.VISIBLE);
-                                mPrepaidBillPayView.setVisibility(View.GONE);
-                                mPayBillButton.setText("PAY BILL");
-                            } else {
-                                mCunnectionType = "PREPAID";
-                                mPostPaidBillPayView.setVisibility(View.GONE);
-                                mPrepaidBillPayView.setVisibility(View.VISIBLE);
-                                mPayBillButton.setText("BUY PACKAGE");
-                            }
+                            mConnectionType = "POSTPAID";
+                            mPostPaidBillPayView.setVisibility(View.VISIBLE);
+                            mPayBillButton.setText("PAY BILL");
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)
@@ -436,6 +337,7 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                             Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                         break;
                 }
+                mGetCustomerInfoTask = null;
                 break;
             case Constants.COMMAND_GET_BUSINESS_RULE:
                 mGetBusinessRuleTask = null;
@@ -472,10 +374,11 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                     default:
                         break;
                 }
+                mGetBusinessRuleTask = null;
                 break;
-            case Constants.COMMAND_BANGLALION_BILL_PAY:
+            case Constants.COMMAND_LINK_THREE_BILL_PAY:
                 try {
-                    mBanglalionBillPayResponse = gson.fromJson(result.getJsonString(), BanglalionBillPayResponse.class);
+                    mLink3BillPayResponse = gson.fromJson(result.getJsonString(), Link3BillPayResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                         if (getActivity() != null) {
                             new Handler().postDelayed(new Runnable() {
@@ -484,14 +387,16 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                                     getActivity().setResult(Activity.RESULT_OK);
                                     getActivity().finish();
                                 }
-                            }, 3000);
+                            }, 2000);
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
+                        if(mPayBillButton != null){
+                            mPayBillButton.setClickable(false);
+                        }
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         } else {
-                            mCustomProgressDialog.showSuccessAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
+                            mCustomProgressDialog.showSuccessAnimationAndMessage(mLink3BillPayResponse.getMessage());
                         }
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -500,42 +405,42 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                                 getActivity().finish();
 
                             }
-                        }, 3000);
-                        Utilities.sendSuccessEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                        }, 2000);
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                        mCustomProgressDialog.showFailureAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
+                        mCustomProgressDialog.showFailureAnimationAndMessage(mLink3BillPayResponse.getMessage());
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                ((MyApplication) getActivity().getApplication()).launchLoginPage(mBanglalionBillPayResponse.getMessage());
+                                ((MyApplication) getActivity().getApplication()).launchLoginPage(mLink3BillPayResponse.getMessage());
                             }
                         }, 2000);
 
-                        Utilities.sendBlockedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId());
-
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
-                        if (!TextUtils.isEmpty(mBanglalionBillPayResponse.getMessage())) {
-                            errorMessage = mBanglalionBillPayResponse.getMessage();
+                        if (!TextUtils.isEmpty(mLink3BillPayResponse.getMessage())) {
+                            errorMessage = mLink3BillPayResponse.getMessage();
                         } else {
                             errorMessage = getString(R.string.recharge_failed);
                         }
                         mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        Toast.makeText(getActivity(), mBanglalionBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), mLink3BillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         mCustomProgressDialog.dismissDialog();
-                        SecuritySettingsActivity.otpDuration = mBanglalionBillPayResponse.getOtpValidFor();
+                        SecuritySettingsActivity.otpDuration = mLink3BillPayResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
                         if (getActivity() != null) {
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
-                                mCustomProgressDialog.showFailureAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mLink3BillPayResponse.getMessage());
                             } else {
-                                Toast.makeText(getContext(), mBanglalionBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), mLink3BillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
                             }
 
-                            if (mBanglalionBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            if (mLink3BillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                                 if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
                                     mCustomProgressDialog.dismissDialog();
@@ -545,8 +450,9 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                                 }
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mBanglalionBillPayResponse.getMessage());
                         }
+                        Utilities.sendFailedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mLink3BillPayResponse.getMessage());
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -555,7 +461,8 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }
                 }
-                mBanglalionBillPayTask = null;
+
+                mLink3PayBillTask = null;
                 break;
 
             default:

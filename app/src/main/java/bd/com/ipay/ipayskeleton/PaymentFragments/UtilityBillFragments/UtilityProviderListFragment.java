@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,6 +48,8 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
 
     private PinChecker pinChecker;
 
+    private ProgressDialog mProgressDialog;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +67,15 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
         View v = inflater.inflate(R.layout.fragment_utility_provider, container, false);
         mScrollViewHolder = (LinearLayout) v.findViewById(R.id.scrollViewHolder);
         utilityProviderListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
-        getActivity().setTitle(R.string.utility_bill);
+        getActivity().setTitle(R.string.bill_pay);
         getTrendingBusinessList();
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.show();
 
-        utilityProviderListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        utilityProviderListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+
+        {
             @Override
             public void onRefresh() {
                 if (mScrollViewHolder.getVisibility() == View.VISIBLE) {
@@ -91,7 +100,7 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
         }
 
         mGetUtilityProviderListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
-                Constants.BASE_URL_UTILITY+Constants.URL_GET_PROVIDER, getActivity(), false);
+                Constants.BASE_URL_UTILITY + Constants.URL_GET_PROVIDER, getActivity(), false);
         mGetUtilityProviderListTask.mHttpResponseListener = this;
         mGetUtilityProviderListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -101,9 +110,11 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetUtilityProviderListTask = null;
             utilityProviderListRefreshLayout.setRefreshing(false);
+            mProgressDialog.dismiss();
             return;
         }
         try {
+            mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 Gson gson = new Gson();
 
@@ -142,7 +153,7 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
             utilityProviderListRefreshLayout.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
-
+            mProgressDialog.dismiss();
             if (getActivity() != null) {
                 Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
             }
@@ -174,16 +185,36 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
                 final String name = provider.getName();
                 mTextView.setText(name);
 
-                if(name.equalsIgnoreCase("BanglaLion"))
-                    mImageView.setProfilePicture(R.drawable.banglalion_icon);
-                else
+                if (getIconByName(provider.getName().toLowerCase()) != 0) {
+                    mImageView.setProfilePicture(getIconByName(provider.getName().toLowerCase()));
+                } else {
                     mImageView.setProfilePicture(R.drawable.utility_icon);
+                }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((UtilityBillPaymentActivity) getActivity()) .switchToBanglalionBillPayFragment();
+                        switchToDesiredFragment(provider.getName());
                     }
                 });
+            }
+
+            private void switchToDesiredFragment(String name) {
+                if (name.toLowerCase().equals(Constants.BANGLALION.toLowerCase())) {
+                    ((UtilityBillPaymentActivity) getActivity()).switchToBanglalionBillPayFragment();
+                } else if (name.toLowerCase().equals(Constants.WESTZONE.toLowerCase())) {
+                    ((UtilityBillPaymentActivity) getActivity()).switchToWestZoneBillPayFragment();
+                } else if (name.toLowerCase().equals(Constants.BRILLIANT.toLowerCase())) {
+                    ((UtilityBillPaymentActivity) getActivity()).switchToBrilliantRechargeFragment();
+                } else if (name.toLowerCase().equals(Constants.LINK3.toLowerCase())) {
+                    ((UtilityBillPaymentActivity) getActivity()).switchToLink3BillPayment();
+                }
+            }
+
+            private int getIconByName(String name) {
+                Resources resources = getContext().getResources();
+                final int resourceId = resources.getIdentifier(name, "drawable",
+                        getContext().getPackageName());
+                return resourceId;
             }
         }
 
