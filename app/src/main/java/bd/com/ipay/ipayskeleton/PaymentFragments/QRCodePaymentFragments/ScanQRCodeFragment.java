@@ -228,7 +228,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                         if (!getUserInfoResponse.getName().isEmpty())
                             brandName = getUserInfoResponse.getName();
 
-                        if (outletId>0 && getUserInfoResponse.getOutlets().size()>0 && getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
+                        if (outletId!=null && getUserInfoResponse.getOutlets().size()>0 && getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
                             for (Outlets outlets: getUserInfoResponse.getOutlets()) {
                                 if(outlets.getOutletId()==outletId){
                                     imageUrl = outlets.getOutletLogoUrl();

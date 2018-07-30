@@ -90,6 +90,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static android.view.View.GONE;
+import static android.view.View.inflate;
 
 public class MakePaymentFragment extends BaseFragment implements LocationListener, HttpResponseListener {
 
@@ -155,6 +156,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private LocationManager locationManager;
     private BusinessOutletSelectorDialog moutletSelectorDialog;
     List<Outlets> outlets;
+    private boolean hasOutlet = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -402,6 +404,10 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             public void onClick(View v) {
                 mobileNumberView.setVisibility(View.VISIBLE);
                 profileView.setVisibility(GONE);
+                outletView.setVisibility(GONE);
+                mOutletEditText.getText().clear();
+                mOutletName = null;
+                mOutletId = null;
                 mMobileNumberEditText.requestFocus();
             }
         });
@@ -417,8 +423,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         public void onResourceSelected(Outlets allowablePackage) {
                             mOutletEditText.setText(allowablePackage.getOutletName());
                             mOutletId = allowablePackage.getOutletId();
-
-                            outletView.setVisibility(View.GONE);
+                            System.out.println("Fired>>> "+mOutletId);
                             mobileNumberView.setVisibility(View.GONE);
                             profileView.setVisibility(View.VISIBLE);
                             mAddressTextView.setVisibility(View.VISIBLE);
@@ -432,7 +437,10 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             }
                             if (!allowablePackage.getOutletName().isEmpty()) {
                                 mReceiverName = allowablePackage.getOutletName();
+                                outletNameTextView.setVisibility(View.VISIBLE);
                                 outletNameTextView.setText(mReceiverName);
+                            }else {
+                                outletNameTextView.setVisibility(View.GONE);
                             }
                             if (allowablePackage.getAddressString() != null && !allowablePackage.getAddressString().isEmpty()) {
                                 mAddressString = allowablePackage.getAddressString();
@@ -441,6 +449,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             if (thanaDistrict != null && !thanaDistrict.isEmpty()) {
                                 mThanaAndDistrictTextView.setText(thanaDistrict);
                             }
+
+                            outletView.setVisibility(View.GONE);
                         }
                     });
                     moutletSelectorDialog.showDialog();
@@ -451,26 +461,30 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mMobileNumberEditText.setCustomTextChangeListener(new BusinessContactsSearchView.CustomTextChangeListener() {
             @Override
             public void onTextChange(String inputText) {
-
                 if (profileView.getVisibility() == GONE
                         && Utilities.isConnectionAvailable(getActivity())
                         && InputValidator.isValidNumber(inputText)) {
-                    Cursor mCursor = searchContact(inputText);
-                    try {
-                        if (mCursor != null) {
-                            setValueFromCursor(mCursor);
-                        } else {
+                    if(!hasOutlet) {
+                        Cursor mCursor = searchContact(inputText);
+                        try {
+                            if (mCursor != null) {
+                                setValueFromCursor(mCursor);
+                            } else {
+                                getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
+                                mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
                             mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
+                        } finally {
+                            if (mCursor != null) {
+                                mCursor.close();
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
-                        mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
-                    } finally {
-                        if (mCursor != null) {
-                            mCursor.close();
-                        }
+
+                    }else{
+                        outletView.setVisibility(View.VISIBLE);
                     }
 
 
@@ -478,26 +492,44 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
 
             @Override
-            public void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict) {
+            public void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict, String outlet) {
 
-                if (imageURL != null && !imageURL.isEmpty()) {
-                    mReceiverPhotoUri = imageURL;
-                    businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                if (TextUtils.isEmpty(name)) {
+                    businessNameTextView.setVisibility(GONE);
+                } else {
+                    businessNameTextView.setVisibility(View.VISIBLE);
+                    businessNameTextView.setText(name);
                 }
-                if (!name.isEmpty()) {
-                    mReceiverName = name;
-                    businessNameTextView.setText(mReceiverName);
-                }
-                profileView.setVisibility(View.VISIBLE);
-                mobileNumberView.setVisibility(GONE);
-                mAddressTextView.setVisibility(View.VISIBLE);
-                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
-                mThanaAndDistrictTextView.setText(thanaDistrict);
-                mAddressTextView.setText(address);
-                mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
-                //getProfileInfo(ContactEngine.formatMobileNumberBD(inputText), false);
 
-                mMobileNumberEditText.clearSelectedData();
+                if(!TextUtils.isEmpty(outlet)){
+                    hasOutlet =true;
+                    Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
+                    outlets = new Gson().fromJson(outlet, outletListType);
+                    outletView.setVisibility(View.VISIBLE);
+                    mMobileNumberEditText.setText(inputText);
+                }else{
+                    hasOutlet =false;
+                    outletView.setVisibility(View.GONE);
+                    outletNameTextView.setVisibility(View.GONE);
+                    if (imageURL != null && !imageURL.isEmpty()) {
+                        mReceiverPhotoUri = imageURL;
+                        businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                    }
+                    if (!name.isEmpty()) {
+                        mReceiverName = name;
+                        businessNameTextView.setText(mReceiverName);
+                    }
+                    profileView.setVisibility(View.VISIBLE);
+                    mobileNumberView.setVisibility(GONE);
+                    mAddressTextView.setVisibility(View.VISIBLE);
+                    mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mThanaAndDistrictTextView.setText(thanaDistrict);
+                    mAddressTextView.setText(address);
+                    mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
+                    //getProfileInfo(ContactEngine.formatMobileNumberBD(inputText), false);
+
+                    mMobileNumberEditText.clearSelectedData();
+                }
             }
         });
 
@@ -559,6 +591,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     final String mobile = stringArray[0];
                     if(stringArray.length>1) {
                         mOutletId = Long.parseLong(stringArray[1]);
+                    }else{
+                        mOutletId =null;
                     }
 
                     if (mobile != null) {
@@ -570,7 +604,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                     Cursor mCursor = searchContact(mobile);
                                     try {
                                         if (mCursor != null) {
-                                            setValueFromCursor(mCursor);
+                                            setValueFromCursor(mCursor, mOutletId);
                                         } else {
                                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(mobile));
                                             getProfileInfo(ContactEngine.formatMobileNumberBD(mobile));
@@ -598,6 +632,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
         } else if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             mMobileNumberEditText.setText("");
+            outletView.setVisibility(GONE);
+            mOutletId = null;
+            mOutletName = null;
+            outletNameTextView.setVisibility(GONE);
+            mOutletEditText.getText().clear();
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             String name = data.getStringExtra(Constants.BUSINESS_NAME);
             String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
@@ -611,12 +650,15 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
 
             if(!TextUtils.isEmpty(outletString)){
+                hasOutlet =true;
                 Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
                 outlets = new Gson().fromJson(outletString, outletListType);
                 outletView.setVisibility(View.VISIBLE);
                 mMobileNumberEditText.setText(mobileNumber);
             }else{
+                hasOutlet =false;
                 outletView.setVisibility(View.GONE);
+                outletNameTextView.setVisibility(View.GONE);
                 mobileNumberView.setVisibility(View.GONE);
                 profileView.setVisibility(View.VISIBLE);
                 mAddressTextView.setVisibility(View.VISIBLE);
@@ -713,6 +755,13 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
                 cancel = true;
             }
+        }
+
+        if (hasOutlet && mOutletId==null) {
+            errorMessage = "Please select a outlet.";
+            focusView = mOutletEditText;
+            mOutletEditText.setError(errorMessage);
+            cancel = true;
         }
 
         if (cancel) {
@@ -1171,30 +1220,13 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         List<BusinessContact> mBusinessContactList = getBusinessContactList(cursor);
         BusinessContact mBussinessContact = mBusinessContactList.get(0);
 
-        if(!TextUtils.isEmpty(mBussinessContact.getOutletString())){
-            Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
-            outlets = new Gson().fromJson(mBussinessContact.getOutletString(), outletListType);
-            outletView.setVisibility(View.VISIBLE);
-        }else{
-            outletView.setVisibility(View.GONE);
-        }
-
+//        mOutletId = null;
+//        mOutletName = null;
+        outletNameTextView.setVisibility(GONE);
+        mOutletEditText.getText().clear();
         mAddressProgressBar.setVisibility(View.GONE);
-        mobileNumberView.setVisibility(GONE);
-        profileView.setVisibility(View.VISIBLE);
+
         mReceiverName = mBussinessContact.getBusinessName();
-        mAddressString = mBussinessContact.getAddressString();
-        mDistrict = mBussinessContact.getDistrictString();
-        mThana = mBussinessContact.getThanaString();
-        mAddressTextView.setText(mAddressString);
-        mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
-        mAddressTextView.setVisibility(View.VISIBLE);
-        mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
-        mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(mBussinessContact.getMobileNumber());
-        mMobileNumberEditText.setText(mBussinessContact.getMobileNumber());
-
-        System.out.println("Test Outlet "+mBussinessContact.getOutletString());
-
         if (TextUtils.isEmpty(mReceiverName)) {
             businessNameTextView.setVisibility(GONE);
         } else {
@@ -1202,9 +1234,98 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             businessNameTextView.setText(mReceiverName);
         }
 
-        String profilePicture = mBussinessContact.getProfilePictureUrl();
-        if (!profilePicture.isEmpty()) {
-            mReceiverPhotoUri = profilePicture;
+        if(!TextUtils.isEmpty(mBussinessContact.getOutletString())){
+            hasOutlet =true;
+            Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
+            outlets = new Gson().fromJson(mBussinessContact.getOutletString(), outletListType);
+            outletView.setVisibility(View.VISIBLE);
+            mMobileNumberEditText.setText(mBussinessContact.getMobileNumber());
+        }else{
+            hasOutlet =false;
+            outletView.setVisibility(View.GONE);
+            outletNameTextView.setVisibility(View.GONE);
+            mobileNumberView.setVisibility(View.GONE);
+            profileView.setVisibility(View.VISIBLE);
+            mAddressTextView.setVisibility(View.VISIBLE);
+            mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+
+            mAddressString = mBussinessContact.getAddressString();
+            mDistrict = mBussinessContact.getDistrictString();
+            mThana = mBussinessContact.getThanaString();
+            mAddressTextView.setText(mAddressString);
+            mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+            mAddressTextView.setVisibility(View.VISIBLE);
+            mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+            mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(mBussinessContact.getMobileNumber());
+            mMobileNumberEditText.setText(mBussinessContact.getMobileNumber());
+
+            String profilePicture = mBussinessContact.getProfilePictureUrl();
+            if (!profilePicture.isEmpty()) {
+                mReceiverPhotoUri = profilePicture;
+                businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+            }
+        }
+
+
+    }
+
+
+    private void setValueFromCursor(Cursor cursor, Long outletId) {
+        mMobileNumberEditText.setText("");
+        List<BusinessContact> mBusinessContactList = getBusinessContactList(cursor);
+        BusinessContact mBussinessContact = mBusinessContactList.get(0);
+        outletView.setVisibility(View.GONE);
+        mAddressProgressBar.setVisibility(View.GONE);
+        mobileNumberView.setVisibility(GONE);
+        profileView.setVisibility(View.VISIBLE);
+        mReceiverName = mBussinessContact.getBusinessName();
+
+        if(outletId!=null){
+            if (!mBussinessContact.getOutletString().isEmpty()){
+                Outlets[] outlets = new Gson().fromJson(mBussinessContact.getOutletString(), Outlets[].class);
+                for(Outlets outlet: outlets){
+                    if(outlet.getOutletId() == outletId){
+                        mOutletName = outlet.getOutletName();
+                        mReceiverPhotoUri = outlet.getOutletLogoUrl();
+                        mAddressString = outlet.getAddressString();
+                        mDistrict = outlet.getOutletAddress().getDistrictName();
+                        mThana = outlet.getOutletAddress().getThanaName();
+                    }
+                }
+            }
+
+        }else{
+            if (!mBussinessContact.getProfilePictureUrl().isEmpty())
+                mReceiverPhotoUri = mBussinessContact.getProfilePictureUrl();
+            if (!mBussinessContact.getAddressString().isEmpty())
+                mAddressString = mBussinessContact.getAddressString();
+            if (!mBussinessContact.getDistrictString().isEmpty())
+                mDistrict = mBussinessContact.getDistrictString();
+            if (!mBussinessContact.getThanaString().isEmpty())
+                mThana = mBussinessContact.getThanaString();
+        }
+
+        if (TextUtils.isEmpty(mOutletName)) {
+            outletNameTextView.setVisibility(GONE);
+        } else {
+            outletNameTextView.setVisibility(View.VISIBLE);
+            outletNameTextView.setText(mOutletName);
+        }
+
+        mAddressTextView.setText(mAddressString);
+        mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+        mAddressTextView.setVisibility(View.VISIBLE);
+        mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+        mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(mBussinessContact.getMobileNumber());
+        mMobileNumberEditText.setText(mBussinessContact.getMobileNumber());
+
+        if (TextUtils.isEmpty(mReceiverName)) {
+            businessNameTextView.setVisibility(GONE);
+        } else {
+            businessNameTextView.setVisibility(View.VISIBLE);
+            businessNameTextView.setText(mReceiverName);
+        }
+        if (!mReceiverPhotoUri.isEmpty()) {
             businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
         }
     }
