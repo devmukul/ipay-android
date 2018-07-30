@@ -14,12 +14,14 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class WebViewActivity extends AppCompatActivity {
     private WebView webView;
+    private String uriString;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         final Uri uri = Uri.parse(getIntent().getStringExtra("url"));
+        uriString = uri.toString();
         webView = (WebView) findViewById(R.id.web_view);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
@@ -30,10 +32,15 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
+        if(uriString != null && !uriString.isEmpty() && uriString.toLowerCase().contains("promotions")){
             super.onBackPressed();
+        }
+        else {
+            if (webView.canGoBack()) {
+                webView.goBack();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 }
