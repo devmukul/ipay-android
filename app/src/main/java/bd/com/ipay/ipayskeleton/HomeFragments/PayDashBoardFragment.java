@@ -58,6 +58,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mBrilliantRechargeView;
     private View mWestZoneBillPayView;
     private View mDescoBillPayView;
+    private View mDpdcBillPayView;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
     private PinChecker pinChecker;
@@ -86,6 +87,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
         mDescoBillPayView = v.findViewById(R.id.desco);
         mWestZoneBillPayView = v.findViewById(R.id.west_zone);
+        mDpdcBillPayView = v.findViewById(R.id.dpdc);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
@@ -253,7 +255,24 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker.execute();
             }
         });
-
+        mDpdcBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.DPDC);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
         trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

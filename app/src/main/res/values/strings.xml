@@ -1200,4 +1200,7 @@
     <string name="desco_bill_pay_message">Please enter the bill number of desco</string>
     <string name="enter_bill_no">Enter bill number</string>
     <string name="desco">Desco</string>
+    <string name="dpdc_bill_pay_message">Please enter your DPDC account number</string>
+    <string name="enter_account_number">Please enter an account number</string>
+    <string name="dpdc">Dpdc</string>
 </resources>
