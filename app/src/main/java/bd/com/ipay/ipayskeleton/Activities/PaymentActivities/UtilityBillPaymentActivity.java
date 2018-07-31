@@ -8,6 +8,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantBillPayFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.WestzoneBillPaymentFragment;
@@ -36,6 +37,8 @@ public class UtilityBillPaymentActivity extends BaseActivity {
                     switchToBrilliantRechargeFragment();
                 } else if (service.equals(Constants.WESTZONE)) {
                     switchToWestZoneBillPayFragment();
+                } else if (service.equals(Constants.DESCO)) {
+                    switchToDescoBillPayFragment();
                 }
             }
         } catch (Exception e) {
@@ -58,6 +61,11 @@ public class UtilityBillPaymentActivity extends BaseActivity {
     public void switchToBillProviderListFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new UtilityProviderListFragment()).commit();
+    }
+
+    public void switchToDescoBillPayFragment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new DescoBillPaymentFragment()).commit();
     }
 
     public void switchToBrilliantRechargeFragment() {

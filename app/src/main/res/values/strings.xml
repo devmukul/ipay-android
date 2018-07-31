@@ -1195,4 +1195,9 @@
     <string name="bill_number">Bill Number</string>
     <string name="WestZone">WestZone</string>
     <string name="bill_pay">Bill Pay</string>
+    <string name="due_date">Due Date</string>
+    <string name="ipc">Ipc</string>
+    <string name="desco_bill_pay_message">Please enter the bill number of desco</string>
+    <string name="enter_bill_no">Enter bill number</string>
+    <string name="desco">Desco</string>
 </resources>

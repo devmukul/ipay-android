@@ -57,6 +57,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mLink3BillPayView;
     private View mBrilliantRechargeView;
     private View mWestZoneBillPayView;
+    private View mDescoBillPayView;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
     private PinChecker pinChecker;
@@ -83,6 +84,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
         mBillPayView = v.findViewById(R.id.billPayView);
         mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
+        mDescoBillPayView = v.findViewById(R.id.desco);
         mWestZoneBillPayView = v.findViewById(R.id.west_zone);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
@@ -233,6 +235,25 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker.execute();
             }
         });
+        mDescoBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.DESCO);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
 
         trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
