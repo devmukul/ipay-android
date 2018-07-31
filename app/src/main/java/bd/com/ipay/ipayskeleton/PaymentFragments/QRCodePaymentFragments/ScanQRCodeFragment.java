@@ -112,7 +112,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                 DataHelper dataHelper = DataHelper.getInstance(getContext());
                                 mCursor = dataHelper.searchBusinessAccountsByMobile(mobile.replaceAll("[^0-9]", ""));
                                 try {
-                                    if (mCursor != null) {
+                                    if (mCursor != null && mCursor.getCount()>0) {
                                         mobileNumber = ContactEngine.formatMobileNumberBD(mobile);
                                         mBusinessContactList = getBusinessContactList(mCursor);
                                         BusinessContact businessContact = mBusinessContactList.get(0);
@@ -133,7 +133,6 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                                             district = outlet.getOutletAddress().getDistrictName();
                                                         if (!outlet.getOutletAddress().getThanaName().isEmpty())
                                                             thana = outlet.getOutletAddress().getThanaName();
-
                                                         break;
                                                     }
                                                 }
@@ -153,6 +152,8 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                                             DialogUtils.showServiceNotAllowedDialog(getContext());
                                         } else {
+                                            System.out.println("Fired "+address+" "+district+" "+thana);
+
                                             if (TextUtils.isEmpty(address) || TextUtils.isEmpty(district) || TextUtils.isEmpty(thana) ){
                                                 fetchUserInfo(mobile);
                                             }else {
@@ -237,7 +238,6 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                         Gson gson = new GsonBuilder().create();
                         GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
-                        System.out.println("Fired "+outletId);
                         if (!getUserInfoResponse.getName().isEmpty())
                             brandName = getUserInfoResponse.getName();
 

@@ -466,7 +466,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     if(!hasOutlet) {
                         Cursor mCursor = searchContact(inputText);
                         try {
-                            if (mCursor != null) {
+                            if (mCursor != null && mCursor.getCount()>0) {
                                 setValueFromCursor(mCursor);
                             } else {
                                 getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
@@ -970,8 +970,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mAddressProgressBar.setVisibility(View.GONE);
                     mobileNumberView.setVisibility(GONE);
                     profileView.setVisibility(View.VISIBLE);
-                    System.out.println("Fired "+mOutletId);
-
                     int accountType = mGetUserInfoResponse.getAccountType();
 
                     if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {
@@ -1193,7 +1191,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         mBusinessContacts = new ArrayList<>();
 
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount()>0) {
             mBusinessContacts.clear();
             businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
             phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
