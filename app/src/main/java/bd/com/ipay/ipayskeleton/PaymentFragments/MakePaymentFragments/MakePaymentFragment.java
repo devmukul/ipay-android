@@ -423,7 +423,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         public void onResourceSelected(Outlets allowablePackage) {
                             mOutletEditText.setText(allowablePackage.getOutletName());
                             mOutletId = allowablePackage.getOutletId();
-                            System.out.println("Fired>>> "+mOutletId);
                             mobileNumberView.setVisibility(View.GONE);
                             profileView.setVisibility(View.VISIBLE);
                             mAddressTextView.setVisibility(View.VISIBLE);
@@ -971,22 +970,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mAddressProgressBar.setVisibility(View.GONE);
                     mobileNumberView.setVisibility(GONE);
                     profileView.setVisibility(View.VISIBLE);
-                    mReceiverName = mGetUserInfoResponse.getName();
-                    if (mGetUserInfoResponse.getAddressList() != null) {
-                        if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
-                            List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
-                            if (office != null) {
-                                mAddressString = office.get(0).getAddressLine1();
-                                mDistrict = office.get(0).getDistrict();
-                                //mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
-                                mThana = office.get(0).getThana();
-                                mAddressTextView.setText(mAddressString);
-                                mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
-                                mAddressTextView.setVisibility(View.VISIBLE);
-                                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
+                    System.out.println("Fired "+mOutletId);
 
                     int accountType = mGetUserInfoResponse.getAccountType();
 
@@ -1016,12 +1000,58 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         materialDialog.show();
                     }
 
-
+                    if (!mGetUserInfoResponse.getName().isEmpty())
+                        mReceiverName = mGetUserInfoResponse.getName();
                     String profilePicture = null;
-                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                        businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
+
+                    if (mOutletId!=null && mGetUserInfoResponse.getOutlets().size()>0 && mGetUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
+                        for (Outlets outlets: mGetUserInfoResponse.getOutlets()) {
+                            if(outlets.getOutletId().equals(mOutletId)){
+                                profilePicture = outlets.getOutletLogoUrl();
+                                mAddressString = outlets.getAddressString();
+                                mDistrict = outlets.getOutletAddress().getDistrictName();
+                                mThana = outlets.getOutletAddress().getThanaName();
+                                mOutletName = outlets.getOutletName();
+
+                                mAddressTextView.setText(mAddressString);
+                                mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                                mAddressTextView.setVisibility(View.VISIBLE);
+                                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+
+                                if (TextUtils.isEmpty(mOutletName)) {
+                                    outletNameTextView.setVisibility(GONE);
+                                } else {
+                                    outletNameTextView.setVisibility(View.VISIBLE);
+                                    outletNameTextView.setText(mOutletName);
+                                }
+
+                                break;
+                            }
+                        }
+                    }else {
+
+                        outletNameTextView.setVisibility(GONE);
+                        if (mGetUserInfoResponse.getAddressList() != null) {
+                            if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
+                                List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                                if (office != null) {
+                                    mAddressString = office.get(0).getAddressLine1();
+                                    mDistrict = office.get(0).getDistrict();
+                                    //mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
+                                    mThana = office.get(0).getThana();
+                                    mAddressTextView.setText(mAddressString);
+                                    mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                                    mAddressTextView.setVisibility(View.VISIBLE);
+                                    mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+
+                        if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                            profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        }
                     }
+
 
                     if (!TextUtils.isEmpty(profilePicture) && mReceiverPhotoUri == null) {
                         mReceiverPhotoUri = profilePicture;
@@ -1284,7 +1314,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             if (!mBussinessContact.getOutletString().isEmpty()){
                 Outlets[] outlets = new Gson().fromJson(mBussinessContact.getOutletString(), Outlets[].class);
                 for(Outlets outlet: outlets){
-                    if(outlet.getOutletId() == outletId){
+                    if(outlet.getOutletId().equals(outletId)){
                         mOutletName = outlet.getOutletName();
                         mReceiverPhotoUri = outlet.getOutletLogoUrl();
                         mAddressString = outlet.getAddressString();

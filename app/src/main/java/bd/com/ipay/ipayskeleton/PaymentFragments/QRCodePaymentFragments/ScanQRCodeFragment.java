@@ -67,7 +67,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     private String country;
     private String district;
     private String thana;
-    private Long outletId;
+    private Long outletId = null;
 
     @Nullable
     @Override
@@ -111,49 +111,60 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                 Cursor mCursor;
                                 DataHelper dataHelper = DataHelper.getInstance(getContext());
                                 mCursor = dataHelper.searchBusinessAccountsByMobile(mobile.replaceAll("[^0-9]", ""));
-
                                 try {
                                     if (mCursor != null) {
                                         mobileNumber = ContactEngine.formatMobileNumberBD(mobile);
                                         mBusinessContactList = getBusinessContactList(mCursor);
-                                        if (!mBusinessContactList.get(0).getBusinessName().isEmpty())
-                                            brandName = mBusinessContactList.get(0).getBusinessName();
-                                        if(outletId>0){
-                                            if (!mBusinessContactList.get(0).getOutletString().isEmpty()){
-                                                Outlets[] outlets = new Gson().fromJson(mBusinessContactList.get(0).getOutletString(), Outlets[].class);
+                                        BusinessContact businessContact = mBusinessContactList.get(0);
+                                        if (!businessContact.getBusinessName().isEmpty())
+                                            brandName = businessContact.getBusinessName();
+                                        if(outletId!=null){
+                                            if (!businessContact.getOutletString().isEmpty()){
+                                                Outlets[] outlets = new Gson().fromJson(businessContact.getOutletString(), Outlets[].class);
                                                 for(Outlets outlet: outlets){
-                                                    if(outlet.getOutletId() == outletId){
-                                                        outletName = outlet.getOutletName();
-                                                        imageUrl = outlet.getOutletLogoUrl();
-                                                        address = outlet.getAddressString();
-                                                        district = outlet.getOutletAddress().getDistrictName();
-                                                        thana = outlet.getOutletAddress().getThanaName();
+                                                    if(outlet.getOutletId().equals(outletId)){
+                                                        if (!outlet.getOutletName().isEmpty())
+                                                            outletName = outlet.getOutletName();
+                                                        if (!outlet.getOutletLogoUrl().isEmpty())
+                                                            imageUrl = outlet.getOutletLogoUrl();
+                                                        if (!outlet.getAddressString().isEmpty())
+                                                            address = outlet.getAddressString();
+                                                        if (!outlet.getOutletAddress().getDistrictName().isEmpty())
+                                                            district = outlet.getOutletAddress().getDistrictName();
+                                                        if (!outlet.getOutletAddress().getThanaName().isEmpty())
+                                                            thana = outlet.getOutletAddress().getThanaName();
+
+                                                        break;
                                                     }
                                                 }
                                             }
 
                                         }else{
-                                            if (!mBusinessContactList.get(0).getProfilePictureUrl().isEmpty())
-                                                imageUrl = mBusinessContactList.get(0).getProfilePictureUrl();
-                                            if (!mBusinessContactList.get(0).getAddressString().isEmpty())
-                                                address = mBusinessContactList.get(0).getAddressString();
-                                            if (!mBusinessContactList.get(0).getDistrictString().isEmpty())
-                                                district = mBusinessContactList.get(0).getDistrictString();
-                                            if (!mBusinessContactList.get(0).getThanaString().isEmpty())
-                                                thana = mBusinessContactList.get(0).getThanaString();
+                                            if (!businessContact.getProfilePictureUrl().isEmpty())
+                                                imageUrl = businessContact.getProfilePictureUrl();
+                                            if (!businessContact.getAddressString().isEmpty())
+                                                address = businessContact.getAddressString();
+                                            if (!businessContact.getDistrictString().isEmpty())
+                                                district = businessContact.getDistrictString();
+                                            if (!businessContact.getThanaString().isEmpty())
+                                                thana = businessContact.getThanaString();
                                         }
 
                                         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                                             DialogUtils.showServiceNotAllowedDialog(getContext());
                                         } else {
-                                            switchActivity(PaymentActivity.class);
+                                            if (TextUtils.isEmpty(address) || TextUtils.isEmpty(district) || TextUtils.isEmpty(thana) ){
+                                                fetchUserInfo(mobile);
+                                            }else {
+                                                switchActivity(PaymentActivity.class);
+                                            }
                                         }
                                     } else {
                                         fetchUserInfo(mobile);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    fetchUserInfo(mobile);
+                                    //fetchUserInfo(mobile);
                                 } finally {
                                     if (mCursor != null) {
                                         mCursor.close();
@@ -225,12 +236,14 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     try {
                         Gson gson = new GsonBuilder().create();
                         GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                        System.out.println("Fired "+outletId);
                         if (!getUserInfoResponse.getName().isEmpty())
                             brandName = getUserInfoResponse.getName();
 
                         if (outletId!=null && getUserInfoResponse.getOutlets().size()>0 && getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
                             for (Outlets outlets: getUserInfoResponse.getOutlets()) {
-                                if(outlets.getOutletId()==outletId){
+                                if(outlets.getOutletId().equals(outletId)){
                                     imageUrl = outlets.getOutletLogoUrl();
                                     address = outlets.getAddressString();
                                     district = outlets.getOutletAddress().getDistrictName();
