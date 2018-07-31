@@ -3,6 +3,8 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
+
 public class GetUserInfoResponse {
 
     private String message;
@@ -11,6 +13,7 @@ public class GetUserInfoResponse {
     private String accountStatus;
     private int accountType;
     private UserAddressList addressList;
+    private List<Outlets> outlets;
 
     public GetUserInfoResponse() {
     }
@@ -37,5 +40,9 @@ public class GetUserInfoResponse {
 
     public int getAccountType() {
         return accountType;
+    }
+
+    public List<Outlets> getOutlets() {
+        return outlets;
     }
 }

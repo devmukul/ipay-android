@@ -194,7 +194,7 @@ public class PaymentReviewFragment extends BaseFragment implements HttpResponseL
         mProgressDialog.setCancelable(false);
         mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiverBusinessMobileNumber),
-                mAmount.toString(), mDescription, pin, mReferenceNumber, latitude, longitude);
+                mAmount.toString(), mDescription, pin, mReferenceNumber, null,latitude, longitude);
 
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
