@@ -203,7 +203,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonPayment = (Button) v.findViewById(R.id.button_payment);
-
         mBalanceView = (TextView) v.findViewById(R.id.balance_view);
 
         mBalanceView.setText(SharedPrefManager.getUserBalance());
@@ -429,7 +428,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
                             String thanaDistrict = allowablePackage.getOutletAddress().getDistrictName() + ", " + allowablePackage.getOutletAddress().getThanaName();
 
-
                             if (allowablePackage.getOutletLogoUrl() != null && !allowablePackage.getOutletLogoUrl().isEmpty()) {
                                 mReceiverPhotoUri = allowablePackage.getOutletLogoUrl();
                                 businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
@@ -485,8 +483,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     }else{
                         outletView.setVisibility(View.VISIBLE);
                     }
-
-
                 }
             }
 
@@ -525,13 +521,10 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mThanaAndDistrictTextView.setText(thanaDistrict);
                     mAddressTextView.setText(address);
                     mReceiverMobileNumber = ContactEngine.formatMobileNumberBD(inputText);
-                    //getProfileInfo(ContactEngine.formatMobileNumberBD(inputText), false);
-
                     mMobileNumberEditText.clearSelectedData();
                 }
             }
         });
-
 
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
@@ -680,10 +673,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mMobileNumberEditText.setText(mobileNumber);
                 }
             }
-            //getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber), false);
-
-
-
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         } else if (requestCode == Utilities.LOCATION_SETTINGS_RESULT_CODE || requestCode == Utilities.LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
@@ -1188,7 +1177,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         int businessDistrictIndex;
         int businessOutletIndex;
 
-
         mBusinessContacts = new ArrayList<>();
 
         if (cursor != null && cursor.getCount()>0) {
@@ -1247,9 +1235,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mMobileNumberEditText.setText("");
         List<BusinessContact> mBusinessContactList = getBusinessContactList(cursor);
         BusinessContact mBussinessContact = mBusinessContactList.get(0);
-
-//        mOutletId = null;
-//        mOutletName = null;
         outletNameTextView.setVisibility(GONE);
         mOutletEditText.getText().clear();
         mAddressProgressBar.setVisibility(View.GONE);

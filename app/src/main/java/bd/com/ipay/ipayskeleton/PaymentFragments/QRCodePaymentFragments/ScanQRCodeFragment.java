@@ -152,8 +152,6 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                                             DialogUtils.showServiceNotAllowedDialog(getContext());
                                         } else {
-                                            System.out.println("Fired "+address+" "+district+" "+thana);
-
                                             if (TextUtils.isEmpty(address) || TextUtils.isEmpty(district) || TextUtils.isEmpty(thana) ){
                                                 fetchUserInfo(mobile);
                                             }else {
@@ -165,13 +163,12 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    //fetchUserInfo(mobile);
+                                    fetchUserInfo(mobile);
                                 } finally {
                                     if (mCursor != null) {
                                         mCursor.close();
                                     }
                                 }
-
                             } else if (getActivity() != null) {
                                 DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                             }
@@ -316,7 +313,6 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         getActivity().finish();
     }
 
-
     private List<BusinessContact> getBusinessContactList(Cursor cursor) {
         List<BusinessContact> mBusinessContacts;
         int businessNameIndex;
@@ -327,7 +323,6 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         int businessThanaIndex;
         int businessDistrictIndex;
         int businessOutletIndex;
-
 
         mBusinessContacts = new ArrayList<>();
 

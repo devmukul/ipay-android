@@ -108,13 +108,6 @@ public class BusinessOutletSelectorDialog extends AlertDialog {
         }
 
         private void switchToMakePaymentActivity(MerchantOutletAddressViewHolder holder, int position) {
-//            Intent intent = new Intent(context, PaymentActivity.class);
-//            intent.putExtra(Constants.NAME, outlets.get(position).getOutletName());
-//            intent.putExtra(Constants.OUTLET_ID, outlets.get(position).getOutletId());
-//            intent.putExtra(Constants.FROM_BRANCHING, true);
-//            context.startActivity(intent);
-//            BusinessOutletSelectorDialog.this.dismiss();
-
             Outlets outletsData = outlets.get(position);
 
             if (onResourceSelectedListener != null)
