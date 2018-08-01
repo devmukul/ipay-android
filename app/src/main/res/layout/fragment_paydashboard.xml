@@ -184,6 +184,18 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingRight="@dimen/value5"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:singleLine="true"
+                android:text="@string/bill_pay"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_small" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -212,7 +224,7 @@
                             android:elevation="@dimen/value2"
                             android:padding="@dimen/value15"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/utility_icon"
+                            android:src="@drawable/banglalion"
                             card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
@@ -222,7 +234,7 @@
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
                             android:singleLine="true"
-                            android:text="@string/bill_pay"
+                            android:text="@string/banglalion"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11" />
                     </LinearLayout>
@@ -263,7 +275,6 @@
                     <LinearLayout
                         android:id="@+id/brilliant_recharge_view"
                         android:layout_width="0dp"
-                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
