@@ -113,7 +113,6 @@ public class Constants {
     public static final String REJECTED = "REJECTED";
     public static final String CANCELED = "CANCELED";
 
-
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
@@ -135,6 +134,7 @@ public class Constants {
     public static final String VERIFIED = "VERIFIED";
     public static final String DISTRICT = "DISTRICT";
     public static final String COUNTRY = "COUNTRY";
+    public static final String OUTLET = "OUTLET";
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
@@ -164,6 +164,8 @@ public class Constants {
     public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
     public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
     public static String ROLEID = "ROLEID";
+    public static final String OUTLET_ID = "OUTLET_ID";
+    public static final String OUTLET_NAME = "OUTLET_NAME";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
