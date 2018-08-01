@@ -582,7 +582,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     String [] stringArray = result.split("-");
                     final String mobile = stringArray[0];
                     if(stringArray.length>1) {
-                        mOutletId = Long.parseLong(stringArray[1]);
+                        try {
+                            mOutletId = Long.parseLong(stringArray[1].trim().replaceAll("[^0-9]", ""));
+                        }catch (Exception e){
+                            mOutletId =null;
+                        }
                     }else{
                         mOutletId =null;
                     }
@@ -991,7 +995,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         mReceiverName = mGetUserInfoResponse.getName();
                     String profilePicture = null;
 
-                    if (mOutletId!=null && mGetUserInfoResponse.getOutlets().size()>0 && mGetUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
+                    if (mOutletId!=null && mGetUserInfoResponse.getOutlets()!=null && mGetUserInfoResponse.getOutlets().size()>0 && mGetUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
                         for (Outlets outlets: mGetUserInfoResponse.getOutlets()) {
                             if(outlets.getOutletId().equals(mOutletId)){
                                 profilePicture = outlets.getOutletLogoUrl();
