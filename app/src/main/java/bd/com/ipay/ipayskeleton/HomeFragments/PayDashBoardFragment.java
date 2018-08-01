@@ -32,7 +32,10 @@ import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusiness;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusinessResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.GetAllTrendingBusinessResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.TrendingBusinessList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -46,8 +49,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class PayDashBoardFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
-    TrendingBusinessResponse mTrendingBusinessResponse;
-    List<TrendingBusiness> mTrendingBusinessList;
+    GetAllTrendingBusinessResponse mTrendingBusinessResponse;
+    List<TrendingBusinessList> mTrendingBusinessList;
     private LinearLayout mScrollViewHolder;
     private View mTopUpView;
     private View mPayByQCView;
@@ -259,7 +262,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         }
 
         mGetTrendingBusinessListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING_BRANCHED, getActivity(), false);
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity(), false);
         mGetTrendingBusinessListTask.mHttpResponseListener = this;
         mGetTrendingBusinessListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -277,9 +280,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 
                 mScrollViewHolder.removeAllViews();
 
-                mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), TrendingBusinessResponse.class);
+                mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), GetAllTrendingBusinessResponse.class);
                 mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
-                for (TrendingBusiness trendingBusiness : mTrendingBusinessList) {
+                for (TrendingBusinessList trendingBusiness : mTrendingBusinessList) {
 
                     String mBusinessType = trendingBusiness.getBusinessType();
                     CustomDashBoardTitleView customDashBoardTitleView = new CustomDashBoardTitleView(getContext());
@@ -293,7 +296,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     recyclerView.setLayoutParams(params);
                     recyclerView.setNestedScrollingEnabled(false);
 
-                    List<MerchantDetails> mBusinessAccountEntryList = trendingBusiness.getBranchResponseList();
+                    List<BusinessList> mBusinessAccountEntryList = trendingBusiness.getBusinessList();
                     PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
                     recyclerView.setAdapter(payDashBoardItemAdapter);
                     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));

@@ -1,7 +1,10 @@
 package bd.com.ipay.ipayskeleton.Model.SqLiteDatabase;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddressList;
 
@@ -15,10 +18,11 @@ public class BusinessAccountEntry {
     public String profilePictureUrlHigh;
     public int businessId;
     private UserAddressList addressList;
+    private List<Outlets> outlets;
 
     public BusinessAccountEntry(String mobileNumber, String businessName, String email,
                                 int businessType, String profilePictureUrl, String profilePictureUrlMedium,
-                                String profilePictureUrlHigh, int businessId, UserAddressList addressList) {
+                                String profilePictureUrlHigh, int businessId, UserAddressList addressList,List<Outlets> outlets) {
         this.mobileNumber = mobileNumber;
         this.businessName = businessName;
         this.email = email;
@@ -28,6 +32,7 @@ public class BusinessAccountEntry {
         this.profilePictureUrlHigh = profilePictureUrlHigh;
         this.businessId = businessId;
         this.addressList = addressList;
+        this.outlets = outlets;
     }
 
     public String getMobileNumber() {
@@ -102,6 +107,14 @@ public class BusinessAccountEntry {
         this.addressList = addressList;
     }
 
+    public List<Outlets> getOutlets() {
+        return outlets;
+    }
+
+    public void setOutlets(List<Outlets> outlets) {
+        this.outlets = outlets;
+    }
+
     public String getAddressString() {
         String addressString = null;
         if (addressList != null) {
@@ -116,6 +129,14 @@ public class BusinessAccountEntry {
             }
         }
         return addressString;
+    }
+
+    public String getOutLetString() {
+        String outletString = null;
+        if (outlets != null) {
+            outletString = new Gson().toJson(outlets);
+        }
+        return outletString;
     }
 
     public String getThanaString() {

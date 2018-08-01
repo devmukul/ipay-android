@@ -36,6 +36,7 @@ public class BusinessContactsSearchView extends FrameLayout {
     private String mName = "";
     private String mAddress = "";
     private String mThanaDistrict = "";
+    private String mOutlet = "";
 
     private Context mContext;
 
@@ -75,7 +76,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     if (mName.isEmpty() && mImageURL.isEmpty())
                         customTextChangeListener.onTextChange(inputString);
                     else
-                        customTextChangeListener.onTextChange(inputString, mName, mImageURL, mAddress, mThanaDistrict);
+                        customTextChangeListener.onTextChange(inputString, mName, mImageURL, mAddress, mThanaDistrict, mOutlet);
                 }
             }
         });
@@ -123,7 +124,7 @@ public class BusinessContactsSearchView extends FrameLayout {
     public interface CustomTextChangeListener {
         void onTextChange(String inputText);
 
-        void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict);
+        void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict, String outlet);
     }
 
     public void clearSelectedData() {
@@ -131,6 +132,7 @@ public class BusinessContactsSearchView extends FrameLayout {
         mImageURL = "";
         mAddress ="";
         mThanaDistrict = "";
+        mOutlet = "";
     }
 
     public Editable getText() {
@@ -163,6 +165,7 @@ public class BusinessContactsSearchView extends FrameLayout {
         int businessAddressIndex;
         int businessThanaIndex;
         int businessDistrictIndex;
+        int businessOutletIndex;
 
 
         mBusinessContacts = new ArrayList<>();
@@ -176,6 +179,7 @@ public class BusinessContactsSearchView extends FrameLayout {
             businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
             businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
             businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
+            businessOutletIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_OUTLET);
 
             if (cursor.moveToFirst())
                 do {
@@ -186,6 +190,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     String businessAddress = cursor.getString(businessAddressIndex);
                     String businessThana = cursor.getString(businessThanaIndex);
                     String businessDistrict = cursor.getString(businessDistrictIndex);
+                    String businessOutlet = cursor.getString(businessOutletIndex);
 
                     BusinessContact businessContact = new BusinessContact();
                     businessContact.setBusinessName(businessName);
@@ -194,6 +199,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     businessContact.setAddressString(businessAddress);
                     businessContact.setThanaString(businessThana);
                     businessContact.setDistrictString(businessDistrict);
+                    businessContact.setOutletString(businessOutlet);
 
                     if (CommonData.getBusinessTypes() != null) {
                         BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
@@ -276,6 +282,7 @@ public class BusinessContactsSearchView extends FrameLayout {
             final String businessAddress = businessContact.getAddressString();
             final String businessThana = businessContact.getThanaString();
             final String businessDistrict = businessContact.getDistrictString();
+            final String businessOutlet = businessContact.getOutletString();
 
             if (businessName != null && !businessName.isEmpty())
                 businessNameView.setText(businessName);
@@ -298,6 +305,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     mImageURL = profilePictureUrl;
                     mAddress = businessAddress;
                     mThanaDistrict = businessThana+", "+businessDistrict;
+                    mOutlet = businessOutlet;
                     mCustomAutoCompleteView.clearFocus();
                     Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
                 }
