@@ -847,6 +847,7 @@ public class HomeActivity extends BaseActivity
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
             mLocationUpdateRequestAsyncTask = null;
+            mGetNotificationAsyncTask = null;
             return;
         }
         mProgressDialog.dismiss();
@@ -961,7 +962,7 @@ public class HomeActivity extends BaseActivity
                     GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
                             fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
                     SharedPrefManager.setNotificationCount(getDeepLinkedNotificationResponse.getNotSeenCount());
-                    //updateNotificationBadgeCount(mBadgeCount);
+                    updateNotificationBadgeCount(mBadgeCount);
                 }
                 mGetNotificationAsyncTask = null;
                 break;
