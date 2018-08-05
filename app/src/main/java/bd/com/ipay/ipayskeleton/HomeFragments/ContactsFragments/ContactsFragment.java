@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -381,8 +382,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     if (mBottomSheetLayout.isSheetShowing()) {
                         mBottomSheetLayout.dismissSheet();
                     }
-
-                    showInviteDialog(mSelectedName, mSelectedNumber);
+                    switchToInvitePeopleActivity();
                 }
             });
         }
@@ -465,6 +465,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
+    }
+
+    private void switchToInvitePeopleActivity() {
+        Intent intent = new Intent(getActivity(), InviteFriendActivity.class);
+        startActivity(intent);
     }
 
     private void showDeleteContactConfirmationDialog(final String mobileNumber) {
@@ -924,7 +929,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     inviteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            showInviteDialog(name, mobileNumber);
+                            switchToInvitePeopleActivity();
                         }
                     });
 
@@ -967,8 +972,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                                 setSelectedName(originalName);
                             else setSelectedName(name);
                             setSelectedNumber(mobileNumber);
-
-                            showInviteDialog(name, mobileNumber);
+                            switchToInvitePeopleActivity();
                         } else {
                             if (originalName != null && !originalName.isEmpty())
                                 setSelectedName(originalName);
