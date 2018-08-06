@@ -1183,7 +1183,7 @@
 
     <style name="OnBoardPageDescriptionTextStyle">
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/colorOnBoardText</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
