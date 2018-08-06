@@ -5,9 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -30,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BanglalionPackageSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
@@ -38,7 +35,6 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AllowablePackage;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayResponse;
@@ -56,7 +52,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class BanglalionBillPayFragment extends Fragment implements HttpResponseListener {
+public class BanglalionBillPayFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetCustomerInfoTask = null;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -89,7 +85,7 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
     private ProgressDialog mProgressDialog;
     private CustomProgressDialog mCustomProgressDialog;
 
-    private String mCunnectionType="";
+    private String mCunnectionType = "";
     private int mAmount;
     private String mCustomerId;
 
@@ -165,29 +161,29 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
         return view;
     }
 
-    private void initView(View v){
+    private void initView(View v) {
         if (UtilityBillPaymentActivity.mMandatoryBusinessRules == null) {
             UtilityBillPaymentActivity.mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.UTILITY_BILL_PAYMENT);
         }
 
         mCustomerIdView = v.findViewById(R.id.customer_id_view);
-        mBillPayOptionView= v.findViewById(R.id.bill_pay_option_selector_view_holder);
-        mUserInfoView= v.findViewById(R.id.user_info_view_holder);
-        mPostPaidBillPayView= v.findViewById(R.id.postpaid_bill_view_holder);
-        mPrepaidBillPayView= v.findViewById(R.id.prepaid_package_selector_view_holder);
-        mPrepaidAmmountView= v.findViewById(R.id.package_amount_view);
+        mBillPayOptionView = v.findViewById(R.id.bill_pay_option_selector_view_holder);
+        mUserInfoView = v.findViewById(R.id.user_info_view_holder);
+        mPostPaidBillPayView = v.findViewById(R.id.postpaid_bill_view_holder);
+        mPrepaidBillPayView = v.findViewById(R.id.prepaid_package_selector_view_holder);
+        mPrepaidAmmountView = v.findViewById(R.id.package_amount_view);
 
-        mCustomerIdEditText= v.findViewById(R.id.customer_id_edit_text);
-        mPostpaidAmountEditText= v.findViewById(R.id.postpaid_amount_edit_text);
-        mPrepaidAmountEditText= v.findViewById(R.id.prepaid_amount_edit_text);
-        mPrepaidPackageSelectEditText= v.findViewById(R.id.package_selector_edit_text);
+        mCustomerIdEditText = v.findViewById(R.id.customer_id_edit_text);
+        mPostpaidAmountEditText = v.findViewById(R.id.postpaid_amount_edit_text);
+        mPrepaidAmountEditText = v.findViewById(R.id.prepaid_amount_edit_text);
+        mPrepaidPackageSelectEditText = v.findViewById(R.id.package_selector_edit_text);
 
-        mCustomerNameTextView= v.findViewById(R.id.name_text_view);
-        mPackageTypeTextView= v.findViewById(R.id.package_type_text_view);
-        mCustomerIdTextView= v.findViewById(R.id.acount_id_text_view);
-        mErrorTextView= v.findViewById(R.id.errortext);
+        mCustomerNameTextView = v.findViewById(R.id.name_text_view);
+        mPackageTypeTextView = v.findViewById(R.id.package_type_text_view);
+        mCustomerIdTextView = v.findViewById(R.id.acount_id_text_view);
+        mErrorTextView = v.findViewById(R.id.errortext);
 
-        mPayBillButton= v.findViewById(R.id.bill_pay_button);
+        mPayBillButton = v.findViewById(R.id.bill_pay_button);
         mContinue = v.findViewById(R.id.continue_button);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
 
@@ -202,7 +198,7 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
         mProgressDialog.show();
         mCustomerId = mCustomerIdEditText.getText().toString();
         mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANGLALION_CUSTOMER_INFO,
-                Constants.BASE_URL_UTILITY + Constants.URL_GET_CUSTOMER_INFO +mCustomerId, getActivity(), false);
+                Constants.BASE_URL_UTILITY + Constants.URL_GET_BANGLALION_CUSTOMER_INFO + mCustomerId, getActivity(), false);
         mGetCustomerInfoTask.mHttpResponseListener = this;
         mGetCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -212,7 +208,7 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
             return;
         }
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE_V2 + "/" + serviceID, getActivity(),false);
+                Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE_V2 + "/" + serviceID, getActivity(), false);
         mGetBusinessRuleTask.mHttpResponseListener = this;
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -240,7 +236,7 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
     private void attemptBillPay(String pin) {
         if (mCunnectionType.equals("POSTPAID")) {
             mAmount = Integer.parseInt(mPostpaidAmountEditText.getText().toString().trim());
-        }else{
+        } else {
             mAmount = Integer.parseInt(mPrepaidAmountEditText.getText().toString().trim());
         }
 
@@ -416,14 +412,14 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                             mPayBillButton.setVisibility(View.VISIBLE);
                             mContinue.setVisibility(View.GONE);
                             mCustomerNameTextView.setText(mCustomerInfoResponse.getUserName());
-                            mCustomerIdTextView.setText("Customer ID: "+mCustomerId);
-                            mPackageTypeTextView.setText("( "+mCustomerInfoResponse.getUserType()+" )");
-                            if(mCustomerInfoResponse.getUserType().equals("POSTPAID")){
+                            mCustomerIdTextView.setText("Customer ID: " + mCustomerId);
+                            mPackageTypeTextView.setText("( " + mCustomerInfoResponse.getUserType() + " )");
+                            if (mCustomerInfoResponse.getUserType().equals("POSTPAID")) {
                                 mCunnectionType = "POSTPAID";
                                 mPostPaidBillPayView.setVisibility(View.VISIBLE);
                                 mPrepaidBillPayView.setVisibility(View.GONE);
                                 mPayBillButton.setText("PAY BILL");
-                            }else {
+                            } else {
                                 mCunnectionType = "PREPAID";
                                 mPostPaidBillPayView.setVisibility(View.GONE);
                                 mPrepaidBillPayView.setVisibility(View.VISIBLE);
@@ -505,6 +501,7 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
 
                             }
                         }, 3000);
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         mCustomProgressDialog.showFailureAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
@@ -514,6 +511,8 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                                 ((MyApplication) getActivity().getApplication()).launchLoginPage(mBanglalionBillPayResponse.getMessage());
                             }
                         }, 2000);
+
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
@@ -546,7 +545,7 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                                 }
                             }
-                            //Google Analytic event
+                            Utilities.sendFailedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mBanglalionBillPayResponse.getMessage());
                         }
                     }
                 } catch (Exception e) {
@@ -556,7 +555,6 @@ public class BanglalionBillPayFragment extends Fragment implements HttpResponseL
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }
                 }
-
                 mBanglalionBillPayTask = null;
                 break;
 

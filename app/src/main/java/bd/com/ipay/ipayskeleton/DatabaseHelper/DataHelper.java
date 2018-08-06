@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -139,6 +139,7 @@ public class DataHelper {
                     values.put(DBConstants.KEY_BUSINESS_ADDRESS, mBusinessAccountEntry.getAddressString());
                     values.put(DBConstants.KEY_BUSINESS_THANA, mBusinessAccountEntry.getThanaString());
                     values.put(DBConstants.KEY_BUSINESS_DISTRICT, mBusinessAccountEntry.getDistrictString());
+                    values.put(DBConstants.KEY_BUSINESS_OUTLET, mBusinessAccountEntry.getOutLetString());
 
                     db.insertWithOnConflict(DBConstants.DB_TABLE_BUSINESS_ACCOUNTS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
