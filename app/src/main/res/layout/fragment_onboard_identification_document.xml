@@ -33,7 +33,7 @@
                 style="@style/OnBoardPageTitleStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/onboard_photo_id_upload_title"/>
+                android:text="@string/upload_identification_document"/>
 
             <ImageView
                 android:id="@+id/document_id_helper_image"
@@ -53,7 +53,6 @@
                 android:layout_marginTop="@dimen/onboard_page_vertical_margin"
                 android:layout_marginLeft="@dimen/onboard_page_description_horizontal_margin"
                 android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin"
-                android:minLines="4"
                 android:gravity="top|center_horizontal" />
 
             <Button
@@ -61,7 +60,7 @@
                 style="@style/ButtonPrimaryOnBoard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/upload_photo_id" />
+                android:text="@string/upload_document" />
 
             <Button
                 android:id="@+id/button_skip"
@@ -69,7 +68,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/skip_now" />
-
 
         </LinearLayout>
 

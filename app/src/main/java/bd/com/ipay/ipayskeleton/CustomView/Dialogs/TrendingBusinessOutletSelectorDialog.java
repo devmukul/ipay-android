@@ -12,25 +12,38 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.MerchantDetails;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class MerchantBranchSelectorDialog extends AlertDialog {
+public class TrendingBusinessOutletSelectorDialog extends AlertDialog {
     private Context context;
-    private MerchantDetails merchantDetails;
+    private BusinessList merchantDetails;
     private ProfileImageView mMerchantLogoView;
     private TextView merchantNameTextView;
     private RecyclerView merchantAddressListRecyclerView;
-    private MerchantBranchAdapter mMerchantBranchAdapter;
+    private MerchantOutletAdapter mMerchantBranchAdapter;
+    List<Outlets> outlets;
+    private String name;
+    private String photoUrl;
 
 
-    public MerchantBranchSelectorDialog(@NonNull Context context, MerchantDetails merchantDetails) {
+    public TrendingBusinessOutletSelectorDialog(@NonNull Context context, BusinessList merchantDetails) {
         super(context);
         this.context = context;
         this.merchantDetails = merchantDetails;
+        outlets = merchantDetails.getOutlets();
         initializeViews();
     }
 
@@ -40,7 +53,7 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
         merchantNameTextView = (TextView) view.findViewById(R.id.merchant_name);
         mMerchantLogoView = (ProfileImageView) view.findViewById(R.id.merchant_logo);
         supportViewsWithData();
-        mMerchantBranchAdapter = new MerchantBranchAdapter();
+        mMerchantBranchAdapter = new MerchantOutletAdapter();
         merchantAddressListRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         merchantAddressListRecyclerView.setAdapter(mMerchantBranchAdapter);
         this.setView(view);
@@ -55,43 +68,31 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
         this.merchantNameTextView.setText(merchantDetails.getMerchantName());
     }
 
-    public class MerchantBranchAdapter extends RecyclerView.Adapter<MerchantBranchAdapter.MerchantBranchAddressViewHolder> {
+    public class MerchantOutletAdapter extends RecyclerView.Adapter<MerchantOutletAdapter.MerchantBranchAddressViewHolder> {
 
         @Override
         public MerchantBranchAddressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new MerchantBranchAddressViewHolder
-                    (LayoutInflater.from(context).inflate(R.layout.list_item_address, parent, false));
+                    (LayoutInflater.from(context).inflate(R.layout.list_item_outlets, parent, false));
         }
 
         @Override
         public void onBindViewHolder(final MerchantBranchAddressViewHolder holder, final int position) {
-            holder.mAddressLineOneTextView.setText(merchantDetails.getBranches().get(position).getBranchAddress1());
-            holder.mAddressLineTwoTextView.setText(merchantDetails.getBranches().get(position).getBranchAddress2());
-            holder.addressRadioButton.setChecked(false);
+            holder.mNameTextView.setText(merchantDetails.getOutlets().get(position).getOutletName());
+            holder.mAddressTextView.setText(merchantDetails.getOutlets().get(position).getAddressString());
+            holder.outletIcon.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + merchantDetails.getOutlets().get(position).getOutletLogoUrl(), false);
+
             holder.mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.addressRadioButton.setChecked(true);
-                    new android.os.Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            switchToMakePaymentActivity(holder, position);
-                        }
-                    }, 500);
+                    switchToMakePaymentActivity(holder, position);
 
                 }
             });
-            holder.addressRadioButton.setOnClickListener(new View.OnClickListener() {
+            holder.outletIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.addressRadioButton.setChecked(true);
-                    new android.os.Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            switchToMakePaymentActivity(holder, position);
-                        }
-                    }, 500);
-
+                    switchToMakePaymentActivity(holder, position);
                 }
             });
         }
@@ -99,31 +100,35 @@ public class MerchantBranchSelectorDialog extends AlertDialog {
         private void switchToMakePaymentActivity(MerchantBranchAddressViewHolder holder, int position) {
             Intent intent = new Intent(context, PaymentActivity.class);
             intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-            intent.putExtra(Constants.ADDRESS_ONE, merchantDetails.getBranches().get(position).getBranchAddress1());
-            intent.putExtra(Constants.ADDRESS_TWO, merchantDetails.getBranches().get(position).getBranchAddress2());
-            intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getBranches().get(position).getMobileNumber());
+            intent.putExtra(Constants.ADDRESS, merchantDetails.getOutlets().get(position).getAddressString());
+            intent.putExtra(Constants.DISTRICT, merchantDetails.getOutlets().get(position).getOutletAddress().getDistrictName());
+            intent.putExtra(Constants.THANA, merchantDetails.getOutlets().get(position).getOutletAddress().getThanaName());
+            intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
             intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
+            intent.putExtra(Constants.OUTLET_ID, outlets.get(position).getOutletId());
+            intent.putExtra(Constants.OUTLET_NAME, outlets.get(position).getOutletName());
             intent.putExtra(Constants.FROM_BRANCHING, true);
             context.startActivity(intent);
-            MerchantBranchSelectorDialog.this.dismiss();
+            TrendingBusinessOutletSelectorDialog.this.dismiss();
         }
 
         @Override
         public int getItemCount() {
-            return merchantDetails.getBranches().size();
+            return merchantDetails.getOutlets().size();
         }
 
         public class MerchantBranchAddressViewHolder extends RecyclerView.ViewHolder {
-            private RadioButton addressRadioButton;
-            private TextView mAddressLineOneTextView;
-            private TextView mAddressLineTwoTextView;
+            private ProfileImageView outletIcon;
+            private TextView mNameTextView;
+            private TextView mAddressTextView;
             private View mainView;
 
             public MerchantBranchAddressViewHolder(View itemView) {
                 super(itemView);
-                addressRadioButton = (RadioButton) itemView.findViewById(R.id.address_radio_button);
-                mAddressLineOneTextView = (TextView) itemView.findViewById(R.id.address_line_1);
-                mAddressLineTwoTextView = (TextView) itemView.findViewById(R.id.address_line_2);
+                outletIcon = (ProfileImageView) itemView.findViewById(R.id.outlet_radio_button);
+                mNameTextView = (TextView) itemView.findViewById(R.id.outlet_name);
+                mAddressTextView = (TextView) itemView.findViewById(R.id.outlet_address);
+                outletIcon.setBusinessLogoPlaceHolder();
                 mainView = itemView;
             }
         }

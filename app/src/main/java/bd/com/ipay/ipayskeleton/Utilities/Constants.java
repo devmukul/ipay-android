@@ -113,7 +113,6 @@ public class Constants {
     public static final String REJECTED = "REJECTED";
     public static final String CANCELED = "CANCELED";
 
-
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
@@ -135,6 +134,7 @@ public class Constants {
     public static final String VERIFIED = "VERIFIED";
     public static final String DISTRICT = "DISTRICT";
     public static final String COUNTRY = "COUNTRY";
+    public static final String OUTLET = "OUTLET";
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
@@ -169,6 +169,8 @@ public class Constants {
     public static final String COMMAND_DPDC_BILL_PAY = "COMMAND_DPDC_BILL_PAY";
     public static final String DPDC = "DPDC";
     public static String ROLEID = "ROLEID";
+    public static final String OUTLET_ID = "OUTLET_ID";
+    public static final String OUTLET_NAME = "OUTLET_NAME";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
@@ -936,7 +938,12 @@ public class Constants {
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_TAKE_PICTURE = "Take a picture";
+    public static final String ACTION_TYPE_TAKE_PICTURE_FOR_DOCUMENT = "Take a picture of your document";
+
     public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from gallery";
+
+    public static final String ACTION_TYPE_SELECT_FROM_GALLERY_FOR_DOCUMENT = "Upload your document from gallery";
+
 
     public static final String SERVICE_ACTION_REQUEST_PAYMENT = "Request Payment";
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";

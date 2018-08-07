@@ -928,6 +928,7 @@
 
     <string name="select_from_gallery_message">Select from gallery</string>
     <string name="take_a_picture_message">Take a picture</string>
+    <string name="take_a_picture_message_for_document">Take a picture of your document</string>
     <string name="select_a_pdf_message">Select a PDF</string>
     <string name="view_uploaded_document_message">View uploaded document</string>
     <string name="profile_picture_temp_file">profile_picture.jpg</string>
@@ -1077,8 +1078,8 @@
     <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
-    <string name="onboard_upload_photo_id_text">Your photo ID can be either your National ID, Passport or your Driving License. Make sure all information is clearly readable and that it is fully in frame.</string>
-    <string name="onboard_upload_prifile_info_text">Your basic information is your occupation, organization and present address. Add your basic information to receive some goodies or official documents.</string>
+    <string name="onboard_upload_photo_id_text">Please take a clear picture of your NID, Passport or Driving License and upload.</string>
+    <string name="onboard_upload_prifile_info_text">Update your Work and Address information for faster verification.</string>
     <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
     <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
     <string name="upload_profile_photo_again">Do you want to upload a profile photo again? You have already uploaded once</string>
@@ -1125,7 +1126,7 @@
     <string name="account_switched">Account switched</string>
     <string name="make_another_payment">MAKE ANOTHER PAYMENT</string>
     <string name="source_of_fund">Source Of Fund</string>
-    <string name="onboard_source_of_fund_text">For verification process you need to add at least one source of fund. Select a method of add money to your iPay wallet</string>
+    <string name="onboard_source_of_fund_text">Add your bank or debit/credit card as a source of fund of your iPay wallet and enjoy full access to our services.</string>
     <string name="add_source_of_fund">Add Source Of Fund</string>
     <string name="add_money_by_card">Add Money By Credit/Debit Card</string>
     <string name="onboard_add_source_of_fund">Please select on of the method of you source of fund</string>
@@ -1195,6 +1196,7 @@
     <string name="bill_number">Bill Number</string>
     <string name="WestZone">WestZone</string>
     <string name="bill_pay">Bill Pay</string>
+    <string name="upload_identification_document">Upload Identification Document</string>
     <string name="due_date">Due Date</string>
     <string name="ipc">Ipc</string>
     <string name="desco_bill_pay_message">Please enter the bill number of desco</string>
