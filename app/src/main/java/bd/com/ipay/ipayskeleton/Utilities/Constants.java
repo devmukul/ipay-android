@@ -169,6 +169,7 @@ public class Constants {
     public static final String COMMAND_DPDC_BILL_PAY = "COMMAND_DPDC_BILL_PAY";
     public static final String DPDC = "DPDC";
     public static final String COMMAND_GET_DPDC_CUSTOMER = "COMMAND_GET_DPDC_CUSTOMER";
+    public static final String COMMAND_GET_DESCO_CUSTOMER = "COMMAND_GET_DESCO_CUSTOMER";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";

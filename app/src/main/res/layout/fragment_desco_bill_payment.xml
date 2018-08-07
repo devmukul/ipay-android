@@ -78,6 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/value8"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -90,6 +91,7 @@
                     <TextView
                         android:id="@+id/account_number_view"
                         android:layout_width="0dp"
+                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="" />
@@ -117,6 +119,7 @@
                     <TextView
                         android:id="@+id/due_date_view"
                         android:layout_width="0dp"
+                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="" />
@@ -145,6 +148,7 @@
                     <TextView
                         android:id="@+id/bill_number_view"
                         android:layout_width="0dp"
+                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="" />
@@ -154,12 +158,14 @@
                     style="@style/Divider"
                     android:layout_marginBottom="@dimen/value8"
                     android:layout_marginLeft="0dp"
+                    android:visibility="gone"
                     android:layout_marginRight="0dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/value8"
+                    android:visibility="gone"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -181,6 +187,7 @@
                     style="@style/Divider"
                     android:layout_marginBottom="@dimen/value8"
                     android:layout_marginLeft="0dp"
+                    android:visibility="gone"
                     android:layout_marginRight="0dp" />
 
                 <LinearLayout
@@ -188,6 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/value8"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:weightSum="2">
 
                     <TextView
@@ -226,6 +234,7 @@
                     <TextView
                         android:id="@+id/ipc_view"
                         android:layout_width="0dp"
+                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="" />
@@ -253,6 +262,7 @@
                     <TextView
                         android:id="@+id/total_amount_view"
                         android:layout_width="0dp"
+                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="" />
@@ -279,6 +289,7 @@
                     <TextView
                         android:id="@+id/bill_status_view"
                         android:layout_width="0dp"
+                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="" />

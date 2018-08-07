@@ -8,7 +8,7 @@ public class DescoCustomerInfoResponse {
     private String totalPayableAmount;
     private String billNumber;
     private String message;
-    private String ipc;
+    private String lpc;
     private String dueDate;
 
     public String getAccountNumber() {
@@ -39,8 +39,8 @@ public class DescoCustomerInfoResponse {
         return message;
     }
 
-    public String getIpc() {
-        return ipc;
+    public String getLpc() {
+        return lpc;
     }
 
     public String getDueDate() {

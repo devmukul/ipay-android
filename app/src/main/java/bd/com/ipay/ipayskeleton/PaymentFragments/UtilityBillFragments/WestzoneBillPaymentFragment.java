@@ -59,6 +59,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     private TextView mBillStatusTextView;
     private TextView mBillNumberTextView;
     private EditText mAccountIDEditText;
+    private TextView mPrevMonthView;
     private Button mContinueButton;
     private View infoView;
     private View customerIDView;
@@ -99,6 +100,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
         mPrimaryAmountTextView = (TextView) view.findViewById(R.id.principal_amount_view);
         mVatTextView = (TextView) view.findViewById(R.id.vat_amount);
         mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
+        mPrevMonthView = (TextView) view.findViewById(R.id.bill_month_prev);
         mBillMonthTextView = (TextView) view.findViewById(R.id.bill_month_view);
         mBillStatusTextView = (TextView) view.findViewById(R.id.bill_status_view);
         customerIDView = view.findViewById(R.id.customer_id_view);
@@ -106,6 +108,9 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
         mAccountIDEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
         mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number);
+
+        mPrevMonthView.setText("( Bill month " + ((UtilityBillPaymentActivity) getActivity()).getPreviousMonth() + " )");
+
         UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
         setUpButtonAction();
     }
@@ -281,7 +286,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                                 }, 2000);
                             }
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                            if(mContinueButton != null){
+                            if (mContinueButton != null) {
                                 mContinueButton.setClickable(false);
                             }
 

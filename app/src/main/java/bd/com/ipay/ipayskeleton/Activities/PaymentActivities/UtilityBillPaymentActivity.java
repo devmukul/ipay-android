@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
@@ -103,6 +105,49 @@ public class UtilityBillPaymentActivity extends BaseActivity {
             getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    public String getPreviousMonth() {
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        switch (month) {
+            case 1:
+                return "January " + Integer.toString(year);
+
+            case 2:
+                return "February " + Integer.toString(year);
+
+            case 3:
+                return "March " + Integer.toString(year);
+
+            case 4:
+                return "April " + Integer.toString(year);
+
+            case 5:
+                return "May " + Integer.toString(year);
+
+            case 6:
+                return "June " + Integer.toString(year);
+
+            case 7:
+                return "July " + Integer.toString(year);
+
+            case 8:
+                return "August " + Integer.toString(year);
+
+            case 9:
+                return "September " + Integer.toString(year);
+
+            case 10:
+                return "October " + Integer.toString(year);
+            case 11:
+                return "November " + Integer.toString(year);
+            case 0:
+                return "December " + Integer.toString(year - 1);
+            default:
+                return "";
         }
     }
 

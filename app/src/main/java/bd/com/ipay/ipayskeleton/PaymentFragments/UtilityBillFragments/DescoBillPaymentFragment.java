@@ -101,6 +101,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         mIpcTextView = (TextView) view.findViewById(R.id.ipc_view);
         mBillStatusTextView = (TextView) view.findViewById(R.id.bill_status_view);
         mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number_view);
+        mDueDateTextView = (TextView) view.findViewById(R.id.due_date_view);
         customerIDView = view.findViewById(R.id.customer_id_view);
         infoView = view.findViewById(R.id.info_view);
         mEnterBillNumberEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
@@ -182,7 +183,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         } else {
             mProgressDialog.setMessage("Please wait");
             mUri = Constants.BASE_URL_UTILITY + Constants.URL_DESCO_CUSTOMER_INFO + mBillNumber;
-            mDescoCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER, mUri,
+            mDescoCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DESCO_CUSTOMER, mUri,
                     getActivity(), this, true);
             mDescoCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
@@ -212,8 +213,8 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         mAccountIDTextView.setText(mDescoCustomerInfoResponse.getAccountNumber());
         mVatTextView.setText(mDescoCustomerInfoResponse.getVatAmount());
         mTotalAmountTextView.setText(mDescoCustomerInfoResponse.getTotalPayableAmount());
-        mBillNumberTextView.setText(mDescoCustomerInfoResponse.getBillNumber());
-        mIpcTextView.setText(mDescoCustomerInfoResponse.getIpc());
+        mBillNumberTextView.setText(mBillNumber);
+        mIpcTextView.setText(mDescoCustomerInfoResponse.getLpc());
         mContinueButton.setText("Pay bill");
         mDueDateTextView.setText(mDescoCustomerInfoResponse.getDueDate());
         infoView.setVisibility(View.VISIBLE);
@@ -231,7 +232,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         } else {
             try {
                 Gson gson = new Gson();
-                if (result.getApiCommand().equals(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER)) {
+                if (result.getApiCommand().equals(Constants.COMMAND_GET_DESCO_CUSTOMER)) {
                     mDescoCustomerInfoResponse = gson.fromJson(result.getJsonString(), DescoCustomerInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         fillUpFiledsWithData();

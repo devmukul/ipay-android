@@ -61,6 +61,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
     private TextView mBillNumberTextView;
     private EditText mAccountIDEditText;
     private EditText mLocationCodeEditText;
+    private TextView mPrevMonthView;
     private Button mContinueButton;
     private View infoView;
     private View customerIDView;
@@ -104,6 +105,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         mLocationCodeEditText = (EditText) view.findViewById(R.id.location_code_edit_text);
         mPrimaryAmountTextView = (TextView) view.findViewById(R.id.principal_amount_view);
         mVatTextView = (TextView) view.findViewById(R.id.vat_amount);
+        mPrevMonthView = (TextView) view.findViewById(R.id.bill_month_prev);
         mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
         mBillMonthTextView = (TextView) view.findViewById(R.id.bill_month_view);
         mBillStatusTextView = (TextView) view.findViewById(R.id.bill_status_view);
@@ -112,6 +114,9 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         mAccountIDEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
         mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number);
+
+        mPrevMonthView.setText("( Bill month "+  ((UtilityBillPaymentActivity)getActivity()).getPreviousMonth()+" )");
+
         UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
         setUpButtonAction();
     }
@@ -189,9 +194,9 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         } else {
             mProgressDialog.setMessage("Please wait");
             mUri = Constants.BASE_URL_UTILITY + Constants.URL_DPDC_CUSTOMER_INFO;
-            mDpdcUserInfoGetRequest = new DPDCUserInfoGetRequest(mAccountID,mLocationCode);
+            mDpdcUserInfoGetRequest = new DPDCUserInfoGetRequest(mAccountID, mLocationCode);
             mJsonString = new Gson().toJson(mDpdcUserInfoGetRequest);
-            mDpdcCustomerInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_DPDC_CUSTOMER, mUri,mJsonString,
+            mDpdcCustomerInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_DPDC_CUSTOMER, mUri, mJsonString,
                     getActivity(), this, true);
             mDpdcCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
