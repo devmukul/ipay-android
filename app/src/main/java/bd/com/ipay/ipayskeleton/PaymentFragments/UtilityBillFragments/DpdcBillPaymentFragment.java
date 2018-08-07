@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DPDCUserInfoGetRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DpdcBillPayRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DpdcBillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DpdcCustomerInfoResponse;
@@ -59,6 +60,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
     private TextView mBillStatusTextView;
     private TextView mBillNumberTextView;
     private EditText mAccountIDEditText;
+    private EditText mLocationCodeEditText;
     private Button mContinueButton;
     private View infoView;
     private View customerIDView;
@@ -67,9 +69,12 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 
     private String mUri;
     private String mAccountID;
+    private String mLocationCode;
+    private String mJsonString;
 
-    private HttpRequestGetAsyncTask mDpdcCustomerInfoTask = null;
+    private HttpRequestPostAsyncTask mDpdcCustomerInfoTask = null;
     private DpdcCustomerInfoResponse mDpdcCustomerInfoResponse;
+    private DPDCUserInfoGetRequest mDpdcUserInfoGetRequest;
     private HttpRequestPostAsyncTask mDpdcBillPayTask = null;
     private DpdcBillPayRequest mDpdcBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
@@ -96,6 +101,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 
         mNameTextView = (TextView) view.findViewById(R.id.name_view);
         mAccountIDTextView = (TextView) view.findViewById(R.id.account_number_view);
+        mLocationCodeEditText = (EditText) view.findViewById(R.id.location_code_edit_text);
         mPrimaryAmountTextView = (TextView) view.findViewById(R.id.principal_amount_view);
         mVatTextView = (TextView) view.findViewById(R.id.vat_amount);
         mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
@@ -182,8 +188,10 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
             return;
         } else {
             mProgressDialog.setMessage("Please wait");
-            mUri = Constants.BASE_URL_UTILITY + Constants.URL_DPDC_CUSTOMER_INFO + mAccountID;
-            mDpdcCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER, mUri,
+            mUri = Constants.BASE_URL_UTILITY + Constants.URL_DPDC_CUSTOMER_INFO;
+            mDpdcUserInfoGetRequest = new DPDCUserInfoGetRequest(mAccountID,mLocationCode);
+            mJsonString = new Gson().toJson(mDpdcUserInfoGetRequest);
+            mDpdcCustomerInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_DPDC_CUSTOMER, mUri,mJsonString,
                     getActivity(), this, true);
             mDpdcCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
@@ -201,10 +209,20 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
             if (mAccountID == null || mAccountID.isEmpty()) {
                 mAccountIDEditText.setError(getString(R.string.enter_account_number));
                 return false;
-            } else {
-                return true;
             }
         }
+        editable = mLocationCodeEditText.getText();
+        if (editable == null) {
+            mLocationCodeEditText.setError(getString(R.string.enter_location_code));
+            return false;
+        } else {
+            mLocationCode = editable.toString();
+            if (mLocationCode == null || mLocationCode.isEmpty()) {
+                mLocationCodeEditText.setError(getString(R.string.enter_location_code));
+                return false;
+            }
+        }
+        return true;
     }
 
     private void fillUpFiledsWithData() {
@@ -232,7 +250,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         } else {
             try {
                 Gson gson = new Gson();
-                if (result.getApiCommand().equals(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER)) {
+                if (result.getApiCommand().equals(Constants.COMMAND_GET_DPDC_CUSTOMER)) {
                     mDpdcCustomerInfoResponse = gson.fromJson(result.getJsonString(), DpdcCustomerInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         fillUpFiledsWithData();
@@ -267,7 +285,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
                         }
                     }
                     mGetBusinessRuleTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_WEST_ZONE_BILL_PAY)) {
+                } else if (result.getApiCommand().equals(Constants.COMMAND_DPDC_BILL_PAY)) {
                     try {
                         mDpdcBillPayResponse = gson.fromJson(result.getJsonString(), DpdcBillPayResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {

@@ -51,7 +51,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BanglalionPackageSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
@@ -71,7 +70,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AllowablePackage;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -90,7 +88,6 @@ import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static android.view.View.GONE;
-import static android.view.View.inflate;
 
 public class MakePaymentFragment extends BaseFragment implements LocationListener, HttpResponseListener {
 

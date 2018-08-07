@@ -158,7 +158,7 @@ public class Constants {
     public static final String COMMAND_GET_WEST_ZONE_CUSTOMER = "COMMAND_GET_WEST_ZONE_CUSTOMER";
     public static final String URL_WEST_ZONE_BILL_PAY = "wzone/billpay";
     public static final String URL_DPDC_BILL_PAY = "dpdc/billpay";
-    public static final String URL_DPDC_CUSTOMER_INFO = "dpdc/bill-info/";
+    public static final String URL_DPDC_CUSTOMER_INFO = "dpdc/bill-info";
     public static final String WESTZONE_BILL_PAY = "WESTZONE BILL PAY";
     public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
     public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
@@ -168,6 +168,7 @@ public class Constants {
     public static final String DESCO = "DESCO";
     public static final String COMMAND_DPDC_BILL_PAY = "COMMAND_DPDC_BILL_PAY";
     public static final String DPDC = "DPDC";
+    public static final String COMMAND_GET_DPDC_CUSTOMER = "COMMAND_GET_DPDC_CUSTOMER";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
