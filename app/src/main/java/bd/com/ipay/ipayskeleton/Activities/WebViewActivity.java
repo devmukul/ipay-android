@@ -68,6 +68,6 @@ public class WebViewActivity extends AppCompatActivity {
                 super.onBackPressed();
             }
         }
-
+        finish();
     }
 }
