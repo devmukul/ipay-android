@@ -27,15 +27,11 @@ public class FCMListenerService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage message) {
         parseRemoteMessage(message);
-        System.out.println("Sagid "+message.getNotification().getBody());
-        System.out.println("Sagid "+message.getNotification().getTitle());
-        System.out.println("Sagid "+message.getNotification().getTag());
     }
 
     private void parseRemoteMessage(RemoteMessage message) {
         from = message.getFrom();
         data = message.getData();
-        notification = message.getNotification();
 
         Logger.logD("Message", "From: " + from);
 
@@ -51,11 +47,11 @@ public class FCMListenerService extends FirebaseMessagingService {
         if (!(AppInstanceUtilities.isUserActive(this))
                 || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION
                 || serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
-            if (notification != null) {
-                Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
+            if (data != null) {
+                //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
 
-                createNotification(this, notification.getTitle(),
-                        notification.getBody(), mFcmNotificationResponse.getIcon());
+                createNotification(this, data.values().toArray()[5].toString(),
+                        data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
             }
         } else {
             FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
