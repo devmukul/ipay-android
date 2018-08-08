@@ -376,6 +376,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                             updateNotificationState(timeList, "VISITED");
                             Intent intent = new Intent(getActivity(), WebViewActivity.class);
                             intent.putExtra("url", mDeepLinkedNotifications.get(pos).getDeepLink());
+                            intent.putExtra("sourceActivity","Notification");
                             startActivity(intent);
                             new Handler().postDelayed(new Runnable() {
                                 @Override

@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,15 +33,41 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(uriString != null && !uriString.isEmpty() && uriString.toLowerCase().contains("promotions")){
-            super.onBackPressed();
-        }
-        else {
+        if (getIntent() != null) {
+            if (getIntent().hasExtra("sourceActivity")) {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    super.onBackPressed();
+                }
+            } else {
+                if (uriString != null && !uriString.isEmpty()) {
+                    if (uriString.toLowerCase().contains("promotion")) {
+                        Intent intent = new Intent(this, HomeActivity.class);
+                        startActivity(intent);
+                    } else {
+                        if (webView.canGoBack()) {
+                            webView.goBack();
+                        } else {
+                            super.onBackPressed();
+                        }
+                    }
+                } else {
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                    } else {
+                        super.onBackPressed();
+                    }
+                }
+
+            }
+        } else {
             if (webView.canGoBack()) {
                 webView.goBack();
             } else {
                 super.onBackPressed();
             }
         }
+
     }
 }
