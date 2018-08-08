@@ -100,7 +100,11 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     String [] stringArray = result.split("-");
                     final String mobile = stringArray[0];
                     if(stringArray.length>1) {
-                        outletId = Long.parseLong(stringArray[1]);
+                        try {
+                            outletId = Long.parseLong(stringArray[1].trim().replaceAll("[^0-9]", ""));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
 
                     final Handler mHandler = new Handler();
@@ -238,7 +242,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                         if (!getUserInfoResponse.getName().isEmpty())
                             brandName = getUserInfoResponse.getName();
 
-                        if (outletId!=null && getUserInfoResponse.getOutlets().size()>0 && getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
+                        if (outletId!=null && getUserInfoResponse.getOutlets()!=null && getUserInfoResponse.getOutlets().size()>0 && getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
                             for (Outlets outlets: getUserInfoResponse.getOutlets()) {
                                 if(outlets.getOutletId().equals(outletId)){
                                     imageUrl = outlets.getOutletLogoUrl();

@@ -930,7 +930,12 @@ public class Constants {
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_TAKE_PICTURE = "Take a picture";
+    public static final String ACTION_TYPE_TAKE_PICTURE_FOR_DOCUMENT = "Take a picture of your document";
+
     public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from gallery";
+
+    public static final String ACTION_TYPE_SELECT_FROM_GALLERY_FOR_DOCUMENT = "Upload your document from gallery";
+
 
     public static final String SERVICE_ACTION_REQUEST_PAYMENT = "Request Payment";
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
