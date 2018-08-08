@@ -109,4 +109,13 @@ public class SharedPrefManager {
     public static void setNotificationCount(int count) {
         pref.edit().putInt("Notification", count).apply();
     }
+
+    public static boolean isFireBaseTokenSent() {
+        return pref.getBoolean(Constants.FIREBASE_TOKEN, false);
+    }
+
+    public static void setSentFireBaseToken(boolean value) {
+        pref.edit().putBoolean(Constants.FIREBASE_TOKEN, value).apply();
+    }
+
 }

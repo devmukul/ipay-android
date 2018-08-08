@@ -163,6 +163,7 @@ public class Constants {
     public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
     public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
     public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";

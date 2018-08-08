@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
@@ -88,6 +89,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRes
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
@@ -135,6 +137,8 @@ public class HomeActivity extends BaseActivity
     private RemoveEmployeeResponse mResignFromBusinessResponse;
 
     private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
+
+    private HttpRequestPostAsyncTask mRefreshTokenAsyncTask;
 
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
@@ -186,7 +190,9 @@ public class HomeActivity extends BaseActivity
         }
         refreshBalance();
         mProgressDialog = new ProgressDialog(HomeActivity.this);
-
+        if (!SharedPrefManager.isFireBaseTokenSent()) {
+            sendFireBaseTokenToServer();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -353,6 +359,25 @@ public class HomeActivity extends BaseActivity
             }
             mLocationManager.requestSingleUpdate(locationProvider, this, Looper.myLooper());
         }
+    }
+
+    private void sendFireBaseTokenToServer() {
+        String fireBaseToken = FirebaseInstanceId.getInstance().getToken();
+        Logger.logW("Firebase Token", "Refresh token called");
+
+        if (mRefreshTokenAsyncTask != null) {
+            mRefreshTokenAsyncTask = null;
+        }
+
+        String myDeviceID = DeviceInfoFactory.getDeviceId(this);
+        FCMRefreshTokenRequest mFcmRefreshTokenRequest = new FCMRefreshTokenRequest(fireBaseToken, myDeviceID, Constants.MOBILE_ANDROID);
+        Gson gson = new Gson();
+        String json = gson.toJson(mFcmRefreshTokenRequest);
+        mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_FIREBASE_TOKEN,
+                Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_REFRESH_FIREBASE_TOKEN, json, this, true);
+        mRefreshTokenAsyncTask.mHttpResponseListener = this;
+
+        mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getManagedBusinessAccountList() {
@@ -965,6 +990,11 @@ public class HomeActivity extends BaseActivity
                     updateNotificationBadgeCount(mBadgeCount);
                 }
                 mGetNotificationAsyncTask = null;
+                break;
+            case Constants.COMMAND_REFRESH_FIREBASE_TOKEN:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    SharedPrefManager.setSentFireBaseToken(true);
+                }
                 break;
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:
                 try {
