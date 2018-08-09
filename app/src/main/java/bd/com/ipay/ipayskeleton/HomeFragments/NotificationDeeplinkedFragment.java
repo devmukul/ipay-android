@@ -232,7 +232,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                             mNotificationListAdapter.notifyDataSetChanged();
                             try {
                                 lastTime = mDeepLinkedNotifications.get(mDeepLinkedNotifications.size() - 1).getTime();
-                            }catch (Exception e){
+                            } catch (Exception e) {
 
                             }
                             rowToDelete = -1;
@@ -337,10 +337,11 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                     mLoadMoreProgressBar.setVisibility(View.GONE);
                     mLoadMoreTextView.setVisibility(View.VISIBLE);
 
-                    if (hasNext)
+                    if (hasNext) {
                         mLoadMoreTextView.setText(R.string.load_more);
-                    else
+                    } else {
                         mLoadMoreTextView.setText(R.string.no_more_results);
+                    }
                 }
             }
 
@@ -376,7 +377,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                             updateNotificationState(timeList, "VISITED");
                             Intent intent = new Intent(getActivity(), WebViewActivity.class);
                             intent.putExtra("url", mDeepLinkedNotifications.get(pos).getDeepLink());
-                            intent.putExtra("sourceActivity","Notification");
+                            intent.putExtra("sourceActivity", "Notification");
                             startActivity(intent);
                             new Handler().postDelayed(new Runnable() {
                                 @Override
