@@ -170,6 +170,10 @@ public class Constants {
     public static final String DPDC = "DPDC";
     public static final String COMMAND_GET_DPDC_CUSTOMER = "COMMAND_GET_DPDC_CUSTOMER";
     public static final String COMMAND_GET_DESCO_CUSTOMER = "COMMAND_GET_DESCO_CUSTOMER";
+    public static final String COMMAND_GET_DOZE_CUSTOMER = "COMMAND_GET_DOZE_CUSTOMER";
+    public static final String COMMAND_DOZE_BILL_PAY = "COMMAND_DOZE_BILL_PAY";
+    public static final String URL_DOZE_BILL_PAY = "doze/billpay";
+    public static final String DOZE = "DOZE";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -297,6 +301,7 @@ public class Constants {
     public static String Business_role = "BUSINESS_ROLE";
     public static String invalid_credential = "invalid credential";
     public static String URL_DESCO_BILL_PAY = "/desco/billpay";
+    public static String URL_DOZE = "/doze/bill-info/";
 
 
     static {

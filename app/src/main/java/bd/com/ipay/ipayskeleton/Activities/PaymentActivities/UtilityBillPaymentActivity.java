@@ -11,6 +11,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillPaymentFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DozeBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DpdcBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
@@ -44,12 +45,19 @@ public class UtilityBillPaymentActivity extends BaseActivity {
                     switchToDescoBillPayFragment();
                 } else if (service.equals(Constants.DPDC)) {
                     switchToDpdcBillPaymentFragment();
+                } else if (service.equals(Constants.DOZE)) {
+                    switchToDozeBillPaymentFragment();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void switchToDozeBillPaymentFragment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new DozeBillPayFragment()).commit();
     }
 
 

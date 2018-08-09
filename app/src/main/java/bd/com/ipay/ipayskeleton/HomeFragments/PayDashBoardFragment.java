@@ -59,6 +59,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mWestZoneBillPayView;
     private View mDescoBillPayView;
     private View mDpdcBillPayView;
+    private View mDozeBillPayView;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
     private PinChecker pinChecker;
@@ -87,6 +88,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
         mDescoBillPayView = v.findViewById(R.id.desco);
         mWestZoneBillPayView = v.findViewById(R.id.west_zone);
+        mDozeBillPayView = v.findViewById(R.id.doze);
         mDpdcBillPayView = v.findViewById(R.id.dpdc);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
@@ -249,6 +251,24 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         intent.putExtra(Constants.SERVICE, Constants.DESCO);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mDozeBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE,Constants.DOZE);
                         startActivity(intent);
                     }
                 });

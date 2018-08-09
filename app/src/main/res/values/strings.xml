@@ -1206,4 +1206,7 @@
     <string name="enter_account_number">Please enter an account number</string>
     <string name="dpdc">Dpdc</string>
     <string name="enter_location_code">Enter location code</string>
+    <string name="doze_bill_pay_message">Please enter your doze user ID</string>
+    <string name="current_package_rate">Current Package Rate</string>
+    <string name="doze">Doze</string>
 </resources>
