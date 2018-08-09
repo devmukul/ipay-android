@@ -167,6 +167,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
     private void loadNotifications(List<DeepLinkedNotification> notifications, boolean hasNext) {
         if (clearListAfterLoading || mDeepLinkedNotifications == null || mDeepLinkedNotifications.size() == 0) {
             mDeepLinkedNotifications = notifications;
+            lastTime = notifications.get(notifications.size() - 1).getTime();
             clearListAfterLoading = false;
         } else {
             List<DeepLinkedNotification> tempNotifications;

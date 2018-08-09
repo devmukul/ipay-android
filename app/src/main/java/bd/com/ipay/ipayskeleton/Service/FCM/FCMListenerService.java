@@ -30,6 +30,7 @@ public class FCMListenerService extends FirebaseMessagingService {
     }
 
     private void parseRemoteMessage(RemoteMessage message) {
+
         from = message.getFrom();
         data = message.getData();
 
@@ -49,9 +50,12 @@ public class FCMListenerService extends FirebaseMessagingService {
                 || serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
             if (data != null) {
                 //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
+                try {
+                    createNotification(this, data.values().toArray()[5].toString(),
+                            data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
+                }catch (Exception e){
 
-                createNotification(this, data.values().toArray()[5].toString(),
-                        data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
+                }
             }
         } else {
             FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);

@@ -94,25 +94,31 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
-                .setPriority(android.app.Notification.PRIORITY_HIGH)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                .setContentTitle(title)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
-        if (Build.VERSION.SDK_INT >= 21) {
-            notificationBuilder.setVibrate(new long[0]);
+        try {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
+                    .setPriority(android.app.Notification.PRIORITY_HIGH)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setColor(mContext.getResources().getColor(R.color.colorPrimary))
+                    .setContentTitle(title)
+                    .setGroup("Notifications")
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+            if (Build.VERSION.SDK_INT >= 21) {
+                notificationBuilder.setVibrate(new long[0]);
+            }
+
+            if (result != null) {
+                notificationBuilder.setLargeIcon(result);
+            }
+
+            NotificationManager notificationManager =
+                    (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(notificationID, notificationBuilder.build());
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        if (result != null) {
-            notificationBuilder.setLargeIcon(result);
-        }
-
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationID, notificationBuilder.build());
     }
 }

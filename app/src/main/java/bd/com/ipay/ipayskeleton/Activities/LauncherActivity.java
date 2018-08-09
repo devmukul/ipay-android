@@ -15,7 +15,6 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationStateRequest;
-import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -78,10 +77,8 @@ public class LauncherActivity extends AppCompatActivity {
                 break;
             case Intent.ACTION_MAIN:
             default:
-                if (!AppInstanceUtilities.isAppAlreadyLaunched(this)) {
-                    firstLaunch = SharedPrefManager.getFirstLaunch();
-                    startApplication();
-                }
+                firstLaunch = SharedPrefManager.getFirstLaunch();
+                startApplication();
                 break;
         }
     }
