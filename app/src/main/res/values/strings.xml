@@ -1209,4 +1209,6 @@
     <string name="doze_bill_pay_message">Please enter your doze user ID</string>
     <string name="current_package_rate">Current Package Rate</string>
     <string name="doze">Doze</string>
+    <string name="you_cant_avail_this_service">You cant avail this service now , please try again later</string>
+    <string name="active">Active</string>
 </resources>
