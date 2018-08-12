@@ -154,6 +154,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private BusinessOutletSelectorDialog moutletSelectorDialog;
     List<Outlets> outlets;
     private boolean hasOutlet = false;
+    private String mBusinessName;
+    private String mBusinessPhotoUri;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -234,7 +236,10 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         outletNameTextView.setVisibility(View.VISIBLE);
                         outletNameTextView.setText(mOutletName);
                     }
+                }else{
+                    outletNameTextView.setVisibility(GONE);
                 }
+
                 if (getActivity().getIntent().hasExtra(Constants.ADDRESS)) {
                     mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
                     if (mAddressString != null) {
@@ -413,7 +418,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             @Override
             public void onClick(View view) {
                 if (outlets.size()>0) {
-                    moutletSelectorDialog = new BusinessOutletSelectorDialog(getContext(), mReceiverName, mReceiverPhotoUri, outlets);
+                    moutletSelectorDialog = new BusinessOutletSelectorDialog(getContext(), mReceiverName, mBusinessPhotoUri, outlets);
                     moutletSelectorDialog.setOnResourceSelectedListener(new BusinessOutletSelectorDialog.OnResourceSelectedListener() {
                         @Override
                         public void onResourceSelected(Outlets allowablePackage) {
@@ -430,9 +435,9 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                             }
                             if (!allowablePackage.getOutletName().isEmpty()) {
-                                mReceiverName = allowablePackage.getOutletName();
+                                mOutletName = allowablePackage.getOutletName();
                                 outletNameTextView.setVisibility(View.VISIBLE);
-                                outletNameTextView.setText(mReceiverName);
+                                outletNameTextView.setText(mOutletName);
                             }else {
                                 outletNameTextView.setVisibility(View.GONE);
                             }
@@ -497,6 +502,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     hasOutlet =true;
                     Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
                     outlets = new Gson().fromJson(outlet, outletListType);
+                    mBusinessName = name;
+                    mBusinessPhotoUri = imageURL;
                     outletView.setVisibility(View.VISIBLE);
                     mMobileNumberEditText.setText(inputText);
                 }else{
@@ -646,6 +653,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 hasOutlet =true;
                 Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
                 outlets = new Gson().fromJson(outletString, outletListType);
+                mBusinessName = name;
+                mBusinessPhotoUri = imageURL;
                 outletView.setVisibility(View.VISIBLE);
                 mMobileNumberEditText.setText(mobileNumber);
             }else{
@@ -1072,7 +1081,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT)) {
 
             try {
-                PaymentResponse mPaymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
+                final PaymentResponse mPaymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
@@ -1084,7 +1093,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         @Override
                         public void run() {
                             mCustomProgressDialog.dismissDialog();
-                            getActivity().finish();
+                            switchToPaymentSuccessFragment(mReceiverName, mOutletName, mReceiverPhotoUri, mPaymentResponse.getTransactionId());
                         }
                     }, 2000);
 
@@ -1145,11 +1154,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         }
     }
 
-    private void switchToPaymentSuccessFragment(String name, String profilePictureUrl, String tansactionId) {
+    private void switchToPaymentSuccessFragment(String name, String outletName, String profilePictureUrl, String tansactionId) {
         PaymentSucessFragment paymentSuccessFragment = new PaymentSucessFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
+        bundle.putString(Constants.OUTLET_NAME, outletName);
         bundle.putString(Constants.PHOTO_URI, profilePictureUrl);
         bundle.putString(Constants.TRANSACTION_ID, tansactionId);
         bundle.putString(Constants.AMOUNT, mAmount);
@@ -1252,6 +1262,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             hasOutlet =true;
             Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
             outlets = new Gson().fromJson(mBussinessContact.getOutletString(), outletListType);
+            mBusinessName = mBussinessContact.getBusinessName();;
+            mBusinessPhotoUri = mBussinessContact.getProfilePictureUrl();;
             outletView.setVisibility(View.VISIBLE);
             mMobileNumberEditText.setText(mBussinessContact.getMobileNumber());
         }else{
