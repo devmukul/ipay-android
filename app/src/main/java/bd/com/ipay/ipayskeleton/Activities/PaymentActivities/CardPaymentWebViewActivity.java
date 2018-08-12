@@ -192,8 +192,6 @@ public class CardPaymentWebViewActivity extends BaseActivity {
         switch (transactionStatusCode) {
             case CARD_TRANSACTION_CANCELED:
                 showTransactionErrorDialog(intent, getString(R.string.add_money_from_credit_or_debit_card_cancel_title), getString(R.string.add_money_from_credit_or_debit_card_cancel_message));
-                Utilities.sendFailedEventTracker(mTracker, "Add money by card", ProfileInfoCacheManager.getAccountId(), getString(R.string.add_money_from_credit_or_debit_card_cancel_message), new BigDecimal(mAmount).longValue());
-
                 break;
             case CARD_TRANSACTION_FAILED:
                 showTransactionErrorDialog(intent, getString(R.string.add_money_from_credit_or_debit_card_failed_title), getString(R.string.add_money_from_credit_or_debit_card_failed_message));
