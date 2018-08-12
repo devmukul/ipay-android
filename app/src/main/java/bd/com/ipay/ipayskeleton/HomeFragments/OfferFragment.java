@@ -133,7 +133,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
             Calendar calendar = Calendar.getInstance();
             long currentTime = calendar.getTimeInMillis();
 
-            if (currentTime < values.getExpireDate()) {
+            if (currentTime < values.getExpire_date()) {
                 mPromotionList.add(values);
             }
         }
@@ -220,9 +220,9 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
             public void bindView(int pos) {
                 final Promotion promotionList = mPromotionList.get(pos);
-                final String imageUrl = promotionList.getImageUrl();
+                final String imageUrl = promotionList.getImage_url();
                 final String offerUrl = promotionList.getUrl();
-                final long expire = promotionList.getExpireDate();
+                final long expire = promotionList.getExpire_date();
                 mPromoImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -43,6 +43,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -149,6 +150,7 @@ public class HomeActivity extends BaseActivity
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
+    private ProfileImageView mOptionMenuProfileImageView;
     private NavigationView mNavigationView;
     private RecyclerView mManagedBusinessListRecyclerView;
     private ImageView mMoreBusinessListImageView;
@@ -174,6 +176,7 @@ public class HomeActivity extends BaseActivity
     private HttpRequestPostAsyncTask mRefreshBalanceTask;
 
     private BottomSheetBehavior mBottomSheetBehavior;
+    private MenuItem mProfilePictureMenu;
     View testView;
 
 
@@ -453,6 +456,11 @@ public class HomeActivity extends BaseActivity
         inflater.inflate(R.menu.home_activity, menu);
         mOptionsMenu = menu;
 
+        mProfilePictureMenu = mOptionsMenu.findItem(R.id.action_profile_image);
+        FrameLayout rootView = (FrameLayout) mProfilePictureMenu.getActionView();
+        mOptionMenuProfileImageView = (ProfileImageView) rootView.findViewById(R.id.profile_picture);
+        mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl(), false);
+
         // If the menu is recreated, then restore the previous badge count
         updateNotificationBadgeCount(mBadgeCount);
         return true;
@@ -492,6 +500,8 @@ public class HomeActivity extends BaseActivity
         mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
+                ProfileInfoCacheManager.getProfileImageUrl(), false);
+        mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
     }
 
@@ -969,6 +979,7 @@ public class HomeActivity extends BaseActivity
                             ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
                         }
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     }
                 } catch (Exception e) {
@@ -1023,6 +1034,7 @@ public class HomeActivity extends BaseActivity
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
                         ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(mGetBusinessInformationResponse));
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1125,6 +1137,7 @@ public class HomeActivity extends BaseActivity
             Logger.logD("Broadcast home activity", newProfilePicture);
 
             mProfileImageView.setAccountPhoto(newProfilePicture, true);
+            mOptionMenuProfileImageView.setAccountPhoto(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
             // we should have received a push from the server and FcmListenerService should have

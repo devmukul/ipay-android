@@ -6,13 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -26,6 +30,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
@@ -34,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivi
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -48,6 +56,9 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -66,6 +77,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private static boolean profileCompletionPromptShown = false;
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
+    private HttpRequestGetAsyncTask mTransactionHistoryTask = null;
+
 
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
@@ -77,24 +90,42 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-    private TextView mNameView;
-    private TextView mMobileNumberView;
-    private ProfileImageView mProfilePictureView;
-    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateProfileData();
-        }
-    };
-    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Logger.logD("Broadcast home fragment", newProfilePicture);
-            mProfilePictureView.setAccountPhoto(newProfilePicture, true);
-        }
-    };
-    private View mProfileInfo;
+//    private TextView mNameView;
+//    private TextView mMobileNumberView;
+    //private ProfileImageView mProfilePictureView;
+
+    private int historyPageCount = 1;
+    private Integer type = null;
+    private Calendar fromDate = null;
+    private Calendar toDate = null;
+    private String mSearchText;
+
+    // Transaction History
+    private TextView mTransactionDescriptionView;
+    private TextView mTimeView;
+    private TextView mReceiverView;
+    private TextView mBalanceTextView;
+    private TextView mNetAmountView;
+    private ImageView mOtherImageView;
+    private ProfileImageView mProfileImageView;
+    private ImageView mStatusIconView;
+
+//    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            updateProfileData();
+//        }
+//    };
+
+//    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
+//            Logger.logD("Broadcast home fragment", newProfilePicture);
+//            mProfilePictureView.setAccountPhoto(newProfilePicture, true);
+//        }
+//    };
+    //private View mProfileInfo;
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
     private LinearLayout mSendMoneyButton;
@@ -110,11 +141,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             refreshBalance();
         }
     };
-    private View mProfileCompletionPromptView;
-    private CircularProgressBar mProgressBar;
+//    private View mProfileCompletionPromptView;
+//    private CircularProgressBar mProgressBar;
     private ProgressBar mProgressBarWithoutAnimation;
-    private TextView mProfileCompletionMessageView;
-    private ImageButton mCloseButton;
+//    private TextView mProfileCompletionMessageView;
+//    private ImageButton mCloseButton;
     private ImageView mShowQRCodeButton;
 
     @Override
@@ -127,16 +158,16 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mProfileCompletionPromptView = v.findViewById(R.id.profile_completion);
+//        mProfileCompletionPromptView = v.findViewById(R.id.profile_completion);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
 
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mProfileInfo = v.findViewById(R.id.profile_info);
+//        mNameView = (TextView) v.findViewById(R.id.textview_name);
+//        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+//        mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+//        mProfileInfo = v.findViewById(R.id.profile_info);
 
         mAddMoneyButton = v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = v.findViewById(R.id.button_withdraw_money);
@@ -149,18 +180,27 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
 
-        mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
-        mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
-        mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
+//        mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
+//        mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
+//        mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
 
         mShowQRCodeButton = (ImageView) v.findViewById(R.id.show_qr_code_button);
 
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mProfileCompletionPromptView.setVisibility(View.GONE);
-            }
-        });
+        mTransactionDescriptionView = (TextView) v.findViewById(R.id.activity_description);
+        mTimeView = (TextView) v.findViewById(R.id.time);
+        mReceiverView = (TextView) v.findViewById(R.id.receiver);
+        mBalanceTextView = (TextView) v.findViewById(R.id.amount);
+        mNetAmountView = (TextView) v.findViewById(R.id.net_amount);
+        mStatusIconView = (ImageView) v.findViewById(R.id.status_description_icon);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mOtherImageView = (ImageView) v.findViewById(R.id.other_image);
+
+//        mCloseButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mProfileCompletionPromptView.setVisibility(View.GONE);
+//            }
+//        });
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,13 +325,13 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 }
             }
         });
-        mProfileInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(intent);
-            }
-        });
+//        mProfileInfo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         mShowQRCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,17 +349,19 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             getProfileCompletionStatus();
         }
 
-        updateProfileData();
+//        updateProfileData();
 
         if (!SharedPrefManager.getUserCountry().equals("BD")) {
             DialogUtils.showDialogForCountyNotSupported(getContext());
         }
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
-                new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+        getTransactionHistory();
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
-                new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
+//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
+//                new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+
+//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
+//                new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBalanceUpdateBroadcastReceiver,
                 new IntentFilter(Constants.BALANCE_UPDATE_BROADCAST));
@@ -343,8 +385,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     @Override
     public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
+//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
+//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
 
@@ -363,19 +405,19 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             menu.findItem(R.id.action_filter_by_date).setVisible(false);
     }
 
-    private void updateProfileData() {
-        mNameView.setText(ProfileInfoCacheManager.getUserName());
-        mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
-        mProfilePictureView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
-                ProfileInfoCacheManager.getProfileImageUrl(), false);
-
-        try {
-            Drawable verificationIconDrawable = getVerificationIconDrawable(ProfileInfoCacheManager.isAccountVerified());
-            mNameView.setCompoundDrawablesWithIntrinsicBounds(null, null, verificationIconDrawable, null);
-        } catch (IllegalStateException e) {
-            Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
-        }
-    }
+//    private void updateProfileData() {
+//        mNameView.setText(ProfileInfoCacheManager.getUserName());
+//        mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
+//        mProfilePictureView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
+//                ProfileInfoCacheManager.getProfileImageUrl(), false);
+//
+//        try {
+//            Drawable verificationIconDrawable = getVerificationIconDrawable(ProfileInfoCacheManager.isAccountVerified());
+//            mNameView.setCompoundDrawablesWithIntrinsicBounds(null, null, verificationIconDrawable, null);
+//        } catch (IllegalStateException e) {
+//            Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+//        }
+//    }
 
     private Drawable getVerificationIconDrawable(boolean accountVerified) {
         BitmapDrawable drawable;
@@ -397,24 +439,24 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
             if (!mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage().isEmpty()) {
 
-                mProfileCompletionMessageView.setText("Your profile is " +
-                        mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                        + "complete.\nThe following information are required " + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
-
-                mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
-
-                mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
-                    public void onClick(View v) {
-                        mProfileCompletionPromptView.setVisibility(View.GONE);
-                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
-                        startActivity(intent);
-                    }
-                });
-
-                mProfileCompletionPromptView.setVisibility(View.VISIBLE);
+//                mProfileCompletionMessageView.setText("Your profile is " +
+//                        mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
+//                        + "complete.\nThe following information are required " + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
+//
+//                mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
+//
+//                mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
+//                    public void onClick(View v) {
+//                        mProfileCompletionPromptView.setVisibility(View.GONE);
+//                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+//                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
+//                        startActivity(intent);
+//                    }
+//                });
+//
+//                mProfileCompletionPromptView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -447,6 +489,95 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getTransactionHistory() {
+        if (mTransactionHistoryTask != null) {
+            return;
+        }
+        String url = TransactionHistoryRequest.generateUri(type,
+                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT, mSearchText);
+
+        mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+                url, getActivity(), false);
+        mTransactionHistoryTask.mHttpResponseListener = this;
+        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void loadTransactionHistory(TransactionHistory transactionHistory) {
+
+        final String description = transactionHistory.getShortDescription();
+        final String receiver = transactionHistory.getReceiver();
+        String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
+        final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
+        final Integer statusCode = transactionHistory.getStatusCode();
+        final Double balance = transactionHistory.getAccountBalance();
+
+        if (balance != null) {
+            mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
+        }
+
+        mNetAmountView.setText(netAmountWithSign);
+
+        switch (statusCode) {
+            case Constants.TRANSACTION_STATUS_ACCEPTED: {
+                mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_tick_sign));
+                break;
+            }
+            case Constants.TRANSACTION_STATUS_CANCELLED: {
+                mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_cross_sign));
+                break;
+            }
+            case Constants.TRANSACTION_STATUS_REJECTED: {
+                mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_cross_sign));
+                break;
+            }
+            case Constants.TRANSACTION_STATUS_FAILED: {
+                mNetAmountView.setPaintFlags(mNetAmountView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                mStatusIconView.setImageDrawable(getResources().getDrawable(R.drawable.transaction_cross_sign));
+                break;
+            }
+        }
+
+        mTransactionDescriptionView.setText(description);
+
+        if (receiver != null && !receiver.equals("")) {
+            mReceiverView.setVisibility(View.VISIBLE);
+            mReceiverView.setText(receiver);
+        } else mReceiverView.setVisibility(View.GONE);
+
+        if (DateUtils.isToday(transactionHistory.getTime())) {
+            responseTime = "Today, " + Utilities.formatTimeOnly(transactionHistory.getTime());
+        }
+        mTimeView.setText(responseTime);
+
+        if (transactionHistory.getAdditionalInfo().getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_USER)) {
+            String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
+            mOtherImageView.setVisibility(View.INVISIBLE);
+            mProfileImageView.setVisibility(View.VISIBLE);
+            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+        } else {
+            int iconId = transactionHistory.getAdditionalInfo().getImageWithType(getContext());
+            mProfileImageView.setVisibility(View.INVISIBLE);
+            mOtherImageView.setVisibility(View.VISIBLE);
+            mOtherImageView.setImageResource(iconId);
+        }
+
+//        itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
+//            public void onClick(View v) {
+//                if (!mSwipeRefreshLayout.isRefreshing()) {
+//                    Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+//                    intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+//                    startActivity(intent);
+//                }
+//            }
+//        });
+
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -454,6 +585,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mProgressDialog.dismiss();
             mRefreshBalanceTask = null;
             mGetProfileCompletionStatusTask = null;
+            mTransactionHistoryTask = null;
             refreshBalanceButton.clearAnimation();
             return;
         }
@@ -501,6 +633,21 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             }
 
             mGetProfileCompletionStatusTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    TransactionHistoryResponse mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions().get(0));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+            }
+            mTransactionHistoryTask = null;
         }
     }
 }
