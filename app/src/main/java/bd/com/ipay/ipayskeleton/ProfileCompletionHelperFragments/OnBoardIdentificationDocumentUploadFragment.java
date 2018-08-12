@@ -147,6 +147,8 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
 
         documentFrontSideSelectorButton.setOnClickListener(documentChooserButtonClickListener);
         documentBackSideSelectorButton.setOnClickListener(documentChooserButtonClickListener);
+        mDocumentFrontSideImageView.setOnClickListener(documentChooserButtonClickListener);
+        mDocumentBackSideImageView.setOnClickListener(documentChooserButtonClickListener);
 
         documentBackSideUploadOptionViewHolder.setVisibility(View.GONE);
 
@@ -388,11 +390,11 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
             if (isAdded()) {
                 CustomUploadPickerDialog customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(),
                         getActivity().getString(R.string.select_a_document),
-                        Arrays.asList(getResources().getStringArray(R.array.upload_picker_action)));
+                        Arrays.asList(getResources().getStringArray(R.array.upload_picker_action_for_document)));
                 customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                     @Override
                     public void onResourceSelected(int actionId, String action) {
-                        if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
+                        if (Constants.ACTION_TYPE_TAKE_PICTURE_FOR_DOCUMENT.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY_FOR_DOCUMENT.equals(action))
                             if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                                 selectDocument(actionId, documentSide);
                             else {
