@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.analytics.Tracker;
 
 import java.math.BigDecimal;
 
@@ -46,6 +47,7 @@ public class CardPaymentWebViewActivity extends BaseActivity {
     private MaterialDialog transactionCancelDialog;
     private WebView mWebView;
     private double mAmount = 0.0;
+    private Tracker mTracker;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -53,6 +55,7 @@ public class CardPaymentWebViewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit_or_debit_card_payment_web_view);
         mWebView = (WebView) findViewById(R.id.web_view);
+        mTracker = Utilities.getTracker(this);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         if (getIntent().hasExtra(Constants.AMOUNT)) {
             mAmount = getIntent().getDoubleExtra(Constants.AMOUNT, 0.0);
