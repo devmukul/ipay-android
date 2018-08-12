@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
@@ -72,6 +73,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
     private String mAccountID;
     private String mLocationCode;
     private String mJsonString;
+    private String mAmount;
 
     private HttpRequestPostAsyncTask mDpdcCustomerInfoTask = null;
     private DpdcCustomerInfoResponse mDpdcCustomerInfoResponse;
@@ -115,7 +117,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
         mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number);
 
-        mPrevMonthView.setText("( Bill month "+  ((UtilityBillPaymentActivity)getActivity()).getPreviousMonth()+" )");
+        mPrevMonthView.setText("( Bill month " + ((UtilityBillPaymentActivity) getActivity()).getPreviousMonth() + " )");
 
         UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
         setUpButtonAction();
@@ -238,6 +240,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         mAccountIDTextView.setText(mDpdcCustomerInfoResponse.getAccountNumber());
         mVatTextView.setText(mDpdcCustomerInfoResponse.getVatAmount());
         mTotalAmountTextView.setText(mDpdcCustomerInfoResponse.getTotalAmount());
+        mAmount = mDpdcCustomerInfoResponse.getTotalAmount();
         mBillNumberTextView.setText(mDpdcCustomerInfoResponse.getBillNumber());
         mContinueButton.setText("Pay bill");
         infoView.setVisibility(View.VISIBLE);
@@ -321,7 +324,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 
                                 }
                             }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.DPDC_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mDpdcBillPayResponse.getMessage());
@@ -369,7 +372,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
+                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }

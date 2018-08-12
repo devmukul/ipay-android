@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
@@ -68,6 +69,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
 
     private String mUri;
     private String mCustomerID;
+    private String mAmount;
 
     private HttpRequestGetAsyncTask mWestZoneCustomerInfoTask = null;
     private WestZoneCustomerInfoResponse westZoneCustomerInfoResponse;
@@ -220,6 +222,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
         mAccountIDTextView.setText(westZoneCustomerInfoResponse.getAccountNumber());
         mVatTextView.setText(westZoneCustomerInfoResponse.getVatAmount());
         mTotalAmountTextView.setText(westZoneCustomerInfoResponse.getTotalAmount());
+        mAmount = westZoneCustomerInfoResponse.getTotalAmount();
         mBillNumberTextView.setText(westZoneCustomerInfoResponse.getBillNumber());
         mContinueButton.setText("Pay bill");
         infoView.setVisibility(View.VISIBLE);
@@ -303,7 +306,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
 
                                 }
                             }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mWestZoneBillPayResponse.getMessage());

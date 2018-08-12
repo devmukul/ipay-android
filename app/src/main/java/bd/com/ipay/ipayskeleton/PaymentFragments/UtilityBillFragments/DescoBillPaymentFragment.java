@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
@@ -67,6 +68,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
 
     private String mUri;
     private String mBillNumber;
+    private String mAmount;
 
     private HttpRequestGetAsyncTask mDescoCustomerInfoTask = null;
     private DescoCustomerInfoResponse mDescoCustomerInfoResponse;
@@ -213,6 +215,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         mAccountIDTextView.setText(mDescoCustomerInfoResponse.getAccountNumber());
         mVatTextView.setText(mDescoCustomerInfoResponse.getVatAmount());
         mTotalAmountTextView.setText(mDescoCustomerInfoResponse.getTotalPayableAmount());
+        mAmount = mDescoCustomerInfoResponse.getTotalPayableAmount();
         mBillNumberTextView.setText(mBillNumber);
         mIpcTextView.setText(mDescoCustomerInfoResponse.getLpc());
         mContinueButton.setText("Pay bill");
@@ -298,7 +301,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
 
                                 }
                             }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(),new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mDescoBillPayResponse.getMessage());

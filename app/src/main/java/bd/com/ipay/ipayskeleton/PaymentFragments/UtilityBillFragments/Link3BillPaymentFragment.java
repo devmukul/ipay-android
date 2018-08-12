@@ -390,7 +390,7 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                             }, 2000);
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if(mPayBillButton != null){
+                        if (mPayBillButton != null) {
                             mPayBillButton.setClickable(false);
                         }
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
@@ -406,7 +406,7 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
 
                             }
                         }, 2000);
-                        Utilities.sendSuccessEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {

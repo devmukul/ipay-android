@@ -174,6 +174,7 @@ public class Constants {
     public static final String COMMAND_DOZE_BILL_PAY = "COMMAND_DOZE_BILL_PAY";
     public static final String URL_DOZE_BILL_PAY = "doze/billpay";
     public static final String DOZE = "DOZE";
+    public static final String DPDC_BILL_PAY = "DPDC BILL PAY";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";

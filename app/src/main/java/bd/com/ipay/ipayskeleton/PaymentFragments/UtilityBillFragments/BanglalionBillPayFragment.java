@@ -501,7 +501,7 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
 
                             }
                         }, 3000);
-                        Utilities.sendSuccessEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId(),new BigDecimal(mAmount).longValue());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         mCustomProgressDialog.showFailureAnimationAndMessage(mBanglalionBillPayResponse.getMessage());

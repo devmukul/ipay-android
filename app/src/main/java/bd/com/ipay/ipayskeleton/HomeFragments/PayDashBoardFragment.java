@@ -95,6 +95,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
 
+
         if (ProfileInfoCacheManager.isBusinessAccount())
             mRequestPaymentView.setVisibility(View.VISIBLE);
 
