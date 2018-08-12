@@ -183,13 +183,18 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mBillPayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String k = mProviderAvailabilityMap.get("BLION");
+                String l = mProviderAvailabilityMap.get(Constants.BLION);
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
+
                     return;
-                } else if (mProviderAvailabilityMap.get(Constants.BLION).toLowerCase().
-                        equals(getString(R.string.you_cant_avail_this_service))) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.BLION) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.BLION).
+                            equals(getString(R.string.you_cant_avail_this_service))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
                 }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -208,11 +213,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                }
-                else if (mProviderAvailabilityMap.get(Constants.LINK3).toLowerCase().
-                        equals(getString(R.string.you_cant_avail_this_service))) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.LINK3) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.LINK3).
+                            equals(getString(R.string.you_cant_avail_this_service))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
                 }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -231,11 +237,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                }
-                else if (mProviderAvailabilityMap.get(Constants.BRILLIANT).toLowerCase().
-                        equals(getString(R.string.you_cant_avail_this_service))) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.BRILLIANT) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.BRILLIANT).
+                            equals(getString(R.string.you_cant_avail_this_service))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
                 }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -254,11 +261,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                }
-                else if (mProviderAvailabilityMap.get(Constants.WESTZONE).toLowerCase().
-                        equals(getString(R.string.you_cant_avail_this_service))) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.WESTZONE) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.WESTZONE).
+                            equals(getString(R.string.you_cant_avail_this_service))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
                 }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -277,11 +285,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                }
-                else if (mProviderAvailabilityMap.get(Constants.DESCO).toLowerCase().
-                        equals(getString(R.string.you_cant_avail_this_service))) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.DESCO) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.DESCO).
+                            equals(getString(R.string.you_cant_avail_this_service))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
                 }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -300,11 +309,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                }
-                else if (mProviderAvailabilityMap.get(Constants.DOZE).toLowerCase().
-                        equals(getString(R.string.you_cant_avail_this_service))) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.DOZE) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.DOZE).
+                            equals(getString(R.string.you_cant_avail_this_service))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
                 }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -323,11 +333,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                }
-                else if (mProviderAvailabilityMap.get(Constants.DPDC).toLowerCase().
-                        equals(getString(R.string.you_cant_avail_this_service))) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.DPDC) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.DPDC.toLowerCase()).
+                            equals(getString(R.string.you_cant_avail_this_service))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
                 }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -437,9 +448,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                             for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
                                 Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
                                 if (!provider.isActive()) {
-                                    mProviderAvailabilityMap.put(provider.getCode().toLowerCase(), getString(R.string.you_cant_avail_this_service));
+                                    mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
                                 } else {
-                                    mProviderAvailabilityMap.put(provider.getCode().toLowerCase(), getString(R.string.active));
+                                    mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
                                 }
                             }
                         }

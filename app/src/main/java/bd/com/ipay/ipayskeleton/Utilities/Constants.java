@@ -148,7 +148,7 @@ public class Constants {
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
     public static final String SERVICE = "SERVICE";
     public static final String BANGLALION = "BANGLALION";
-    public static final String BLION = " BLION";
+    public static final String BLION = "BLION";
     public static final String LINK3 = "LINK3";
     public static final String COMMAND_LINK_THREE_BILL_PAY = "COMMAND_LINK_THREE_BILL_PAY";
     public static final String COMMAND_BRILLIANT_RECHARGE = "COMMAND_BRILLIANT_RECHARGE";
