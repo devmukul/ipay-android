@@ -30,9 +30,9 @@ public class FCMListenerService extends FirebaseMessagingService {
     }
 
     private void parseRemoteMessage(RemoteMessage message) {
+
         from = message.getFrom();
         data = message.getData();
-        notification = message.getNotification();
 
         Logger.logD("Message", "From: " + from);
 
@@ -45,12 +45,17 @@ public class FCMListenerService extends FirebaseMessagingService {
         serviceId = FCMNotificationParser.parseServiceID(mFcmNotificationResponse);
 
         // Check if message contains a notification payload.
-        if (!(AppInstanceUtilities.isUserActive(this)) || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION) {
-            if (notification != null) {
-                Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
+        if (!(AppInstanceUtilities.isUserActive(this))
+                || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION
+                || serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
+            if (data != null) {
+                //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
+                try {
+                    createNotification(this, data.values().toArray()[5].toString(),
+                            data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
+                }catch (Exception e){
 
-                createNotification(this, notification.getTitle(),
-                        notification.getBody(), mFcmNotificationResponse.getIcon());
+                }
             }
         } else {
             FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
@@ -65,8 +70,12 @@ public class FCMListenerService extends FirebaseMessagingService {
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {
-        new CreateCustomNotificationAsyncTask(context, title,
-                message, imageUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
+            new CreateCustomNotificationAsyncTask(context, title,
+                    message, imageUrl, mFcmNotificationResponse.getDeepLink(), mFcmNotificationResponse.getTime()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new CreateCustomNotificationAsyncTask(context, title,
+                    message, imageUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
-
 }

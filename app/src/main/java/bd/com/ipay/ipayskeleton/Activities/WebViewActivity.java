@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,12 +15,14 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class WebViewActivity extends AppCompatActivity {
     private WebView webView;
+    private String uriString;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         final Uri uri = Uri.parse(getIntent().getStringExtra("url"));
+        uriString = uri.toString();
         webView = (WebView) findViewById(R.id.web_view);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
@@ -30,10 +33,41 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
+        if (getIntent() != null) {
+            if (getIntent().hasExtra("sourceActivity")) {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    super.onBackPressed();
+                }
+            } else {
+                if (uriString != null && !uriString.isEmpty()) {
+                    if (uriString.toLowerCase().contains("promotion")) {
+                        Intent intent = new Intent(this, HomeActivity.class);
+                        startActivity(intent);
+                    } else {
+                        if (webView.canGoBack()) {
+                            webView.goBack();
+                        } else {
+                            super.onBackPressed();
+                        }
+                    }
+                } else {
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                    } else {
+                        super.onBackPressed();
+                    }
+                }
+
+            }
         } else {
-            super.onBackPressed();
+            if (webView.canGoBack()) {
+                webView.goBack();
+            } else {
+                super.onBackPressed();
+            }
         }
+        finish();
     }
 }

@@ -7,6 +7,8 @@ public class FCMNotificationResponse {
     private boolean isReceiver;
     private String changed_data;
     private String icon;
+    private long time;
+    private String deepLink;
 
     public int getServiceId() {
         return serviceId;
@@ -20,10 +22,18 @@ public class FCMNotificationResponse {
         return icon;
     }
 
+    public String getDeepLink() {
+        return deepLink;
+    }
+
     public FCMNotificationData getNotificationData() {
         FCMNotificationData fcmNotificationData;
         Gson gson = new Gson();
         fcmNotificationData = gson.fromJson(changed_data, FCMNotificationData.class);
         return fcmNotificationData;
+    }
+
+    public long getTime() {
+        return time;
     }
 }
