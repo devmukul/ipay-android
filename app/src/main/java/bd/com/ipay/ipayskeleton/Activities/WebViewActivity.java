@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,8 +9,6 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.R;
 
@@ -36,37 +33,41 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
+        if (getIntent() != null) {
+            if (getIntent().hasExtra("sourceActivity")) {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    super.onBackPressed();
+                }
+            } else {
+                if (uriString != null && !uriString.isEmpty()) {
+                    if (uriString.toLowerCase().contains("promotion")) {
+                        Intent intent = new Intent(this, HomeActivity.class);
+                        startActivity(intent);
+                    } else {
+                        if (webView.canGoBack()) {
+                            webView.goBack();
+                        } else {
+                            super.onBackPressed();
+                        }
+                    }
+                } else {
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                    } else {
+                        super.onBackPressed();
+                    }
+                }
+
+            }
         } else {
-            if (isLaunchedFromHomeScreen()) {
-                Intent intent = new Intent(WebViewActivity.this, HomeActivity.class);
-                startActivity(intent);
+            if (webView.canGoBack()) {
+                webView.goBack();
             } else {
-                finish();
+                super.onBackPressed();
             }
         }
-    }
-
-    /*We need to check if promotional notification is launched from home screen of android device,
-    in that case we will try redirect to wallet page on back button press. otherwise back press will just finish
-     the web view activity and behave normally
-    */
-
-    private boolean isLaunchedFromHomeScreen() {
-        try {
-            ActivityManager mngr = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
-            List<ActivityManager.RunningTaskInfo> taskList = mngr.getRunningTasks(10);
-
-            if (taskList.get(0).numActivities == 1 &&
-                    taskList.get(0).topActivity.getClassName().equals(this.getClass().getName())) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
+        finish();
     }
 }

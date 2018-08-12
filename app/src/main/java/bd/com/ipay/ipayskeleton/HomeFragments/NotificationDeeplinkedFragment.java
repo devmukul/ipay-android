@@ -93,7 +93,9 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
         mProgressDialog = new ProgressDialog(getActivity());
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mEmptyListTextView.setText("You do not have any notifications");
+        if (mEmptyListTextView != null) {
+            mEmptyListTextView.setText("You do not have any notifications");
+        }
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
@@ -277,7 +279,11 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         && (mVisibleItem + mPastVisibleItems) == mTotalItemCount && hasNext && mGetNotificationAsyncTask == null) {
                     isLoading = true;
                     mIsScrolled = false;
-                    mNotificationListAdapter.notifyDataSetChanged();
+                    try {
+                        mNotificationListAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     getNotifications();
                 }
 
