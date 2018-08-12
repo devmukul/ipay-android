@@ -222,8 +222,15 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
                                 fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
                         List<DeepLinkedNotification> deepLinkedNotifications = getDeepLinkedNotificationResponse.getNotificationList();
-                        checkNotificationStatusAndUpdate(deepLinkedNotifications);
-                        loadNotifications(deepLinkedNotifications, getDeepLinkedNotificationResponse.isHasNext());
+                        if(deepLinkedNotifications != null && deepLinkedNotifications.size()>0) {
+                            checkNotificationStatusAndUpdate(deepLinkedNotifications);
+                            loadNotifications(deepLinkedNotifications, getDeepLinkedNotificationResponse.isHasNext());
+                        }
+                        else{
+                            if(mDeepLinkedNotifications == null || mDeepLinkedNotifications.size() == 0){
+                                mEmptyListTextView.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                     setContentShown(true);
                     mSwipeRefreshLayout.setRefreshing(false);
