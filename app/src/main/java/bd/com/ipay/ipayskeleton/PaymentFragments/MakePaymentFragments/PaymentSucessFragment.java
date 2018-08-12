@@ -42,6 +42,7 @@ public class PaymentSucessFragment extends BaseFragment {
 
     private BigDecimal mAmount;
     private String mReceiverBusinessName;
+    private String mReceiverOutletName;
     private String mReceiverBusinessMobileNumber;
     private String mPhotoUri;
     private String mDescription;
@@ -63,6 +64,7 @@ public class PaymentSucessFragment extends BaseFragment {
 
         if (getArguments() != null) {
             mReceiverBusinessName = getArguments().getString(Constants.NAME);
+            mReceiverOutletName = getArguments().getString(Constants.OUTLET_NAME);
             mAmount = new BigDecimal(getArguments().getString(Constants.AMOUNT));
             mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
             mTransactionId = getArguments().getString(Constants.TRANSACTION_ID);
@@ -92,6 +94,7 @@ public class PaymentSucessFragment extends BaseFragment {
 
         final ProfileImageView businessProfileImageView = findViewById(R.id.business_profile_image_view);
         final TextView businessNameTextView = findViewById(R.id.business_name_text_view);
+        final TextView businessOutletTextView = findViewById(R.id.business_outlet_text_view);
         final TextView businessMobileNumberTextView = findViewById(R.id.business_mobile_number_text_view);
         final TextView statusTextView = findViewById(R.id.status_text_view);
         final TextView successAmountTextView = findViewById(R.id.success_amount);
@@ -110,6 +113,14 @@ public class PaymentSucessFragment extends BaseFragment {
             businessNameTextView.setVisibility(View.VISIBLE);
             businessNameTextView.setText(mReceiverBusinessName);
         }
+
+        if (TextUtils.isEmpty(mReceiverOutletName)) {
+            businessOutletTextView.setVisibility(View.GONE);
+        } else {
+            businessOutletTextView.setVisibility(View.VISIBLE);
+            businessOutletTextView.setText(mReceiverOutletName);
+        }
+
         businessMobileNumberTextView.setText(mReceiverBusinessMobileNumber);
 
         statusTextView.setText(getContext().getResources().getText(R.string.success));
