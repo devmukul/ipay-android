@@ -8,6 +8,7 @@ public class BusinessContact {
     private String AddressString;
     private String thanaString;
     private String districtString;
+    private String outletString;
 
     public String getBusinessName() {
         return businessName;
@@ -63,5 +64,13 @@ public class BusinessContact {
 
     public void setDistrictString(String districtString) {
         this.districtString = districtString;
+    }
+
+    public String getOutletString() {
+        return outletString;
+    }
+
+    public void setOutletString(String outletString) {
+        this.outletString = outletString;
     }
 }

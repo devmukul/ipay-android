@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/topLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:orientation="vertical">
 
-  <bd.com.ipay.ipayskeleton.QRScanner.camera.CameraSourcePreview
-      android:id="@+id/preview"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
+    <bd.com.ipay.ipayskeleton.QRScanner.camera.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-  </bd.com.ipay.ipayskeleton.QRScanner.camera.CameraSourcePreview>
+        <bd.com.ipay.ipayskeleton.QRScanner.ScannerOverlay
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#44000000"
+            app:line_color="@color/colorPrimary"
+            app:line_speed="9"
+            app:line_width="6"
+            app:square_height="300"
+            app:square_width="300" />
+
+    </bd.com.ipay.ipayskeleton.QRScanner.camera.CameraSourcePreview>
+
 
 </LinearLayout>

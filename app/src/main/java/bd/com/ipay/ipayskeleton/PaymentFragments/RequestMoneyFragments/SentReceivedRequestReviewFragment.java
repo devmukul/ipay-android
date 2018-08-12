@@ -482,8 +482,11 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                                 mCustomProgressDialog.showFailureAnimationAndMessage(
                                         mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
                             } else {
-                                Toast.makeText(mContext, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(),
-                                        Toast.LENGTH_LONG).show();
+                                if (mCustomProgressDialog != null) {
+                                    mCustomProgressDialog.showFailureAnimationAndMessage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
+                                } else {
+                                    Toast.makeText(mContext, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
 
                             if (mRequestMoneyAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {

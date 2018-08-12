@@ -47,7 +47,9 @@ public class Constants {
     public static final String ADD_MONEY_BY_CARD = "ADD_MONEY_BY_CARD";
     public static final String WITHDRAW_MONEY = "WITHDRAW_MONEY";
     public static final String MAKE_PAYMENT = "MAKE_PAYMENT";
+    public static final String PAYMENT_REVERT = "PAYMENT_REVERT";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
+    public static final String UTILITY_BILL_PAYMENT = "UTILITY_BILL_PAYMENT";
     public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
@@ -111,7 +113,6 @@ public class Constants {
     public static final String REJECTED = "REJECTED";
     public static final String CANCELED = "CANCELED";
 
-
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
@@ -133,6 +134,7 @@ public class Constants {
     public static final String VERIFIED = "VERIFIED";
     public static final String DISTRICT = "DISTRICT";
     public static final String COUNTRY = "COUNTRY";
+    public static final String OUTLET = "OUTLET";
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
@@ -144,7 +146,24 @@ public class Constants {
     public static final String FROM_BRANCHING = "FROM_BRANCHING";
     public static final String ADDRESS_ONE = "ADDRESS_ONE";
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
+    public static final String SERVICE = "SERVICE";
+    public static final String BANGLALION = "BANGLALION";
+    public static final String LINK3 = "LINK3";
+    public static final String COMMAND_LINK_THREE_BILL_PAY = "COMMAND_LINK_THREE_BILL_PAY";
+    public static final String COMMAND_BRILLIANT_RECHARGE = "COMMAND_BRILLIANT_RECHARGE";
+    public static final String BRILLIANT = "BRILLIANT";
+    public static final String WESTZONE = "WESTZONE";
+    public static final String URL_WEST_ZONE = "wzone/bill-info/";
+    public static final String COMMAND_WEST_ZONE_BILL_PAY = "COMMAND_WEST_ZONE_BILL_PAY";
+    public static final String COMMAND_GET_WEST_ZONE_CUSTOMER = "COMMAND_GET_WEST_ZONE_CUSTOMER";
+    public static final String URL_WEST_ZONE_BILL_PAY = "wzone/billpay";
+    public static final String WESTZONE_BILL_PAY = "WESTZONE BILL PAY";
+    public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
+    public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
+    public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
     public static String ROLEID = "ROLEID";
+    public static final String OUTLET_ID = "OUTLET_ID";
+    public static final String OUTLET_NAME = "OUTLET_NAME";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
@@ -234,6 +253,7 @@ public class Constants {
     public static final String BASE_URL_DATA_COLLECTOR;
     private static final String SERVER_NAME;
     public static final String BASE_URL_OFFER;
+    public static final String BASE_URL_UTILITY;
 
     public static final int DEV_SERVER = 1;
     public static final int TEST_SERVER = 2;
@@ -285,6 +305,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
             BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
 
@@ -295,12 +316,13 @@ public class Constants {
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
-            BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
+            BASE_URL_ADMIN = "http://10.10.10.169:8080/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
             BASE_URL_OFFER = "https://test.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://test.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
 
@@ -317,6 +339,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
             BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://stage.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
 
@@ -333,6 +356,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
             BASE_URL_OFFER = "https://www.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://www.ipay.com.bd/api/utility/";
 
         } else if (SERVER_TYPE == DEMO_SERVER) {
 
@@ -349,6 +373,7 @@ public class Constants {
             BASE_URL_WEB = "https://demo.ipay.com.bd";
             SERVER_NAME = "demo";
             BASE_URL_OFFER = "https://demo.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://demo.ipay.com.bd/api/utility/";
 
         } else {
 
@@ -365,6 +390,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
             BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
+            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
         }
     }
 
@@ -424,6 +450,7 @@ public class Constants {
 
     //business rule Rest
     public static final String URL_BUSINESS_RULE = "business-rule";
+    public static final String URL_BUSINESS_RULE_V2 = "business-rule/v2";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
 
     // Introducer REST
@@ -444,6 +471,7 @@ public class Constants {
     // Invite Rest
     public static final String URL_GET_INVITE_INFO = "invitation";
     public static final String URL_SEND_INVITE = "invitation/invite/";
+    public static final String URL_GET_INVITATION_CODE = "promo/invitation-code";
 
 
     // Mobile Topup Request REST
@@ -495,6 +523,7 @@ public class Constants {
     public static final String URL_GET_SINGLE_REQUEST_PAYMENT = "payment/invoice/get/";
     public static final String URL_GET_ORDER_DETAILS = "orderId/info";
     public static final String URL_PAY_BY_DEEP_LINK = "orderId/pay";
+    public static final String URL_PAYMENT_REVERT = "payment-revert";
 
     public static final String URL_PAYMENT = "payment/v2";
 
@@ -603,6 +632,14 @@ public class Constants {
     // IPayHere
     public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
 
+    // Utilities Bill
+    public static final String URL_GET_PROVIDER = "providers";
+    public static final String URL_GET_BANGLALION_CUSTOMER_INFO = "banglalion/customer/";
+    public static final String URL_GET_LINK_THREE_CUSTOMER_INFO = "link3/subscriber/";
+    public static final String URL_BANGLALION_BILL_PAY = "banglalion/billpay";
+    public static final String URL_LINK_THREE_BILL_PAY = "link3/billpay";
+    public static final String URL_BRILLIANT_RECHARGE = "brilliant/recharge";
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -641,6 +678,7 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_PAYMENT_REVERT = "COMMAND_PAYMENT_REVERT";
     public static final String COMMAND_CANCEL_ORDER = "COMMAND_CANCEL_ORDER";
     public static final String COMMAND_PAYMENT_BY_DEEP_LINK = "COMMAND_PAYMENT_BY_DEEP_LINK";
     public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
@@ -713,6 +751,9 @@ public class Constants {
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
     public static final String COMMAND_UPDATE_SECURITY_ANSWERS = "COMMAND_UPDATE_SECURITY_ANSWERS";
     public static final String COMMAND_GET_ACCESS_CONTROL_LIST = "COMMAND_GET_ACCESS_CONTROL_LIST";
+    public static final String COMMAND_BANGLALION_BILL_PAY = "COMMAND_BANGLALION_BILL_PAY";
+    public static final String COMMAND_GET_BANGLALION_CUSTOMER_INFO = "COMMAND_GET_BANGLALION_CUSTOMER_INFO";
+    public static final String COMMAND_GET_LINK_THREE_CUSTOMER_INFO = "COMMAND_GET_LINK_THREE_CUSTOMER_INFO";
 
     // Ticket
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
@@ -733,6 +774,7 @@ public class Constants {
     // Invite
     public static final String COMMAND_GET_INVITE_INFO = "COMMAND_GET_INVITE_INFO";
     public static final String COMMAND_SEND_INVITE = "COMMAND_SEND_INVITE";
+    public static final String COMMAND_GET_INVITATION_CODE = "COMMAND_GET_INVITATION_CODE";
 
     // Email
     public static final String COMMAND_GET_EMAILS = "COMMAND_GET_EMAILS";
@@ -828,6 +870,8 @@ public class Constants {
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
     public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
+    public static final int SERVICE_ID_TRANSACTION_REVERT = 966002;
+    public static final int SERVICE_ID_UTILITY_BILL = 6010;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";
@@ -886,7 +930,12 @@ public class Constants {
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_TAKE_PICTURE = "Take a picture";
+    public static final String ACTION_TYPE_TAKE_PICTURE_FOR_DOCUMENT = "Take a picture of your document";
+
     public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from gallery";
+
+    public static final String ACTION_TYPE_SELECT_FROM_GALLERY_FOR_DOCUMENT = "Upload your document from gallery";
+
 
     public static final String SERVICE_ACTION_REQUEST_PAYMENT = "Request Payment";
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
@@ -946,6 +995,7 @@ public class Constants {
     public static final int LOCATION_REQUIRED_TRUE = 1;
     public static final String DEEP_LINK_ACTION = "DEEP_LINK_ACTION";
     public static final String ORDER_ID = "ORDER_ID";
+    public static final String INVITATION_CODE = "INVITATION_CODE";
 
     public static final int RC_BARCODE_CAPTURE = 9001;
 

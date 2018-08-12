@@ -76,6 +76,12 @@ public class MandatoryBusinessRules {
                 VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_TOP_UP_VERIFICATION_REQUIRED;
                 LOCATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_LOCATION_REQUIRED;
                 break;
+            case Constants.UTILITY_BILL_PAYMENT:
+                MAX_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT);
+                MIN_AMOUNT_PER_PAYMENT = new BigDecimal(BusinessRuleConstants.DEFAULT_VALUE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT);
+                PIN_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_UTILITY_BILL_PAYMENT_PIN_REQUIRED;
+                VERIFICATION_REQUIRED = BusinessRuleConstants.DEFAULT_VALUE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED;
+                break;
             default:
                 MAX_AMOUNT_PER_PAYMENT = new BigDecimal("0");
                 MIN_AMOUNT_PER_PAYMENT = new BigDecimal("10000");
@@ -118,6 +124,9 @@ public class MandatoryBusinessRules {
     }
 
     public void setVERIFICATION_REQUIRED(BigDecimal VERIFICATION_REQUIRED) {
+
+        System.out.println("Test RulesV? "+VERIFICATION_REQUIRED);
+
         if (VERIFICATION_REQUIRED.compareTo(BigDecimal.ZERO) > 0)
             this.VERIFICATION_REQUIRED = true;
         else

@@ -18,13 +18,8 @@ public class BusinessRuleCacheManager {
         pref = mContext.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
-    public static boolean ifContainsDefaultBusinessRules() {
-        return (pref.contains(BusinessRuleConstants.SET_IS_DEFAULT_BUSINESS_RULES));
-    }
-
-    public static void setIsDefaultBusinessRulesAvailable(boolean value) {
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(BusinessRuleConstants.SET_IS_DEFAULT_BUSINESS_RULES, value).apply();
+    public static boolean ifContainsBusinessRule(String tag) {
+        return (pref.contains(tag));
     }
     public static void setBusinessRules(String tag, MandatoryBusinessRules mandatoryBusinessRules) {
         SharedPreferences.Editor prefsEditor = pref.edit();

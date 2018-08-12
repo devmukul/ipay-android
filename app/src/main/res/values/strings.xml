@@ -241,6 +241,8 @@
     <string name="progress_dialog_accepted">Accepting request…</string>
     <string name="progress_dialog_signing_out">Signing out…</string>
     <string name="progress_dialog_adding_trusted_device">Adding this device as trusted…</string>
+    <string name="progress_dialog_fetching_customer_info">Fetching customer info…</string>
+    <string name="progress_dialog_bill_payment_in_progress">Bill payment in progress. Please wait…</string>
     <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
@@ -249,7 +251,7 @@
     <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="promo_code">Promo Code</string>
-    <string name="enter_promo_code_optional">Promo Code (Optional)</string>
+    <string name="enter_promo_code_optional">Promo/Invitation Code (Optional)</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
@@ -266,6 +268,7 @@
     <string name="resend">Resend Code</string>
     <string name="send_money">Send Money</string>
     <string name="continue_send_money">Continue</string>
+    <string name="revert">Transaction Revert</string>
     <string name="continue_request_money">Continue</string>
     <string name="continue_mobile_recharge">Continue</string>
     <string name="continue_add_money">Continue</string>
@@ -830,7 +833,7 @@
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
     <string name="withdraw_money_to_bank_info">It may take 3–5 business days to complete the operation</string>
-    <string name="add_money_from_credit_or_debit_card_info">The card has to be e-commerce enabled.</string>
+    <string name="add_money_from_credit_or_debit_card_info">The card has to be e-commerce enabled VISA, Mastercard or AMEX.\nFor debit cards, it\'s completely free! For credit cards, it\'s free up to 5000 BDT per month. After 5000 BDT, 5% service charge will be applicable</string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
@@ -925,6 +928,7 @@
 
     <string name="select_from_gallery_message">Select from gallery</string>
     <string name="take_a_picture_message">Take a picture</string>
+    <string name="take_a_picture_message_for_document">Take a picture of your document</string>
     <string name="select_a_pdf_message">Select a PDF</string>
     <string name="view_uploaded_document_message">View uploaded document</string>
     <string name="profile_picture_temp_file">profile_picture.jpg</string>
@@ -1074,8 +1078,8 @@
     <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
-    <string name="onboard_upload_photo_id_text">Your photo ID can be either your National ID, Passport or your Driving License. Make sure all information is clearly readable and that it is fully in frame.</string>
-    <string name="onboard_upload_prifile_info_text">Your basic information is your occupation, organization and present address. Add your basic information to receive some goodies or official documents.</string>
+    <string name="onboard_upload_photo_id_text">Please take a clear picture of your NID, Passport or Driving License and upload.</string>
+    <string name="onboard_upload_prifile_info_text">Update your Work and Address information for faster verification.</string>
     <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
     <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
     <string name="upload_profile_photo_again">Do you want to upload a profile photo again? You have already uploaded once</string>
@@ -1122,7 +1126,7 @@
     <string name="account_switched">Account switched</string>
     <string name="make_another_payment">MAKE ANOTHER PAYMENT</string>
     <string name="source_of_fund">Source Of Fund</string>
-    <string name="onboard_source_of_fund_text">For verification process you need to add at least one source of fund. Select a method of add money to your iPay wallet</string>
+    <string name="onboard_source_of_fund_text">Add your bank or debit/credit card as a source of fund of your iPay wallet and enjoy full access to our services.</string>
     <string name="add_source_of_fund">Add Source Of Fund</string>
     <string name="add_money_by_card">Add Money By Credit/Debit Card</string>
     <string name="onboard_add_source_of_fund">Please select on of the method of you source of fund</string>
@@ -1165,4 +1169,32 @@
     <string name="are_you_sure_to_introduce">Are you sure you want to introduce the person ?</string>
     <string name="accepted_in">Accepted in number location</string>
     <string name="merchants">Merchants</string>
+    <string name="invite_people_to_ipay">Invite Friends</string>
+    <string name="invite_a_friend">Invite a Friend</string>
+    <string name="invite_peple_text">Invite a friend and get instant 50 taka ipay balance (after verification)</string>
+
+    <string name="facebook_app_id">269331673611619</string>
+    <string name="fb_login_protocol_scheme">fb269331673611619</string>
+    <string name="utility_bill">Utility Bill</string>
+    <string name="utility">Utility</string>
+    <string name="banglalion">Banglalion</string>
+    <string name="Link_three">Link3</string>
+    <string name="bill_pay_help_message">Enter your Banglalion CustomerID or CustomerNumber or MSISDN number.</string>
+    <string name="prepaid_amount_bill_pay_help_message">Enter amount to pay your Banglalion bill.</string>
+    <string name="choose_your_package">Choose Your Package</string>
+    <string name="pay_bill">Pay Bill</string>
+    <string name="please_select_package">Please select a package.</string>
+    <string name="link_three">Link3</string>
+    <string name="bill_pay_help_message_link3">Enter your link3 subscriber ID</string>
+    <string name="brilliant">Brilliant</string>
+    <string name="west_zone_bill_pay_message">Please enter your westzone account number</string>
+    <string name="bill_month">Bill Month</string>
+    <string name="principal_amount">Principal Amount</string>
+    <string name="vat_amount">Vat Amount</string>
+    <string name="bill_status">Bill Status</string>
+    <string name="enter_customer_id">Please enter a customer ID</string>
+    <string name="bill_number">Bill Number</string>
+    <string name="WestZone">WestZone</string>
+    <string name="bill_pay">Bill Pay</string>
+    <string name="upload_identification_document">Upload Identification Document</string>
 </resources>

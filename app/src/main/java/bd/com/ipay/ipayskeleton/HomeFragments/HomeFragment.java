@@ -28,8 +28,8 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
+import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -100,7 +100,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private LinearLayout mSendMoneyButton;
     private LinearLayout mRequestMoneyButton;
     private LinearLayout mPayByQRCodeButton;
-    private LinearLayout mMakePaymentButton;
+    private LinearLayout mInviteFriendButton;
     private LinearLayout mTopUpButton;
     private LinearLayout mIPayHereButton;
     public static ImageView refreshBalanceButton;
@@ -143,7 +143,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mSendMoneyButton = (LinearLayout) v.findViewById(R.id.button_send_money);
         mRequestMoneyButton = (LinearLayout) v.findViewById(R.id.button_request_money);
         mPayByQRCodeButton = (LinearLayout) v.findViewById(R.id.button_pay_by_qr_code);
-        mMakePaymentButton = (LinearLayout) v.findViewById(R.id.button_make_payment);
+        mInviteFriendButton = (LinearLayout) v.findViewById(R.id.button_invite_friend);
         mTopUpButton = (LinearLayout) v.findViewById(R.id.button_topup);
         mIPayHereButton = (LinearLayout) v.findViewById(R.id.button_ipay_here);
 
@@ -225,19 +225,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             }
         });
 
-        mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
+        mInviteFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
             public void onClick(View v) {
-                PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
-                        intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
-                        startActivity(intent);
-                    }
-                });
-                makePaymentPinChecker.execute();
+                Intent inviteActivityIntent = new Intent(getActivity(), InviteFriendActivity.class);
+                startActivity(inviteActivityIntent);
             }
         });
 
@@ -497,8 +490,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    promptForProfileCompletion();
-                    mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                    if (!ProfileInfoCacheManager.isAccountVerified()) {
+                        promptForProfileCompletion();
+                        mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                    }
                 }
 
             } catch (Exception e) {
