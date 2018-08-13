@@ -71,16 +71,16 @@ public class ServiceAccessValidatorAspect {
 
         Logger.logW("Aspect", checkedId + "");
         switch (radioGroup.getId()) {
-            case R.id.transaction_history_type_radio_group:
+            case R.id.notification_type_radio_group:
                 switch (checkedId) {
-                    case R.id.radio_button_pending:
+                    case R.id.radio_button_general:
                         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
                             result = joinPoint.proceed();
                         } else {
                             DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
                         }
                         break;
-                    case R.id.radio_button_completed:
+                    case R.id.radio_button_deep_linked:
                         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
                             result = joinPoint.proceed();
                         } else {
