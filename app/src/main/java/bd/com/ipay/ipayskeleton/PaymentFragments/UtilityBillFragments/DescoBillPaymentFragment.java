@@ -160,7 +160,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
 
             Gson gson = new Gson();
             String json = gson.toJson(mDescoBillPayRequest);
-            mDescoBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WEST_ZONE_BILL_PAY,
+            mDescoBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DESCO_BILL_PAY,
                     Constants.BASE_URL_UTILITY + Constants.URL_DESCO_BILL_PAY, json, getActivity(), false);
             mDescoBillPayTask.mHttpResponseListener = this;
             mDescoBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -186,7 +186,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
             mProgressDialog.setMessage("Please wait");
             mUri = Constants.BASE_URL_UTILITY + Constants.URL_DESCO_CUSTOMER_INFO + mBillNumber;
             mDescoCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DESCO_CUSTOMER, mUri,
-                    getActivity(), this, true);
+                    getActivity(), this, false);
             mDescoCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
         }
@@ -270,7 +270,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
                         }
                     }
                     mGetBusinessRuleTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_WEST_ZONE_BILL_PAY)) {
+                } else if (result.getApiCommand().equals(Constants.COMMAND_DESCO_BILL_PAY)) {
                     try {
                         mDescoBillPayResponse = gson.fromJson(result.getJsonString(), DescoBillPayResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
