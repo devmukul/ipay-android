@@ -1,61 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/description_holder"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_holder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/activity_vertical_margin_card"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical">
 
-    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:scaleType="centerCrop" />
-
-    <LinearLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/profile_picture"
-        android:orientation="vertical">
+        android:paddingBottom="@dimen/value5"
+        android:paddingTop="@dimen/value5">
 
-        <RelativeLayout
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp">
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/profile_picture"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_title"
-            android:singleLine="true"
-            android:ellipsize="end"
-            style="@style/TextStylePrimaryMedium"
-            android:textSize="@dimen/text_size_small_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/textview_amount"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp">
 
-        <TextView
-            android:id="@+id/textview_amount"
-            style="@style/TransactionHistoryRightTextViewStyle"
-            android:textSize="@dimen/text_size_small"
-            android:layout_alignParentTop="true"/>
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/textview_title"
+                    style="@style/TextStylePrimaryMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                    android:layout_toLeftOf="@+id/textview_amount"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_small_medium"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textview_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/textview_amount"
+                    style="@style/TransactionHistoryRightTextViewStyle"
+                    android:layout_alignParentTop="true"
+                    android:textSize="@dimen/text_size_small" />
+            </RelativeLayout>
 
-        <TextView
-            android:id="@+id/textview_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/textview_description"
+                android:layout_width="wrap_content"
+                android:paddingRight="@dimen/value8"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2" />
 
-    </LinearLayout>
-</RelativeLayout>
+            <TextView
+                android:id="@+id/textview_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="65dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/colorDivider"></View>
+</LinearLayout>

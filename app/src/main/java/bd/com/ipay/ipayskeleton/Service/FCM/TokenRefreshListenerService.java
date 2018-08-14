@@ -29,6 +29,7 @@ public class TokenRefreshListenerService extends FirebaseInstanceIdService {
 
         pref = this.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         saveRegistrationTokenInPref(refreshedToken);
+
     }
 
     private void saveRegistrationTokenInPref(String refreshedToken) {

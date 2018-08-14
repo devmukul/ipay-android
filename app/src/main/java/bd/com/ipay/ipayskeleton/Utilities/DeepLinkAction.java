@@ -8,25 +8,25 @@ public class DeepLinkAction implements Parcelable {
     private String orderId;
 
     private String actionType;
-    private String invitationCode;
+    private String queryParameter;
 
     public DeepLinkAction() {
         this("", "", "","");
     }
 
 
-    public DeepLinkAction(String action, String orderId, String actionType, String invitationCode) {
+    public DeepLinkAction(String action, String orderId, String actionType, String queryParameter) {
         this.action = action;
         this.orderId = orderId;
         this.actionType = actionType;
-        this.invitationCode = invitationCode;
+        this.queryParameter = queryParameter;
     }
 
     protected DeepLinkAction(Parcel in) {
         action = in.readString();
         orderId = in.readString();
         actionType = in.readString();
-        invitationCode = in.readString();
+        queryParameter = in.readString();
     }
 
     public static final Creator<DeepLinkAction> CREATOR = new Creator<DeepLinkAction>() {
@@ -66,12 +66,12 @@ public class DeepLinkAction implements Parcelable {
         this.actionType = actionType;
     }
 
-    public String getInvitationCode() {
-        return invitationCode;
+    public String getQueryParameter() {
+        return queryParameter;
     }
 
-    public void setInvitationCode(String invitationCode) {
-        this.invitationCode = invitationCode;
+    public void setQueryParameter(String queryParameter) {
+        this.queryParameter = queryParameter;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class DeepLinkAction implements Parcelable {
                 "action='" + action + '\'' +
                 ", orderId='" + orderId + '\'' +
                 ", actionType='" + actionType + '\'' +
-                ", invitationCode='" + invitationCode + '\'' +
+                ", queryParameter='" + queryParameter + '\'' +
                 '}';
     }
 
@@ -94,6 +94,6 @@ public class DeepLinkAction implements Parcelable {
         dest.writeString(action);
         dest.writeString(orderId);
         dest.writeString(actionType);
-        dest.writeString(invitationCode);
+        dest.writeString(queryParameter);
     }
 }

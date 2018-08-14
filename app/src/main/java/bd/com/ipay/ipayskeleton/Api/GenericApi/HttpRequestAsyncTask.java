@@ -129,7 +129,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 if (mHttpResponseListener != null)
                     mHttpResponseListener.httpResponseReceiver(null);
             } else {
-                mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection, isSlient));
+                if (mHttpResponseListener != null) {
+                    mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection, isSlient));
+                }
             }
         }
     }

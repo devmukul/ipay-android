@@ -146,6 +146,8 @@ public class Constants {
     public static final String FROM_BRANCHING = "FROM_BRANCHING";
     public static final String ADDRESS_ONE = "ADDRESS_ONE";
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
+    public static final String COMMAND_GET_NOTIFICATION = "COMMAND_GET_NOTIFICATION";
+    public static final String COMMAND_UPDATE_NOTIFICATION_STATE = "COMMAND_UPDATE_NOTIFICATION_STATE";
     public static final String SERVICE = "SERVICE";
     public static final String BANGLALION = "BANGLALION";
     public static final String BLION = "BLION";
@@ -164,6 +166,7 @@ public class Constants {
     public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
     public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
     public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
     public static final String URL_DESCO_CUSTOMER_INFO = "desco/bill-info/";
     public static final String DESCO_BILL_PAY = "DESCO BILL PAY";
     public static final String DESCO = "DESCO";
@@ -336,7 +339,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.169:8080/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
+            BASE_URL_PUSH_NOTIFICATION = "https://test.ipay.com.bd/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
@@ -510,6 +513,7 @@ public class Constants {
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept/v2";
     public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
+    public static final String URL_PULL_NOTIFICATION = "v2/pull";
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password/v2";
@@ -891,6 +895,7 @@ public class Constants {
     public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
     public static final int SERVICE_ID_TRANSACTION_REVERT = 966002;
     public static final int SERVICE_ID_UTILITY_BILL = 6010;
+    public static final int SERVICE_ID_DEEP_LINK_NOTIFICATION = 1234;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";
@@ -1017,5 +1022,6 @@ public class Constants {
     public static final String INVITATION_CODE = "INVITATION_CODE";
 
     public static final int RC_BARCODE_CAPTURE = 9001;
+    public static final String PATH = "PATH";
 
 }

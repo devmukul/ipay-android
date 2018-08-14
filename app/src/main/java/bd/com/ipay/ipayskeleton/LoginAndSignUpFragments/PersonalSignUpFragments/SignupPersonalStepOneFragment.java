@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +22,6 @@ import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
 import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,34 +82,34 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
     private DeepLinkAction mDeepLinkAction;
 
     private final DatePickerDialog.OnDateSetListener mDateSetListener =
-        new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year,
-                                  int monthOfYear, int dayOfMonth) {
-                String[] mMonthArray;
-                String birthDate, birthMonth, birthYear;
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    String[] mMonthArray;
+                    String birthDate, birthMonth, birthYear;
 
-                mYear = year;
-                mMonth = monthOfYear + 1;
-                mDay = dayOfMonth;
-                mMonthArray = getResources().getStringArray(R.array.month_name);
+                    mYear = year;
+                    mMonth = monthOfYear + 1;
+                    mDay = dayOfMonth;
+                    mMonthArray = getResources().getStringArray(R.array.month_name);
 
-                if (mDay < 10) birthDate = "0" + mDay;
-                else birthDate = mDay + "";
-                if (mMonth < 10) birthMonth = "0" + mMonth;
-                else birthMonth = mMonth + "";
-                birthYear = mYear + "";
-                mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
-                try {
-                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(mDOB);
-                    mDayName = new SimpleDateFormat("EE").format(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    if (mDay < 10) birthDate = "0" + mDay;
+                    else birthDate = mDay + "";
+                    if (mMonth < 10) birthMonth = "0" + mMonth;
+                    else birthMonth = mMonth + "";
+                    birthYear = mYear + "";
+                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
+                    try {
+                        Date date = new SimpleDateFormat("dd/MM/yyyy").parse(mDOB);
+                        mDayName = new SimpleDateFormat("EE").format(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    mBirthdayEditText.setError(null);
+                    mBirthdayEditText.setText(mDayName + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
                 }
-
-                mBirthdayEditText.setError(null);
-                mBirthdayEditText.setText(mDayName + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
-            }
-        };
+            };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -177,8 +174,8 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             }
         });
 
-        if(mDeepLinkAction !=null && !StringUtils.isEmpty(mDeepLinkAction.getInvitationCode())){
-            mPromoCodeEditText.setText(mDeepLinkAction.getInvitationCode());
+        if (mDeepLinkAction != null && !StringUtils.isEmpty(mDeepLinkAction.getQueryParameter())) {
+            mPromoCodeEditText.setText(mDeepLinkAction.getQueryParameter());
             mPromoCodeEditText.setEnabled(false);
         }
 
@@ -299,7 +296,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             focusView = mBirthdayEditText;
             cancel = true;
 
-        }else if (!mAgreementCheckBox.isChecked()) {
+        } else if (!mAgreementCheckBox.isChecked()) {
             cancel = true;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
@@ -319,7 +316,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity(),false);
+                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity(), false);
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -328,7 +325,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (HttpErrorHandler.isErrorFound(result,getContext(),mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mRequestOTPTask = null;
             return;
