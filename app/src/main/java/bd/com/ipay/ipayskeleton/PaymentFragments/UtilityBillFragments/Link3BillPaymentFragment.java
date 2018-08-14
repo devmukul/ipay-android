@@ -326,6 +326,7 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                             mPostPaidBillPayView.setVisibility(View.VISIBLE);
                             mPayBillButton.setText("PAY BILL");
 
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)
@@ -364,7 +365,6 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                                         UtilityBillPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                                         break;
                                 }
-
                                 BusinessRuleCacheManager.setBusinessRules(Constants.UTILITY_BILL_PAYMENT, UtilityBillPaymentActivity.mMandatoryBusinessRules);
                             }
                         } catch (Exception e) {
@@ -418,7 +418,7 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                             }
                         }, 2000);
 
-                        Utilities.sendBlockedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId(),new BigDecimal(mAmount).longValue());
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
                         if (!TextUtils.isEmpty(mLink3BillPayResponse.getMessage())) {
@@ -451,12 +451,12 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
                                 }
                             }
                         }
-                        Utilities.sendFailedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mLink3BillPayResponse.getMessage());
+                        Utilities.sendFailedEventTracker(mTracker, Constants.LINK_THREE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mLink3BillPayResponse.getMessage(),new BigDecimal(mAmount).longValue());
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
+                    mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                     if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }

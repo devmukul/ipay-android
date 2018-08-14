@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
@@ -42,7 +43,9 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
@@ -123,15 +126,8 @@ public class DozeBillPayFragment extends BaseFragment implements HttpResponseLis
                             getCustomerInfo();
                         }
                     } else {
-                        if (mAmountEditText.getText() != null) {
-                            mAmount = mAmountEditText.getText().toString();
-                            if (mAmount != null && !mAmount.isEmpty()) {
-                                attemptBillPayWithPinCheck();
-                            } else {
-                                mAmountEditText.setError("Please enter an amount");
-                            }
-                        } else {
-                            mAmountEditText.setError("Please enter an amount");
+                        if (ifUserEligibleToPaySufficient()) {
+                            attemptBillPayWithPinCheck();
                         }
                     }
                 } else {
@@ -139,6 +135,35 @@ public class DozeBillPayFragment extends BaseFragment implements HttpResponseLis
                 }
             }
         });
+    }
+
+    private boolean ifUserEligibleToPaySufficient() {
+        String errorMessage = null;
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+            //validation check of amount
+            if (mAmountEditText.getText() != null) {
+                final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
+                if (topUpAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
+                } else {
+                    final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+
+                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                }
+            } else {
+                errorMessage = "Please enter an amount";
+            }
+        } else {
+            errorMessage = getString(R.string.balance_not_available);
+        }
+        if (errorMessage != null) {
+            mAmountEditText.setError(errorMessage);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void attemptBillPayWithPinCheck() {
@@ -296,7 +321,7 @@ public class DozeBillPayFragment extends BaseFragment implements HttpResponseLis
 
                                 }
                             }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mWestZoneBillPayResponse.getMessage());
@@ -306,7 +331,7 @@ public class DozeBillPayFragment extends BaseFragment implements HttpResponseLis
                                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mWestZoneBillPayResponse.getMessage());
                                 }
                             }, 2000);
-                            Utilities.sendBlockedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                            Utilities.sendBlockedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                             final String errorMessage;
                             if (!TextUtils.isEmpty(mWestZoneBillPayResponse.getMessage())) {
@@ -340,11 +365,11 @@ public class DozeBillPayFragment extends BaseFragment implements HttpResponseLis
                                 }
                                 //Google Analytic event
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mWestZoneBillPayResponse.getMessage());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mWestZoneBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
+                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }

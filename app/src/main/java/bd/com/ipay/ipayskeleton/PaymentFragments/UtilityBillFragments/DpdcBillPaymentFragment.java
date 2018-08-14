@@ -44,7 +44,10 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
@@ -141,7 +144,9 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
                             getCustomerInfo();
                         }
                     } else {
-                        attemptBillPayWithPinCheck();
+                        if (isUserEligibleToPaySufficient()) {
+                            attemptBillPayWithPinCheck();
+                        }
                     }
                 } else {
                     Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
@@ -178,6 +183,48 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
             mCustomProgressDialog.setLoadingMessage("Please wait");
             mCustomProgressDialog.showDialog();
         }
+    }
+
+    private boolean isUserEligibleToPaySufficient() {
+        boolean cancel = false;
+        mTotalAmountTextView.setError(null);
+        String errorMessage = null;
+        if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        }
+
+        if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
+
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+
+            //validation check of amount
+            if (mTotalAmountTextView.getText() != null) {
+                final BigDecimal topUpAmount = new BigDecimal(mTotalAmountTextView.getText().toString());
+                if (topUpAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
+                } else {
+                    final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+
+                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                }
+            }
+        } else {
+            errorMessage = getString(R.string.balance_not_available);
+            cancel = true;
+        }
+
+        if (errorMessage != null) {
+            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+            cancel = true;
+        }
+        return !cancel;
     }
 
     private void attemptGetBusinessRule(int serviceID) {
@@ -245,6 +292,13 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         mContinueButton.setText("Pay bill");
         infoView.setVisibility(View.VISIBLE);
         customerIDView.setVisibility(View.GONE);
+        if (mDpdcCustomerInfoResponse.getBillStatus() != null) {
+            if (mDpdcCustomerInfoResponse.getBillStatus().toLowerCase().equals("paid")) {
+                mContinueButton.setEnabled(false);
+            } else {
+                mContinueButton.setEnabled(true);
+            }
+        }
     }
 
     @Override
@@ -334,7 +388,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
                                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mDpdcBillPayResponse.getMessage());
                                 }
                             }, 2000);
-                            Utilities.sendBlockedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                            Utilities.sendBlockedEventTracker(mTracker, Constants.DPDC_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                             final String errorMessage;
                             if (!TextUtils.isEmpty(mDpdcBillPayResponse.getMessage())) {
@@ -368,7 +422,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
                                 }
                                 //Google Analytic event
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDpdcBillPayResponse.getMessage());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.DPDC_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDpdcBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -272,7 +272,7 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
 
                             }
                         }, 2000);
-                        Utilities.sendSuccessEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(),new BigDecimal(mAmount).longValue());
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         mCustomProgressDialog.showFailureAnimationAndMessage(brilliantRechargeResponse.getMessage());
@@ -283,7 +283,7 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
                             }
                         }, 2000);
 
-                        Utilities.sendBlockedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(),new BigDecimal(mAmount).longValue());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
@@ -316,7 +316,7 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                                 }
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(), brilliantRechargeResponse.getMessage());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(), brilliantRechargeResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     }
                 } catch (Exception e) {

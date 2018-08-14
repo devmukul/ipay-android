@@ -995,6 +995,7 @@ public class HomeActivity extends BaseActivity
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     SharedPrefManager.setSentFireBaseToken(true);
                 }
+                mRefreshTokenAsyncTask = null ;
                 break;
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:
                 try {

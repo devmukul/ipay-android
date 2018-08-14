@@ -43,7 +43,10 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
@@ -130,7 +133,9 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
                             getCustomerInfo();
                         }
                     } else {
-                        attemptBillPayWithPinCheck();
+                        if (isUserEligibleToPaySufficient()) {
+                            attemptBillPayWithPinCheck();
+                        }
                     }
                 } else {
                     Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
@@ -150,6 +155,48 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         } else {
             attemptBillPay(null);
         }
+    }
+
+    private boolean isUserEligibleToPaySufficient() {
+        boolean cancel = false;
+        mTotalAmountTextView.setError(null);
+        String errorMessage = null;
+        if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        }
+
+        if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
+
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+
+            //validation check of amount
+            if (mTotalAmountTextView.getText() != null) {
+                final BigDecimal topUpAmount = new BigDecimal(mTotalAmountTextView.getText().toString());
+                if (topUpAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
+                } else {
+                    final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+
+                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                }
+            }
+        } else {
+            errorMessage = getString(R.string.balance_not_available);
+            cancel = true;
+        }
+
+        if (errorMessage != null) {
+            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+            cancel = true;
+        }
+        return !cancel;
     }
 
     private void attemptBillPay(String pin) {
@@ -222,6 +269,13 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         mDueDateTextView.setText(mDescoCustomerInfoResponse.getDueDate());
         infoView.setVisibility(View.VISIBLE);
         customerIDView.setVisibility(View.GONE);
+        if (mDescoCustomerInfoResponse.getBillStatus() != null) {
+            if (mDescoCustomerInfoResponse.getBillStatus().toLowerCase().equals("paid")) {
+                mContinueButton.setEnabled(false);
+            } else {
+                mContinueButton.setEnabled(true);
+            }
+        }
     }
 
     @Override
@@ -231,6 +285,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
             mCustomProgressDialog.dismissDialog();
             mDescoCustomerInfoTask = null;
             mDescoBillPayTask = null;
+            mGetBusinessRuleTask = null;
             return;
         } else {
             try {
@@ -301,7 +356,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
 
                                 }
                             }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(),new BigDecimal(mAmount).longValue());
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mDescoBillPayResponse.getMessage());
@@ -320,6 +375,8 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
                                 errorMessage = getString(R.string.payment_failed);
                             }
                             mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
+                            Utilities.sendFailedEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDescoBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
+
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                             Toast.makeText(getActivity(), mDescoBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
                             mCustomProgressDialog.dismissDialog();
@@ -345,7 +402,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
                                 }
                                 //Google Analytic event
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDescoBillPayResponse.getMessage());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDescoBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -361,6 +418,7 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
                 mDescoCustomerInfoTask = null;
                 mDescoBillPayTask = null;
                 mGetBusinessRuleTask = null;
+                Toast.makeText(getContext(), getString(R.string.request_failed), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
