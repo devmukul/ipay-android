@@ -359,47 +359,49 @@ public class HomeActivity extends BaseActivity
 
         //Find bottom Sheet ID
 
-        View bottomSheet = findViewById(R.id.bottom_sheet);
-        testView = findViewById(R.id.test_sheet);
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        new BottomSheetFragment().show(getSupportFragmentManager(), "dialog");
 
-        //If you want to handle callback of Sheet Behavior you can use below code
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-//                        Animation fadeIn = new AlphaAnimation(1, 0);
-//                        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-//                        fadeIn.setDuration(300);
-//                        testView.startAnimation(fadeIn);
-                        testView.animate().scaleX(1).scaleY(1).start();
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        //testView.startAnimation(new AlphaAnimation(1,0));
-                        testView.animate().scaleX(0).scaleY(0).setDuration(300).start();
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                Animation fadeIn = new AlphaAnimation(1-slideOffset, 0);
-                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-                fadeIn.setDuration(300);
-                testView.startAnimation(fadeIn);
-            }
-        });
-
-
-
+//        View bottomSheet = findViewById(R.id.bottom_sheet);
+//        testView = findViewById(R.id.test_sheet);
+//
+//        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+//
+//        //If you want to handle callback of Sheet Behavior you can use below code
+//        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//
+//                switch (newState) {
+//                    case BottomSheetBehavior.STATE_COLLAPSED:
+////                        Animation fadeIn = new AlphaAnimation(1, 0);
+////                        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+////                        fadeIn.setDuration(300);
+////                        testView.startAnimation(fadeIn);
+//                        testView.animate().scaleX(1).scaleY(1).start();
+//                        break;
+//                    case BottomSheetBehavior.STATE_DRAGGING:
+//                        //testView.startAnimation(new AlphaAnimation(1,0));
+//                        testView.animate().scaleX(0).scaleY(0).start();
+//                        break;
+//                    case BottomSheetBehavior.STATE_EXPANDED:
+//                        break;
+//                    case BottomSheetBehavior.STATE_HIDDEN:
+//                        break;
+//                    case BottomSheetBehavior.STATE_SETTLING:
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+////                Animation fadeIn = new AlphaAnimation(1-slideOffset, 0);
+////                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+////                fadeIn.setDuration(100);
+////                testView.startAnimation(fadeIn);
+//
+//                //testView.animate().scaleX(0).scaleY(0).start();
+//            }
+//        });
     }
 
 //    private void animateBottomSheetArrows(float slideOffset) {

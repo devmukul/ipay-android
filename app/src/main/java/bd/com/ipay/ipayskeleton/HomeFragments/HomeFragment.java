@@ -52,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
@@ -110,6 +111,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private ProfileImageView mProfileImageView;
     private ImageView mStatusIconView;
 
+
+    private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
+
 //    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
 //        @Override
 //        public void onReceive(Context context, Intent intent) {
@@ -125,6 +129,14 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 //            mProfilePictureView.setAccountPhoto(newProfilePicture, true);
 //        }
 //    };
+
+    private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getTransactionHistory();
+        }
+    }
+
     //private View mProfileInfo;
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
@@ -357,6 +369,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         getTransactionHistory();
 
+
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+
 //        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
 //                new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
 
@@ -375,17 +392,21 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     @Override
     public void onResume() {
         super.onResume();
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
 
         // TODO we should refresh the balance only based on push notification, no need to fetch it
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
         refreshBalance();
+        getTransactionHistory();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_home));
     }
 
     @Override
     public void onDestroyView() {
-//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
 //        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
