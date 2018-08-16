@@ -1,7 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill;
 
 
-public class DozeCustomerInfoResponse {
+public class CarnivalCustomerInfoResponse {
     private String message;
     private String currentPackageRate;
     private String name;
@@ -30,7 +30,7 @@ public class DozeCustomerInfoResponse {
         this.name = name;
     }
 
-    public DozeCustomerInfoResponse(String message, String currentPackageRate, String name) {
+    public CarnivalCustomerInfoResponse(String message, String currentPackageRate, String name) {
 
         this.message = message;
         this.currentPackageRate = currentPackageRate;

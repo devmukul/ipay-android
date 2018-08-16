@@ -1208,9 +1208,9 @@
     <string name="enter_account_number">Please enter an account number</string>
     <string name="dpdc">Dpdc</string>
     <string name="enter_location_code">Enter location code</string>
-    <string name="doze_bill_pay_message">Please enter your doze user ID</string>
+    <string name="carnival_bill_pay_message">Please enter your Carnival user ID</string>
     <string name="current_package_rate">Current Package Rate</string>
-    <string name="doze">Doze</string>
+    <string name="carnival">Carnival</string>
     <string name="you_cant_avail_this_service">You cant avail this service now , please try again later</string>
     <string name="active">Active</string>
     <string name="request_failed">Request Failed</string>

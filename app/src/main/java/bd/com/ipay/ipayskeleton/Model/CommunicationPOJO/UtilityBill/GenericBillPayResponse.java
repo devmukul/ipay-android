@@ -2,7 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill;
 
 
 
-public class WestZoneBillPayResponse {
+public class GenericBillPayResponse {
     private String message;
     private String transactionId;
     private long otpValidFor;

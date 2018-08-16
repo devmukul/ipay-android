@@ -36,8 +36,8 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneBillPayRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneBillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -79,7 +79,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     private HttpRequestPostAsyncTask mWestZoneBillPayTask = null;
     private WestZoneBillPayRequest mWestZoneBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
-    private WestZoneBillPayResponse mWestZoneBillPayResponse;
+    private GenericBillPayResponse mGenericBillPayResponse;
     private CustomProgressDialog mCustomProgressDialog;
 
     @Nullable
@@ -331,7 +331,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                     mGetBusinessRuleTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_WEST_ZONE_BILL_PAY)) {
                     try {
-                        mWestZoneBillPayResponse = gson.fromJson(result.getJsonString(), WestZoneBillPayResponse.class);
+                        mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                             if (getActivity() != null) {
                                 new Handler().postDelayed(new Runnable() {
@@ -350,7 +350,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                             } else {
-                                mCustomProgressDialog.showSuccessAnimationAndMessage(mWestZoneBillPayResponse.getMessage());
+                                mCustomProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
                             }
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -363,36 +363,36 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                             Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                            mCustomProgressDialog.showFailureAnimationAndMessage(mWestZoneBillPayResponse.getMessage());
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mWestZoneBillPayResponse.getMessage());
+                                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mGenericBillPayResponse.getMessage());
                                 }
                             }, 2000);
                             Utilities.sendBlockedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                             final String errorMessage;
-                            if (!TextUtils.isEmpty(mWestZoneBillPayResponse.getMessage())) {
-                                errorMessage = mWestZoneBillPayResponse.getMessage();
+                            if (!TextUtils.isEmpty(mGenericBillPayResponse.getMessage())) {
+                                errorMessage = mGenericBillPayResponse.getMessage();
                             } else {
                                 errorMessage = getString(R.string.recharge_failed);
                             }
                             mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                            Toast.makeText(getActivity(), mWestZoneBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
                             mCustomProgressDialog.dismissDialog();
-                            SecuritySettingsActivity.otpDuration = mWestZoneBillPayResponse.getOtpValidFor();
+                            SecuritySettingsActivity.otpDuration = mGenericBillPayResponse.getOtpValidFor();
                             launchOTPVerification();
                         } else {
                             if (getActivity() != null) {
                                 if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
-                                    mCustomProgressDialog.showFailureAnimationAndMessage(mWestZoneBillPayResponse.getMessage());
+                                    mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
                                 } else {
-                                    Toast.makeText(getContext(), mWestZoneBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
                                 }
 
-                                if (mWestZoneBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                                     if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
                                         mCustomProgressDialog.dismissDialog();
@@ -404,7 +404,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                                 }
                                 //Google Analytic event
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mWestZoneBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mGenericBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

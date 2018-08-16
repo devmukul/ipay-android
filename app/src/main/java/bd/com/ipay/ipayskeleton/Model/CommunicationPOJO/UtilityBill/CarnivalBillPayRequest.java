@@ -1,19 +1,19 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill;
 
 
-public class DozeBillPayRequest {
+public class CarnivalBillPayRequest {
     private String userId;
     private String amount;
     private String pin;
     private String otp;
 
-    public DozeBillPayRequest(String userId, String amount, String pin) {
+    public CarnivalBillPayRequest(String userId, String amount, String pin) {
         this.userId = userId;
         this.amount = amount;
         this.pin = pin;
     }
 
-    public DozeBillPayRequest(String userId, String amount, String pin, String otp) {
+    public CarnivalBillPayRequest(String userId, String amount, String pin, String otp) {
 
         this.userId = userId;
         this.amount = amount;

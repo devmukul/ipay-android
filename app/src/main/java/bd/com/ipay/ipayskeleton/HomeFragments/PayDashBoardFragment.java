@@ -99,7 +99,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
         mDescoBillPayView = v.findViewById(R.id.desco);
         mWestZoneBillPayView = v.findViewById(R.id.west_zone);
-        mDozeBillPayView = v.findViewById(R.id.doze);
+        mDozeBillPayView = v.findViewById(R.id.carnival);
         mDpdcBillPayView = v.findViewById(R.id.dpdc);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
@@ -309,8 +309,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                } else if (mProviderAvailabilityMap.get(Constants.DOZE) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.DOZE).
+                } else if (mProviderAvailabilityMap.get(Constants.CARNIVAL) != null) {
+                    if (mProviderAvailabilityMap.get(Constants.CARNIVAL).
                             equals(getString(R.string.you_cant_avail_this_service))) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                         return;
@@ -320,7 +320,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     @Override
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-                        intent.putExtra(Constants.SERVICE, Constants.DOZE);
+                        intent.putExtra(Constants.SERVICE, Constants.CARNIVAL);
                         startActivity(intent);
                     }
                 });

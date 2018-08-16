@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/trending_business_list_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -327,7 +328,7 @@
                             android:elevation="@dimen/value2"
                             android:padding="@dimen/value15"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/westzone"
+                            android:src="@drawable/wzone"
                             card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
@@ -359,7 +360,7 @@
                             android:elevation="@dimen/value2"
                             android:padding="@dimen/value15"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/desco_icon_delete"
+                            android:src="@drawable/desco"
                             card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
@@ -391,7 +392,7 @@
                             android:elevation="@dimen/value2"
                             android:padding="@dimen/value15"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/dpdc_delete"
+                            android:src="@drawable/dpdc"
                             card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
@@ -420,7 +421,7 @@
                         android:weightSum="3">
 
                         <LinearLayout
-                            android:id="@+id/doze"
+                            android:id="@+id/carnival"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
@@ -436,7 +437,7 @@
                                 android:elevation="@dimen/value2"
                                 android:padding="@dimen/value15"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/ic_doze_delete"
+                                app:srcCompat="@drawable/carnival_2"
                                 card_view:riv_corner_radius="@dimen/value2" />
 
                             <TextView
@@ -446,7 +447,7 @@
                                 android:ellipsize="marquee"
                                 android:gravity="center_horizontal"
                                 android:singleLine="true"
-                                android:text="@string/doze"
+                                android:text="@string/carnival"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/text_size_extra_smaller_value11" />
                         </LinearLayout>

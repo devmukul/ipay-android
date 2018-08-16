@@ -10,8 +10,8 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantBillPayFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CarnivalBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillPaymentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DozeBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DpdcBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
@@ -45,7 +45,7 @@ public class UtilityBillPaymentActivity extends BaseActivity {
                     switchToDescoBillPayFragment();
                 } else if (service.equals(Constants.DPDC)) {
                     switchToDpdcBillPaymentFragment();
-                } else if (service.equals(Constants.DOZE)) {
+                } else if (service.equals(Constants.CARNIVAL)) {
                     switchToDozeBillPaymentFragment();
                 }
             }
@@ -57,7 +57,7 @@ public class UtilityBillPaymentActivity extends BaseActivity {
 
     private void switchToDozeBillPaymentFragment() {
         getSupportFragmentManager().beginTransaction().
-                replace(R.id.fragment_container, new DozeBillPayFragment()).commit();
+                replace(R.id.fragment_container, new CarnivalBillPayFragment()).commit();
     }
 
 
