@@ -221,7 +221,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
                 mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
                 mMobileNumberEditText.setText(mReceiverMobileNumber);
-                mOutletId = getActivity().getIntent().getLongExtra(Constants.OUTLET_ID, 0);
+                if (getActivity().getIntent().hasExtra(Constants.OUTLET_ID)) {
+                    mOutletId = getActivity().getIntent().getLongExtra(Constants.OUTLET_ID, 0);
+                }else{
+                    mOutletId = null;
+                }
+
                 if (getActivity().getIntent().hasExtra(Constants.NAME)) {
                     mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
                     if (TextUtils.isEmpty(mReceiverName)) {
@@ -301,7 +306,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
                         mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
                         mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
-                        mOutletId = getActivity().getIntent().getLongExtra(Constants.OUTLET_ID, 0);
+                        if (getActivity().getIntent().hasExtra(Constants.OUTLET_ID)) {
+                            mOutletId = getActivity().getIntent().getLongExtra(Constants.OUTLET_ID, 0);
+                        }else{
+                            mOutletId = null;
+                        }
+
                         mAddressTextView.setVisibility(View.VISIBLE);
                         mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
                         mAddressTextView.setText(mAddressString);
