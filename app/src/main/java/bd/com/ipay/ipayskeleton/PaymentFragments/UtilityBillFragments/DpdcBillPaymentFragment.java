@@ -172,7 +172,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         if (mDpdcBillPayTask != null) {
             return;
         } else {
-            mDpdcBillPayRequest = new DpdcBillPayRequest(mAccountID, pin);
+            mDpdcBillPayRequest = new DpdcBillPayRequest(mAccountID, pin, mLocationCode);
 
             Gson gson = new Gson();
             String json = gson.toJson(mDpdcBillPayRequest);
@@ -286,8 +286,8 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
         mBillMonthTextView.setText(mDpdcCustomerInfoResponse.getBillMonth());
         mAccountIDTextView.setText(mDpdcCustomerInfoResponse.getAccountNumber());
         mVatTextView.setText(mDpdcCustomerInfoResponse.getVatAmount());
-        mTotalAmountTextView.setText(mDpdcCustomerInfoResponse.getTotalAmount());
-        mAmount = mDpdcCustomerInfoResponse.getTotalAmount();
+        mTotalAmountTextView.setText(mDpdcCustomerInfoResponse.getTotalBillAmount());
+        mAmount = mDpdcCustomerInfoResponse.getTotalBillAmount();
         mBillNumberTextView.setText(mDpdcCustomerInfoResponse.getBillNumber());
         mContinueButton.setText("Pay bill");
         infoView.setVisibility(View.VISIBLE);

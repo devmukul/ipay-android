@@ -334,7 +334,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 } else if (mProviderAvailabilityMap.get(Constants.DPDC) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.DPDC.toLowerCase()).
+                    if (mProviderAvailabilityMap.get(Constants.DPDC).
                             equals(getString(R.string.you_cant_avail_this_service))) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                         return;

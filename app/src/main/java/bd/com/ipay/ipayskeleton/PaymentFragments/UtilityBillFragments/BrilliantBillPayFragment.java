@@ -283,7 +283,7 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
                             }
                         }, 2000);
 
-                        Utilities.sendBlockedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(),new BigDecimal(mAmount).longValue());
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.BRILLIANT_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;

@@ -656,7 +656,7 @@ public class Constants {
     public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
 
     // Utilities Bill
-    public static final String URL_GET_PROVIDER = "providers";
+    public static final String URL_GET_PROVIDER = "providers/all";
     public static final String URL_GET_BANGLALION_CUSTOMER_INFO = "banglalion/customer/";
     public static final String URL_GET_LINK_THREE_CUSTOMER_INFO = "link3/subscriber/";
     public static final String URL_BANGLALION_BILL_PAY = "banglalion/billpay";

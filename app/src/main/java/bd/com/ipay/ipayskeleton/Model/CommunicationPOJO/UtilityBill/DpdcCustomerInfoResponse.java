@@ -8,7 +8,7 @@ public class DpdcCustomerInfoResponse {
     private String billStatus;
     private String principalAmount;
     private String vatAmount;
-    private String totalAmount;
+    private String totalBillAmount;
     private String billNumber;
     private String message;
 
@@ -60,12 +60,12 @@ public class DpdcCustomerInfoResponse {
         this.vatAmount = vatAmount;
     }
 
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getTotalBillAmount() {
+        return totalBillAmount;
     }
 
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setTotalBillAmount(String totalBillAmount) {
+        this.totalBillAmount = totalBillAmount;
     }
 
     public String getBillNumber() {
