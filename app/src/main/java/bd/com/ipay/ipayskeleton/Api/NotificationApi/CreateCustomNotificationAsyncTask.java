@@ -79,45 +79,51 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
     protected void onPostExecute(Bitmap result) {
 
         int notificationID = new Random().nextInt();
-        Intent intent;
-        if (deepLink != null || !deepLink.isEmpty()) {
-            intent = new Intent(mContext, LauncherActivity.class);
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(deepLink));
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("time", this.time);
+        Intent intent = null;
+        if (deepLink != null) {
+            if (!deepLink.isEmpty()) {
+                intent = new Intent(mContext, LauncherActivity.class);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(deepLink));
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("time", this.time);
+            }
         } else {
             intent = new Intent(mContext, SignupOrLoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        if (intent != null) {
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
+                    PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        try {
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
-                    .setPriority(android.app.Notification.PRIORITY_HIGH)
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                    .setContentTitle(title)
-                    .setGroup("Notifications")
-                    .setContentText(message)
-                    .setAutoCancel(true)
-                    .setSound(defaultSoundUri)
-                    .setContentIntent(pendingIntent);
-            if (Build.VERSION.SDK_INT >= 21) {
-                notificationBuilder.setVibrate(new long[0]);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            try {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
+                        .setPriority(android.app.Notification.PRIORITY_HIGH)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setColor(mContext.getResources().getColor(R.color.colorPrimary))
+                        .setContentTitle(title)
+                        .setGroup("Notifications")
+                        .setContentText(message)
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
+                if (Build.VERSION.SDK_INT >= 21) {
+                    notificationBuilder.setVibrate(new long[0]);
+                }
+
+                if (result != null) {
+                    notificationBuilder.setLargeIcon(result);
+                }
+
+                NotificationManager notificationManager =
+                        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(notificationID, notificationBuilder.build());
+            } catch (Exception e)
+
+            {
+                e.printStackTrace();
             }
-
-            if (result != null) {
-                notificationBuilder.setLargeIcon(result);
-            }
-
-            NotificationManager notificationManager =
-                    (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationID, notificationBuilder.build());
-        }catch (Exception e){
-            e.printStackTrace();
         }
 
     }
