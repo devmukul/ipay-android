@@ -194,7 +194,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 } else if (mProviderAvailabilityMap.get(Constants.BLION) != null) {
                     if (!mProviderAvailabilityMap.get(Constants.BLION).
                             equals(getString(R.string.active))) {
-                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(BLION));
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(BLION));
                         return;
                     }
                 }
@@ -218,7 +218,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 } else if (mProviderAvailabilityMap.get(Constants.LINK3) != null) {
                     if (!mProviderAvailabilityMap.get(Constants.LINK3).
                             equals(getString(R.string.active))) {
-                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LINK3));
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LINK3));
                         return;
                     }
                 }
@@ -242,7 +242,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 } else if (mProviderAvailabilityMap.get(Constants.BRILLIANT) != null) {
                     if (!mProviderAvailabilityMap.get(Constants.BRILLIANT).
                             equals(getString(R.string.active))) {
-                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.BRILLIANT));
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.BRILLIANT));
                         return;
                     }
                 }
@@ -266,7 +266,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 } else if (mProviderAvailabilityMap.get(Constants.WESTZONE) != null) {
                     if (!mProviderAvailabilityMap.get(Constants.WESTZONE).
                             equals(getString(R.string.active))) {
-                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.WESTZONE));
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.WESTZONE));
                         return;
                     }
                 }
@@ -290,7 +290,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 } else if (mProviderAvailabilityMap.get(DESCO) != null) {
                     if (!mProviderAvailabilityMap.get(DESCO).
                             equals(getString(R.string.active))) {
-                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DESCO)
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DESCO)
                         );
                         return;
                     }
@@ -315,7 +315,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 } else if (mProviderAvailabilityMap.get(Constants.CARNIVAL) != null) {
                     if (!mProviderAvailabilityMap.get(Constants.CARNIVAL).
                             equals(getString(R.string.active))) {
-                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.CARNIVAL));
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.CARNIVAL));
                         return;
                     }
                 }
@@ -339,7 +339,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 } else if (mProviderAvailabilityMap.get(Constants.DPDC) != null) {
                     if (!mProviderAvailabilityMap.get(Constants.DPDC).
                             equals(getString(R.string.active))) {
-                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DPDC));
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DPDC));
                         return;
                     }
                 }
