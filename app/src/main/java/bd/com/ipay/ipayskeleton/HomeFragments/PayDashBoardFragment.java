@@ -47,6 +47,9 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
+import static bd.com.ipay.ipayskeleton.Utilities.Constants.BLION;
+import static bd.com.ipay.ipayskeleton.Utilities.Constants.DESCO;
+
 public class PayDashBoardFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
@@ -187,12 +190,11 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 String l = mProviderAvailabilityMap.get(Constants.BLION);
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
-
                     return;
                 } else if (mProviderAvailabilityMap.get(Constants.BLION) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.BLION).
-                            equals(getString(R.string.you_cant_avail_this_service))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    if (!mProviderAvailabilityMap.get(Constants.BLION).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(BLION));
                         return;
                     }
                 }
@@ -214,9 +216,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 } else if (mProviderAvailabilityMap.get(Constants.LINK3) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.LINK3).
-                            equals(getString(R.string.you_cant_avail_this_service))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    if (!mProviderAvailabilityMap.get(Constants.LINK3).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LINK3));
                         return;
                     }
                 }
@@ -238,9 +240,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 } else if (mProviderAvailabilityMap.get(Constants.BRILLIANT) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.BRILLIANT).
-                            equals(getString(R.string.you_cant_avail_this_service))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    if (!mProviderAvailabilityMap.get(Constants.BRILLIANT).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.BRILLIANT));
                         return;
                     }
                 }
@@ -262,9 +264,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 } else if (mProviderAvailabilityMap.get(Constants.WESTZONE) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.WESTZONE).
-                            equals(getString(R.string.you_cant_avail_this_service))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    if (!mProviderAvailabilityMap.get(Constants.WESTZONE).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.WESTZONE));
                         return;
                     }
                 }
@@ -285,10 +287,11 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
-                } else if (mProviderAvailabilityMap.get(Constants.DESCO) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.DESCO).
-                            equals(getString(R.string.you_cant_avail_this_service))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                } else if (mProviderAvailabilityMap.get(DESCO) != null) {
+                    if (!mProviderAvailabilityMap.get(DESCO).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DESCO)
+                        );
                         return;
                     }
                 }
@@ -296,7 +299,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     @Override
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-                        intent.putExtra(Constants.SERVICE, Constants.DESCO);
+                        intent.putExtra(Constants.SERVICE, DESCO);
                         startActivity(intent);
                     }
                 });
@@ -310,9 +313,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 } else if (mProviderAvailabilityMap.get(Constants.CARNIVAL) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.CARNIVAL).
-                            equals(getString(R.string.you_cant_avail_this_service))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    if (!mProviderAvailabilityMap.get(Constants.CARNIVAL).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.CARNIVAL));
                         return;
                     }
                 }
@@ -334,9 +337,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 } else if (mProviderAvailabilityMap.get(Constants.DPDC) != null) {
-                    if (mProviderAvailabilityMap.get(Constants.DPDC).
-                            equals(getString(R.string.you_cant_avail_this_service))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    if (!mProviderAvailabilityMap.get(Constants.DPDC).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DPDC));
                         return;
                     }
                 }
@@ -448,7 +451,11 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                             for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
                                 Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
                                 if (!provider.isActive()) {
-                                    mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
+                                    if (provider.getStatusMessage() != null) {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), provider.getStatusMessage());
+                                    } else {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
+                                    }
                                 } else {
                                     mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
                                 }

@@ -143,14 +143,19 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
             //validation check of amount
             if (mAmountEditText.getText() != null) {
-                final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
-                if (topUpAmount.compareTo(balance) > 0) {
-                    errorMessage = getString(R.string.insufficient_balance);
-                } else {
-                    final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+                if (mAmountEditText.getText().toString() != null && !mAmountEditText.getText().toString().equals("")) {
+                    mAmount = mAmountEditText.getText().toString();
+                    final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
+                    if (topUpAmount.compareTo(balance) > 0) {
+                        errorMessage = getString(R.string.insufficient_balance);
+                    } else {
+                        final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                        final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
 
-                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                        errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                    }
+                } else {
+                    errorMessage = "Please enter an amount";
                 }
             } else {
                 errorMessage = "Please enter an amount";

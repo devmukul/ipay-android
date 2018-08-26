@@ -176,7 +176,7 @@ public class Constants {
     public static final String COMMAND_GET_DESCO_CUSTOMER = "COMMAND_GET_DESCO_CUSTOMER";
     public static final String COMMAND_GET_DOZE_CUSTOMER = "COMMAND_GET_DOZE_CUSTOMER";
     public static final String COMMAND_CARNIVAL_BILL_PAY = "COMMAND_CARNIVAL_BILL_PAY";
-    public static final String URL_DOZE_BILL_PAY = "doze/billpay";
+    public static final String URL_DOZE_BILL_PAY = "carnival/billpay";
     public static final String CARNIVAL = "CARNIVAL";
     public static final String DPDC_BILL_PAY = "DPDC BILL PAY";
     public static final String COMMAND_GET_SERVICE_PROVIDER_LIST = "COMMAND_GET_SERVICE_PROVIDER_LIST";
