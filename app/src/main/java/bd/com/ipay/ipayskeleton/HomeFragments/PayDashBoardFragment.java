@@ -186,8 +186,6 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mBillPayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String k = mProviderAvailabilityMap.get("BLION");
-                String l = mProviderAvailabilityMap.get(Constants.BLION);
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
