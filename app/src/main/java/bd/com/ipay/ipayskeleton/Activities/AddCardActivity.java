@@ -29,7 +29,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddCardResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddCardActivity extends BaseActivity implements HttpResponseListener {
@@ -73,9 +76,13 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
         mFabAddNewBank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddCardActivity.this, AddMoneyActivity.class);
-                intent.putExtra(Constants.INTENDED_FRAGMENT, Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
-                startActivity(intent);
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                    Intent intent = new Intent(AddCardActivity.this, AddMoneyActivity.class);
+                    intent.putExtra(Constants.INTENDED_FRAGMENT, Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
+                    startActivity(intent);
+                } else {
+                    DialogUtils.showServiceNotAllowedDialog(AddCardActivity.this);
+                }
             }
         });
     }

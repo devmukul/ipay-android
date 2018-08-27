@@ -81,7 +81,6 @@ public class SelectorView extends AbstractSelectorView<String> {
             DialogUtils.showServiceNotAllowedDialog(getContext());
             return;
         }
-
         mSelectedItemEditText.setText(name);
         mSelectedItemPosition = id;
         if (mOnItemSelectListener != null)
