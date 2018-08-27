@@ -111,10 +111,15 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         final View mAddMoneyOptionSelectorViewHolder = findViewById(R.id.add_money_option_selector_view_holder);
         final Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
 
-        if (getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD"))
-            isOnlyByCard = true;
-        else
+        if (getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD")) {
+            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                isOnlyByCard = true;
+            } else {
+                isOnlyByCard = false;
+            }
+        } else {
             isOnlyByCard = false;
+        }
         final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isOnlyByCard);
 
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
