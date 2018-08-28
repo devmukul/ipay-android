@@ -139,6 +139,7 @@
     <string name="create_event">Create Event</string>
     <string name="in_out_list_button">In out list</string>
     <string name="no_contacts">No Contacts Available</string>
+    <string name="no_outlets">No Outlet Found</string>
     <string name="no_verified_contacts">No verified contacts available in your account</string>
     <string name="contacts">Contacts</string>
     <string name="country">Country</string>
