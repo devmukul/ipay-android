@@ -14,7 +14,10 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 
 public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
@@ -43,10 +46,14 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
         mAddMoneyByCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                intent.putExtra(Constants.FROM_ON_BOARD, true);
-                intent.putExtra(Constants.TAG, "CARD");
-                startActivity(intent);
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                    Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                    intent.putExtra(Constants.FROM_ON_BOARD, true);
+                    intent.putExtra(Constants.TAG, "CARD");
+                    startActivity(intent);
+                } else {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                }
             }
         });
         mSkipButton.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +65,13 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
         mAddBankButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ManageBanksActivity.class);
-                intent.putExtra(Constants.FROM_ON_BOARD, true);
-                startActivity(intent);
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK)) {
+                    Intent intent = new Intent(getActivity(), ManageBanksActivity.class);
+                    intent.putExtra(Constants.FROM_ON_BOARD, true);
+                    startActivity(intent);
+                } else {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                }
             }
         });
 
