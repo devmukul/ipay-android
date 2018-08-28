@@ -258,7 +258,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 if (getActivity().getIntent().hasExtra(Constants.DISTRICT)) {
                     String thanaDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
                     if (getActivity().getIntent().hasExtra(Constants.THANA)) {
-                        thanaDistrict = thanaDistrict +" "+getActivity().getIntent().getStringExtra(Constants.THANA);
+                        thanaDistrict = getActivity().getIntent().getStringExtra(Constants.THANA)+", "+thanaDistrict;
                     }
                     if (thanaDistrict != null) {
                         mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
@@ -336,7 +336,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
                             if (mAddressString != null) {
                                 mAddressTextView.setText(mAddressString);
-                                mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                                mThanaAndDistrictTextView.setText(mThana + ", " + mDistrict);
                                 mAddressTextView.setVisibility(View.VISIBLE);
                                 mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
 
@@ -438,7 +438,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             profileView.setVisibility(View.VISIBLE);
                             mAddressTextView.setVisibility(View.VISIBLE);
                             mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
-                            String thanaDistrict = allowablePackage.getOutletAddress().getDistrictName() + ", " + allowablePackage.getOutletAddress().getThanaName();
+                            String thanaDistrict =  allowablePackage.getOutletAddress().getThanaName()+ ", " +allowablePackage.getOutletAddress().getDistrictName() ;
 
                             if (allowablePackage.getOutletLogoUrl() != null && !allowablePackage.getOutletLogoUrl().isEmpty()) {
                                 mReceiverPhotoUri = allowablePackage.getOutletLogoUrl();

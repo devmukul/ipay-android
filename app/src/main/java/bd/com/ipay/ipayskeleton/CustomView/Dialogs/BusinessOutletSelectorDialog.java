@@ -252,7 +252,7 @@ public class BusinessOutletSelectorDialog extends AlertDialog implements SearchV
         }
 
         private void switchToMakePaymentActivity(int position) {
-            Outlets outletsData = outlets.get(position);
+            Outlets outletsData = mFilteredOutlets.get(position);
 
             if (onResourceSelectedListener != null)
                 onResourceSelectedListener.onResourceSelected(outletsData);
