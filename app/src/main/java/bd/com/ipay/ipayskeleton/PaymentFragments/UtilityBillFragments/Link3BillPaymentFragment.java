@@ -203,7 +203,6 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
     private void attemptBillPay(String pin) {
         mAmount = Integer.parseInt(mPostpaidAmountEditText.getText().toString().trim());
 
-
         if (mLink3PayBillTask != null)
             return;
         mLinkThreeBillPayRequest = new LinkThreeBillPayRequest(mCustomerId, mAmount, pin);

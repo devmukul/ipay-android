@@ -61,6 +61,36 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
         mLoginButton = (Button) v.findViewById(R.id.button_log_in);
 
         mBusinessMobileNumberView.requestFocus();
+        mBusinessMobileNumberView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b) {
+                    if (mBusinessMobileNumberView.getText() != null) {
+                        if (mBusinessMobileNumberView.getText().toString() != null) {
+                            String number = mBusinessMobileNumberView.getText().toString();
+                            if (number.length() == 10 && number.startsWith("1")) {
+                                String firstPart = number.substring(2, 6);
+                                String secondPart = number.substring(6, 10);
+                                mBusinessMobileNumberView.setText(number.substring(0, 2) + "-" + firstPart + "-" + secondPart);
+                            } else if (number.length() == 11 && number.startsWith("0")) {
+                                String firstPart = number.substring(3, 7);
+                                String secondPart = number.substring(7, 11);
+                                mBusinessMobileNumberView.setText(number.substring(0, 3) + "-" + firstPart + "-" + secondPart);
+                            }
+                        }
+                    }
+                } else {
+                    if (mBusinessMobileNumberView.getText() != null) {
+                        if (mBusinessMobileNumberView.getText().toString() != null) {
+                            String number = mBusinessMobileNumberView.getText().toString();
+                            number = number.replaceAll("[^0-9]", "");
+                            mBusinessMobileNumberView.setText(number);
+                        }
+                    }
+
+                }
+            }
+        });
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override

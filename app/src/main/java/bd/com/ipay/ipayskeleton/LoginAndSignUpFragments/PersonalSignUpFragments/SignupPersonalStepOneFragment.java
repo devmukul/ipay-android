@@ -45,7 +45,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SignupPersonalStepOneFragment extends BaseFragment implements HttpResponseListener {
+public class SignupPersonalStepOneFragment extends BaseFragment implements HttpResponseListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
@@ -71,7 +71,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 
     private String mDeviceID;
 
-    private DatePickerDialog mDatePickerDialog;
+    private com.tsongkha.spinnerdatepicker.DatePickerDialog mDatePickerDialog;
     private String mDOB;
 
     private int mYear;
@@ -139,6 +139,37 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
         mCountryCodePicker = (CountryCodePicker) v.findViewById(R.id.ccp);
         mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+
+                if (!b) {
+                    if (mMobileNumberView.getText() != null) {
+                        if (mMobileNumberView.getText().toString() != null) {
+                            String number = mMobileNumberView.getText().toString();
+                            if (number.length() == 10 && number.startsWith("1")) {
+                                String firstPart = number.substring(2, 6);
+                                String secondPart = number.substring(6, 10);
+                                mMobileNumberView.setText(number.substring(0, 2) + "-" + firstPart + "-" + secondPart);
+                            } else if (number.length() == 11 && number.startsWith("0")) {
+                                String firstPart = number.substring(3, 7);
+                                String secondPart = number.substring(7, 11);
+                                mMobileNumberView.setText(number.substring(0, 3) + "-" + firstPart + "-" + secondPart);
+                            }
+                        }
+                    }
+                } else {
+                    if (mMobileNumberView.getText() != null) {
+                        if (mMobileNumberView.getText().toString() != null) {
+                            String number = mMobileNumberView.getText().toString();
+                            number = number.replaceAll("[^0-9]", "");
+                            mMobileNumberView.setText(number);
+                        }
+                    }
+
+                }
+            }
+        });
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
@@ -166,7 +197,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
         setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
-        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, this);
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -390,5 +421,31 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         }
     }
 
+    @Override
+    public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker datePicker, int i, int i1, int i2) {
+        String[] mMonthArray;
+        String birthDate, birthMonth, birthYear;
+
+        mYear = i;
+        mMonth = i1 + 1;
+        mDay = i2;
+        mMonthArray = getResources().getStringArray(R.array.month_name);
+
+        if (mDay < 10) birthDate = "0" + mDay;
+        else birthDate = mDay + "";
+        if (mMonth < 10) birthMonth = "0" + mMonth;
+        else birthMonth = mMonth + "";
+        birthYear = mYear + "";
+        mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
+        try {
+            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(mDOB);
+            mDayName = new SimpleDateFormat("EE").format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        mBirthdayEditText.setError(null);
+        mBirthdayEditText.setText(mDayName + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
+    }
 }
 

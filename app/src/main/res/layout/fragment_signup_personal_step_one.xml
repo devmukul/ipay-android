@@ -33,6 +33,7 @@
                 android:layout_height="@dimen/value30"
                 android:layout_alignParentRight="true"
                 android:padding="@dimen/activity_horizontal_margin_card"
+                android:visibility="gone"
                 android:src="@drawable/ic_crossw" />
         </RelativeLayout>
 
