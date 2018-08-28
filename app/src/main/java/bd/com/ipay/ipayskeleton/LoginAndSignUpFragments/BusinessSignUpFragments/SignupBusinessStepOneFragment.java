@@ -87,7 +87,6 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
                             mBusinessMobileNumberView.setText(number);
                         }
                     }
-
                 }
             }
         });
@@ -210,7 +209,6 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             }
-
             mProgressDialog.dismiss();
             mCheckIfUserExistsTask = null;
         }
