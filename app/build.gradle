@@ -29,8 +29,8 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 173
-        versionName "1.8.7"
+        versionCode 174
+        versionName "1.8.8"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -137,7 +137,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.firebase:firebase-client-android:2.4.0'
-
+    compile 'com.github.drawers:SpinnerDatePicker:1.0.6'
     // Notification badge
     compile 'com.mikepenz:actionitembadge:3.2.6@aar'
     compile 'com.mikepenz:iconics-core:2.6.6@aar'
