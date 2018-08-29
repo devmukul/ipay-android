@@ -962,7 +962,7 @@ public class HomeActivity extends BaseActivity
                 } catch (Exception e) {
 
                 }
-                mRefreshTokenAsyncTask = null;
+                mRefreshBalanceTask = null;
                 break;
 
             case Constants.COMMAND_GET_ACCESS_CONTROL_LIST:
