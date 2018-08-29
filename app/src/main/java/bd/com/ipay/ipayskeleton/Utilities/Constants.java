@@ -150,6 +150,7 @@ public class Constants {
     public static final String COMMAND_UPDATE_NOTIFICATION_STATE = "COMMAND_UPDATE_NOTIFICATION_STATE";
     public static final String SERVICE = "SERVICE";
     public static final String BANGLALION = "BANGLALION";
+    public static final String BLION = "BLION";
     public static final String LINK3 = "LINK3";
     public static final String COMMAND_LINK_THREE_BILL_PAY = "COMMAND_LINK_THREE_BILL_PAY";
     public static final String COMMAND_BRILLIANT_RECHARGE = "COMMAND_BRILLIANT_RECHARGE";
@@ -159,11 +160,28 @@ public class Constants {
     public static final String COMMAND_WEST_ZONE_BILL_PAY = "COMMAND_WEST_ZONE_BILL_PAY";
     public static final String COMMAND_GET_WEST_ZONE_CUSTOMER = "COMMAND_GET_WEST_ZONE_CUSTOMER";
     public static final String URL_WEST_ZONE_BILL_PAY = "wzone/billpay";
+    public static final String URL_DPDC_BILL_PAY = "dpdc/billpay";
+    public static final String URL_DPDC_CUSTOMER_INFO = "dpdc/bill-info";
     public static final String WESTZONE_BILL_PAY = "WESTZONE BILL PAY";
     public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
     public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
     public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
-    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN_V2";
+    public static final String URL_DESCO_CUSTOMER_INFO = "desco/bill-info/";
+    public static final String DESCO_BILL_PAY = "DESCO BILL PAY";
+    public static final String DESCO = "DESCO";
+    public static final String COMMAND_DPDC_BILL_PAY = "COMMAND_DPDC_BILL_PAY";
+    public static final String DPDC = "DPDC";
+    public static final String COMMAND_GET_DPDC_CUSTOMER = "COMMAND_GET_DPDC_CUSTOMER";
+    public static final String COMMAND_GET_DESCO_CUSTOMER = "COMMAND_GET_DESCO_CUSTOMER";
+    public static final String COMMAND_GET_DOZE_CUSTOMER = "COMMAND_GET_DOZE_CUSTOMER";
+    public static final String COMMAND_CARNIVAL_BILL_PAY = "COMMAND_CARNIVAL_BILL_PAY";
+    public static final String URL_DOZE_BILL_PAY = "doze/billpay";
+    public static final String CARNIVAL = "CARNIVAL";
+    public static final String DPDC_BILL_PAY = "DPDC BILL PAY";
+    public static final String COMMAND_GET_SERVICE_PROVIDER_LIST = "COMMAND_GET_SERVICE_PROVIDER_LIST";
+    public static final String COMMAND_DESCO_BILL_PAY = "COMMAND_DESCO_BILL_PAY";
+    public static final String CARNIVAL_BILL_PAY = "CARNIVAL_BILL_PAY";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -290,6 +308,8 @@ public class Constants {
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String Business_role = "BUSINESS_ROLE";
     public static String invalid_credential = "invalid credential";
+    public static String URL_DESCO_BILL_PAY = "/desco/billpay";
+    public static String URL_CARNIVAL = "/carnival/bill-info/";
 
 
     static {
@@ -637,7 +657,7 @@ public class Constants {
     public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
 
     // Utilities Bill
-    public static final String URL_GET_PROVIDER = "providers";
+    public static final String URL_GET_PROVIDER = "providers/all";
     public static final String URL_GET_BANGLALION_CUSTOMER_INFO = "banglalion/customer/";
     public static final String URL_GET_LINK_THREE_CUSTOMER_INFO = "link3/subscriber/";
     public static final String URL_BANGLALION_BILL_PAY = "banglalion/billpay";

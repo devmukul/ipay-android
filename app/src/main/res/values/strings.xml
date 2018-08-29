@@ -339,7 +339,7 @@
     <string name="scan_valid_qr_code">Please scan a valid mobile number</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
-    <string name="oath_sign_up"><![CDATA[I agree to the]]> </string>
+    <string name="oath_sign_up"><![CDATA[By clicking continue you are agreeing with]]> </string>
     <string name="already_have_an_account">"Already have an account?"</string>
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">iPay Balance</string>
@@ -1183,6 +1183,7 @@
     <string name="Link_three">Link3</string>
     <string name="bill_pay_help_message">Enter your Banglalion CustomerID or CustomerNumber or MSISDN number.</string>
     <string name="prepaid_amount_bill_pay_help_message">Enter amount to pay your Banglalion bill.</string>
+    <string name="link3_bill_pay_help_message">Enter amount to pay your Link3 bill.</string>
     <string name="choose_your_package">Choose Your Package</string>
     <string name="pay_bill">Pay Bill</string>
     <string name="please_select_package">Please select a package.</string>
@@ -1199,4 +1200,19 @@
     <string name="WestZone">WestZone</string>
     <string name="bill_pay">Bill Pay</string>
     <string name="upload_identification_document">Upload Identification Document</string>
+    <string name="due_date">Due Date</string>
+    <string name="ipc">Ipc</string>
+    <string name="desco_bill_pay_message">Please enter the bill number of desco</string>
+    <string name="enter_bill_no">Enter bill number</string>
+    <string name="desco">Desco</string>
+    <string name="dpdc_bill_pay_message">Please enter your DPDC account number and your location code</string>
+    <string name="enter_account_number">Please enter an account number</string>
+    <string name="dpdc">Dpdc</string>
+    <string name="enter_location_code">Enter location code</string>
+    <string name="carnival_bill_pay_message">Please enter your Carnival user ID</string>
+    <string name="current_package_rate">Current Package Rate</string>
+    <string name="carnival">Carnival</string>
+    <string name="you_cant_avail_this_service">You cant avail this service now , please try again later</string>
+    <string name="active">Active</string>
+    <string name="request_failed">Request Failed</string>
 </resources>

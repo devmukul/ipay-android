@@ -36,34 +36,27 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.CarnivalBillPayRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.CarnivalCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneBillPayRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-
-public class WestzoneBillPaymentFragment extends BaseFragment implements HttpResponseListener {
+public class CarnivalBillPayFragment extends BaseFragment implements HttpResponseListener {
     private TextView mNameTextView;
-    private TextView mAccountIDTextView;
-    private TextView mPrimaryAmountTextView;
-    private TextView mVatTextView;
-    private TextView mTotalAmountTextView;
-    private TextView mBillMonthTextView;
-    private TextView mBillStatusTextView;
-    private TextView mBillNumberTextView;
     private EditText mAccountIDEditText;
+    private EditText mAmountEditText;
     private TextView mPrevMonthView;
+    private TextView mCurrentPackageView;
     private Button mContinueButton;
     private View infoView;
     private View customerIDView;
@@ -71,13 +64,13 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private String mUri;
-    private String mCustomerID;
     private String mAmount;
+    private String mCustomerID;
 
-    private HttpRequestGetAsyncTask mWestZoneCustomerInfoTask = null;
-    private WestZoneCustomerInfoResponse westZoneCustomerInfoResponse;
-    private HttpRequestPostAsyncTask mWestZoneBillPayTask = null;
-    private WestZoneBillPayRequest mWestZoneBillPayRequest;
+    private HttpRequestGetAsyncTask mCarnivalUserInfoGetTask = null;
+    private CarnivalCustomerInfoResponse carnivalCustomerInfoResponse;
+    private HttpRequestPostAsyncTask mDozeBillPayTask = null;
+    private CarnivalBillPayRequest mCarnivalBillPayRequst;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
     private GenericBillPayResponse mGenericBillPayResponse;
     private CustomProgressDialog mCustomProgressDialog;
@@ -86,8 +79,8 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     @Override
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_westzone_bill_pay, container, false);
-        getActivity().setTitle("West Zone");
+        View view = inflater.inflate(R.layout.fragment_doze_bill_pay, container, false);
+        getActivity().setTitle("Carnival");
         attemptGetBusinessRule(ServiceIdConstants.UTILITY_BILL_PAYMENT);
         mProgressDialog = new ProgressDialog(getContext());
         mCustomProgressDialog = new CustomProgressDialog(getContext());
@@ -101,18 +94,13 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
         }
 
         mNameTextView = (TextView) view.findViewById(R.id.name_view);
-        mAccountIDTextView = (TextView) view.findViewById(R.id.account_number_view);
-        mPrimaryAmountTextView = (TextView) view.findViewById(R.id.principal_amount_view);
-        mVatTextView = (TextView) view.findViewById(R.id.vat_amount);
-        mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
         mPrevMonthView = (TextView) view.findViewById(R.id.bill_month_prev);
-        mBillMonthTextView = (TextView) view.findViewById(R.id.bill_month_view);
-        mBillStatusTextView = (TextView) view.findViewById(R.id.bill_status_view);
         customerIDView = view.findViewById(R.id.customer_id_view);
         infoView = view.findViewById(R.id.info_view);
+        mCurrentPackageView = (TextView) view.findViewById(R.id.current_package_view);
         mAccountIDEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
+        mAmountEditText = (EditText) view.findViewById(R.id.amount_edit_text);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
-        mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number);
 
         mPrevMonthView.setText("( Bill month " + ((UtilityBillPaymentActivity) getActivity()).getPreviousMonth() + " )");
 
@@ -121,7 +109,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     }
 
     private void launchOTPVerification() {
-        String jsonString = new Gson().toJson(mWestZoneBillPayRequest);
+        String jsonString = new Gson().toJson(mCarnivalBillPayRequst);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
                 Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
@@ -138,7 +126,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                             getCustomerInfo();
                         }
                     } else {
-                        if (isUserEligibleToPaySufficient()) {
+                        if (ifUserEligibleToPaySufficient()) {
                             attemptBillPayWithPinCheck();
                         }
                     }
@@ -147,6 +135,35 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                 }
             }
         });
+    }
+
+    private boolean ifUserEligibleToPaySufficient() {
+        String errorMessage = null;
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+            //validation check of amount
+            if (mAmountEditText.getText() != null) {
+                final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
+                if (topUpAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
+                } else {
+                    final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+
+                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                }
+            } else {
+                errorMessage = "Please enter an amount";
+            }
+        } else {
+            errorMessage = getString(R.string.balance_not_available);
+        }
+        if (errorMessage != null) {
+            mAmountEditText.setError(errorMessage);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void attemptBillPayWithPinCheck() {
@@ -163,17 +180,17 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     }
 
     private void attemptBillPay(String pin) {
-        if (mWestZoneBillPayTask != null) {
+        if (mDozeBillPayTask != null) {
             return;
         } else {
-            mWestZoneBillPayRequest = new WestZoneBillPayRequest(mCustomerID, pin);
+            mCarnivalBillPayRequst = new CarnivalBillPayRequest(mCustomerID, mAmount, pin);
 
             Gson gson = new Gson();
-            String json = gson.toJson(mWestZoneBillPayRequest);
-            mWestZoneBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WEST_ZONE_BILL_PAY,
-                    Constants.BASE_URL_UTILITY + Constants.URL_WEST_ZONE_BILL_PAY, json, getActivity(), false);
-            mWestZoneBillPayTask.mHttpResponseListener = this;
-            mWestZoneBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            String json = gson.toJson(mCarnivalBillPayRequst);
+            mDozeBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CARNIVAL_BILL_PAY,
+                    Constants.BASE_URL_UTILITY + Constants.URL_DOZE_BILL_PAY, json, getActivity(), false);
+            mDozeBillPayTask.mHttpResponseListener = this;
+            mDozeBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mCustomProgressDialog.setLoadingMessage("Please wait");
             mCustomProgressDialog.showDialog();
         }
@@ -190,58 +207,16 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     }
 
     private void getCustomerInfo() {
-        if (mWestZoneCustomerInfoTask != null) {
+        if (mCarnivalUserInfoGetTask != null) {
             return;
         } else {
             mProgressDialog.setMessage("Please wait");
-            mUri = Constants.BASE_URL_UTILITY + Constants.URL_WEST_ZONE + mCustomerID;
-            mWestZoneCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER, mUri,
+            mUri = Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL + mCustomerID;
+            mCarnivalUserInfoGetTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DOZE_CUSTOMER, mUri,
                     getActivity(), this, true);
-            mWestZoneCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mCarnivalUserInfoGetTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
         }
-    }
-
-    private boolean isUserEligibleToPaySufficient() {
-        boolean cancel = false;
-        mTotalAmountTextView.setError(null);
-        String errorMessage = null;
-        if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-            return false;
-        }
-
-        if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
-            DialogUtils.showDialogVerificationRequired(getActivity());
-            return false;
-        }
-
-        if (SharedPrefManager.ifContainsUserBalance()) {
-            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-
-            //validation check of amount
-            if (mTotalAmountTextView.getText() != null) {
-                final BigDecimal topUpAmount = new BigDecimal(mTotalAmountTextView.getText().toString());
-                if (topUpAmount.compareTo(balance) > 0) {
-                    errorMessage = getString(R.string.insufficient_balance);
-                } else {
-                    final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
-                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
-                }
-            }
-        } else {
-            errorMessage = getString(R.string.balance_not_available);
-            cancel = true;
-        }
-
-        if (errorMessage != null) {
-            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-            cancel = true;
-        }
-        return !cancel;
     }
 
     private boolean verifyUserInput() {
@@ -262,25 +237,11 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     }
 
     private void fillUpFiledsWithData() {
-        mNameTextView.setText(westZoneCustomerInfoResponse.getName());
-        mPrimaryAmountTextView.setText(westZoneCustomerInfoResponse.getPrincipalAmount());
-        mBillStatusTextView.setText(westZoneCustomerInfoResponse.getBillStatus());
-        mBillMonthTextView.setText(westZoneCustomerInfoResponse.getBillMonth());
-        mAccountIDTextView.setText(westZoneCustomerInfoResponse.getAccountNumber());
-        mVatTextView.setText(westZoneCustomerInfoResponse.getVatAmount());
-        mTotalAmountTextView.setText(westZoneCustomerInfoResponse.getTotalAmount());
-        mAmount = westZoneCustomerInfoResponse.getTotalAmount();
-        mBillNumberTextView.setText(westZoneCustomerInfoResponse.getBillNumber());
+        mNameTextView.setText(carnivalCustomerInfoResponse.getName());
+        mCurrentPackageView.setText(carnivalCustomerInfoResponse.getCurrentPackageRate());
         mContinueButton.setText("Pay bill");
         infoView.setVisibility(View.VISIBLE);
         customerIDView.setVisibility(View.GONE);
-        if (westZoneCustomerInfoResponse.getBillStatus() != null) {
-            if (westZoneCustomerInfoResponse.getBillStatus().toLowerCase().equals("paid")) {
-                mContinueButton.setEnabled(false);
-            } else {
-                mContinueButton.setEnabled(true);
-            }
-        }
     }
 
     @Override
@@ -288,20 +249,20 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mCustomProgressDialog.dismissDialog();
-            mWestZoneCustomerInfoTask = null;
-            mWestZoneBillPayTask = null;
+            mCarnivalUserInfoGetTask = null;
+            mDozeBillPayTask = null;
             return;
         } else {
             try {
                 Gson gson = new Gson();
-                if (result.getApiCommand().equals(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER)) {
-                    westZoneCustomerInfoResponse = gson.fromJson(result.getJsonString(), WestZoneCustomerInfoResponse.class);
+                if (result.getApiCommand().equals(Constants.COMMAND_GET_DOZE_CUSTOMER)) {
+                    carnivalCustomerInfoResponse = gson.fromJson(result.getJsonString(), CarnivalCustomerInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         fillUpFiledsWithData();
                     } else {
-                        Toast.makeText(getContext(), westZoneCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), carnivalCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                    mWestZoneCustomerInfoTask = null;
+                    mCarnivalUserInfoGetTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         gson = new Gson();
@@ -329,7 +290,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                         }
                     }
                     mGetBusinessRuleTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_WEST_ZONE_BILL_PAY)) {
+                } else if (result.getApiCommand().equals(Constants.COMMAND_CARNIVAL_BILL_PAY)) {
                     try {
                         mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
@@ -360,7 +321,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
 
                                 }
                             }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
@@ -370,7 +331,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mGenericBillPayResponse.getMessage());
                                 }
                             }, 2000);
-                            Utilities.sendBlockedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                            Utilities.sendBlockedEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                             final String errorMessage;
                             if (!TextUtils.isEmpty(mGenericBillPayResponse.getMessage())) {
@@ -404,23 +365,24 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                                 }
                                 //Google Analytic event
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mGenericBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mGenericBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
+                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }
                     }
-                    mWestZoneBillPayTask = null;
+                    mDozeBillPayTask = null;
                 }
             } catch (Exception e) {
                 mProgressDialog.dismiss();
-                mWestZoneCustomerInfoTask = null;
-                mWestZoneBillPayTask = null;
+                mCarnivalUserInfoGetTask = null;
+                mDozeBillPayTask = null;
                 mGetBusinessRuleTask = null;
                 e.printStackTrace();
+                Toast.makeText(getContext(), getString(R.string.request_failed), Toast.LENGTH_LONG).show();
             }
         }
 

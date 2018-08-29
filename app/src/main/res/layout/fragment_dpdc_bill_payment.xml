@@ -22,7 +22,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/wzone" />
+                android:src="@drawable/dpdc" />
 
             <LinearLayout
                 android:id="@+id/customer_id_view"
@@ -44,7 +44,29 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
-                        android:hint="Westzone account number"
+                        android:hint="DPDC Account Number"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </android.support.design.widget.TextInputLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/CustomTextInputLayout">
+
+                    <EditText
+                        android:id="@+id/location_code_edit_text"
+                        style="@style/CustomEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="0dp"
+                        android:hint="Location Code"
                         android:inputType="text"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
@@ -62,13 +84,14 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:gravity="left"
-                    android:text="@string/west_zone_bill_pay_message" />
+                    android:text="@string/dpdc_bill_pay_message" />
+
                 <TextView
+                    android:id="@+id/bill_month_prev"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/bill_month_prev"
                     android:gravity="center_horizontal"
-                    android:text="(Bill month "/>
+                    android:text="(Bill month " />
             </LinearLayout>
 
             <LinearLayout
@@ -84,6 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/value8"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:weightSum="2">
 
                     <TextView
@@ -95,9 +119,9 @@
                     <TextView
                         android:id="@+id/name_view"
                         android:layout_width="0dp"
-                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:text="" />
                 </LinearLayout>
 
@@ -123,9 +147,9 @@
                     <TextView
                         android:id="@+id/account_number_view"
                         android:layout_width="0dp"
-                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:text="" />
                 </LinearLayout>
 
@@ -140,6 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/value8"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:weightSum="2">
 
                     <TextView
@@ -151,9 +176,9 @@
                     <TextView
                         android:id="@+id/bill_month_view"
                         android:layout_width="0dp"
-                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:text="" />
                 </LinearLayout>
 
@@ -161,7 +186,8 @@
                     style="@style/Divider"
                     android:layout_marginBottom="@dimen/value8"
                     android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp" />
+                    android:layout_marginRight="0dp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -179,9 +205,9 @@
                     <TextView
                         android:id="@+id/bill_number"
                         android:layout_width="0dp"
-                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:text="" />
                 </LinearLayout>
 
@@ -217,8 +243,8 @@
                     style="@style/Divider"
                     android:layout_marginBottom="@dimen/value8"
                     android:layout_marginLeft="0dp"
-                    android:visibility="gone"
-                    android:layout_marginRight="0dp" />
+                    android:layout_marginRight="0dp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -246,8 +272,8 @@
                     style="@style/Divider"
                     android:layout_marginBottom="@dimen/value8"
                     android:layout_marginLeft="0dp"
-                    android:visibility="gone"
-                    android:layout_marginRight="0dp" />
+                    android:layout_marginRight="0dp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -265,9 +291,9 @@
                     <TextView
                         android:id="@+id/total_amount_view"
                         android:layout_width="0dp"
-                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:text="" />
                 </LinearLayout>
 
@@ -292,9 +318,9 @@
                     <TextView
                         android:id="@+id/bill_status_view"
                         android:layout_width="0dp"
-                        android:gravity="right"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:text="" />
                 </LinearLayout>
             </LinearLayout>

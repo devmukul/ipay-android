@@ -154,7 +154,7 @@
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
                         android:gravity="left"
-                        android:text="@string/prepaid_amount_bill_pay_help_message" />
+                        android:text="@string/link3_bill_pay_help_message" />
 
                 </LinearLayout>
 

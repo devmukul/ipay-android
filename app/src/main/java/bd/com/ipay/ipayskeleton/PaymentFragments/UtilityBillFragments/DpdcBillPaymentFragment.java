@@ -36,9 +36,10 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneBillPayRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.WestZoneCustomerInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DPDCUserInfoGetRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DpdcBillPayRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DpdcBillPayResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DpdcCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
@@ -53,7 +54,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class WestzoneBillPaymentFragment extends BaseFragment implements HttpResponseListener {
+public class DpdcBillPaymentFragment extends BaseFragment implements HttpResponseListener {
     private TextView mNameTextView;
     private TextView mAccountIDTextView;
     private TextView mPrimaryAmountTextView;
@@ -63,6 +64,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     private TextView mBillStatusTextView;
     private TextView mBillNumberTextView;
     private EditText mAccountIDEditText;
+    private EditText mLocationCodeEditText;
     private TextView mPrevMonthView;
     private Button mContinueButton;
     private View infoView;
@@ -71,23 +73,26 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private String mUri;
-    private String mCustomerID;
+    private String mAccountID;
+    private String mLocationCode;
+    private String mJsonString;
     private String mAmount;
 
-    private HttpRequestGetAsyncTask mWestZoneCustomerInfoTask = null;
-    private WestZoneCustomerInfoResponse westZoneCustomerInfoResponse;
-    private HttpRequestPostAsyncTask mWestZoneBillPayTask = null;
-    private WestZoneBillPayRequest mWestZoneBillPayRequest;
+    private HttpRequestPostAsyncTask mDpdcCustomerInfoTask = null;
+    private DpdcCustomerInfoResponse mDpdcCustomerInfoResponse;
+    private DPDCUserInfoGetRequest mDpdcUserInfoGetRequest;
+    private HttpRequestPostAsyncTask mDpdcBillPayTask = null;
+    private DpdcBillPayRequest mDpdcBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
-    private GenericBillPayResponse mGenericBillPayResponse;
+    private DpdcBillPayResponse mDpdcBillPayResponse;
     private CustomProgressDialog mCustomProgressDialog;
 
     @Nullable
     @Override
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_westzone_bill_pay, container, false);
-        getActivity().setTitle("West Zone");
+        View view = inflater.inflate(R.layout.fragment_dpdc_bill_payment, container, false);
+        getActivity().setTitle("DPDC");
         attemptGetBusinessRule(ServiceIdConstants.UTILITY_BILL_PAYMENT);
         mProgressDialog = new ProgressDialog(getContext());
         mCustomProgressDialog = new CustomProgressDialog(getContext());
@@ -102,10 +107,11 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
 
         mNameTextView = (TextView) view.findViewById(R.id.name_view);
         mAccountIDTextView = (TextView) view.findViewById(R.id.account_number_view);
+        mLocationCodeEditText = (EditText) view.findViewById(R.id.location_code_edit_text);
         mPrimaryAmountTextView = (TextView) view.findViewById(R.id.principal_amount_view);
         mVatTextView = (TextView) view.findViewById(R.id.vat_amount);
-        mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
         mPrevMonthView = (TextView) view.findViewById(R.id.bill_month_prev);
+        mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
         mBillMonthTextView = (TextView) view.findViewById(R.id.bill_month_view);
         mBillStatusTextView = (TextView) view.findViewById(R.id.bill_status_view);
         customerIDView = view.findViewById(R.id.customer_id_view);
@@ -121,7 +127,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     }
 
     private void launchOTPVerification() {
-        String jsonString = new Gson().toJson(mWestZoneBillPayRequest);
+        String jsonString = new Gson().toJson(mDpdcBillPayRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
                 Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
@@ -163,42 +169,19 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
     }
 
     private void attemptBillPay(String pin) {
-        if (mWestZoneBillPayTask != null) {
+        if (mDpdcBillPayTask != null) {
             return;
         } else {
-            mWestZoneBillPayRequest = new WestZoneBillPayRequest(mCustomerID, pin);
+            mDpdcBillPayRequest = new DpdcBillPayRequest(mAccountID, pin, mLocationCode);
 
             Gson gson = new Gson();
-            String json = gson.toJson(mWestZoneBillPayRequest);
-            mWestZoneBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WEST_ZONE_BILL_PAY,
-                    Constants.BASE_URL_UTILITY + Constants.URL_WEST_ZONE_BILL_PAY, json, getActivity(), false);
-            mWestZoneBillPayTask.mHttpResponseListener = this;
-            mWestZoneBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            String json = gson.toJson(mDpdcBillPayRequest);
+            mDpdcBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DPDC_BILL_PAY,
+                    Constants.BASE_URL_UTILITY + Constants.URL_DPDC_BILL_PAY, json, getActivity(), false);
+            mDpdcBillPayTask.mHttpResponseListener = this;
+            mDpdcBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mCustomProgressDialog.setLoadingMessage("Please wait");
             mCustomProgressDialog.showDialog();
-        }
-    }
-
-    private void attemptGetBusinessRule(int serviceID) {
-        if (mGetBusinessRuleTask != null) {
-            return;
-        }
-        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE_V2 + "/" + serviceID, getActivity(), false);
-        mGetBusinessRuleTask.mHttpResponseListener = this;
-        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void getCustomerInfo() {
-        if (mWestZoneCustomerInfoTask != null) {
-            return;
-        } else {
-            mProgressDialog.setMessage("Please wait");
-            mUri = Constants.BASE_URL_UTILITY + Constants.URL_WEST_ZONE + mCustomerID;
-            mWestZoneCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER, mUri,
-                    getActivity(), this, true);
-            mWestZoneCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            mProgressDialog.show();
         }
     }
 
@@ -244,38 +227,73 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
         return !cancel;
     }
 
+    private void attemptGetBusinessRule(int serviceID) {
+        if (mGetBusinessRuleTask != null) {
+            return;
+        }
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE_V2 + "/" + serviceID, getActivity(), false);
+        mGetBusinessRuleTask.mHttpResponseListener = this;
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getCustomerInfo() {
+        if (mDpdcCustomerInfoTask != null) {
+            return;
+        } else {
+            mProgressDialog.setMessage("Please wait");
+            mUri = Constants.BASE_URL_UTILITY + Constants.URL_DPDC_CUSTOMER_INFO;
+            mDpdcUserInfoGetRequest = new DPDCUserInfoGetRequest(mAccountID, mLocationCode);
+            mJsonString = new Gson().toJson(mDpdcUserInfoGetRequest);
+            mDpdcCustomerInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_DPDC_CUSTOMER, mUri, mJsonString,
+                    getActivity(), this, true);
+            mDpdcCustomerInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mProgressDialog.show();
+        }
+    }
+
     private boolean verifyUserInput() {
         Editable editable;
         editable = mAccountIDEditText.getText();
         if (editable == null) {
-            mAccountIDEditText.setError(getString(R.string.enter_customer_id));
+            mAccountIDEditText.setError(getString(R.string.enter_account_number));
             return false;
         } else {
-            mCustomerID = editable.toString();
-            if (mCustomerID == null || mCustomerID.isEmpty()) {
-                mAccountIDEditText.setError(getString(R.string.enter_customer_id));
+            mAccountID = editable.toString();
+            if (mAccountID == null || mAccountID.isEmpty()) {
+                mAccountIDEditText.setError(getString(R.string.enter_account_number));
                 return false;
-            } else {
-                return true;
             }
         }
+        editable = mLocationCodeEditText.getText();
+        if (editable == null) {
+            mLocationCodeEditText.setError(getString(R.string.enter_location_code));
+            return false;
+        } else {
+            mLocationCode = editable.toString();
+            if (mLocationCode == null || mLocationCode.isEmpty()) {
+                mLocationCodeEditText.setError(getString(R.string.enter_location_code));
+                return false;
+            }
+        }
+        return true;
     }
 
     private void fillUpFiledsWithData() {
-        mNameTextView.setText(westZoneCustomerInfoResponse.getName());
-        mPrimaryAmountTextView.setText(westZoneCustomerInfoResponse.getPrincipalAmount());
-        mBillStatusTextView.setText(westZoneCustomerInfoResponse.getBillStatus());
-        mBillMonthTextView.setText(westZoneCustomerInfoResponse.getBillMonth());
-        mAccountIDTextView.setText(westZoneCustomerInfoResponse.getAccountNumber());
-        mVatTextView.setText(westZoneCustomerInfoResponse.getVatAmount());
-        mTotalAmountTextView.setText(westZoneCustomerInfoResponse.getTotalAmount());
-        mAmount = westZoneCustomerInfoResponse.getTotalAmount();
-        mBillNumberTextView.setText(westZoneCustomerInfoResponse.getBillNumber());
+        mNameTextView.setText(mDpdcCustomerInfoResponse.getName());
+        mPrimaryAmountTextView.setText(mDpdcCustomerInfoResponse.getPrincipalAmount());
+        mBillStatusTextView.setText(mDpdcCustomerInfoResponse.getBillStatus());
+        mBillMonthTextView.setText(mDpdcCustomerInfoResponse.getBillMonth());
+        mAccountIDTextView.setText(mDpdcCustomerInfoResponse.getAccountNumber());
+        mVatTextView.setText(mDpdcCustomerInfoResponse.getVatAmount());
+        mTotalAmountTextView.setText(mDpdcCustomerInfoResponse.getTotalBillAmount());
+        mAmount = mDpdcCustomerInfoResponse.getTotalBillAmount();
+        mBillNumberTextView.setText(mDpdcCustomerInfoResponse.getBillNumber());
         mContinueButton.setText("Pay bill");
         infoView.setVisibility(View.VISIBLE);
         customerIDView.setVisibility(View.GONE);
-        if (westZoneCustomerInfoResponse.getBillStatus() != null) {
-            if (westZoneCustomerInfoResponse.getBillStatus().toLowerCase().equals("paid")) {
+        if (mDpdcCustomerInfoResponse.getBillStatus() != null) {
+            if (mDpdcCustomerInfoResponse.getBillStatus().toLowerCase().equals("paid")) {
                 mContinueButton.setEnabled(false);
             } else {
                 mContinueButton.setEnabled(true);
@@ -288,20 +306,20 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mCustomProgressDialog.dismissDialog();
-            mWestZoneCustomerInfoTask = null;
-            mWestZoneBillPayTask = null;
+            mDpdcCustomerInfoTask = null;
+            mDpdcBillPayTask = null;
             return;
         } else {
             try {
                 Gson gson = new Gson();
-                if (result.getApiCommand().equals(Constants.COMMAND_GET_WEST_ZONE_CUSTOMER)) {
-                    westZoneCustomerInfoResponse = gson.fromJson(result.getJsonString(), WestZoneCustomerInfoResponse.class);
+                if (result.getApiCommand().equals(Constants.COMMAND_GET_DPDC_CUSTOMER)) {
+                    mDpdcCustomerInfoResponse = gson.fromJson(result.getJsonString(), DpdcCustomerInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         fillUpFiledsWithData();
                     } else {
-                        Toast.makeText(getContext(), westZoneCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), mDpdcCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                    mWestZoneCustomerInfoTask = null;
+                    mDpdcCustomerInfoTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         gson = new Gson();
@@ -329,9 +347,9 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                         }
                     }
                     mGetBusinessRuleTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_WEST_ZONE_BILL_PAY)) {
+                } else if (result.getApiCommand().equals(Constants.COMMAND_DPDC_BILL_PAY)) {
                     try {
-                        mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
+                        mDpdcBillPayResponse = gson.fromJson(result.getJsonString(), DpdcBillPayResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                             if (getActivity() != null) {
                                 new Handler().postDelayed(new Runnable() {
@@ -350,7 +368,7 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                             } else {
-                                mCustomProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
+                                mCustomProgressDialog.showSuccessAnimationAndMessage(mDpdcBillPayResponse.getMessage());
                             }
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -360,39 +378,39 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
 
                                 }
                             }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                            Utilities.sendSuccessEventTracker(mTracker, Constants.DPDC_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                            mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+                            mCustomProgressDialog.showFailureAnimationAndMessage(mDpdcBillPayResponse.getMessage());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mGenericBillPayResponse.getMessage());
+                                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mDpdcBillPayResponse.getMessage());
                                 }
                             }, 2000);
-                            Utilities.sendBlockedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                            Utilities.sendBlockedEventTracker(mTracker, Constants.DPDC_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                             final String errorMessage;
-                            if (!TextUtils.isEmpty(mGenericBillPayResponse.getMessage())) {
-                                errorMessage = mGenericBillPayResponse.getMessage();
+                            if (!TextUtils.isEmpty(mDpdcBillPayResponse.getMessage())) {
+                                errorMessage = mDpdcBillPayResponse.getMessage();
                             } else {
                                 errorMessage = getString(R.string.recharge_failed);
                             }
                             mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
                         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                            Toast.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), mDpdcBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
                             mCustomProgressDialog.dismissDialog();
-                            SecuritySettingsActivity.otpDuration = mGenericBillPayResponse.getOtpValidFor();
+                            SecuritySettingsActivity.otpDuration = mDpdcBillPayResponse.getOtpValidFor();
                             launchOTPVerification();
                         } else {
                             if (getActivity() != null) {
                                 if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
-                                    mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+                                    mCustomProgressDialog.showFailureAnimationAndMessage(mDpdcBillPayResponse.getMessage());
                                 } else {
-                                    Toast.makeText(getContext(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), mDpdcBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
                                 }
 
-                                if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                if (mDpdcBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                                     if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
                                         mCustomProgressDialog.dismissDialog();
@@ -404,21 +422,21 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
                                 }
                                 //Google Analytic event
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.WESTZONE_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mGenericBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.DPDC_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDpdcBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
+                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                         }
                     }
-                    mWestZoneBillPayTask = null;
+                    mDpdcBillPayTask = null;
                 }
             } catch (Exception e) {
                 mProgressDialog.dismiss();
-                mWestZoneCustomerInfoTask = null;
-                mWestZoneBillPayTask = null;
+                mDpdcCustomerInfoTask = null;
+                mDpdcBillPayTask = null;
                 mGetBusinessRuleTask = null;
                 e.printStackTrace();
             }

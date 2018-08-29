@@ -246,9 +246,9 @@
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                         android:layout_weight="1"
+                        android:visibility="gone"
                         android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card"
-                        android:visibility="gone">
+                        android:padding="@dimen/activity_horizontal_margin_card">
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:layout_width="@dimen/value80"
@@ -309,7 +309,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:weightSum="3"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/west_zone"
@@ -319,8 +320,7 @@
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card"
-                        android:visibility="gone">
+                        android:padding="@dimen/activity_horizontal_margin_card">
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:layout_width="@dimen/value80"
@@ -329,7 +329,7 @@
                             android:elevation="@dimen/value2"
                             android:padding="@dimen/value15"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/westzone"
+                            android:src="@drawable/wzone"
                             card_view:riv_corner_radius="@dimen/value2" />
 
                         <TextView
@@ -343,15 +343,131 @@
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/desco"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/activity_horizontal_margin_card">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="@dimen/value80"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/desco"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/desco"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/dpdc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/activity_horizontal_margin_card">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="@dimen/value80"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/dpdc"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/dpdc"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <LinearLayout
+                            android:id="@+id/carnival"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                            android:layout_weight="1"
+                            android:visibility="gone"
+                            android:orientation="vertical"
+                            android:padding="@dimen/activity_horizontal_margin_card">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/value80"
+                                android:layout_height="@dimen/value80"
+                                android:background="@drawable/semiround_white_default"
+                                android:elevation="@dimen/value2"
+                                android:padding="@dimen/value15">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/ic_carnival" />
+                            </LinearLayout>
+
+
+
+                            <TextView
+                                android:layout_width="@dimen/value80"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/carnival"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/scrollViewHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
             </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/scrollViewHolder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
         </LinearLayout>
     </ScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>
