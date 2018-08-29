@@ -29,7 +29,7 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 174
+        versionCode 175
         versionName "1.8.8"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
