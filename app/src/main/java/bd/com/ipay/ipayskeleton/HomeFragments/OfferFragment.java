@@ -47,7 +47,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     private PromotionsAdapter mPromotionsAdapter;
     private LinearLayoutManager mLayoutManager;
     private List<Promotion> mPromotionList = new ArrayList<>();
-    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+//    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
     private boolean isLoading = false;
 
@@ -70,7 +70,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
         initializeViews(v);
         setupViewsAndActions();
 
-        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+    /*    mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity()) && mPromotionTask == null) {
@@ -79,7 +79,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
-        });
+        });*/
 
         return v;
     }
@@ -93,11 +93,11 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public void onPause() {
         super.onPause();
-        if (mSwipeRefreshLayout != null) {
+       /* if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
             mSwipeRefreshLayout.destroyDrawingCache();
             mSwipeRefreshLayout.clearAnimation();
-        }
+        }*/
     }
 
     @Override
@@ -160,7 +160,8 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     private void initializeViews(View v) {
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mPromotionsRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mPromotionsRecyclerView.setNestedScrollingEnabled(true);
+        //mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
     }
 
     private void setupViewsAndActions() {
@@ -200,7 +201,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.promotions_get_failed, Toast.LENGTH_LONG).show();
             }
-            mSwipeRefreshLayout.setRefreshing(false);
+            //mSwipeRefreshLayout.setRefreshing(false);
             mPromotionTask = null;
             if (this.isAdded()) setContentShown(true);
         }
