@@ -45,9 +45,8 @@
 
         <fragment
             android:layout_width="match_parent"
-            android:name="bd.com.ipay.ipayskeleton.HomeFragments.BottomSheetFragment"
-            android:layout_height="wrap_content"
-            app:layout_behavior="android.support.design.widget.BottomSheetBehavior"/>
+            android:name="bd.com.ipay.ipayskeleton.HomeFragments.OfferFragment"
+            android:layout_height="wrap_content"/>
 
         <include
             android:id="@+id/test_sheet"
