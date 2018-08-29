@@ -154,8 +154,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private BusinessOutletSelectorDialog moutletSelectorDialog;
     List<Outlets> outlets;
     private boolean hasOutlet = false;
-    private String mBusinessName;
-    private String mBusinessPhotoUri;
+//    private String mBusinessName;
+//    private String mBusinessPhotoUri;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -428,7 +428,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             @Override
             public void onClick(View view) {
                 if (outlets.size()>0) {
-                    moutletSelectorDialog = new BusinessOutletSelectorDialog(getContext(), mReceiverName, mBusinessPhotoUri, outlets);
+                    moutletSelectorDialog = new BusinessOutletSelectorDialog(getContext(), mReceiverName, mReceiverPhotoUri, outlets);//dfgdfgdfg
                     moutletSelectorDialog.setOnResourceSelectedListener(new BusinessOutletSelectorDialog.OnResourceSelectedListener() {
                         @Override
                         public void onResourceSelected(Outlets allowablePackage) {
@@ -512,8 +512,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     hasOutlet =true;
                     Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
                     outlets = new Gson().fromJson(outlet, outletListType);
-                    mBusinessName = name;
-                    mBusinessPhotoUri = imageURL;
+                    mReceiverName = name;
+                    mReceiverPhotoUri = imageURL;
                     outletView.setVisibility(View.VISIBLE);
                     mMobileNumberEditText.setText(inputText);
                 }else{
@@ -654,6 +654,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             String thanaDistrict = data.getStringExtra(Constants.THANA) + ", " + data.getStringExtra(Constants.DISTRICT);
             String outletString = data.getStringExtra(Constants.OUTLET);
 
+            System.out.println("Test "+name+" "+imageURL);
+
             if (!name.isEmpty()) {
                 mReceiverName = name;
                 businessNameTextView.setText(mReceiverName);
@@ -663,8 +665,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 hasOutlet =true;
                 Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
                 outlets = new Gson().fromJson(outletString, outletListType);
-                mBusinessName = name;
-                mBusinessPhotoUri = imageURL;
+                mReceiverName = name;
+                mReceiverPhotoUri = imageURL;
                 outletView.setVisibility(View.VISIBLE);
                 mMobileNumberEditText.setText(mobileNumber);
             }else{
@@ -1272,8 +1274,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             hasOutlet =true;
             Type outletListType = new TypeToken<ArrayList<Outlets>>(){}.getType();
             outlets = new Gson().fromJson(mBussinessContact.getOutletString(), outletListType);
-            mBusinessName = mBussinessContact.getBusinessName();;
-            mBusinessPhotoUri = mBussinessContact.getProfilePictureUrl();;
+            mReceiverName = mBussinessContact.getBusinessName();
+            mReceiverPhotoUri = mBussinessContact.getProfilePictureUrl();
             outletView.setVisibility(View.VISIBLE);
             mMobileNumberEditText.setText(mBussinessContact.getMobileNumber());
         }else{
