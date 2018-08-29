@@ -39,6 +39,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -651,29 +652,38 @@ public class Utilities {
         return "";
     }
 
-    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
-        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
+    public static com.tsongkha.spinnerdatepicker.DatePickerDialog getDatePickerDialog(Context context, Date date, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
 
         return datePickerDialog;
     }
 
-    public static DatePickerDialog initDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+    public static com.tsongkha.spinnerdatepicker.DatePickerDialog initDatePickerDialog(Context context, Date date, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener) {
         final Calendar calendar = Calendar.getInstance();
-
+        int year, month, day;
+        int minYear = calendar.get(Calendar.YEAR) - Constants.MIN_AGE_LIMIT;
+        int minMonth = calendar.get(Calendar.MONTH);
+        int minDay = calendar.get(Calendar.DAY_OF_MONTH);
         if (date == null) {
-            setCalenderWithAgeLimit(calendar); // If no date was selected previously
-        } else
+            year = calendar.get(Calendar.YEAR) - Constants.MIN_AGE_LIMIT;
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        } else {
             calendar.setTime(date);
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        }
 
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                context, onDateSetListener, year, month, day);
-
-        setLimitInDatePickerDialog(datePickerDialog);
-        return datePickerDialog;
+        SpinnerDatePickerDialogBuilder spinnerDatePickerDialogBuilder = new SpinnerDatePickerDialogBuilder()
+                .context(context)
+                .spinnerTheme(R.style.NumberPickerStyle)
+                .showTitle(true)
+                .callback(onDateSetListener)
+                .showDaySpinner(true)
+                .defaultDate(year, month, day)
+                .maxDate(minYear, minMonth, minDay);
+        return spinnerDatePickerDialogBuilder.build();
     }
 
     private static void setCalenderWithAgeLimit(Calendar calendar) {
@@ -936,20 +946,18 @@ public class Utilities {
 
     public static List<IpayService> getAvailableAddMoneyOptions(boolean isOnlyByCard) {
         if (isOnlyByCard) {
-            if(ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
                 ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
             }
         } else {
-            if(ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
+            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
                     ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
                 ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
-            }
-            else if(ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
-                    !ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)){
+            } else if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
+                    !ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
                 ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_BANK};
-            }
-            else if( !ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
-                    ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)){
+            } else if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
+                    ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
                 ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
             }
         }

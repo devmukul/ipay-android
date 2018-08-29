@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/tools" xmlns:tools="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -17,6 +17,12 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="NumberPickerStyle">
+        <item name="android:textSize">22dp</item>
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:colorControlNormal" tools:targetApi="lollipop">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -644,7 +650,6 @@
     </style>
 
 
-
     <style name="PaymentReviewImageStyle">
         <item name="android:layout_width">74dp</item>
         <item name="android:layout_height">74dp</item>
@@ -824,7 +829,6 @@
     </style>
 
 
-
     <style name="DividerReview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/divider_space</item>
@@ -869,19 +873,20 @@
     </style><!-- Business Profile -->
 
 
-    <!-- Transaction History --><style name="TransactionHistoryFilterCheckboxStyle">
+    <!-- Transaction History -->
+    <style name="TransactionHistoryFilterCheckboxStyle">
 
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-    <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
-    <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
-    <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
-    <item name="android:drawableRight">@drawable/round_checkbox_for_filter</item>
-    <item name="android:button">@null</item>
-    <item name="android:textSize">14sp</item>
-    <item name="android:textColor">@color/colorTextPrimary</item>
-</style>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:drawableRight">@drawable/round_checkbox_for_filter</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
     <!-- Transaction History --><style name="BusinessRolePrivilegeCheckboxStyle">
 
     <item name="android:layout_width">match_parent</item>
