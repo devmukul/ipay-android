@@ -60,6 +60,12 @@ public class LauncherActivity extends AppCompatActivity {
                                             new Gson().toJson(updateNotificationStateRequest), this, true).
                                             executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 }
+                            } else {
+                                try {
+                                    Utilities.performDeepLinkAction(this, deepLinkAction);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         } else {
                             launchHomeActivity();

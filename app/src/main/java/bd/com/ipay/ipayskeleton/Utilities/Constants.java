@@ -166,7 +166,7 @@ public class Constants {
     public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
     public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
     public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
-    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN_V2";
     public static final String URL_DESCO_CUSTOMER_INFO = "desco/bill-info/";
     public static final String DESCO_BILL_PAY = "DESCO BILL PAY";
     public static final String DESCO = "DESCO";
