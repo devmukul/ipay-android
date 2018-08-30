@@ -238,24 +238,21 @@ public class Constants {
     public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
     public static final String KEY_NAME = "key_name";
 
-    public static final String BASE_URL_MM = BuildConfig.BASE_URL_MM;
-    public static final String BASE_URL_SM = BuildConfig.BASE_URL_SM;
-    public static final String BASE_URL_PG = BuildConfig.BASE_URL_PG;
-    public static final String BASE_URL_CARD = BuildConfig.BASE_URL_CARD;
-    public static final String BASE_URL_EDU = BuildConfig.BASE_URL_EDU;
-    public static final String BASE_URL_CONTACT = BuildConfig.BASE_URL_CONTACT;
-    public static final String BASE_URL_ADMIN = BuildConfig.BASE_URL_ADMIN;
-    public static final String BASE_URL_PUSH_NOTIFICATION = BuildConfig.BASE_URL_PUSH;
-    public static final String BASE_URL_FTP_SERVER = BuildConfig.BASE_URL_FTP;
-    public static final String BASE_URL_WEB = BuildConfig.BASE_URL_WEB;
-    public static final String BASE_URL_DATA_COLLECTOR = BuildConfig.BASE_URL_DC;
-    public static final String SERVER_NAME = BuildConfig.SERVER_NAME;
-    public static final String BASE_URL_OFFER = BuildConfig.BASE_URL_OFFER;
-    public static final String BASE_URL_UTILITY = BuildConfig.BASE_URL_UTILITY;
+    public static final String BASE_URL_MM = BuildConfig.BASE_URL_IPAY + "/api/v1/";
+    public static final String BASE_URL_SM = BuildConfig.BASE_URL_IPAY + "/api/v1/money/";
+    public static final String BASE_URL_PG = BuildConfig.BASE_URL_IPAY + "/api/pg/order/";
+    public static final String BASE_URL_CARD = BuildConfig.BASE_URL_IPAY + "/api/v1/card/";
+    public static final String BASE_URL_EDU = BuildConfig.BASE_URL_IPAY + "/api/v1/em/";
+    public static final String BASE_URL_FTP_SERVER = BuildConfig.BASE_URL_IPAY;
+    public static final String BASE_URL_CONTACT = BuildConfig.BASE_URL_IPAY + "/external/v1/";
+    public static final String BASE_URL_ADMIN = BuildConfig.BASE_URL_IPAY + "/api/v1/support/";
+    public static final String BASE_URL_PUSH_NOTIFICATION = BuildConfig.BASE_URL_IPAY + "/api/v1/notification/";
+    public static final String BASE_URL_WEB = BuildConfig.BASE_URL_IPAY;
+    public static final String BASE_URL_DATA_COLLECTOR = BuildConfig.BASE_URL_IPAY + "/data-collector/v1/";
+    public static final String BASE_URL_OFFER = BuildConfig.BASE_URL_IPAY + "/offer_v2/api/v1/";
+    public static final String BASE_URL_UTILITY = BuildConfig.BASE_URL_IPAY + "/api/utility/";
     public static final String INTERCOM_API_KEY = BuildConfig.API_KEY_INTERCOM;
     public static final String INTERCOM_ANDROID_SDK_KEY = BuildConfig.SDK_KEY_INTERCOM;
-
-    public static final int LIVE_SERVER = 4;
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
