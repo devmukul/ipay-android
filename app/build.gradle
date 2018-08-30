@@ -35,7 +35,7 @@ android {
         versionName appProperties['app.version.name']
         vectorDrawables.useSupportLibrary = true
 
-        def buildVariant = getBuildVariant().toLowerCase()
+        def buildVariant = getBuildVariant()
         def environmentPath
         environmentPath = appProperties["env.path.$buildVariant"]
 
@@ -181,9 +181,13 @@ def getBuildVariant() {
     for (TaskExecutionRequest t : gradle.getStartParameter().getTaskRequests()) {
         for (String command : t.args) {
             if (command.matches(":app:generate(.*)Sources")) {
-                return command.replaceAll(":app:generate(.*)Sources", "\$1").replaceAll("debug", "test").replaceAll("Build", "")
+                return command.replaceAll(":app:generate(.*)Sources", "\$1")
+                        .toLowerCase()
+                        .replaceAll("debug", "test").replaceAll("build", "")
             } else if (command.matches(":app:assemble(.*)")) {
-                return command.replaceAll(":app:assemble(.*)", "\$1").replaceAll("debug", "test").replaceAll("Build", "")
+                return command.replaceAll(":app:assemble(.*)", "\$1")
+                        .toLowerCase()
+                        .replaceAll("debug", "test").replaceAll("build", "")
             }
         }
     }
