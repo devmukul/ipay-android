@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -205,7 +204,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             }
         });
 
-        if (mDeepLinkAction != null && !StringUtils.isEmpty(mDeepLinkAction.getQueryParameter())) {
+        if (mDeepLinkAction != null && !TextUtils.isEmpty(mDeepLinkAction.getQueryParameter())) {
             mPromoCodeEditText.setText(mDeepLinkAction.getQueryParameter());
             mPromoCodeEditText.setEnabled(false);
         }
