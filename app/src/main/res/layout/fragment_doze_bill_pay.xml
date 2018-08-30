@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
     <ScrollView
@@ -151,7 +151,7 @@
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
                         android:hint="Enter the amount you want to pay"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
 
