@@ -1,16 +1,17 @@
-import org.aspectj.bridge.IMessage
-import org.aspectj.bridge.MessageHandler
-import org.aspectj.tools.ajc.Main
-
 apply plugin: 'com.android.application'
 
 def keystorePropertiesFile = rootProject.file("../iPay_KeyStore/keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
+def appPropertiesFile = rootProject.file("app-settings.properties")
+def appProperties = new Properties()
+appProperties.load(new FileInputStream(appPropertiesFile))
+def envProperties
+
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.0'
+    compileSdkVersion appProperties['sdk.version.compile'] as int
+    buildToolsVersion appProperties['build.tool.version']
 
     signingConfigs {
         iPaySigningConfig {
@@ -27,44 +28,62 @@ android {
 
     defaultConfig {
         applicationId "bd.com.ipay.android"
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 175
-        versionName "1.8.8"
+        minSdkVersion appProperties['sdk.version.min'] as int
+        targetSdkVersion appProperties['sdk.version.target'] as int
         multiDexEnabled true
+        versionCode appProperties['app.version.code'] as int
+        versionName appProperties['app.version.name']
         vectorDrawables.useSupportLibrary = true
+
+        def buildVariant = getBuildVariant().toLowerCase()
+        def environmentPath
+        environmentPath = appProperties["env.path.$buildVariant"]
+
+        def envPropertiesFile = rootProject.file(environmentPath)
+        envProperties = new Properties()
+        envProperties.load(new FileInputStream(envPropertiesFile))
+        println("buildVariant = $buildVariant")
+        for (String key : envProperties.keySet()) {
+            buildConfigField "String", key.replaceAll("\\.", "_").toUpperCase(), "\"" + envProperties[key] + "\""
+        }
     }
 
     lintOptions {
         abortOnError false
     }
 
-    // Server Type 1 -> dev server
-    // Server Type 2 -> test server
-    // Server Type 3 -> stage server
-    // Server Type 4 -> live server
-    // Server Type 5 -> local server
-    def ServerType = java.lang.System.getProperty('ServerType') ?: "4"
-    def AutoLogin = java.lang.System.getProperty('AutoLogin') ?: "false"
-    def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "false"
-
     buildTypes {
         debug {
-            buildConfigField "int", "ServerType", ServerType
-            buildConfigField "boolean", "AutoLogin", AutoLogin
-            buildConfigField "boolean", "DebugOnOffStatus", DebugOnOffStatus
+            debuggable true
+            signingConfig signingConfigs.iPaySigningConfig
+        }
+        BuildTest {
+            debuggable true
+            signingConfig signingConfigs.iPaySigningConfig
+        }
+        BuildDev {
+            debuggable true
+            signingConfig signingConfigs.iPaySigningConfig
+        }
+        BuildStage {
+            debuggable true
+            signingConfig signingConfigs.iPaySigningConfig
+        }
+        BuildDemo {
+            debuggable true
+            signingConfig signingConfigs.iPaySigningConfig
+        }
+        BuildLocal {
+            debuggable true
+            signingConfig signingConfigs.iPaySigningConfig
         }
         release {
             signingConfig signingConfigs.iPaySigningConfig
-            buildConfigField "int", "ServerType", ServerType
-            buildConfigField "boolean", "AutoLogin", AutoLogin
-            buildConfigField "boolean", "DebugOnOffStatus", DebugOnOffStatus
-            minifyEnabled true
+            minifyEnabled appProperties["minify.enabled"] as boolean
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
 
-    useLibrary 'org.apache.http.legacy'
+    }
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/fonts'] } }
 }
 
@@ -120,9 +139,6 @@ dependencies {
     compile('org.apache.httpcomponents:httpmime:4.3.6') {
         exclude module: 'httpclient'
     }
-    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
-    compile 'org.apache.commons:commons-lang3:3.0'
-
     // Bottom Sheet
     compile 'com.flipboard:bottomsheet-core:1.5.0'
     compile 'com.flipboard:bottomsheet-commons:1.5.0'
@@ -161,42 +177,18 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 
-final def log = project.logger
-final def variants = project.android.applicationVariants
-
-variants.all { variant ->
-    JavaCompile javaCompile = variant.javaCompile
-    javaCompile.doLast {
-        String[] args = ["-showWeaveInfo",
-                         "-1.5",
-                         "-inpath", javaCompile.destinationDir.toString(),
-                         "-aspectpath", javaCompile.classpath.asPath,
-                         "-d", javaCompile.destinationDir.toString(),
-                         "-classpath", javaCompile.classpath.asPath,
-                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
-        log.debug "ajc args: " + Arrays.toString(args)
-
-        MessageHandler handler = new MessageHandler(true);
-        new Main().run(args, handler);
-        for (IMessage message : handler.getMessages(null, true)) {
-            switch (message.getKind()) {
-                case IMessage.ABORT:
-                case IMessage.ERROR:
-                case IMessage.FAIL:
-                    log.error message.message, message.thrown
-                    break;
-                case IMessage.WARNING:
-                    log.warn message.message, message.thrown
-                    break;
-                case IMessage.INFO:
-                    log.info message.message, message.thrown
-                    break;
-                case IMessage.DEBUG:
-                    log.debug message.message, message.thrown
-                    break;
+def getBuildVariant() {
+    for (TaskExecutionRequest t : gradle.getStartParameter().getTaskRequests()) {
+        for (String command : t.args) {
+            if (command.matches(":app:generate(.*)Sources")) {
+                return command.replaceAll(":app:generate(.*)Sources", "\$1").replaceAll("debug", "test").replaceAll("Build", "")
+            } else if (command.matches(":app:assemble(.*)")) {
+                return command.replaceAll(":app:assemble(.*)", "\$1").replaceAll("debug", "test").replaceAll("Build", "")
             }
         }
     }
+
+    return "release"
 }
 
 apply plugin: 'com.google.gms.google-services'

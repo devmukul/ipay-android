@@ -1,12 +1,16 @@
 apply plugin: 'com.android.library'
 
+def appPropertiesFile = rootProject.file("app-settings.properties")
+def appProperties = new Properties()
+appProperties.load(new FileInputStream(appPropertiesFile))
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion appProperties['sdk.version.compile'] as int
+    buildToolsVersion appProperties['build.tool.version']
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion appProperties['sdk.version.min'] as int
+        targetSdkVersion appProperties['sdk.version.target'] as int
         versionCode 1
         versionName "1.0"
 
@@ -26,7 +30,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:27.1.1'
     compile 'com.google.android.gms:play-services-vision:10.2.1'
     testCompile 'junit:junit:4.12'
 }
