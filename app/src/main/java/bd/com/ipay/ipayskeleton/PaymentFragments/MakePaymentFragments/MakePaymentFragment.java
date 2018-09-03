@@ -135,7 +135,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private String mReceiverPhotoUri;
     private String mAddressString;
     private String mDistrict;
-    //private String mCountry;
     private String mThana;
     private String mAmount;
     private String mReceiver;
@@ -154,8 +153,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private BusinessOutletSelectorDialog moutletSelectorDialog;
     List<Outlets> outlets;
     private boolean hasOutlet = false;
-//    private String mBusinessName;
-//    private String mBusinessPhotoUri;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
