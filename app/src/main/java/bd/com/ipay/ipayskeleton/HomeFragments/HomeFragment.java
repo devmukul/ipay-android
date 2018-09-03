@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -110,6 +111,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private ImageView mOtherImageView;
     private ProfileImageView mProfileImageView;
     private ImageView mStatusIconView;
+    private TextView mTitleView;
+    private TextView mProfileCompletionMessageView;
+
+    private View mTransactionHistoryView;
+    private View mProfileCompletionView;
 
 
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -133,7 +139,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            getTransactionHistory();
+            if (ProfileInfoCacheManager.isAccountVerified()) {
+                getTransactionHistory();
+            }
         }
     }
 
@@ -200,6 +208,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         mTransactionDescriptionView = (TextView) v.findViewById(R.id.activity_description);
 
+        mTitleView = (TextView) v.findViewById(R.id.title_view);
         mTimeView = (TextView) v.findViewById(R.id.time);
         mReceiverView = (TextView) v.findViewById(R.id.receiver);
         mBalanceTextView = (TextView) v.findViewById(R.id.amount);
@@ -207,6 +216,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mStatusIconView = (ImageView) v.findViewById(R.id.status_description_icon);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mOtherImageView = (ImageView) v.findViewById(R.id.other_image);
+        mProfileCompletionMessageView = (TextView) v.findViewById(R.id.profile_completion_msg_view);
+
+        mTransactionHistoryView = v.findViewById(R.id.transaction_view);
+        mProfileCompletionView = v.findViewById(R.id.profile_completion_holder);
 
 //        mCloseButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -398,7 +411,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
         refreshBalance();
-        getTransactionHistory();
+        if (!ProfileInfoCacheManager.isAccountVerified()) {
+            getProfileCompletionStatus();
+            //mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+        }else{
+            getTransactionHistory();
+        }
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_home));
     }
 
@@ -454,9 +472,17 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         if (!profileCompletionPromptShown) {
             profileCompletionPromptShown = true;
 
+            mTransactionHistoryView.setVisibility(View.GONE);
+            mProfileCompletionView.setVisibility(View.VISIBLE);
+            mTitleView.setText("PROFILE COMPLETION");
+
             mProfileCompletionStatusResponse.analyzeProfileCompletionData();
 
             if (!mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage().isEmpty()) {
+
+                String sourceString = "Hi "+ProfileInfoCacheManager.getUserName()+", Please update your "+"<b>" +
+                        mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + "</b> " + " to complete your profile.";
+                mProfileCompletionMessageView.setText(Html.fromHtml(sourceString));
 
 //                mProfileCompletionMessageView.setText("Your profile is " +
 //                        mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
@@ -464,16 +490,15 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 //
 //                mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 //
-//                mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
-//                    public void onClick(View v) {
-//                        mProfileCompletionPromptView.setVisibility(View.GONE);
-//                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-//                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
-//                        startActivity(intent);
-//                    }
-//                });
+                mProfileCompletionView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
+                        startActivity(intent);
+                    }
+                });
 //
 //                mProfileCompletionPromptView.setVisibility(View.VISIBLE);
             }
@@ -522,6 +547,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     }
 
     private void loadTransactionHistory(TransactionHistory transactionHistory) {
+
+
+        mTransactionHistoryView.setVisibility(View.VISIBLE);
+        mProfileCompletionView.setVisibility(View.GONE);
+        mTitleView.setText("LAST TRANSACTION");
 
         final String description = transactionHistory.getShortDescription();
         final String receiver = transactionHistory.getReceiver();
@@ -643,7 +673,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (!ProfileInfoCacheManager.isAccountVerified()) {
                         promptForProfileCompletion();
-                        mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                        //mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
                     }else{
                         getTransactionHistory();
                     }
