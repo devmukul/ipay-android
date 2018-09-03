@@ -145,11 +145,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
-
-        if (Constants.DEBUG && Constants.AUTO_LOGIN && (Constants.SERVER_TYPE == 1 || Constants.SERVER_TYPE == 2)) {
-            mOTPEditText.setText("123456");
-            mActivateButton.callOnClick();
-        }
         return v;
     }
 

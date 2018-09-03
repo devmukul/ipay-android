@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.R;
 
 public class SSLPinning {
@@ -19,7 +20,7 @@ public class SSLPinning {
 
     public static String validatePinning() {
         Context context = MyApplication.getMyApplicationInstance().getApplicationContext();
-        if (Constants.SERVER_TYPE == Constants.SERVER_TYPE_LIVE) {
+        if (!BuildConfig.DEBUG) {
 
             okhttp3.CertificatePinner certificatePinner = new okhttp3.CertificatePinner.Builder()
                     .add(Constants.HOST_NAME, PINS[0])
