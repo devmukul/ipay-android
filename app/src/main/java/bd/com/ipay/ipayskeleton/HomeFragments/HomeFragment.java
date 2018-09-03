@@ -199,6 +199,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mShowQRCodeButton = (ImageView) v.findViewById(R.id.show_qr_code_button);
 
         mTransactionDescriptionView = (TextView) v.findViewById(R.id.activity_description);
+
         mTimeView = (TextView) v.findViewById(R.id.time);
         mReceiverView = (TextView) v.findViewById(R.id.receiver);
         mBalanceTextView = (TextView) v.findViewById(R.id.amount);
@@ -366,9 +367,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         if (!SharedPrefManager.getUserCountry().equals("BD")) {
             DialogUtils.showDialogForCountyNotSupported(getContext());
         }
-
-        getTransactionHistory();
-
 
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
@@ -646,6 +644,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                     if (!ProfileInfoCacheManager.isAccountVerified()) {
                         promptForProfileCompletion();
                         mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+                    }else{
+                        getTransactionHistory();
                     }
                 }
 
