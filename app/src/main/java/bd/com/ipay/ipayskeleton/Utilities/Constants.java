@@ -244,7 +244,7 @@ public class Constants {
     public static final String BASE_URL_CARD = BuildConfig.BASE_URL_IPAY + "/api/v1/card/";
     public static final String BASE_URL_EDU = BuildConfig.BASE_URL_IPAY + "/api/v1/em/";
     public static final String BASE_URL_FTP_SERVER = BuildConfig.BASE_URL_IPAY;
-    public static final String BASE_URL_CONTACT = BuildConfig.BASE_URL_IPAY + "/external/v1/";
+    public static final String BASE_URL_CONTACT = BuildConfig.BASE_URL_IPAY + "/cm/api/v1/";
     public static final String BASE_URL_ADMIN = BuildConfig.BASE_URL_IPAY + "/api/v1/support/";
     public static final String BASE_URL_PUSH_NOTIFICATION = BuildConfig.BASE_URL_IPAY + "/api/v1/notification/";
     public static final String BASE_URL_WEB = BuildConfig.BASE_URL_IPAY;
