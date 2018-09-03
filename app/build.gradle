@@ -187,7 +187,7 @@ def getBuildVariant() {
             } else if (command.matches(":app:assemble(.*)")) {
                 return command.replaceAll(":app:assemble(.*)", "\$1")
                         .toLowerCase()
-                        .replaceAll("debug", "test").replaceAll("build", "")
+                        .replaceAll("debug", "release").replaceAll("build", "")
             }
         }
     }
