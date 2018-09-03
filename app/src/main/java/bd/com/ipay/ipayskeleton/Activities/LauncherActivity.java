@@ -2,12 +2,18 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
+import java.util.ArrayList;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationStateRequest;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -29,8 +35,10 @@ public class LauncherActivity extends AppCompatActivity {
         loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
         String activityAction = getIntent().getAction();
-        if (activityAction == null)
+        System.out.println("NOTIFICATION TEST - " + getIntent().getExtras().toString());
+        if (activityAction == null) {
             activityAction = Intent.ACTION_MAIN;
+        }
         switch (activityAction) {
             case Intent.ACTION_VIEW:
                 Uri uri = getIntent().getData();
@@ -39,15 +47,32 @@ public class LauncherActivity extends AppCompatActivity {
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
-                        if(!StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
-                            Utilities.performDeepLinkAction(this, deepLinkAction);
-                        }else{
+                        if (!TextUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
+                            if (deepLinkAction.getAction().contains("promotions")) {
+                                Utilities.performDeepLinkAction(this, deepLinkAction);
+                                if (getIntent().hasExtra("time")) {
+                                    List<Long> timeList = new ArrayList<>();
+                                    timeList.add(getIntent().getLongExtra("time", 0));
+                                    UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList, "VISITED");
+                                    new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_NOTIFICATION_STATE,
+                                            Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
+                                            new Gson().toJson(updateNotificationStateRequest), this, true).
+                                            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                }
+                            } else {
+                                try {
+                                    Utilities.performDeepLinkAction(this, deepLinkAction);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else {
                             launchHomeActivity();
                         }
                     } else {
                         launchSigninOrLoginActivity(deepLinkAction);
                     }
-                }else{
+                } else {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
                         launchHomeActivity();
                     } else {
@@ -57,14 +82,10 @@ public class LauncherActivity extends AppCompatActivity {
                 break;
             case Intent.ACTION_MAIN:
             default:
-                if (!AppInstanceUtilities.isAppAlreadyLaunched(this)) {
-                    firstLaunch = SharedPrefManager.getFirstLaunch();
-                    startApplication();
-                }
+                firstLaunch = SharedPrefManager.getFirstLaunch();
+                startApplication();
                 break;
         }
-
-
     }
 
     private void startApplication() {
@@ -107,5 +128,5 @@ public class LauncherActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    
+
 }

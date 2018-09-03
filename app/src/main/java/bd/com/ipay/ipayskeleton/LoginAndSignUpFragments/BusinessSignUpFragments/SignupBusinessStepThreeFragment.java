@@ -41,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class SignupBusinessStepThreeFragment extends BaseFragment implements HttpResponseListener {
+public class SignupBusinessStepThreeFragment extends BaseFragment implements HttpResponseListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponseBusinessSignup mOtpResponseBusinessSignup;
 
@@ -62,7 +62,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
 
     private String mDeviceID;
 
-    private DatePickerDialog mDatePickerDialog;
+    private com.tsongkha.spinnerdatepicker.DatePickerDialog mDatePickerDialog;
     private String mDOB;
     private int mYear;
     private int mMonth;
@@ -124,7 +124,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
                 getString(R.string.address_line_2));
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
-        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, this);
 
         // Enable hyperlinked
         mTermsConditionsView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -350,6 +350,32 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
         }
     }
 
+    @Override
+    public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker datePicker, int i, int i1, int i2) {
+        String[] mMonthArray;
+        String birthDate, birthMonth, birthYear;
+
+        mYear = i;
+        mMonth = i1 + 1;
+        mDay = i2;
+        mMonthArray = getResources().getStringArray(R.array.month_name);
+
+        if (mDay < 10) birthDate = "0" + mDay;
+        else birthDate = mDay + "";
+        if (mMonth < 10) birthMonth = "0" + mMonth;
+        else birthMonth = mMonth + "";
+        birthYear = mYear + "";
+        mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
+        try {
+            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(mDOB);
+            mDayName = new SimpleDateFormat("EE").format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        mBirthdayEditText.setError(null);
+        mBirthdayEditText.setText(mDayName + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
+    }
 }
 
 

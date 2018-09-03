@@ -1,9 +1,10 @@
 
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill;
 
-import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 public class Provider implements Serializable
 {
@@ -14,6 +15,24 @@ public class Provider implements Serializable
     @SerializedName("code")
     @Expose
     private String code;
+    private boolean isActive;
+    private String statusMessage;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
 
     public String getName() {
         return name;

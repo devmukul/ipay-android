@@ -92,7 +92,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         setButtonActions();
 
         setCountDownTimer();
-        setAutoLoginCredentials();
     }
 
     private void setButtonActions() {
@@ -149,13 +148,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
-    }
-
-    private void setAutoLoginCredentials() {
-        if (Constants.DEBUG && Constants.AUTO_LOGIN && (Constants.SERVER_TYPE == 1 || Constants.SERVER_TYPE == 2)) {
-            mOTPEditText.setText("123456");
-            mActivateButton.callOnClick();
-        }
     }
 
     private void verifyInput() {

@@ -310,7 +310,9 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.ADDRESS, address);
         intent.putExtra(Constants.THANA, thana);
         intent.putExtra(Constants.FROM_QR_SCAN, true);
-        intent.putExtra(Constants.OUTLET_ID, outletId);
+        if(outletId!=null) {
+            intent.putExtra(Constants.OUTLET_ID, outletId);
+        }
         intent.putExtra(Constants.OUTLET_NAME, outletName);
 
         startActivity(intent);

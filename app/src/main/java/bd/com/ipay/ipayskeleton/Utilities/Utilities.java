@@ -39,6 +39,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -71,13 +72,14 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -650,29 +652,38 @@ public class Utilities {
         return "";
     }
 
-    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
-        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
+    public static com.tsongkha.spinnerdatepicker.DatePickerDialog getDatePickerDialog(Context context, Date date, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final com.tsongkha.spinnerdatepicker.DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
 
         return datePickerDialog;
     }
 
-    public static DatePickerDialog initDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+    public static com.tsongkha.spinnerdatepicker.DatePickerDialog initDatePickerDialog(Context context, Date date, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener onDateSetListener) {
         final Calendar calendar = Calendar.getInstance();
-
+        int year, month, day;
+        int minYear = calendar.get(Calendar.YEAR) - Constants.MIN_AGE_LIMIT;
+        int minMonth = calendar.get(Calendar.MONTH);
+        int minDay = calendar.get(Calendar.DAY_OF_MONTH);
         if (date == null) {
-            setCalenderWithAgeLimit(calendar); // If no date was selected previously
-        } else
+            year = calendar.get(Calendar.YEAR) - Constants.MIN_AGE_LIMIT;
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        } else {
             calendar.setTime(date);
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        }
 
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                context, onDateSetListener, year, month, day);
-
-        setLimitInDatePickerDialog(datePickerDialog);
-        return datePickerDialog;
+        SpinnerDatePickerDialogBuilder spinnerDatePickerDialogBuilder = new SpinnerDatePickerDialogBuilder()
+                .context(context)
+                .spinnerTheme(R.style.NumberPickerStyle)
+                .showTitle(true)
+                .callback(onDateSetListener)
+                .showDaySpinner(true)
+                .defaultDate(year, month, day)
+                .maxDate(minYear, minMonth, minDay);
+        return spinnerDatePickerDialogBuilder.build();
     }
 
     private static void setCalenderWithAgeLimit(Calendar calendar) {
@@ -935,9 +946,20 @@ public class Utilities {
 
     public static List<IpayService> getAvailableAddMoneyOptions(boolean isOnlyByCard) {
         if (isOnlyByCard) {
-            ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+            }
         } else {
-            ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
+                    ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+            } else if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
+                    !ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_BANK};
+            } else if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) &&
+                    ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+            }
         }
         List<IpayService> ipayServiceList = new ArrayList<>();
         for (int i = 0; i < ADD_MONEY_OPTION_SERVICE_ID.length; i++) {
@@ -1090,13 +1112,30 @@ public class Utilities {
     public static DeepLinkAction parseUriForDeepLinkingAction(Uri uri) {
         DeepLinkAction deepLinkAction = new DeepLinkAction();
         List<String> pathSegments = uri.getPathSegments();
-        if(pathSegments.size()<2){
-            return null;
-        }if(pathSegments.size()==2){
-            System.out.println("Test Invite "+pathSegments.get(0)+" "+uri.getQueryParameter("code"));
+        if (pathSegments.size() < 2 && pathSegments.size() != 0) {
+            if (pathSegments.get(0).toLowerCase().contains("promotions")) {
+                deepLinkAction.setAction(pathSegments.get(0));
+                if (uri.getQueryParameter("link") != null) {
+                    deepLinkAction.setQueryParameter(uri.getQueryParameter("link"));
+                }
+                return deepLinkAction;
+            } else {
+                return null;
+            }
+        } else if (pathSegments.size() == 2 && pathSegments.get(0).contains("signup")) {
+            System.out.println("Test Invite " + pathSegments.get(0) + " " + uri.getQueryParameter("code"));
             deepLinkAction.setAction(pathSegments.get(0));
-            deepLinkAction.setInvitationCode(uri.getQueryParameter("code"));
-        }else {
+            deepLinkAction.setQueryParameter(uri.getQueryParameter("code"));
+        } else if (pathSegments.size() == 2) {
+            if (pathSegments.get(0).contains("app")) {
+                deepLinkAction.setAction(pathSegments.get(1));
+            } else {
+                deepLinkAction.setAction(pathSegments.get(0));
+            }
+            if (uri.getQueryParameter("link") != null) {
+                deepLinkAction.setQueryParameter(uri.getQueryParameter("link"));
+            }
+        } else {
             deepLinkAction.setAction(pathSegments.get(1));
             deepLinkAction.setOrderId(pathSegments.get(2));
         }
@@ -1112,6 +1151,19 @@ public class Utilities {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 activity.startActivity(intent);
                 activity.finishAffinity();
+                break;
+            case "promotions":
+                if (deepLinkAction.getQueryParameter() != null) {
+                    intent = new Intent(activity, WebViewActivity.class);
+                    intent.putExtra("url", "https://www.ipay.com.bd/promotions?link=" + deepLinkAction.getQueryParameter());
+                    activity.startActivity(intent);
+                    activity.finish();
+                } else {
+                    intent = new Intent(activity, HomeActivity.class);
+                    intent.putExtra(Constants.PATH, deepLinkAction.getAction());
+                    activity.startActivity(intent);
+                    activity.finish();
+                }
                 break;
             default:
                 intent = new Intent(activity, HomeActivity.class);

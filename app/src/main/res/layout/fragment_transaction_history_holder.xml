@@ -27,13 +27,13 @@
                 android:visibility="visible">
 
                 <RadioGroup
-                    android:id="@+id/transaction_history_type_radio_group"
+                    android:id="@+id/notification_type_radio_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/radio_button_pending"
+                        android:id="@+id/radio_button_general"
                         style="@style/ContactsSelectorStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                         android:textColor="@color/radio_button_text_color" />
 
                     <RadioButton
-                        android:id="@+id/radio_button_completed"
+                        android:id="@+id/radio_button_deep_linked"
                         style="@style/ContactsSelectorStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
 
 
         <FrameLayout
-            android:id="@+id/fragment_container_transaction_history"
+            android:id="@+id/fragment_container_notification"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/transaction_history_header" />

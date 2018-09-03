@@ -501,7 +501,7 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
 
                             }
                         }, 3000);
-                        Utilities.sendSuccessEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         mCustomProgressDialog.showFailureAnimationAndMessage(mBanglalionBillPayResponse.getMessage());
@@ -512,7 +512,7 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                             }
                         }, 2000);
 
-                        Utilities.sendBlockedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId());
+                        Utilities.sendBlockedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
@@ -545,12 +545,12 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                                 }
                             }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mBanglalionBillPayResponse.getMessage());
+                            Utilities.sendFailedEventTracker(mTracker, Constants.BANGLALION_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mBanglalionBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
+                    mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                     if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                         mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                     }

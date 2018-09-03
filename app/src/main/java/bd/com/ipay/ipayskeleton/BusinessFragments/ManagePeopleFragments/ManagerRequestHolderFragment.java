@@ -84,7 +84,7 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
 
 
         RadioGroup mTransactionHistoryTypeRadioGroup = (RadioGroup) view.findViewById(R.id.employee_request_radio_group);
-        mPendingTransactionRadioButton = (RadioButton) view.findViewById(R.id.radio_button_pending);
+        mPendingTransactionRadioButton = (RadioButton) view.findViewById(R.id.radio_button_general);
         mCompletedTransactionRadioButton = (RadioButton) view.findViewById(R.id.radio_button_accepted);
 
         mTransactionHistoryTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -93,7 +93,7 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 switch (checkedId) {
-                    case R.id.radio_button_pending:
+                    case R.id.radio_button_general:
                         switchToPendingTransactionsFragment();
                         break;
                     case R.id.radio_button_accepted:
@@ -135,12 +135,12 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
 
     private void switchToProcessedTransactionsFragment() {
         ManagerRequestAcceptedFragment mProcessedTransactionHistoryCompletedFragment = new ManagerRequestAcceptedFragment();
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryCompletedFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, mProcessedTransactionHistoryCompletedFragment).commit();
     }
 
     private void switchToPendingTransactionsFragment() {
         ManagerRequestPendingFragment mPendingTransactionHistoryFragment = new ManagerRequestPendingFragment();
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, mPendingTransactionHistoryFragment).commit();
     }
 
     @Override

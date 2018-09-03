@@ -27,12 +27,4 @@
             android:layout_centerVertical="true"/>
     </RelativeLayout>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/divider_space"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:background="@color/colorDivider" />
-
 </LinearLayout>

@@ -78,6 +78,15 @@ public class DialogUtils {
         dialog.show();
     }
 
+    public static void showCancelableAlertDialog(final Context context, String message){
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(true)
+                .content(message)
+                .negativeText(R.string.ok)
+                .show();
+        dialog.show();
+    }
+
     public static void showDialogForInvalidQRCode(final Activity activity, String message) {
         MaterialDialog materialDialog;
         MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(activity);
