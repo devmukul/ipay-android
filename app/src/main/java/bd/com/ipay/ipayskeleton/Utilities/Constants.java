@@ -166,7 +166,7 @@ public class Constants {
     public static final String LINK_THREE_BILL_PAY = "LINK THREE BILL PAY";
     public static final String BANGLALION_BILL_PAY = "BANGLALION BILL PAY";
     public static final String BRILLIANT_BILL_PAY = "BRILLIANT BILL PAY";
-    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN_V2";
     public static final String URL_DESCO_CUSTOMER_INFO = "desco/bill-info/";
     public static final String DESCO_BILL_PAY = "DESCO BILL PAY";
     public static final String DESCO = "DESCO";
@@ -176,7 +176,7 @@ public class Constants {
     public static final String COMMAND_GET_DESCO_CUSTOMER = "COMMAND_GET_DESCO_CUSTOMER";
     public static final String COMMAND_GET_DOZE_CUSTOMER = "COMMAND_GET_DOZE_CUSTOMER";
     public static final String COMMAND_CARNIVAL_BILL_PAY = "COMMAND_CARNIVAL_BILL_PAY";
-    public static final String URL_DOZE_BILL_PAY = "doze/billpay";
+    public static final String URL_CARNIVAL_BILL_PAY = "carnival/billpay";
     public static final String CARNIVAL = "CARNIVAL";
     public static final String DPDC_BILL_PAY = "DPDC BILL PAY";
     public static final String COMMAND_GET_SERVICE_PROVIDER_LIST = "COMMAND_GET_SERVICE_PROVIDER_LIST";
@@ -237,51 +237,22 @@ public class Constants {
 
     public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
     public static final String KEY_NAME = "key_name";
-    /**
-     * All requests and responses to server, as well as token is printed when debug flag is enabled.
-     * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
-     */
-    public static final boolean DEBUG = BuildConfig.DebugOnOffStatus;
 
-    /**
-     * If set to true (with DEBUG flag also being set to true),
-     * it works like the "Remember me" function. Mobile number and password will be
-     * required only for the first time when user tries to login. After that, login request will be
-     * automatically sent to the server using the previously used mobile number and default password
-     * (qqqqqqq1).
-     * <p>
-     * *** Set it to false if you are not using the default password ***
-     */
-    public static final boolean AUTO_LOGIN = BuildConfig.AutoLogin;
-
-    // Server Type 1 -> dev server
-    // Server Type 2 -> test server
-    // Server Type 3 -> stage server
-    // Server Type 4 -> live server
-    // Server Type 5 -> local server
-    public static final int SERVER_TYPE = BuildConfig.ServerType;
-
-    public static final String BASE_URL_MM;
-    public static final String BASE_URL_SM;
-    public static final String BASE_URL_PG;
-    public static final String BASE_URL_CARD;
-    public static final String BASE_URL_EDU;
-    public static final String BASE_URL_CONTACT;
-    public static final String BASE_URL_ADMIN;
-    public static final String BASE_URL_PUSH_NOTIFICATION;
-    public static final String BASE_URL_FTP_SERVER;
-    public static final String BASE_URL_WEB;
-    public static final String BASE_URL_DATA_COLLECTOR;
-    private static final String SERVER_NAME;
-    public static final String BASE_URL_OFFER;
-    public static final String BASE_URL_UTILITY;
-
-    public static final int DEV_SERVER = 1;
-    public static final int TEST_SERVER = 2;
-    public static final int STAGE_SERVER = 3;
-    public static final int LIVE_SERVER = 4;
-    public static final int DEMO_SERVER = 5;
-    public static final int LOCAL_SERVER = 6;
+    public static final String BASE_URL_MM = BuildConfig.BASE_URL_IPAY + "/api/v1/";
+    public static final String BASE_URL_SM = BuildConfig.BASE_URL_IPAY + "/api/v1/money/";
+    public static final String BASE_URL_PG = BuildConfig.BASE_URL_IPAY + "/api/pg/order/";
+    public static final String BASE_URL_CARD = BuildConfig.BASE_URL_IPAY + "/api/v1/card/";
+    public static final String BASE_URL_EDU = BuildConfig.BASE_URL_IPAY + "/api/v1/em/";
+    public static final String BASE_URL_FTP_SERVER = BuildConfig.BASE_URL_IPAY;
+    public static final String BASE_URL_CONTACT = BuildConfig.BASE_URL_IPAY + "/cm/api/v1/";
+    public static final String BASE_URL_ADMIN = BuildConfig.BASE_URL_IPAY + "/api/v1/support/";
+    public static final String BASE_URL_PUSH_NOTIFICATION = BuildConfig.BASE_URL_IPAY + "/api/v1/notification/";
+    public static final String BASE_URL_WEB = BuildConfig.BASE_URL_IPAY;
+    public static final String BASE_URL_DATA_COLLECTOR = BuildConfig.BASE_URL_IPAY + "/data-collector/v1/";
+    public static final String BASE_URL_OFFER = BuildConfig.BASE_URL_IPAY + "/offer_v2/api/v1/";
+    public static final String BASE_URL_UTILITY = BuildConfig.BASE_URL_IPAY + "/api/utility/";
+    public static final String INTERCOM_API_KEY = BuildConfig.API_KEY_INTERCOM;
+    public static final String INTERCOM_ANDROID_SDK_KEY = BuildConfig.SDK_KEY_INTERCOM;
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
@@ -310,125 +281,6 @@ public class Constants {
     public static String invalid_credential = "invalid credential";
     public static String URL_DESCO_BILL_PAY = "/desco/billpay";
     public static String URL_CARNIVAL = "/carnival/bill-info/";
-
-
-    static {
-        if (SERVER_TYPE == DEV_SERVER) {
-
-            BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
-            BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
-            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
-            BASE_URL_CARD = "http://10.10.10.11:5665/api/v1/card/";
-            BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
-            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
-            BASE_URL_WEB = "http://dev.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
-            SERVER_NAME = "dev";
-            BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
-            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
-
-        } else if (SERVER_TYPE == TEST_SERVER) {
-
-            BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
-            BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
-            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
-            BASE_URL_CARD = "http://10.15.40.11:2202/api/v1/card/";
-            BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "http://10.15.40.14";
-            BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
-            BASE_URL_ADMIN = "http://10.10.10.169:8080/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "https://test.ipay.com.bd/api/v1/notification/";
-            BASE_URL_WEB = "http://test.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
-            SERVER_NAME = "test";
-            BASE_URL_OFFER = "https://test.ipay.com.bd/offer_v2/api/v1/";
-            BASE_URL_UTILITY = "https://test.ipay.com.bd/api/utility/";
-
-        } else if (SERVER_TYPE == STAGE_SERVER) {
-
-            BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
-            BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
-            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
-            BASE_URL_CARD = "http://10.10.40.11:2202/api/v1/card/";
-            BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "http://10.10.40.14";
-            BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
-            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
-            BASE_URL_WEB = "http://stage.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
-            SERVER_NAME = "stage";
-            BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
-            BASE_URL_UTILITY = "https://stage.ipay.com.bd/api/utility/";
-
-        } else if (SERVER_TYPE == LIVE_SERVER) {
-
-            BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
-            BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
-            BASE_URL_PG = "https://www.ipay.com.bd/api/pg/order/";
-            BASE_URL_CARD = "https://www.ipay.com.bd/api/v1/card/";
-            BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
-            BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
-            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
-            BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "https://www.ipay.com.bd/api/v1/notification/";
-            BASE_URL_WEB = "https://www.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
-            SERVER_NAME = "live";
-            BASE_URL_OFFER = "https://www.ipay.com.bd/offer_v2/api/v1/";
-            BASE_URL_UTILITY = "https://www.ipay.com.bd/api/utility/";
-
-        } else if (SERVER_TYPE == DEMO_SERVER) {
-
-            BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
-            BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
-            BASE_URL_PG = "https://demo.ipay.com.bd/api/pg/order/";
-            BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
-            BASE_URL_CARD = "https://demo.ipay.com.bd/api/v1/card/";
-            BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
-            BASE_URL_CONTACT = "https://demo.ipay.com.bd/external/v1/";
-            BASE_URL_ADMIN = "https://demo.ipay.com.bd/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "https://demo.ipay.com.bd/api/v1/notification/";
-            BASE_URL_DATA_COLLECTOR = "https://demo.ipay.com.bd/data-collector/v1/";
-            BASE_URL_WEB = "https://demo.ipay.com.bd";
-            SERVER_NAME = "demo";
-            BASE_URL_OFFER = "https://demo.ipay.com.bd/offer_v2/api/v1/";
-            BASE_URL_UTILITY = "https://demo.ipay.com.bd/api/utility/";
-
-        } else {
-
-            BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
-            BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
-            BASE_URL_PG = "http://192.168.1.105:8085/api/pg/order/";
-            BASE_URL_CARD = "http://192.168.1.215:2202/api/v1/card/";
-            BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
-            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
-            BASE_URL_WEB = "http://dev.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
-            SERVER_NAME = "local";
-            BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
-            BASE_URL_UTILITY = "https://dev.ipay.com.bd/api/utility/";
-        }
-    }
-
-    public static final String INTERCOM_API_KEY;
-    public static final String INTERCOM_ANDROID_SDK_KEY;
-
-    static {
-        if (SERVER_TYPE == LIVE_SERVER) {
-            INTERCOM_API_KEY = "rvba5ye6";
-            INTERCOM_ANDROID_SDK_KEY = "android_sdk-75b180d622ad8a70eb7fd36a84534f9db277f402";
-        } else {
-            INTERCOM_API_KEY = "zlbinvht";
-            INTERCOM_ANDROID_SDK_KEY = "android_sdk-534f3bfed2dbd05497dffe8d9a629a92e6a8583b";
-        }
-    }
 
     // Activity REST
     public static final String URL_USER_ACTIVITY = "/activity";

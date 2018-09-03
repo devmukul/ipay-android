@@ -5,10 +5,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class LauncherActivity extends AppCompatActivity {
                 DeepLinkAction deepLinkAction = Utilities.parseUriForDeepLinkingAction(uri);
                 if (deepLinkAction != null) {
                     if (SharedPrefManager.isRememberMeActive() && loggedIn) {
-                        if (!StringUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
+                        if (!TextUtils.isEmpty(deepLinkAction.getAction()) && !deepLinkAction.getAction().equals("signup")) {
                             if (deepLinkAction.getAction().contains("promotions")) {
                                 Utilities.performDeepLinkAction(this, deepLinkAction);
                                 if (getIntent().hasExtra("time")) {
@@ -59,6 +58,12 @@ public class LauncherActivity extends AppCompatActivity {
                                             Constants.BASE_URL_PUSH_NOTIFICATION + "v2/update",
                                             new Gson().toJson(updateNotificationStateRequest), this, true).
                                             executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                }
+                            } else {
+                                try {
+                                    Utilities.performDeepLinkAction(this, deepLinkAction);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
                         } else {

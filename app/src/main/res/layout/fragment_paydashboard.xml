@@ -240,38 +240,6 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/linkThreeBill"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="@dimen/activity_horizontal_margin_card">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:layout_width="@dimen/value80"
-                            android:layout_height="@dimen/value80"
-                            android:background="@drawable/semiround_white_default"
-                            android:elevation="@dimen/value2"
-                            android:padding="@dimen/value15"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/link3"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="@dimen/value80"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/link_three"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11" />
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:id="@+id/brilliant_recharge_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -302,14 +270,51 @@
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/carnival"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:orientation="vertical"
+                        android:padding="@dimen/activity_horizontal_margin_card">
+
+                        <LinearLayout
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="@dimen/value80"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:padding="@dimen/value15">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                card_view:srcCompat="@drawable/ic_carnival" />
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:layout_width="@dimen/value80"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/carnival"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:weightSum="3">
 
                     <LinearLayout
                         android:id="@+id/west_zone"
@@ -421,29 +426,25 @@
                         android:weightSum="3">
 
                         <LinearLayout
-                            android:id="@+id/carnival"
+                            android:id="@+id/linkThreeBill"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                             android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:padding="@dimen/activity_horizontal_margin_card">
+                            android:padding="@dimen/activity_horizontal_margin_card"
+                            android:visibility="gone">
 
-                            <LinearLayout
+                            <com.makeramen.roundedimageview.RoundedImageView
                                 android:layout_width="@dimen/value80"
                                 android:layout_height="@dimen/value80"
                                 android:background="@drawable/semiround_white_default"
                                 android:elevation="@dimen/value2"
-                                android:padding="@dimen/value15">
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:src="@drawable/ic_carnival" />
-                            </LinearLayout>
-
-
+                                android:padding="@dimen/value15"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/link3"
+                                card_view:riv_corner_radius="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="@dimen/value80"
@@ -452,7 +453,7 @@
                                 android:ellipsize="marquee"
                                 android:gravity="center_horizontal"
                                 android:singleLine="true"
-                                android:text="@string/carnival"
+                                android:text="@string/link_three"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/text_size_extra_smaller_value11" />
                         </LinearLayout>

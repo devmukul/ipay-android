@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import org.apache.commons.lang3.StringUtils;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -62,7 +61,7 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
 
         mInvitationCode = SharedPrefManager.getInvitationCode();
 
-        if (StringUtils.isEmpty(mInvitationCode)) {
+        if (TextUtils.isEmpty(mInvitationCode)) {
             getInvitationCode();
         } else {
             mInvitationCodeEditText.setText(mInvitationCode);
