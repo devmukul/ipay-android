@@ -20,7 +20,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
@@ -55,7 +57,6 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
     private TextView mNameTextView;
     private EditText mAccountIDEditText;
     private EditText mAmountEditText;
-    private TextView mPrevMonthView;
     private TextView mCurrentPackageView;
     private Button mContinueButton;
     private View infoView;
@@ -63,14 +64,13 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
     private ProgressDialog mProgressDialog;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
-    private String mUri;
     private String mAmount;
     private String mCustomerID;
 
     private HttpRequestGetAsyncTask mCarnivalUserInfoGetTask = null;
     private CarnivalCustomerInfoResponse carnivalCustomerInfoResponse;
     private HttpRequestPostAsyncTask mDozeBillPayTask = null;
-    private CarnivalBillPayRequest mCarnivalBillPayRequst;
+    private CarnivalBillPayRequest mCarnivalBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
     private GenericBillPayResponse mGenericBillPayResponse;
     private CustomProgressDialog mCustomProgressDialog;
@@ -80,6 +80,8 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_doze_bill_pay, container, false);
+        if (getActivity() == null)
+            return view;
         getActivity().setTitle("Carnival");
         attemptGetBusinessRule(ServiceIdConstants.UTILITY_BILL_PAYMENT);
         mProgressDialog = new ProgressDialog(getContext());
@@ -93,23 +95,22 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
             UtilityBillPaymentActivity.mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.UTILITY_BILL_PAYMENT);
         }
 
-        mNameTextView = (TextView) view.findViewById(R.id.name_view);
-        mPrevMonthView = (TextView) view.findViewById(R.id.bill_month_prev);
+        mNameTextView = view.findViewById(R.id.name_view);
         customerIDView = view.findViewById(R.id.customer_id_view);
         infoView = view.findViewById(R.id.info_view);
-        mCurrentPackageView = (TextView) view.findViewById(R.id.current_package_view);
-        mAccountIDEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
-        mAmountEditText = (EditText) view.findViewById(R.id.amount_edit_text);
-        mContinueButton = (Button) view.findViewById(R.id.continue_button);
-
-        mPrevMonthView.setText("( Bill month " + ((UtilityBillPaymentActivity) getActivity()).getPreviousMonth() + " )");
+        mCurrentPackageView = view.findViewById(R.id.current_package_view);
+        mAccountIDEditText = view.findViewById(R.id.customer_id_edit_text);
+        mAmountEditText = view.findViewById(R.id.amount_edit_text);
+        mContinueButton = view.findViewById(R.id.continue_button);
 
         UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
         setUpButtonAction();
     }
 
     private void launchOTPVerification() {
-        String jsonString = new Gson().toJson(mCarnivalBillPayRequst);
+        if (getActivity() == null)
+            return;
+        String jsonString = new Gson().toJson(mCarnivalBillPayRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
                 Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
@@ -138,12 +139,12 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
     }
 
     private boolean ifUserEligibleToPaySufficient() {
-        String errorMessage = null;
+        String errorMessage;
         if (SharedPrefManager.ifContainsUserBalance()) {
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
             //validation check of amount
             if (mAmountEditText.getText() != null) {
-                if (mAmountEditText.getText().toString() != null && !mAmountEditText.getText().toString().equals("")) {
+                if (mAmountEditText.getText() != null && !TextUtils.isEmpty(mAmountEditText.getText().toString())) {
                     mAmount = mAmountEditText.getText().toString();
                     final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
                     if (topUpAmount.compareTo(balance) > 0) {
@@ -155,10 +156,10 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
                         errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
                     }
                 } else {
-                    errorMessage = "Please enter an amount";
+                    errorMessage = getString(R.string.please_enter_amount);
                 }
             } else {
-                errorMessage = "Please enter an amount";
+                errorMessage = getString(R.string.please_enter_amount);
             }
         } else {
             errorMessage = getString(R.string.balance_not_available);
@@ -185,18 +186,16 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
     }
 
     private void attemptBillPay(String pin) {
-        if (mDozeBillPayTask != null) {
-            return;
-        } else {
-            mCarnivalBillPayRequst = new CarnivalBillPayRequest(mCustomerID, mAmount, pin);
+        if (mDozeBillPayTask == null) {
+            mCarnivalBillPayRequest = new CarnivalBillPayRequest(mCustomerID, mAmount, pin);
 
             Gson gson = new Gson();
-            String json = gson.toJson(mCarnivalBillPayRequst);
+            String json = gson.toJson(mCarnivalBillPayRequest);
             mDozeBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CARNIVAL_BILL_PAY,
                     Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL_BILL_PAY, json, getActivity(), false);
             mDozeBillPayTask.mHttpResponseListener = this;
             mDozeBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            mCustomProgressDialog.setLoadingMessage("Please wait");
+            mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait));
             mCustomProgressDialog.showDialog();
         }
     }
@@ -212,11 +211,9 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
     }
 
     private void getCustomerInfo() {
-        if (mCarnivalUserInfoGetTask != null) {
-            return;
-        } else {
-            mProgressDialog.setMessage("Please wait");
-            mUri = Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL + mCustomerID;
+        if (mCarnivalUserInfoGetTask == null) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            String mUri = Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL + mCustomerID;
             mCarnivalUserInfoGetTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DOZE_CUSTOMER, mUri,
                     getActivity(), this, true);
             mCarnivalUserInfoGetTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -232,7 +229,7 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
             return false;
         } else {
             mCustomerID = editable.toString();
-            if (mCustomerID == null || mCustomerID.isEmpty()) {
+            if (TextUtils.isEmpty(mCustomerID)) {
                 mAccountIDEditText.setError(getString(R.string.enter_customer_id));
                 return false;
             } else {
@@ -241,145 +238,155 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
         }
     }
 
-    private void fillUpFiledsWithData() {
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+
+    private void setupView() {
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
         mNameTextView.setText(carnivalCustomerInfoResponse.getName());
-        mCurrentPackageView.setText(carnivalCustomerInfoResponse.getCurrentPackageRate());
-        mContinueButton.setText("Pay bill");
+        mCurrentPackageView.setText(numberFormat.format(new BigDecimal(carnivalCustomerInfoResponse.getCurrentPackageRate())));
+        mContinueButton.setText(R.string.pay_bill);
         infoView.setVisibility(View.VISIBLE);
         customerIDView.setVisibility(View.GONE);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        if (getActivity() == null)
+            return;
+
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mCustomProgressDialog.dismissDialog();
             mCarnivalUserInfoGetTask = null;
             mDozeBillPayTask = null;
-            return;
         } else {
             try {
                 Gson gson = new Gson();
-                if (result.getApiCommand().equals(Constants.COMMAND_GET_DOZE_CUSTOMER)) {
-                    carnivalCustomerInfoResponse = gson.fromJson(result.getJsonString(), CarnivalCustomerInfoResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        fillUpFiledsWithData();
-                    } else {
-                        Toast.makeText(getContext(), carnivalCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    mCarnivalUserInfoGetTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        gson = new Gson();
-
-                        BusinessRuleV2 businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRuleV2.class);
-                        List<Rule> rules = businessRuleArray.getRules();
-
-                        for (Rule rule : rules) {
-                            switch (rule.getRuleName()) {
-                                case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
-                                    UtilityBillPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                    break;
-                                case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
-                                    UtilityBillPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                    break;
-                                case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED:
-                                    UtilityBillPaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-                                    break;
-                                case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED:
-                                    UtilityBillPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-                                    break;
-                            }
-
-                            BusinessRuleCacheManager.setBusinessRules(Constants.UTILITY_BILL_PAYMENT, UtilityBillPaymentActivity.mMandatoryBusinessRules);
+                switch (result.getApiCommand()) {
+                    case Constants.COMMAND_GET_DOZE_CUSTOMER:
+                        carnivalCustomerInfoResponse = gson.fromJson(result.getJsonString(), CarnivalCustomerInfoResponse.class);
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            setupView();
+                        } else {
+                            Toast.makeText(getContext(), carnivalCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    }
-                    mGetBusinessRuleTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_CARNIVAL_BILL_PAY)) {
-                    try {
-                        mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
-                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                            if (getActivity() != null) {
+                        mCarnivalUserInfoGetTask = null;
+                        break;
+                    case Constants.COMMAND_GET_BUSINESS_RULE:
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            gson = new Gson();
+
+                            BusinessRuleV2 businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRuleV2.class);
+                            List<Rule> rules = businessRuleArray.getRules();
+
+                            for (Rule rule : rules) {
+                                switch (rule.getRuleName()) {
+                                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+                                        UtilityBillPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+                                        UtilityBillPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED:
+                                        UtilityBillPaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                        break;
+                                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED:
+                                        UtilityBillPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                                        break;
+                                }
+
+                                BusinessRuleCacheManager.setBusinessRules(Constants.UTILITY_BILL_PAYMENT, UtilityBillPaymentActivity.mMandatoryBusinessRules);
+                            }
+                        }
+                        mGetBusinessRuleTask = null;
+                        break;
+                    case Constants.COMMAND_CARNIVAL_BILL_PAY:
+                        try {
+                            mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
+                            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                                if (getActivity() != null) {
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getActivity().setResult(Activity.RESULT_OK);
+                                            getActivity().finish();
+                                        }
+                                    }, 2000);
+                                }
+                            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                                if (mContinueButton != null) {
+                                    mContinueButton.setClickable(false);
+                                }
+
+                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                } else {
+                                    mCustomProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
+                                }
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         getActivity().setResult(Activity.RESULT_OK);
                                         getActivity().finish();
+
                                     }
                                 }, 2000);
-                            }
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                            if (mContinueButton != null) {
-                                mContinueButton.setClickable(false);
-                            }
+                                Utilities.sendSuccessEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
 
+                            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                                mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mGenericBillPayResponse.getMessage());
+                                    }
+                                }, 2000);
+                                Utilities.sendBlockedEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+                            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
+                                final String errorMessage;
+                                if (!TextUtils.isEmpty(mGenericBillPayResponse.getMessage())) {
+                                    errorMessage = mGenericBillPayResponse.getMessage();
+                                } else {
+                                    errorMessage = getString(R.string.recharge_failed);
+                                }
+                                mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
+                            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                                Toast.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                                mCustomProgressDialog.dismissDialog();
+                                SecuritySettingsActivity.otpDuration = mGenericBillPayResponse.getOtpValidFor();
+                                launchOTPVerification();
+                            } else {
+                                if (getActivity() != null) {
+                                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+                                        mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+                                    } else {
+                                        Toast.makeText(getContext(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+
+                                    if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                                            mCustomProgressDialog.dismissDialog();
+                                        }
+                                    } else {
+                                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                        }
+                                    }
+                                    //Google Analytic event
+                                }
+                                Utilities.sendFailedEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mGenericBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-                            } else {
-                                mCustomProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
                             }
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getActivity().setResult(Activity.RESULT_OK);
-                                    getActivity().finish();
-
-                                }
-                            }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
-
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                            mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mGenericBillPayResponse.getMessage());
-                                }
-                            }, 2000);
-                            Utilities.sendBlockedEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
-                            final String errorMessage;
-                            if (!TextUtils.isEmpty(mGenericBillPayResponse.getMessage())) {
-                                errorMessage = mGenericBillPayResponse.getMessage();
-                            } else {
-                                errorMessage = getString(R.string.recharge_failed);
-                            }
-                            mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                            Toast.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                            mCustomProgressDialog.dismissDialog();
-                            SecuritySettingsActivity.otpDuration = mGenericBillPayResponse.getOtpValidFor();
-                            launchOTPVerification();
-                        } else {
-                            if (getActivity() != null) {
-                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
-                                    mCustomProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
-                                } else {
-                                    Toast.makeText(getContext(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-
-                                if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-                                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
-                                        mCustomProgressDialog.dismissDialog();
-                                    }
-                                } else {
-                                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-                                    }
-                                }
-                                //Google Analytic event
-                            }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.CARNIVAL_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mGenericBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
-                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-                        }
-                    }
-                    mDozeBillPayTask = null;
+                        mDozeBillPayTask = null;
+                        break;
                 }
             } catch (Exception e) {
                 mProgressDialog.dismiss();
