@@ -576,7 +576,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
             mGetPendingRoleManagerRequestTask = null;
-            setContentShown(true);
+
         }
     }
 
@@ -756,7 +756,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     }
                 });
             }
-
         }
 
         @Override
