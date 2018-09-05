@@ -11,6 +11,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -35,6 +37,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
@@ -116,6 +119,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     private View mTransactionHistoryView;
     private View mProfileCompletionView;
+
+    private BottomSheetBehavior mBottomSheetBehavior;
+    View testView;
 
 
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -403,6 +409,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     @Override
     public void onResume() {
         super.onResume();
+
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
@@ -701,4 +708,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mTransactionHistoryTask = null;
         }
     }
+
+
 }

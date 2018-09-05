@@ -12,6 +12,7 @@
     </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
     
     <ImageView
+        android:id="@+id/verification_status"
         android:layout_width="14dp"
         android:layout_height="14dp"
         android:src="@drawable/ic_varified_actionbar"

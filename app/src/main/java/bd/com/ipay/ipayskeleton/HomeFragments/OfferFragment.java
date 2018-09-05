@@ -118,8 +118,10 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
         if (mPromotionTask != null) {
             return;
         }
-        String url = "https://ipay-772e8.firebaseio.com/.json";
+        //String url = "https://ipay-772e8.firebaseio.com/.json";
+        String url = Constants.BASE_URL_MM+"bsp/contents";
 
+        https://www.ipay.com.bd/api/v1/bsp/contents
         mPromotionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROMOTIONS,
                 url, getActivity(), false);
         mPromotionTask.mHttpResponseListener = this;

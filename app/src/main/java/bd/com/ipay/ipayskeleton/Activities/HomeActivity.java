@@ -158,6 +158,7 @@ public class HomeActivity extends BaseActivity
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
     private ProfileImageView mOptionMenuProfileImageView;
+    private ImageView mVerificationStatusView;
     private NavigationView mNavigationView;
     private RecyclerView mManagedBusinessListRecyclerView;
     private ImageView mMoreBusinessListImageView;
@@ -185,6 +186,7 @@ public class HomeActivity extends BaseActivity
     private BottomSheetBehavior mBottomSheetBehavior;
     private MenuItem mProfilePictureMenu;
     View testView;
+    View bottomSheet;
 
 
     @Override
@@ -370,7 +372,7 @@ public class HomeActivity extends BaseActivity
 
 //        new BottomSheetFragment().show(getSupportFragmentManager(), "dialog");
 
-        View bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheet = findViewById(R.id.bottom_sheet);
         testView = findViewById(R.id.test_sheet);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -386,6 +388,8 @@ public class HomeActivity extends BaseActivity
 //                        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
 //                        fadeIn.setDuration(300);
 //                        testView.startAnimation(fadeIn);
+
+                        testView.setVisibility(View.VISIBLE);
                         testView.animate().scaleX(1).scaleY(1).start();
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
@@ -393,6 +397,7 @@ public class HomeActivity extends BaseActivity
                         testView.animate().scaleX(0).scaleY(0).start();
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
+                        testView.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         break;
@@ -438,6 +443,14 @@ public class HomeActivity extends BaseActivity
             }
             mLocationManager.requestSingleUpdate(locationProvider, this, Looper.myLooper());
         }
+    }
+
+    public void hideBottomSheet(){
+        bottomSheet.setVisibility(View.GONE);
+    }
+
+    public void showBottomSheet(){
+        bottomSheet.setVisibility(View.VISIBLE);
     }
 
     private void sendFireBaseTokenToServer() {
@@ -489,7 +502,16 @@ public class HomeActivity extends BaseActivity
         mProfilePictureMenu = mOptionsMenu.findItem(R.id.action_profile_image);
         FrameLayout rootView = (FrameLayout) mProfilePictureMenu.getActionView();
         mOptionMenuProfileImageView = (ProfileImageView) rootView.findViewById(R.id.profile_picture);
+        mVerificationStatusView = (ImageView) rootView.findViewById(R.id.verification_status);
         mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl(), false);
+        if(!ProfileInfoCacheManager.isAccountVerified()) {
+            mVerificationStatusView.setImageResource(R.drawable.ic_unvarified);
+        }
+        else{
+            mVerificationStatusView.setImageResource(R.drawable.ic_varified_actionbar);
+        }
+
+
 
         // If the menu is recreated, then restore the previous badge count
         updateNotificationBadgeCount(mBadgeCount);
