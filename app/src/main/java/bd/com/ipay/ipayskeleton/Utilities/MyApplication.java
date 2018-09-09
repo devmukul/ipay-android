@@ -18,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
@@ -59,8 +60,8 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
     public void onCreate() {
         super.onCreate();
         myApplicationInstance = this;
-        okHttpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(30, TimeUnit.SECONDS).build();
+        okHttpClient = new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS).build();
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize(this);
@@ -102,13 +103,13 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
      * set Default Business Rules is to cache the offline business rules
      */
     private void setDefaultBusinessRules() {
-            for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
-                if(!BusinessRuleCacheManager.ifContainsBusinessRule(serviceTag)) {
-                    MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
-                    mandatoryBusinessRules.setDefaultRules();
-                    BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
-                }
+        for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
+            if (!BusinessRuleCacheManager.ifContainsBusinessRule(serviceTag)) {
+                MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
+                mandatoryBusinessRules.setDefaultRules();
+                BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
             }
+        }
     }
 
     public void attemptLogout() {
@@ -218,7 +219,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
      */
     synchronized public Tracker getDefaultTracker() {
         if (sTracker == null) {
-            if (Constants.SERVER_TYPE == Constants.LIVE_SERVER) {
+            if (!BuildConfig.DEBUG) {
                 sTracker = sAnalytics.newTracker(R.xml.global_tracker_for_live);
             } else {
                 sTracker = sAnalytics.newTracker(R.xml.global_tracker);

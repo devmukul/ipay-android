@@ -124,6 +124,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
         mProgressDialog = new ProgressDialog(getActivity());
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView.setText("Nothing to show right now");
         getNotificationLists(getActivity());
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -575,7 +576,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
             mGetPendingRoleManagerRequestTask = null;
-            setContentShown(true);
+
         }
     }
 
@@ -750,13 +751,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                     @Override
                                     public void ifFinishNeeded() {
                                         refreshNotificationLists(getActivity());
-
                                     }
                                 });
                     }
                 });
             }
-
         }
 
         @Override

@@ -30,9 +30,9 @@ public class TransactionHistoryHolderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_transaction_history_holder, container, false);
 
-        RadioGroup mTransactionHistoryTypeRadioGroup = (RadioGroup) view.findViewById(R.id.transaction_history_type_radio_group);
-        mPendingTransactionRadioButton = (RadioButton) view.findViewById(R.id.radio_button_pending);
-        mCompletedTransactionRadioButton = (RadioButton) view.findViewById(R.id.radio_button_completed);
+        RadioGroup mTransactionHistoryTypeRadioGroup = (RadioGroup) view.findViewById(R.id.notification_type_radio_group);
+        mPendingTransactionRadioButton = (RadioButton) view.findViewById(R.id.radio_button_general);
+        mCompletedTransactionRadioButton = (RadioButton) view.findViewById(R.id.radio_button_deep_linked);
 
         mTransactionHistoryTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -40,10 +40,10 @@ public class TransactionHistoryHolderFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 switch (checkedId) {
-                    case R.id.radio_button_pending:
+                    case R.id.radio_button_general:
                         switchToPendingTransactionsFragment();
                         break;
-                    case R.id.radio_button_completed:
+                    case R.id.radio_button_deep_linked:
                         switchToProcessedTransactionsFragment();
                         break;
                 }
@@ -79,11 +79,11 @@ public class TransactionHistoryHolderFragment extends Fragment {
 
     private void switchToProcessedTransactionsFragment() {
         TransactionHistoryCompletedFragment mProcessedTransactionHistoryCompletedFragment = new TransactionHistoryCompletedFragment();
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryCompletedFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, mProcessedTransactionHistoryCompletedFragment).commit();
     }
 
     private void switchToPendingTransactionsFragment() {
         TransactionHistoryPendingFragment mPendingTransactionHistoryFragment = new TransactionHistoryPendingFragment();
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, mPendingTransactionHistoryFragment).commit();
     }
 }

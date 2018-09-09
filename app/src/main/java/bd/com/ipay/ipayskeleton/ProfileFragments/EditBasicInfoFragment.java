@@ -38,7 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener {
+public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
 
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
@@ -59,7 +59,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
     private CheckBox mMaleCheckBox;
     private ProgressDialog mProgressDialog;
     private String mName = "";
-    private DatePickerDialog mDatePickerDialog;
+    private com.tsongkha.spinnerdatepicker.DatePickerDialog mDatePickerDialog;
     private String mDateOfBirth = "";
     private String mGender = null;
     private String mOrganizationName;
@@ -93,7 +93,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
         mProgressDialog = new ProgressDialog(getActivity());
 
         Date date = Utilities.formatDateFromString(mDateOfBirth);
-        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), date, mDateSetListener);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), date, this);
 
         mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,5 +338,11 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
                 mOccupationTypeResourceSelectorDialog.show();
             }
         });
+    }
+
+    @Override
+    public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker datePicker, int i, int i1, int i2) {
+        mDateOfBirthEditText.setText(
+                String.format(Locale.getDefault(), Constants.DATE_FORMAT, i2, i1 + 1, i));
     }
 }

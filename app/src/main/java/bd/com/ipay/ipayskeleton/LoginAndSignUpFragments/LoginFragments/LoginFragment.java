@@ -240,12 +240,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             mUserNameEditText.setText("");
             mButtonJoinUs.setVisibility(View.VISIBLE);
         }
-
-        // Auto Login
-        if (SharedPrefManager.ifContainsUserID() && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordEditText.setText("qqqqqqq1");
-            attemptLogin();
-        }
     }
 
     private void attemptLoginWithTouchID() {

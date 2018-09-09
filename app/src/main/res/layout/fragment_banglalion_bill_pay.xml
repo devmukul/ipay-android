@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -23,14 +22,14 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/blion"/>
+                android:src="@drawable/banglalion" />
 
             <LinearLayout
                 android:id="@+id/customer_id_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -42,26 +41,27 @@
                         style="@style/CustomEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="0dp"
                         android:hint="Account ID"
                         android:inputType="text"
-                        android:maxLines="1"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"/>
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
 
-                <View style="@style/Divider"
+                <View
+                    style="@style/Divider"
                     android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"/>
+                    android:layout_marginRight="0dp" />
 
                 <TextView
                     android:id="@+id/message_text_view"
                     style="@style/CustomNoteTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/bill_pay_help_message"
-                    android:gravity="left"
                     android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"/>
+                    android:layout_marginRight="0dp"
+                    android:gravity="left"
+                    android:text="@string/bill_pay_help_message" />
 
             </LinearLayout>
 
@@ -69,8 +69,8 @@
                 android:id="@+id/bill_pay_option_selector_view_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/user_info_view_holder"
@@ -82,25 +82,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:id="@+id/name_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=""
                             android:gravity="left"
-                            android:textSize="@dimen/text_size_small"
+                            android:text=""
                             android:textColor="@color/colorOnBoardText"
-                            android:textStyle="bold"/>
+                            android:textSize="@dimen/text_size_small"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/package_type_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=""
-                            android:gravity="left"
                             android:layout_marginLeft="@dimen/value5"
-                            android:textSize="@dimen/text_size_mini"
-                            android:textColor="@color/cunnection_type"/>
+                            android:gravity="left"
+                            android:text=""
+                            android:textColor="@color/cunnection_type"
+                            android:textSize="@dimen/text_size_mini" />
 
                     </LinearLayout>
 
@@ -108,10 +109,10 @@
                         android:id="@+id/acount_id_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
                         android:gravity="left"
-                        android:textSize="@dimen/text_size_mini"
-                        android:textColor="@color/colorOnBoardText"/>
+                        android:text=""
+                        android:textColor="@color/colorOnBoardText"
+                        android:textSize="@dimen/text_size_mini" />
 
                 </LinearLayout>
 
@@ -120,8 +121,8 @@
                     android:id="@+id/postpaid_bill_view_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:orientation="vertical"
                     android:visibility="gone">
 
                     <android.support.design.widget.TextInputLayout
@@ -134,25 +135,26 @@
                             style="@style/CustomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="0dp"
                             android:hint="@string/enter_amount"
                             android:inputType="number"
-                            android:maxLines="1"
-                            android:layout_marginLeft="0dp"
-                            android:layout_marginRight="0dp" />
+                            android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <View style="@style/Divider"
+                    <View
+                        style="@style/Divider"
                         android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"/>
+                        android:layout_marginRight="0dp" />
 
                     <TextView
                         style="@style/CustomNoteTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/prepaid_amount_bill_pay_help_message"
-                        android:gravity="left"
                         android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"/>
+                        android:layout_marginRight="0dp"
+                        android:gravity="left"
+                        android:text="@string/prepaid_amount_bill_pay_help_message" />
 
                 </LinearLayout>
 
@@ -160,8 +162,8 @@
                     android:id="@+id/prepaid_package_selector_view_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:orientation="vertical"
                     android:visibility="gone">
 
                     <android.support.design.widget.TextInputLayout
@@ -174,39 +176,40 @@
                             style="@style/CustomEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="0dp"
+                            android:drawableRight="@drawable/dropdown_arrow"
                             android:focusable="false"
                             android:hint="@string/choose_your_package"
                             android:inputType=""
                             android:maxLines="1"
-                            android:singleLine="true"
-                            android:layout_marginLeft="0dp"
-                            android:layout_marginRight="0dp"
-                            android:drawableRight="@drawable/dropdown_arrow"
-                            android:paddingRight="10dp"/>
+                            android:paddingRight="10dp"
+                            android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <View style="@style/Divider"
+                    <View
+                        style="@style/Divider"
                         android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"/>
+                        android:layout_marginRight="0dp" />
 
                     <TextView
                         android:id="@+id/errortext"
                         style="@style/CustomNoteTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/please_select_package"
-                        android:gravity="left"
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
+                        android:gravity="left"
+                        android:text="@string/please_select_package"
                         android:textColor="#FF0000"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <LinearLayout
+                        android:id="@+id/package_amount_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:id="@+id/package_amount_view"
                         android:visibility="gone">
 
                         <android.support.design.widget.TextInputLayout
@@ -219,23 +222,25 @@
                                 style="@style/CustomEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/enter_amount"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1"
                                 android:layout_marginLeft="0dp"
                                 android:layout_marginRight="0dp"
                                 android:enabled="false"
-                                android:textColor="@color/colorOnBoardText"/>
+                                android:hint="@string/enter_amount"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1"
+                                android:textColor="@color/colorOnBoardText" />
                         </android.support.design.widget.TextInputLayout>
 
-                        <View style="@style/Divider"
+                        <View
+                            style="@style/Divider"
                             android:layout_marginLeft="0dp"
                             android:layout_marginRight="0dp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
-            </LinearLayout>]
+            </LinearLayout>
+            ]
 
         </LinearLayout>
     </ScrollView>
@@ -244,18 +249,18 @@
         android:id="@+id/continue_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/continue_add_money"
+        android:layout_alignParentBottom="true"
         android:background="@color/colorPrimaryButton"
-        android:textColor="@color/colorPrimaryButtonText"
-        android:layout_alignParentBottom="true"/>
+        android:text="@string/continue_add_money"
+        android:textColor="@color/colorPrimaryButtonText" />
 
     <Button
         android:id="@+id/bill_pay_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/pay_bill"
-        android:background="@color/colorPrimaryButton"
-        android:textColor="@color/colorPrimaryButtonText"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"/>
+        android:background="@color/colorPrimaryButton"
+        android:text="@string/pay_bill"
+        android:textColor="@color/colorPrimaryButtonText"
+        android:visibility="gone" />
 </RelativeLayout>

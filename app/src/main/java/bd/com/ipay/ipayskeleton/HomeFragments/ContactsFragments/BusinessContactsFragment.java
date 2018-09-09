@@ -50,6 +50,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
     private int businessAddressIndex;
     private int businessThanaIndex;
     private int businessDistrictIndex;
+    private int businessOutletIndex;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                     businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
                     businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
                     businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
+                    businessOutletIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_OUTLET);
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_BUSINESS_URI);
                 }
@@ -263,6 +265,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                 final String businessAddress = mCursor.getString(businessAddressIndex);
                 final String businessThana = mCursor.getString(businessThanaIndex);
                 final String businessDistrict = mCursor.getString(businessDistrictIndex);
+                final String businessOutlet = mCursor.getString(businessOutletIndex);
 
                 if (businessName != null && !businessName.isEmpty()) {
                     businessNameView.setText(businessName);
@@ -292,6 +295,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
                         intent.putExtra(Constants.ADDRESS, businessAddress);
                         intent.putExtra(Constants.THANA, businessThana);
                         intent.putExtra(Constants.DISTRICT, businessDistrict);
+                        intent.putExtra(Constants.OUTLET, businessOutlet);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }

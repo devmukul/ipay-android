@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
@@ -58,12 +60,14 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     private ProgressDialog mProgressDialog;
 
     private String mobileNumber;
-    private String name;
+    private String brandName;
+    private String outletName;
     private String imageUrl;
     private String address;
     private String country;
     private String district;
     private String thana;
+    private Long outletId = null;
 
     @Nullable
     @Override
@@ -93,48 +97,82 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     final String result = barcode.displayValue;
+                    String [] stringArray = result.split("-");
+                    final String mobile = stringArray[0];
+                    if(stringArray.length>1) {
+                        try {
+                            outletId = Long.parseLong(stringArray[1].trim().replaceAll("[^0-9]", ""));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
 
                     final Handler mHandler = new Handler();
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (InputValidator.isValidNumber(result)) {
+                            if (InputValidator.isValidNumber(mobile)) {
                                 Cursor mCursor;
                                 DataHelper dataHelper = DataHelper.getInstance(getContext());
-                                mCursor = dataHelper.searchBusinessAccountsByMobile(result.replaceAll("[^0-9]", ""));
-
+                                mCursor = dataHelper.searchBusinessAccountsByMobile(mobile.replaceAll("[^0-9]", ""));
                                 try {
-                                    if (mCursor != null) {
-                                        mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                    if (mCursor != null && mCursor.getCount()>0) {
+                                        mobileNumber = ContactEngine.formatMobileNumberBD(mobile);
                                         mBusinessContactList = getBusinessContactList(mCursor);
-                                        if (!mBusinessContactList.get(0).getProfilePictureUrl().isEmpty())
-                                            imageUrl = mBusinessContactList.get(0).getProfilePictureUrl();
-                                        if (!mBusinessContactList.get(0).getBusinessName().isEmpty())
-                                            name = mBusinessContactList.get(0).getBusinessName();
-                                        if (!mBusinessContactList.get(0).getAddressString().isEmpty())
-                                            address = mBusinessContactList.get(0).getAddressString();
-                                        if (!mBusinessContactList.get(0).getDistrictString().isEmpty())
-                                            district = mBusinessContactList.get(0).getDistrictString();
-                                        if (!mBusinessContactList.get(0).getThanaString().isEmpty())
-                                            thana = mBusinessContactList.get(0).getThanaString();
+                                        BusinessContact businessContact = mBusinessContactList.get(0);
+                                        if (!businessContact.getBusinessName().isEmpty())
+                                            brandName = businessContact.getBusinessName();
+                                        if(outletId!=null){
+                                            if (!businessContact.getOutletString().isEmpty()){
+                                                Outlets[] outlets = new Gson().fromJson(businessContact.getOutletString(), Outlets[].class);
+                                                for(Outlets outlet: outlets){
+                                                    if(outlet.getOutletId().equals(outletId)){
+                                                        if (!outlet.getOutletName().isEmpty())
+                                                            outletName = outlet.getOutletName();
+                                                        if (!outlet.getOutletLogoUrl().isEmpty())
+                                                            imageUrl = outlet.getOutletLogoUrl();
+                                                        if (!outlet.getAddressString().isEmpty())
+                                                            address = outlet.getAddressString();
+                                                        if (!outlet.getOutletAddress().getDistrictName().isEmpty())
+                                                            district = outlet.getOutletAddress().getDistrictName();
+                                                        if (!outlet.getOutletAddress().getThanaName().isEmpty())
+                                                            thana = outlet.getOutletAddress().getThanaName();
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                        }else{
+                                            if (!businessContact.getProfilePictureUrl().isEmpty())
+                                                imageUrl = businessContact.getProfilePictureUrl();
+                                            if (!businessContact.getAddressString().isEmpty())
+                                                address = businessContact.getAddressString();
+                                            if (!businessContact.getDistrictString().isEmpty())
+                                                district = businessContact.getDistrictString();
+                                            if (!businessContact.getThanaString().isEmpty())
+                                                thana = businessContact.getThanaString();
+                                        }
 
                                         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                                             DialogUtils.showServiceNotAllowedDialog(getContext());
                                         } else {
-                                            switchActivity(PaymentActivity.class);
+                                            if (TextUtils.isEmpty(address) || TextUtils.isEmpty(district) || TextUtils.isEmpty(thana) ){
+                                                fetchUserInfo(mobile);
+                                            }else {
+                                                switchActivity(PaymentActivity.class);
+                                            }
                                         }
                                     } else {
-                                        fetchUserInfo(result);
+                                        fetchUserInfo(mobile);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    fetchUserInfo(result);
+                                    fetchUserInfo(mobile);
                                 } finally {
                                     if (mCursor != null) {
                                         mCursor.close();
                                     }
                                 }
-
                             } else if (getActivity() != null) {
                                 DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                             }
@@ -200,16 +238,31 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     try {
                         Gson gson = new GsonBuilder().create();
                         GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
-                        if (!getUserInfoResponse.getProfilePictures().isEmpty())
-                            imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+
                         if (!getUserInfoResponse.getName().isEmpty())
-                            name = getUserInfoResponse.getName();
-                        if (getUserInfoResponse.getAddressList() != null) {
-                            if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
-                                address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
-                                country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                                district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
-                                thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                            brandName = getUserInfoResponse.getName();
+
+                        if (outletId!=null && getUserInfoResponse.getOutlets()!=null && getUserInfoResponse.getOutlets().size()>0 && getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE){
+                            for (Outlets outlets: getUserInfoResponse.getOutlets()) {
+                                if(outlets.getOutletId().equals(outletId)){
+                                    imageUrl = outlets.getOutletLogoUrl();
+                                    address = outlets.getAddressString();
+                                    district = outlets.getOutletAddress().getDistrictName();
+                                    thana = outlets.getOutletAddress().getThanaName();
+                                    outletName = outlets.getOutletName();
+                                    break;
+                                }
+                            }
+                        }else {
+                            if (!getUserInfoResponse.getProfilePictures().isEmpty())
+                                imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                            if (getUserInfoResponse.getAddressList() != null) {
+                                if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
+                                    address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                                    country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                                    district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                                    thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                                }
                             }
                         }
 
@@ -250,17 +303,21 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
         intent.putExtra(Constants.FROM_QR_SCAN, true);
-        intent.putExtra(Constants.NAME, name);
+        intent.putExtra(Constants.NAME, brandName);
         intent.putExtra(Constants.PHOTO_URI, imageUrl);
         intent.putExtra(Constants.COUNTRY, country);
         intent.putExtra(Constants.DISTRICT, district);
         intent.putExtra(Constants.ADDRESS, address);
         intent.putExtra(Constants.THANA, thana);
         intent.putExtra(Constants.FROM_QR_SCAN, true);
+        if(outletId!=null) {
+            intent.putExtra(Constants.OUTLET_ID, outletId);
+        }
+        intent.putExtra(Constants.OUTLET_NAME, outletName);
+
         startActivity(intent);
         getActivity().finish();
     }
-
 
     private List<BusinessContact> getBusinessContactList(Cursor cursor) {
         List<BusinessContact> mBusinessContacts;
@@ -271,7 +328,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         int businessAddressIndex;
         int businessThanaIndex;
         int businessDistrictIndex;
-
+        int businessOutletIndex;
 
         mBusinessContacts = new ArrayList<>();
 
@@ -284,6 +341,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
             businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
             businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
             businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
+            businessOutletIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_OUTLET);
 
             if (cursor.moveToFirst())
                 do {
@@ -294,6 +352,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     String businessAddress = cursor.getString(businessAddressIndex);
                     String businessThana = cursor.getString(businessThanaIndex);
                     String businessDistrict = cursor.getString(businessDistrictIndex);
+                    String businessOutlet = cursor.getString(businessOutletIndex);
 
                     BusinessContact businessContact = new BusinessContact();
                     businessContact.setBusinessName(businessName);
@@ -302,6 +361,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     businessContact.setAddressString(businessAddress);
                     businessContact.setThanaString(businessThana);
                     businessContact.setDistrictString(businessDistrict);
+                    businessContact.setOutletString(businessOutlet);
 
                     if (CommonData.getBusinessTypes() != null) {
                         BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);

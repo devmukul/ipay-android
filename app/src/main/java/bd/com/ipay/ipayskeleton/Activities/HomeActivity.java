@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
@@ -82,11 +83,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GetDeepLinkedNotificationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
@@ -132,6 +135,10 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestDeleteAsyncTask mResignFromBusinessAsyncTask;
     private RemoveEmployeeResponse mResignFromBusinessResponse;
+
+    private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
+
+    private HttpRequestPostAsyncTask mRefreshTokenAsyncTask;
 
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
@@ -183,7 +190,9 @@ public class HomeActivity extends BaseActivity
         }
         refreshBalance();
         mProgressDialog = new ProgressDialog(HomeActivity.this);
-
+        if (!SharedPrefManager.isFireBaseTokenSent()) {
+            sendFireBaseTokenToServer();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -352,6 +361,25 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    private void sendFireBaseTokenToServer() {
+        String fireBaseToken = FirebaseInstanceId.getInstance().getToken();
+        Logger.logW("Firebase Token", "Refresh token called");
+
+        if (mRefreshTokenAsyncTask != null) {
+            mRefreshTokenAsyncTask = null;
+        }
+
+        String myDeviceID = DeviceInfoFactory.getDeviceId(this);
+        FCMRefreshTokenRequest mFcmRefreshTokenRequest = new FCMRefreshTokenRequest(fireBaseToken, myDeviceID, Constants.MOBILE_ANDROID);
+        Gson gson = new Gson();
+        String json = gson.toJson(mFcmRefreshTokenRequest);
+        mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_FIREBASE_TOKEN,
+                Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_REFRESH_FIREBASE_TOKEN, json, this, true);
+        mRefreshTokenAsyncTask.mHttpResponseListener = this;
+
+        mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void getManagedBusinessAccountList() {
         if (mGetBusinessAccountsAsyncTask != null)
             return;
@@ -400,11 +428,24 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         Utilities.hideKeyboard(this);
+        getNotifications();
 
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         }
 
+    }
+
+    private void getNotifications() {
+        if (mGetNotificationAsyncTask != null) {
+            return;
+        } else {
+            String url = Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_PULL_NOTIFICATION;
+
+            mGetNotificationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NOTIFICATION,
+                    url, this, this, false);
+            mGetNotificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     @Override
@@ -486,13 +527,17 @@ public class HomeActivity extends BaseActivity
 
     private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
-
         Logger.logD("Notification Count", badgeCount + "");
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
-                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY,
+                        badgeCount + SharedPrefManager.getNotificationCount());
             } else {
-                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
+                if (SharedPrefManager.getNotificationCount() != 0) {
+                    ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, SharedPrefManager.getNotificationCount());
+                } else {
+                    ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
+                }
             }
         }
     }
@@ -827,6 +872,7 @@ public class HomeActivity extends BaseActivity
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
             mLocationUpdateRequestAsyncTask = null;
+            mGetNotificationAsyncTask = null;
             return;
         }
         mProgressDialog.dismiss();
@@ -916,6 +962,7 @@ public class HomeActivity extends BaseActivity
                 } catch (Exception e) {
 
                 }
+                mRefreshBalanceTask = null;
                 break;
 
             case Constants.COMMAND_GET_ACCESS_CONTROL_LIST:
@@ -935,6 +982,21 @@ public class HomeActivity extends BaseActivity
 
                 mGetAccessControlTask = null;
 
+                break;
+            case Constants.COMMAND_GET_NOTIFICATION:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
+                            fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
+                    SharedPrefManager.setNotificationCount(getDeepLinkedNotificationResponse.getNotSeenCount());
+                    updateNotificationBadgeCount(mBadgeCount);
+                }
+                mGetNotificationAsyncTask = null;
+                break;
+            case Constants.COMMAND_REFRESH_FIREBASE_TOKEN:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    SharedPrefManager.setSentFireBaseToken(true);
+                }
+                mRefreshTokenAsyncTask = null;
                 break;
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:
                 try {

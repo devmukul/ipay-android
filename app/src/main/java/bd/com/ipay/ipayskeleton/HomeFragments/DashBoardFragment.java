@@ -44,6 +44,8 @@ public class DashBoardFragment extends Fragment {
     private View transactionHistoryTabView;
 
     private ViewPager viewPager;
+    private String mDeepLinkActionPath;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,8 +70,9 @@ public class DashBoardFragment extends Fragment {
         payTab = tabLayout.getTabAt(PAY_TAB);
         offerTab = tabLayout.getTabAt(OFFER_TAB);
 
-        setupCustomViewsForTabLayout();
+        mDeepLinkActionPath = getActivity().getIntent().getStringExtra(Constants.PATH);
 
+        setupCustomViewsForTabLayout();
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -107,6 +110,10 @@ public class DashBoardFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        if (mDeepLinkActionPath != null && mDeepLinkActionPath.contains("promotions")) {
+            viewPager.setCurrentItem(OFFER_TAB, true);
+        }
 
         return v;
     }

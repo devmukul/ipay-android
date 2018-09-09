@@ -59,7 +59,7 @@
                 style="@style/ButtonPrimaryOnBoard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_bank" />
+                android:text="@string/link_bank" />
 
             <Button
                 android:id="@+id/button_add_money_by_card"
