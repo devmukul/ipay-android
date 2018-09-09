@@ -183,6 +183,7 @@ public class Constants {
     public static final String COMMAND_DESCO_BILL_PAY = "COMMAND_DESCO_BILL_PAY";
     public static final String CARNIVAL_BILL_PAY = "CARNIVAL_BILL_PAY";
     public static final String AMBER_BILL_PAY = "AMBER BILL PAY";
+    public static final String AMBERIT = "AMBERIT";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";

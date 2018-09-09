@@ -68,7 +68,7 @@
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
                         android:hint="@string/amount"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:orientation="vertical"
-                android:visibility="gne">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"

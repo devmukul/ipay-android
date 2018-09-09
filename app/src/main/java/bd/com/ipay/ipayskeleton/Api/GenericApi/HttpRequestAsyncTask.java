@@ -92,47 +92,50 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             return;
         }
+        try {
+            if (result == null)
+                Logger.logE(Constants.RESULT, API_COMMAND + " NULL");
+            else
+                Logger.logW(Constants.RESULT, Constants.GET_REQUEST + result.toString());
 
-        if (result == null)
-            Logger.logE(Constants.RESULT, API_COMMAND + " NULL");
-        else
-            Logger.logW(Constants.RESULT, Constants.GET_REQUEST + result.toString());
+            if (result != null) {
 
-        if (result != null) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
+                    try {
+                        MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
+                        boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
-                try {
-                    MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
-                    boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
-
-                    if (loggedIn && !result.getJsonString().contains(Constants.USERNAME_PASSWORD_INCORRECT)) {
-                        String message = mContext.getString(R.string.please_log_in_again);
-                        myApplicationInstance.launchLoginPage(message);
-                        Utilities.resetIntercomInformation();
-                    } else {
-                        // Wrong user name or password returns HTTP_RESPONSE_STATUS_UNAUTHORIZED too
-                        if (mHttpResponseListener != null)
-                            mHttpResponseListener.httpResponseReceiver(result);
+                        if (loggedIn && !result.getJsonString().contains(Constants.USERNAME_PASSWORD_INCORRECT)) {
+                            String message = mContext.getString(R.string.please_log_in_again);
+                            myApplicationInstance.launchLoginPage(message);
+                            Utilities.resetIntercomInformation();
+                        } else {
+                            // Wrong user name or password returns HTTP_RESPONSE_STATUS_UNAUTHORIZED too
+                            if (mHttpResponseListener != null)
+                                mHttpResponseListener.httpResponseReceiver(result);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                } else {
+                    if (mHttpResponseListener != null)
+                        mHttpResponseListener.httpResponseReceiver(result);
                 }
 
             } else {
-                if (mHttpResponseListener != null)
-                    mHttpResponseListener.httpResponseReceiver(result);
-            }
-
-        } else {
-            if (socketTimeOutConnection == null) {
-                if (mHttpResponseListener != null)
-                    mHttpResponseListener.httpResponseReceiver(null);
-            } else {
-                if (mHttpResponseListener != null) {
-                    mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection, isSlient));
+                if (socketTimeOutConnection == null) {
+                    if (mHttpResponseListener != null)
+                        mHttpResponseListener.httpResponseReceiver(null);
+                } else {
+                    if (mHttpResponseListener != null) {
+                        mHttpResponseListener.httpResponseReceiver(new GenericHttpResponse(socketTimeOutConnection, isSlient));
+                    }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
