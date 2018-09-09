@@ -74,7 +74,7 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         attemptGetBusinessRule(ServiceIdConstants.SEND_MONEY);
         SendMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
         ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorToolbarSendMoney));
-        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
         Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
         mBackButtonIcon.setColorFilter(new
                 PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));

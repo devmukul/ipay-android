@@ -18,28 +18,16 @@ public class SendMoneyHelperFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_helper, container, false);
-        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
-        ((SendMoneyActivity) getActivity()).hideTitle();
-        getActivity().overridePendingTransition(R.anim.right_to_left_enter,R.anim.right_to_left_exit);
-        okButton = (Button) view.findViewById(R.id.ok_button);
-        if (getArguments() != null) {
-            Bundle bundle = getArguments();
-            try {
-                if (bundle.getBoolean("isBackPresent")) {
-                    ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.GONE);
-                    this.getArguments().clear();
-                    setArguments(null);
-
-                } else {
-                    ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e) {
+        ((SendMoneyActivity) getActivity()).toolbar.setVisibility(View.GONE);
+        if(getArguments() != null){
+            if(getArguments().getBoolean("isBackPresent")){
 
             }
-        } else {
-            ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
-
         }
+        else {
+            getActivity().overridePendingTransition(R.anim.right_to_left_enter, R.anim.right_to_left_exit);
+        }
+        okButton = (Button) view.findViewById(R.id.ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

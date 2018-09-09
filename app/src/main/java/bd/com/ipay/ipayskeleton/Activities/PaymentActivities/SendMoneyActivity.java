@@ -89,16 +89,28 @@ public class SendMoneyActivity extends BaseActivity {
             getSupportFragmentManager().popBackStackImmediate();
         }
         if (isBackPresent) {
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("isBackPresent", isBackPresent);
+            Bundle bundle =new Bundle();
+            bundle.putBoolean("isBackPresent",isBackPresent);
             SendMoneyHelperFragment sendMoneyHelperFragment = new SendMoneyHelperFragment();
             sendMoneyHelperFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_out,R.anim.y_hundred_to_zero)
                     .replace(R.id.fragment_container, sendMoneyHelperFragment).commit();
         } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new SendMoneyHelperFragment()).commit();
         }
+    }
+
+    public void switchToHelperFragmentTest(){
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        Bundle bundle =new Bundle();
+        bundle.putBoolean("isBackPresent",true);
+        SendMoneyHelperFragment sendMoneyHelperFragment = new SendMoneyHelperFragment();
+        sendMoneyHelperFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, sendMoneyHelperFragment).commit();
     }
 
     public void switchToSendMoneyContactFragment() {
@@ -109,7 +121,7 @@ public class SendMoneyActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.SOURCE, Constants.SEND_MONEY);
         transactionContactFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in_enter, R.anim.up_to_down_exit)
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in_enter,R.anim.y_zero_to_hundred)
                 .replace(R.id.fragment_container, transactionContactFragment).addToBackStack(null).commit();
     }
 
@@ -120,7 +132,8 @@ public class SendMoneyActivity extends BaseActivity {
         this.bundle = bundle;
         SendMoneyRecheckFragment sendMoneyRecheckFragment = new SendMoneyRecheckFragment();
         sendMoneyRecheckFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter, R.anim.right_to_left_exit)
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
+                R.anim.right_to_left_exit,R.anim.left_to_right_enter,R.anim.left_to_right_exit)
                 .replace(R.id.fragment_container, sendMoneyRecheckFragment).addToBackStack(null).commit();
     }
 

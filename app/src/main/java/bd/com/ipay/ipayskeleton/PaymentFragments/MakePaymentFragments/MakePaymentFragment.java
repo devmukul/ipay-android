@@ -70,7 +70,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;

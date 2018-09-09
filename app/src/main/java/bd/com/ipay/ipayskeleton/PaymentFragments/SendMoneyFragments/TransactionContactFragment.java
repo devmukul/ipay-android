@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,6 +66,8 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
     private static final String TAG = TransactionContactFragment.class.getSimpleName();
 
     private static final int CONTACTS_QUERY_LOADER = 0;
+
+    private int isFirstLoad = 0;
 
     private BottomSheetLayout mBottomSheetLayout;
     private RecyclerView mRecyclerView;
@@ -126,8 +127,8 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         resetSearchKeyword();
     }
 
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+    /* @Override
+   public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         try {
             Animation animation = AnimationUtils.loadAnimation(getActivity(), nextAnim);
             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -172,7 +173,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         } catch (Exception e) {
             return null;
         }
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -180,10 +181,30 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         mNumberTextView = (TextView) v.findViewById(R.id.number_text_view);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
         mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
-
+        ((SendMoneyActivity)getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+        ((SendMoneyActivity)getActivity()).showTitle();
+        ((SendMoneyActivity)getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((SendMoneyActivity)getActivity()).switchToHelperFragmentTest();
+            }
+        });
         if (getArguments() != null) {
             sourceActivityName = getArguments().getString(Constants.SOURCE);
         }
+
+        if (sourceActivityName != null ){
+            if(sourceActivityName.equals(Constants.SEND_MONEY)){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((SendMoneyActivity)getActivity()).toolbar.setVisibility(View.VISIBLE);
+
+                    }
+                },500);
+            }
+        }
+
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,6 +240,13 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
 
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isFirstLoad = 1;
+                mAdapter.notifyDataSetChanged();
+            }
+        }, 1000);
         return v;
     }
 
@@ -453,10 +481,15 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
 
         @Override
         public int getItemCount() {
-            if (mCursor == null || mCursor.isClosed())
+            if (mCursor == null || mCursor.isClosed()) {
                 return 0;
-            else
-                return mCursor.getCount();
+            } else {
+                if (isFirstLoad == 0) {
+                    return 10;
+                } else {
+                    return mCursor.getCount();
+                }
+            }
         }
 
         @Override

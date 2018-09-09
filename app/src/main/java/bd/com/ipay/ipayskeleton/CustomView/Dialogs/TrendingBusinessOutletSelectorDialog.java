@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,18 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
-import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-
-import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
 
 public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements SearchView.OnQueryTextListener{
     private Context context;
