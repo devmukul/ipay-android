@@ -182,11 +182,7 @@ public class HomeActivity extends BaseActivity
 
     private ManagedBusinessAcountAdapter mManageBusinessAcountAdapter;
     private HttpRequestPostAsyncTask mRefreshBalanceTask;
-
-    private BottomSheetBehavior mBottomSheetBehavior;
     private MenuItem mProfilePictureMenu;
-    View testView;
-    View bottomSheet;
 
 
     @Override
@@ -366,70 +362,8 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
-
-
-        //Find bottom Sheet ID
-
-//        new BottomSheetFragment().show(getSupportFragmentManager(), "dialog");
-
-        bottomSheet = findViewById(R.id.bottom_sheet);
-        testView = findViewById(R.id.test_sheet);
-
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        //If you want to handle callback of Sheet Behavior you can use below code
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-//                        Animation fadeIn = new AlphaAnimation(1, 0);
-//                        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-//                        fadeIn.setDuration(300);
-//                        testView.startAnimation(fadeIn);
-
-                        testView.setVisibility(View.VISIBLE);
-                        testView.animate().scaleX(1).scaleY(1).start();
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        //testView.startAnimation(new AlphaAnimation(1,0));
-                        testView.animate().scaleX(0).scaleY(0).start();
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        testView.setVisibility(View.GONE);
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//                Animation fadeIn = new AlphaAnimation(1-slideOffset, 0);
-//                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-//                fadeIn.setDuration(100);
-//                testView.startAnimation(fadeIn);
-
-                //testView.animate().scaleX(0).scaleY(0).start();
-            }
-        });
     }
 
-//    private void animateBottomSheetArrows(float slideOffset) {
-//        testView.animate()
-//                .translationY(slideOffset)
-//                .alpha(0.0f)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        super.onAnimationEnd(animation);
-//                        testView.setVisibility(View.GONE);
-//                    }
-//                });
-//    }
 
     @SuppressWarnings("MissingPermission")
     private void startLocationCollection() {
@@ -443,14 +377,6 @@ public class HomeActivity extends BaseActivity
             }
             mLocationManager.requestSingleUpdate(locationProvider, this, Looper.myLooper());
         }
-    }
-
-    public void hideBottomSheet(){
-        bottomSheet.setVisibility(View.GONE);
-    }
-
-    public void showBottomSheet(){
-        bottomSheet.setVisibility(View.VISIBLE);
     }
 
     private void sendFireBaseTokenToServer() {
@@ -511,7 +437,13 @@ public class HomeActivity extends BaseActivity
             mVerificationStatusView.setImageResource(R.drawable.ic_varified_actionbar);
         }
 
-
+        mOptionMenuProfileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(i);
+            }
+        });
 
         // If the menu is recreated, then restore the previous badge count
         updateNotificationBadgeCount(mBadgeCount);
@@ -525,6 +457,11 @@ public class HomeActivity extends BaseActivity
                 Intent intent = new Intent(this, NotificationActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_profile_image:
+                Intent i = new Intent(this, ProfileActivity.class);
+                startActivity(i);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -767,10 +704,6 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_account) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
-        } else if (id == R.id.nav_contact) {
-
-            switchToContactsActivity();
-
         } else if (id == R.id.nav_bank_account) {
 
             switchToManageBanksActivity();

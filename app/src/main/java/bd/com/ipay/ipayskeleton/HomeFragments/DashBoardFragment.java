@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
+import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BottomNavigationViewHelper;
@@ -28,24 +29,14 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
     private final int HOME_TAB = 0;
     private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
-    private final int OFFER_TAB = 3;
+    private final int CONTACTS_TAB = 3;
 
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
     private PayDashBoardFragment mPayFragment;
-    private OfferFragment mOfferHolderFragment;
+    private ContactsHolderFragment mContactsHolderFragment;
     private TransactionHistoryHolderFragment mTransactionHistoryFragment;
-
-//    private TabLayout.Tab homeTab;
-//    private TabLayout.Tab payTab;
-//    private TabLayout.Tab offerTab;
-//    private TabLayout.Tab transactionHistoryTab;
-
-    private View homeTabView;
-    private View payTabView;
-    private View offerTabView;
-    private View transactionHistoryTabView;
 
     private ViewPager viewPager;
     private String mDeepLinkActionPath;
@@ -59,7 +50,7 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
         setTitle();
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
-        mOfferHolderFragment = new OfferFragment();
+        mContactsHolderFragment = new ContactsHolderFragment();
         mPayFragment = new PayDashBoardFragment();
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
@@ -70,41 +61,7 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
-//        final TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
-//        tabLayout.setupWithViewPager(viewPager);
-
-
-//        homeTab = tabLayout.getTabAt(HOME_TAB);
-//        transactionHistoryTab = tabLayout.getTabAt(TRANSACTION_HISTORY_TAB);
-//        payTab = tabLayout.getTabAt(PAY_TAB);
-//        offerTab = tabLayout.getTabAt(OFFER_TAB);
-
         mDeepLinkActionPath = getActivity().getIntent().getStringExtra(Constants.PATH);
-
-//        setupCustomViewsForTabLayout();
-
-//        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                viewPager.setCurrentItem(tab.getPosition());
-//
-//                if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
-//                    BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//            }
-//        });
-
-        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -130,46 +87,17 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
             }
         });
 
-        if (mDeepLinkActionPath != null && mDeepLinkActionPath.contains("promotions")) {
-            viewPager.setCurrentItem(OFFER_TAB, true);
-        }
+//        if (mDeepLinkActionPath != null && mDeepLinkActionPath.contains("promotions")) {
+//            viewPager.setCurrentItem(OFFER_TAB, true);
+//        }
 
         return v;
     }
-
-//    private void setupCustomViewsForTabLayout() {
-//        homeTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-//        offerTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-//        transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-//        payTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-//        setTabViews();
-//    }
-
-//    private void setTabViews() {
-//        setTabIconsWithTexts();
-//
-//        homeTab.setCustomView(homeTabView);
-//        offerTab.setCustomView(offerTabView);
-//        transactionHistoryTab.setCustomView(transactionHistoryTabView);
-//        payTab.setCustomView(payTabView);
-//    }
 
     private void setTitle() {
         ((HomeActivity) getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
         ((HomeActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
-
-//    private void setTabIconsWithTexts() {
-//        ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_wallet);
-//        ((ImageView) offerTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_offer);
-//        ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
-//        ((ImageView) payTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
-//
-//        ((TextView) homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
-//        ((TextView) offerTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.offer));
-//        ((TextView) payTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
-//        ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
-//    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -184,11 +112,11 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
                 BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
                 viewPager.setCurrentItem(TRANSACTION_HISTORY_TAB);
                 break;
-            case R.id.navigation_offer:
-                viewPager.setCurrentItem(OFFER_TAB);
+            case R.id.navigation_contact:
+                viewPager.setCurrentItem(CONTACTS_TAB);
                 break;
         }
-        return false;
+        return true;
     }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
@@ -206,8 +134,8 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
                     return mPayFragment;
                 case TRANSACTION_HISTORY_TAB:
                     return mTransactionHistoryFragment;
-                case OFFER_TAB:
-                    return mOfferHolderFragment;
+                case CONTACTS_TAB:
+                    return mContactsHolderFragment;
                 default:
                     return new Fragment();
             }

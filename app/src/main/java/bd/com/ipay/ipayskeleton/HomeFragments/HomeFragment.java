@@ -15,6 +15,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -59,6 +62,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DashboardProfileCompletionPOJO;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
@@ -78,27 +82,15 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
-
     private static boolean profileCompletionPromptShown = false;
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private HttpRequestGetAsyncTask mTransactionHistoryTask = null;
-
-
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
-    private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            getProfileCompletionStatus();
-        }
-    };
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-//    private TextView mNameView;
-//    private TextView mMobileNumberView;
-    //private ProfileImageView mProfilePictureView;
-
     private int historyPageCount = 1;
     private Integer type = null;
     private Calendar fromDate = null;
@@ -119,28 +111,40 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     private View mTransactionHistoryView;
     private View mProfileCompletionView;
-
+    private View mAddMoneyButton;
+    private View mWithdrawMoneyButton;
+    private LinearLayout mSendMoneyButton;
+    private LinearLayout mRequestMoneyButton;
+    private LinearLayout mPayByQRCodeButton;
+    private LinearLayout mInviteFriendButton;
+    private LinearLayout mTopUpButton;
+    private LinearLayout mIPayHereButton;
+    public static ImageView refreshBalanceButton;
+    private ImageView mShowQRCodeButton;
     private BottomSheetBehavior mBottomSheetBehavior;
-    View testView;
+    private View mBottomSheet;
+    private ImageView mUpArrow;
+    private TextView mUpArrowText;
 
+    private RecyclerView mProfileCompletionRecyclerView;
+    private ProfileCompletionAdapter mProfileCompletionAdapter;
+    private LinearLayoutManager mLayoutManager;
 
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
 
-//    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            updateProfileData();
-//        }
-//    };
+    private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getProfileCompletionStatus();
+        }
+    };
 
-//    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-//            Logger.logD("Broadcast home fragment", newProfilePicture);
-//            mProfilePictureView.setAccountPhoto(newProfilePicture, true);
-//        }
-//    };
+    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshBalance();
+        }
+    };
 
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -151,29 +155,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         }
     }
 
-    //private View mProfileInfo;
-    private View mAddMoneyButton;
-    private View mWithdrawMoneyButton;
-    private LinearLayout mSendMoneyButton;
-    private LinearLayout mRequestMoneyButton;
-    private LinearLayout mPayByQRCodeButton;
-    private LinearLayout mInviteFriendButton;
-    private LinearLayout mTopUpButton;
-    private LinearLayout mIPayHereButton;
-    public static ImageView refreshBalanceButton;
-    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            refreshBalance();
-        }
-    };
-//    private View mProfileCompletionPromptView;
-//    private CircularProgressBar mProgressBar;
-    private ProgressBar mProgressBarWithoutAnimation;
-//    private TextView mProfileCompletionMessageView;
-//    private ImageButton mCloseButton;
-    private ImageView mShowQRCodeButton;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,19 +163,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-
-//        mProfileCompletionPromptView = v.findViewById(R.id.profile_completion);
-
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
-
-//        mNameView = (TextView) v.findViewById(R.id.textview_name);
-//        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-//        mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-//        mProfileInfo = v.findViewById(R.id.profile_info);
-
         mAddMoneyButton = v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = v.findViewById(R.id.button_withdraw_money);
         mSendMoneyButton = (LinearLayout) v.findViewById(R.id.button_send_money);
@@ -203,17 +176,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mInviteFriendButton = (LinearLayout) v.findViewById(R.id.button_invite_friend);
         mTopUpButton = (LinearLayout) v.findViewById(R.id.button_topup);
         mIPayHereButton = (LinearLayout) v.findViewById(R.id.button_ipay_here);
-
-        mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
-
-//        mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
-//        mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
-//        mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
-
         mShowQRCodeButton = (ImageView) v.findViewById(R.id.show_qr_code_button);
 
         mTransactionDescriptionView = (TextView) v.findViewById(R.id.activity_description);
-
         mTitleView = (TextView) v.findViewById(R.id.title_view);
         mTimeView = (TextView) v.findViewById(R.id.time);
         mReceiverView = (TextView) v.findViewById(R.id.receiver);
@@ -227,12 +192,14 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mTransactionHistoryView = v.findViewById(R.id.transaction_view);
         mProfileCompletionView = v.findViewById(R.id.profile_completion_holder);
 
-//        mCloseButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mProfileCompletionPromptView.setVisibility(View.GONE);
-//            }
-//        });
+        mProfileCompletionRecyclerView = v.findViewById(R.id.profile_completion);
+
+        // find container view
+        mBottomSheet = v.findViewById(R.id.bottom_sheet);
+        mUpArrow = v.findViewById(R.id.up_arrow);
+        mUpArrowText = v.findViewById(R.id.up_arrow_text);
+
+        initializeBottomSheet();
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -357,13 +324,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 }
             }
         });
-//        mProfileInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), ProfileActivity.class);
-//                startActivity(intent);
-//            }
-//        });
 
         mShowQRCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,7 +338,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            getProfileCompletionStatus();
+            if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType()== Constants.PERSONAL_ACCOUNT_TYPE) {
+                getProfileCompletionStatus();
+            }else{
+                getTransactionHistory();
+            }
         }
 
 //        updateProfileData();
@@ -391,17 +355,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
 
-//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
-//                new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
-
-//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
-//                new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
-
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBalanceUpdateBroadcastReceiver,
                 new IntentFilter(Constants.BALANCE_UPDATE_BROADCAST));
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileCompletionInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST));
+
 
         return v;
     }
@@ -418,9 +377,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
         refreshBalance();
-        if (!ProfileInfoCacheManager.isAccountVerified()) {
+        if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
             getProfileCompletionStatus();
-            //mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
         }else{
             getTransactionHistory();
         }
@@ -430,7 +388,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     @Override
     public void onDestroyView() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
-//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
 
@@ -442,36 +399,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         super.onPrepareOptionsMenu(menu);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
-
         if (menu.findItem(R.id.action_filter_by_service) != null)
             menu.findItem(R.id.action_filter_by_service).setVisible(false);
         if (menu.findItem(R.id.action_filter_by_date) != null)
             menu.findItem(R.id.action_filter_by_date).setVisible(false);
-    }
-
-//    private void updateProfileData() {
-//        mNameView.setText(ProfileInfoCacheManager.getUserName());
-//        mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
-//        mProfilePictureView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
-//                ProfileInfoCacheManager.getProfileImageUrl(), false);
-//
-//        try {
-//            Drawable verificationIconDrawable = getVerificationIconDrawable(ProfileInfoCacheManager.isAccountVerified());
-//            mNameView.setCompoundDrawablesWithIntrinsicBounds(null, null, verificationIconDrawable, null);
-//        } catch (IllegalStateException e) {
-//            Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
-//        }
-//    }
-
-    private Drawable getVerificationIconDrawable(boolean accountVerified) {
-        BitmapDrawable drawable;
-        if (accountVerified) {
-            drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_verified_profile);
-        } else {
-            drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_not_verified);
-        }
-        int resizeDimension = getResources().getDimensionPixelSize(R.dimen.value15);
-        return new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(drawable.getBitmap(), resizeDimension, resizeDimension, true));
     }
 
     private void promptForProfileCompletion() {
@@ -480,35 +411,14 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             profileCompletionPromptShown = true;
 
             mTransactionHistoryView.setVisibility(View.GONE);
-            mProfileCompletionView.setVisibility(View.VISIBLE);
-            mTitleView.setText("PROFILE COMPLETION");
-
-            mProfileCompletionStatusResponse.analyzeProfileCompletionData();
-
-            if (!mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage().isEmpty()) {
-
-                String sourceString = "Hi "+ProfileInfoCacheManager.getUserName()+", Please update your "+"<b>" +
-                        mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + "</b> " + " to complete your profile.";
-                mProfileCompletionMessageView.setText(Html.fromHtml(sourceString));
-
-//                mProfileCompletionMessageView.setText("Your profile is " +
-//                        mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-//                        + "complete.\nThe following information are required " + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
-//
-//                mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
-//
-                mProfileCompletionView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
-                        startActivity(intent);
-                    }
-                });
-//
-//                mProfileCompletionPromptView.setVisibility(View.VISIBLE);
-            }
+            List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
+            mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
+            mLayoutManager = new LinearLayoutManager(getActivity(),
+                    LinearLayoutManager.HORIZONTAL, false);
+            mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
+            mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
+            PagerSnapHelper snapHelper = new PagerSnapHelper();
+            snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
         }
     }
 
@@ -553,13 +463,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadTransactionHistory(TransactionHistory transactionHistory) {
-
+    private void loadTransactionHistory(final TransactionHistory transactionHistory) {
 
         mTransactionHistoryView.setVisibility(View.VISIBLE);
-        mProfileCompletionView.setVisibility(View.GONE);
+        mProfileCompletionRecyclerView.setVisibility(View.GONE);
         mTitleView.setText("LAST TRANSACTION");
-
         final String description = transactionHistory.getShortDescription();
         final String receiver = transactionHistory.getReceiver();
         String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
@@ -620,17 +528,15 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mOtherImageView.setImageResource(iconId);
         }
 
-//        itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
-//            public void onClick(View v) {
-//                if (!mSwipeRefreshLayout.isRefreshing()) {
-//                    Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-//                    intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-//                    startActivity(intent);
-//                }
-//            }
-//        });
+        mTransactionHistoryView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -678,9 +584,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (!ProfileInfoCacheManager.isAccountVerified()) {
+                    if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
                         promptForProfileCompletion();
-                        //mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
                     }else{
                         getTransactionHistory();
                     }
@@ -709,5 +614,158 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         }
     }
 
+    private void initializeBottomSheet() {
+
+        // init the bottom sheet behavior
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+
+        // change the state of the bottom sheet
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        // change the state of the bottom sheet
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        // set callback for changes
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        mUpArrowText.setText("SWIPE UP TO SEE MORE");
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        mUpArrowText.setText("SWIPE DOWN TO CLOSE");
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (isAdded()) {
+                    transitionBottomSheetBackgroundColor(slideOffset);
+                    animateBottomSheetArrows(slideOffset);
+                }
+            }
+        });
+    }
+
+    private void transitionBottomSheetBackgroundColor(float slideOffset) {
+        int colorFrom = getResources().getColor(R.color.colorTransparent);
+        int colorTo = getResources().getColor(R.color.colorBlackAlpha60);
+        mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
+                colorFrom, colorTo));
+    }
+
+    private void animateBottomSheetArrows(float slideOffset) {
+        mUpArrow.setRotation(slideOffset * -180);
+    }
+
+    // Helper method to interpolate colors
+    private int interpolateColor(float fraction, int startValue, int endValue) {
+        int startA = (startValue >> 24) & 0xff;
+        int startR = (startValue >> 16) & 0xff;
+        int startG = (startValue >> 8) & 0xff;
+        int startB = startValue & 0xff;
+        int endA = (endValue >> 24) & 0xff;
+        int endR = (endValue >> 16) & 0xff;
+        int endG = (endValue >> 8) & 0xff;
+        int endB = endValue & 0xff;
+        return ((startA + (int) (fraction * (endA - startA))) << 24) |
+                ((startR + (int) (fraction * (endR - startR))) << 16) |
+                ((startG + (int) (fraction * (endG - startG))) << 8) |
+                ((startB + (int) (fraction * (endB - startB))));
+    }
+
+    private class ProfileCompletionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        List<DashboardProfileCompletionPOJO> requiredInfo;
+
+        public ProfileCompletionAdapter(List<DashboardProfileCompletionPOJO> requiredInfo) {
+            this.requiredInfo = requiredInfo;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private final TextView mTitleView;
+            private final TextView mSubTitleView;
+            private final TextView mNumberView;
+            private final ImageView mImageView;
+
+            public ViewHolder(final View itemView) {
+                super(itemView);
+                mTitleView = (TextView) itemView.findViewById(R.id.profile_completion_msg_view);
+                mSubTitleView = (TextView) itemView.findViewById(R.id.profile_completion_subtitle_view);
+                mNumberView = (TextView) itemView.findViewById(R.id.number_view);
+                mImageView = (ImageView) itemView.findViewById(R.id.other_image);
+            }
+
+            public void bindView(int pos) {
+                final DashboardProfileCompletionPOJO profileCompletionData = requiredInfo.get(pos);
+
+                mTitleView.setText(profileCompletionData.getTitle());
+                mSubTitleView.setText(profileCompletionData.getSubTitle());
+                mImageView.setImageResource(profileCompletionData.getImgDrawable());
+                mNumberView.setText((pos+1)+"/"+requiredInfo.size());
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (profileCompletionData.getProperty().equals(ProfileCompletionPropertyConstants.PROFILE_PICTURE) && ProfileInfoCacheManager.isAccountVerified()) {
+                            DialogUtils.showProfilePictureUpdateRestrictionDialog(getContext());
+                        } else {
+                            Intent i = new Intent(getActivity(), ProfileActivity.class);
+                            i.putExtra(Constants.TARGET_FRAGMENT, profileCompletionData.getProperty());
+                            startActivity(i);
+
+                        }
+                    }
+                });
+            }
+        }
+
+        // Now define the view holder for Normal list item
+        class NormalViewHolder extends ViewHolder {
+            NormalViewHolder(View itemView) {
+                super(itemView);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Do whatever you want on clicking the normal items
+                    }
+                });
+            }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_dashboard_profile_completion, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                NormalViewHolder vh = (NormalViewHolder) holder;
+                vh.bindView(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return requiredInfo.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+    }
 
 }

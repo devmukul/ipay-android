@@ -17,8 +17,8 @@
         android:title="@string/transaction"/>
 
     <item
-        android:id="@+id/navigation_offer"
-        android:icon="@drawable/ic_offer"
-        android:title="@string/offer"/>
+        android:id="@+id/navigation_contact"
+        android:icon="@drawable/ic_contact"
+        android:title="@string/contacts"/>
 
 </menu>

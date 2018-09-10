@@ -177,15 +177,17 @@
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:background="@color/colorWhite"
                 apps:cardElevation="3dp"
                 apps:cardCornerRadius="5dp">
 
                 <LinearLayout
+                    android:id="@+id/transaction_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/title_view"
@@ -203,53 +205,59 @@
                         android:background="#EEEEEE">
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/profile_completion_holder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/other_image"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/activity_vertical_margin"
-                            android:layout_marginRight="@dimen/activity_vertical_margin"
-                            android:layout_marginTop="@dimen/activity_vertical_margin_card"
-                            android:layout_marginBottom="@dimen/activity_vertical_margin_card"
-                            android:src="@drawable/profile_completation_img"/>
-
-                        <LinearLayout
-                            android:id="@+id/description_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginBottom="@dimen/activity_vertical_margin_card"
-                            android:layout_marginRight="@dimen/activity_horizontal_margin"
-                            android:layout_marginTop="@dimen/activity_vertical_margin_card"
-                            android:layout_toRightOf="@+id/other_image"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/profile_completion_msg_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:fontFamily="sans-serif"
-                                android:textSize="13sp"
-                                android:textColor="@color/colorPaymentReviewPrimaryText"/>
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
                     <include
-                        android:id="@+id/transaction_view"
-                        layout="@layout/list_item_transaction_history"
-                        android:visibility="gone"/>
+                        layout="@layout/list_item_transaction_history"/>
 
                 </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/profile_completion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="@dimen/value2">
+
+                </android.support.v7.widget.RecyclerView>
+
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/profile_completion_holder"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_vertical">-->
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/other_image"-->
+                        <!--android:layout_width="50dp"-->
+                        <!--android:layout_height="50dp"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginLeft="@dimen/activity_vertical_margin"-->
+                        <!--android:layout_marginRight="@dimen/activity_vertical_margin"-->
+                        <!--android:layout_marginTop="@dimen/activity_vertical_margin_card"-->
+                        <!--android:layout_marginBottom="@dimen/activity_vertical_margin_card"-->
+                        <!--android:src="@drawable/profile_completation_img"/>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:id="@+id/description_layout"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginBottom="@dimen/activity_vertical_margin_card"-->
+                        <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
+                        <!--android:layout_marginTop="@dimen/activity_vertical_margin_card"-->
+                        <!--android:layout_toRightOf="@+id/other_image"-->
+                        <!--android:orientation="vertical">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/profile_completion_msg_view"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="left"-->
+                            <!--android:fontFamily="sans-serif"-->
+                            <!--android:textSize="13sp"-->
+                            <!--android:textColor="@color/colorPaymentReviewPrimaryText"/>-->
+
+                    <!--</LinearLayout>-->
+
+                <!--</RelativeLayout>-->
 
 
             </android.support.v7.widget.CardView>

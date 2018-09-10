@@ -34,7 +34,7 @@
             android:id="@+id/navigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            app:itemBackground="@drawable/tab_color_bottom_navigation_bar"
             app:itemIconTint="@color/colorWhite"
             app:itemTextColor="@color/colorWhite"
             app:menu="@menu/bottom_navigation"/>
