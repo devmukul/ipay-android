@@ -44,8 +44,8 @@
                         android:id="@+id/topUpView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -76,8 +76,8 @@
                         android:id="@+id/payByQCView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -108,8 +108,8 @@
                         android:id="@+id/makePaymentView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -148,8 +148,8 @@
                         android:id="@+id/requestPaymentView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card"
@@ -204,15 +204,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:id="@+id/billPayView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -243,8 +242,8 @@
                         android:id="@+id/brilliant_recharge_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -275,26 +274,21 @@
                         android:id="@+id/carnival"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
-                        android:visibility="gone"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
 
-                        <LinearLayout
+
+                        <ImageView
                             android:layout_width="@dimen/value80"
                             android:layout_height="@dimen/value80"
                             android:background="@drawable/semiround_white_default"
                             android:elevation="@dimen/value2"
-                            android:padding="@dimen/value15">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                card_view:srcCompat="@drawable/ic_carnival" />
-                        </LinearLayout>
-
+                            android:padding="@dimen/value25"
+                            android:scaleType="centerCrop"
+                            card_view:srcCompat="@drawable/ic_carnival" />
 
                         <TextView
                             android:layout_width="@dimen/value80"
@@ -320,8 +314,8 @@
                         android:id="@+id/west_zone"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -352,8 +346,8 @@
                         android:id="@+id/desco"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -384,8 +378,8 @@
                         android:id="@+id/dpdc"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginLeft="@dimen/margin_size_medium_small"
+                        android:layout_marginRight="@dimen/margin_size_medium_small"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/activity_horizontal_margin_card">
@@ -429,8 +423,8 @@
                             android:id="@+id/linkThreeBill"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                            android:layout_marginLeft="@dimen/margin_size_medium_small"
+                            android:layout_marginRight="@dimen/margin_size_medium_small"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:padding="@dimen/activity_horizontal_margin_card"

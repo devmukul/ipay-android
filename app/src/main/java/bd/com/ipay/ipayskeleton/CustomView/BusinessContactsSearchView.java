@@ -39,6 +39,7 @@ public class BusinessContactsSearchView extends FrameLayout {
     private String mOutlet = "";
 
     private Context mContext;
+    private CustomFocusListener mCustomFocusListener;
 
     private CustomTextChangeListener customTextChangeListener;
 
@@ -70,6 +71,8 @@ public class BusinessContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                if (mCustomFocusListener != null)
+                    mCustomFocusListener.onFocusChange(v, hasFocus);
                 if (!hasFocus) {
                     String inputString = mCustomAutoCompleteView.getText().toString().trim();
 
@@ -83,6 +86,10 @@ public class BusinessContactsSearchView extends FrameLayout {
 
         mBusinessContactList = new ArrayList<>();
         setBusinessContactAdapter(mBusinessContactList);
+    }
+
+    public void setOnCustomFocusChangeListener(CustomFocusListener mCustomFocusListener) {
+        this.mCustomFocusListener = mCustomFocusListener;
     }
 
     public class CustomAutoCompleteTextChangedListener implements TextWatcher {
@@ -130,7 +137,7 @@ public class BusinessContactsSearchView extends FrameLayout {
     public void clearSelectedData() {
         mName = "";
         mImageURL = "";
-        mAddress ="";
+        mAddress = "";
         mThanaDistrict = "";
         mOutlet = "";
     }
@@ -304,7 +311,7 @@ public class BusinessContactsSearchView extends FrameLayout {
                     mName = businessName;
                     mImageURL = profilePictureUrl;
                     mAddress = businessAddress;
-                    mThanaDistrict = businessThana+", "+businessDistrict;
+                    mThanaDistrict = businessThana + ", " + businessDistrict;
                     mOutlet = businessOutlet;
                     mCustomAutoCompleteView.clearFocus();
                     Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
@@ -313,6 +320,10 @@ public class BusinessContactsSearchView extends FrameLayout {
 
             return view;
         }
+    }
+
+    public interface CustomFocusListener {
+        void onFocusChange(View v, boolean hasFocus);
     }
 }
 
