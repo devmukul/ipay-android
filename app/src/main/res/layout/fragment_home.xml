@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="100"
-        android:layout_marginBottom="@dimen/value50">
+        android:layout_marginBottom="@dimen/value40">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -392,7 +392,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="true"
-        apps:behavior_peekHeight="50dp"
+        apps:behavior_peekHeight="40dp"
         apps:layout_behavior="android.support.design.widget.BottomSheetBehavior"
         android:orientation="vertical">
 
