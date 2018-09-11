@@ -111,6 +111,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
     private LinearLayout mNumberLayout;
 
     private String sourceActivityName = "";
+    private View mDivider;
 
     private ContactLoadFinishListener contactLoadFinishListener;
 
@@ -127,83 +128,40 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         resetSearchKeyword();
     }
 
-    /* @Override
-   public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        try {
-            Animation animation = AnimationUtils.loadAnimation(getActivity(), nextAnim);
-            animation.setAnimationListener(new Animation.AnimationListener() {
-
-
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    if (sourceActivityName.equals(Constants.SEND_MONEY)) {
-                        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
-                        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ((SendMoneyActivity) getActivity()).switchToSendMoneyHelperFragment(true);
-                            }
-                        });
-                        ((SendMoneyActivity) getActivity()).showTitle();
-                        ((SendMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
-                    } else if (sourceActivityName.equals(Constants.REQUEST_MONEY)) {
-                        ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
-                        ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ((RequestMoneyActivity) getActivity()).switchToRequestMoneyHelperFragment(true);
-                            }
-                        });
-                        ((RequestMoneyActivity) getActivity()).showTitle();
-                        ((RequestMoneyActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            return animation;
-        } catch (Exception e) {
-            return null;
-        }
-    }*/
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contact_send_money, container, false);
         mNumberTextView = (TextView) v.findViewById(R.id.number_text_view);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
+        mDivider = v.findViewById(R.id.divider);
+        getActivity().overridePendingTransition(R.anim.right_to_left_enter,
+                R.anim.right_to_left_exit);
         mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
-        ((SendMoneyActivity)getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
-        ((SendMoneyActivity)getActivity()).showTitle();
-        ((SendMoneyActivity)getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+        ((SendMoneyActivity) getActivity()).showTitle();
+        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((SendMoneyActivity)getActivity()).switchToHelperFragmentTest();
+                ((SendMoneyActivity) getActivity()).mHolderView.setVisibility(View.GONE);
+                ((SendMoneyActivity) getActivity()).slideUp(((SendMoneyActivity) getActivity()).mHelperView);
+
             }
         });
         if (getArguments() != null) {
             sourceActivityName = getArguments().getString(Constants.SOURCE);
         }
 
-        if (sourceActivityName != null ){
-            if(sourceActivityName.equals(Constants.SEND_MONEY)){
+      /*  if (sourceActivityName != null) {
+            if (sourceActivityName.equals(Constants.SEND_MONEY)) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ((SendMoneyActivity)getActivity()).toolbar.setVisibility(View.VISIBLE);
+                       // ((SendMoneyActivity) getActivity()).toolbar.setVisibility(View.VISIBLE);
 
                     }
-                },500);
+                }, 500);
             }
-        }
+        }*/
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,6 +198,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
 
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -249,6 +208,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         }, 1000);
         return v;
     }
+
 
     private void getProfileInfo(String mobileNumber) {
         if (mGetProfileInfoTask != null) {
@@ -278,6 +238,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
             getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
         }
     }
+
 
     @Override
     public void onDestroyView() {

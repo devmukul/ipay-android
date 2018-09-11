@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyConfirmFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneySuccessFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class SendMoneyConfirmActivity extends AppCompatActivity {
@@ -38,9 +39,13 @@ public class SendMoneyConfirmActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        overridePendingTransition(R.anim.right_to_left_enter_from_negative, R.anim.left_to_right_exit);
     }
 
     public void switchToSendMoneyConfirmFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
         Bundle bundle = new Bundle();
         if (getIntent() != null) {
             bundle.putString("name", name = getIntent().getStringExtra("name"));
@@ -51,5 +56,17 @@ public class SendMoneyConfirmActivity extends AppCompatActivity {
         SendMoneyConfirmFragment sendMoneyConfirmFragment = new SendMoneyConfirmFragment();
         sendMoneyConfirmFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, sendMoneyConfirmFragment).commit();
+    }
+
+    public void switchToSendMoneySuccessFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+        SendMoneySuccessFragment sendMoneySuccessFragment = new SendMoneySuccessFragment();
+        sendMoneySuccessFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.right_to_left_enter,
+                        R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit)
+                .replace(R.id.fragment_container, sendMoneySuccessFragment).addToBackStack(null).commit();
     }
 }

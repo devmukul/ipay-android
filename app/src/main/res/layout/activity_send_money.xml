@@ -4,53 +4,65 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <include layout="@layout/fragment_send_money_helper"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorToolbarSendMoney"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:id="@+id/helper_view"></include>
 
-        <RelativeLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/holder_view"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@color/colorToolbarSendMoney"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <TextView
-                android:id="@+id/help_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="Help"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/value18" />
-
-            <TextView
-                android:id="@+id/title"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/value20"
-                android:layout_toLeftOf="@id/help_text_view"
-                android:layout_toRightOf="@+id/back_button"
-                android:text="Send Money"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp" />
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/back_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentLeft="true"
-                android:padding="3dp"
-                android:src="@drawable/ic_arrow_back" />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+                <TextView
+                    android:id="@+id/help_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:text="Help"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/value18" />
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/value20"
+                    android:layout_toLeftOf="@id/help_text_view"
+                    android:layout_toRightOf="@+id/back_button"
+                    android:text="Send Money"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20dp" />
+
+                <ImageView
+                    android:id="@+id/back_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_arrow_back" />
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_below="@id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>

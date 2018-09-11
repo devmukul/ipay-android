@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
-
     <TextView
         android:id="@+id/contact_list_empty"
         android:layout_width="match_parent"
+        android:layout_below="@+id/helper_view"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
@@ -82,7 +82,6 @@
         android:layout_below="@+id/search_contacts"
         android:background="#E0E0E0"
         android:orientation="vertical">
-
     </LinearLayout>
 
 </RelativeLayout>

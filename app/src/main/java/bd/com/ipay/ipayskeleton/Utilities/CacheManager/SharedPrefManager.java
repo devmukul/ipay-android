@@ -118,4 +118,6 @@ public class SharedPrefManager {
         pref.edit().putBoolean(Constants.FIREBASE_TOKEN, value).apply();
     }
 
+
+
 }

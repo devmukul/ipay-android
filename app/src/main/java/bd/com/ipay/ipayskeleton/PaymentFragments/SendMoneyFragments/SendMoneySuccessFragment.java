@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyConfirmActivity;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
@@ -40,7 +40,7 @@ public class SendMoneySuccessFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_success, container, false);
-        ((SendMoneyActivity) getActivity()).toolbar.setVisibility(View.GONE);
+        ((SendMoneyConfirmActivity) getActivity()).toolbar.setVisibility(View.GONE);
         setUpViews(view);
         return view;
     }
