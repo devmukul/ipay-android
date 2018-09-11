@@ -1,7 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +50,13 @@ public class SendMoneyActivity extends BaseActivity {
         mToolbarHelpText = (TextView) toolbar.findViewById(R.id.help_text_view);
         mTitle = (TextView) toolbar.findViewById(R.id.title);
         backButton = (ImageView) toolbar.findViewById(R.id.back_button);
+
+        Drawable mBackButtonIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back);
+        mBackButtonIcon.setColorFilter(new
+                PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
+        backButton.setImageDrawable(null);
+        backButton.setImageDrawable(mBackButtonIcon);
+
         mHelperView = findViewById(R.id.helper_view);
         mHolderView = findViewById(R.id.holder_view);
         mHelperView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

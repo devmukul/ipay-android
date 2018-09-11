@@ -67,8 +67,8 @@ public class SendMoneySuccessFragment extends BaseFragment {
         if (getArguments() != null) {
             Bundle bundle = getArguments();
             mName = bundle.getString("name");
-            mSenderImageUrl = bundle.getString("receiverImageUrl");
-            mReceiverImageUrl = bundle.getString("senderImageUrl");
+            mSenderImageUrl = bundle.getString("senderImageUrl");
+            mReceiverImageUrl = bundle.getString("receiverImageUrl");
             mAmount = bundle.getString("amount");
             setUpTextViewsAndButtonActions();
         }

@@ -224,7 +224,7 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
                                     Bundle bundle = new Bundle();
                                     bundle.putString("name", mName);
                                     bundle.putString("receiverImageUrl", mProfilePictureUrl);
-                                    bundle.putString("senderImageUrl", ProfileInfoCacheManager.getProfileImageUrl());
+                                    bundle.putString("senderImageUrl", Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
                                     bundle.putString("amount", mAmount);
                                     ((SendMoneyConfirmActivity) getActivity()).switchToSendMoneySuccessFragment(bundle);
                                 }
