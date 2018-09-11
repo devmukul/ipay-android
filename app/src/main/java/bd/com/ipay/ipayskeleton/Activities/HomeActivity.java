@@ -114,10 +114,6 @@ public class HomeActivity extends BaseActivity
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestPostAsyncTask mLocationUpdateRequestAsyncTask;
-    private HttpRequestDeleteAsyncTask mRemoveAccountAsyncTask;
-
-    private HttpRequestGetAsyncTask mGetBusinessAccountsAsyncTask;
-    private GetManagedBusinessAccountsResponse mGetManagedBusinessAccountsResponse;
     private List<BusinessAccountDetails> mManagedBusinessAccountList = new ArrayList<>();
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
@@ -147,9 +143,6 @@ public class HomeActivity extends BaseActivity
     private ProfileImageView mOptionMenuProfileImageView;
     private ImageView mVerificationStatusView;
     private NavigationView mNavigationView;
-    private RecyclerView mManagedBusinessListRecyclerView;
-    private ImageView mMoreBusinessListImageView;
-    private View headerView;
 
     private String mUserID;
     private String mDeviceID;
@@ -203,61 +196,12 @@ public class HomeActivity extends BaseActivity
         DialogUtils.showAppUpdateDialog = null;
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mManagedBusinessListRecyclerView = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.managed_business_list);
-        mMoreBusinessListImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.drop_arrow);
-        headerView = mNavigationView.getHeaderView(0);
         mNavigationMenu = mNavigationView.getMenu();
-
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mManagedBusinessListRecyclerView.getVisibility() == View.VISIBLE) {
-                    mMoreBusinessListImageView.animate().rotation(0).start();
-                    mManagedBusinessListRecyclerView.setVisibility(View.GONE);
-                } else {
-                    mMoreBusinessListImageView.animate().rotation(180).start();
-                    mManagedBusinessListRecyclerView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        if (!ProfileInfoCacheManager.isBusinessAccount() || ProfileInfoCacheManager.isAccountSwitched())
-            mNavigationMenu.findItem(R.id.nav_manage_account).setVisible(false);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-
-        mManagedBusinessListRecyclerView.setHasFixedSize(true);
-        mManagedBusinessListRecyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
-        mManagedBusinessListRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mManagedBusinessListRecyclerView.setVisibility(View.GONE);
-
-        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                Utilities.hideKeyboard(HomeActivity.this);
-                mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
-                mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
-                mManageBusinessAcountAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                mNavigationView.getMenu().getItem(0).setChecked(true);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -326,22 +270,6 @@ public class HomeActivity extends BaseActivity
 
         getAllBusinessAccountsList();
 
-        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
-            getManagedBusinessAccountList();
-        } else {
-            mManagedBusinessAccountList = new ArrayList<>();
-            String userName = "";
-            if (Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-                userName = Utilities.getMainBusinessInfo(ProfileInfoCacheManager.getMainUserBusinessInfo()).getBusinessName();
-            else
-                userName = Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getName();
-
-            BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountId(),
-                    userName, Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getProfilePictures());
-            mManagedBusinessAccountList.add(tempProfileInfo);
-            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
-        }
-
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
@@ -382,15 +310,6 @@ public class HomeActivity extends BaseActivity
         mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void getManagedBusinessAccountList() {
-        if (mGetBusinessAccountsAsyncTask != null)
-            return;
-
-        mGetBusinessAccountsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS,
-                Constants.BASE_URL_MM + Constants.URL_SWITCH_ACCOUNT, this, this, true);
-        mGetBusinessAccountsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
@@ -458,11 +377,6 @@ public class HomeActivity extends BaseActivity
         super.onResume();
         Utilities.hideKeyboard(this);
         getNotifications();
-
-        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
-            getManagedBusinessAccountList();
-        }
-
     }
 
     private void getNotifications() {
@@ -712,10 +626,6 @@ public class HomeActivity extends BaseActivity
             }
 
             showPromoCodeDialogue();
-
-        } else if (id == R.id.nav_manage_account) {
-
-            switchToManageAccountsActivity();
 
         } else if (id == R.id.nav_live_chat) {
 
@@ -1050,40 +960,40 @@ public class HomeActivity extends BaseActivity
                 mLocationUpdateRequestAsyncTask = null;
                 break;
 
-            case Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS:
-                try {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
-                        mManagedBusinessAccountList = mGetManagedBusinessAccountsResponse.getBusinessList();
-                        if (mManagedBusinessAccountList == null || mManagedBusinessAccountList.size() == 0)
-                            mMoreBusinessListImageView.setVisibility(View.INVISIBLE);
-                        else {
-                            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
-
-                            mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
-                            mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
-                            mManageBusinessAcountAdapter.notifyDataSetChanged();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                mGetBusinessAccountsAsyncTask = null;
-                break;
-            case Constants.COMMAND_REMOVE_AN_EMPLOYEE:
-                mResignFromBusinessResponse = new Gson().fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
-                try {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
-                        getManagedBusinessAccountList();
-                    } else {
-                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                mResignFromBusinessAsyncTask = null;
-                break;
+//            case Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS:
+//                try {
+//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+//                        mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
+//                        mManagedBusinessAccountList = mGetManagedBusinessAccountsResponse.getBusinessList();
+//                        if (mManagedBusinessAccountList == null || mManagedBusinessAccountList.size() == 0)
+//                            mMoreBusinessListImageView.setVisibility(View.INVISIBLE);
+//                        else {
+//                            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
+//
+//                            mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
+//                            mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
+//                            mManageBusinessAcountAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                mGetBusinessAccountsAsyncTask = null;
+//                break;
+//            case Constants.COMMAND_REMOVE_AN_EMPLOYEE:
+//                mResignFromBusinessResponse = new Gson().fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
+//                try {
+//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+//                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
+//                        getManagedBusinessAccountList();
+//                    } else {
+//                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                mResignFromBusinessAsyncTask = null;
+//                break;
         }
     }
 

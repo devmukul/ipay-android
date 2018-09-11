@@ -15,10 +15,6 @@
             android:icon="@drawable/ic_bank"
             android:title="@string/link_bank" />
         <item
-            android:id="@+id/nav_manage_account"
-            android:icon="@drawable/ic_manage_people"
-            android:title="@string/manage_account" />
-        <item
             android:id="@+id/nav_security_settings"
             android:icon="@drawable/ic_settings"
             android:title="@string/security" />
