@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO;
 
-
 public class DashboardProfileCompletionPOJO {
     private String property;
     private String title;

@@ -47,7 +47,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     private PromotionsAdapter mPromotionsAdapter;
     private LinearLayoutManager mLayoutManager;
     private List<Promotion> mPromotionList = new ArrayList<>();
-//    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
     private boolean isLoading = false;
 
@@ -69,18 +68,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
         initializeViews(v);
         setupViewsAndActions();
-
-    /*    mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity()) && mPromotionTask == null) {
-                    refreshPromotions();
-                } else {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });*/
-
         return v;
     }
 
@@ -93,11 +80,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public void onPause() {
         super.onPause();
-       /* if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.destroyDrawingCache();
-            mSwipeRefreshLayout.clearAnimation();
-        }*/
     }
 
     @Override
@@ -118,10 +100,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
         if (mPromotionTask != null) {
             return;
         }
-        //String url = "https://ipay-772e8.firebaseio.com/.json";
-        String url = Constants.BASE_URL_MM+"bsp/contents";
-
-        https://www.ipay.com.bd/api/v1/bsp/contents
+        String url = "https://ipay-772e8.firebaseio.com/.json";
         mPromotionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROMOTIONS,
                 url, getActivity(), false);
         mPromotionTask.mHttpResponseListener = this;
@@ -203,7 +182,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.promotions_get_failed, Toast.LENGTH_LONG).show();
             }
-            //mSwipeRefreshLayout.setRefreshing(false);
             mPromotionTask = null;
             if (this.isAdded()) setContentShown(true);
         }

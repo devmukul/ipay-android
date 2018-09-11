@@ -5,29 +5,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -40,7 +33,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
@@ -57,9 +49,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DashboardProfileCompletionPOJO;
@@ -76,13 +66,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends BaseFragment implements HttpResponseListener {
-
-    private static boolean profileCompletionPromptShown = false;
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private HttpRequestGetAsyncTask mTransactionHistoryTask = null;
@@ -92,10 +79,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
     private int historyPageCount = 1;
-    private Integer type = null;
-    private Calendar fromDate = null;
-    private Calendar toDate = null;
-    private String mSearchText;
 
     // Transaction History
     private TextView mTransactionDescriptionView;
@@ -107,10 +90,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private ProfileImageView mProfileImageView;
     private ImageView mStatusIconView;
     private TextView mTitleView;
-    private TextView mProfileCompletionMessageView;
 
     private View mTransactionHistoryView;
-    private View mProfileCompletionView;
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
     private LinearLayout mSendMoneyButton;
@@ -129,6 +110,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private RecyclerView mProfileCompletionRecyclerView;
     private ProfileCompletionAdapter mProfileCompletionAdapter;
     private LinearLayoutManager mLayoutManager;
+    private ProgressBar mProgressBarTransaction;
 
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
 
@@ -187,12 +169,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mStatusIconView = (ImageView) v.findViewById(R.id.status_description_icon);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mOtherImageView = (ImageView) v.findViewById(R.id.other_image);
-        mProfileCompletionMessageView = (TextView) v.findViewById(R.id.profile_completion_msg_view);
 
         mTransactionHistoryView = v.findViewById(R.id.transaction_view);
-        mProfileCompletionView = v.findViewById(R.id.profile_completion_holder);
-
         mProfileCompletionRecyclerView = v.findViewById(R.id.profile_completion);
+        mProgressBarTransaction = v.findViewById(R.id.progress_bar_transaction);
 
         // find container view
         mBottomSheet = v.findViewById(R.id.bottom_sheet);
@@ -329,7 +309,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
-
                 intent.putExtra(Constants.STRING_TO_ENCODE, ProfileInfoCacheManager.getMobileNumber());
                 intent.putExtra(Constants.ACTIVITY_TITLE, "My QR Code to Share");
                 startActivity(intent);
@@ -345,8 +324,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             }
         }
 
-//        updateProfileData();
-
         if (!SharedPrefManager.getUserCountry().equals("BD")) {
             DialogUtils.showDialogForCountyNotSupported(getContext());
         }
@@ -361,14 +338,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileCompletionInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST));
 
-
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
@@ -390,7 +365,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
-
         super.onDestroyView();
     }
 
@@ -406,11 +380,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     }
 
     private void promptForProfileCompletion() {
-
-        if (!profileCompletionPromptShown) {
-            profileCompletionPromptShown = true;
-
             mTransactionHistoryView.setVisibility(View.GONE);
+            mProgressBarTransaction.setVisibility(View.GONE);
+            mProfileCompletionRecyclerView.setVisibility(View.VISIBLE);
             List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
             mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
             mLayoutManager = new LinearLayoutManager(getActivity(),
@@ -419,7 +391,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
             PagerSnapHelper snapHelper = new PagerSnapHelper();
             snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
-        }
     }
 
     private void refreshBalance() {
@@ -454,8 +425,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         if (mTransactionHistoryTask != null) {
             return;
         }
-        String url = TransactionHistoryRequest.generateUri(type,
-                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT, mSearchText);
+        String url = TransactionHistoryRequest.generateUri(null,
+                null, null, historyPageCount, 1 , null);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 url, getActivity(), false);
@@ -464,17 +435,15 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     }
 
     private void loadTransactionHistory(final TransactionHistory transactionHistory) {
-
         mTransactionHistoryView.setVisibility(View.VISIBLE);
+        mProgressBarTransaction.setVisibility(View.GONE);
         mProfileCompletionRecyclerView.setVisibility(View.GONE);
-        mTitleView.setText("LAST TRANSACTION");
         final String description = transactionHistory.getShortDescription();
         final String receiver = transactionHistory.getReceiver();
         String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
         final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
         final Integer statusCode = transactionHistory.getStatusCode();
         final Double balance = transactionHistory.getAccountBalance();
-
         if (balance != null) {
             mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
         }

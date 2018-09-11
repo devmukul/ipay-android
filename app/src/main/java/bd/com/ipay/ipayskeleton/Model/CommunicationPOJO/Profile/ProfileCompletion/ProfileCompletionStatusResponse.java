@@ -21,7 +21,6 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_PROFILE_PICTURE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_SOURCE_OF_FUND;
 
-
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_PICTURE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
@@ -146,31 +145,10 @@ public class ProfileCompletionStatusResponse {
                     mCompletionStatus.getThreshold(), mCompletionStatus.getTag(), mCompletionStatus.getProperty());
             double propertyCompletionPercentage = getPropertyCompletionPercentage(mCompletionStatus.getThreshold(), mCompletionStatus.getValue());
 
-            System.out.println("Test Output "+ mCompletionStatus.getTag()+ " "+propertyCompletionPercentage);
-
             if (mCompletionStatus.getProperty().equals(PROFILE_PICTURE)) {
                 if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
                     tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Profile Picture", "Please upload your profile picture for verification purpose.",
                             R.drawable.ic_onboard_profile_pic_upload_small,propertyDetails.getTag()));
-                }
-
-            } else if (mCompletionStatus.getProperty().equals(BUSINESS_ADDRESS)) {
-                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
-                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Business Address", "We require your business address for faster verification.",
-                            R.drawable.ic_onboard_basic_info_small,propertyDetails.getTag()));
-                }
-
-            } else if (mCompletionStatus.getProperty().equals(BUSINESS_DOCUMENTS)) {
-                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
-                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Business Document", "Please upload your business document(i.e Trade Licence).",
-                            R.drawable.ic_onboard_photo_id_small,propertyDetails.getTag()));
-                }
-
-            } else if (mCompletionStatus.getProperty().equals(BUSINESS_INFO)) {
-
-                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
-                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Business Info", "Please update your business information.",
-                            R.drawable.ic_onboard_basic_info_small,propertyDetails.getTag()));
                 }
 
             } else if (mCompletionStatus.getProperty().equals(BASIC_PROFILE)) {

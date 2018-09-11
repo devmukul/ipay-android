@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,8 +16,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -33,16 +29,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -81,12 +73,9 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPromoDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
-import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
-import bd.com.ipay.ipayskeleton.HomeFragments.BottomSheetFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
-import bd.com.ipay.ipayskeleton.HomeFragments.OfferFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
@@ -121,8 +110,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener, HttpResponseListener {
-
-    private static final String TAG = HomeActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -183,7 +170,6 @@ public class HomeActivity extends BaseActivity
     private ManagedBusinessAcountAdapter mManageBusinessAcountAdapter;
     private HttpRequestPostAsyncTask mRefreshBalanceTask;
     private MenuItem mProfilePictureMenu;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -983,7 +969,6 @@ public class HomeActivity extends BaseActivity
                         }
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                         mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

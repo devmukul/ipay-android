@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
@@ -30,7 +27,6 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
     private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
     private final int CONTACTS_TAB = 3;
-
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;

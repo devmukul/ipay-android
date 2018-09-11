@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -87,5 +86,4 @@ public class TransactionHistoryHolderFragment extends Fragment {
         TransactionHistoryPendingFragment mPendingTransactionHistoryFragment = new TransactionHistoryPendingFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_notification, mPendingTransactionHistoryFragment).commit();
     }
-
 }
