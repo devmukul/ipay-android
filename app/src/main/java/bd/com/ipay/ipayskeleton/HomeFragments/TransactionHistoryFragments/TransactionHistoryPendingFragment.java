@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -675,11 +676,16 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
                 final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final int serviceId = transactionHistory.getServiceId();
+                final String outletName = transactionHistory.getOutletName();
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
                     mReceiverView.setVisibility(View.VISIBLE);
-                    mReceiverView.setText(receiver);
+                    if(!TextUtils.isEmpty(outletName)) {
+                        mReceiverView.setText(receiver +" ("+outletName+")");
+                    }else{
+                        mReceiverView.setText(receiver);
+                    }
                 } else mReceiverView.setVisibility(View.GONE);
 
                 mNetAmountView.setText(netAmountWithSign);
