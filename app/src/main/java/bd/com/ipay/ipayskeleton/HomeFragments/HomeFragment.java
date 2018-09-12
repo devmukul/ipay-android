@@ -384,13 +384,20 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mProgressBarTransaction.setVisibility(View.GONE);
             mProfileCompletionRecyclerView.setVisibility(View.VISIBLE);
             List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
-            mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
-            mLayoutManager = new LinearLayoutManager(getActivity(),
-                    LinearLayoutManager.HORIZONTAL, false);
-            mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
-            mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
-            PagerSnapHelper snapHelper = new PagerSnapHelper();
-            snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
+            if(requiredInfo.size()<1) {
+                mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
+                mLayoutManager = new LinearLayoutManager(getActivity(),
+                        LinearLayoutManager.HORIZONTAL, false);
+                mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
+                mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
+                PagerSnapHelper snapHelper = new PagerSnapHelper();
+                snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
+            }else{
+                mTransactionHistoryView.setVisibility(View.GONE);
+                mProgressBarTransaction.setVisibility(View.VISIBLE);
+                mProfileCompletionRecyclerView.setVisibility(View.GONE);
+                getTransactionHistory();
+            }
     }
 
     private void refreshBalance() {
