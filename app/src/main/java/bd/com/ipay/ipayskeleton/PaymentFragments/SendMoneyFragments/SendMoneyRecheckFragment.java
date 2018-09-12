@@ -112,7 +112,7 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
                     if (keyEvent.getKeyCode() == keyEvent.KEYCODE_BACK) {
                         getActivity().onBackPressed();
                     }
-                    return true;
+                    return false;
                 } else {
                     if (i == keyEvent.KEYCODE_DEL) {
                         double set = Double.parseDouble((mAmountTextView.getText().toString()));
