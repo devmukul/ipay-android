@@ -191,7 +191,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
 
             Gson gson = new Gson();
             String json = gson.toJson(mAmberITBillPayRequest);
-            mAmberITBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CARNIVAL_BILL_PAY,
+            mAmberITBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_AMBERIT_BILL_PAY,
                     Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL_BILL_PAY, json, getActivity(), false);
             mAmberITBillPayTask.mHttpResponseListener = this;
             mAmberITBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -214,7 +214,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
         if (mGetAmberItUserInfo == null) {
             mProgressDialog.setMessage(getString(R.string.please_wait));
             String mUri = Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL + mCustomerID;
-            mGetAmberItUserInfo = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DOZE_CUSTOMER, mUri,
+            mGetAmberItUserInfo = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_AMBERIT_CUSTOMER, mUri,
                     getActivity(), this, true);
             mGetAmberItUserInfo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
@@ -230,22 +230,26 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
         if (editableAccountID == null) {
             mAccountIDEditText.setError(getString(R.string.enter_customer_id));
             cancel = true;
+            return !cancel;
         } else {
             mCustomerID = editableAccountID.toString();
-            if (TextUtils.isEmpty(mCustomerID)) {
+            if (mCustomerID == null || TextUtils.isEmpty(mCustomerID)) {
                 mAccountIDEditText.setError(getString(R.string.enter_customer_id));
                 cancel = true;
+                return !cancel;
             }
         }
         editableAmount = mAmountEditText.getText();
         if (editableAccountID == null) {
-            mAmountEditText.setError(getString(R.string.enter_amount));
+            mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
+            return !cancel;
         } else {
             mAmount = editableAmount.toString();
-            if (TextUtils.isEmpty(mAmount)) {
-                mAmountEditText.setError(getString(R.string.enter_amount));
+            if (mAmount == null || TextUtils.isEmpty(mAmount)) {
+                mAmountEditText.setError(getString(R.string.please_enter_amount));
                 cancel = true;
+                return !cancel;
             }
         }
         final BigDecimal topUpAmount = new BigDecimal(mAmount);
@@ -292,7 +296,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
             try {
                 Gson gson = new Gson();
                 switch (result.getApiCommand()) {
-                    case Constants.COMMAND_GET_DOZE_CUSTOMER:
+                    case Constants.COMMAND_GET_AMBERIT_CUSTOMER:
                         amberITCustomerInfoResponse = gson.fromJson(result.getJsonString(), AmberITCustomerInfoResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                             setupView();
@@ -329,7 +333,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
                         }
                         mGetBusinessRuleTask = null;
                         break;
-                    case Constants.COMMAND_CARNIVAL_BILL_PAY:
+                    case Constants.COMMAND_AMBERIT_BILL_PAY:
                         try {
                             mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
                             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
