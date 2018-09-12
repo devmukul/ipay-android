@@ -225,6 +225,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             @Override
             @ValidateAccess({ServiceIdConstants.SEND_MONEY})
             public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_MONEY)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
                 PinChecker sendMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
                     public void ifPinAdded() {
@@ -384,13 +388,20 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mProgressBarTransaction.setVisibility(View.GONE);
             mProfileCompletionRecyclerView.setVisibility(View.VISIBLE);
             List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
-            mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
-            mLayoutManager = new LinearLayoutManager(getActivity(),
-                    LinearLayoutManager.HORIZONTAL, false);
-            mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
-            mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
-            PagerSnapHelper snapHelper = new PagerSnapHelper();
-            snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
+            if(requiredInfo!=null && requiredInfo.size()>0) {
+                mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
+                mLayoutManager = new LinearLayoutManager(getActivity(),
+                        LinearLayoutManager.HORIZONTAL, false);
+                mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
+                mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
+                PagerSnapHelper snapHelper = new PagerSnapHelper();
+                snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
+            }else{
+                mTransactionHistoryView.setVisibility(View.GONE);
+                mProgressBarTransaction.setVisibility(View.VISIBLE);
+                mProfileCompletionRecyclerView.setVisibility(View.GONE);
+                getTransactionHistory();
+            }
     }
 
     private void refreshBalance() {

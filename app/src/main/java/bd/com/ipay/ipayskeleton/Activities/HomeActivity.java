@@ -257,7 +257,7 @@ public class HomeActivity extends BaseActivity
         getRelationshipList();
 
         // Fetch ACL List
-        if (SharedPrefManager.isRememberMeActive() && !ProfileInfoCacheManager.isAccountSwitched()) {
+        if (SharedPrefManager.isRememberMeActive()) {
             getAccessControlList();
         }
 
