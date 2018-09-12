@@ -225,10 +225,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             @Override
             @ValidateAccess({ServiceIdConstants.SEND_MONEY})
             public void onClick(View v) {
-                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_MONEY)) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
-                }
                 PinChecker sendMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
                     public void ifPinAdded() {
