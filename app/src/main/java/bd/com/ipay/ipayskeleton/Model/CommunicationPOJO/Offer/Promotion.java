@@ -1,83 +1,47 @@
 
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class Promotion {
-
-    @SerializedName("expire_date")
-    @Expose
-    private Long expireDate;
-    @SerializedName("image_url")
-    @Expose
-    private String imageUrl;
-    @SerializedName("merchants")
-    @Expose
+    private Long expire_date;
+    private String image_url;
     private List<Merchant> merchants = null;
-    @SerializedName("period")
-    @Expose
     private String period;
-    @SerializedName("subtitle")
-    @Expose
     private String subtitle;
-    @SerializedName("terms_conditions")
-    @Expose
-    private List<String> termsConditions = null;
-    @SerializedName("title")
-    @Expose
+    private List<String> terms_conditions = null;
     private String title;
-    @SerializedName("url")
-    @Expose
     private String url;
 
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
+
     public Promotion() {
     }
 
-    /**
-     *
-     * @param merchants
-     * @param title
-     * @param imageUrl
-     * @param expireDate
-     * @param subtitle
-     * @param termsConditions
-     * @param period
-     * @param url
-     */
-
-    public Promotion(Long expireDate, String imageUrl, List<Merchant> merchants, String period, String subtitle, List<String> termsConditions, String title, String url) {
-        this.expireDate = expireDate;
-        this.imageUrl = imageUrl;
+    public Promotion(Long expire_date, String image_url, List<Merchant> merchants, String period, String subtitle, List<String> terms_conditions, String title, String url) {
+        this.expire_date = expire_date;
+        this.image_url = image_url;
         this.merchants = merchants;
         this.period = period;
         this.subtitle = subtitle;
-        this.termsConditions = termsConditions;
+        this.terms_conditions = terms_conditions;
         this.title = title;
         this.url = url;
     }
 
-
-    public Long getExpireDate() {
-        return expireDate;
+    public Long getExpire_date() {
+        return expire_date;
     }
 
-    public void setExpireDate(Long expireDate) {
-        this.expireDate = expireDate;
+    public void setExpire_date(Long expire_date) {
+        this.expire_date = expire_date;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public List<Merchant> getMerchants() {
@@ -104,12 +68,12 @@ public class Promotion {
         this.subtitle = subtitle;
     }
 
-    public List<String> getTermsConditions() {
-        return termsConditions;
+    public List<String> getTerms_conditions() {
+        return terms_conditions;
     }
 
-    public void setTermsConditions(List<String> termsConditions) {
-        this.termsConditions = termsConditions;
+    public void setTerms_conditions(List<String> terms_conditions) {
+        this.terms_conditions = terms_conditions;
     }
 
     public String getTitle() {
@@ -131,12 +95,12 @@ public class Promotion {
     @Override
     public String toString() {
         return "Promotion{" +
-                "expireDate=" + expireDate +
-                ", imageUrl='" + imageUrl + '\'' +
+                "expire_date=" + expire_date +
+                ", image_url='" + image_url + '\'' +
                 ", merchants=" + merchants +
                 ", period='" + period + '\'' +
                 ", subtitle='" + subtitle + '\'' +
-                ", termsConditions=" + termsConditions +
+                ", terms_conditions=" + terms_conditions +
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 '}';

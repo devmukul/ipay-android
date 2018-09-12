@@ -3,6 +3,8 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompleti
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DashboardProfileCompletionPOJO;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
@@ -18,6 +20,13 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_IDENTIFICATION;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_PROFILE_PICTURE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_SOURCE_OF_FUND;
+
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_PICTURE;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_ADDRESS;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_INFO;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PHOTOID;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFY_BANK_OR_CARD;
 
 public class ProfileCompletionStatusResponse {
 
@@ -123,6 +132,55 @@ public class ProfileCompletionStatusResponse {
         }
 
         return message;
+    }
+
+    public List<DashboardProfileCompletionPOJO> dashboardProfileCompletionData() {
+
+        List<DashboardProfileCompletionPOJO> tempData = new ArrayList<>();
+
+        // Iterate the completionStatusList
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+
+            PropertyDetails propertyDetails = new PropertyDetails(mCompletionStatus.getValue(),
+                    mCompletionStatus.getThreshold(), mCompletionStatus.getTag(), mCompletionStatus.getProperty());
+            double propertyCompletionPercentage = getPropertyCompletionPercentage(mCompletionStatus.getThreshold(), mCompletionStatus.getValue());
+
+            if (mCompletionStatus.getProperty().equals(PROFILE_PICTURE)) {
+                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
+                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Profile Picture", "Please upload your profile picture for verification purpose.",
+                            R.drawable.ic_onboard_profile_pic_upload_small,propertyDetails.getTag()));
+                }
+
+            } else if (mCompletionStatus.getProperty().equals(BASIC_PROFILE)) {
+
+                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
+                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Basic Profile", "Please update your basic information.",
+                            R.drawable.ic_onboard_basic_info_small,propertyDetails.getTag()));
+                }
+
+            } else if (mCompletionStatus.getProperty().equals(PERSONAL_ADDRESS)) {
+
+                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
+                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Personal Address", "We require your present address along with basic info for faster verification.",
+                            R.drawable.ic_onboard_basic_info_small,propertyDetails.getTag()));
+                }
+
+            } else if (mCompletionStatus.getProperty().equals(PHOTOID)) {
+
+                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
+                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Photo ID", "Please upload your Photo ID(i.e National ID).",
+                            R.drawable.ic_onboard_photo_id_small,propertyDetails.getTag()));
+                }
+
+            } else if (mCompletionStatus.getProperty().equals(VERIFY_BANK_OR_CARD)) {
+
+                if (propertyDetails.getPropertyTitle() != null && propertyCompletionPercentage<100) {
+                    tempData.add(new DashboardProfileCompletionPOJO(propertyDetails.getPropertyName(), "Verify Bank or Card", "Add your bank or debit/card card as a source of fund.",
+                            R.drawable.ic_onboard_add_bank_helper_small,propertyDetails.getTag()));
+                }
+            }
+        }
+        return tempData;
     }
 
     public void analyzeProfileCompletionData() {
