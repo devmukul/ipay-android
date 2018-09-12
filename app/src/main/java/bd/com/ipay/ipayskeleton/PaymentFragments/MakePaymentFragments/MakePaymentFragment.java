@@ -1047,6 +1047,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 }
                             }
                         } else {
+                            hasOutlet = true;
                             mobileNumberView.setVisibility(View.VISIBLE);
                             profileView.setVisibility(View.GONE);
                             outlets = mGetUserInfoResponse.getOutlets();
