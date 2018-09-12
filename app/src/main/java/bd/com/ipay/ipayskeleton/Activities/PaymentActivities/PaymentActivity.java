@@ -59,6 +59,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
             switchToMakePaymentByDeepLinkFragment();
         else if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
             if (getIntent().getStringExtra(Constants.MOBILE_NUMBER) != null && getIntent().getStringExtra(Constants.PHOTO_URI) == null) {
+
                 getProfileInfo(getIntent().getStringExtra(Constants.MOBILE_NUMBER));
             } else {
                 switchToMakePaymentFragment(null);

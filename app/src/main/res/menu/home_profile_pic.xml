@@ -3,14 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_notification"
-        android:title="@string/notification"
-        android:icon="@drawable/ic_bell"
-        app:showAsAction="always"
-        android:visible="true"
-        android:orderInCategory="1"/>
-
-    <item
         android:id="@+id/action_profile_image"
         app:actionLayout="@layout/actionbar_profile_image_view"
         android:title="Alerts"
