@@ -93,6 +93,10 @@
                     android:scheme="https" />
 
                 <data
+                    android:host="www.ipay.com.bd"
+                    android:scheme="https" />
+
+                <data
                     android:host="@string/ipay_live_host"
                     android:scheme="https" />
 
