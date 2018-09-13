@@ -29,8 +29,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Calendar;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
@@ -71,6 +72,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
+    public static final String BALANCE_KEY = "BALANCE";
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private HttpRequestGetAsyncTask mTransactionHistoryTask = null;
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
@@ -78,7 +80,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-    private int historyPageCount = 1;
 
     // Transaction History
     private TextView mTransactionDescriptionView;
@@ -89,27 +90,14 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private ImageView mOtherImageView;
     private ProfileImageView mProfileImageView;
     private ImageView mStatusIconView;
-    private TextView mTitleView;
 
     private View mTransactionHistoryView;
-    private View mAddMoneyButton;
-    private View mWithdrawMoneyButton;
-    private LinearLayout mSendMoneyButton;
-    private LinearLayout mRequestMoneyButton;
-    private LinearLayout mPayByQRCodeButton;
-    private LinearLayout mInviteFriendButton;
-    private LinearLayout mTopUpButton;
-    private LinearLayout mIPayHereButton;
-    public static ImageView refreshBalanceButton;
-    private ImageView mShowQRCodeButton;
-    private BottomSheetBehavior mBottomSheetBehavior;
+    public ImageView refreshBalanceButton;
     private View mBottomSheet;
     private ImageView mUpArrow;
     private TextView mUpArrowText;
 
     private RecyclerView mProfileCompletionRecyclerView;
-    private ProfileCompletionAdapter mProfileCompletionAdapter;
-    private LinearLayoutManager mLayoutManager;
     private ProgressBar mProgressBarTransaction;
 
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -124,7 +112,18 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            refreshBalance();
+            if (intent.hasExtra(BALANCE_KEY)) {
+                BigDecimal balance = (BigDecimal) intent.getSerializableExtra(BALANCE_KEY);
+                if (isAdded() && balance != null) {
+                    balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(Double.parseDouble(balance.toString()))));
+                    SharedPrefManager.setUserBalance(balance.toString());
+                }
+            } else {
+                if (isAdded())
+                    refreshBalanceButton.performClick();
+                else
+                    refreshBalance();
+            }
         }
     };
 
@@ -144,40 +143,39 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
-        balanceView = (TextView) v.findViewById(R.id.balance);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        balanceView = view.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
-        refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
-        mAddMoneyButton = v.findViewById(R.id.button_add_money);
-        mWithdrawMoneyButton = v.findViewById(R.id.button_withdraw_money);
-        mSendMoneyButton = (LinearLayout) v.findViewById(R.id.button_send_money);
-        mRequestMoneyButton = (LinearLayout) v.findViewById(R.id.button_request_money);
-        mPayByQRCodeButton = (LinearLayout) v.findViewById(R.id.button_pay_by_qr_code);
-        mInviteFriendButton = (LinearLayout) v.findViewById(R.id.button_invite_friend);
-        mTopUpButton = (LinearLayout) v.findViewById(R.id.button_topup);
-        mIPayHereButton = (LinearLayout) v.findViewById(R.id.button_ipay_here);
-        mShowQRCodeButton = (ImageView) v.findViewById(R.id.show_qr_code_button);
+        refreshBalanceButton = view.findViewById(R.id.refresh_balance_button);
+        View mAddMoneyButton = view.findViewById(R.id.button_add_money);
+        View mWithdrawMoneyButton = view.findViewById(R.id.button_withdraw_money);
+        LinearLayout mSendMoneyButton = view.findViewById(R.id.button_send_money);
+        LinearLayout mRequestMoneyButton = view.findViewById(R.id.button_request_money);
+        LinearLayout mPayByQRCodeButton = view.findViewById(R.id.button_pay_by_qr_code);
+        LinearLayout mInviteFriendButton = view.findViewById(R.id.button_invite_friend);
+        LinearLayout mTopUpButton = view.findViewById(R.id.button_topup);
+        LinearLayout mIPayHereButton = view.findViewById(R.id.button_ipay_here);
+        ImageView mShowQRCodeButton = view.findViewById(R.id.show_qr_code_button);
 
-        mTransactionDescriptionView = (TextView) v.findViewById(R.id.activity_description);
-        mTitleView = (TextView) v.findViewById(R.id.title_view);
-        mTimeView = (TextView) v.findViewById(R.id.time);
-        mReceiverView = (TextView) v.findViewById(R.id.receiver);
-        mBalanceTextView = (TextView) v.findViewById(R.id.amount);
-        mNetAmountView = (TextView) v.findViewById(R.id.net_amount);
-        mStatusIconView = (ImageView) v.findViewById(R.id.status_description_icon);
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mOtherImageView = (ImageView) v.findViewById(R.id.other_image);
+        mTransactionDescriptionView = view.findViewById(R.id.activity_description);
+        mTimeView = view.findViewById(R.id.time);
+        mReceiverView = view.findViewById(R.id.receiver);
+        mBalanceTextView = view.findViewById(R.id.amount);
+        mNetAmountView = view.findViewById(R.id.net_amount);
+        mStatusIconView = view.findViewById(R.id.status_description_icon);
+        mProfileImageView = view.findViewById(R.id.profile_picture);
+        mOtherImageView = view.findViewById(R.id.other_image);
 
-        mTransactionHistoryView = v.findViewById(R.id.transaction_view);
-        mProfileCompletionRecyclerView = v.findViewById(R.id.profile_completion);
-        mProgressBarTransaction = v.findViewById(R.id.progress_bar_transaction);
+        mTransactionHistoryView = view.findViewById(R.id.transaction_view);
+        mProfileCompletionRecyclerView = view.findViewById(R.id.profile_completion);
+        mProgressBarTransaction = view.findViewById(R.id.progress_bar_transaction);
 
         // find container view
-        mBottomSheet = v.findViewById(R.id.bottom_sheet);
-        mUpArrow = v.findViewById(R.id.up_arrow);
-        mUpArrowText = v.findViewById(R.id.up_arrow_text);
+        mBottomSheet = view.findViewById(R.id.bottom_sheet);
+        mUpArrow = view.findViewById(R.id.up_arrow);
+        mUpArrowText = view.findViewById(R.id.up_arrow_text);
 
         initializeBottomSheet();
 
@@ -198,12 +196,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 }
             }
         });
-        if (SharedPrefManager.getUserBalance() != null) {
-            if (SharedPrefManager.getUserBalance().equals("0.0")) {
-                balanceView.setText("Loading…");
-            } else {
-                balanceView.setText(Utilities.takaWithComma(Double.parseDouble(SharedPrefManager.getUserBalance())) + " " + getString(R.string.bdt));
-            }
+        if (SharedPrefManager.getUserBalance().equals("0.0")) {
+            balanceView.setText(R.string.loading);
+        } else {
+            balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(Double.parseDouble(SharedPrefManager.getUserBalance()))));
         }
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
@@ -317,9 +313,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType()== Constants.PERSONAL_ACCOUNT_TYPE) {
+            if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
                 getProfileCompletionStatus();
-            }else{
+            } else {
                 getTransactionHistory();
             }
         }
@@ -338,15 +334,17 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileCompletionInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST));
 
-        return v;
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        if (getActivity() != null) {
+            transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                    new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        }
 
         // TODO we should refresh the balance only based on push notification, no need to fetch it
         // from the server every time someone navigates to the home activity. Once push is implemented
@@ -354,7 +352,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         refreshBalance();
         if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
             getProfileCompletionStatus();
-        }else{
+        } else {
             getTransactionHistory();
         }
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_home));
@@ -362,10 +360,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     @Override
     public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
         super.onDestroyView();
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
+        }
     }
 
     @Override
@@ -380,24 +380,24 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     }
 
     private void promptForProfileCompletion() {
+        mTransactionHistoryView.setVisibility(View.GONE);
+        mProgressBarTransaction.setVisibility(View.GONE);
+        mProfileCompletionRecyclerView.setVisibility(View.VISIBLE);
+        List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
+        if (requiredInfo != null && requiredInfo.size() > 0) {
+            ProfileCompletionAdapter mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
+                    LinearLayoutManager.HORIZONTAL, false);
+            mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
+            mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
+            PagerSnapHelper snapHelper = new PagerSnapHelper();
+            snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
+        } else {
             mTransactionHistoryView.setVisibility(View.GONE);
-            mProgressBarTransaction.setVisibility(View.GONE);
-            mProfileCompletionRecyclerView.setVisibility(View.VISIBLE);
-            List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
-            if(requiredInfo!=null && requiredInfo.size()>0) {
-                mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
-                mLayoutManager = new LinearLayoutManager(getActivity(),
-                        LinearLayoutManager.HORIZONTAL, false);
-                mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
-                mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
-                PagerSnapHelper snapHelper = new PagerSnapHelper();
-                snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
-            }else{
-                mTransactionHistoryView.setVisibility(View.GONE);
-                mProgressBarTransaction.setVisibility(View.VISIBLE);
-                mProfileCompletionRecyclerView.setVisibility(View.GONE);
-                getTransactionHistory();
-            }
+            mProgressBarTransaction.setVisibility(View.VISIBLE);
+            mProfileCompletionRecyclerView.setVisibility(View.GONE);
+            getTransactionHistory();
+        }
     }
 
     private void refreshBalance() {
@@ -432,8 +432,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         if (mTransactionHistoryTask != null) {
             return;
         }
+        int historyPageCount = 1;
         String url = TransactionHistoryRequest.generateUri(null,
-                null, null, historyPageCount, 1 , null);
+                null, null, historyPageCount, 1, null);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 url, getActivity(), false);
@@ -528,72 +529,72 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             return;
         }
 
-
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_BALANCE)) {
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                try {
-                    RefreshBalanceResponse mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
-                    String balance = mRefreshBalanceResponse.getBalance() + "";
-                    if (balance != null) {
-                        if (isAdded())
-                            balanceView.setText(Utilities.takaWithComma(Double.parseDouble(balance)) + " " + getString(R.string.bdt));
-                        SharedPrefManager.setUserBalance(balance);
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_REFRESH_BALANCE:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    try {
+                        RefreshBalanceResponse mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
+                        if (mRefreshBalanceResponse.getBalance() != null) {
+                            if (isAdded())
+                                balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(Double.parseDouble(mRefreshBalanceResponse.getBalance().toString()))));
+                            SharedPrefManager.setUserBalance(mRefreshBalanceResponse.getBalance().toString());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG);
                 }
-            } else {
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG);
-            }
 
-            mRefreshBalanceTask = null;
-            refreshBalanceButton.clearAnimation();
+                mRefreshBalanceTask = null;
+                refreshBalanceButton.clearAnimation();
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
-            try {
-                mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-                        promptForProfileCompletion();
-                    }else{
-                        getTransactionHistory();
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mGetProfileCompletionStatusTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                break;
+            case Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS:
                 try {
-                    TransactionHistoryResponse mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions().get(0));
+                    mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (!ProfileInfoCacheManager.isAccountVerified() && ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
+                            promptForProfileCompletion();
+                        } else {
+                            getTransactionHistory();
+                        }
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+
+                mGetProfileCompletionStatusTask = null;
+                break;
+            case Constants.COMMAND_GET_TRANSACTION_HISTORY:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    try {
+                        TransactionHistoryResponse mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                        loadTransactionHistory(mTransactionHistoryResponse.getTransactions().get(0));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                    }
+                } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
-            }
-            mTransactionHistoryTask = null;
+                mTransactionHistoryTask = null;
+                break;
         }
     }
 
     private void initializeBottomSheet() {
 
         // init the bottom sheet behavior
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
         // change the state of the bottom sheet
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -607,12 +608,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        mUpArrowText.setText("SWIPE UP TO SEE MORE");
+                        mUpArrowText.setText(R.string.swipe_up_to_see_more);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        mUpArrowText.setText("SWIPE DOWN TO CLOSE");
+                        mUpArrowText.setText(R.string.swipe_down_to_close);
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         break;
@@ -661,7 +662,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private class ProfileCompletionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         List<DashboardProfileCompletionPOJO> requiredInfo;
 
-        public ProfileCompletionAdapter(List<DashboardProfileCompletionPOJO> requiredInfo) {
+        ProfileCompletionAdapter(List<DashboardProfileCompletionPOJO> requiredInfo) {
             this.requiredInfo = requiredInfo;
         }
 
@@ -673,10 +674,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-                mTitleView = (TextView) itemView.findViewById(R.id.profile_completion_msg_view);
-                mSubTitleView = (TextView) itemView.findViewById(R.id.profile_completion_subtitle_view);
-                mNumberView = (TextView) itemView.findViewById(R.id.number_view);
-                mImageView = (ImageView) itemView.findViewById(R.id.other_image);
+                mTitleView = itemView.findViewById(R.id.profile_completion_msg_view);
+                mSubTitleView = itemView.findViewById(R.id.profile_completion_subtitle_view);
+                mNumberView = itemView.findViewById(R.id.number_view);
+                mImageView = itemView.findViewById(R.id.other_image);
             }
 
             public void bindView(int pos) {
@@ -685,7 +686,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 mTitleView.setText(profileCompletionData.getTitle());
                 mSubTitleView.setText(profileCompletionData.getSubTitle());
                 mImageView.setImageResource(profileCompletionData.getImgDrawable());
-                mNumberView.setText((pos+1)+"/"+requiredInfo.size());
+                mNumberView.setText(String.format(Locale.getDefault(), "%d/%d", pos + 1, requiredInfo.size()));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -717,13 +718,14 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             }
         }
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_dashboard_profile_completion, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             try {
                 NormalViewHolder vh = (NormalViewHolder) holder;
                 vh.bindView(position);
