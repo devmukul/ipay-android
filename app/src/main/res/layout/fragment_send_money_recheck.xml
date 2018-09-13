@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_transaction">
@@ -9,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/continue_button"
-        android:fadingEdge="none"
-        android:fillViewport="true"
         android:layout_marginLeft="@dimen/value32"
         android:layout_marginRight="@dimen/value32"
+        android:fadingEdge="none"
+        android:fillViewport="true"
         android:overScrollMode="never">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,6 +60,7 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
+                android:maxLines="1"
                 android:paddingLeft="@dimen/value20"
                 android:paddingRight="@dimen/value20"
                 android:text="00.00"
@@ -77,6 +79,7 @@
                 android:cursorVisible="false"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
+                android:maxLines="1"
                 android:inputType="numberDecimal"
                 android:paddingLeft="@dimen/value20"
                 android:paddingRight="@dimen/value20"
@@ -118,8 +121,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ipay_balance"
-                android:gravity="center"
                 android:layout_marginBottom="@dimen/value15"
+                android:gravity="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
         </RelativeLayout>

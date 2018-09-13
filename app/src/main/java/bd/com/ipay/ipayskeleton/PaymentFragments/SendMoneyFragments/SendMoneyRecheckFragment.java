@@ -7,6 +7,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -65,6 +67,8 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     private String before;
     private String after;
 
+    private int viewWidth;
+
     int l = 0;
 
     @Nullable
@@ -72,6 +76,13 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_recheck, container, false);
         attemptGetBusinessRule(ServiceIdConstants.SEND_MONEY);
+        final RelativeLayout relativeLayout = view.findViewById(R.id.main_view);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                viewWidth = relativeLayout.getWidth();
+            }
+        });
         SendMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
         ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorToolbarSendMoney));
         ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
@@ -103,6 +114,7 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
         mAmountTextView = (TextView) view.findViewById(R.id.amount_edit_text);
+
         mDummy = (EditText) view.findViewById(R.id.amount_dummy_edit_text);
         String setString = "";
         mDummy.setOnKeyListener(new View.OnKeyListener() {
@@ -121,11 +133,14 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
                             BigDecimal bigDecimal = new BigDecimal(set);
                             bigDecimal = bigDecimal.setScale(2, RoundingMode.DOWN);
                             mAmountTextView.setText("0" + String.valueOf(bigDecimal));
+
+
                         } else {
                             BigDecimal bigDecimal = new BigDecimal(set);
                             bigDecimal = bigDecimal.setScale(2, RoundingMode.DOWN);
 
                             mAmountTextView.setText(String.valueOf(bigDecimal));
+
                         }
                     }
                     return false;
@@ -196,9 +211,11 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
 
                         mAmountTextView.setText(setString);
 
+
                     } else {
                         String setString = String.format("%.2f", set);
                         mAmountTextView.setText(setString);
+
                     }
                 }
 
@@ -230,6 +247,7 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
             }
         });
     }
+
 
     private void attemptGetBusinessRule(int serviceID) {
         if (mGetBusinessRuleTask != null) {

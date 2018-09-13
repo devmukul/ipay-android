@@ -6,15 +6,16 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
@@ -38,6 +39,7 @@ public class SendMoneyActivity extends BaseActivity {
     public View mHelperView;
     public View mHolderView;
     public Bundle bundle;
+    public LinearLayout mMainLayout;
 
     public float mHeight;
     public float mWidth;
@@ -58,12 +60,12 @@ public class SendMoneyActivity extends BaseActivity {
         backButton.setImageDrawable(mBackButtonIcon);
 
         mHelperView = findViewById(R.id.helper_view);
+        mMainLayout = (LinearLayout) findViewById(R.id.main_view);
         mHolderView = findViewById(R.id.holder_view);
-        mHelperView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        new Handler().post(new Runnable() {
             @Override
-            public void onGlobalLayout() {
-                mHelperView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                mHeight = mHelperView.getHeight(); //height is ready
+            public void run() {
+                mHeight = mMainLayout.getHeight();
             }
         });
         mRemoveHelperViewButton = findViewById(R.id.ok_button);
@@ -100,14 +102,8 @@ public class SendMoneyActivity extends BaseActivity {
 
 
     public void slideUp(View view, int height) {
+        mHolderView.setVisibility(View.GONE);
         mHelperView.setVisibility(View.VISIBLE);
-        mHeight = view.getHeight();
-        if (mHeight == 0) {
-            mHeight = height;
-            if (mHeight == 0) {
-                mHeight = 3000;
-            }
-        }
         TranslateAnimation animate = new TranslateAnimation(
                 0,                 // fromXDelta
                 0,                 // toXDelta
@@ -136,6 +132,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     // slide the view from its current position to below itself
     public void slideDown(View view) {
+        mHeight = view.getHeight();
         TranslateAnimation animate = new TranslateAnimation(
                 0,                 // fromXDelta
                 0,                 // toXDelta
@@ -185,7 +182,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     public void switchToSendMoneyContactFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
+            getSupportFragmentManager().popBackStack();
         }
         TransactionContactFragment transactionContactFragment = new TransactionContactFragment();
         Bundle bundle = new Bundle();
@@ -197,7 +194,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     public void switchToSendMoneyRecheckFragment(Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStackImmediate();
+            getSupportFragmentManager().popBackStack();
         }
         this.bundle = bundle;
         SendMoneyRecheckFragment sendMoneyRecheckFragment = new SendMoneyRecheckFragment();
@@ -210,17 +207,16 @@ public class SendMoneyActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
             overridePendingTransition(R.anim.right_to_left_enter_from_negative, R.anim.left_to_right_exit);
         }
+
     }
 
     @Override
     public Context setContext() {
         return SendMoneyActivity.this;
     }
-
-
 }
