@@ -56,6 +56,7 @@ public class PromotionsViewModel extends AndroidViewModel implements HttpRespons
             case Constants.COMMAND_GET_PROMOTIONS_LIST:
                 if (HttpErrorHandler.isErrorFound(result, getApplication())) {
                     httpRequestGetPromotionListAsyncTask = null;
+                    mPromotionListMutableLiveData.postValue(null);
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     httpRequestGetPromotionListAsyncTask = null;
                     final PromotionResponse promotionResponse = gson.fromJson(result.getJsonString(), PromotionResponse.class);

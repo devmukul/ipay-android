@@ -57,7 +57,8 @@ public class HttpErrorHandler {
                     try {
                         GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
                                 fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-                        Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                        if (!result.isSilent())
+                            Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
 
                     } catch (Exception e) {
                         Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
@@ -65,7 +66,8 @@ public class HttpErrorHandler {
                     }
                     return true;
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-                    Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
+                    if (!result.isSilent())
+                        Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
                     return true;
                 }
                 return false;
@@ -112,15 +114,18 @@ public class HttpErrorHandler {
                     try {
                         GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
                                 fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-                        Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                        if (!result.isSilent())
+                            Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
 
                     } catch (Exception e) {
-                        Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
+                        if (!result.isSilent())
+                            Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
 
                     }
                     return true;
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-                    Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
+                    if (!result.isSilent())
+                        Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
                     return true;
                 }
                 return false;
@@ -143,15 +148,18 @@ public class HttpErrorHandler {
                 try {
                     GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
                             fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-                    Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    if (!result.isSilent())
+                        Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
 
                 } catch (Exception e) {
-                    Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
+                    if (!result.isSilent())
+                        Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
 
                 }
                 return true;
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-                Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
+                if (!result.isSilent())
+                    Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
                 return true;
             }
             return false;
