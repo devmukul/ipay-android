@@ -11,14 +11,14 @@
         android:layout_above="@+id/continue_button"
         android:fadingEdge="none"
         android:fillViewport="true"
+        android:layout_marginLeft="@dimen/value32"
+        android:layout_marginRight="@dimen/value32"
         android:overScrollMode="never">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/value50"
-            android:layout_marginLeft="@dimen/value32"
-            android:layout_marginRight="@dimen/value32"
             android:gravity="center">
 
             <TextView

@@ -68,6 +68,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
     private static final int CONTACTS_QUERY_LOADER = 0;
 
     private int isFirstLoad = 0;
+    private int mainViewHeight = 0;
 
     private BottomSheetLayout mBottomSheetLayout;
     private RecyclerView mRecyclerView;
@@ -80,6 +81,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
     private String mQuery = "";
     private String mActionName = "";
 
+    private View mainView;
     private String mPhoneNumber;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
@@ -134,6 +136,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         mNumberTextView = (TextView) v.findViewById(R.id.number_text_view);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
         mDivider = v.findViewById(R.id.divider);
+        mainView = v.findViewById(R.id.main_view);
         getActivity().overridePendingTransition(R.anim.right_to_left_enter,
                 R.anim.right_to_left_exit);
         mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
@@ -143,13 +146,19 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
             @Override
             public void onClick(View view) {
                 ((SendMoneyActivity) getActivity()).mHolderView.setVisibility(View.GONE);
-                ((SendMoneyActivity) getActivity()).slideUp(((SendMoneyActivity) getActivity()).mHelperView);
+                ((SendMoneyActivity) getActivity()).slideUp(((SendMoneyActivity) getActivity()).mHelperView,mainViewHeight);
 
             }
         });
         if (getArguments() != null) {
             sourceActivityName = getArguments().getString(Constants.SOURCE);
         }
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mainViewHeight = mainView.getHeight();
+            }
+        });
 
       /*  if (sourceActivityName != null) {
             if (sourceActivityName.equals(Constants.SEND_MONEY)) {

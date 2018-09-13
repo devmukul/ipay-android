@@ -99,11 +99,14 @@ public class SendMoneyActivity extends BaseActivity {
     }
 
 
-    public void slideUp(View view) {
+    public void slideUp(View view, int height) {
         mHelperView.setVisibility(View.VISIBLE);
         mHeight = view.getHeight();
         if (mHeight == 0) {
-            mHeight = 3000;
+            mHeight = height;
+            if (mHeight == 0) {
+                mHeight = 3000;
+            }
         }
         TranslateAnimation animate = new TranslateAnimation(
                 0,                 // fromXDelta
@@ -210,6 +213,7 @@ public class SendMoneyActivity extends BaseActivity {
             getSupportFragmentManager().popBackStackImmediate();
         } else {
             super.onBackPressed();
+            overridePendingTransition(R.anim.right_to_left_enter_from_negative, R.anim.left_to_right_exit);
         }
     }
 
