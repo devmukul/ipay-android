@@ -206,7 +206,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                         mPhotoUri = mGetSingleInvoiceResponse.getOriginatorProfile().getUserProfilePicture();
                         mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();
                         mReceiverMobileNumber = mGetSingleInvoiceResponse.originatorProfile.getUserMobileNumber();
-                        mDescription = mGetSingleInvoiceResponse.getDescriptionofRequest();
+                        mDescription = mGetSingleInvoiceResponse.getDescriptionOfRequest();
                         mTitle = mGetSingleInvoiceResponse.getTitle();
                         mRequestId = mGetSingleInvoiceResponse.getId();
                         mAmount = mGetSingleInvoiceResponse.getAmount();

@@ -516,6 +516,10 @@ public class Constants {
     public static final String URL_LINK_THREE_BILL_PAY = "link3/billpay";
     public static final String URL_BRILLIANT_RECHARGE = "brilliant/recharge";
 
+    //Promotions
+    public static final String URL_PROMOTIONS = "promotions/";
+
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -690,6 +694,9 @@ public class Constants {
     public static final String COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS = "COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS";
     public static final String COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS = "COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS";
 
+    // Promotions
+    public static final String COMMAND_GET_PROMOTIONS_LIST = "COMMAND_GET_PROMOTIONS_LIST";
+    public static final String COMMAND_PROMOTIONS_CLAIM = "COMMAND_PROMOTIONS_CLAIM";
     //Data Collector
     public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
 

@@ -99,7 +99,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             Logger.logW(Constants.RESULT, Constants.GET_REQUEST + result.toString());
 
         if (result != null) {
-
+            result.setSilent(isSlient);
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
 
                 try {
