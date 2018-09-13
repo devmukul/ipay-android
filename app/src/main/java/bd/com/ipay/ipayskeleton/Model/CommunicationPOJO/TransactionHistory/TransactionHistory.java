@@ -26,7 +26,91 @@ public class TransactionHistory implements Parcelable {
     private final Double accountBalance;
     private final Double availableBalance;
     private final TransactionHistoryAdditionalInfo otherParty;
-    private final String[] actions = null;
+    private final String[] actions;
+    private final String outletName;
+    private final long outletId;
+
+    protected TransactionHistory(Parcel in) {
+        insertTime = in.readLong();
+        accountId = in.readString();
+        serviceId = in.readInt();
+        transactionId = in.readString();
+        message = in.readString();
+        amount = in.readDouble();
+        fee = in.readDouble();
+        netAmount = in.readDouble();
+        purpose = in.readString();
+        description = in.readString();
+        shortDesc = in.readString();
+        statusCode = in.readInt();
+        statusInWord = in.readString();
+        type = in.readString();
+        if (in.readByte() == 0) {
+            accountBalance = null;
+        } else {
+            accountBalance = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            availableBalance = null;
+        } else {
+            availableBalance = in.readDouble();
+        }
+        otherParty = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
+        actions = in.createStringArray();
+        outletName = in.readString();
+        outletId = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(insertTime);
+        dest.writeString(accountId);
+        dest.writeInt(serviceId);
+        dest.writeString(transactionId);
+        dest.writeString(message);
+        dest.writeDouble(amount);
+        dest.writeDouble(fee);
+        dest.writeDouble(netAmount);
+        dest.writeString(purpose);
+        dest.writeString(description);
+        dest.writeString(shortDesc);
+        dest.writeInt(statusCode);
+        dest.writeString(statusInWord);
+        dest.writeString(type);
+        if (accountBalance == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(accountBalance);
+        }
+        if (availableBalance == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(availableBalance);
+        }
+        dest.writeParcelable(otherParty, flags);
+        dest.writeStringArray(actions);
+        dest.writeString(outletName);
+        dest.writeLong(outletId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<TransactionHistory> CREATOR = new Creator<TransactionHistory>() {
+        @Override
+        public TransactionHistory createFromParcel(Parcel in) {
+            return new TransactionHistory(in);
+        }
+
+        @Override
+        public TransactionHistory[] newArray(int size) {
+            return new TransactionHistory[size];
+        }
+    };
 
     public String getOriginatingMobileNumber() {
         return ProfileInfoCacheManager.getMobileNumber();
@@ -137,10 +221,20 @@ public class TransactionHistory implements Parcelable {
         return statusInWord;
     }
 
+    public String getOutletName() {
+        return outletName;
+    }
+
+    public long getOutletId() {
+        return outletId;
+    }
+
     @Override
     public String toString() {
         return "TransactionHistory{" +
                 "insertTime=" + insertTime +
+                ", outletName=" + outletName + '\'' +
+                ", outletId=" + outletId + '\'' +
                 ", accountId='" + accountId + '\'' +
                 ", serviceId=" + serviceId +
                 ", transactionId='" + transactionId + '\'' +
@@ -159,83 +253,4 @@ public class TransactionHistory implements Parcelable {
                 ", actions=" + Arrays.toString(actions) +
                 '}';
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.otherParty, flags);
-        dest.writeDouble(this.amount);
-        dest.writeDouble(this.fee);
-        dest.writeDouble(this.netAmount);
-        dest.writeLong(this.insertTime);
-        if (this.availableBalance != null)
-            dest.writeDouble(this.availableBalance);
-        else {
-            Double availableBalance = new Double(0.0);
-            dest.writeDouble(availableBalance);
-        }
-        if (this.accountBalance != null)
-            dest.writeDouble(this.accountBalance);
-        else {
-            Double accountBalance = new Double(0.0);
-            dest.writeDouble(accountBalance);
-        }
-        dest.writeInt(this.serviceId);
-        dest.writeInt(this.statusCode);
-        dest.writeString(this.purpose);
-        dest.writeString(this.statusInWord);
-        dest.writeString(this.description);
-        if (this.shortDesc != null) {
-            dest.writeString(this.shortDesc);
-        }
-        dest.writeString(this.transactionId);
-        dest.writeString(this.accountId);
-        if (this.type != null) {
-            dest.writeString(this.type);
-        }
-        if (this.actions != null) {
-            dest.writeArray(this.actions);
-        }
-        if (this.message != null) {
-            dest.writeString(this.message);
-        }
-    }
-
-    protected TransactionHistory(Parcel in) {
-        this.otherParty = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
-        this.amount = in.readDouble();
-        this.fee = in.readDouble();
-        this.netAmount = in.readDouble();
-        this.insertTime = in.readLong();
-        this.availableBalance = in.readDouble();
-        this.accountBalance = in.readDouble();
-        this.serviceId = in.readInt();
-        this.statusCode = in.readInt();
-        this.purpose = in.readString();
-        this.statusInWord = in.readString();
-        this.description = in.readString();
-        this.shortDesc = in.readString();
-        this.transactionId = in.readString();
-        this.accountId = in.readString();
-        this.type = in.readString();
-        if (actions != null)
-            in.readStringArray(actions);
-        this.message = in.readString();
-    }
-
-    public static final Parcelable.Creator<TransactionHistory> CREATOR = new Parcelable.Creator<TransactionHistory>() {
-        @Override
-        public TransactionHistory createFromParcel(Parcel source) {
-            return new TransactionHistory(source);
-        }
-
-        @Override
-        public TransactionHistory[] newArray(int size) {
-            return new TransactionHistory[size];
-        }
-    };
 }

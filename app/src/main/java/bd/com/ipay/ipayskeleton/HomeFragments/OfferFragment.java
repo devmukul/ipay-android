@@ -47,7 +47,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     private PromotionsAdapter mPromotionsAdapter;
     private LinearLayoutManager mLayoutManager;
     private List<Promotion> mPromotionList = new ArrayList<>();
-    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
     private boolean isLoading = false;
 
@@ -69,18 +68,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
         initializeViews(v);
         setupViewsAndActions();
-
-        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity()) && mPromotionTask == null) {
-                    refreshPromotions();
-                } else {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
-
         return v;
     }
 
@@ -93,11 +80,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public void onPause() {
         super.onPause();
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.destroyDrawingCache();
-            mSwipeRefreshLayout.clearAnimation();
-        }
     }
 
     @Override
@@ -119,7 +101,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
             return;
         }
         String url = "https://ipay-772e8.firebaseio.com/.json";
-
         mPromotionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROMOTIONS,
                 url, getActivity(), false);
         mPromotionTask.mHttpResponseListener = this;
@@ -133,7 +114,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
             Calendar calendar = Calendar.getInstance();
             long currentTime = calendar.getTimeInMillis();
 
-            if (currentTime < values.getExpireDate()) {
+            if (currentTime < values.getExpire_date()) {
                 mPromotionList.add(values);
             }
         }
@@ -160,7 +141,8 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     private void initializeViews(View v) {
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mPromotionsRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mPromotionsRecyclerView.setNestedScrollingEnabled(true);
+        //mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
     }
 
     private void setupViewsAndActions() {
@@ -200,7 +182,6 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.promotions_get_failed, Toast.LENGTH_LONG).show();
             }
-            mSwipeRefreshLayout.setRefreshing(false);
             mPromotionTask = null;
             if (this.isAdded()) setContentShown(true);
         }
@@ -220,9 +201,9 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
             public void bindView(int pos) {
                 final Promotion promotionList = mPromotionList.get(pos);
-                final String imageUrl = promotionList.getImageUrl();
+                final String imageUrl = promotionList.getImage_url();
                 final String offerUrl = promotionList.getUrl();
-                final long expire = promotionList.getExpireDate();
+                final long expire = promotionList.getExpire_date();
                 mPromoImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

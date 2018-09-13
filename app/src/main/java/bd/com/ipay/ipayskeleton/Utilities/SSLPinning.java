@@ -23,8 +23,8 @@ public class SSLPinning {
         if (!BuildConfig.DEBUG) {
 
             okhttp3.CertificatePinner certificatePinner = new okhttp3.CertificatePinner.Builder()
-                    .add(Constants.HOST_NAME, PINS[0])
-                    .add(Constants.HOST_NAME, PINS[1])
+                    .add(Constants.BASE_URL_WEB, PINS[0])
+                    .add(Constants.BASE_URL_WEB, PINS[1])
                     .build();
 
             okhttp3.OkHttpClient okHttpClient = new okhttp3.OkHttpClient.Builder().
