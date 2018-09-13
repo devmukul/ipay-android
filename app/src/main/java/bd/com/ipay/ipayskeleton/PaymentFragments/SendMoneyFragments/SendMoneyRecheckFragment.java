@@ -7,8 +7,8 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -66,9 +65,6 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
 
     private String before;
     private String after;
-
-    private int viewWidth;
-
     int l = 0;
 
     @Nullable
@@ -76,13 +72,7 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_recheck, container, false);
         attemptGetBusinessRule(ServiceIdConstants.SEND_MONEY);
-        final RelativeLayout relativeLayout = view.findViewById(R.id.main_view);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                viewWidth = relativeLayout.getWidth();
-            }
-        });
+        //mErrorView = (TextView) view.findViewById(R.id.error_view);
         SendMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
         ((SendMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorToolbarSendMoney));
         ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
@@ -150,8 +140,10 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         mDummy.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                before = charSequence.toString();
-                l = i;
+                if (mAmountTextView.getText().toString().length() <= 8) {
+                    before = charSequence.toString();
+                    l = i;
+                }
             }
 
             @Override
@@ -161,61 +153,65 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
 
             @Override
             public void afterTextChanged(Editable editable) {
-                double set = Double.parseDouble(mAmountTextView.getText().toString());
-                if (editable.toString().length() < before.length()) {
+                if (mAmountTextView.getText() != null) {
+                    if (mAmountTextView.getText().toString().length() <= 8) {
 
-                } else {
-                    char inserted = editable.toString().charAt(l);
-                    if (inserted == '1') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 1.0 / 100.00;
-                    }
-                    if (inserted == '2') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 2.0 / 100.00;
-                    }
-                    if (inserted == '3') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 3.0 / 100.00;
-                    }
-                    if (inserted == '4') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 4.0 / 100.00;
-                    }
-                    if (inserted == '5') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 5.0 / 100.00;
-                    }
-                    if (inserted == '0') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 0.0 / 100.00;
-                    }
-                    if (inserted == '6') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 6.0 / 100.00;
-                    }
-                    if (inserted == '7') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 7.0 / 100.00;
-                    }
-                    if (inserted == '8') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 8.0 / 100.00;
-                    }
-                    if (inserted == '9') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 9.0 / 100.00;
-                    }
-                    if (set < 10) {
-                        String setString = "0" + String.format("%.2f", set);
+                        double set = Double.parseDouble(mAmountTextView.getText().toString());
+                        if (editable.toString().length() < before.length()) {
 
-                        mAmountTextView.setText(setString);
+                        } else {
+                            char inserted = editable.toString().charAt(l);
+                            if (inserted == '1') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 1.0 / 100.00;
+                            }
+                            if (inserted == '2') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 2.0 / 100.00;
+                            }
+                            if (inserted == '3') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 3.0 / 100.00;
+                            }
+                            if (inserted == '4') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 4.0 / 100.00;
+                            }
+                            if (inserted == '5') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 5.0 / 100.00;
+                            }
+                            if (inserted == '0') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 0.0 / 100.00;
+                            }
+                            if (inserted == '6') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 6.0 / 100.00;
+                            }
+                            if (inserted == '7') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 7.0 / 100.00;
+                            }
+                            if (inserted == '8') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 8.0 / 100.00;
+                            }
+                            if (inserted == '9') {
+                                set = Double.parseDouble((mAmountTextView.getText().toString()));
+                                set = set * 10.00 + 9.0 / 100.00;
+                            }
+                            if (set < 10) {
+                                String setString = "0" + String.format("%.2f", set);
 
+                                mAmountTextView.setText(setString);
 
-                    } else {
-                        String setString = String.format("%.2f", set);
-                        mAmountTextView.setText(setString);
+                            } else {
+                                String setString = String.format("%.2f", set);
+                                mAmountTextView.setText(setString);
 
+                            }
+                        }
                     }
                 }
 
@@ -263,7 +259,6 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
     private boolean verifyUserInputs() {
         mDummy.setError(null);
         boolean cancel = false;
-        View focusView = null;
         String errorMessage;
 
         if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
@@ -290,7 +285,6 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
                 } else {
                     final BigDecimal minimumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
                     final BigDecimal maximumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
                     errorMessage = InputValidator.isValidAmount(getActivity(), sendMoneyAmount, minimumSendMoneyAmount, maximumSendMoneyAmount);
                 }
             }
@@ -299,12 +293,18 @@ public class SendMoneyRecheckFragment extends Fragment implements HttpResponseLi
         }
 
         if (errorMessage != null) {
-            focusView = mAmountTextView;
-            mDummy.setError(errorMessage);
+            // this has done to because ,
+            // for some reason snackbar was making the whole screen white. the animation prevented this
+           /* mErrorView.startAnimation(new Animation() {
+                @Override
+                protected Animation clone() throws CloneNotSupportedException {
+                    return super.clone();
+                }
+            });*/
+            Snackbar.make(getView(), errorMessage, Snackbar.LENGTH_LONG).show();
             cancel = true;
         }
         if (cancel) {
-            focusView.requestFocus();
             return false;
         } else {
             return true;

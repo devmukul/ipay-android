@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_transaction">
@@ -13,13 +12,13 @@
         android:layout_marginLeft="@dimen/value32"
         android:layout_marginRight="@dimen/value32"
         android:fadingEdge="none"
+        android:scrollbars="none"
         android:fillViewport="true"
         android:overScrollMode="never">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/value50"
             android:gravity="center">
 
             <TextView
@@ -60,13 +59,13 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:maxLines="1"
+                android:maxLength="9"
                 android:paddingLeft="@dimen/value20"
                 android:paddingRight="@dimen/value20"
                 android:text="00.00"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorWhite"
-                android:textSize="@dimen/value60" />
+                android:textSize="@dimen/text_size_transaction_value" />
 
             <EditText
                 android:id="@+id/amount_dummy_edit_text"
@@ -79,14 +78,14 @@
                 android:cursorVisible="false"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:maxLines="1"
                 android:inputType="numberDecimal"
+                android:maxLines="1"
                 android:paddingLeft="@dimen/value20"
                 android:paddingRight="@dimen/value20"
                 android:text="00.00"
                 android:textColor="@android:color/transparent"
                 android:textColorHint="@color/colorWhite"
-                android:textSize="@dimen/value60"
+                android:textSize="@dimen/text_size_transaction_value"
                 android:visibility="visible" />
 
             <TextView
@@ -121,7 +120,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ipay_balance"
-                android:layout_marginBottom="@dimen/value15"
                 android:gravity="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
