@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification;
 
 
+import android.os.Parcel;
+
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
@@ -13,6 +15,42 @@ public class BusinessRoleManagerInvitation implements Notification {
     private String roleName;
     private long createdAt;
     private List<UserProfilePictureClass> profilePictures;
+
+    protected BusinessRoleManagerInvitation(Parcel in) {
+        id = in.readLong();
+        businessAccountId = in.readLong();
+        businessName = in.readString();
+        roleName = in.readString();
+        createdAt = in.readLong();
+        profilePictures = in.createTypedArrayList(UserProfilePictureClass.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeLong(businessAccountId);
+        dest.writeString(businessName);
+        dest.writeString(roleName);
+        dest.writeLong(createdAt);
+        dest.writeTypedList(profilePictures);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<BusinessRoleManagerInvitation> CREATOR = new Creator<BusinessRoleManagerInvitation>() {
+        @Override
+        public BusinessRoleManagerInvitation createFromParcel(Parcel in) {
+            return new BusinessRoleManagerInvitation(in);
+        }
+
+        @Override
+        public BusinessRoleManagerInvitation[] newArray(int size) {
+            return new BusinessRoleManagerInvitation[size];
+        }
+    };
 
     @Override
     public String getNotificationTitle() {

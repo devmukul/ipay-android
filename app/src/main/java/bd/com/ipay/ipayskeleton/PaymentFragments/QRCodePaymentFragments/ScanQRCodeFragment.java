@@ -71,7 +71,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_scan_qr_code, container, false);
         }
@@ -316,6 +316,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.OUTLET_NAME, outletName);
 
         startActivity(intent);
+        if (getActivity()!=null)
         getActivity().finish();
     }
 

@@ -1,418 +1,415 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:apps="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:orientation="vertical"
-    android:weightSum="100">
+    android:background="@color/colorBackground">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="45"
-        android:background="@drawable/background_all_layout"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:layout_marginBottom="@dimen/value40">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layout_button"
+            android:layout_height="0dp"
+            android:layout_weight="30"
             android:orientation="vertical"
-            android:weightSum="5">
+            android:background="@drawable/background_all_layout">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_above="@+id/layout_button"
+                android:orientation="vertical"
+                android:weightSum="2">
 
                 <RelativeLayout
-                    android:id="@+id/profile_info"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
                     android:paddingLeft="@dimen/activity_horizontal_margin_double"
-                    android:paddingRight="@dimen/activity_horizontal_margin">
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:gravity="center_vertical">
 
-                    <RelativeLayout
-                        android:id="@+id/profile_picture_holder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true">
-
-                        <ProgressBar
-                            android:id="@+id/circular_progress_bar"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:indeterminate="false"
-                            android:max="100"
-                            android:progress="0"
-                            android:progressDrawable="@drawable/profile_picture_progress_bar"
-                            android:secondaryProgress="100" />
-
-                        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                            android:id="@+id/profile_picture"
-                            android:layout_width="@dimen/value50"
-                            android:layout_height="@dimen/value50"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true">
-
-                        </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/info_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
-                        android:layout_toRightOf="@+id/profile_picture_holder">
-
-                        <LinearLayout
-                            android:id="@+id/name_layout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_toLeftOf="@+id/show_qr_code_button"
-                            android:layout_toStartOf="@+id/show_qr_code_button"
-                            android:gravity="start"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textview_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/value2"
-                                android:drawablePadding="5dip"
-                                android:ellipsize="end"
-                                android:maxLines="2"
-                                android:textColor="@android:color/white"
-                                android:textSize="@dimen/text_size_small_medium_value18" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/textview_mobile_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/name_layout"
-                            android:layout_marginBottom="@dimen/value2"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_small" />
-
-                        <ImageView
-                            android:id="@+id/show_qr_code_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:background="@android:color/transparent"
-                            android:clickable="true"
-                            android:padding="@dimen/activity_horizontal_margin_card"
-                            android:src="@drawable/ic_qr_code_home" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/profile_completion"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/value80"
-                    android:layout_centerVertical="true"
-                    android:background="@android:color/white"
-                    android:clickable="true"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar
-                        android:id="@+id/profile_completion_percentage"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/value4"
-                        android:layout_marginRight="@dimen/value4"
-                        android:paddingBottom="@dimen/activity_vertical_margin_card"
-                        android:paddingTop="@dimen/activity_vertical_margin_card" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/profile_completion_message"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/balance_label"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginBottom="@dimen/activity_vertical_margin"
-                            android:layout_toLeftOf="@+id/button_close"
-                            android:layout_toStartOf="@+id/button_close"
-                            android:gravity="center"
-                            android:textSize="@dimen/text_size_small" />
-
-                        <ImageButton
-                            android:id="@+id/button_close"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentTop="true"
-                            android:background="@android:color/transparent"
-                            android:padding="@dimen/activity_vertical_margin_card"
-                            android:src="@drawable/ic_close_black_24dp"
-                            android:tint="@color/colorPrimary" />
-                    </RelativeLayout>
+                            android:text="@string/ipay_balance"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_small"
+                            android:fontFamily="sans-serif"/>
 
-                </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-            </RelativeLayout>
+                            <TextView
+                                android:id="@+id/balance"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/balance_label"
+                                android:fontFamily="sans-serif-light"
+                                android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                                android:text="@string/loading"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/text_size_extra_extra_large"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:paddingLeft="@dimen/activity_horizontal_margin_double"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                            <ImageView
+                                android:id="@+id/refresh_balance_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/transparent"
+                                android:backgroundTint="@android:color/white"
+                                android:clickable="true"
+                                android:padding="@dimen/activity_horizontal_margin_card"
+                                android:src="@drawable/reload_icon" />
+                        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical">
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/balance_label"
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/show_qr_code_button"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:fontFamily="sans-serif-light"
-                        android:text="@string/ipay_balance"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small" />
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/db_qr_icon" />
 
-                    <TextView
-                        android:id="@+id/balance"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/balance_label"
-                        android:fontFamily="sans-serif-thin"
-                        android:paddingBottom="@dimen/activity_horizontal_margin_card"
-                        android:text="@string/loading"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-
-                <ImageView
-                    android:id="@+id/refresh_balance_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@android:color/transparent"
-                    android:backgroundTint="@android:color/white"
-                    android:clickable="true"
-                    android:padding="@dimen/activity_horizontal_margin_card"
-                    android:src="@drawable/ic_home_refresh" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/value1"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                android:background="#40CABD" />
-
+                </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/value1"
+                    android:background="#40CABD"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+
 
                 <LinearLayout
-                    android:id="@+id/button_add_money"
-                    style="@style/HomeBalanceButtonBackground">
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_add" />
+                    <LinearLayout
+                        android:id="@+id/button_add_money"
+                        style="@style/HomeBalanceButtonBackground">
 
-                    <TextView
-                        style="@style/HomeBalanceButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/add_money" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_add" />
 
+                        <TextView
+                            style="@style/HomeBalanceButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/add_money" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/button_withdraw_money"
+                        style="@style/HomeBalanceButtonBackground">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_withdraw" />
+
+                        <TextView
+                            style="@style/HomeBalanceButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:text="@string/withdraw_money" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/button_withdraw_money"
-                    style="@style/HomeBalanceButtonBackground">
+                <View style="@style/HomeDividerStyleColorGrey" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_withdraw" />
-
-                    <TextView
-                        style="@style/HomeBalanceButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/withdraw_money" />
-
-                </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/HomeDividerStyleColorGrey" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-
-    </RelativeLayout>
-
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="@dimen/activity_horizontal_margin_card"
-        android:layout_weight="55"
-        android:background="@color/colorWhite"
-        apps:cardCornerRadius="5dp"
-        apps:cardElevation="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="70"
+            android:layout_margin="@dimen/activity_horizontal_margin_card"
             android:orientation="vertical">
 
-            <LinearLayout
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="100dp"
+                android:background="@color/colorWhite"
+                apps:cardElevation="3dp"
+                apps:cardCornerRadius="5dp">
 
                 <LinearLayout
-                    android:id="@+id/button_send_money"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
+                    android:id="@+id/transaction_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_send_money"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/send_money" />
+                        android:id="@+id/title_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingTop="@dimen/value8"
+                        android:paddingBottom="@dimen/value8"
+                        android:textColor="#666666"
+                        android:textSize="10sp"
+                        android:text="LAST TRANSACTION"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/value1"
+                        android:background="#EEEEEE">
+                    </LinearLayout>
+
+                    <include
+                        layout="@layout/list_item_transaction_history"/>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/button_pay_by_qr_code"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/profile_completion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="@dimen/value2"
+                    android:visibility="gone">
 
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_pay_by_qc_home"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/pay_by_QR_code" />
+                </android.support.v7.widget.RecyclerView>
 
-                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progress_bar_transaction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_gravity="center"/>
+            </android.support.v7.widget.CardView>
 
-                <LinearLayout
-                    android:id="@+id/button_topup"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
 
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_topup_home"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/mobile_topup" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                apps:cardElevation="3dp"
+                apps:cardCornerRadius="5dp"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card">
 
                 <LinearLayout
-                    android:id="@+id/button_request_money"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_request_money"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/request_money" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
 
+                        <LinearLayout
+                            android:id="@+id/button_send_money"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/background_icon_send_money"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/send_money" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#edeeef"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/button_pay_by_qr_code"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/background_icon_pay_by_qc_home"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/pay_by_QR_code" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#edeeef"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/button_topup"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/background_icon_topup_home"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/mobile_topup" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#edeeef"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_card">
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:id="@+id/button_request_money"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/background_icon_request_money"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/request_money" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#edeeef"
+                            android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/button_ipay_here"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/background_icon_ipay_here"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/ipay_here" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#edeeef"
+                            android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/button_invite_friend"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/invite_icon"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/invite_people_to_ipay" />
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/button_ipay_here"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
+            </android.support.v7.widget.CardView>
 
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_ipay_here"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/ipay_here" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/button_invite_friend"
-                    style="@style/HomeImageLinearLayoutStyleHorizontal"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/invite_icon"
-                        android:ellipsize="marquee"
-                        android:singleLine="true"
-                        android:text="@string/invite_people_to_ipay" />
-
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        apps:behavior_peekHeight="40dp"
+        apps:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/test_sheet"
+            layout="@layout/bottom_sheet"/>
+
+        <fragment
+            android:layout_width="match_parent"
+            android:name="bd.com.ipay.ipayskeleton.HomeFragments.OfferFragment"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-6dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
 
 

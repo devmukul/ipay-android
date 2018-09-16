@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_profile_image"
+        app:actionLayout="@layout/actionbar_profile_image_view"
+        android:title="Alerts"
+        app:showAsAction="always"
+        android:visible="true"
+        android:orderInCategory="2"/>
+</menu>

@@ -1,12 +1,15 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class IntroductionRequestClass implements Notification {
+public class IntroductionRequestClass implements Notification, Parcelable {
     private long id;
     private String senderMobileNumber;
     private String senderName;
@@ -18,6 +21,52 @@ public class IntroductionRequestClass implements Notification {
     private String status;
     private String profilePictureUrl;
     private List<AddressContainer> addresses;
+
+    protected IntroductionRequestClass(Parcel in) {
+        id = in.readLong();
+        senderMobileNumber = in.readString();
+        senderName = in.readString();
+        senderAccountId = in.readLong();
+        verifierAccountId = in.readLong();
+        date = in.readLong();
+        father = in.readString();
+        mother = in.readString();
+        status = in.readString();
+        profilePictureUrl = in.readString();
+        addresses = in.createTypedArrayList(AddressContainer.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(senderMobileNumber);
+        dest.writeString(senderName);
+        dest.writeLong(senderAccountId);
+        dest.writeLong(verifierAccountId);
+        dest.writeLong(date);
+        dest.writeString(father);
+        dest.writeString(mother);
+        dest.writeString(status);
+        dest.writeString(profilePictureUrl);
+        dest.writeTypedList(addresses);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<IntroductionRequestClass> CREATOR = new Creator<IntroductionRequestClass>() {
+        @Override
+        public IntroductionRequestClass createFromParcel(Parcel in) {
+            return new IntroductionRequestClass(in);
+        }
+
+        @Override
+        public IntroductionRequestClass[] newArray(int size) {
+            return new IntroductionRequestClass[size];
+        }
+    };
 
     public String getProfilePictureUrl() {
         return profilePictureUrl;
@@ -108,26 +157,4 @@ public class IntroductionRequestClass implements Notification {
         }
         return null;
     }
-
-    public static class AddressContainer {
-        private String addressType;
-        private AddressClass address;
-
-        public String getAddressType() {
-            return addressType;
-        }
-
-        public AddressClass getAddress() {
-            return address;
-        }
-
-        @Override
-        public String toString() {
-            return "AddressContainer{" +
-                    "addressType='" + addressType + '\'' +
-                    ", address=" + address +
-                    '}';
-        }
-    }
-
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_wallet"
+        android:icon="@drawable/ic_wallet"
+        android:title="@string/wallet" />
+    <item
+        android:id="@+id/navigation_pay"
+        android:icon="@drawable/ic_pay"
+        android:title="@string/pay" />
+    <item
+        android:id="@+id/navigation_transaction"
+        android:icon="@drawable/ic_transaction"
+        android:title="@string/transaction" />
+    <item
+        android:id="@+id/navigation_promotions"
+        android:icon="@drawable/ic_offer"
+        android:title="@string/promotions" />
+
+</menu>

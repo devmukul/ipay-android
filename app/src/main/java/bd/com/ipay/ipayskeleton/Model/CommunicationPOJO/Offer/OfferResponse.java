@@ -10,30 +10,27 @@ public class OfferResponse {
 
     @SerializedName("promotions")
     @Expose
-    private List<Promotion> promotions = null;
+    private List<NewsRoom> newsRooms = null;
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public OfferResponse() {
     }
 
     /**
-     *
-     * @param promotions
+     * @param newsRooms
      */
-    public OfferResponse(List<Promotion> promotions) {
+    public OfferResponse(List<NewsRoom> newsRooms) {
         super();
-        this.promotions = promotions;
+        this.newsRooms = newsRooms;
     }
 
-    public List<Promotion> getPromotions() {
-        return promotions;
+    public List<NewsRoom> getNewsRooms() {
+        return newsRooms;
     }
 
-    public void setPromotions(List<Promotion> promotions) {
-        this.promotions = promotions;
+    public void setNewsRooms(List<NewsRoom> newsRooms) {
+        this.newsRooms = newsRooms;
     }
-
 }

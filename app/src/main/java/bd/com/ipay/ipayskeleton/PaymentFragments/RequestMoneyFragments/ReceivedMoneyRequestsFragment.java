@@ -270,7 +270,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
-                final String description = moneyRequest.getDescriptionofRequest();
+                final String description = moneyRequest.getDescriptionOfRequest();
                 final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();

@@ -1,9 +1,9 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,23 +31,18 @@ import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer.NewsRoom;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer.OfferResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer.Promotion;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OfferFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mPromotionTask = null;
     private RecyclerView mPromotionsRecyclerView;
-    private PromotionsAdapter mPromotionsAdapter;
-    private LinearLayoutManager mLayoutManager;
-    private List<Promotion> mPromotionList = new ArrayList<>();
-    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    private NewsRoomAdapterAdapter mNewsRoomAdapterAdapter;
+    private List<NewsRoom> mNewsRoomList = new ArrayList<>();
     private TextView mEmptyListTextView;
     private boolean isLoading = false;
 
@@ -65,39 +60,23 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_offer, container, false);
-        getActivity().setTitle(R.string.offer);
+        if (getActivity() != null)
+            getActivity().setTitle(R.string.offer);
 
         initializeViews(v);
         setupViewsAndActions();
-
-        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity()) && mPromotionTask == null) {
-                    refreshPromotions();
-                } else {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
-
         return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getPromotions();
+        getNewsRoomList();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.destroyDrawingCache();
-            mSwipeRefreshLayout.clearAnimation();
-        }
     }
 
     @Override
@@ -105,43 +84,42 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null) {
             if (isVisibleToUser) {
-                refreshPromotions();
+                refreshNewsRoomList();
             }
         }
     }
 
-    private void refreshPromotions() {
-        getPromotions();
+    private void refreshNewsRoomList() {
+        getNewsRoomList();
     }
 
-    private void getPromotions() {
+    private void getNewsRoomList() {
         if (mPromotionTask != null) {
             return;
         }
         String url = "https://ipay-772e8.firebaseio.com/.json";
-
         mPromotionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROMOTIONS,
                 url, getActivity(), false);
         mPromotionTask.mHttpResponseListener = this;
         mPromotionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadPromotions(List<Promotion> promotions) {
-        mPromotionList = new ArrayList<>();
-        for (int i = 0; i < promotions.size(); i++) {
-            Promotion values = promotions.get(i);
+    private void loadNewsRoomList(List<NewsRoom> newsRooms) {
+        mNewsRoomList = new ArrayList<>();
+        for (int i = 0; i < newsRooms.size(); i++) {
+            NewsRoom values = newsRooms.get(i);
             Calendar calendar = Calendar.getInstance();
             long currentTime = calendar.getTimeInMillis();
 
-            if (currentTime < values.getExpireDate()) {
-                mPromotionList.add(values);
+            if (currentTime < values.getExpire_date()) {
+                mNewsRoomList.add(values);
             }
         }
 
-        if (mPromotionList != null && mPromotionList.size() > 0) {
+        if (mNewsRoomList != null && mNewsRoomList.size() > 0) {
             mPromotionsRecyclerView.setVisibility(View.VISIBLE);
             mEmptyListTextView.setVisibility(View.GONE);
-            mPromotionsAdapter.notifyDataSetChanged();
+            mNewsRoomAdapterAdapter.notifyDataSetChanged();
             setContentShown(true);
         } else {
             mPromotionsRecyclerView.setVisibility(View.GONE);
@@ -158,9 +136,9 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     }
 
     private void initializeViews(View v) {
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mPromotionsRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mEmptyListTextView = v.findViewById(R.id.empty_list_text);
+        mPromotionsRecyclerView = v.findViewById(R.id.list_transaction_history);
+        mPromotionsRecyclerView.setNestedScrollingEnabled(true);
     }
 
     private void setupViewsAndActions() {
@@ -168,10 +146,10 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
     }
 
     private void setupRecyclerView() {
-        mPromotionsAdapter = new PromotionsAdapter();
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mNewsRoomAdapterAdapter = new NewsRoomAdapterAdapter();
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mPromotionsRecyclerView.setLayoutManager(mLayoutManager);
-        mPromotionsRecyclerView.setAdapter(mPromotionsAdapter);
+        mPromotionsRecyclerView.setAdapter(mNewsRoomAdapterAdapter);
     }
 
 
@@ -188,7 +166,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
                     OfferResponse mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), OfferResponse.class);
-                    loadPromotions(mTransactionHistoryResponse.getPromotions());
+                    loadNewsRoomList(mTransactionHistoryResponse.getNewsRooms());
                 } catch (Exception e) {
                     e.printStackTrace();
                     mPromotionsRecyclerView.setVisibility(View.GONE);
@@ -200,13 +178,12 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.promotions_get_failed, Toast.LENGTH_LONG).show();
             }
-            mSwipeRefreshLayout.setRefreshing(false);
             mPromotionTask = null;
             if (this.isAdded()) setContentShown(true);
         }
     }
 
-    private class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class NewsRoomAdapterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final ImageView mPromoImageView;
@@ -214,15 +191,14 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-                mPromoImageView = (ImageView) itemView.findViewById(R.id.offer_image);
-                progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
+                mPromoImageView = itemView.findViewById(R.id.offer_image);
+                progressBar = itemView.findViewById(R.id.progress);
             }
 
             public void bindView(int pos) {
-                final Promotion promotionList = mPromotionList.get(pos);
-                final String imageUrl = promotionList.getImageUrl();
-                final String offerUrl = promotionList.getUrl();
-                final long expire = promotionList.getExpireDate();
+                final NewsRoom newsRoomList = mNewsRoomList.get(pos);
+                final String imageUrl = newsRoomList.getImage_url();
+                final String offerUrl = newsRoomList.getUrl();
                 mPromoImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -261,7 +237,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
         }
 
 
-        // Now define the view holder for Normal mPromotionList item
+        // Now define the view holder for Normal mNewsRoomList item
         class NormalViewHolder extends ViewHolder {
             NormalViewHolder(View itemView) {
                 super(itemView);
@@ -274,13 +250,14 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
             }
         }
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_offer, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             try {
                 NormalViewHolder vh = (NormalViewHolder) holder;
                 vh.bindView(position);
@@ -291,7 +268,7 @@ public class OfferFragment extends ProgressFragment implements HttpResponseListe
 
         @Override
         public int getItemCount() {
-            return mPromotionList.size();
+            return mNewsRoomList.size();
         }
 
         @Override

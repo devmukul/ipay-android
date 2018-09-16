@@ -151,7 +151,10 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mMakePaymentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
                     public void ifPinAdded() {
@@ -161,6 +164,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     }
                 });
                 pinChecker.execute();
+
             }
         });
 
