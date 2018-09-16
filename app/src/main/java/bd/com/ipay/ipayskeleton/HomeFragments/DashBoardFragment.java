@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,14 +15,13 @@ import android.view.ViewGroup;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
-import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BottomNavigationViewHelper;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class DashBoardFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class DashBoardFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private final int HOME_TAB = 0;
     private final int PAY_TAB = 1;
@@ -31,33 +31,31 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
 
     private HomeFragment mHomeFragment;
     private PayDashBoardFragment mPayFragment;
-    private ContactsHolderFragment mContactsHolderFragment;
+    private PromotionsFragment mPromotionsFragment;
     private TransactionHistoryHolderFragment mTransactionHistoryFragment;
 
     private ViewPager viewPager;
-    private String mDeepLinkActionPath;
     private MenuItem mPrevMenuItem;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         setTitle();
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
-        mContactsHolderFragment = new ContactsHolderFragment();
+        mPromotionsFragment = new PromotionsFragment();
         mPayFragment = new PayDashBoardFragment();
 
-        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+        viewPager = v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
-        viewPager.setOffscreenPageLimit(3);    // TODO: Change upon number of tabs
+        viewPager.setOffscreenPageLimit(TOTAL_PAGE_COUNT - 1);
 
-        final BottomNavigationView bottomNavigationView = (BottomNavigationView) v.findViewById(R.id.navigationView);
+        final BottomNavigationView bottomNavigationView = v.findViewById(R.id.navigationView);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        mDeepLinkActionPath = getActivity().getIntent().getStringExtra(Constants.PATH);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -65,12 +63,11 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
 
             @Override
             public void onPageSelected(int position) {
-                Utilities.hideKeyboard(getActivity());
+                if (getActivity() != null)
+                    Utilities.hideKeyboard(getActivity());
                 if (mPrevMenuItem != null) {
                     mPrevMenuItem.setChecked(false);
-                }
-                else
-                {
+                } else {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
 
@@ -91,8 +88,13 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
     }
 
     private void setTitle() {
-        ((HomeActivity) getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
-        ((HomeActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (getActivity() instanceof HomeActivity && ((HomeActivity) getActivity()).getSupportActionBar() != null) {
+            ActionBar actionBar = ((HomeActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayUseLogoEnabled(true);
+                actionBar.setDisplayShowTitleEnabled(false);
+            }
+        }
     }
 
     @Override
@@ -108,7 +110,7 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
                 BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
                 viewPager.setCurrentItem(TRANSACTION_HISTORY_TAB);
                 break;
-            case R.id.navigation_contact:
+            case R.id.navigation_promotions:
                 viewPager.setCurrentItem(CONTACTS_TAB);
                 break;
         }
@@ -117,7 +119,7 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
 
-        public DashBoardTabAdapter(FragmentManager fm) {
+        DashBoardTabAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -131,7 +133,7 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
                 case TRANSACTION_HISTORY_TAB:
                     return mTransactionHistoryFragment;
                 case CONTACTS_TAB:
-                    return mContactsHolderFragment;
+                    return mPromotionsFragment;
                 default:
                     return new Fragment();
             }

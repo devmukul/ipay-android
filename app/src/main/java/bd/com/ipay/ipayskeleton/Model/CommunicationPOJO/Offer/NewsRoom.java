@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Offer;
 
 import java.util.List;
 
-public class Promotion {
+public class NewsRoom {
     private Long expire_date;
     private String image_url;
     private List<Merchant> merchants = null;
@@ -14,10 +14,10 @@ public class Promotion {
     private String url;
 
 
-    public Promotion() {
+    public NewsRoom() {
     }
 
-    public Promotion(Long expire_date, String image_url, List<Merchant> merchants, String period, String subtitle, List<String> terms_conditions, String title, String url) {
+    public NewsRoom(Long expire_date, String image_url, List<Merchant> merchants, String period, String subtitle, List<String> terms_conditions, String title, String url) {
         this.expire_date = expire_date;
         this.image_url = image_url;
         this.merchants = merchants;
@@ -94,7 +94,7 @@ public class Promotion {
 
     @Override
     public String toString() {
-        return "Promotion{" +
+        return "NewsRoom{" +
                 "expire_date=" + expire_date +
                 ", image_url='" + image_url + '\'' +
                 ", merchants=" + merchants +

@@ -1173,4 +1173,14 @@ public class Utilities {
         }
     }
 
+    private static final SimpleDateFormat promotionDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+
+    public static Date parsePromotionDate(String date) {
+        try {
+            return promotionDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
