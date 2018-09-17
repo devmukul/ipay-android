@@ -149,7 +149,7 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
                 if (verifyUserInputs()) {
                     String amount = Utilities.formatTakaFromString(mAmountEditText.getText().toString());
                     amount = amount.replaceAll("[^\\d.]", "");
-                    Intent intent = new Intent(getActivity() ,RequestMoneyConfirmActivity.class);
+                    Intent intent = new Intent(getActivity(), RequestMoneyConfirmActivity.class);
                     intent.putExtra("name", mNameTextView.getText().toString());
                     intent.putExtra("imageUrl", imageUrl);
                     intent.putExtra("amount", amount);
@@ -174,7 +174,7 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
     private boolean verifyUserInputs() {
         mDummy.setError(null);
         boolean cancel = false;
-        String errorMessage;
+        String errorMessage = null;
 
         if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
@@ -196,13 +196,10 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
             } else {
                 String amount = mAmountEditText.getText().toString();
                 amount = amount.replaceAll("[^\\d.]", "");
-                final BigDecimal requestMoneyAmount = new BigDecimal(amount);
-                if (requestMoneyAmount.compareTo(balance) > 0) {
-                    errorMessage = getString(R.string.insufficient_balance);
-                } else {
-                    final BigDecimal minimumRequestMoneyAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumRequestMoneyAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-                    errorMessage = InputValidator.isValidAmount(getActivity(), requestMoneyAmount, minimumRequestMoneyAmount, maximumRequestMoneyAmount);
+                if ((amount.length() > 0 && InputValidator.isValidDigit(amount))) {
+                    BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
+                    errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                            RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
                 }
             }
         } else {
@@ -210,11 +207,11 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
         }
 
         if (errorMessage != null) {
-            Snackbar snackbar= Snackbar.make(mParentLayout, errorMessage, Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(mParentLayout, errorMessage, Snackbar.LENGTH_LONG);
             View view = snackbar.getView();
             view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-            TextView textView = (TextView)view.findViewById(android.support.design.R.id.snackbar_text);
-            LinearLayout.LayoutParams layoutParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             textView.setLayoutParams(layoutParams);
             textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
             textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value4));

@@ -390,7 +390,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             });
         }
-
         mSheetViewIpayMember = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_member, null);
 
@@ -400,7 +399,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             @ValidateAccess(ServiceIdConstants.SEND_MONEY)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
-                intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
+                intent.putExtra(Constants.MOBILE_NUMBER, number);
+                intent.putExtra(Constants.NAME, name);
+                intent.putExtra(Constants.PHOTO_URI, imageUrl);
+                intent.putExtra(Constants.FROM_CONTACT, true);
                 startActivity(intent);
 
                 if (mBottomSheetLayout.isSheetShowing()) {

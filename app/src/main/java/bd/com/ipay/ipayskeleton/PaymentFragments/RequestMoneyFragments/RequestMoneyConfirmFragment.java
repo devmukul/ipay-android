@@ -160,10 +160,10 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
     }
 
     private void setUpTextViews() {
-        String setString = "YOU ARE SENDING TK " + mAmount + " TO";
+        String setString = "YOU ARE REQUESTING TK " + mAmount + " FROM";
         mDescriptionTextView.setText(setString, TextView.BufferType.SPANNABLE);
         ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney));
-        ((Spannable) mDescriptionTextView.getText()).setSpan(span, 16, 16 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ((Spannable) mDescriptionTextView.getText()).setSpan(span, 18, 18 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void attemptSendMoney(String pin) {

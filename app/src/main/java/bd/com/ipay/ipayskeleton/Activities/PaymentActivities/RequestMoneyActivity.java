@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMo
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionContactFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -69,6 +70,13 @@ public class RequestMoneyActivity extends BaseActivity {
         mHelperView = findViewById(R.id.helper_view);
         mMainLayout = (LinearLayout) findViewById(R.id.main_view);
         mHolderView = findViewById(R.id.holder_view);
+        if (SharedPrefManager.ifFirstRequestMoney()) {
+            mHelperView.setVisibility(View.VISIBLE);
+            mHolderView.setVisibility(View.GONE);
+        } else {
+            mHelperView.setVisibility(View.GONE);
+            mHolderView.setVisibility(View.VISIBLE);
+        }
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -80,6 +88,7 @@ public class RequestMoneyActivity extends BaseActivity {
         mRemoveHelperViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPrefManager.setIfFirstRequestMoney(false);
                 slideDown(mHelperView);
             }
         });
@@ -101,13 +110,12 @@ public class RequestMoneyActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             bundle.putString("name", name);
             bundle.putString("number", mobileNumbr);
-            bundle.putString("imageUrl", Constants.BASE_URL_FTP_SERVER + imageUrl);
+            bundle.putString("imageUrl", imageUrl);
             switchToRequestMoneyEnterAmountFragment(bundle);
         } else {
-            mHelperView.setVisibility(View.VISIBLE);
-            mHolderView.setVisibility(View.GONE);
             switchToRequestMoneyContactFragment();
         }
+
     }
 
     public void showTitle() {

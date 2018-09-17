@@ -118,6 +118,20 @@ public class SharedPrefManager {
         pref.edit().putBoolean(Constants.FIREBASE_TOKEN, value).apply();
     }
 
+    public static void setIfFirstSendMoney(boolean isFirstSendMoney) {
+        pref.edit().putBoolean(Constants.IS_FIRST_SEND_MONEY, isFirstSendMoney).apply();
+    }
 
+    public static boolean ifFirstSendMoney() {
+        return pref.getBoolean(Constants.IS_FIRST_SEND_MONEY, true);
+    }
+
+    public static void setIfFirstRequestMoney(boolean isFirstSendMoney) {
+        pref.edit().putBoolean(Constants.IS_FIRST_REQUEST_MONEY, isFirstSendMoney).apply();
+    }
+
+    public static boolean ifFirstRequestMoney() {
+        return pref.getBoolean(Constants.IS_FIRST_REQUEST_MONEY, true);
+    }
 
 }
