@@ -1,22 +1,27 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyConfirmFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyHelperFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyRecheckFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneySuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyEnterAmountFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionContactFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -24,19 +29,26 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyActivity extends BaseActivity {
 
-    /**
-     * If this value is set in the intent extras,
-     * you would be taken directly to the new request page
-     */
-    public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
-    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.REQUEST_MONEY);
-    private FloatingActionButton mFabRequestMoney;
-    private boolean switchedToPendingList = true;
-
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
     public Toolbar toolbar;
     public TextView mToolbarHelpText;
     public TextView mTitle;
-    public ImageView backButton;
+    public ImageView backButtonToolbar;
+    public Button mRemoveHelperViewButton;
+
+    public View mHelperView;
+    public View mHolderView;
+    public Bundle bundle;
+    public LinearLayout mMainLayout;
+
+    public float mHeight;
+    public float mWidth;
+
+    public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
+
+    public boolean isFromQRCode;
+
+    public boolean isFromContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +57,33 @@ public class RequestMoneyActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbarHelpText = (TextView) toolbar.findViewById(R.id.help_text_view);
         mTitle = (TextView) toolbar.findViewById(R.id.title);
-        backButton = (ImageView) toolbar.findViewById(R.id.back_button_black);
-        backButton.setOnClickListener(new View.OnClickListener() {
+        backButtonToolbar = (ImageView) toolbar.findViewById(R.id.back_button_toolbar);
+        Drawable mBackButtonIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back);
+        mBackButtonIcon.setColorFilter(new
+                PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
+        backButtonToolbar.setImageDrawable(null);
+        isFromQRCode = false;
+        isFromContact = false;
+        backButtonToolbar.setImageDrawable(mBackButtonIcon);
+
+        mHelperView = findViewById(R.id.helper_view);
+        mMainLayout = (LinearLayout) findViewById(R.id.main_view);
+        mHolderView = findViewById(R.id.holder_view);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mHeight = mMainLayout.getHeight();
+            }
+        });
+        mRemoveHelperViewButton = findViewById(R.id.ok_button);
+
+        mRemoveHelperViewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slideDown(mHelperView);
+            }
+        });
+        backButtonToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -54,11 +91,23 @@ public class RequestMoneyActivity extends BaseActivity {
         });
         mToolbarHelpText.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
-        switchToRequestMoneyHelperFragment();
-    }
-
-    public void switchToRequestMoneyHelperFragment() {
-        switchToRequestMoneyHelperFragment(false);
+        if (getIntent().hasExtra(Constants.FROM_CONTACT)) {
+            isFromContact = true;
+            mHelperView.setVisibility(View.GONE);
+            mHolderView.setVisibility(View.VISIBLE);
+            String mobileNumbr = getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+            String imageUrl = getIntent().getStringExtra(Constants.PHOTO_URI);
+            String name = getIntent().getStringExtra(Constants.NAME);
+            Bundle bundle = new Bundle();
+            bundle.putString("name", name);
+            bundle.putString("number", mobileNumbr);
+            bundle.putString("imageUrl", Constants.BASE_URL_FTP_SERVER + imageUrl);
+            switchToRequestMoneyEnterAmountFragment(bundle);
+        } else {
+            mHelperView.setVisibility(View.VISIBLE);
+            mHolderView.setVisibility(View.GONE);
+            switchToRequestMoneyContactFragment();
+        }
     }
 
     public void showTitle() {
@@ -69,21 +118,69 @@ public class RequestMoneyActivity extends BaseActivity {
         mTitle.setVisibility(View.GONE);
     }
 
-    public void switchToRequestMoneyHelperFragment(boolean isBackPresent) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        if (isBackPresent) {
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("isBackPresent", isBackPresent);
-            RequestMoneyHelperFragment requestMoneyHelperFragment = new RequestMoneyHelperFragment();
-            requestMoneyHelperFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, requestMoneyHelperFragment).commit();
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new RequestMoneyHelperFragment()).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    public void slideUp(View view, int height) {
+        mHolderView.setVisibility(View.GONE);
+        mHelperView.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                mHeight,  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        animate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mHelperView.startAnimation(animate);
+    }
+
+    // slide the view from its current position to below itself
+    public void slideDown(View view) {
+        mHeight = view.getHeight();
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,                 // fromYDelta
+                view.getHeight()); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        animate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mHelperView.setVisibility(View.GONE);
+                mHolderView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
     }
 
     @Override
@@ -92,9 +189,47 @@ public class RequestMoneyActivity extends BaseActivity {
             Utilities.hideKeyboard(this);
             onBackPressed();
             return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
 
+    public void switchToSendMoneyFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SendMoneyFragment()).commit();
+    }
+
+    public void switchToRequestMoneyContactFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        TransactionContactFragment transactionContactFragment = new TransactionContactFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.SOURCE, Constants.REQUEST_MONEY);
+        transactionContactFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, transactionContactFragment).commit();
+    }
+
+    public void switchToRequestMoneyEnterAmountFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+        this.bundle = bundle;
+        RequestMoneyEnterAmountFragment requestMoneyEnterAmountFragment = new RequestMoneyEnterAmountFragment();
+        requestMoneyEnterAmountFragment.setArguments(bundle);
+        if (isFromContact || isFromQRCode) {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
+                    R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit)
+                    .replace(R.id.fragment_container, requestMoneyEnterAmountFragment).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
+                    R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit)
+                    .replace(R.id.fragment_container, requestMoneyEnterAmountFragment).addToBackStack(null).commit();
+        }
     }
 
     @Override
@@ -102,75 +237,22 @@ public class RequestMoneyActivity extends BaseActivity {
         if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
             finish();
         } else {
-            super.onBackPressed();
+            Utilities.hideKeyboard(this);
+            try {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                    ((RequestMoneyEnterAmountFragment) getSupportFragmentManager().getFragments().get(1)).mBackButton.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+
+            }
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+                overridePendingTransition(R.anim.right_to_left_enter_from_negative, R.anim.left_to_right_exit);
+            }
         }
-    }
 
-
-    public void switchToMoneyRequestListFragment(boolean switchToSentRequestsFragment) {
-        MoneyRequestListHolderFragment moneyRequestListHolderFragment = new MoneyRequestListHolderFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(MoneyRequestListHolderFragment.SWITCH_TO_SENT_REQUESTS, switchToSentRequestsFragment);
-        moneyRequestListHolderFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, moneyRequestListHolderFragment).commit();
-
-        setTitle(R.string.request_money);
-        mFabRequestMoney.setVisibility(View.VISIBLE);
-        switchedToPendingList = true;
-    }
-
-    public void switchToRequestMoneyFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
-
-        setTitle(R.string.request_money);
-        mFabRequestMoney.setVisibility(View.GONE);
-        switchedToPendingList = false;
-    }
-
-    public void switchToRequestMoneyContactFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        TransactionContactFragment transactionContactFragment = new TransactionContactFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.SOURCE, Constants.REQUEST_MONEY);
-        transactionContactFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, transactionContactFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToRequestMoneyRecheckFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        RequestMoneyRecheckFragment requestMoneyRecheckFragment = new RequestMoneyRecheckFragment();
-        requestMoneyRecheckFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, requestMoneyRecheckFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToSendMoneyConfirmFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 3) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        RequestMoneyConfirmFragment requestMoneyConfirmFragment = new RequestMoneyConfirmFragment();
-        requestMoneyConfirmFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, requestMoneyConfirmFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToRequestMoneySuccessFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 4) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        RequestMoneySuccessFragment requestMoneyFragment = new RequestMoneySuccessFragment();
-        requestMoneyFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, requestMoneyFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -178,4 +260,3 @@ public class RequestMoneyActivity extends BaseActivity {
         return RequestMoneyActivity.this;
     }
 }
-

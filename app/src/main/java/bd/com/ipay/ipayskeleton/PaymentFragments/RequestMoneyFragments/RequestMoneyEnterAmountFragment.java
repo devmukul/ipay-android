@@ -1,31 +1,32 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyConfirmActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -44,13 +45,15 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestMoneyRecheckFragment extends Fragment implements HttpResponseListener {
+public class RequestMoneyEnterAmountFragment extends Fragment implements HttpResponseListener {
     private Button mContinueButton;
     private TextView mNameTextView;
     private ProfileImageView mProfileImageView;
     private TextView mIpayBalanceTextView;
-    private TextView mAmountTextView;
+    private TextView mAmountEditText;
     private EditText mDummy;
+    private View mParentLayout;
+    public ImageView mBackButton;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -62,128 +65,71 @@ public class RequestMoneyRecheckFragment extends Fragment implements HttpRespons
 
     private String before;
     private String after;
-
     int l = 0;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_send_money_enter_amount, container, false);
-        attemptGetBusinessRule(ServiceIdConstants.SEND_MONEY);
-        RequestMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
-        ((RequestMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorToolbarSendMoney));
-        ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
-        Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
-        mBackButtonIcon.setColorFilter(new
-                PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
-        ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.GONE);
-        ((RequestMoneyActivity) getActivity()).hideTitle();
+        View view = inflater.inflate(R.layout.fragment_request_money_recheck, container, false);
+        attemptGetBusinessRule(ServiceIdConstants.REQUEST_MONEY);
+        RequestMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_MONEY);
+        ((RequestMoneyActivity) getActivity()).toolbar.setVisibility(View.GONE);
         setUpViews(view);
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void setUpViews(View view) {
+        final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        numberFormat.setMinimumIntegerDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
         before = "00.00";
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
+        mBackButton = (ImageView) view.findViewById(R.id.back_button);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBackButton.setVisibility(View.GONE);
+                getActivity().onBackPressed();
+            }
+        });
         mIpayBalanceTextView = (TextView) view.findViewById(R.id.ipay_balance_text_view);
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
-        mAmountTextView = (TextView) view.findViewById(R.id.amount_edit_text);
+        mAmountEditText = (TextView) view.findViewById(R.id.amount_edit_text);
         mDummy = (EditText) view.findViewById(R.id.amount_dummy_edit_text);
-        String setString = "";
-        mDummy.setOnKeyListener(new View.OnKeyListener() {
+        mDummy.requestFocus();
+        mParentLayout = view.findViewById(R.id.parent_layout);
+        ((RequestMoneyActivity) getActivity()).toolbar.setVisibility(View.GONE);
+        mAmountEditText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction() != keyEvent.ACTION_DOWN) {
-                    return true;
-                } else {
-                    if (i == keyEvent.KEYCODE_DEL) {
-                        double set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set / 10.00;
-                        if (set < 10) {
-                            BigDecimal bigDecimal = new BigDecimal(set);
-                            bigDecimal = bigDecimal.setScale(2, RoundingMode.DOWN);
-                            mAmountTextView.setText("0" + String.valueOf(bigDecimal));
-                        } else {
-                            BigDecimal bigDecimal = new BigDecimal(set);
-                            bigDecimal = bigDecimal.setScale(2, RoundingMode.DOWN);
-
-                            mAmountTextView.setText(String.valueOf(bigDecimal));
-                        }
-                    }
-                    return true;
-                }
+            public void onClick(View view) {
+                mDummy.setSelection(mDummy.getText().length());
             }
         });
+
         mDummy.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                before = charSequence.toString();
-                l = i;
+
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                double result = 0;
+                if (charSequence != null && charSequence.length() > 0) {
+                    result = new Double(charSequence.toString());
+                    result /= 100;
+                }
+                mAmountEditText.setText(numberFormat.format(result));
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                double set = Double.parseDouble(mAmountTextView.getText().toString());
-                if (editable.toString().length() < before.length()) {
-
-                } else {
-                    char inserted = editable.toString().charAt(l);
-                    if (inserted == '1') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 1.0 / 100.00;
-                    }
-                    if (inserted == '2') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 2.0 / 100.00;
-                    }
-                    if (inserted == '3') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 3.0 / 100.00;
-                    }
-                    if (inserted == '4') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 4.0 / 100.00;
-                    }
-                    if (inserted == '5') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 5.0 / 100.00;
-                    }
-                    if (inserted == '0') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 0.0 / 100.00;
-                    }
-                    if (inserted == '6') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 6.0 / 100.00;
-                    }
-                    if (inserted == '7') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 7.0 / 100.00;
-                    }
-                    if (inserted == '8') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 8.0 / 100.00;
-                    }
-                    if (inserted == '9') {
-                        set = Double.parseDouble((mAmountTextView.getText().toString()));
-                        set = set * 10.00 + 9.0 / 100.00;
-                    }
-                    if (set < 10) {
-                        String setString = "0" + String.format("%.2f", set);
-
-                        mAmountTextView.setText(setString);
-
-                    } else {
-                        String setString = String.format("%.2f", set);
-                        mAmountTextView.setText(setString);
-                    }
-                }
 
             }
         });
@@ -201,13 +147,14 @@ public class RequestMoneyRecheckFragment extends Fragment implements HttpRespons
             @Override
             public void onClick(View view) {
                 if (verifyUserInputs()) {
-                    String amount = Utilities.formatTakaFromString(mAmountTextView.getText().toString());
+                    String amount = Utilities.formatTakaFromString(mAmountEditText.getText().toString());
                     amount = amount.replaceAll("[^\\d.]", "");
-                    bundle.putString("name", mNameTextView.getText().toString());
-                    bundle.putString("imageUrl", imageUrl);
-                    bundle.putString("amount", amount);
-                    bundle.putString("number", mMobileNumber);
-                    (( RequestMoneyActivity) getActivity()).switchToSendMoneyConfirmFragment(bundle);
+                    Intent intent = new Intent(getActivity() ,RequestMoneyConfirmActivity.class);
+                    intent.putExtra("name", mNameTextView.getText().toString());
+                    intent.putExtra("imageUrl", imageUrl);
+                    intent.putExtra("amount", amount);
+                    intent.putExtra("number", mMobileNumber);
+                    startActivity(intent);
                 }
             }
         });
@@ -227,7 +174,6 @@ public class RequestMoneyRecheckFragment extends Fragment implements HttpRespons
     private boolean verifyUserInputs() {
         mDummy.setError(null);
         boolean cancel = false;
-        View focusView = null;
         String errorMessage;
 
         if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
@@ -242,20 +188,21 @@ public class RequestMoneyRecheckFragment extends Fragment implements HttpRespons
         if (SharedPrefManager.ifContainsUserBalance()) {
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
-            if (TextUtils.isEmpty(mAmountTextView.getText())) {
+            if (TextUtils.isEmpty(mAmountEditText.getText())) {
                 errorMessage = getString(R.string.please_enter_amount);
 
-            } else if (!InputValidator.isValidDigit(mAmountTextView.getText().toString().trim())) {
+            } else if (!InputValidator.isValidDigit(mAmountEditText.getText().toString().trim())) {
                 errorMessage = getString(R.string.please_enter_amount);
             } else {
-                final BigDecimal sendMoneyAmount = new BigDecimal(mAmountTextView.getText().toString());
-                if (sendMoneyAmount.compareTo(balance) > 0) {
+                String amount = mAmountEditText.getText().toString();
+                amount = amount.replaceAll("[^\\d.]", "");
+                final BigDecimal requestMoneyAmount = new BigDecimal(amount);
+                if (requestMoneyAmount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
                 } else {
-                    final BigDecimal minimumSendMoneyAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumSendMoneyAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
-                    errorMessage = InputValidator.isValidAmount(getActivity(), sendMoneyAmount, minimumSendMoneyAmount, maximumSendMoneyAmount);
+                    final BigDecimal minimumRequestMoneyAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumRequestMoneyAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+                    errorMessage = InputValidator.isValidAmount(getActivity(), requestMoneyAmount, minimumRequestMoneyAmount, maximumRequestMoneyAmount);
                 }
             }
         } else {
@@ -263,12 +210,18 @@ public class RequestMoneyRecheckFragment extends Fragment implements HttpRespons
         }
 
         if (errorMessage != null) {
-            focusView = mAmountTextView;
-            mDummy.setError(errorMessage);
+            Snackbar snackbar= Snackbar.make(mParentLayout, errorMessage, Snackbar.LENGTH_LONG);
+            View view = snackbar.getView();
+            view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
+            TextView textView = (TextView)view.findViewById(android.support.design.R.id.snackbar_text);
+            LinearLayout.LayoutParams layoutParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            textView.setLayoutParams(layoutParams);
+            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
+            textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value4));
+            snackbar.show();
             cancel = true;
         }
         if (cancel) {
-            focusView.requestFocus();
             return false;
         } else {
             return true;
@@ -300,7 +253,6 @@ public class RequestMoneyRecheckFragment extends Fragment implements HttpRespons
                                 RequestMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                             }
                         }
-
                         BusinessRuleCacheManager.setBusinessRules(Constants.REQUEST_MONEY, RequestMoneyActivity.mMandatoryBusinessRules);
                     }
                 } catch (Exception e) {

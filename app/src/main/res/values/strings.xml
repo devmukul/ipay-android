@@ -1243,4 +1243,5 @@
     <string name="request_money_step_two">insert <b>amount</b> you want to request</string>
     <string name="request_money_from">You are requesting money from</string>
     <string name="send_money_confirm">Send Money Confirm</string>
+    <string name="request_money_confirm">Request Money Confirm</string>
 </resources>

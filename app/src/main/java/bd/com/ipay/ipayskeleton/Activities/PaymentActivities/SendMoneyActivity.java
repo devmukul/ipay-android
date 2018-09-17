@@ -45,6 +45,7 @@ public class SendMoneyActivity extends BaseActivity {
     public float mWidth;
 
     public boolean isFromQRCode;
+    public boolean isFromContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class SendMoneyActivity extends BaseActivity {
                 PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
         backButtonToolbar.setImageDrawable(null);
         isFromQRCode = false;
+        isFromContact = false;
         backButtonToolbar.setImageDrawable(mBackButtonIcon);
 
         mHelperView = findViewById(R.id.helper_view);
@@ -98,9 +100,21 @@ public class SendMoneyActivity extends BaseActivity {
             bundle.putString("number", mobileNumbr);
             bundle.putString("imageUrl", Constants.BASE_URL_FTP_SERVER + imageUrl);
             switchToSendMoneyEnterAmountFragment(bundle);
-
-
-        } else {
+        }
+        else if(getIntent().hasExtra(Constants.FROM_CONTACT)){
+            isFromContact = true;
+            mHelperView.setVisibility(View.GONE);
+            mHolderView.setVisibility(View.VISIBLE);
+            String mobileNumbr = getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+            String imageUrl = getIntent().getStringExtra(Constants.PHOTO_URI);
+            String name = getIntent().getStringExtra(Constants.NAME);
+            Bundle bundle = new Bundle();
+            bundle.putString("name", name);
+            bundle.putString("number", mobileNumbr);
+            bundle.putString("imageUrl", Constants.BASE_URL_FTP_SERVER + imageUrl);
+            switchToSendMoneyEnterAmountFragment(bundle);
+        }
+        else {
             mHelperView.setVisibility(View.VISIBLE);
             mHolderView.setVisibility(View.GONE);
             switchToSendMoneyContactFragment();
@@ -218,7 +232,7 @@ public class SendMoneyActivity extends BaseActivity {
         this.bundle = bundle;
         SendMoneyEnterAmountFragment sendMoneyEnterAmountFragment = new SendMoneyEnterAmountFragment();
         sendMoneyEnterAmountFragment.setArguments(bundle);
-        if (isFromQRCode) {
+        if (isFromQRCode || isFromContact) {
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
                     R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit)
                     .replace(R.id.fragment_container, sendMoneyEnterAmountFragment).commit();

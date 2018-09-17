@@ -137,21 +137,39 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
         mDivider = v.findViewById(R.id.divider);
         mainView = v.findViewById(R.id.main_view);
-        ((SendMoneyActivity) getActivity()).toolbar.setVisibility(View.VISIBLE);
-        ((SendMoneyActivity) getActivity()).backButtonToolbar.setVisibility(View.VISIBLE);
-        getActivity().overridePendingTransition(R.anim.right_to_left_enter,
-                R.anim.right_to_left_exit);
-        mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
-        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
-        ((SendMoneyActivity) getActivity()).showTitle();
-        ((SendMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((SendMoneyActivity) getActivity()).mHolderView.setVisibility(View.GONE);
-                ((SendMoneyActivity) getActivity()).slideUp(((SendMoneyActivity) getActivity()).mHelperView, mainViewHeight);
+        if (getActivity() instanceof SendMoneyActivity) {
+            ((SendMoneyActivity) getActivity()).toolbar.setVisibility(View.VISIBLE);
+            ((SendMoneyActivity) getActivity()).backButtonToolbar.setVisibility(View.VISIBLE);
+            getActivity().overridePendingTransition(R.anim.right_to_left_enter,
+                    R.anim.right_to_left_exit);
+            mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
+            ((SendMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+            ((SendMoneyActivity) getActivity()).showTitle();
+            ((SendMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((SendMoneyActivity) getActivity()).mHolderView.setVisibility(View.GONE);
+                    ((SendMoneyActivity) getActivity()).slideUp(((SendMoneyActivity) getActivity()).mHelperView, mainViewHeight);
 
-            }
-        });
+                }
+            });
+        } else if (getActivity() instanceof RequestMoneyActivity) {
+            ((RequestMoneyActivity) getActivity()).toolbar.setVisibility(View.VISIBLE);
+            ((RequestMoneyActivity) getActivity()).backButtonToolbar.setVisibility(View.VISIBLE);
+            getActivity().overridePendingTransition(R.anim.right_to_left_enter,
+                    R.anim.right_to_left_exit);
+            mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
+            ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setVisibility(View.VISIBLE);
+            ((RequestMoneyActivity) getActivity()).showTitle();
+            ((RequestMoneyActivity) getActivity()).mToolbarHelpText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((RequestMoneyActivity) getActivity()).mHolderView.setVisibility(View.GONE);
+                    ((RequestMoneyActivity) getActivity()).slideUp(((RequestMoneyActivity) getActivity()).mHelperView, mainViewHeight);
+
+                }
+            });
+        }
         if (getArguments() != null) {
             sourceActivityName = getArguments().getString(Constants.SOURCE);
         }
@@ -598,7 +616,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
                 if (getArguments().getString(Constants.SOURCE).equals(Constants.SEND_MONEY)) {
                     ((SendMoneyActivity) getActivity()).switchToSendMoneyEnterAmountFragment(bundle);
                 } else if (getArguments().getString(Constants.SOURCE).equals(Constants.REQUEST_MONEY)) {
-                    ((RequestMoneyActivity) getActivity()).switchToRequestMoneyRecheckFragment(bundle);
+                    ((RequestMoneyActivity) getActivity()).switchToRequestMoneyEnterAmountFragment(bundle);
                 }
             }
         } catch (Exception e) {

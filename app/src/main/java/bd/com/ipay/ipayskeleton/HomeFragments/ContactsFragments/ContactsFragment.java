@@ -90,6 +90,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private View mSheetViewIpayMember;
     private View selectedBottomSheetView;
 
+    private String name;
+    private String number;
+    private String imageUrl;
+
     private String mQuery = "";
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
@@ -426,7 +430,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             @ValidateAccess(ServiceIdConstants.REQUEST_MONEY)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
-                intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
+                intent.putExtra(Constants.MOBILE_NUMBER, number);
+                intent.putExtra(Constants.NAME, name);
+                intent.putExtra(Constants.PHOTO_URI, imageUrl);
+                intent.putExtra(Constants.FROM_CONTACT, true);
                 intent.putExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, true);
                 startActivity(intent);
 
@@ -618,11 +625,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
-    private void showMemberSheet(boolean isVerified, int accountType) {
+    private void showMemberSheet(boolean isVerified, int accountType, String name, String imageUrl, String number) {
         if (mBottomSheetLayout == null)
             return;
 
         selectedBottomSheetView = mSheetViewIpayMember;
+
+        this.name = name;
+        this.number = number;
+        this.imageUrl = imageUrl;
 
         Button askForConfirmationButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
         Button mMakePaymentButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_make_payment);
@@ -988,7 +999,12 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                                 public void run() {
                                     int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
                                     if (isMember) {
-                                        showMemberSheet(isVerified, accountType);
+                                        if (originalName != null && !originalName.isEmpty()) {
+                                            showMemberSheet(isVerified, accountType, originalName, profilePictureUrlQualityHigh, mobileNumber);
+                                        } else {
+                                            showMemberSheet(isVerified, accountType, name, profilePictureUrlQualityHigh, mobileNumber);
+                                        }
+
                                     } else {
                                         showNonMemberSheet(mobileNumber);
                                     }
