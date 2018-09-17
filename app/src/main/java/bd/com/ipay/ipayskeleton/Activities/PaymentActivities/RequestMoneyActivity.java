@@ -45,7 +45,7 @@ public class RequestMoneyActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbarHelpText = (TextView) toolbar.findViewById(R.id.help_text_view);
         mTitle = (TextView) toolbar.findViewById(R.id.title);
-        backButton = (ImageView) toolbar.findViewById(R.id.back_button);
+        backButton = (ImageView) toolbar.findViewById(R.id.back_button_black);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

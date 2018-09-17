@@ -32,13 +32,13 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/value20"
                 android:layout_toLeftOf="@id/help_text_view"
-                android:layout_toRightOf="@+id/back_button"
+                android:layout_toRightOf="@+id/back_button_black"
                 android:text="Request Money"
                 android:textColor="@color/colorWhite"
                 android:textSize="20dp" />
 
             <ImageView
-                android:id="@+id/back_button"
+                android:id="@+id/back_button_black"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentLeft="true"

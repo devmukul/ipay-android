@@ -1,13 +1,11 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -18,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +55,7 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
     private Button mSendMoneyButton;
     private Bundle bundle;
     private TextInputLayout pinLayout;
+    private CoordinatorLayout parentLayout;
 
     private String mAmount;
     private String mName;
@@ -76,24 +76,21 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_confirm, container, false);
-        ((SendMoneyConfirmActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        Drawable mBackButtonIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_arrow_back);
-        mBackButtonIcon.setColorFilter(new
-                PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY));
         ((SendMoneyConfirmActivity) getActivity()).backButton.setVisibility(View.VISIBLE);
         setUpViews(view);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
+        parentLayout = view.findViewById(R.id.parent_layout);
         return view;
     }
 
     private void setUpViews(View view) {
         mNoteEditText = (EditText) view.findViewById(R.id.note_edit_text);
         mPinEditText = (EditText) view.findViewById(R.id.pin_edit_text);
+        mPinEditText.requestFocus();
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mDescriptionTextView = (TextView) view.findViewById(R.id.textview_description);
-        ((SendMoneyConfirmActivity) getActivity()).toolbar.setBackgroundColor(Color.WHITE);
         mSendMoneyButton = (Button) view.findViewById(R.id.send_money_button);
         if (!SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             mPinEditText.setVisibility(View.GONE);
@@ -123,17 +120,30 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
             mPin = mPinEditText.getText().toString();
             if (mPin.length() < 4) {
                 errorMessage = "Pin must be at least 4 digits";
-                mPinEditText.setError(errorMessage);
+                showSnackBar(errorMessage);
                 return false;
             } else {
                 return true;
             }
         } else {
             errorMessage = "Please enter a pin";
-            mPinEditText.setError(errorMessage);
+           showSnackBar(errorMessage);
             return false;
         }
 
+    }
+
+    private void showSnackBar(String errorMessage){
+        Snackbar snackbar= Snackbar.make(parentLayout, errorMessage, Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
+        TextView textView = (TextView)view.findViewById(android.support.design.R.id.snackbar_text);
+        LinearLayout.LayoutParams layoutParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0,10,0,0);
+        textView.setLayoutParams(layoutParams);
+        textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
+        textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value10));
+        snackbar.show();
     }
 
     private void getDataFromBundle() {

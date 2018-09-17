@@ -40,7 +40,7 @@ public class SendMoneySuccessFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_money_success, container, false);
-        ((SendMoneyConfirmActivity) getActivity()).toolbar.setVisibility(View.GONE);
+        ((SendMoneyConfirmActivity) getActivity()).backButton.setVisibility(View.GONE);
         setUpViews(view);
         return view;
     }

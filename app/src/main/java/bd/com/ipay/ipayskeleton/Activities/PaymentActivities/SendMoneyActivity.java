@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyEnterAmountFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyRecheckFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionContactFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -33,7 +33,7 @@ public class SendMoneyActivity extends BaseActivity {
     public Toolbar toolbar;
     public TextView mToolbarHelpText;
     public TextView mTitle;
-    public ImageView backButton;
+    public ImageView backButtonToolbar;
     public Button mRemoveHelperViewButton;
 
     public View mHelperView;
@@ -44,6 +44,8 @@ public class SendMoneyActivity extends BaseActivity {
     public float mHeight;
     public float mWidth;
 
+    public boolean isFromQRCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +53,13 @@ public class SendMoneyActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbarHelpText = (TextView) toolbar.findViewById(R.id.help_text_view);
         mTitle = (TextView) toolbar.findViewById(R.id.title);
-        backButton = (ImageView) toolbar.findViewById(R.id.back_button);
-
+        backButtonToolbar = (ImageView) toolbar.findViewById(R.id.back_button_toolbar);
         Drawable mBackButtonIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back);
         mBackButtonIcon.setColorFilter(new
                 PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY));
-        backButton.setImageDrawable(null);
-        backButton.setImageDrawable(mBackButtonIcon);
+        backButtonToolbar.setImageDrawable(null);
+        isFromQRCode = false;
+        backButtonToolbar.setImageDrawable(mBackButtonIcon);
 
         mHelperView = findViewById(R.id.helper_view);
         mMainLayout = (LinearLayout) findViewById(R.id.main_view);
@@ -76,7 +78,7 @@ public class SendMoneyActivity extends BaseActivity {
                 slideDown(mHelperView);
             }
         });
-        backButton.setOnClickListener(new View.OnClickListener() {
+        backButtonToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -84,7 +86,25 @@ public class SendMoneyActivity extends BaseActivity {
         });
         mToolbarHelpText.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
-        switchToSendMoneyContactFragment();
+        if (getIntent().hasExtra(Constants.FROM_QR_SCAN)) {
+            isFromQRCode = true;
+            mHelperView.setVisibility(View.GONE);
+            mHolderView.setVisibility(View.VISIBLE);
+            String mobileNumbr = getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+            String imageUrl = getIntent().getStringExtra(Constants.PHOTO_URI);
+            String name = getIntent().getStringExtra(Constants.NAME);
+            Bundle bundle = new Bundle();
+            bundle.putString("name", name);
+            bundle.putString("number", mobileNumbr);
+            bundle.putString("imageUrl", Constants.BASE_URL_FTP_SERVER + imageUrl);
+            switchToSendMoneyRecheckFragment(bundle);
+
+
+        } else {
+            mHelperView.setVisibility(View.VISIBLE);
+            mHolderView.setVisibility(View.GONE);
+            switchToSendMoneyContactFragment();
+        }
     }
 
     public void showTitle() {
@@ -119,7 +139,6 @@ public class SendMoneyActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
             }
 
             @Override
@@ -197,15 +216,29 @@ public class SendMoneyActivity extends BaseActivity {
             getSupportFragmentManager().popBackStack();
         }
         this.bundle = bundle;
-        SendMoneyRecheckFragment sendMoneyRecheckFragment = new SendMoneyRecheckFragment();
-        sendMoneyRecheckFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
-                R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit)
-                .replace(R.id.fragment_container, sendMoneyRecheckFragment).addToBackStack(null).commit();
+        SendMoneyEnterAmountFragment sendMoneyEnterAmountFragment = new SendMoneyEnterAmountFragment();
+        sendMoneyEnterAmountFragment.setArguments(bundle);
+        if (isFromQRCode) {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
+                    R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit)
+                    .replace(R.id.fragment_container, sendMoneyEnterAmountFragment).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
+                    R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit)
+                    .replace(R.id.fragment_container, sendMoneyEnterAmountFragment).addToBackStack(null).commit();
+        }
     }
 
     @Override
     public void onBackPressed() {
+        Utilities.hideKeyboard(this);
+        try {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                ((SendMoneyEnterAmountFragment) getSupportFragmentManager().getFragments().get(1)).mBackButton.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+
+        }
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {

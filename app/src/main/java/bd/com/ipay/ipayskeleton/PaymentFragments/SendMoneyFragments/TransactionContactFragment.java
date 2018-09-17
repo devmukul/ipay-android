@@ -137,6 +137,8 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
         mDivider = v.findViewById(R.id.divider);
         mainView = v.findViewById(R.id.main_view);
+        ((SendMoneyActivity) getActivity()).toolbar.setVisibility(View.VISIBLE);
+        ((SendMoneyActivity) getActivity()).backButtonToolbar.setVisibility(View.VISIBLE);
         getActivity().overridePendingTransition(R.anim.right_to_left_enter,
                 R.anim.right_to_left_exit);
         mActionNameTextView = (TextView) v.findViewById(R.id.action_name_text_view);
@@ -146,7 +148,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
             @Override
             public void onClick(View view) {
                 ((SendMoneyActivity) getActivity()).mHolderView.setVisibility(View.GONE);
-                ((SendMoneyActivity) getActivity()).slideUp(((SendMoneyActivity) getActivity()).mHelperView,mainViewHeight);
+                ((SendMoneyActivity) getActivity()).slideUp(((SendMoneyActivity) getActivity()).mHelperView, mainViewHeight);
 
             }
         });

@@ -1,20 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:id="@+id/main_view"
     android:orientation="vertical">
-    <include layout="@layout/fragment_send_money_helper"
-        android:layout_height="match_parent"
+
+    <include
+        android:id="@+id/helper_view"
+        layout="@layout/fragment_send_money_helper"
         android:layout_width="match_parent"
-        android:id="@+id/helper_view"></include>
+        android:layout_height="match_parent"></include>
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:id="@+id/holder_view"
-        android:visibility="gone"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -44,13 +46,13 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/value20"
                     android:layout_toLeftOf="@id/help_text_view"
-                    android:layout_toRightOf="@+id/back_button"
+                    android:layout_toRightOf="@+id/back_button_toolbar"
                     android:text="Send Money"
                     android:textColor="@color/colorWhite"
                     android:textSize="20dp" />
 
                 <ImageView
-                    android:id="@+id/back_button"
+                    android:id="@+id/back_button_toolbar"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentLeft="true"
@@ -61,9 +63,9 @@
 
         <FrameLayout
             android:id="@+id/fragment_container"
-            android:layout_below="@id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"></FrameLayout>
     </RelativeLayout>
 
 </LinearLayout>

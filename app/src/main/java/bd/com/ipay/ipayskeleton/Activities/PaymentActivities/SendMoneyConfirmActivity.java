@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -12,7 +11,6 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class SendMoneyConfirmActivity extends AppCompatActivity {
 
-    public Toolbar toolbar;
     public ImageView backButton;
     private String name;
     private String number;
@@ -24,8 +22,8 @@ public class SendMoneyConfirmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money_confirm);
         overridePendingTransition(R.anim.right_to_left_enter, R.anim.right_to_left_exit);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        backButton = (ImageView) findViewById(R.id.back_button);
+        backButton = (ImageView) findViewById(R.id.back_button_black);
+        backButton.setVisibility(View.VISIBLE);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
