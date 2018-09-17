@@ -97,7 +97,7 @@ public class SendMoneyActivity extends BaseActivity {
             bundle.putString("name", name);
             bundle.putString("number", mobileNumbr);
             bundle.putString("imageUrl", Constants.BASE_URL_FTP_SERVER + imageUrl);
-            switchToSendMoneyRecheckFragment(bundle);
+            switchToSendMoneyEnterAmountFragment(bundle);
 
 
         } else {
@@ -211,7 +211,7 @@ public class SendMoneyActivity extends BaseActivity {
                 .replace(R.id.fragment_container, transactionContactFragment).commit();
     }
 
-    public void switchToSendMoneyRecheckFragment(Bundle bundle) {
+    public void switchToSendMoneyEnterAmountFragment(Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
         }

@@ -68,7 +68,7 @@ public class RequestMoneyRecheckFragment extends Fragment implements HttpRespons
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_send_money_recheck, container, false);
+        View view = inflater.inflate(R.layout.fragment_send_money_enter_amount, container, false);
         attemptGetBusinessRule(ServiceIdConstants.SEND_MONEY);
         RequestMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.SEND_MONEY);
         ((RequestMoneyActivity) getActivity()).toolbar.setBackgroundColor(getResources().getColor(R.color.colorToolbarSendMoney));

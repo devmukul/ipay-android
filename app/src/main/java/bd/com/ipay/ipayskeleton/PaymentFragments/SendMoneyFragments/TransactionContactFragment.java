@@ -596,7 +596,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
         try {
             if (getArguments() != null) {
                 if (getArguments().getString(Constants.SOURCE).equals(Constants.SEND_MONEY)) {
-                    ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(bundle);
+                    ((SendMoneyActivity) getActivity()).switchToSendMoneyEnterAmountFragment(bundle);
                 } else if (getArguments().getString(Constants.SOURCE).equals(Constants.REQUEST_MONEY)) {
                     ((RequestMoneyActivity) getActivity()).switchToRequestMoneyRecheckFragment(bundle);
                 }
@@ -623,7 +623,7 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
                         bundle.putString("name", getUserInfoResponse.getName());
                         bundle.putString("imageUrl", getUserInfoResponse.getProfilePictures().get(0).getUrl());
                         bundle.putString("number", mPhoneNumber);
-                        ((SendMoneyActivity) getActivity()).switchToSendMoneyRecheckFragment(bundle);
+                        ((SendMoneyActivity) getActivity()).switchToSendMoneyEnterAmountFragment(bundle);
                     } else {
                         Toast.makeText(getContext(), getString(R.string.user_has_no_ipay_account), Toast.LENGTH_LONG).show();
                     }
