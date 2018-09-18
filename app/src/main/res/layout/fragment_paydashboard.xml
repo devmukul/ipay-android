@@ -479,7 +479,7 @@
                                 android:ellipsize="marquee"
                                 android:gravity="center_horizontal"
                                 android:singleLine="true"
-                                android:text="@string/carnival"
+                                android:text="@string/amberIT"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/text_size_extra_smaller_value11" />
                         </LinearLayout>

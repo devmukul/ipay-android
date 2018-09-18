@@ -110,7 +110,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
-        //getServiceProviderList();
+        getServiceProviderList();
 
 
         if (ProfileInfoCacheManager.isBusinessAccount())

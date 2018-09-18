@@ -1213,7 +1213,7 @@
     <string name="dpdc">Dpdc</string>
     <string name="enter_location_code">Enter location code</string>
     <string name="carnival_bill_pay_message">Please enter your Carnival user ID</string>
-    <string name="current_package_rate">Current Package Rate</string>
+    <string name="current_package_rate">Amount</string>
     <string name="carnival">Carnival</string>
     <string name="you_cant_avail_this_service">You can\'t avail this service now , please try again later</string>
     <string name="active">Active</string>
@@ -1230,4 +1230,10 @@
     <string name="receive_offer_from_merchant_message">Please receive your gift from the merchant.</string>
     <string name="start_date_title">Start Date:</string>
     <string name="end_date_title">End Date:</string>
+    <string name="amberIT">AmberIT</string>
+    <string name="lanka_bangla_card_number">Lanka Bangla card number</string>
+    <string name="lanka_bangla_bill_pay_message">Please enter your Lanka Bangla Visa/Mastercard card number</string>
+    <string name="card_number">Card number</string>
+    <string name="credit_balance">Credit balance</string>
+    <string name="minimum_pay">Minimum pay</string>
 </resources>
