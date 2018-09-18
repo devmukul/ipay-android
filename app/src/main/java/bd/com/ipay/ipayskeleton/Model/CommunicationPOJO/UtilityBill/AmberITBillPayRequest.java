@@ -1,31 +1,31 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill;
 
 public class AmberITBillPayRequest {
-    private String userId;
+    private String customerId;
     private String amount;
     private String pin;
     private String otp;
 
-    public AmberITBillPayRequest(String userId, String amount, String pin) {
-        this.userId = userId;
+    public AmberITBillPayRequest(String customerId, String amount, String pin) {
+        this.customerId = customerId;
         this.amount = amount;
         this.pin = pin;
     }
 
-    public AmberITBillPayRequest(String userId, String amount, String pin, String otp) {
+    public AmberITBillPayRequest(String customerId, String amount, String pin, String otp) {
 
-        this.userId = userId;
+        this.customerId = customerId;
         this.amount = amount;
         this.pin = pin;
         this.otp = otp;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getAmount() {

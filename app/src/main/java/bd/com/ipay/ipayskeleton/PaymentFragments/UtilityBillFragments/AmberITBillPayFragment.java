@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AmberITBillPayRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AmberITCustomerInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AmberItCustomerRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -67,7 +68,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
     private String mAmount;
     private String mCustomerID;
 
-    private HttpRequestGetAsyncTask mGetAmberItUserInfo = null;
+    private HttpRequestPostAsyncTask mGetAmberItUserInfo = null;
     private AmberITCustomerInfoResponse amberITCustomerInfoResponse;
     private HttpRequestPostAsyncTask mAmberITBillPayTask = null;
     private AmberITBillPayRequest mAmberITBillPayRequest;
@@ -192,7 +193,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
             Gson gson = new Gson();
             String json = gson.toJson(mAmberITBillPayRequest);
             mAmberITBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_AMBERIT_BILL_PAY,
-                    Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL_BILL_PAY, json, getActivity(), false);
+                    Constants.BASE_URL_UTILITY + Constants.URL_AMBERIT_BILL_PAY, json, getActivity(), false);
             mAmberITBillPayTask.mHttpResponseListener = this;
             mAmberITBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait));
@@ -213,9 +214,11 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
     private void getCustomerInfo() {
         if (mGetAmberItUserInfo == null) {
             mProgressDialog.setMessage(getString(R.string.please_wait));
-            String mUri = Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL + mCustomerID;
-            mGetAmberItUserInfo = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_AMBERIT_CUSTOMER, mUri,
-                    getActivity(), this, true);
+            String mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_AMBERIT_CUSTOMER;
+            AmberItCustomerRequest amberItCustomerRequest = new AmberItCustomerRequest(mCustomerID, mAmount);
+            String json = new Gson().toJson(amberItCustomerRequest);
+            mGetAmberItUserInfo = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_AMBERIT_CUSTOMER, mUri, json,
+                    getActivity(), this, false);
             mGetAmberItUserInfo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
         }

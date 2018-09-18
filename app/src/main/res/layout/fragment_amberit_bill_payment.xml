@@ -151,12 +151,6 @@
                     android:layout_marginBottom="@dimen/value8"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp" />
-
-                <View
-                    style="@style/Divider"
-                    android:layout_marginBottom="@dimen/value8"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp" />
             </LinearLayout>
 
         </LinearLayout>

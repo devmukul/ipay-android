@@ -186,6 +186,8 @@ public class Constants {
     public static final String AMBERIT = "AMBERIT";
     public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
     public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
+    public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
+    public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
