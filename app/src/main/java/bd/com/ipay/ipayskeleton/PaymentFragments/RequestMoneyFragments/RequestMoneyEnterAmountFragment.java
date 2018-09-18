@@ -147,7 +147,8 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
             @Override
             public void onClick(View view) {
                 if (verifyUserInputs()) {
-                    String amount = Utilities.formatTakaFromString(mAmountEditText.getText().toString());
+                    String cleanAmount = mAmountEditText.getText().toString().replaceAll("[^\\d.]", "");
+                    String amount = Utilities.formatTakaFromString(cleanAmount);
                     amount = amount.replaceAll("[^\\d.]", "");
                     Intent intent = new Intent(getActivity(), RequestMoneyConfirmActivity.class);
                     intent.putExtra("name", mNameTextView.getText().toString());
@@ -198,7 +199,7 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
                 amount = amount.replaceAll("[^\\d.]", "");
                 if ((amount.length() > 0 && InputValidator.isValidDigit(amount))) {
                     BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
-                    errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                    errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(amount),
                             RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
                 }
             }

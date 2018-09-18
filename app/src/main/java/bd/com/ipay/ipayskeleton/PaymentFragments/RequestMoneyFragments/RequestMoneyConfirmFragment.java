@@ -103,12 +103,8 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
             @Override
             public void onClick(View view) {
                 Utilities.hideKeyboard(getActivity());
-                if (mPinEditText.getVisibility() == View.VISIBLE) {
-                    if (verifyInput()) {
-                        attemptSendMoney(mPin);
-                    }
-                } else {
-                    attemptSendMoney(null);
+                if(verifyInput()){
+                    attemptRequestMoney();
                 }
             }
         });
@@ -116,30 +112,32 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
 
     private boolean verifyInput() {
         String errorMessage = null;
-        if (mPinEditText.getText() != null) {
-            mPin = mPinEditText.getText().toString();
-            if (mPin.length() < 4) {
-                errorMessage = "Pin must be at least 4 digits";
-                showSnackBar(errorMessage);
-                return false;
+        if (mNoteEditText.getText() != null) {
+            mNote = mNoteEditText.getText().toString();
+            if (mNote == null || mNote.equals("")) {
+                errorMessage = "Please enter a note";
             } else {
-                return true;
+                errorMessage = null;
             }
+
         } else {
-            errorMessage = "Please enter a pin";
+            errorMessage = "Please enter a note";
+        }
+        if (errorMessage != null) {
             showSnackBar(errorMessage);
             return false;
+        } else {
+            return true;
         }
-
     }
 
-    private void showSnackBar(String errorMessage){
-        Snackbar snackbar= Snackbar.make(parentLayout, errorMessage, Snackbar.LENGTH_LONG);
+    private void showSnackBar(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(parentLayout, errorMessage, Snackbar.LENGTH_LONG);
         View view = snackbar.getView();
         view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-        TextView textView = (TextView)view.findViewById(android.support.design.R.id.snackbar_text);
-        LinearLayout.LayoutParams layoutParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0,10,0,0);
+        TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 10, 0, 0);
         textView.setLayoutParams(layoutParams);
         textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
         textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value10));
@@ -163,21 +161,16 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
         String setString = "YOU ARE REQUESTING TK " + mAmount + " FROM";
         mDescriptionTextView.setText(setString, TextView.BufferType.SPANNABLE);
         ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney));
-        ((Spannable) mDescriptionTextView.getText()).setSpan(span, 18, 18 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ((Spannable) mDescriptionTextView.getText()).setSpan(span, 18, 18 + 4 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    private void attemptSendMoney(String pin) {
+    private void attemptRequestMoney() {
         if (mRequestMoneyTask != null) {
             return;
         }
 
         mCustomProgressDialog.setLoadingMessage(getString(R.string.requesting_money));
         mCustomProgressDialog.showDialog();
-        if (mNoteEditText.getText() != null) {
-            mNote = mNoteEditText.getText().toString();
-        } else {
-            mNote = null;
-        }
 
         mRequestMoneyRequest = new RequestMoneyRequest(ContactEngine.formatMobileNumberBD(mMobileNumber),
                 Double.parseDouble(mAmount), mNote);

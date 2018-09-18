@@ -80,7 +80,7 @@ public class RequestMoneySuccessFragment extends BaseFragment {
         String setString = "SUCCESSFULLY REQUESTED TK." + mAmount + " FROM";
         mAmountTextView.setText(setString, TextView.BufferType.SPANNABLE);
         ForegroundColorSpan span = new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney));
-        ((Spannable) mAmountTextView.getText()).setSpan(span, 16, 16 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ((Spannable) mAmountTextView.getText()).setSpan(span, 23, 23 + 3 + mAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mSenderProfileImageView.setProfilePicture(mSenderImageUrl, false);
         mReceiverProfileImageView.setProfilePicture(mReceiverImageUrl, false);

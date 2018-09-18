@@ -62,6 +62,7 @@
                     android:backgroundTint="#e5e5e5"
                     android:gravity="center"
                     android:hint="Enter pin"
+                    android:visibility="gone"
                     android:inputType="numberPassword"
                     android:paddingBottom="9dp" />
 
@@ -73,7 +74,7 @@
                     android:layout_marginTop="@dimen/value28"
                     android:backgroundTint="#e5e5e5"
                     android:gravity="center"
-                    android:hint="Enter a short note (Optional)"
+                    android:hint="Enter a short note"
                     android:paddingBottom="9dp"
                     android:textSize="@dimen/value18" />
             </RelativeLayout>
