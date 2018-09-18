@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.AmberITBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CarnivalBillPayFragment;
@@ -47,6 +48,8 @@ public class UtilityBillPaymentActivity extends BaseActivity {
                     switchToDpdcBillPaymentFragment();
                 } else if (service.equals(Constants.CARNIVAL)) {
                     switchToDozeBillPaymentFragment();
+                } else if (service.equals(Constants.AMBERIT)) {
+                    switchToAmberITBillPaymentFragment();
                 }
             }
         } catch (Exception e) {
@@ -85,6 +88,11 @@ public class UtilityBillPaymentActivity extends BaseActivity {
     private void switchToDpdcBillPaymentFragment() {
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.fragment_container, new DpdcBillPaymentFragment()).commit();
+    }
+
+    private void switchToAmberITBillPaymentFragment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new AmberITBillPayFragment()).commit();
     }
 
     public void switchToBrilliantRechargeFragment() {
