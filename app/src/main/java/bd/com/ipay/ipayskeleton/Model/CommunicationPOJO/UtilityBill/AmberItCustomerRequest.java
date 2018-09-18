@@ -1,9 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill;
 
-/**
- * Created by sourav.saha on 9/18/18.
- */
-
 public class AmberItCustomerRequest {
     private String customerId;
     private String amount;
