@@ -365,6 +365,7 @@
     <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT(%)</string>
     <string name="enter_amount">Amount in BDT</string>
+    <string name="amount_enter">Enter amount in BDT</string>
     <string name="reference_number_optional">Reference Number (Optional)</string>
     <string name="reference_number">Reference Number</string>
     <string name="send_money_description">Write a note</string>
@@ -1236,4 +1237,6 @@
     <string name="card_number">Card number</string>
     <string name="credit_balance">Credit balance</string>
     <string name="minimum_pay">Minimum pay</string>
+    <string name="amount_to_pay">Amount to pay</string>
+    <string name="lanka_bangla">Lanka Bangla</string>
 </resources>

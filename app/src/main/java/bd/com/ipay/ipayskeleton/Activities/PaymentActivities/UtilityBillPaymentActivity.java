@@ -14,6 +14,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantB
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CarnivalBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DpdcBillPaymentFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBanglaCardBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.WestzoneBillPaymentFragment;
@@ -50,6 +51,8 @@ public class UtilityBillPaymentActivity extends BaseActivity {
                     switchToDozeBillPaymentFragment();
                 } else if (service.equals(Constants.AMBERIT)) {
                     switchToAmberITBillPaymentFragment();
+                } else if (service.equals(Constants.LANKABANGLA)) {
+                    switchToLankaBanglaBillPaymentFragment();
                 }
             }
         } catch (Exception e) {
@@ -113,6 +116,11 @@ public class UtilityBillPaymentActivity extends BaseActivity {
     public void switchToWestZoneBillPayFragment() {
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.fragment_container, new WestzoneBillPaymentFragment()).commit();
+    }
+
+    public void switchToLankaBanglaBillPaymentFragment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new LankaBanglaCardBillPaymentFragment()).commit();
     }
 
     @Override

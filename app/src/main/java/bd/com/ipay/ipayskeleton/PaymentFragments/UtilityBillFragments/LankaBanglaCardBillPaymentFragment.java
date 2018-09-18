@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,21 +34,22 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.LankaBanglaAmountSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AmberITBillPayRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AmberITCustomerInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AmberItCustomerRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCardBillPayRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -57,25 +59,37 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements HttpResponseListener {
     private TextView mNameTextView;
     private EditText mCardNumberEditText;
-    private EditText mAmountEditText;
     private TextView mCreditBalanceView;
     private TextView mMinimumPayView;
+    private EditText mAmountSelectorEditText;
+    private EditText mOtherAmountEditText;
     private Button mContinueButton;
     private View infoView;
-    private View cardNumberView;
+    private TextView mCardNumberView;
     private ProgressDialog mProgressDialog;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private String mAmount;
-    private String mCustomerID;
+    private String mCardNumber;
 
-    private HttpRequestPostAsyncTask mGetAmberItUserInfo = null;
-    private AmberITCustomerInfoResponse amberITCustomerInfoResponse;
-    private HttpRequestPostAsyncTask mAmberITBillPayTask = null;
-    private AmberITBillPayRequest mAmberITBillPayRequest;
+    private String cardType;
+
+    private HttpRequestGetAsyncTask mGetLankaBanglaCardUserInfo = null;
+    private LankaBanglaCustomerResponse lankaBanglaCustomerResponse;
+    private HttpRequestPostAsyncTask mLankaBanglaCardBillPayTask = null;
+    private LankaBanglaCardBillPayRequest mLankaBanglaCardBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
     private GenericBillPayResponse mGenericBillPayResponse;
     private CustomProgressDialog mCustomProgressDialog;
+    private LankaBanglaAmountSelectorDialog lankaBanglaAmountSelectorDialog;
+    private List<String> mAmountTypes;
+    private String mAmountType;
+    private String mMinimumPayAmount;
+    private String mCreditBalanceAmount;
+    private View amountLayout;
+
+    private View mCustomerIDView;
+    private View mInfoView;
 
     @Nullable
     @Override
@@ -98,12 +112,51 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
         }
 
         mNameTextView = view.findViewById(R.id.name_view);
-        cardNumberView = view.findViewById(R.id.card_number_view);
+        mCardNumberView = (TextView) view.findViewById(R.id.card_number_view);
         infoView = view.findViewById(R.id.info_view);
         mCreditBalanceView = (TextView) view.findViewById(R.id.credit_balance_view);
         mMinimumPayView = (TextView) view.findViewById(R.id.minimum_pay_view);
         mCardNumberEditText = view.findViewById(R.id.card_number_edit_text);
-        mAmountEditText = view.findViewById(R.id.amount_edit_text);
+        mCustomerIDView = view.findViewById(R.id.customer_id_view);
+        infoView = view.findViewById(R.id.info_view);
+        amountLayout = view.findViewById(R.id.amount_layout);
+        mAmountSelectorEditText = (EditText) view.findViewById(R.id.amount_selector_edit_text);
+        mAmountTypes = new ArrayList<>();
+        mAmountTypes.add(Constants.credit_balance);
+        mAmountTypes.add(Constants.minimun_pay);
+        mAmountTypes.add(Constants.others);
+        mAmountSelectorEditText.setFocusable(false);
+        mAmountSelectorEditText.setClickable(true);
+        mAmountSelectorEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lankaBanglaAmountSelectorDialog = new LankaBanglaAmountSelectorDialog(getContext(), mAmountTypes);
+                lankaBanglaAmountSelectorDialog.setOnResourceSelectedListener(new LankaBanglaAmountSelectorDialog.OnResourceSelectedListener() {
+                    @Override
+                    public void onResourceSelected(String amountType) {
+                        amountLayout.setVisibility(View.VISIBLE);
+                        mAmountType = amountType;
+                        if (mAmountType.equals(Constants.credit_balance)) {
+                            mAmountSelectorEditText.setText(Constants.credit_balance);
+                            mOtherAmountEditText.setText(mCreditBalanceAmount);
+                            mOtherAmountEditText.setEnabled(false);
+                        } else if (mAmountType.equals(Constants.minimun_pay)) {
+                            mAmountSelectorEditText.setText(Constants.minimun_pay);
+                            mOtherAmountEditText.setText(mMinimumPayAmount);
+                            mOtherAmountEditText.setEnabled(false);
+
+                        } else if (mAmountType.equals(Constants.others)) {
+                            mAmountSelectorEditText.setText(Constants.others);
+                            mOtherAmountEditText.setText("");
+                            mOtherAmountEditText.setEnabled(true);
+                        }
+                        lankaBanglaAmountSelectorDialog.dismiss();
+                    }
+                });
+                lankaBanglaAmountSelectorDialog.showDialog();
+            }
+        });
+        mOtherAmountEditText = (EditText) view.findViewById(R.id.other_amount_edit_text);
         mContinueButton = view.findViewById(R.id.continue_button);
 
         UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
@@ -113,11 +166,58 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
     private void launchOTPVerification() {
         if (getActivity() == null)
             return;
-        String jsonString = new Gson().toJson(mAmberITBillPayRequest);
+        String jsonString = new Gson().toJson(mLankaBanglaCardBillPayRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
                 Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
 
+    }
+
+    private boolean ifUserEligibleToPay() {
+        Editable amountEditable;
+        amountEditable = mOtherAmountEditText.getText();
+        if (amountEditable == null) {
+            Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG);
+            return false;
+        } else {
+            mAmount = amountEditable.toString();
+            if (mAmount == null || mAmount.equals("")) {
+                Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG);
+                return false;
+            } else {
+                if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+                    return false;
+                }
+
+                if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+                    DialogUtils.showDialogVerificationRequired(getActivity());
+                    return false;
+                }
+                if (SharedPrefManager.ifContainsUserBalance()) {
+                    final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+                    final BigDecimal topUpAmount = new BigDecimal(mAmount);
+                    if (topUpAmount.compareTo(balance) > 0) {
+                        Toast.makeText(getContext(), getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
+                        return false;
+                    } else {
+                        final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                        final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+                        String errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                        if (errorMessage != null && !errorMessage.equals("")) {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                            return false;
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.balance_not_available), Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void setUpButtonAction() {
@@ -130,9 +230,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
                             getCustomerInfo();
                         }
                     } else {
-                        if (ifUserEligibleToPaySufficient()) {
-                            attemptBillPayWithPinCheck();
-                        }
+                        attemptBillPayWithPinCheck();
                     }
                 } else {
                     Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
@@ -141,63 +239,39 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
         });
     }
 
-    private boolean ifUserEligibleToPaySufficient() {
-        String errorMessage;
-        if (SharedPrefManager.ifContainsUserBalance()) {
-            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-            //validation check of amount
-            if (mAmountEditText.getText() != null) {
-                if (mAmountEditText.getText() != null && !TextUtils.isEmpty(mAmountEditText.getText().toString())) {
-                    mAmount = mAmountEditText.getText().toString();
-                    final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
-                    if (topUpAmount.compareTo(balance) > 0) {
-                        errorMessage = getString(R.string.insufficient_balance);
-                    } else {
-                        final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                        final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
-                        errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
-                    }
-                } else {
-                    errorMessage = getString(R.string.please_enter_amount);
-                }
-            } else {
-                errorMessage = getString(R.string.please_enter_amount);
-            }
-        } else {
-            errorMessage = getString(R.string.balance_not_available);
-        }
-        if (errorMessage != null) {
-            mAmountEditText.setError(errorMessage);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     private void attemptBillPayWithPinCheck() {
         if (UtilityBillPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
-                    attemptBillPay(pin);
+                    if (ifUserEligibleToPay()) {
+                        attemptBillPay(pin);
+                    }
                 }
             });
         } else {
-            attemptBillPay(null);
+            if (ifUserEligibleToPay()) {
+                attemptBillPay(null);
+            }
         }
     }
 
     private void attemptBillPay(String pin) {
-        if (mAmberITBillPayTask == null) {
-            mAmberITBillPayRequest = new AmberITBillPayRequest(mCustomerID, mAmount, pin);
+        if (mLankaBanglaCardBillPayTask == null) {
+            mLankaBanglaCardBillPayRequest = new LankaBanglaCardBillPayRequest(mCardNumber, mAmount, mAmountType, pin);
 
             Gson gson = new Gson();
-            String json = gson.toJson(mAmberITBillPayRequest);
-            mAmberITBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_AMBERIT_BILL_PAY,
-                    Constants.BASE_URL_UTILITY + Constants.URL_AMBERIT_BILL_PAY, json, getActivity(), false);
-            mAmberITBillPayTask.mHttpResponseListener = this;
-            mAmberITBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            String json = gson.toJson(mLankaBanglaCardBillPayRequest);
+            String mUri = "";
+            if (cardType.equals(Constants.VISA)) {
+                mUri = Constants.BASE_URL_UTILITY + Constants.URL_LANKABANGLA_VISA_BILL_PAY;
+            } else if (cardType.equals(Constants.MASTERCARD)) {
+                mUri = Constants.BASE_URL_UTILITY + Constants.URL_LANKABANGLA_MASTERCARD_BILL_PAY;
+            }
+            mLankaBanglaCardBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY,
+                    mUri, json, getActivity(), false);
+            mLankaBanglaCardBillPayTask.mHttpResponseListener = this;
+            mLankaBanglaCardBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mCustomProgressDialog.setLoadingMessage(getString(R.string.please_wait));
             mCustomProgressDialog.showDialog();
         }
@@ -214,65 +288,49 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
     }
 
     private void getCustomerInfo() {
-        if (mGetAmberItUserInfo == null) {
+        if (mGetLankaBanglaCardUserInfo == null) {
             mProgressDialog.setMessage(getString(R.string.please_wait));
-            String mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_AMBERIT_CUSTOMER;
-            AmberItCustomerRequest amberItCustomerRequest = new AmberItCustomerRequest(mCustomerID, mAmount);
-            String json = new Gson().toJson(amberItCustomerRequest);
-            mGetAmberItUserInfo = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_AMBERIT_CUSTOMER, mUri, json,
+            String mUri = "";
+            if (mCardNumber.startsWith("4")) {
+                cardType = "VISA";
+            } else if (mCardNumber.startsWith("5")) {
+                cardType = "MASTERCARD";
+            }
+
+            if (cardType.equals(Constants.VISA)) {
+                mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_VISA_CUSTOMER + mCardNumber;
+
+            } else if (cardType.equals(Constants.MASTERCARD)) {
+                mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER + mCardNumber;
+            }
+
+            mGetLankaBanglaCardUserInfo = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER, mUri,
                     getActivity(), this, false);
-            mGetAmberItUserInfo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mGetLankaBanglaCardUserInfo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
         }
     }
 
     private boolean verifyUserInput() {
-        Editable editableAccountID;
-        Editable editableAmount;
-        boolean cancel = false;
-        String errorMessage;
-        editableAccountID = mCardNumberEditText.getText();
-        if (editableAccountID == null) {
-            mCardNumberEditText.setError(getString(R.string.enter_customer_id));
-            cancel = true;
-            return !cancel;
+        Editable mCardNumberEditable;
+        mCardNumberEditable = mCardNumberEditText.getText();
+        if (mCardNumberEditable == null) {
+            mCardNumberEditText.setError("Please enter your lanka bangla card number");
+            return false;
         } else {
-            mCustomerID = editableAccountID.toString();
-            if (mCustomerID == null || TextUtils.isEmpty(mCustomerID)) {
-                mCardNumberEditText.setError(getString(R.string.enter_customer_id));
-                cancel = true;
-                return !cancel;
+            mCardNumber = mCardNumberEditable.toString();
+            if (mCardNumber == null || mCardNumber.equals("")) {
+                mCardNumberEditText.setError("Please enter your lanka bangla card number");
+                return false;
+            } else {
+                if (!(mCardNumber.startsWith("4") || mCardNumber.startsWith("5"))) {
+                    mCardNumberEditText.setError("Invalid Visa/Mastercard number");
+                    return false;
+                } else {
+                    return true;
+                }
             }
         }
-        editableAmount = mAmountEditText.getText();
-        if (editableAccountID == null) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            cancel = true;
-            return !cancel;
-        } else {
-            mAmount = editableAmount.toString();
-            if (mAmount == null || TextUtils.isEmpty(mAmount)) {
-                mAmountEditText.setError(getString(R.string.please_enter_amount));
-                cancel = true;
-                return !cancel;
-            }
-        }
-        final BigDecimal topUpAmount = new BigDecimal(mAmount);
-        final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-        if (topUpAmount.compareTo(balance) > 0) {
-            errorMessage = getString(R.string.insufficient_balance);
-            mAmountEditText.setError(errorMessage);
-            cancel = true;
-        } else {
-            final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-            final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-            errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
-            if (errorMessage != null) {
-                mAmountEditText.setError(errorMessage);
-                cancel = true;
-            }
-        }
-        return !cancel;
     }
 
     private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
@@ -280,11 +338,15 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
     private void setupView() {
         numberFormat.setMinimumFractionDigits(2);
         numberFormat.setMaximumFractionDigits(2);
-        mNameTextView.setText(amberITCustomerInfoResponse.getCustomerName());
-        mCurrentPackageView.setText(numberFormat.format(new BigDecimal(mAmount)));
+        mNameTextView.setText(lankaBanglaCustomerResponse.getName());
+        mMinimumPayView.setText(lankaBanglaCustomerResponse.getMinimumPay());
+        mCreditBalanceView.setText(lankaBanglaCustomerResponse.getCreditBalance());
+        mCardNumberView.setText(lankaBanglaCustomerResponse.getCardNumber());
         mContinueButton.setText(R.string.pay_bill);
         infoView.setVisibility(View.VISIBLE);
-        cardNumberView.setVisibility(View.GONE);
+        mCustomerIDView.setVisibility(View.GONE);
+        mMinimumPayAmount = lankaBanglaCustomerResponse.getMinimumPay();
+        mCreditBalanceAmount = lankaBanglaCustomerResponse.getCreditBalance();
     }
 
     @Override
@@ -295,20 +357,20 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mCustomProgressDialog.dismissDialog();
-            mGetAmberItUserInfo = null;
-            mAmberITBillPayTask = null;
+            mGetLankaBanglaCardUserInfo = null;
+            mLankaBanglaCardBillPayTask = null;
         } else {
             try {
                 Gson gson = new Gson();
                 switch (result.getApiCommand()) {
-                    case Constants.COMMAND_GET_AMBERIT_CUSTOMER:
-                        amberITCustomerInfoResponse = gson.fromJson(result.getJsonString(), AmberITCustomerInfoResponse.class);
+                    case Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER:
+                        lankaBanglaCustomerResponse = gson.fromJson(result.getJsonString(), LankaBanglaCustomerResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                             setupView();
                         } else {
-                            Toast.makeText(getContext(), amberITCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), lankaBanglaCustomerResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                        mGetAmberItUserInfo = null;
+                        mGetLankaBanglaCardUserInfo = null;
                         break;
                     case Constants.COMMAND_GET_BUSINESS_RULE:
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -338,7 +400,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
                         }
                         mGetBusinessRuleTask = null;
                         break;
-                    case Constants.COMMAND_AMBERIT_BILL_PAY:
+                    case Constants.COMMAND_LANKABANGLA_BILL_PAY:
                         try {
                             mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
                             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
@@ -422,13 +484,13 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                             }
                         }
-                        mAmberITBillPayTask = null;
+                        mLankaBanglaCardBillPayTask = null;
                         break;
                 }
             } catch (Exception e) {
                 mProgressDialog.dismiss();
-                mGetAmberItUserInfo = null;
-                mAmberITBillPayTask = null;
+                mGetLankaBanglaCardUserInfo = null;
+                mLankaBanglaCardBillPayTask = null;
                 mGetBusinessRuleTask = null;
                 e.printStackTrace();
                 Toast.makeText(getContext(), getString(R.string.request_failed), Toast.LENGTH_LONG).show();

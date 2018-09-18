@@ -72,6 +72,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mDescoBillPayView;
     private View mDpdcBillPayView;
     private View mDozeBillPayView;
+    private View mLankaBanglaView;
     private View mAmberITBillPayView;
     private HashMap<String, String> mProviderAvailabilityMap;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
@@ -106,11 +107,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mDozeBillPayView = v.findViewById(R.id.carnival);
         mDpdcBillPayView = v.findViewById(R.id.dpdc);
         mAmberITBillPayView = v.findViewById(R.id.amberit);
+        mLankaBanglaView = v.findViewById(R.id.lankaBanglaView);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
-        getServiceProviderList();
+        //getServiceProviderList();
 
 
         if (ProfileInfoCacheManager.isBusinessAccount())
@@ -287,6 +289,33 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker.execute();
             }
         });
+
+        mLankaBanglaView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.LANKABANGLA) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.LANKABANGLA).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LANKABANGLA));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.LANKABANGLA);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+
 
 
         mWestZoneBillPayView.setOnClickListener(new View.OnClickListener() {

@@ -188,6 +188,15 @@ public class Constants {
     public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
     public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
     public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
+    public static final String VISA = "VISA";
+    public static final String MASTERCARD = "MASTERCARD";
+    public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER = "lankabangla/visa/";
+    public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER = "COMMAND_GET_LANKA_BANGLA_CUSTOMER";
+    public static final String LANKABANGLA = "LANKABANGLA";
+    public static final String COMMAND_LANKABANGLA_BILL_PAY = "COMMAND_LANKABANGLA_BILL_PAY";
+    public static final String URL_LANKABANGLA_VISA_BILL_PAY = "lankabangla/visa/billpay";
+    public static final String URL_LANKABANGLA_MASTERCARD_BILL_PAY = "lankabangla/mastercard/billpay";
+
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -890,4 +899,8 @@ public class Constants {
     public static final int RC_BARCODE_CAPTURE = 9001;
     public static final String PATH = "PATH";
 
+    public static String credit_balance = "Credit balance";
+    public static String minimun_pay = "Minimum pay";
+    public static String others = "Other";
+    public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER = "/lankabangla/mastercard/";
 }
