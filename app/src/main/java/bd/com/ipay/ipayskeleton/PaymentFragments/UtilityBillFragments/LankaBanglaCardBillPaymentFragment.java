@@ -182,7 +182,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
         } else {
             mAmount = amountEditable.toString();
             if (mAmount == null || mAmount.equals("")) {
-                Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG);
+                Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG).show();
                 return false;
             } else {
                 if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
@@ -230,7 +230,9 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
                             getCustomerInfo();
                         }
                     } else {
-                        attemptBillPayWithPinCheck();
+                        if (ifUserEligibleToPay()) {
+                            attemptBillPayWithPinCheck();
+                        }
                     }
                 } else {
                     Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
@@ -244,15 +246,13 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
-                    if (ifUserEligibleToPay()) {
-                        attemptBillPay(pin);
-                    }
+                    attemptBillPay(pin);
+
                 }
             });
         } else {
-            if (ifUserEligibleToPay()) {
-                attemptBillPay(null);
-            }
+            attemptBillPay(null);
+
         }
     }
 
