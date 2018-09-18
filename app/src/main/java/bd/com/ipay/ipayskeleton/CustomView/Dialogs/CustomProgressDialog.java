@@ -24,7 +24,6 @@ Library Github Link:   https://github.com/airbnb/lottie-android
 
 public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
     private Context context;
-    private View customView;
     private LottieAnimationView animationView;
     private TextView progressDialogTextView;
     private String currentState;
@@ -37,10 +36,10 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         createView();
     }
 
-    public void createView() {
-        customView = LayoutInflater.from(context).inflate(R.layout.view_custom_progress_dialog, null, false);
-        progressDialogTextView = (TextView) customView.findViewById(R.id.progress_dialog_text_view);
-        animationView = (LottieAnimationView) customView.findViewById(R.id.view_animation);
+    private void createView() {
+        View customView = LayoutInflater.from(context).inflate(R.layout.view_custom_progress_dialog, null, false);
+        progressDialogTextView = customView.findViewById(R.id.progress_dialog_text_view);
+        animationView = customView.findViewById(R.id.view_animation);
         animationView.setSpeed(1.1f);
         setUpAnimationAction();
         animationView.playAnimation();
@@ -120,7 +119,7 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         animationView.playAnimation();
     }
 
-    public void clearAnimation() {
+    private void clearAnimation() {
         animationView.clearAnimation();
     }
 }

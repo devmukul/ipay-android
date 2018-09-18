@@ -243,7 +243,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                 mPhotoUri = moneyRequest.getOriginatorProfile().getUserProfilePicture();
                 mReceiverName = moneyRequest.originatorProfile.getUserName();
                 mReceiverMobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
-                mDescription = moneyRequest.getDescriptionofRequest();
+                mDescription = moneyRequest.getDescriptionOfRequest();
                 mTime = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 mStatus = moneyRequest.getStatus();
                 mAmount = moneyRequest.getAmount();

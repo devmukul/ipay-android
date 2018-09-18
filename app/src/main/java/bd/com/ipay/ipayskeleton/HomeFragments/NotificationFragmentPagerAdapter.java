@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 
 public class NotificationFragmentPagerAdapter extends FragmentPagerAdapter {
-    public NotificationFragmentPagerAdapter(FragmentManager fm) {
+    NotificationFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 

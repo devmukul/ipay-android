@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -701,6 +702,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
+                final String outletName = transactionHistory.getOutletName();
 
                 if (balance != null) {
                     mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
@@ -735,7 +737,11 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 if (receiver != null && !receiver.equals("")) {
                     mReceiverView.setVisibility(View.VISIBLE);
-                    mReceiverView.setText(receiver);
+                    if(!TextUtils.isEmpty(outletName)) {
+                        mReceiverView.setText(receiver +" ("+outletName+")");
+                    }else{
+                        mReceiverView.setText(receiver);
+                    }
                 } else mReceiverView.setVisibility(View.GONE);
 
                 if (DateUtils.isToday(transactionHistory.getTime())) {
@@ -760,6 +766,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
+
+                            System.out.println("Test "+transactionHistory.toString());
                             Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
                             intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
                             startActivity(intent);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
     private int serviceId;
     private Integer statusCode;
     private String status;
+    private String outletName;
 
 
     @Nullable
@@ -90,11 +92,19 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         View v = inflater.inflate(R.layout.fragment_transaction_details, container, false);
 
         transactionHistory = getArguments().getParcelable(Constants.TRANSACTION_DETAILS);
+        System.out.println("Test "+transactionHistory.toString());
+
         serviceId = transactionHistory.getServiceID();
         purpose = transactionHistory.getPurpose();
 
         otherPartyNumber = transactionHistory.getAdditionalInfo().getNumber();
         otherPartyName = transactionHistory.getAdditionalInfo().getName();
+        outletName = transactionHistory.getOutletName();
+        System.out.println("Test otherPartyName "+otherPartyName);
+
+        System.out.println("Test outletName "+outletName);
+
+
 
         statusCode = transactionHistory.getStatusCode();
         status = transactionHistory.getStatus();
@@ -170,7 +180,11 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             otherImageView.setImageResource(iconId);
         }
 
-        mNameView.setText(otherPartyName);
+        if(!TextUtils.isEmpty(outletName)) {
+            mNameView.setText(otherPartyName+" ("+outletName+")");
+        }else{
+            mNameView.setText(otherPartyName);
+        }
         mMobileNumberView.setText(otherPartyNumber);
         purposeTextView.setText(purpose);
         statusTextView.setText(status);
