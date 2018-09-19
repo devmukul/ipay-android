@@ -9,11 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,9 +34,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.LankaBanglaAmountSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
@@ -47,21 +47,17 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements HttpResponseListener {
+public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements HttpResponseListener, LankaBanglaBillTypeSelectorBottomSheetFragment.PinInputListener {
     private TextView mNameTextView;
     private EditText mCardNumberEditText;
     private TextView mCreditBalanceView;
     private TextView mMinimumPayView;
-    private EditText mAmountSelectorEditText;
     private EditText mOtherAmountEditText;
     private Button mContinueButton;
     private View infoView;
@@ -71,6 +67,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
 
     private String mAmount;
     private String mCardNumber;
+    private LankaBanglaBillTypeSelectorBottomSheetFragment bottomSheetDialog;
 
     private String cardType;
 
@@ -81,15 +78,18 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
     private GenericBillPayResponse mGenericBillPayResponse;
     private CustomProgressDialog mCustomProgressDialog;
-    private LankaBanglaAmountSelectorDialog lankaBanglaAmountSelectorDialog;
     private List<String> mAmountTypes;
     private String mAmountType;
     private String mMinimumPayAmount;
     private String mCreditBalanceAmount;
     private View amountLayout;
 
+    private ImageView mCardIconImageView;
     private View mCustomerIDView;
     private View mInfoView;
+
+    private String REGEX_VISA_CARD_NUMBER = "^4[0-9]{6,}$";
+    private String REGEX_MASTERCARD_NUMBER = "^5[1-5][0-9]{5,}|222[1-9][0-9]{3,}|22[3-9][0-9]{4,}|2[3-6][0-9]{5,}|27[01][0-9]{4,}|2720[0-9]{3,}$";
 
     @Nullable
     @Override
@@ -117,45 +117,43 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
         mCreditBalanceView = (TextView) view.findViewById(R.id.credit_balance_view);
         mMinimumPayView = (TextView) view.findViewById(R.id.minimum_pay_view);
         mCardNumberEditText = view.findViewById(R.id.card_number_edit_text);
+        mCardIconImageView = (ImageView) view.findViewById(R.id.card_icon);
+
+        mCardNumberEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().length() == 16) {
+                    if (charSequence.toString().matches(REGEX_VISA_CARD_NUMBER)) {
+                        cardType = "VISA";
+                        mCardIconImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.visa));
+                    } else if (charSequence.toString().matches(REGEX_MASTERCARD_NUMBER)) {
+                        cardType = "MASTERCARD";
+                        mCardIconImageView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.mastercard));
+                    }
+                } else {
+                    cardType = "";
+                    mCardIconImageView.setImageDrawable(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         mCustomerIDView = view.findViewById(R.id.customer_id_view);
         infoView = view.findViewById(R.id.info_view);
         amountLayout = view.findViewById(R.id.amount_layout);
-        mAmountSelectorEditText = (EditText) view.findViewById(R.id.amount_selector_edit_text);
+
         mAmountTypes = new ArrayList<>();
         mAmountTypes.add(Constants.credit_balance);
         mAmountTypes.add(Constants.minimun_pay);
         mAmountTypes.add(Constants.others);
-        mAmountSelectorEditText.setFocusable(false);
-        mAmountSelectorEditText.setClickable(true);
-        mAmountSelectorEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lankaBanglaAmountSelectorDialog = new LankaBanglaAmountSelectorDialog(getContext(), mAmountTypes);
-                lankaBanglaAmountSelectorDialog.setOnResourceSelectedListener(new LankaBanglaAmountSelectorDialog.OnResourceSelectedListener() {
-                    @Override
-                    public void onResourceSelected(String amountType) {
-                        amountLayout.setVisibility(View.VISIBLE);
-                        mAmountType = amountType;
-                        if (mAmountType.equals(Constants.credit_balance)) {
-                            mAmountSelectorEditText.setText(Constants.credit_balance);
-                            mOtherAmountEditText.setText(mCreditBalanceAmount);
-                            mOtherAmountEditText.setEnabled(false);
-                        } else if (mAmountType.equals(Constants.minimun_pay)) {
-                            mAmountSelectorEditText.setText(Constants.minimun_pay);
-                            mOtherAmountEditText.setText(mMinimumPayAmount);
-                            mOtherAmountEditText.setEnabled(false);
-
-                        } else if (mAmountType.equals(Constants.others)) {
-                            mAmountSelectorEditText.setText(Constants.others);
-                            mOtherAmountEditText.setText("");
-                            mOtherAmountEditText.setEnabled(true);
-                        }
-                        lankaBanglaAmountSelectorDialog.dismiss();
-                    }
-                });
-                lankaBanglaAmountSelectorDialog.showDialog();
-            }
-        });
         mOtherAmountEditText = (EditText) view.findViewById(R.id.other_amount_edit_text);
         mContinueButton = view.findViewById(R.id.continue_button);
 
@@ -173,53 +171,6 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
 
     }
 
-    private boolean ifUserEligibleToPay() {
-        Editable amountEditable;
-        amountEditable = mOtherAmountEditText.getText();
-        if (amountEditable == null) {
-            Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG);
-            return false;
-        } else {
-            mAmount = amountEditable.toString();
-            if (mAmount == null || mAmount.equals("")) {
-                Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG).show();
-                return false;
-            } else {
-                if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-                    return false;
-                }
-
-                if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
-                    DialogUtils.showDialogVerificationRequired(getActivity());
-                    return false;
-                }
-                if (SharedPrefManager.ifContainsUserBalance()) {
-                    final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-                    final BigDecimal topUpAmount = new BigDecimal(mAmount);
-                    if (topUpAmount.compareTo(balance) > 0) {
-                        Toast.makeText(getContext(), getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
-                        return false;
-                    } else {
-                        final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                        final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-                        String errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
-                        if (errorMessage != null && !errorMessage.equals("")) {
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                            return false;
-                        }
-                    }
-
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.balance_not_available), Toast.LENGTH_LONG).show();
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     private void setUpButtonAction() {
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,30 +181,21 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
                             getCustomerInfo();
                         }
                     } else {
-                        if (ifUserEligibleToPay()) {
-                            attemptBillPayWithPinCheck();
-                        }
+                        bottomSheetDialog =
+                                LankaBanglaBillTypeSelectorBottomSheetFragment.getInstance();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("minimumAmount", mMinimumPayAmount);
+                        bundle.putString("creditAmount", mCreditBalanceAmount);
+
+                        bottomSheetDialog.setArguments(bundle);
+                        bottomSheetDialog.show(getChildFragmentManager(), "Custom Bottom Sheet");
+                        bottomSheetDialog.pinInputListener = LankaBanglaCardBillPaymentFragment.this;
                     }
                 } else {
                     Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
                 }
             }
         });
-    }
-
-    private void attemptBillPayWithPinCheck() {
-        if (UtilityBillPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
-                @Override
-                public void ifPinCheckedAndAdded(String pin) {
-                    attemptBillPay(pin);
-
-                }
-            });
-        } else {
-            attemptBillPay(null);
-
-        }
     }
 
     private void attemptBillPay(String pin) {
@@ -323,7 +265,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
                 mCardNumberEditText.setError("Please enter your lanka bangla card number");
                 return false;
             } else {
-                if (!(mCardNumber.startsWith("4") || mCardNumber.startsWith("5"))) {
+                if (!(mCardNumber.matches(REGEX_VISA_CARD_NUMBER)) && !(mCardNumber.matches(REGEX_MASTERCARD_NUMBER))) {
                     mCardNumberEditText.setError("Invalid Visa/Mastercard number");
                     return false;
                 } else {
@@ -496,6 +438,13 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
                 Toast.makeText(getContext(), getString(R.string.request_failed), Toast.LENGTH_LONG).show();
             }
         }
+    }
 
+    @Override
+    public void onPinInput(String pin, String amount, String billType) {
+        mAmount = amount;
+        mAmountType = billType;
+        attemptBillPay(pin);
+        bottomSheetDialog.dismiss();
     }
 }

@@ -375,7 +375,7 @@
         <activity
             android:name=".QRScanner.BarcodeCaptureActivity"
             android:label="Scan QR Code"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Activities.IPayHereActivity"
