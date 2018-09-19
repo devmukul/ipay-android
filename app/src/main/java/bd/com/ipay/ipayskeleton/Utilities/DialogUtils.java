@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -78,7 +79,7 @@ public class DialogUtils {
         dialog.show();
     }
 
-    public static void showCancelableAlertDialog(final Context context, String message){
+    public static void showCancelableAlertDialog(final Context context, String message) {
         MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .cancelable(true)
                 .content(message)
@@ -190,18 +191,20 @@ public class DialogUtils {
         dialog.show();
     }
 
-    public static void showNecessaryDialogForDeeplinkAction(final Context context, String message) {
+    public static void showNecessaryDialogForDeepLinkAction(final Context context, String message) {
         MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .cancelable(false)
+                .title(android.R.string.dialog_alert_title)
                 .content(message)
-                .positiveText(R.string.ok)
+                .positiveText(android.R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        ((Activity) context).finishAffinity();
+                        if (context instanceof AppCompatActivity)
+                            ((AppCompatActivity) context).finishAffinity();
                     }
                 })
-                .show();
+                .build();
         dialog.show();
     }
 }
