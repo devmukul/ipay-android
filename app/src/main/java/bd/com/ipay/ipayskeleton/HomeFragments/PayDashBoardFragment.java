@@ -72,6 +72,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mDescoBillPayView;
     private View mDpdcBillPayView;
     private View mDozeBillPayView;
+    private View mAmberITBillPayView;
     private HashMap<String, String> mProviderAvailabilityMap;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -104,6 +105,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mWestZoneBillPayView = v.findViewById(R.id.west_zone);
         mDozeBillPayView = v.findViewById(R.id.carnival);
         mDpdcBillPayView = v.findViewById(R.id.dpdc);
+        mAmberITBillPayView = v.findViewById(R.id.amberit);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
@@ -259,6 +261,34 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker.execute();
             }
         });
+
+
+        mAmberITBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.AMBERIT) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.AMBERIT).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.AMBERIT));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.AMBERIT);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+
         mWestZoneBillPayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
