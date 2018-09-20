@@ -483,6 +483,7 @@
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/text_size_extra_smaller_value11" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/lankaBanglaView"
                             android:layout_width="0dp"
@@ -500,7 +501,7 @@
                                 android:elevation="@dimen/value2"
                                 android:padding="@dimen/value15"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/ic_lankabangla"
+                                android:src="@drawable/ic_lankabd2"
                                 card_view:riv_corner_radius="@dimen/value2" />
 
                             <TextView
