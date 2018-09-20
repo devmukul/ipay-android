@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyConfirmActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -86,17 +85,11 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
     private void setUpViews(View view) {
         mNoteEditText = (EditText) view.findViewById(R.id.note_edit_text);
         mPinEditText = (EditText) view.findViewById(R.id.pin_edit_text);
-        mPinEditText.requestFocus();
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mDescriptionTextView = (TextView) view.findViewById(R.id.textview_description);
         mSendMoneyButton = (Button) view.findViewById(R.id.request_money_button);
-        if (!RequestMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            mPinEditText.setVisibility(View.GONE);
-        } else {
-            mPinEditText.setVisibility(View.VISIBLE);
-        }
         getDataFromBundle();
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
@@ -132,14 +125,12 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
     }
 
     private void showSnackBar(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(parentLayout, errorMessage, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(parentLayout, errorMessage, Snackbar.LENGTH_SHORT);
         View view = snackbar.getView();
         view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
         TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 10, 0, 0);
-        textView.setLayoutParams(layoutParams);
-        textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
+        textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
         textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value10));
         snackbar.show();
     }

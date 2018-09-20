@@ -214,7 +214,7 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
             TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             textView.setLayoutParams(layoutParams);
-            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
+            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
             textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value4));
             snackbar.show();
             cancel = true;
