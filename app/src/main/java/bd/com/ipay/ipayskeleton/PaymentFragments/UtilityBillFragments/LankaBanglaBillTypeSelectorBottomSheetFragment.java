@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class LankaBanglaBillTypeSelectorBottomSheetFragment extends BottomSheetDialogFragment {
@@ -100,31 +101,27 @@ public class LankaBanglaBillTypeSelectorBottomSheetFragment extends BottomSheetD
             @Override
             public void onClick(View view) {
                 if (selectedRadioID == R.id.credit_amount) {
-                    if (Long.parseLong(mCreditAmount) != 0) {
+                    if (ifUserEligibleToPay(mCreditAmount)) {
                         selectedAmount = mCreditAmount;
                         selectedBillType = Constants.credit_balance;
                         attemptBillPayWithPinCheck();
-                    } else {
-                        selectedBillType = "";
-                        selectedAmount = "";
-                        Toast.makeText(getContext(), "You can't pay 0 tk", Toast.LENGTH_LONG).show();
                     }
                 } else if (selectedRadioID == R.id.minimum_amount) {
-                    if (Long.parseLong(mMinAmount) != 0) {
+                    if (ifUserEligibleToPay(mMinAmount)) {
                         selectedAmount = mMinAmount;
-                        selectedBillType = Constants.minimun_pay;
+                        selectedBillType = Constants.minimum_pay;
                         attemptBillPayWithPinCheck();
-                    } else {
-                        selectedAmount = "";
-                        selectedBillType = "";
-                        Toast.makeText(getContext(), "You can't pay 0 tk", Toast.LENGTH_LONG).show();
                     }
                 } else if (selectedRadioID == R.id.other_amount) {
-                    if (ifUserEligibleToPay()) {
-                        selectedBillType = Constants.others;
-                        selectedAmount = otherAmount;
-                        attemptBillPayWithPinCheck();
+                    if (!isFieldEmpty()) {
+                        if (ifUserEligibleToPay(otherAmount)) {
+                            selectedAmount = otherAmount;
+                            selectedBillType = Constants.others;
+                            attemptBillPayWithPinCheck();
+                        }
                     }
+                } else {
+                    Toast.makeText(getContext(), "You must select one of the options", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -160,43 +157,54 @@ public class LankaBanglaBillTypeSelectorBottomSheetFragment extends BottomSheetD
         mMinimumAmountRadioButton.setText("Minimum Amount ( " + mMinAmount + " TK )");
     }
 
-    private boolean ifUserEligibleToPay() {
+    private boolean isFieldEmpty() {
         Editable amountEditable;
         amountEditable = mOtherAmountEditText.getText();
         if (amountEditable == null) {
-            mOtherAmountEditText.setError("Please provide an amount to pay");
-            return false;
+            Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG).show();
+            return true;
         } else {
             otherAmount = amountEditable.toString();
             if (otherAmount == null || otherAmount.equals("")) {
-                mOtherAmountEditText.setError("Please provide an amount to pay");
+                Toast.makeText(getContext(), "Please provide an amount to pay", Toast.LENGTH_LONG).show();
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private boolean ifUserEligibleToPay(String amount) {
+        if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        } else if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        } else if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+            final BigDecimal topUpAmount = new BigDecimal(amount);
+            if (topUpAmount.compareTo(balance) > 0) {
+                Toast.makeText(getContext(), getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
                 return false;
             } else {
-                if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-                    return false;
-                }
-
-                if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
-                    DialogUtils.showDialogVerificationRequired(getActivity());
-                    return false;
-                }
-                if (SharedPrefManager.ifContainsUserBalance()) {
-                    final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-                    final BigDecimal topUpAmount = new BigDecimal(otherAmount);
-                    if (topUpAmount.compareTo(balance) > 0) {
-                        Toast.makeText(getContext(), getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
-                        return false;
-                    }
-
+                String errorMessage = null;
+                final BigDecimal minimumSendMoneyAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                final BigDecimal maximumSendMoneyAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+                errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(amount), minimumSendMoneyAmount, maximumSendMoneyAmount);
+                if (errorMessage == null) {
+                    return true;
                 } else {
-                    mOtherAmountEditText.setError(getString(R.string.balance_not_available));
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                     return false;
                 }
             }
+
+        } else {
+            Toast.makeText(getContext(), getString(R.string.balance_not_available), Toast.LENGTH_LONG).show();
+            return false;
         }
-        return true;
     }
 
     public interface PinInputListener {

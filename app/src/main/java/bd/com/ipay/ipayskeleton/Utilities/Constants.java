@@ -903,7 +903,7 @@ public class Constants {
     public static final String ORDER_CHECKOUT_CANCELLED = "cancelled";
 
     public static String credit_balance = "Credit balance";
-    public static String minimun_pay = "Minimum pay";
+    public static String minimum_pay = "Minimum pay";
     public static String others = "Other";
     public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER = "/lankabangla/mastercard/";
 }

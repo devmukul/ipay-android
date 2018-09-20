@@ -152,7 +152,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
 
         mAmountTypes = new ArrayList<>();
         mAmountTypes.add(Constants.credit_balance);
-        mAmountTypes.add(Constants.minimun_pay);
+        mAmountTypes.add(Constants.minimum_pay);
         mAmountTypes.add(Constants.others);
         mOtherAmountEditText = (EditText) view.findViewById(R.id.other_amount_edit_text);
         mContinueButton = view.findViewById(R.id.continue_button);
