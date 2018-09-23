@@ -115,9 +115,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
         if (getActivity() != null) {
             if (mGetOrderDetailsTask == null) {
                 if (mCustomProgressDialog != null) {
-                    mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+                    mCustomProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
                     mCustomProgressDialog.setCancelable(false);
-                    mCustomProgressDialog.setMessage(getString(R.string.please_wait));
+                    mCustomProgressDialog.setMessage(getString(R.string.loading));
                     mCustomProgressDialog.show();
                 }
                 String mUri = new GetOrderDetailsRequestBuilder(orderID).getGeneratedUri();
@@ -199,7 +199,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
 
     private void attemptCancelPayment() {
         if (mCancelOrderTask == null) {
-            if (mGetOrderDetailsTask == null) {
+            if (mCustomProgressDialog != null) {
                 mCustomProgressDialog.setMessage(getString(R.string.please_wait));
                 mCustomProgressDialog.show();
             }
@@ -240,12 +240,17 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
         }
     }
 
-    private void launchThirdPartyApp(String message) {
+    private void launchThirdPartyApp(String message, String redirectUrl) {
         final String thirdPartyAppUrl = "ipay" + mOrderDetailsResponse.getMerchantAppUriSchemeAndroid() + "://" + orderID + "/" + message;
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl)));
         } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));
+                startActivity(intent);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
         if (getActivity() != null)
             getActivity().finishAffinity();
@@ -253,10 +258,11 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (mCustomProgressDialog != null)
-            mCustomProgressDialog.dismiss();
+        if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND
+                && result.getApiCommand().equals(Constants.COMMAND_GET_ORDER_DETAILS)) {
+            if (mCustomProgressDialog != null)
+                mCustomProgressDialog.dismiss();
 
-        if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND && result.getApiCommand().equals(Constants.COMMAND_GET_ORDER_DETAILS)) {
             Gson gson = new Gson();
             mOrderDetailsResponse = gson.fromJson(result.getJsonString(), OrderDetailsResponse.class);
             DialogUtils.showNecessaryDialogForDeepLinkAction(getActivity(), mOrderDetailsResponse.getMessage());
@@ -309,6 +315,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
                     mGetBusinessRuleTask = null;
                     break;
                 case Constants.COMMAND_GET_ORDER_DETAILS:
+                    if (mCustomProgressDialog != null)
+                        mCustomProgressDialog.dismiss();
+
                     mOrderDetailsResponse = gson.fromJson(result.getJsonString(), OrderDetailsResponse.class);
                     try {
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -327,39 +336,49 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
                     final GetPayByDeepLinkResponse getPayByDeepLinkResponse = gson.fromJson(result.getJsonString(), GetPayByDeepLinkResponse.class);
                     try {
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                            if (mCustomProgressDialog != null)
+                            if (mCustomProgressDialog != null) {
+                                mCustomProgressDialog.setTitle(R.string.success);
                                 mCustomProgressDialog.showSuccessAnimationAndMessage(getPayByDeepLinkResponse.getMessage());
+                            }
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    launchThirdPartyApp(Constants.ORDER_CHECKOUT_SUCCESS);
+                                    launchThirdPartyApp(Constants.ORDER_CHECKOUT_SUCCESS, getPayByDeepLinkResponse.getRedirectUrl());
                                 }
                             }, 2000);
 
                         } else {
-                            if (mCustomProgressDialog != null)
+                            if (mCustomProgressDialog != null) {
+                                mCustomProgressDialog.setTitle(R.string.failed);
                                 mCustomProgressDialog.showFailureAnimationAndMessage(getPayByDeepLinkResponse.getMessage());
+                            }
                             if (!getPayByDeepLinkResponse.getMessage().toLowerCase().contains(Constants.INVALID_CREDENTIAL)) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        launchThirdPartyApp(Constants.ORDER_CHECKOUT_FAILED);
+                                        launchThirdPartyApp(Constants.ORDER_CHECKOUT_FAILED, getPayByDeepLinkResponse.getRedirectUrl());
                                     }
                                 }, 2000);
                             }
 
                         }
                     } catch (Exception e) {
+                        if (mCustomProgressDialog != null) {
+                            mCustomProgressDialog.dismissDialog();
+                        }
                         Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
                     }
                     mPaymentTask = null;
                     break;
                 case Constants.COMMAND_CANCEL_ORDER:
+                    if (mCustomProgressDialog != null) {
+                        mCustomProgressDialog.dismissDialog();
+                    }
                     CancelOrderResponse mCancelOrderResponse = gson.fromJson(result.getJsonString(),
                             CancelOrderResponse.class);
                     try {
                         Toast.makeText(getContext(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        launchThirdPartyApp(Constants.ORDER_CHECKOUT_CANCELLED);
+                        launchThirdPartyApp(Constants.ORDER_CHECKOUT_CANCELLED, mCancelOrderResponse.getRedirectUrl());
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
