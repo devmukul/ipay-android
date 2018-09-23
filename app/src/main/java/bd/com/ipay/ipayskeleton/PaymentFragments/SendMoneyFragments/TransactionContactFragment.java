@@ -196,7 +196,11 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
             @Override
             public void onClick(View view) {
                 mPhoneNumber = mQuery;
-                getProfileInfo(mQuery);
+                if (ContactEngine.formatMobileNumberBD(mPhoneNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+                    Toast.makeText(getContext(), getString(R.string.you_cannot_send_money_to_your_number), Toast.LENGTH_LONG).show();
+                } else {
+                    getProfileInfo(mQuery);
+                }
             }
         });
         mProgressDialog = new ProgressDialog(getActivity());
@@ -602,7 +606,12 @@ public class TransactionContactFragment extends Fragment implements LoaderManage
                         bundle.putString("name", originalName);
                         bundle.putString("imageUrl", profilePictureUrlQualityMedium);
                         bundle.putString("number", mobileNumber);
-                        switchToDesiredFragment(bundle);
+                        if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+                            Toast.makeText(getContext(), getString(R.string.you_cannot_send_money_to_your_number), Toast.LENGTH_LONG).show();
+                        } else {
+                            switchToDesiredFragment(bundle);
+                        }
+
                     }
                 });
             }
