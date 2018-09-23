@@ -95,8 +95,8 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utilities.hideKeyboard(getActivity());
                 if(verifyInput()){
+                    Utilities.hideKeyboard(getActivity());
                     attemptRequestMoney();
                 }
             }

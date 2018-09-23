@@ -208,14 +208,13 @@ public class RequestMoneyEnterAmountFragment extends Fragment implements HttpRes
         }
 
         if (errorMessage != null) {
-            Snackbar snackbar = Snackbar.make(mParentLayout, errorMessage, Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(mParentLayout, errorMessage, Snackbar.LENGTH_SHORT);
             View view = snackbar.getView();
             view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
             TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            textView.setLayoutParams(layoutParams);
             textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
-            textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value4));
+            textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value10));
             snackbar.show();
             cancel = true;
         }
