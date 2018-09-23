@@ -162,6 +162,7 @@
     <string name="verification_required_message">You need to get verified to access this feature. Please complete the verification process and try again.</string>
     <string name="please_wait_loading">Please wait. Loading…</string>
     <string name="please_wait">Please wait…</string>
+    <string name="please_wait_no_ellipsis">Please wait</string>
     <string name="loading">Loading…</string>
     <string name="load_more">Load more…</string>
     <string name="student_id">Student ID</string>
@@ -1109,6 +1110,7 @@
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
     <string name="tk">Tk</string>
     <string name="success">Successful</string>
+    <string name="failed">Failed</string>
     <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
     <string name="manage_account">Manage Account</string>
