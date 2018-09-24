@@ -95,12 +95,23 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
         Date date = Utilities.formatDateFromString(mDateOfBirth);
         mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), date, this);
 
-        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDatePickerDialog.show();
-            }
-        });
+        if (ProfileInfoCacheManager.isAccountVerified())
+            mNameEditText.setEnabled(false);
+        else {
+            mNameEditText.setEnabled(true);
+        }
+
+        if (ProfileInfoCacheManager.isAccountVerified())
+            mDateOfBirthEditText.setEnabled(false);
+        else {
+            mNameEditText.setEnabled(true);
+            mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDatePickerDialog.show();
+                }
+            });
+        }
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
