@@ -162,6 +162,7 @@
     <string name="verification_required_message">You need to get verified to access this feature. Please complete the verification process and try again.</string>
     <string name="please_wait_loading">Please wait. Loading…</string>
     <string name="please_wait">Please wait…</string>
+    <string name="please_wait_no_ellipsis">Please wait</string>
     <string name="loading">Loading…</string>
     <string name="load_more">Load more…</string>
     <string name="student_id">Student ID</string>
@@ -1109,6 +1110,7 @@
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
     <string name="tk">Tk</string>
     <string name="success">Successful</string>
+    <string name="failed">Failed</string>
     <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
     <string name="manage_account">Manage Account</string>
@@ -1213,11 +1215,13 @@
     <string name="dpdc">Dpdc</string>
     <string name="enter_location_code">Enter location code</string>
     <string name="carnival_bill_pay_message">Please enter your Carnival user ID</string>
-    <string name="current_package_rate">Current Package Rate</string>
+    <string name="current_package_rate">Amount</string>
     <string name="carnival">Carnival</string>
     <string name="you_cant_avail_this_service">You can\'t avail this service now , please try again later</string>
     <string name="active">Active</string>
     <string name="request_failed">Request Failed</string>
+    <string name="amber_it_customer_id">AmberIT Customer ID</string>
+    <string name="amberit_bill_pay_message">Please enter your AmberIT customer ID and amount</string>
     <string name="swipe_up_to_see_more">SWIPE UP TO SEE MORE</string>
     <string name="swipe_down_to_close">SWIPE DOWN TO CLOSE</string>
     <string name="claim">Claim</string>
@@ -1244,4 +1248,10 @@
     <string name="request_money_from">You are requesting money from</string>
     <string name="send_money_confirm">Send Money Confirm</string>
     <string name="request_money_confirm">Request Money Confirm</string>
+    <string name="amberIT">AmberIT</string>
+    <string name="lanka_bangla_card_number">Lanka Bangla card number</string>
+    <string name="lanka_bangla_bill_pay_message">Please enter your Lanka Bangla Visa/Mastercard card number</string>
+    <string name="card_number">Card number</string>
+    <string name="credit_balance">Credit balance</string>
+    <string name="minimum_pay">Minimum pay</string>
 </resources>
