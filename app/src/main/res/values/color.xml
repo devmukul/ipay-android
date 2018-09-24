@@ -7,9 +7,9 @@
     <color name="colorPrimaryLighter">#26A69A</color>
     <color name="colorLightPrimaryAccent">#26A69A</color>
     <color name="colorAccent">#26A69A</color>
-    <color name="colorNotificationiPay">#EBF9F7</color>
+    <color name="colorNotificationIPay">#EBF9F7</color>
     <color name="colorAmber">#FFC107</color>
-    <color name="colorToolbarSendMoney">#01D2BF</color>
+    <color name="colorIPayTransactionAction">#01D2BF</color>
     <color name="colorBorderGray">#c3c1c1</color>
     <color name="colorTextPrimary">#6D6D6D</color>
     <color name="colorTextSecondary">#B3000000</color>

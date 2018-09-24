@@ -269,6 +269,7 @@
     <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>
     <string name="resend">Resend Code</string>
     <string name="send_money">Send Money</string>
+    <string name="continue_button_text">Continue</string>
     <string name="continue_send_money">Continue</string>
     <string name="revert">Transaction Revert</string>
     <string name="continue_request_money">Continue</string>
@@ -1068,7 +1069,7 @@
     <string name="add_bank_onboard">Add bank info</string>
     <string name="skip_now">Skip now</string>
 
-    <string name="balance_holder">%1$s BDT</string>
+    <string name="balance_holder">Tk. %1$s</string>
 
     <string name="onboard_step_one_title">Great! you\'re almost done</string>
     <string name="onboard_photo_id_upload_title">Upload photo ID</string>
@@ -1108,7 +1109,6 @@
     <string name="continue_message">Continue</string>
     <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
-    <string name="tk">Tk</string>
     <string name="success">Successful</string>
     <string name="failed">Failed</string>
     <string name="you_can_do_following_things">You can do following things</string>
@@ -1232,16 +1232,12 @@
     <string name="receive_offer_from_merchant_message">Please receive your gift from the merchant.</string>
     <string name="start_date_title">Start Date:</string>
     <string name="end_date_title">End Date:</string>
-    <string name="amberIT">AmberIT</string>
-    <string name="lanka_bangla_card_number">Lanka Bangla card number</string>
-    <string name="lanka_bangla_bill_pay_message">Please enter your Lanka Bangla Visa/Mastercard card number</string>
-    <string name="card_number">Card number</string>
-    <string name="credit_balance">Credit balance</string>
-    <string name="minimum_pay">Minimum pay</string>
     <string name="send_money_helper_text">You can send money from your iPay account to another iPay member\'s account.To send money, you just have to follow following steps</string>
     <string name="send_money_step_one">Search <b>Name/Mobile number</b> or select the person from the list</string>
+    <string name="request_money_step_one">@string/send_money_step_one</string>
     <string name="ok_got_it">Ok, I got it !</string>
     <string name="send_money_step_three">Write some <b>Note</b>, Done !</string>
+    <string name="request_money_step_three">@string/send_money_step_three</string>
     <string name="send_money_step_two">Insert <b>amount</b> you want to send</string>
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
@@ -1260,4 +1256,16 @@
     <string name="card_number">Card number</string>
     <string name="credit_balance">Credit balance</string>
     <string name="minimum_pay">Minimum pay</string>
+    <string name="something_went_wrong">Something Went Wrong!</string>
+    <string name="empty_string" translatable="false" />
+    <string name="zero_amount">00.00</string>
+    <string name="tk">Tk</string>
+    <string name="send_money_confirmation_message"><![CDATA[<p>You are sending Tk. <b style="color:#6ac159;">%1$s</b> to</p>]]></string>
+    <string name="request_money_confirmation_message"><![CDATA[<p>You are requesting Tk. <b style="color:#6ac159;">%1$s</b> from</p>]]></string>
+    <string name="send_money_confirmation_dummy_message">You are sending Tk. 1,000,000 to</string>
+    <string name="dummy_name">John Doe</string>
+    <string name="short_note_optional_hint">Write a short note (Optional)</string>
+    <string name="short_note_hint">Write a short note</string>
+    <string name="please_enter_a_pin">Please enter a pin</string>
+    <string name="minimum_pin_length_message">Pin must be atleast 4 digits.</string>
 </resources>

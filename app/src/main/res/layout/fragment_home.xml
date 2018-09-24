@@ -248,7 +248,7 @@
                         android:layout_weight="1">
 
                         <LinearLayout
-                            android:id="@+id/button_send_money"
+                            android:id="@+id/continue_button"
                             style="@style/HomeImageLinearLayoutStyleHorizontal"
                             android:layout_weight="1">
 

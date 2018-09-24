@@ -5,7 +5,7 @@
     android:background="@color/colorWhite">
 
     <TextView
-        android:id="@+id/contact_list_empty"
+        android:id="@+id/contact_list_empty_message_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

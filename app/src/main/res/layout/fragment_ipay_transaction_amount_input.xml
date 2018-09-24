@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_transaction"
+    tools:context=".Activities.IPayTransactionActionActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTransparent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorTransparent"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:title="@string/empty_string"
+            app:titleTextColor="@android:color/white" />
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/value50"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/value28"
+            android:layout_marginRight="@dimen/value28"
+            android:background="@android:color/transparent"
+            android:fadingEdge="none"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/transaction_description_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:gravity="center"
+                    android:text="@string/send_money_to"
+                    android:textColor="#ccf3f0"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/profile_image_view"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_profile"
+                    app:riv_oval="true" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/amount_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/value12"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/value20"
+                        android:paddingRight="@dimen/value20"
+                        android:text="@string/zero_amount"
+                        android:textColor="@color/colorWhite"
+                        android:textColorHint="@color/colorWhite"
+                        android:textSize="@dimen/text_size_transaction_value" />
+
+                    <EditText
+                        android:id="@+id/amount_dummy_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/value12"
+                        android:background="@android:color/transparent"
+                        android:cursorVisible="false"
+                        android:fontFamily="sans-serif-light"
+                        android:hint="@string/empty_string"
+                        android:inputType="number"
+                        android:maxLength="8"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/value20"
+                        android:paddingRight="@dimen/value20"
+                        android:textColor="@android:color/transparent"
+                        android:textColorHint="@color/colorWhite"
+                        android:textSize="@dimen/text_size_transaction_value"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@id/amount_text_view"
+                        android:layout_alignRight="@id/amount_text_view"
+                        android:layout_alignTop="@id/amount_text_view"
+                        android:layout_marginTop="@dimen/value6"
+                        android:text="@string/tk"
+                        android:textColor="@color/colorWhite" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#66d8cd" />
+
+                <LinearLayout
+                    android:id="@+id/balance_info_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/value12"
+                        android:gravity="center"
+                        android:text="@string/your_ipay_balance"
+                        android:textColor="#ccf3f0"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/ipay_balance_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/value50"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimaryButton"
+        android:text="@string/continue_send_money"
+        android:textColor="@color/colorWhite" />
+</android.support.design.widget.CoordinatorLayout>

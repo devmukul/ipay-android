@@ -160,8 +160,8 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.PaymentActivities.SendMoneyActivity"
-            android:label="@string/send_money"
+            android:name=".Activities.IPayTransactionActionActivity"
+            android:label="@string/transaction"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -190,12 +190,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.SendMoneyReviewActivity"
-            android:label="@string/send_money"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
             android:name=".Activities.PaymentActivities.RequestPaymentReviewActivity"
             android:label="@string/request_payment"
             android:screenOrientation="portrait"
@@ -206,13 +200,6 @@
             android:label="@string/make_payment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation" />
-
-        <activity
-            android:name=".Activities.PaymentActivities.RequestMoneyActivity"
-            android:label="@string/request_money"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
             android:name=".Activities.InviteFriendActivity"
@@ -375,7 +362,7 @@
         <activity
             android:name=".QRScanner.BarcodeCaptureActivity"
             android:label="Scan QR Code"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Activities.IPayHereActivity"

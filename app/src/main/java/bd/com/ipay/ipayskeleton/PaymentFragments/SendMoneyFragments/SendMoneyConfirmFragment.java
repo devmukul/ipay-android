@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyConfirmActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -92,11 +91,6 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mDescriptionTextView = (TextView) view.findViewById(R.id.textview_description);
         mSendMoneyButton = (Button) view.findViewById(R.id.send_money_button);
-        if (!SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            mPinEditText.setVisibility(View.GONE);
-        } else {
-            mPinEditText.setVisibility(View.VISIBLE);
-        }
         getDataFromBundle();
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {

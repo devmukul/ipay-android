@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    tools:background="@color/colorPrimary">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_transaction"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -15,7 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/value24"
+            android:layout_marginEnd="@dimen/value20"
+            android:layout_marginLeft="@dimen/value20"
             android:layout_marginRight="@dimen/value20"
+            android:layout_marginStart="@dimen/value20"
+            android:contentDescription="@string/send_money_helper_text"
             android:src="@drawable/send_money_help_icon" />
 
         <TextView
@@ -29,86 +34,48 @@
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_size_small_medium" />
 
-        <LinearLayout
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="@dimen/value48"
             android:layout_marginRight="@dimen/value48"
-            android:orientation="horizontal">
+            android:drawableLeft="@drawable/drawable_left_tick"
+            android:drawablePadding="@dimen/value10"
+            android:drawableStart="@drawable/drawable_left_tick"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/send_money_step_one"
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp" />
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginRight="@dimen/value5"
-                android:layout_marginTop="@dimen/value2"
-                android:src="@drawable/drawable_left_tick" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="2dp"
-                android:text="@string/send_money_step_one"
-                android:textColor="@color/colorWhite"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="@dimen/value48"
             android:layout_marginRight="@dimen/value48"
-            android:orientation="horizontal">
+            android:drawableLeft="@drawable/drawable_left_tick"
+            android:drawablePadding="@dimen/value10"
+            android:drawableStart="@drawable/drawable_left_tick"
+            android:lineSpacingExtra="2dp"
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginRight="@dimen/value5"
-                android:layout_marginTop="@dimen/value2"
-                android:src="@drawable/drawable_left_tick" />
+            android:text="@string/send_money_step_two"
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="2dp"
-                android:text="@string/send_money_step_two"
-                android:textColor="@color/colorWhite"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="@dimen/value48"
             android:layout_marginRight="@dimen/value48"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginRight="@dimen/value5"
-                android:layout_marginTop="@dimen/value2"
-                android:src="@drawable/drawable_left_tick" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="2dp"
-                android:text="@string/send_money_step_three"
-                android:textColor="@color/colorWhite"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/ok_button"
-            style="@style/ButtonPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/value32"
-            android:layout_marginRight="@dimen/value32"
-            android:layout_marginTop="@dimen/value50"
-            android:text="@string/ok_got_it" />
-
+            android:drawableLeft="@drawable/drawable_left_tick"
+            android:drawablePadding="@dimen/value10"
+            android:drawableStart="@drawable/drawable_left_tick"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/send_money_step_three"
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp" />
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

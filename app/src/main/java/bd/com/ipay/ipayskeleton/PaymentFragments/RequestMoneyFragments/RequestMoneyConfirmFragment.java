@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyConfirmActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -90,6 +91,11 @@ public class RequestMoneyConfirmFragment extends BaseFragment implements HttpRes
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mDescriptionTextView = (TextView) view.findViewById(R.id.textview_description);
         mSendMoneyButton = (Button) view.findViewById(R.id.request_money_button);
+        if (!SentReceivedRequestReviewActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            mPinEditText.setVisibility(View.GONE);
+        } else {
+            mPinEditText.setVisibility(View.VISIBLE);
+        }
         getDataFromBundle();
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -35,10 +35,9 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -83,7 +82,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private BottomSheetLayout mBottomSheetLayout;
     private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
     private SearchView mSearchView;
     private TextView mEmptyContactsTextView;
     private View mSheetViewNonIpayMember;
@@ -102,10 +100,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private String mInviteMessage;
 
     private HttpRequestPostAsyncTask mSendInviteTask = null;
-    private SendInviteResponse mSendInviteResponse;
     private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
     private HttpRequestPostAsyncTask mIntroduceTask = null;
-    private AskForIntroductionResponse mAskForIntroductionResponse;
     private ProgressDialog mProgressDialog;
 
     private ContactListAdapter mAdapter;
@@ -121,10 +117,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int nameIndex;
     private int originalNameIndex;
     private int phoneNumberIndex;
-    private int profilePictureUrlIndex;
     private int profilePictureUrlQualityMediumIndex;
     private int profilePictureUrlQualityHighIndex;
-    private int relationshipIndex;
     private int verificationStatusIndex;
     private int accountTypeIndex;
     private int isMemberIndex;
@@ -134,8 +128,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!isDialogFragment())
-            setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -145,17 +138,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
 
         // If the fragment is a dialog fragment, we are using the searchview at the bottom.
         // Otherwise, we are using the searchview from the action bar.
-        if (!isDialogFragment()) {
-            if (mBottomSheetLayout != null)
-                setUpBottomSheet();
-        }
-        mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
+        if (mBottomSheetLayout != null)
+            setUpBottomSheet();
+        mSearchView = v.findViewById(R.id.search_contacts);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
 
@@ -173,9 +164,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
 
-        mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
+        mEmptyContactsTextView = v.findViewById(R.id.contact_list_empty_message_text_view);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView = v.findViewById(R.id.contact_list);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new ContactListAdapter();
@@ -205,6 +196,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         super.onDestroyView();
     }
 
+    @NonNull
+    @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -214,7 +207,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
 
                 // TODO hack
-                /**
+                /*
                  * Caution: It takes some time to load invite response from the server. So if you are
                  * loading this Fragment from Contacts page, it is very much possible that invitee list
                  * will be null. This is generally not a problem because invitee list is not used
@@ -237,10 +230,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
                     originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-                    profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
                     profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
-                    relationshipIndex = cursor.getColumnIndex(DBConstants.KEY_RELATIONSHIP);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
                     isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
@@ -258,18 +249,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         populateList(data, mShowVerifiedUsersOnly ?
                 getString(R.string.no_verified_contacts) : getString(R.string.no_contacts));
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
-    }
-
-    boolean isDialogFragment() {
-        return false;
     }
 
     @Override
@@ -370,10 +357,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         this.mBottomSheetLayout = bottomSheetLayout;
     }
 
+    @SuppressLint("InflateParams")
     private void setUpBottomSheet() {
-        mSheetViewNonIpayMember = getActivity().getLayoutInflater()
-                .inflate(R.layout.sheet_view_contact_non_member, null);
-        final Button mInviteButton = (Button) mSheetViewNonIpayMember.findViewById(R.id.button_invite);
+        mSheetViewNonIpayMember = LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_contact_non_member, null);
+        final Button mInviteButton = mSheetViewNonIpayMember.findViewById(R.id.button_invite);
 
         if (ContactsHolderFragment.mGetInviteInfoResponse != null &&
                 ContactsHolderFragment.mGetInviteInfoResponse.invitees.contains(mSelectedNumber)) {
@@ -390,15 +377,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             });
         }
-        mSheetViewIpayMember = getActivity().getLayoutInflater()
-                .inflate(R.layout.sheet_view_contact_member, null);
+        mSheetViewIpayMember = LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_contact_member, null);
 
-        Button mSendMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_send_money);
+        Button mSendMoneyButton = mSheetViewIpayMember.findViewById(R.id.continue_button);
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             @ValidateAccess(ServiceIdConstants.SEND_MONEY)
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY);
                 intent.putExtra(Constants.MOBILE_NUMBER, number);
                 intent.putExtra(Constants.NAME, name);
                 intent.putExtra(Constants.PHOTO_URI, imageUrl);
@@ -410,7 +397,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             }
         });
-        Button introduceUserButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_introduce);
+        Button introduceUserButton = mSheetViewIpayMember.findViewById(R.id.button_introduce);
         if (!ProfileInfoCacheManager.isAccountVerified()) {
             introduceUserButton.setVisibility(View.GONE);
         } else {
@@ -426,17 +413,17 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-        Button mRequestMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_request_money);
+        Button mRequestMoneyButton = mSheetViewIpayMember.findViewById(R.id.button_request_money);
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             @ValidateAccess(ServiceIdConstants.REQUEST_MONEY)
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
+                Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY);
                 intent.putExtra(Constants.MOBILE_NUMBER, number);
                 intent.putExtra(Constants.NAME, name);
                 intent.putExtra(Constants.PHOTO_URI, imageUrl);
                 intent.putExtra(Constants.FROM_CONTACT, true);
-                intent.putExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, true);
                 startActivity(intent);
 
                 if (mBottomSheetLayout.isSheetShowing()) {
@@ -445,8 +432,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-        Button mAskForRecommendationButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
-        Button mMakePaymentButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_make_payment);
+        Button mAskForRecommendationButton = mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
+        Button mMakePaymentButton = mSheetViewIpayMember.findViewById(R.id.button_make_payment);
 
         mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -565,7 +552,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
             try {
-                mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
+                SendInviteResponse mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
@@ -593,7 +580,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
-                mAskForIntroductionResponse = gson.fromJson(result.getJsonString(), AskForIntroductionResponse.class);
+                AskForIntroductionResponse mAskForIntroductionResponse = gson.fromJson(result.getJsonString(), AskForIntroductionResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
@@ -910,77 +897,53 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mobileNumberView.setText(mobileNumber);
 
-                if (!isDialogFragment()) {
-
-                    if (isMember) {
-                        if (!isVerified) {
-                            button_ask.setVisibility(View.GONE);
-                            button_asked.setVisibility(View.GONE);
-                            verificationStatus.setVisibility(View.GONE);
-                            inviteButton.setVisibility(View.GONE);
-                            invitedButton.setVisibility(View.GONE);
-
-                        } else {
-                            button_ask.setVisibility(View.VISIBLE);
-                            verificationStatus.setVisibility(View.VISIBLE);
-                            inviteButton.setVisibility(View.GONE);
-                            invitedButton.setVisibility(View.GONE);
-                            button_asked.setVisibility(View.GONE);
-                        }
-                    } else {
-                        if (!mShowInvitedOnly && isInvited) {
-                            invitedButton.setVisibility(View.VISIBLE);
-                            inviteButton.setVisibility(View.GONE);
-                        } else {
-                            inviteButton.setVisibility(View.VISIBLE);
-                            invitedButton.setVisibility(View.GONE);
-                        }
+                if (isMember) {
+                    if (!isVerified) {
                         button_ask.setVisibility(View.GONE);
+                        button_asked.setVisibility(View.GONE);
                         verificationStatus.setVisibility(View.GONE);
-                    }
+                        inviteButton.setVisibility(View.GONE);
+                        invitedButton.setVisibility(View.GONE);
 
-                    inviteButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            switchToInvitePeopleActivity();
-                        }
-                    });
-
-                    button_ask.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            sendRecommendationRequest(mobileNumber);
-                        }
-                    });
-                } else {
-                    if (isMember) {
-                        if (!isVerified) {
-                            verificationStatus.setVisibility(View.GONE);
-                        } else {
-                            verificationStatus.setVisibility(View.VISIBLE);
-                        }
                     } else {
-                        verificationStatus.setVisibility(View.GONE);
+                        button_ask.setVisibility(View.VISIBLE);
+                        verificationStatus.setVisibility(View.VISIBLE);
+                        inviteButton.setVisibility(View.GONE);
+                        invitedButton.setVisibility(View.GONE);
+                        button_asked.setVisibility(View.GONE);
                     }
-
+                } else {
+                    if (!mShowInvitedOnly && isInvited) {
+                        invitedButton.setVisibility(View.VISIBLE);
+                        inviteButton.setVisibility(View.GONE);
+                    } else {
+                        inviteButton.setVisibility(View.VISIBLE);
+                        invitedButton.setVisibility(View.GONE);
+                    }
+                    button_ask.setVisibility(View.GONE);
+                    verificationStatus.setVisibility(View.GONE);
                 }
+
+                inviteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switchToInvitePeopleActivity();
+                    }
+                });
+
+                button_ask.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendRecommendationRequest(mobileNumber);
+                    }
+                });
 
                 profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (isDialogFragment()) {
-                            Intent intent = new Intent();
-                            if (originalName != null && !originalName.isEmpty())
-                                intent.putExtra(Constants.NAME, originalName);
-                            else intent.putExtra(Constants.NAME, name);
-                            intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
-                            intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrlQualityHigh);
-                            getActivity().setResult(Activity.RESULT_OK, intent);
-                            getActivity().finish();
-
-                        } else if (mShowAllMembersToInvite && !isMember) {
+                        if (mShowAllMembersToInvite && !isMember) {
                             if (originalName != null && !originalName.isEmpty())
                                 setSelectedName(originalName);
                             else setSelectedName(name);

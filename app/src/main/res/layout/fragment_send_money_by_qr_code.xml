@@ -83,7 +83,7 @@
         <View style="@style/Divider" />
 
         <Button
-            android:id="@+id/button_send_money"
+            android:id="@+id/continue_button"
             style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
