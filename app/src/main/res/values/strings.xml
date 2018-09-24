@@ -1232,6 +1232,12 @@
     <string name="receive_offer_from_merchant_message">Please receive your gift from the merchant.</string>
     <string name="start_date_title">Start Date:</string>
     <string name="end_date_title">End Date:</string>
+    <string name="amberIT">AmberIT</string>
+    <string name="lanka_bangla_card_number">Lanka Bangla card number</string>
+    <string name="lanka_bangla_bill_pay_message">Please enter your Lanka Bangla Visa/Mastercard card number</string>
+    <string name="card_number">Card number</string>
+    <string name="credit_balance">Credit balance</string>
+    <string name="minimum_pay">Minimum pay</string>
     <string name="send_money_helper_text">You can send money from your iPay account to another iPay member\'s account.To send money, you just have to follow following steps</string>
     <string name="send_money_step_one">Search <b>Name/Mobile number</b> or select the person from the list</string>
     <string name="ok_got_it">Ok, I got it !</string>

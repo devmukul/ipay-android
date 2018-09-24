@@ -102,12 +102,13 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utilities.hideKeyboard(getActivity());
                 if (mPinEditText.getVisibility() == View.VISIBLE) {
                     if (verifyInput()) {
+                        Utilities.hideKeyboard(getActivity());
                         attemptSendMoney(mPin);
                     }
                 } else {
+                    Utilities.hideKeyboard(getActivity());
                     attemptSendMoney(null);
                 }
             }
@@ -134,14 +135,12 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
     }
 
     private void showSnackBar(String errorMessage){
-        Snackbar snackbar= Snackbar.make(parentLayout, errorMessage, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(parentLayout, errorMessage, Snackbar.LENGTH_SHORT);
         View view = snackbar.getView();
         view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-        TextView textView = (TextView)view.findViewById(android.support.design.R.id.snackbar_text);
-        LinearLayout.LayoutParams layoutParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0,10,0,0);
-        textView.setLayoutParams(layoutParams);
-        textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel_black_24dp, 0, 0, 0);
+        TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
         textView.setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.value10));
         snackbar.show();
     }
