@@ -91,8 +91,7 @@
                         android:id="@+id/button_edit_permanent_address"
                         style="@style/EditIconButton"
                         android:padding="@dimen/activity_vertical_margin_card"
-                        android:src="@drawable/ic_editgrey"
-                        android:visibility="gone" />
+                        android:src="@drawable/ic_editgrey"/>
                 </LinearLayout>
 
                 <View style="@style/DividerWithoutMargin" />

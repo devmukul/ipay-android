@@ -138,10 +138,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mUserInfoServiceNotAllowedTextView = (TextView) view.findViewById(R.id.user_info_service_not_allowed_text_view);
         mParentInfoServiceNotAllowedTextView = (TextView) view.findViewById(R.id.parent_info_service_not_allowed_text_view);
 
-        if (ProfileInfoCacheManager.isAccountVerified())
-            mContactEditButton.setVisibility(View.GONE);
-        else mContactEditButton.setVisibility(View.VISIBLE);
-
         mContactEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE)

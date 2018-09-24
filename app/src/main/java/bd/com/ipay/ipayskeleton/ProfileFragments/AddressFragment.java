@@ -156,12 +156,6 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             mPresentAddressView.setText(mPresentAddress.toString(mThanaList, mDistrictList));
         }
 
-        if (ProfileInfoCacheManager.isAccountVerified()) {
-            mPermanentAddressEditButton.setVisibility(View.GONE);
-        } else {
-            mPermanentAddressEditButton.setVisibility(View.VISIBLE);
-        }
-
         final Bundle presentAddressBundle = new Bundle();
         presentAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_PRESENT);
         if (mPresentAddress != null)
