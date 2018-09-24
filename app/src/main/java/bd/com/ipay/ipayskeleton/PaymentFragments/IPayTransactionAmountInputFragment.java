@@ -147,7 +147,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isValidInputs(view)) {
+                if (isValidInputs()) {
                     Bundle bundle = new Bundle();
                     bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                     bundle.putString(Constants.NAME, name);
@@ -163,7 +163,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
         });
     }
 
-    private boolean isValidInputs(@NonNull View view) {
+    private boolean isValidInputs() {
         if (!Utilities.isValueAvailable(mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
@@ -199,14 +199,17 @@ public class IPayTransactionAmountInputFragment extends Fragment {
             errorMessage = getString(R.string.balance_not_available);
         }
         if (errorMessage != null) {
-            Snackbar snackbar = Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG);
-            if (getActivity() != null) {
+            if (getActivity() != null && getView() != null) {
+                Snackbar snackbar = Snackbar.make(getView(), errorMessage, Snackbar.LENGTH_LONG);
                 View snackbarView = snackbar.getView();
                 snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
+                ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
+                layoutParams.height = getResources().getDimensionPixelSize(R.dimen.value50);
+                snackbarView.setLayoutParams(layoutParams);
                 TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));
+                snackbar.show();
             }
-            snackbar.show();
             return false;
         }
         return true;
