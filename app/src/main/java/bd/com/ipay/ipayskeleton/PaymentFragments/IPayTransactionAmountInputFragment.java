@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -127,8 +128,37 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 .into(profileImageView);
         ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(Double.valueOf(SharedPrefManager.getUserBalance()))));
 
-        amountDummyEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+        amountDummyEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if (source != null) {
+                    try {
+                        String formattedSource = source.subSequence(start, end).toString();
 
+                        String destPrefix = dest.subSequence(0, dstart).toString();
+
+                        String destSuffix = dest.subSequence(dend, dest.length()).toString();
+
+                        String resultString = destPrefix + formattedSource + destSuffix;
+
+                        resultString = resultString.replace(",", ".");
+
+                        double result = Double.valueOf(resultString);
+                        if (result > 999999.99)
+                            return "";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return super.filter(source, start, end, dest, dstart, dend);
+            }
+        }});
+        amountDummyEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                amountDummyEditText.setSelection(amountDummyEditText.getText().length());
+            }
+        });
         amountDummyEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -138,13 +168,25 @@ public class IPayTransactionAmountInputFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 double result = 0;
-                boolean addDot = false;
-                if (charSequence != null && charSequence.length() > 0) {
-                    if (charSequence.charAt(0) != '.' || charSequence.length() > 1)
-                        result = Double.valueOf(charSequence.toString());
-                    addDot = charSequence.charAt(charSequence.length() - 1) == '.';
+                String addSuffix = "";
+                final String resultString;
+                if (charSequence != null)
+                    resultString = charSequence.toString();
+                else
+                    resultString = null;
+                if (resultString != null && resultString.length() > 0) {
+                    if (resultString.matches("[0]+")) {
+                        amountDummyEditText.setText("");
+                    }
+
+                    if (resultString.charAt(0) != '.' || resultString.length() > 1)
+                        result = Double.valueOf(resultString);
+                    if (resultString.endsWith(".") || resultString.endsWith(".0") || resultString.endsWith(".00"))
+                        addSuffix = resultString.substring(resultString.indexOf('.'), resultString.length());
+                    else if (resultString.matches("[0-9]*.[1-9]0"))
+                        addSuffix = "0";
                 }
-                mAmountTextView.setText(String.format("%s%s", numberFormat.format(result), (addDot ? "." : "")));
+                mAmountTextView.setText(String.format("%s%s", numberFormat.format(result), addSuffix));
             }
 
             @Override
