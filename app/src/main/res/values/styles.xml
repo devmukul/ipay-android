@@ -1065,8 +1065,7 @@
     </style>
 
     <style name="ButtonPrimary.IPayTransactionAction" parent="ButtonPrimary">
-        <item name="android:background">@drawable/background_button_oval_ipay_transaction_action
-        </item>
+        <item name="android:background">@drawable/background_button_oval_ipay_transaction_action</item>
     </style>
 
     <style name="ButtonPrimaryWithNote" parent="ButtonPrimary">

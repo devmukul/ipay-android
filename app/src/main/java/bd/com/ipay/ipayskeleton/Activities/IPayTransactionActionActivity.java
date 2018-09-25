@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPayTransactionContactFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -71,9 +72,13 @@ public class IPayTransactionActionActivity extends BaseActivity {
         switchFragment(new IPayTransactionConfirmationFragment(), bundle, 2, true);
     }
 
+    public void switchToTransactionSuccessFragment(@NonNull Bundle bundle) {
+        switchFragment(new IPayTransactionSuccessFragment(), bundle, 3, true);
+    }
+
     private void switchFragment(@NonNull Fragment fragment, @NonNull Bundle bundle, int maxBackStackEntryCount, boolean shouldAnimate) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > maxBackStackEntryCount) {
-            getSupportFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > maxBackStackEntryCount) {
+            getSupportFragmentManager().popBackStackImmediate();
         }
         if (!bundle.containsKey(TRANSACTION_TYPE_KEY) || TextUtils.isEmpty(bundle.getString(TRANSACTION_TYPE_KEY))) {
             bundle.putInt(TRANSACTION_TYPE_KEY, transactionType);
@@ -105,6 +110,12 @@ public class IPayTransactionActionActivity extends BaseActivity {
         Utilities.hideKeyboard(this);
 
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                if (fragment instanceof IPayTransactionSuccessFragment) {
+                    finish();
+                    return;
+                }
+            }
             getSupportFragmentManager().popBackStackImmediate();
         } else {
             finish();

@@ -164,7 +164,7 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
             return;
         }
 
-        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.sending_money));
         mCustomProgressDialog.showDialog();
         if (mNoteEditText.getText() != null) {
             mNote = mNoteEditText.getText().toString();
@@ -247,7 +247,6 @@ public class SendMoneyConfirmFragment extends BaseFragment implements HttpRespon
                             if (getActivity() != null) {
                                 mCustomProgressDialog.showFailureAnimationAndMessage(mSendMoneyResponse.getMessage());
                                 ((MyApplication) getActivity().getApplication()).launchLoginPage("");
-
                                 Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                             }
                             break;

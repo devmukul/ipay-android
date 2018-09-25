@@ -54,7 +54,7 @@
                     android:gravity="center"
                     android:text="@string/send_money_to"
                     android:textColor="#ccf3f0"
-                    android:textSize="15sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name_text_view"
@@ -63,7 +63,7 @@
                     android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/profile_image_view"
@@ -103,7 +103,7 @@
                         android:cursorVisible="false"
                         android:fontFamily="sans-serif-light"
                         android:hint="@string/empty_string"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:maxLength="8"
                         android:maxLines="1"
                         android:paddingLeft="@dimen/value20"
@@ -143,7 +143,7 @@
                         android:gravity="center"
                         android:text="@string/your_ipay_balance"
                         android:textColor="#ccf3f0"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/ipay_balance_text_view"
@@ -151,7 +151,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

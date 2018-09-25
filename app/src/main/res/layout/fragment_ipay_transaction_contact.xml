@@ -20,7 +20,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorIPayTransactionAction"
+                android:background="@color/colorPrimary"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:titleTextColor="@android:color/white"
                 tools:title="@string/send_money">

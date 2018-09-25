@@ -53,7 +53,7 @@
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:gravity="center"
                     android:textColor="#666666"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     tools:text="@string/send_money_confirmation_dummy_message" />
 
                 <TextView
@@ -63,7 +63,7 @@
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
                     android:gravity="center"
                     android:textColor="#212121"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     tools:text="@string/dummy_name" />
 

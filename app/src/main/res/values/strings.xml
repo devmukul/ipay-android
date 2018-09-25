@@ -226,7 +226,7 @@
     <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account. You can use this feature once your linked bank account gets verified!</string>
     <string name="progress_dialog_add_money_in_progress">Request submitting for add money</string>
     <string name="progress_dialog_withdraw_money_in_progress">Request submitting for money withdrawal</string>
-    <string name="progress_dialog_text_sending_money">Sending money in progress. Please wait…</string>
+    <string name="sending_money">Sending money in progress. Please wait…</string>
     <string name="progress_dialog_text_payment">Payment in progress. Please wait…</string>
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile…</string>
     <string name="progress_dialog_validating_promo_code">Validating invitation code…</string>
@@ -1240,14 +1240,14 @@
     <string name="request_money_step_three">@string/send_money_step_three</string>
     <string name="send_money_step_two">Insert <b>amount</b> you want to send</string>
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
-    <string name="send_money_to">you are sending money to</string>
+    <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
-    <string name="send_money_success_description">We will notify receiver that you  sent money. You can see the details in your transaction in case you need them further</string>
-    <string name="request_money_success_description">We will notify receiver that you requested money. We will notify you when he accepts or rejects your request</string>
+    <string name="send_money_success_description">We will notify receiver that you have sent money. You can see the details in your transaction in case you need them further.</string>
+    <string name="request_money_success_description">We will notify receiver that you requested money. We will notify you when he accepts or rejects your request.</string>
     <string name="fetching_user_info">Fetching user info</string>
     <string name="request_money_helper_text">Running low balance in your iPay wallet? Request other members to transfer money to your iPay wallet</string>
     <string name="request_money_step_two">insert <b>amount</b> you want to request</string>
-    <string name="request_money_from">You are requesting money from</string>
+    <string name="request_money_from">YOU ARE REQUESTING MONEY FROM</string>
     <string name="send_money_confirm">Send Money Confirm</string>
     <string name="request_money_confirm">Request Money Confirm</string>
     <string name="amberIT">AmberIT</string>
@@ -1258,14 +1258,17 @@
     <string name="minimum_pay">Minimum pay</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
-    <string name="zero_amount">00.00</string>
+    <string name="zero_amount">0</string>
     <string name="tk">Tk</string>
-    <string name="send_money_confirmation_message"><![CDATA[<p>You are sending Tk. <b style="color:#6ac159;">%1$s</b> to</p>]]></string>
-    <string name="request_money_confirmation_message"><![CDATA[<p>You are requesting Tk. <b style="color:#6ac159;">%1$s</b> from</p>]]></string>
+    <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
+    <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
+    <string name="request_money_confirmation_message">YOU ARE REQUESTING %1$s FROM</string>
+    <string name="request_money_success_message">SUCCESSFULLY REQUESTED %1$s FROM</string>
     <string name="send_money_confirmation_dummy_message">You are sending Tk. 1,000,000 to</string>
     <string name="dummy_name">John Doe</string>
     <string name="short_note_optional_hint">Write a short note (Optional)</string>
     <string name="short_note_hint">Write a short note</string>
     <string name="please_enter_a_pin">Please enter a pin</string>
+    <string name="go_back_to_wallet">Go back to Wallet</string>
     <string name="minimum_pin_length_message">Pin must be at least 4 digits.</string>
 </resources>

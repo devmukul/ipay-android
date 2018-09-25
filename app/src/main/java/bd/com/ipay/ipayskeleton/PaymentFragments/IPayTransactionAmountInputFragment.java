@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -40,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -64,9 +66,9 @@ public class IPayTransactionAmountInputFragment extends Fragment {
             mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
             profilePicture = getArguments().getString(Constants.PHOTO_URI);
         }
-        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
-        numberFormat.setMinimumIntegerDigits(2);
+        numberFormat.setMinimumIntegerDigits(1);
         if (getContext() != null)
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(mBusinessRuleUpdateBroadcastReceiver, new IntentFilter(Constants.BUSINESS_RULE_UPDATE_BROADCAST));
         mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(transactionType));
@@ -91,6 +93,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
         final EditText amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
         final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
         final Button continueButton = view.findViewById(R.id.continue_button);
+        final View balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
 
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -104,9 +107,11 @@ public class IPayTransactionAmountInputFragment extends Fragment {
         switch (transactionType) {
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 transactionDescriptionTextView.setText(R.string.request_money_from);
+                balanceInfoLayout.setVisibility(View.GONE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 transactionDescriptionTextView.setText(R.string.send_money_to);
+                balanceInfoLayout.setVisibility(View.VISIBLE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
@@ -122,6 +127,8 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 .into(profileImageView);
         ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(Double.valueOf(SharedPrefManager.getUserBalance()))));
 
+        amountDummyEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+
         amountDummyEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -131,11 +138,13 @@ public class IPayTransactionAmountInputFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 double result = 0;
+                boolean addDot = false;
                 if (charSequence != null && charSequence.length() > 0) {
-                    result = Double.valueOf(charSequence.toString());
-                    result /= 100;
+                    if (charSequence.charAt(0) != '.' || charSequence.length() > 1)
+                        result = Double.valueOf(charSequence.toString());
+                    addDot = charSequence.charAt(charSequence.length() - 1) == '.';
                 }
-                mAmountTextView.setText(numberFormat.format(result));
+                mAmountTextView.setText(String.format("%s%s", numberFormat.format(result), (addDot ? "." : "")));
             }
 
             @Override
