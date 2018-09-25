@@ -42,11 +42,13 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class IPayTransactionContactFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener, HttpResponseListener {
@@ -55,6 +57,7 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
 
     private int isFirstLoad = 0;
     private RecyclerView mContactListRecyclerView;
+    private Button mContinueButton;
     private SearchView mContactSearchView;
     private TextView mContactListEmptyMessageTextView;
     private TextView mSearchedNumberTextView;
@@ -96,7 +99,7 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_transaction_contact, container, false);
+        return inflater.inflate(R.layout.fragment_ipay_transaction_contact, container, false);
     }
 
     @Override
@@ -112,7 +115,7 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
 
         final Button helperBottomSheetDismissButton = view.findViewById(R.id.helper_bottom_sheet_dismiss_button);
         final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        final Button continueButton = view.findViewById(R.id.continue_button);
+        mContinueButton = view.findViewById(R.id.continue_button);
         final LinearLayout helpBottomSheetLayout = view.findViewById(R.id.help_bottom_sheet_layout);
 
         if (getActivity() instanceof AppCompatActivity) {
@@ -183,7 +186,7 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
             }
         });
 
-        continueButton.setOnClickListener(new View.OnClickListener() {
+        mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mPhoneNumber = mQuery;
@@ -290,6 +293,9 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data != null && data.getCount() <= 0) {
             if (InputValidator.isValidNumber(mQuery)) {
+                if (ContactEngine.formatMobileNumberBD(mQuery).equals(ProfileInfoCacheManager.getMobileNumber())) {
+                    return;
+                }
                 final String mActionName;
                 switch (transactionType) {
                     case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
@@ -303,13 +309,22 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
                         return;
                 }
                 mSearchedNumberLayout.setVisibility(View.VISIBLE);
-                mSearchedNumberTextView.setText(mQuery);
-                mActionNameTextView.setText(String.format("%s to", mActionName));
                 mContactListRecyclerView.setVisibility(View.GONE);
+                mSearchedNumberTextView.setVisibility(View.VISIBLE);
+                mContinueButton.setVisibility(View.VISIBLE);
+                mActionNameTextView.setText(String.format("%s to", mActionName));
+                mSearchedNumberTextView.setText(mQuery);
             } else {
-                mSearchedNumberLayout.setVisibility(View.GONE);
+                if (!mQuery.matches("\\d+")) {
+                    mActionNameTextView.setText(R.string.no_contacts);
+                } else {
+                    mActionNameTextView.setText(R.string.error_invalid_mobile_number);
+                }
+                mSearchedNumberLayout.setVisibility(View.VISIBLE);
+                mContactListRecyclerView.setVisibility(View.GONE);
+                mSearchedNumberTextView.setVisibility(View.GONE);
+                mContinueButton.setVisibility(View.GONE);
                 mSearchedNumberTextView.setText(R.string.empty_string);
-                mContactListRecyclerView.setVisibility(View.VISIBLE);
             }
         } else {
             mSearchedNumberLayout.setVisibility(View.GONE);
@@ -465,6 +480,17 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+                            switch (transactionType) {
+                                case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
+                                    Toaster.makeText(getContext(), R.string.you_cannot_send_money_to_your_number, Toast.LENGTH_SHORT);
+                                    break;
+                                case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
+                                    Toaster.makeText(getContext(), R.string.you_cannot_request_money_from_your_number, Toast.LENGTH_SHORT);
+                                    break;
+                            }
+                            return;
+                        }
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.NAME, originalName);
                         bundle.putString(Constants.PHOTO_URI, profilePictureUrlQualityMedium);
@@ -495,7 +521,7 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.NAME, getUserInfoResponse.getName());
                         if (getUserInfoResponse.getProfilePictures() != null && !getUserInfoResponse.getProfilePictures().isEmpty())
-                            bundle.putString(Constants.PHOTO_URI, getUserInfoResponse.getProfilePictures().get(0).getUrl());
+                            bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + getUserInfoResponse.getProfilePictures().get(0).getUrl());
                         bundle.putString(Constants.MOBILE_NUMBER, mPhoneNumber);
                         bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                         if (getActivity() instanceof IPayTransactionActionActivity) {
