@@ -212,6 +212,11 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 }
             }
         });
+
+        if (getActivity() != null) {
+            amountDummyEditText.requestFocus();
+            Utilities.showKeyboard(getActivity(), amountDummyEditText);
+        }
     }
 
     private boolean isValidInputs() {
