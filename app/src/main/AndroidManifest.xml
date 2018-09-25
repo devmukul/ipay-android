@@ -418,19 +418,6 @@
         </activity>
 
 
-        <activity
-            android:name=".Activities.PaymentActivities.SendMoneyConfirmActivity"
-            android:label="@string/send_money_confirm"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity
-            android:name=".Activities.PaymentActivities.RequestMoneyConfirmActivity"
-            android:label="@string/request_money_confirm"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
