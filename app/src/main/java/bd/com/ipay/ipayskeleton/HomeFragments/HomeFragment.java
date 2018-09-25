@@ -35,11 +35,10 @@ import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
+import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
@@ -151,7 +150,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         refreshBalanceButton = view.findViewById(R.id.refresh_balance_button);
         View mAddMoneyButton = view.findViewById(R.id.button_add_money);
         View mWithdrawMoneyButton = view.findViewById(R.id.button_withdraw_money);
-        LinearLayout mSendMoneyButton = view.findViewById(R.id.button_send_money);
+        LinearLayout mSendMoneyButton = view.findViewById(R.id.continue_button);
         LinearLayout mRequestMoneyButton = view.findViewById(R.id.button_request_money);
         LinearLayout mPayByQRCodeButton = view.findViewById(R.id.button_pay_by_qr_code);
         LinearLayout mInviteFriendButton = view.findViewById(R.id.button_invite_friend);
@@ -224,7 +223,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 PinChecker sendMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
                     public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY);
                         startActivity(intent);
                     }
                 });
@@ -235,8 +235,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent requestMoneyActivityIntent = new Intent(getActivity(), RequestMoneyActivity.class);
-                startActivity(requestMoneyActivityIntent);
+                Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY);
+                startActivity(intent);
             }
         });
 

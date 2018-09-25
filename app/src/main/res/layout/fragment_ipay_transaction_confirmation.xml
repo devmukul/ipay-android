@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".Activities.IPayTransactionActionActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTransparent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorTransparent"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:title="@string/empty_string"
+            app:titleTextColor="@android:color/white" />
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dip"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"
+            android:background="@android:color/transparent"
+            android:fadingEdge="none"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/transaction_description_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:gravity="center"
+                    android:textColor="#666666"
+                    android:textSize="18sp"
+                    tools:text="@string/send_money_confirmation_dummy_message" />
+
+                <TextView
+                    android:id="@+id/name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:gravity="center"
+                    android:textColor="#212121"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="@string/dummy_name" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/profile_image_view"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile"
+                    app:riv_oval="true" />
+
+                <LinearLayout
+                    android:id="@+id/pin_layout_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/pin_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:hint="@string/enter_pin"
+                        android:inputType="numberPassword"
+                        android:maxLength="4"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="8dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@android:color/darker_gray" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/note_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/value28"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:inputType="text"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:textSize="@dimen/value18"
+                    tools:hint="@string/short_note_optional_hint"
+                    tools:ignore="LabelFor" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@android:color/darker_gray" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/transaction_confirmation_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/value50"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimaryButton"
+        android:textColor="@color/colorWhite"
+        tools:text="@string/send_money" />
+</android.support.design.widget.CoordinatorLayout>

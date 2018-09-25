@@ -19,7 +19,7 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <Button
-            android:id="@+id/button_send_money"
+            android:id="@+id/continue_button"
             style="@style/SheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

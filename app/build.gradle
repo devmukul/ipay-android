@@ -50,6 +50,7 @@ android {
         for (String key : envProperties.keySet()) {
             buildConfigField "String", key.replaceAll("\\.", "_").toUpperCase(), "\"" + envProperties[key] + "\""
         }
+        vectorDrawables.useSupportLibrary = true
     }
 
     lintOptions {

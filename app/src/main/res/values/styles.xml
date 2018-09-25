@@ -5,6 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -16,6 +17,7 @@
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="windowNoTitle">true</item>
     </style>
 
@@ -30,7 +32,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="Theme.ActionBar.ZeroElevation" parent="style/Widget.AppCompat.Light.ActionBar.Solid">
+    <style name="Theme.ActionBar.ZeroElevation" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="elevation">0dp</item>
     </style>
 
@@ -1060,6 +1062,10 @@
     <style name="ButtonPrimary" parent="ButtonStyle">
         <item name="android:textColor">@color/colorPrimaryButtonText</item>
         <item name="android:background">@drawable/background_button_oval_green</item>
+    </style>
+
+    <style name="ButtonPrimary.IPayTransactionAction" parent="ButtonPrimary">
+        <item name="android:background">@drawable/background_button_oval_ipay_transaction_action</item>
     </style>
 
     <style name="ButtonPrimaryWithNote" parent="ButtonPrimary">

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.IPayTransactionActionActivity">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:titleTextColor="@android:color/white"
+                tools:title="@string/send_money">
+
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <TextView
+                android:id="@+id/contact_list_empty_message_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/no_contacts"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/contact_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/divider"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                tools:itemCount="6"
+                tools:listitem="@layout/list_item_contact" />
+
+            <LinearLayout
+                android:id="@+id/searched_number_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/value32"
+                android:layout_marginRight="@dimen/value32"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/action_name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColor="#666666"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/searched_number_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/value1"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center_horizontal"
+                    android:textColor="#212121"
+                    android:textSize="32sp" />
+
+                <Button
+                    android:id="@+id/continue_button"
+                    style="@style/ButtonPrimary.IPayTransactionAction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/value10"
+                    android:text="@string/continue_button_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <SearchView
+                android:id="@+id/contact_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorTransparent"
+                android:iconifiedByDefault="false"
+                android:padding="@dimen/value4"
+                android:queryBackground="@color/colorTransparent"
+                android:queryHint="@string/enter_name_or_number"
+                android:submitBackground="@color/colorTransparent" />
+
+            <LinearLayout
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/contact_search_view"
+                android:background="#E0E0E0"
+                android:orientation="vertical" />
+        </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:id="@+id/help_bottom_sheet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_transaction"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <FrameLayout
+            android:id="@+id/help_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/helper_bottom_sheet_dismiss_button"
+            style="@style/ButtonPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"
+            android:layout_marginTop="@dimen/value50"
+            android:text="@string/ok_got_it" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
