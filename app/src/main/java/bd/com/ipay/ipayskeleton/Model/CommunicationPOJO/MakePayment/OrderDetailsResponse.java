@@ -1,7 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment;
 
 
-public class GetOrderDetails {
+public class OrderDetailsResponse {
 
     private String message;
     private String merchantName;

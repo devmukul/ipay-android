@@ -56,6 +56,11 @@ public class CustomProgressDialog extends android.support.v7.app.AlertDialog {
         this.show();
     }
 
+    @Override
+    public void setMessage(CharSequence message) {
+        progressDialogTextView.setText(message);
+    }
+
     public void dismissDialog() {
         this.clearAnimation();
         this.hide();

@@ -182,6 +182,12 @@ public class Constants {
     public static final String COMMAND_GET_SERVICE_PROVIDER_LIST = "COMMAND_GET_SERVICE_PROVIDER_LIST";
     public static final String COMMAND_DESCO_BILL_PAY = "COMMAND_DESCO_BILL_PAY";
     public static final String CARNIVAL_BILL_PAY = "CARNIVAL_BILL_PAY";
+    public static final String AMBER_BILL_PAY = "AMBER BILL PAY";
+    public static final String AMBERIT = "AMBERIT";
+    public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
+    public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
+    public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
+    public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -277,8 +283,7 @@ public class Constants {
     public static final String ADD_MONEY_BY_BANK_TITLE = "Bank";
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
-    public static String Business_role = "BUSINESS_ROLE";
-    public static String invalid_credential = "invalid credential";
+    public static String INVALID_CREDENTIAL = "invalid credential";
     public static String URL_DESCO_BILL_PAY = "/desco/billpay";
     public static String URL_CARNIVAL = "/carnival/bill-info/";
 
@@ -883,5 +888,9 @@ public class Constants {
 
     public static final int RC_BARCODE_CAPTURE = 9001;
     public static final String PATH = "PATH";
+
+    public static final String ORDER_CHECKOUT_SUCCESS = "success";
+    public static final String ORDER_CHECKOUT_FAILED = "failed";
+    public static final String ORDER_CHECKOUT_CANCELLED = "cancelled";
 
 }
