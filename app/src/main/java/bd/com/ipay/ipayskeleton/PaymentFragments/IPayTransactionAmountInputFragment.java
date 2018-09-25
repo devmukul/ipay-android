@@ -183,7 +183,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                         result = Double.valueOf(resultString);
                     if (resultString.endsWith(".") || resultString.endsWith(".0") || resultString.endsWith(".00"))
                         addSuffix = resultString.substring(resultString.indexOf('.'), resultString.length());
-                    else if (resultString.matches("[0-9]*.[1-9]0"))
+                    else if (resultString.matches("[0-9]*\\.[1-9]0"))
                         addSuffix = "0";
                 }
                 mAmountTextView.setText(String.format("%s%s", numberFormat.format(result), addSuffix));
