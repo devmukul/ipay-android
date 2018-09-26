@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -27,6 +26,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
     public static final int TRANSACTION_TYPE_INVALID = -1;
     public static final int TRANSACTION_TYPE_SEND_MONEY = ServiceIdConstants.SEND_MONEY;
     public static final int TRANSACTION_TYPE_REQUEST_MONEY = ServiceIdConstants.REQUEST_MONEY;
+    public static final int TRANSACTION_TYPE_TOP_UP = ServiceIdConstants.TOP_UP;
 
     private int transactionType;
 
@@ -41,6 +41,18 @@ public class IPayTransactionActionActivity extends BaseActivity {
         switch (transactionType) {
             case TRANSACTION_TYPE_SEND_MONEY:
             case TRANSACTION_TYPE_REQUEST_MONEY:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
+                        !getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+                    switchToTransactionContactsFragment(bundle);
+                } else {
+                    bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+                    bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
+                    bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
+                    switchToAmountInputFragment(bundle);
+                }
+                break;
+            case TRANSACTION_TYPE_TOP_UP:
                 BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
                 if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
                         !getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
@@ -80,7 +92,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > maxBackStackEntryCount) {
             getSupportFragmentManager().popBackStackImmediate();
         }
-        if (!bundle.containsKey(TRANSACTION_TYPE_KEY) || TextUtils.isEmpty(bundle.getString(TRANSACTION_TYPE_KEY))) {
+        if (!bundle.containsKey(TRANSACTION_TYPE_KEY) || bundle.getInt(TRANSACTION_TYPE_KEY) != 0) {
             bundle.putInt(TRANSACTION_TYPE_KEY, transactionType);
         }
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

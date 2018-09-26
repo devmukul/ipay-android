@@ -1,0 +1,107 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/icon_topup"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="13dp"
+            android:src="@drawable/ic_top_up_white_screenshot" />
+
+        <TextView
+            android:id="@+id/topup_helper_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/icon_topup"
+            android:layout_marginBottom="@dimen/value10"
+            android:gravity="center"
+            android:text="@string/top_up_helper"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/number_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topup_helper_text_view">
+
+            <EditText
+                android:id="@+id/number_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="+880-1"
+                android:textColor="#212121"
+                android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/contact_image_view"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/value5"
+                android:src="@drawable/ic_contact_picker" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/edit_text_background"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/number_layout"
+            android:background="#19000000" />
+
+        <TextView
+            android:id="@+id/my_number_topup_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_text_background"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/value16"
+            android:lineSpacingExtra="3sp"
+            android:text="TOPUP MY NUMBER"
+            android:textColor="#00b2a2"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/my_number_topup_text_view"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="#666666"
+                android:gravity="center"
+                android:text="Pre-paid Package"
+                android:textColor="#666666" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="#666666"
+                android:gravity="center"
+                android:text="Pre-paid Package"
+                android:textColor="#666666" />
+        </RadioGroup>
+    </RelativeLayout>
+</LinearLayout>

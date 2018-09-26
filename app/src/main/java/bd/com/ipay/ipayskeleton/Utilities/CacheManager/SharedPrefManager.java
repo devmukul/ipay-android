@@ -134,4 +134,11 @@ public class SharedPrefManager {
         return pref.getBoolean(Constants.IS_FIRST_REQUEST_MONEY, true);
     }
 
+    public static void setIfFirstTopUp(boolean isFirstSendMoney) {
+        pref.edit().putBoolean(Constants.IS_FIRST_TOP_UP, isFirstSendMoney).apply();
+    }
+
+    public static boolean ifFirstTopUp() {
+        return pref.getBoolean(Constants.IS_FIRST_TOP_UP, true);
+    }
 }

@@ -28,7 +28,15 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
+        <FrameLayout
+            android:id="@+id/top_up_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
+
         <RelativeLayout
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -112,6 +120,7 @@
                 android:background="#E0E0E0"
                 android:orientation="vertical" />
         </RelativeLayout>
+
     </android.support.design.widget.CoordinatorLayout>
 
     <LinearLayout

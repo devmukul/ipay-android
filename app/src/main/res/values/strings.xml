@@ -296,6 +296,7 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
+    <string name="top_up">Top Up</string>
     <string name="promotions">Promotions</string>
     <string name="ipay_here">iPay Here</string>
     <string name="requesting_money">Money request processing…</string>
@@ -1271,4 +1272,7 @@
     <string name="please_enter_a_pin">Please enter a pin</string>
     <string name="go_back_to_wallet">Go back to Wallet</string>
     <string name="minimum_pin_length_message">Pin must be at least 4 digits.</string>
+    <string name="top_up_step_one">Insert <b>mobile number</b> or <b>Search</b> mobile number from contact</string>
+    <string name="top_up_step_two">Insert <b>Amount</b> you want to recharge</string>
+    <string name="top_up_helper">To topup you or your beloved one\'s mobile,insert number or search from contact</string>
 </resources>

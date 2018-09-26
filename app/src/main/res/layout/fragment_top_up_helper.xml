@@ -14,22 +14,20 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/value24"
-            android:layout_marginEnd="@dimen/value20"
-            android:layout_marginLeft="@dimen/value20"
-            android:layout_marginRight="@dimen/value20"
-            android:layout_marginStart="@dimen/value20"
+            android:layout_gravity="left"
+            android:layout_marginLeft="44dp"
             android:contentDescription="@string/send_money_helper_text"
-            android:src="@drawable/send_money_help_icon" />
+            android:src="@drawable/ic_top_up_screenshot" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/value20"
-            android:layout_marginLeft="@dimen/value32"
-            android:layout_marginRight="@dimen/value32"
+            android:layout_marginLeft="@dimen/value36"
+            android:layout_marginRight="@dimen/value36"
             android:lineSpacingExtra="4dp"
             android:text="@string/send_money_helper_text"
             android:textColor="@color/colorWhite"
@@ -46,7 +44,7 @@
             android:drawablePadding="@dimen/value10"
             android:drawableStart="@drawable/drawable_left_tick"
             android:lineSpacingExtra="2dp"
-            android:text="@string/send_money_step_one"
+            android:text="@string/top_up_step_one"
             android:textColor="@color/colorWhite"
             android:textSize="13sp" />
 
@@ -60,8 +58,7 @@
             android:drawablePadding="@dimen/value10"
             android:drawableStart="@drawable/drawable_left_tick"
             android:lineSpacingExtra="2dp"
-
-            android:text="@string/send_money_step_two"
+            android:text="@string/top_up_step_two"
             android:textColor="@color/colorWhite"
             android:textSize="13sp" />
 

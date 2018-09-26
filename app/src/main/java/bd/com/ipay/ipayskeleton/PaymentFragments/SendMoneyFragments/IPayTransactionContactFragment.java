@@ -23,7 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,12 +43,14 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.TopUpEnterNumberFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
@@ -78,6 +82,9 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
     private int phoneNumberIndex;
     private int profilePictureUrlQualityMediumIndex;
     private LinearLayout mSearchedNumberLayout;
+
+    private RelativeLayout mMainLayout;
+    private FrameLayout mTopUpLayout;
 
     private int transactionType;
 
@@ -112,6 +119,17 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
         mSearchedNumberLayout = view.findViewById(R.id.searched_number_layout);
         mContactListEmptyMessageTextView = view.findViewById(R.id.contact_list_empty_message_text_view);
         mContactListRecyclerView = view.findViewById(R.id.contact_list_recycler_view);
+
+        mMainLayout = (RelativeLayout) view.findViewById(R.id.main_layout);
+        mTopUpLayout = (FrameLayout) view.findViewById(R.id.top_up_fragment_container);
+        if (transactionType == ServiceIdConstants.TOP_UP) {
+            mMainLayout.setVisibility(View.GONE);
+            mTopUpLayout.setVisibility(View.VISIBLE);
+            getChildFragmentManager().beginTransaction().replace(R.id.top_up_fragment_container, new TopUpEnterNumberFragment()).commit();
+        } else {
+            mMainLayout.setVisibility(View.VISIBLE);
+            mTopUpLayout.setVisibility(View.GONE);
+        }
 
         final Button helperBottomSheetDismissButton = view.findViewById(R.id.helper_bottom_sheet_dismiss_button);
         final Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -163,6 +181,14 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
                 break;
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                getActivity().setTitle(R.string.top_up);
+                if (SharedPrefManager.ifFirstTopUp()) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                break;
         }
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -176,6 +202,8 @@ public class IPayTransactionContactFragment extends Fragment implements LoaderMa
                         case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                             SharedPrefManager.setIfFirstRequestMoney(false);
                             break;
+                        case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                            SharedPrefManager.setIfFirstTopUp(false);
                     }
                 }
             }
