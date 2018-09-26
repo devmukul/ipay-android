@@ -178,10 +178,10 @@ public class InputValidator {
         if (number == null)
             return false;
 
+        if (number.length() != 11 && number.length() != 13 && number.length() != 14)
+            return false;
         number = number.replaceAll("[^\\d]", "");
-        if (number.length() == 11 && number.startsWith("0"))
-            return true;
-        else return number.length() == 13 && number.startsWith("880");
+        return number.length() == 11 && number.startsWith("0") || number.length() == 13 && number.startsWith("880");
     }
 
     public static boolean isValidDigit(String number) {

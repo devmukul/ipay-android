@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.R;

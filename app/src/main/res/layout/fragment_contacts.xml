@@ -5,7 +5,7 @@
     android:background="@color/colorWhite">
 
     <TextView
-        android:id="@+id/contact_list_empty"
+        android:id="@+id/contact_list_empty_message_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -34,13 +34,12 @@
         android:queryHint="@string/search"
         android:submitBackground="@color/colorTransparent" />
 
-    <LinearLayout
+    <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/search_contacts"
-        android:background="#E0E0E0">
-
-    </LinearLayout>
+        android:background="#E0E0E0"
+        android:orientation="vertical" />
 
 </RelativeLayout>

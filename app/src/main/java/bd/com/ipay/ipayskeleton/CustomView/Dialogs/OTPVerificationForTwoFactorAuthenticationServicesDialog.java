@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -16,9 +15,9 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -47,7 +46,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
     private HttpRequestPutAsyncTask mHttpPutAsyncTask;
 
     private String json;
-    private String mOTP;
     private String mUri;
     private String method;
     private EditText mOTPEditText;
@@ -65,18 +63,26 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
+    private Long otpValidFor = null;
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
+
     public OTPVerificationForTwoFactorAuthenticationServicesDialog(@NonNull Activity context, String json, String desiredRequest, String mUri, String method) {
+        this(context, json, desiredRequest, mUri, method, null);
+    }
+
+    public OTPVerificationForTwoFactorAuthenticationServicesDialog(@NonNull Activity context, String json, String desiredRequest, String mUri, String method, Long otpValidFor) {
         super(context);
         this.context = context;
-        this.desiredRequest = desiredRequest;
+        OTPVerificationForTwoFactorAuthenticationServicesDialog.desiredRequest = desiredRequest;
         this.json = json;
         this.mUri = mUri;
         this.method = method;
+        this.otpValidFor = otpValidFor;
         initializeView();
-        createProgresDialogStringMap();
+        createProgressDialogStringMap();
     }
 
-    private void createProgresDialogStringMap() {
+    private void createProgressDialogStringMap() {
         mProgressDialogStringMap = new HashMap<>();
         mProgressDialogStringMap = TwoFactorAuthConstants.getProgressDialogStringMap(context);
     }
@@ -86,7 +92,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 
     }
 
-    public void initializeView() {
+    private void initializeView() {
         mOTPInputDialog = new MaterialDialog.Builder(this.getContext())
                 .title(R.string.title_otp_verification_for_change_password)
                 .customView(R.layout.dialog_otp_verification_change_password, true)
@@ -94,10 +100,12 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 
         view = mOTPInputDialog.getCustomView();
 
-        mOTPEditText = (EditText) view.findViewById(R.id.otp_edittext);
-        mActivateButton = (Button) view.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) view.findViewById(R.id.buttonResend);
-        mCancelButton = (Button) view.findViewById(R.id.buttonCancel);
+        if (view == null)
+            return;
+        mOTPEditText = view.findViewById(R.id.otp_edittext);
+        mActivateButton = view.findViewById(R.id.buttonVerifyOTP);
+        mResendOTPButton = view.findViewById(R.id.buttonResend);
+        mCancelButton = view.findViewById(R.id.buttonCancel);
 
         mCustomProgressDialog = new CustomProgressDialog(context);
 
@@ -108,7 +116,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
     }
 
     public void dismiss() {
-        this.dismiss();
+        super.dismiss();
     }
 
 
@@ -156,10 +164,11 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 
     private void setCountDownTimer() {
         mResendOTPButton.setEnabled(false);
-        new CustomCountDownTimer(SecuritySettingsActivity.otpDuration, 500) {
+        final long otpValidTime = otpValidFor != null ? otpValidFor : SecuritySettingsActivity.otpDuration;
+        new CustomCountDownTimer(otpValidTime, 500) {
 
             public void onTick(long millisUntilFinished) {
-                mResendOTPButton.setText(context.getString(R.string.resend) + " " + new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                mResendOTPButton.setText(String.format(Locale.US, "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
             }
 
             public void onFinish() {
@@ -172,7 +181,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         boolean cancel = false;
         View focusView = null;
 
-        mOTP = mOTPEditText.getText().toString().trim();
+        String mOTP = mOTPEditText.getText().toString().trim();
 
         String errorMessage = InputValidator.isValidOTP(context, mOTP);
         if (errorMessage != null) {
@@ -189,38 +198,36 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         }
     }
 
-    private void launchHomeActivity() {
-        Intent intent = new Intent(((Activity) context), HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        context.finish();
-    }
-
     private void attemptDesiredRequestWithOTP(String otp) {
+        if (mCustomProgressDialog != null) {
+            mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
+        }
         if (method.equals(Constants.METHOD_PUT)) {
-            if (mHttpPutAsyncTask != null) return;
-            else {
+            if (mHttpPutAsyncTask == null) {
                 mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
                 mCustomProgressDialog.showDialog();
                 hideOtpDialog();
                 mHttpPutAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
+                if (mHttpPutAsyncTask == null)
+                    return;
                 mHttpPutAsyncTask.mHttpResponseListener = this;
                 mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else if (method.equals(Constants.METHOD_POST)) {
-            if (mHttpPostAsyncTask != null) return;
-            else {
+            if (mHttpPostAsyncTask == null) {
                 mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
                 mCustomProgressDialog.showDialog();
                 hideOtpDialog();
                 mHttpPostAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);
+                if (mHttpPostAsyncTask == null)
+                    return;
                 mHttpPostAsyncTask.mHttpResponseListener = this;
                 mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
     }
 
-    public void hideOtpDialog() {
+    private void hideOtpDialog() {
         view.setVisibility(View.GONE);
     }
 
@@ -232,6 +239,13 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         mOTPInputDialog.dismiss();
     }
 
+    public Long getOtpValidFor() {
+        return otpValidFor;
+    }
+
+    public void setOtpValidFor(Long otpValidFor) {
+        this.otpValidFor = otpValidFor;
+    }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -243,21 +257,19 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
             TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =
                     new Gson().fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
+            mCustomProgressDialog.setTitle(R.string.success);
             mCustomProgressDialog.showSuccessAnimationAndMessage(twoFactorAuthSettingsSaveResponse.getMessage());
         } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
             TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse =
                     new Gson().fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
+            mCustomProgressDialog.setTitle(R.string.failed);
             mCustomProgressDialog.showSuccessAnimationAndMessage(twoFactorAuthSettingsSaveResponse.getMessage());
         } else {
             mCustomProgressDialog.dismissDialog();
         }
-        Gson gson = new Gson();
-        TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse
-                = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
         mHttpPutAsyncTask = null;
         mHttpPostAsyncTask = null;
         mParentHttpResponseListener.httpResponseReceiver(result);
-        return;
     }
 
 }

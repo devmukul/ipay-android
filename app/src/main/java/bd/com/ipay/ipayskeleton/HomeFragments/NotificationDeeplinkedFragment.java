@@ -367,7 +367,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                 } else {
                     DeepLinkedNotification notification = mDeepLinkedNotifications.get(pos);
                     if (!notification.getStatus().equals("VISITED")) {
-                        notificationHolderLayout.setBackgroundColor(getResources().getColor(R.color.colorNotificationiPay));
+                        notificationHolderLayout.setBackgroundColor(getResources().getColor(R.color.colorNotificationIPay));
                     } else {
                         notificationHolderLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                     }

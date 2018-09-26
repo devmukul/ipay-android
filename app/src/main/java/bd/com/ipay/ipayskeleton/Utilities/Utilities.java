@@ -486,26 +486,22 @@ public class Utilities {
         return String.format("\u09F3%s", numberFormat.format(amount));
     }
 
-    public static String formatTakaWithSignAndComma(String sign, double amount) {
-        NumberFormat numberFormat = NumberFormat.getNumberInstance();
-        numberFormat.setMinimumFractionDigits(2);
-        numberFormat.setMaximumFractionDigits(2);
-        return sign + String.format("\u09F3%s", numberFormat.format(amount));
-    }
-
     public static String takaWithComma(double amount) {
-        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
         numberFormat.setMinimumFractionDigits(2);
         numberFormat.setMaximumFractionDigits(2);
         return numberFormat.format(amount);
     }
 
     public static String formatTaka(BigDecimal amount) {
-        return String.format("\u09F3%.2f", amount);
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+        return String.format("\u09F3%s", numberFormat.format(amount));
     }
 
     public static String formatTaka(double amount) {
-        return String.format("\u09F3%.2f", amount);
+        return String.format(Locale.US, "\u09F3%.2f", amount);
     }
 
     public static String formatTakaFromString(String amount) {
@@ -517,21 +513,23 @@ public class Utilities {
             amount = stringBuilder.toString();
         }
         double amountDouble = Double.parseDouble(amount);
-        return sign + String.format("\u09F3%.2f", amountDouble);
+        return String.format(Locale.US, "%s\u09F3%.2f", sign, amountDouble);
     }
 
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (imm != null)
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
     public static void hideKeyboard(Context context, View v) {
         if (v != null) {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            if (imm != null)
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
 

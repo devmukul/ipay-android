@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 
 public class SentReceivedRequestReviewActivity extends BaseActivity {
+
+    public static MandatoryBusinessRules mMandatoryBusinessRules;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

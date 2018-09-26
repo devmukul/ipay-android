@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -160,7 +160,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
         } else
             getActivity().setTitle(R.string.request_money);
 
-        RequestMoneyActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_MONEY);
+        SentReceivedRequestReviewActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.REQUEST_MONEY);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 
@@ -240,7 +240,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             addContact(mReceiverName, mReceiverMobileNumber, null);
         }
 
-        if (RequestMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+        if (SentReceivedRequestReviewActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -421,16 +421,16 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                         if (businessRuleArray != null) {
                             for (BusinessRule rule : businessRuleArray) {
                                 if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                    RequestMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    SentReceivedRequestReviewActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                    RequestMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    SentReceivedRequestReviewActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED)) {
-                                    RequestMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                    SentReceivedRequestReviewActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED)) {
-                                    RequestMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                                    SentReceivedRequestReviewActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                                 }
                             }
-                            BusinessRuleCacheManager.setBusinessRules(Constants.REQUEST_MONEY, RequestMoneyActivity.mMandatoryBusinessRules);
+                            BusinessRuleCacheManager.setBusinessRules(Constants.REQUEST_MONEY, SentReceivedRequestReviewActivity.mMandatoryBusinessRules);
                         }
                     } else {
                     }

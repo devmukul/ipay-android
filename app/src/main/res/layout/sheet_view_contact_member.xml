@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_contacts_sendmoney"
+            android:drawableStart="@drawable/ic_contacts_sendmoney"
             android:text="@string/send_money" />
 
         <Button
@@ -32,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_contacts_req"
+            android:drawableStart="@drawable/ic_contacts_req"
             android:text="@string/request_money" />
 
         <Button
@@ -40,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_action_make_payment"
+            android:drawableStart="@drawable/ic_action_make_payment"
             android:text="@string/make_payment" />
 
         <Button
@@ -48,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_askfor_introduction"
+            android:drawableStart="@drawable/ic_askfor_introduction"
             android:text="@string/ask_for_introduction" />
 
         <Button
@@ -56,6 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/bothway_introduction"
+            android:drawableStart="@drawable/bothway_introduction"
             android:text="@string/introduce_user" />
 
     </LinearLayout>
