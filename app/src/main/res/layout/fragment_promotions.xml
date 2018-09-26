@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/list_item_promotion" />
+                tools:listitem="@layout/list_item_gift_from_ipay_promotion" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </android.support.constraint.ConstraintLayout>
