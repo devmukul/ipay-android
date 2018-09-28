@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.ViewHolders.Promotions;
 
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -19,13 +21,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GiftFromIPayPromotionViewHolder extends PromotionViewHolder {
 
-	private TextView promotionTitleTextView;
-	private TextView promotionSubDetailsTextView;
-	private ImageView promotionImageView;
-	private TextView availableRedeemCountTextView;
-	private TextView offerRedeemCountTextView;
-	private RatingBar totalTransactionCountBar;
-	private Button claimButton;
+	private final TextView promotionTitleTextView;
+	private final TextView promotionSubDetailsTextView;
+	private final ImageView promotionImageView;
+	private final TextView availableRedeemCountTextView;
+	private final TextView offerRedeemCountTextView;
+	private final RatingBar totalTransactionCountBar;
+	private final ConstraintLayout constraintLayout;
+	private final Button claimButton;
 
 	public GiftFromIPayPromotionViewHolder(View itemView, OnOfferActionsListener onOfferActionsListener) {
 		super(itemView, onOfferActionsListener);
@@ -36,6 +39,7 @@ public class GiftFromIPayPromotionViewHolder extends PromotionViewHolder {
 		totalTransactionCountBar = itemView.findViewById(R.id.total_transaction_count_bar);
 		offerRedeemCountTextView = itemView.findViewById(R.id.offer_redeem_count_text_view);
 		claimButton = itemView.findViewById(R.id.claim_button);
+		constraintLayout = itemView.findViewById(R.id.constraint_layout);
 
 		final ImageButton termsButton = itemView.findViewById(R.id.terms_button);
 
@@ -71,6 +75,9 @@ public class GiftFromIPayPromotionViewHolder extends PromotionViewHolder {
 		totalTransactionCountBar.setRating(giftFromIPayMetaData.getTransactionCountPerRedeem() - giftFromIPayMetaData.getTransactionRequiredForNextRedeem());
 		offerRedeemCountTextView.setText(promotion.getConsumptionDetails());
 		final Date currentDate = Calendar.getInstance().getTime();
+		ConstraintSet constraintSet = new ConstraintSet();
+		constraintSet.clone(constraintLayout);
+
 		if (promotion.isActive() &&
 				(giftFromIPayMetaData.getStartDate().before(currentDate) && giftFromIPayMetaData.getEndDate().after(currentDate)) &&
 				giftFromIPayMetaData.getRedeemAvailable() > 0) {
@@ -78,10 +85,13 @@ public class GiftFromIPayPromotionViewHolder extends PromotionViewHolder {
 			totalTransactionCountBar.setVisibility(View.GONE);
 			availableRedeemCountTextView.setText(itemView.getContext().getString(R.string.you_have_already_redeemed_this_offer_times, giftFromIPayMetaData.getRedeemAvailable()));
 			claimButton.setVisibility(View.VISIBLE);
+			constraintSet.connect(offerRedeemCountTextView.getId(), ConstraintSet.TOP, availableRedeemCountTextView.getId(), ConstraintSet.BOTTOM);
 		} else {
 			availableRedeemCountTextView.setVisibility(View.GONE);
 			totalTransactionCountBar.setVisibility(View.VISIBLE);
 			claimButton.setVisibility(View.GONE);
+			constraintSet.connect(offerRedeemCountTextView.getId(), ConstraintSet.TOP, totalTransactionCountBar.getId(), ConstraintSet.BOTTOM);
 		}
+		constraintSet.applyTo(constraintLayout);
 	}
 }
