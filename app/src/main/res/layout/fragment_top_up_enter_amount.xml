@@ -1,15 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:gravity="center">
+        android:layout_centerInParent="true"
+        android:paddingBottom="@dimen/value30"
+        android:layout_marginRight="32dp">
 
         <ImageView
             android:id="@+id/icon_topup"
@@ -77,34 +77,44 @@
             android:textSize="16sp" />
 
         <RadioGroup
+            android:id="@+id/type_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/my_number_topup_text_view"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:id="@+id/type_selector"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <RadioButton
+                android:id="@+id/prepaid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:buttonTint="#666666"
                 android:gravity="center"
-                android:id="@+id/prepaid"
                 android:text="Pre-paid Package"
                 android:textColor="#666666" />
 
             <RadioButton
+                android:id="@+id/post_paid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:buttonTint="#666666"
-                android:id="@+id/post_paid"
                 android:gravity="center"
                 android:text="Pre-paid Package"
                 android:textColor="#666666" />
         </RadioGroup>
+
     </RelativeLayout>
-</LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/continue_button"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryLight" />
+</RelativeLayout>
