@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:contentDescription="@string/empty_string"
+                android:src="@drawable/success_icon" />
+
+            <TextView
+                android:id="@+id/transaction_success_message_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value24"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:textColor="@color/colorGray"
+                android:textSize="18sp"
+                tools:text="@string/send_money_confirmation_dummy_message" />
+
+            <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:text="@string/dummy_name"
+                android:textColor="@color/colorBlack87"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/value24"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/sender_profile_picture_image_url"
+                    android:layout_width="@dimen/value80"
+                    android:layout_height="@dimen/value80"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/ic_profile" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/value14"
+                    android:layout_marginRight="@dimen/value14"
+                    android:contentDescription="@string/empty_string"
+                    android:src="@drawable/success_arrow" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/receiver_profile_picture_image_url"
+                    android:layout_width="@dimen/value80"
+                    android:layout_height="@dimen/value80"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/ic_profile" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/success_description_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_small"
+                tools:text="@string/request_money_success_description" />
+
+            <Button
+                android:id="@+id/go_to_wallet_button"
+                style="@style/ButtonPrimary.IPayTransactionAction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value24"
+                android:text="@string/go_back_to_wallet" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

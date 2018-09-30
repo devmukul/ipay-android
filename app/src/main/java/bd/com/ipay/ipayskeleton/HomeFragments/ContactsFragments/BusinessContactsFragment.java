@@ -72,7 +72,7 @@ public class BusinessContactsFragment extends BaseFragment implements LoaderMana
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
 
-        mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty);
+        mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty_message_text_view);
         final RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
         mRecyclerView.setLayoutManager(linearLayoutManager);

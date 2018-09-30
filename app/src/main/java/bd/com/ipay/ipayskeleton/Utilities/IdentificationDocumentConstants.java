@@ -43,6 +43,7 @@ public class IdentificationDocumentConstants {
             DOCUMENT_TYPE_NATIONAL_ID,
             DOCUMENT_TYPE_PASSPORT,
             DOCUMENT_TYPE_DRIVING_LICENSE,
+            DOCUMENT_TYPE_OTHER
     };
 
     private static final Map<String, Integer> DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP;

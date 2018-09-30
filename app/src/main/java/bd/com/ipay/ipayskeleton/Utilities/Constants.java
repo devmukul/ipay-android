@@ -65,6 +65,7 @@ public class Constants {
     public static final String COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST = "COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST ";
     public static final String PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST = "PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST ";
     public static final String BALANCE_UPDATE_BROADCAST = "BALANCE_UPDATE_BROADCAST";
+    public static final String BUSINESS_RULE_UPDATE_BROADCAST = "BUSINESS_RULE_UPDATE_BROADCAST";
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
     public static final String NOTIFICATION_UPDATE_BROADCAST = "NOTIFICATION_UPDATE_BROADCAST";
 
@@ -146,6 +147,7 @@ public class Constants {
     public static final String FROM_BRANCHING = "FROM_BRANCHING";
     public static final String ADDRESS_ONE = "ADDRESS_ONE";
     public static final String ADDRESS_TWO = "ADDRESS_TWO";
+    public static final String SOURCE = "SOURCE";
     public static final String COMMAND_GET_NOTIFICATION = "COMMAND_GET_NOTIFICATION";
     public static final String COMMAND_UPDATE_NOTIFICATION_STATE = "COMMAND_UPDATE_NOTIFICATION_STATE";
     public static final String SERVICE = "SERVICE";
@@ -188,6 +190,9 @@ public class Constants {
     public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
     public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
     public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
+    public static final String FROM_CONTACT = "FROM_CONTACT";
+    public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
+    public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
     public static final String VISA = "VISA";
     public static final String MASTERCARD = "MASTERCARD";
     public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER = "lankabangla/visa/";
@@ -793,6 +798,8 @@ public class Constants {
     public static final String TOTAL = "total";
     public static final String ROLENAME = "role";
     public static final String RECEIVER_MOBILE_NUMBER = "receiver";
+    public static final String RECEIVER_IMAGE_URL = "receiver_image_url";
+    public static final String SENDER_IMAGE_URL = "sender_image_url";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
     public static final String DESCRIPTION_TAG = "description";
     public static final String REFERENCE_NUMBER = "reference number";

@@ -23,7 +23,6 @@ import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasic
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardContactsFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentUploadFragment;
@@ -188,12 +187,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
     public void switchToContactFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OnBoardContactsFragment()).commit();
-    }
-
-    public void switchToAddBankAgreementFragment(Bundle bundle) {
-        OnBoardConsentAgreementForBankFragment consentAgreementForBankFragment = new OnBoardConsentAgreementForBankFragment();
-        consentAgreementForBankFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, consentAgreementForBankFragment).addToBackStack(null).commit();
     }
 
     @Override
