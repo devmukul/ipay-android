@@ -82,6 +82,7 @@
             android:layout_below="@id/my_number_topup_text_view"
             android:layout_marginTop="20dp"
             android:gravity="center"
+            android:id="@+id/type_selector"
             android:orientation="horizontal"
             android:weightSum="2">
 
@@ -91,6 +92,7 @@
                 android:layout_weight="1"
                 android:buttonTint="#666666"
                 android:gravity="center"
+                android:id="@+id/prepaid"
                 android:text="Pre-paid Package"
                 android:textColor="#666666" />
 
@@ -99,6 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:buttonTint="#666666"
+                android:id="@+id/post_paid"
                 android:gravity="center"
                 android:text="Pre-paid Package"
                 android:textColor="#666666" />
