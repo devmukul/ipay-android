@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -130,6 +130,7 @@ public class DataHelper {
                     ContentValues values = new ContentValues();
                     values.put(DBConstants.KEY_BUSINESS_MOBILE_NUMBER, mBusinessAccountEntry.getMobileNumber());
                     values.put(DBConstants.KEY_BUSINESS_NAME, mBusinessAccountEntry.getBusinessName());
+                    values.put(DBConstants.KEY_COMPANY_NAME, mBusinessAccountEntry.getCompanyName());
                     values.put(DBConstants.BUSINESS_EMAIL, mBusinessAccountEntry.getEmail());
                     values.put(DBConstants.KEY_BUSINESS_TYPE, mBusinessAccountEntry.getBusinessType());
                     values.put(DBConstants.KEY_BUSINESS_PROFILE_PICTURE, mBusinessAccountEntry.getProfilePictureUrl());

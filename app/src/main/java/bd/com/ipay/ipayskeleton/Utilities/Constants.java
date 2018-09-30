@@ -118,6 +118,7 @@ public class Constants {
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
+    public static final String COMPANY_NAME = "COMPANY_NAME";
 
     public static final String BUSINESS_MOBILE_NUMBER = "BUSINESS_MOBILE_NUMBER";
     public static final String BUSINESS_TYPE = "BUSINESS_TYPE";

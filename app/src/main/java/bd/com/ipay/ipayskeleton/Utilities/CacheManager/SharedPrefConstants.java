@@ -14,6 +14,7 @@ public class SharedPrefConstants {
 
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String USER_NAME = "USER_NAME";
+    public static final String COMPANY_NAME = "COMPANY_NAME";
     public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String USERID = "USERID";

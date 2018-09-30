@@ -27,6 +27,7 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
     private EditText mBusinessType;
 
     private EditText mBusinessNameView;
+    private EditText mCompanyNameView;
     private Button mNextButton;
 
     private ResourceSelectorDialog<BusinessType> businessTypeResourceSelectorDialog;
@@ -44,6 +45,7 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.fragment_signup_business_step_two, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         mBusinessNameView = (EditText) v.findViewById(R.id.business_name);
+        mCompanyNameView = (EditText) v.findViewById(R.id.company_name);
         mBusinessType = (EditText) v.findViewById(R.id.business_type);
         mNextButton = (Button) v.findViewById(R.id.business_again_next_button);
 
@@ -99,6 +101,7 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
     private void attemptGoNextPage() {
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mBusinessName = mBusinessNameView.getText().toString().trim();
+        SignupOrLoginActivity.mCompanyName = mCompanyNameView.getText().toString().trim();
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
         SignupOrLoginActivity.mTypeofBusiness = mSelectedBusinessTypeId;
 

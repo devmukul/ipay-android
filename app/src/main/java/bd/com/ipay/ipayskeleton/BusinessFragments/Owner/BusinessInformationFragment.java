@@ -94,6 +94,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private SetProfilePictureResponse mSetBusinessContactProfilePictureResponse;
 
     private TextView mBusinessNameView;
+    private TextView mCompanyNameView;
     private TextView mBusinessMobileNumberView;
     private TextView mBusinessTypeView;
 
@@ -167,6 +168,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         getActivity().setTitle(R.string.basic_info);
 
         mBusinessNameView = (TextView) view.findViewById(R.id.textview_business_name);
+        mCompanyNameView = (TextView) view.findViewById(R.id.textview_company_name);
         mBusinessMobileNumberView = (TextView) view.findViewById(R.id.textview_business_mobile_number);
         mBusinessTypeView = (TextView) view.findViewById(R.id.textview_business_type);
         mNameView = (TextView) view.findViewById(R.id.textview_name);
@@ -502,6 +504,10 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         }
 
         bundle.putString(Constants.BUSINESS_NAME, mGetBusinessInformationResponse.getBusinessName());
+
+        System.out.println("Company Name "+mGetBusinessInformationResponse.getCompanyName());
+
+        bundle.putString(Constants.COMPANY_NAME, mGetBusinessInformationResponse.getCompanyName());
         bundle.putString(Constants.BUSINESS_MOBILE_NUMBER, mGetBusinessInformationResponse.getMobileNumber());
         bundle.putInt(Constants.BUSINESS_TYPE, mGetBusinessInformationResponse.getBusinessType());
         bundle.putParcelableArrayList(Constants.BUSINESS_TYPE_LIST, new ArrayList<>(mBusinessTypes));
@@ -520,6 +526,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
     private void processBusinessInformationResponse() {
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
+        mCompanyNameView.setText(mGetBusinessInformationResponse.getCompanyName());
         mBusinessMobileNumberView.setText(getString(R.string.phone_number) + ": " + mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
 
