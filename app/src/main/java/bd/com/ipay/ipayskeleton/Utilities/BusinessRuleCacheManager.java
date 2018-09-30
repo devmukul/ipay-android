@@ -61,6 +61,9 @@ public class BusinessRuleCacheManager {
                         final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(getTag(serviceId));
                         if (businessRuleArray != null) {
                             for (BusinessRule rule : businessRuleArray) {
+
+                                //Send money
+
                                 if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
                                     mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
@@ -69,6 +72,9 @@ public class BusinessRuleCacheManager {
                                     mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_PIN_REQUIRED)) {
                                     mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+
+                                    //Request Money
+
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
                                     mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
@@ -77,7 +83,20 @@ public class BusinessRuleCacheManager {
                                     mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                                 } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED)) {
                                     mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+
+                                    //Top Up
+
+                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT)) {
+                                    mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
+                                    mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_TOP_UP_VERIFICATION_REQUIRED)) {
+                                    mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_PIN_REQUIRED)) {
+                                    mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                                 }
+
+
                             }
                             BusinessRuleCacheManager.setBusinessRules(getTag(serviceId), mMandatoryBusinessRules);
                             Intent intent = new Intent();
@@ -101,6 +120,8 @@ public class BusinessRuleCacheManager {
                 return Constants.SEND_MONEY;
             case ServiceIdConstants.REQUEST_MONEY:
                 return Constants.REQUEST_MONEY;
+            case ServiceIdConstants.TOP_UP:
+                return Constants.TOP_UP;
             default:
                 return "";
         }

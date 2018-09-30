@@ -1124,7 +1124,6 @@
     <string name="do_you_want_to_resign">Are you sure to remove this business account? </string>
     <string name="leaving">Leaving</string>
     <string name="extension">Extension:</string>
-
     <string name="failed_loading_manager_list">Failed to load manager list</string>
     <string name="invite_manager_info_text">You have not added any member yet. Invite more people to manage this business account.</string>
     <string name="invite_people">INVITE PEOPLE</string>
@@ -1262,6 +1261,7 @@
     <string name="zero_amount">0</string>
     <string name="tk">Tk</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
+    <string name="top_up_confirmation_message">MOBILE TOP UP %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
     <string name="request_money_confirmation_message">YOU ARE REQUESTING %1$s FROM</string>
     <string name="request_money_success_message">SUCCESSFULLY REQUESTED %1$s FROM</string>
@@ -1275,4 +1275,5 @@
     <string name="top_up_step_one">Insert <b>mobile number</b> or <b>Search</b> mobile number from contact</string>
     <string name="top_up_step_two">Insert <b>Amount</b> you want to recharge</string>
     <string name="top_up_helper">To topup you or your beloved one\'s mobile,insert number or search from contact</string>
+    <string name="top_up_to">MOBILE TOP-UP TO</string>
 </resources>

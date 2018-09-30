@@ -114,6 +114,10 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 transactionDescriptionTextView.setText(R.string.send_money_to);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
                 break;
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                transactionDescriptionTextView.setText(R.string.top_up_to);
+                balanceInfoLayout.setVisibility(View.VISIBLE);
+                break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
                 transactionDescriptionTextView.setText(R.string.empty_string);

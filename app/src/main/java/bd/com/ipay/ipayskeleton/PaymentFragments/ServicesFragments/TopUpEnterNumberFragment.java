@@ -14,20 +14,28 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class TopUpEnterNumberFragment extends Fragment implements HttpResponseListener {
 
@@ -44,6 +52,8 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     private String mName;
     private String mProfileImageUrl;
     private String mOperatorType;
+
+    private Button mContinueButton;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask;
 
@@ -64,6 +74,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         mMyNumberTopUpTextView = (TextView) view.findViewById(R.id.my_number_topup_text_view);
         mContactImageView = (ImageView) view.findViewById(R.id.contact_image_view);
         mTypeSelector = (RadioGroup) view.findViewById(R.id.type_selector);
+        mContinueButton = (Button) view.findViewById(R.id.continue_button);
         setUpButtonActions();
     }
 
@@ -74,6 +85,8 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
                 mMobileNumber = mobileNumber;
                 mNumberEditText.setText(mMobileNumber);
+                mName = ProfileInfoCacheManager.getUserName();
+                mProfileImageUrl = ProfileInfoCacheManager.getProfileImageUrl();
             }
         });
         mContactImageView.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +106,27 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 }
             }
         });
+        mContinueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (verifyUserInputs()) {
+                    if (mName == null || mName.equals("")) {
+                        getProfileInfo(ContactEngine.formatLocalMobileNumber(mMobileNumber));
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+                        bundle.putString(Constants.NAME, mName);
+                        bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
+                        if (!mProfileImageUrl.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
+                            bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mProfileImageUrl);
+                        } else {
+                            bundle.putString(Constants.PHOTO_URI, mProfileImageUrl);
+                        }
+                        ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
+                    }
+                }
+            }
+        });
     }
 
     private void showErrorMessage(String errorMessage) {
@@ -109,16 +143,22 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         }
     }
 
-    private boolean verifyUserInputs(){
-        if(mNumberEditText.getText() == null){
+    private boolean verifyUserInputs() {
+        if (mNumberEditText.getText() == null) {
             showErrorMessage("Please enter a mobile number");
             return false;
-        }
-        else if(mNumberEditText.getText().toString()== null || mNumberEditText.getText().toString().equals("")){
+        } else if (mNumberEditText.getText().toString() == null || mNumberEditText.getText().toString().equals("")) {
             showErrorMessage("Please enter a mobile number");
             return false;
+        } else {
+            mMobileNumber = mNumberEditText.getText().toString();
+            mMobileNumber = mMobileNumber.replaceAll("[^0-9.]", "");
+            if (!InputValidator.isValidNumber(mMobileNumber)) {
+                showErrorMessage("Please enter a valid mobile number");
+                return false;
+            }
         }
-        else if(mOperatorType.equals("")){
+        if (mOperatorType == null || mOperatorType.equals("")) {
             showErrorMessage("Please select Prepaid/Postpaid");
             return false;
         }
@@ -147,7 +187,6 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 mMobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 mName = data.getStringExtra(Constants.NAME);
                 mProfileImageUrl = data.getStringExtra(Constants.PROFILE_PICTURE);
-
                 if (mMobileNumber != null) {
                     mNumberEditText.setText(mMobileNumber);
                 }
@@ -157,6 +196,31 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        try {
+            if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+                mGetProfileInfoTask = null;
+                mProgressDialog.dismiss();
+                return;
+            }
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                GetUserInfoResponse getUserInfoResponse =
+                        new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                mName = getUserInfoResponse.getName();
+                mProfileImageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.NAME, mName);
+                bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+                bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
+                if (!mProfileImageUrl.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
+                    bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mProfileImageUrl);
+                } else {
+                    bundle.putString(Constants.PHOTO_URI, mProfileImageUrl);
+                }
+                ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
+            }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

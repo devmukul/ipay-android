@@ -6,10 +6,10 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
         android:layout_centerInParent="true"
-        android:paddingBottom="@dimen/value30"
-        android:layout_marginRight="32dp">
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:paddingBottom="@dimen/value30">
 
         <ImageView
             android:id="@+id/icon_topup"
@@ -110,11 +110,11 @@
     </RelativeLayout>
 
     <Button
+        android:id="@+id/continue_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Continue"
-        android:textColor="@color/colorWhite"
-        android:id="@+id/continue_button"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryLight" />
+        android:background="@color/colorPrimaryLight"
+        android:text="Continue"
+        android:textColor="@color/colorWhite" />
 </RelativeLayout>
