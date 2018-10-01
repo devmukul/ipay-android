@@ -48,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.IPayTransactionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -55,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -72,6 +74,9 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
     private EditText mNoteEditText;
     private EditText mPinEditText;
 
+    private int operatorCode;
+    private int operatorType;
+
     private CustomProgressDialog mCustomProgressDialog;
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -87,6 +92,10 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
             profilePicture = getArguments().getString(Constants.PHOTO_URI);
             amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+        }
+        if (transactionType == ServiceIdConstants.TOP_UP) {
+            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+            operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
         }
         numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
@@ -254,6 +263,16 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 url = Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY;
                 mCustomProgressDialog.setMessage(getString(R.string.requesting_money));
                 break;
+
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                apiCommand = Constants.COMMAND_TOPUP_REQUEST;
+                String number = ContactEngine.formatLocalMobileNumber(mobileNumber);
+                number = number.replaceAll("[^0-9]", "");
+                requestJson = gson.toJson(new TopupRequest(Long.parseLong(number), ContactEngine.formatMobileNumberBD(mobileNumber),
+                        operatorType, operatorCode, Long.parseLong(amount.toString().trim()), "+88", operatorType, Constants.DEFAULT_USER_CLASS, mPinEditText.getText().toString()));
+                url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST;
+                mCustomProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
+                break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
                 return;
@@ -273,6 +292,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             switch (result.getApiCommand()) {
                 case Constants.COMMAND_SEND_MONEY:
                 case Constants.COMMAND_REQUEST_MONEY:
+                case Constants.COMMAND_TOPUP_REQUEST:
                     httpRequestPostAsyncTask = null;
                     IPayTransactionResponse iPayTransactionResponse = new Gson().fromJson(result.getJsonString(), IPayTransactionResponse.class);
                     switch (result.getStatus()) {

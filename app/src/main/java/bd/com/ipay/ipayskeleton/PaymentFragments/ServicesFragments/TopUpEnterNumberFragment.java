@@ -37,7 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
-public class TopUpEnterNumberFragment extends Fragment implements HttpResponseListener {
+public class TopUpEnterNumberFragment extends Fragment implements HttpResponseListener, View.OnClickListener {
 
 
     private EditText mNumberEditText;
@@ -51,9 +51,19 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     private String mMobileNumber;
     private String mName;
     private String mProfileImageUrl;
-    private String mOperatorType;
+    private int mOperatorType;
+    private String mOperator;
 
     private Button mContinueButton;
+
+
+    private ImageView gpImageView;
+    private ImageView airtelImageView;
+    private ImageView robiImageView;
+    private ImageView teletalkImageView;
+    private ImageView banglalinkImageView;
+
+    private int operatorCode;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask;
 
@@ -66,6 +76,9 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         View view = inflater.inflate(R.layout.fragment_top_up_enter_amount, container, false);
         mProgressDialog = new ProgressDialog(getContext());
         setUpView(view);
+        mOperator = "";
+        mOperatorType = -1;
+        operatorCode = -1;
         return view;
     }
 
@@ -75,6 +88,11 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         mContactImageView = (ImageView) view.findViewById(R.id.contact_image_view);
         mTypeSelector = (RadioGroup) view.findViewById(R.id.type_selector);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
+        gpImageView = (ImageView) view.findViewById(R.id.gp);
+        airtelImageView = (ImageView) view.findViewById(R.id.airtel);
+        robiImageView = (ImageView) view.findViewById(R.id.robi);
+        teletalkImageView = (ImageView) view.findViewById(R.id.teletalk);
+        banglalinkImageView = (ImageView) view.findViewById(R.id.banglalink);
         setUpButtonActions();
     }
 
@@ -100,9 +118,9 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if (i == R.id.prepaid) {
-                    mOperatorType = "PREPAID";
+                    mOperatorType = 1;
                 } else if (i == R.id.post_paid) {
-                    mOperatorType = "POSTPAID";
+                    mOperatorType = 2;
                 }
             }
         });
@@ -116,6 +134,8 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                         bundle.putString(Constants.NAME, mName);
+                        bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                        bundle.putInt(Constants.OPERATOR_TYPE, mOperatorType);
                         bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
                         if (!mProfileImageUrl.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
                             bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mProfileImageUrl);
@@ -158,8 +178,11 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 return false;
             }
         }
-        if (mOperatorType == null || mOperatorType.equals("")) {
+        if (mOperatorType != 1 && mOperatorType != 2) {
             showErrorMessage("Please select Prepaid/Postpaid");
+            return false;
+        } else if (operatorCode != 1 && operatorCode != 3 && operatorCode != 4 && operatorCode != 5 && operatorCode != 6) {
+            showErrorMessage("Please select an operator");
             return false;
         }
         return true;
@@ -210,6 +233,8 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.NAME, mName);
                 bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+                bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                bundle.putInt(Constants.OPERATOR_TYPE, mOperatorType);
                 bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
                 if (!mProfileImageUrl.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
                     bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mProfileImageUrl);
@@ -221,6 +246,73 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setAppropriateOperatorIconSelected(int operatorCode) {
+        switch (operatorCode) {
+            case 1:
+                gpImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
+                robiImageView.clearColorFilter();
+                airtelImageView.clearColorFilter();
+                banglalinkImageView.clearColorFilter();
+                teletalkImageView.clearColorFilter();
+                break;
+            case 3:
+                robiImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
+                airtelImageView.clearColorFilter();
+                banglalinkImageView.clearColorFilter();
+                teletalkImageView.clearColorFilter();
+                gpImageView.clearColorFilter();
+                break;
+            case 4:
+                airtelImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
+                banglalinkImageView.clearColorFilter();
+                teletalkImageView.clearColorFilter();
+                gpImageView.clearColorFilter();
+                robiImageView.clearColorFilter();
+                break;
+            case 5:
+                banglalinkImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
+                airtelImageView.clearColorFilter();
+                robiImageView.clearColorFilter();
+                teletalkImageView.clearColorFilter();
+                gpImageView.clearColorFilter();
+                break;
+            case 6:
+                teletalkImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
+                airtelImageView.clearColorFilter();
+                banglalinkImageView.clearColorFilter();
+                gpImageView.clearColorFilter();
+                robiImageView.clearColorFilter();
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.airtel:
+                operatorCode = 4;
+                setAppropriateOperatorIconSelected(4);
+                break;
+            case R.id.teletalk:
+                operatorCode = 6;
+                setAppropriateOperatorIconSelected(6);
+                break;
+            case R.id.banglalink:
+                operatorCode = 5;
+                setAppropriateOperatorIconSelected(5);
+                break;
+            case R.id.gp:
+                operatorCode = 1;
+                setAppropriateOperatorIconSelected(1);
+                break;
+            case R.id.robi:
+                operatorCode = 3;
+                setAppropriateOperatorIconSelected(3);
+                break;
         }
     }
 }

@@ -194,6 +194,7 @@ public class Constants {
     public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
     public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
+    public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";

@@ -56,6 +56,8 @@ public class IPayTransactionAmountInputFragment extends Fragment {
     private int transactionType;
     private String name;
     private String mobileNumber;
+    private int operatorType;
+    private int operatorCode;
     private String profilePicture;
 
     @Override
@@ -66,6 +68,8 @@ public class IPayTransactionAmountInputFragment extends Fragment {
             name = getArguments().getString(Constants.NAME);
             mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
             profilePicture = getArguments().getString(Constants.PHOTO_URI);
+            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+            operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
         }
         numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
@@ -208,6 +212,8 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                     bundle.putString(Constants.NAME, name);
                     bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
                     bundle.putString(Constants.PHOTO_URI, profilePicture);
+                    bundle.putInt(Constants.OPERATOR_TYPE, operatorType);
+                    bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
                     final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                     bundle.putSerializable(Constants.AMOUNT, amount);
                     if (getActivity() instanceof IPayTransactionActionActivity) {

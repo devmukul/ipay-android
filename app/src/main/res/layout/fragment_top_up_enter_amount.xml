@@ -16,19 +16,54 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="17dp"
             android:src="@drawable/ic_top_up_white_screenshot" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/topup_helper_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/icon_topup"
-            android:layout_marginBottom="@dimen/value10"
-            android:gravity="center"
-            android:text="@string/top_up_helper"
-            android:textColor="#666666"
-            android:textSize="16sp" />
+            android:layout_marginBottom="@dimen/value20"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <ImageView
+                android:id="@+id/gp"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/gp" />
+
+            <ImageView
+                android:id="@+id/robi"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/robi" />
+
+            <ImageView
+                android:id="@+id/banglalink"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/banglalink" />
+
+            <ImageView
+                android:id="@+id/airtel"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/airtel" />
+
+            <ImageView
+                android:id="@+id/teletalk"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/teletalk" />
+
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/number_layout"
@@ -40,20 +75,21 @@
                 android:id="@+id/number_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="8dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="sans-serif-light"
-                android:gravity="center"
+                android:gravity="center_horizontal"
                 android:text="+880-1"
                 android:textColor="#212121"
-                android:textSize="25sp" />
+                android:textSize="26sp" />
 
             <ImageView
                 android:id="@+id/contact_image_view"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/value5"
+                android:padding="4dp"
                 android:src="@drawable/ic_contact_picker" />
         </RelativeLayout>
 
@@ -66,15 +102,18 @@
 
         <TextView
             android:id="@+id/my_number_topup_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/edit_text_background"
             android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/value16"
-            android:lineSpacingExtra="3sp"
+            android:layout_marginTop="@dimen/value16"
+            android:fontFamily="sans-serif"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="6sp"
             android:text="TOPUP MY NUMBER"
             android:textColor="#00b2a2"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
         <RadioGroup
             android:id="@+id/type_selector"
@@ -112,9 +151,9 @@
     <Button
         android:id="@+id/continue_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryLight"
+        android:background="#00c0af"
         android:text="Continue"
         android:textColor="@color/colorWhite" />
 </RelativeLayout>
