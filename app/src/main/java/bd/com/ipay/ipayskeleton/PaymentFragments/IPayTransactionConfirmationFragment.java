@@ -143,7 +143,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 transactionConfirmationButton.setText(R.string.send_money);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
-                spannableAmount = new SpannableString(getString(R.string.send_money_confirmation_message, amountValue));
+                spannableAmount = new SpannableString(getString(R.string.top_up_confirmation_message, amountValue));
                 spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), 14, 14 + amountValue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), 14, 14 + amountValue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 transactionDescriptionTextView.setText(spannableAmount, TextView.BufferType.SPANNABLE);

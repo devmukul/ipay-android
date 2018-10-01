@@ -96,7 +96,6 @@ public class BusinessRuleCacheManager {
                                     mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                                 }
 
-
                             }
                             BusinessRuleCacheManager.setBusinessRules(getTag(serviceId), mMandatoryBusinessRules);
                             Intent intent = new Intent();
