@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -198,7 +199,13 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		if (SharedPrefManager.getUserBalance().equals("0.0")) {
 			balanceView.setText(R.string.loading);
 		} else {
-			balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(new BigDecimal(SharedPrefManager.getUserBalance()))));
+			try {
+				balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(new BigDecimal(SharedPrefManager.getUserBalance()))));
+			} catch (Exception e) {
+				mTracker.send(new HitBuilders.ExceptionBuilder()
+						.setDescription("Parsing Error- " + SharedPrefManager.getUserBalance())
+						.build());
+			}
 		}
 
 		mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
