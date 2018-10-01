@@ -38,6 +38,7 @@
                 app:srcCompat="@drawable/ic_info_24dp" />
 
             <LinearLayout
+                android:id="@+id/info_holder_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#66000000"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.PromotionConstants;
 import bd.com.ipay.ipayskeleton.ViewHolders.Promotions.GiftFromIPayPromotionViewHolder;
 import bd.com.ipay.ipayskeleton.ViewHolders.Promotions.MoneyBackIPayPromotionViewHolder;
+import bd.com.ipay.ipayskeleton.ViewHolders.Promotions.MoneyBackIPayWithPromoGroupPromotionViewHolder;
 import bd.com.ipay.ipayskeleton.ViewHolders.Promotions.NotImplementedPromotionViewHolder;
 import bd.com.ipay.ipayskeleton.ViewHolders.Promotions.PromotionViewHolder;
 
@@ -34,10 +36,12 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionViewHolder> 
 			case R.layout.list_item_gift_from_ipay_promotion:
 				return new GiftFromIPayPromotionViewHolder(layoutInflater.inflate(R.layout.list_item_gift_from_ipay_promotion, parent, false), mOnOfferActionsListener);
 			case R.layout.list_item_money_back_ipay_promotion:
-				return new MoneyBackIPayPromotionViewHolder(layoutInflater.inflate(R.layout.list_item_gift_from_ipay_promotion, parent, false), mOnOfferActionsListener);
+				return new MoneyBackIPayPromotionViewHolder(layoutInflater.inflate(R.layout.list_item_money_back_ipay_promotion, parent, false), mOnOfferActionsListener);
+			case R.layout.list_item_money_back_ipay_with_promo_group_promotion:
+				return new MoneyBackIPayWithPromoGroupPromotionViewHolder(layoutInflater.inflate(R.layout.list_item_money_back_ipay_with_promo_group_promotion, parent, false), mOnOfferActionsListener);
 			case PromotionConstants.INVALID_VIEW_TYPE:
 			default:
-				return new NotImplementedPromotionViewHolder(layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false), mOnOfferActionsListener);
+				return new NotImplementedPromotionViewHolder(new View(layoutInflater.getContext()), mOnOfferActionsListener);
 		}
 	}
 
@@ -52,7 +56,10 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionViewHolder> 
 
 	@Override
 	public int getItemViewType(int position) {
-		return PromotionConstants.getItemViewType(this.mPromotionList.get(position).getCampaignType());
+		if (this.mPromotionList != null && this.mPromotionList.get(position) != null && this.mPromotionList.get(position).isActive())
+			return PromotionConstants.getItemViewType(this.mPromotionList.get(position).getCampaignType());
+		else
+			return PromotionConstants.INVALID_VIEW_TYPE;
 	}
 
 	@Override

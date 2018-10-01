@@ -24,12 +24,12 @@ public class Promotion {
 	@SerializedName("isActive")
 	private boolean isActive;
 	@SerializedName("meta")
-	private Map<String, String> metaDataMap;
+	private Map<String, Object> metaDataMap;
 
 	public Promotion() {
 	}
 
-	public Promotion(String campaignTitle, String campaignType, String promotionDetails, String consumptionDetails, String imageUrl, String terms, boolean isActive, Map<String, String> metaDataMap) {
+	public Promotion(String campaignTitle, String campaignType, String promotionDetails, String consumptionDetails, String imageUrl, String terms, boolean isActive, Map<String, Object> metaDataMap) {
 
 		this.campaignTitle = campaignTitle;
 		this.campaignType = campaignType;
@@ -98,11 +98,11 @@ public class Promotion {
 		isActive = active;
 	}
 
-	public Map<String, String> getMetaDataMap() {
+	public Map<String, Object> getMetaDataMap() {
 		return metaDataMap;
 	}
 
-	public void setMetaDataMap(Map<String, String> metaDataMap) {
+	public void setMetaDataMap(Map<String, Object> metaDataMap) {
 		this.metaDataMap = metaDataMap;
 	}
 
