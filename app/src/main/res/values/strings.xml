@@ -1253,13 +1253,13 @@
     <string name="send_money_confirm">Send Money Confirm</string>
     <string name="request_money_confirm">Request Money Confirm</string>
     <string name="amberIT">AmberIT</string>
-    <string name="lanka_bangla_card_number">Lanka Bangla card number</string>
-    <string name="lanka_bangla_bill_pay_message">Please enter your Lanka Bangla Visa/Mastercard card number</string>
+    <string name="lanka_bangla_card_number">LankaBangla card number</string>
+    <string name="lanka_bangla_bill_pay_message">Please enter your LankaBangla Visa/MasterCard number</string>
     <string name="card_number">Card number</string>
     <string name="credit_balance">Credit balance</string>
     <string name="minimum_pay">Minimum pay</string>
     <string name="amount_to_pay">Amount to pay</string>
-    <string name="lanka_bangla">Lanka Bangla</string>
+    <string name="lanka_bangla">LankaBangla</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">0</string>

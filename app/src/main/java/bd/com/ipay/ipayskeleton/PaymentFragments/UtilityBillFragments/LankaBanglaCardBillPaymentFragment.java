@@ -98,7 +98,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
         View view = inflater.inflate(R.layout.fragment_lanka_bangla_card_bill_pay, container, false);
         if (getActivity() == null)
             return view;
-        getActivity().setTitle("Lanka Bangla");
+        getActivity().setTitle("LankaBangla");
         attemptGetBusinessRule(ServiceIdConstants.UTILITY_BILL_PAYMENT);
         mProgressDialog = new ProgressDialog(getContext());
         mCustomProgressDialog = new CustomProgressDialog(getContext());
