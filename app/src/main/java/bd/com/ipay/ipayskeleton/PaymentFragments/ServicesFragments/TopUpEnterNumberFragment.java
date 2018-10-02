@@ -11,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +95,12 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         robiImageView = (ImageView) view.findViewById(R.id.robi);
         teletalkImageView = (ImageView) view.findViewById(R.id.teletalk);
         banglalinkImageView = (ImageView) view.findViewById(R.id.banglalink);
+
+        gpImageView.setOnClickListener(this);
+        airtelImageView.setOnClickListener(this);
+        banglalinkImageView.setOnClickListener(this);
+        teletalkImageView.setOnClickListener(this);
+        robiImageView.setOnClickListener(this);
         setUpButtonActions();
     }
 
@@ -147,6 +155,23 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 }
             }
         });
+        mNumberEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mName = "";
+                mProfileImageUrl = "";
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void showErrorMessage(String errorMessage) {
@@ -173,18 +198,18 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         } else {
             mMobileNumber = mNumberEditText.getText().toString();
             mMobileNumber = mMobileNumber.replaceAll("[^0-9.]", "");
-            if (!InputValidator.isValidNumber(mMobileNumber)) {
+            if (!mMobileNumber.matches(InputValidator.MOBILE_NUMBER_REGEX)) {
                 showErrorMessage("Please enter a valid mobile number");
+                return false;
+            } else if (mOperatorType != 1 && mOperatorType != 2) {
+                showErrorMessage("Please select Prepaid/Postpaid");
+                return false;
+            } else if (operatorCode != 1 && operatorCode != 3 && operatorCode != 4 && operatorCode != 5 && operatorCode != 6) {
+                showErrorMessage("Please select an operator");
                 return false;
             }
         }
-        if (mOperatorType != 1 && mOperatorType != 2) {
-            showErrorMessage("Please select Prepaid/Postpaid");
-            return false;
-        } else if (operatorCode != 1 && operatorCode != 3 && operatorCode != 4 && operatorCode != 5 && operatorCode != 6) {
-            showErrorMessage("Please select an operator");
-            return false;
-        }
+
         return true;
     }
 

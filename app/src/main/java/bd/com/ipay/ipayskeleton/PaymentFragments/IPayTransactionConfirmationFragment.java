@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -293,6 +295,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 case Constants.COMMAND_SEND_MONEY:
                 case Constants.COMMAND_REQUEST_MONEY:
                 case Constants.COMMAND_TOPUP_REQUEST:
+                    final String apiCommand = result.getApiCommand();
                     httpRequestPostAsyncTask = null;
                     IPayTransactionResponse iPayTransactionResponse = new Gson().fromJson(result.getJsonString(), IPayTransactionResponse.class);
                     switch (result.getStatus()) {
@@ -314,8 +317,17 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                     bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                     bundle.putString(Constants.SENDER_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
                                     bundle.putSerializable(Constants.AMOUNT, amount);
-                                    if (getActivity() instanceof IPayTransactionActionActivity)
-                                        ((IPayTransactionActionActivity) getActivity()).switchToTransactionSuccessFragment(bundle);
+                                    if (getActivity() instanceof IPayTransactionActionActivity) {
+                                        if (apiCommand.equals(Constants.COMMAND_TOPUP_REQUEST)) {
+                                            Toast.makeText(getContext(), "You have made a top up request to "+
+                                                    ContactEngine.formatMobileNumberBD(mobileNumber)+".\n"+"Please check transaction" +
+                                                    " history to see the status", Toast.LENGTH_LONG).show();
+                                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                                            startActivity(intent);
+                                        } else {
+                                            ((IPayTransactionActionActivity) getActivity()).switchToTransactionSuccessFragment(bundle);
+                                        }
+                                    }
                                 }
                             }, 2000);
                             break;
