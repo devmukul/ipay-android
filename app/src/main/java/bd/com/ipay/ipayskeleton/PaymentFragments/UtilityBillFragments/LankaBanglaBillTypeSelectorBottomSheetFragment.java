@@ -153,7 +153,7 @@ public class LankaBanglaBillTypeSelectorBottomSheetFragment extends BottomSheetD
     private void getDataFromBundle(Bundle bundle) {
         mCreditAmount = bundle.getString("creditAmount");
         mMinAmount = bundle.getString("minimumAmount");
-        mCreditAmountRadioButton.setText("Credit Amount ( " + mCreditAmount + " TK ) ");
+        mCreditAmountRadioButton.setText("Total Outstanding ( " + mCreditAmount + " TK ) ");
         mMinimumAmountRadioButton.setText("Minimum Amount ( " + mMinAmount + " TK )");
     }
 

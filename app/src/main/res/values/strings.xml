@@ -1274,4 +1274,5 @@
     <string name="please_enter_a_pin">Please enter a pin</string>
     <string name="go_back_to_wallet">Go back to Wallet</string>
     <string name="minimum_pin_length_message">Pin must be at least 4 digits.</string>
+    <string name="total_outstanding">Total outstanding</string>
 </resources>
