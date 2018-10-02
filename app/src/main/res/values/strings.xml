@@ -1263,7 +1263,6 @@
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">0</string>
-    <string name="tk">Tk</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
     <string name="request_money_confirmation_message">YOU ARE REQUESTING %1$s FROM</string>
