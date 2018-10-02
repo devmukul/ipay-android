@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/continue_button"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/value15">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/ic_lankabd2" />
+
+            <LinearLayout
+                android:id="@+id/customer_id_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/card_number_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/card_icon"
+                        android:orientation="horizontal"
+                        android:theme="@style/CustomTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/card_number_edit_text"
+                            style="@style/CustomEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="0dp"
+                            android:hint="@string/lanka_bangla_card_number"
+                            android:inputType="number"
+                            android:maxLength="16"
+                            android:maxLines="1" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/card_icon"
+                        android:layout_width="@dimen/value30"
+                        android:layout_height="@dimen/value30"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/value20" />
+                </RelativeLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp" />
+
+                <TextView
+                    android:id="@+id/message_text_view"
+                    style="@style/CustomNoteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:textSize="14sp"
+                    android:layout_marginRight="0dp"
+                    android:gravity="start"
+                    android:text="@string/lanka_bangla_bill_pay_message" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/info_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/name" />
+
+                    <TextView
+                        android:id="@+id/name_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="" />
+                </LinearLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/card_number" />
+
+                    <TextView
+                        android:id="@+id/card_number_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="" />
+                </LinearLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/total_outstanding" />
+
+                    <TextView
+                        android:id="@+id/credit_balance_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="" />
+                </LinearLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/minimum_pay" />
+
+                    <TextView
+                        android:id="@+id/minimum_pay_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="" />
+                </LinearLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginBottom="@dimen/value8"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp" />
+
+                <LinearLayout
+                    android:id="@+id/amount_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/value10"
+                        android:layout_weight="1"
+                        android:text="Amount to be paid" />
+
+                    <EditText
+                        android:id="@+id/other_amount_edit_text"
+                        style="@style/CustomEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_weight="1"
+                        android:hint="@string/amount_enter"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryButton"
+        android:text="@string/continue_add_money"
+        android:textColor="@color/colorPrimaryButtonText" />
+</RelativeLayout>
