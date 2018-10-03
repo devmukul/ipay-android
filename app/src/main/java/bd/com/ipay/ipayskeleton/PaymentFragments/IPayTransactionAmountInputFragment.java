@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IPayTransactionAmountInputFragment extends Fragment implements View.OnClickListener {
@@ -189,9 +190,15 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 mAmountDummyEditText.setSelection(mAmountDummyEditText.getText().length());
             }
         });
+
         mAmountDummyEditText.addTextChangedListener(new TextWatcher() {
+            String beforeString;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (transactionType == ServiceIdConstants.TOP_UP) {
+                    beforeString = s.toString();
+                }
 
             }
 
@@ -202,9 +209,13 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 final String resultString;
                 if (charSequence != null) {
                     resultString = charSequence.toString();
-                    if (!resultString.equals("50") && !resultString.equals("100") &&
-                            !resultString.equals("200") && !resultString.equals("500")) {
-                        setUpDefaultTopUpAmountTextViewColorsUnselected(new TextView(getContext()));
+                    if (transactionType == ServiceIdConstants.TOP_UP) {
+                        if (beforeString.equals("500") && charSequence.toString().equals("50")) {
+                            setUpDefaultTopUpAmountTextViewColorsUnselected(new TextView(getContext()));
+                        } else if (!resultString.equals("50") && !resultString.equals("100") &&
+                                !resultString.equals("200") && !resultString.equals("500")) {
+                            setUpDefaultTopUpAmountTextViewColorsUnselected(new TextView(getContext()));
+                        }
                     }
                 } else
                     resultString = null;
