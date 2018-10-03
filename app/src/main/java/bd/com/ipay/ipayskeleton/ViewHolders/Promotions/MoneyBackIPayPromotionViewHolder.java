@@ -61,6 +61,6 @@ public class MoneyBackIPayPromotionViewHolder extends PromotionViewHolder {
 			}
 		});
 		offerRedeemCountTextView.setText(promotion.getConsumptionDetails());
-		totalTransactionCountBar.setProgress(moneyBackIPayMetaData.getConsumedOfferAmount() / moneyBackIPayMetaData.getMaximumOfferAmount());
+		totalTransactionCountBar.setProgress((int) ((moneyBackIPayMetaData.getConsumedOfferAmount() / (moneyBackIPayMetaData.getMaximumOfferAmount() * 1.0)) * 100));
 	}
 }
