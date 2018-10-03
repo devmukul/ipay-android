@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     tools:context=".Activities.IPayTransactionActionActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite">
+        android:background="@android:color/white">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_layout"
@@ -31,19 +32,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:background="@android:color/transparent"
+            android:background="@android:color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent">
+                android:background="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@android:color/white"
                     android:orientation="vertical">
 
                     <TextView
@@ -51,10 +51,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/value32"
                         android:layout_marginLeft="@dimen/value32"
-                        android:layout_marginEnd="@dimen/value32"
-                        android:layout_marginRight="@dimen/value32"
-                        android:text="Choose a"
-                        android:textColor="@android:color/black"
+                        android:layout_marginTop="24dip"
+                        android:layout_marginEnd="@dimen/value40"
+                        android:layout_marginRight="@dimen/value40"
+                        android:fontFamily="@font/open_sans_light"
+                        android:lineSpacingExtra="3sp"
+                        android:text="@string/withdraw_money_anytime"
+                        android:textColor="#212121"
                         android:textSize="32sp" />
 
                     <TextView
@@ -62,24 +65,23 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/value32"
                         android:layout_marginLeft="@dimen/value32"
+                        android:layout_marginTop="@dimen/value8"
                         android:layout_marginEnd="@dimen/value32"
                         android:layout_marginRight="@dimen/value32"
-                        android:text="convenient way"
-                        android:textColor="@android:color/black"
-                        android:textSize="32sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/value32"
-                        android:layout_marginLeft="@dimen/value32"
-                        android:layout_marginEnd="@dimen/value32"
-                        android:layout_marginRight="@dimen/value32"
-                        android:text="update iPay balance from Bank or Cards will give you freedom to shop send money or transfer."
-                        android:textColor="@android:color/black"
+                        android:fontFamily="@font/open_sans"
+                        android:lineSpacingExtra="3sp"
+                        android:text="@string/withdraw_money_message"
+                        android:textColor="#666666"
                         android:textSize="14sp" />
+
+                    <FrameLayout
+                        android:id="@+id/bank_option_fragment_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white" />
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
+
 </android.support.design.widget.CoordinatorLayout>

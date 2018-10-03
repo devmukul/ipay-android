@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankRequestRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -52,7 +52,7 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
     private BankAccountList mSelectedBank;
     private Tracker mTracker;
 
-    private AddMoneyRequest mAddMoneyRequest;
+    private AddMoneyByBankRequestRequest mAddMoneyByBankRequestRequest;
 
     private Context context;
     private CustomProgressDialog mCustomProgressDialog;
@@ -136,9 +136,9 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
     }
 
     private void launchOTPVerification() {
-        String jsonString = new Gson().toJson(mAddMoneyRequest);
+        String jsonString = new Gson().toJson(mAddMoneyByBankRequestRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, Constants.METHOD_POST);
+                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY_FROM_BANK, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
@@ -149,11 +149,11 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
 
         mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_add_money_in_progress));
         mCustomProgressDialog.showDialog();
-        mAddMoneyRequest = new AddMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
+        mAddMoneyByBankRequestRequest = new AddMoneyByBankRequestRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
         Gson gson = new Gson();
-        String json = gson.toJson(mAddMoneyRequest);
+        String json = gson.toJson(mAddMoneyByBankRequestRequest);
         mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, json, getActivity(), false);
+                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY_FROM_BANK, json, getActivity(), false);
         mAddMoneyTask.mHttpResponseListener = this;
 
         mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
