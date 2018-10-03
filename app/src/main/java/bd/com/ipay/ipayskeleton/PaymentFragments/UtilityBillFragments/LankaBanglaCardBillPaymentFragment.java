@@ -257,12 +257,12 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
         Editable mCardNumberEditable;
         mCardNumberEditable = mCardNumberEditText.getText();
         if (mCardNumberEditable == null) {
-            mCardNumberEditText.setError("Please enter your lanka bangla card number");
+            mCardNumberEditText.setError("Please enter your LankaBangla card number");
             return false;
         } else {
             mCardNumber = mCardNumberEditable.toString();
             if (mCardNumber == null || mCardNumber.equals("")) {
-                mCardNumberEditText.setError("Please enter your lanka bangla card number");
+                mCardNumberEditText.setError("Please enter your LankaBangla card number");
                 return false;
             } else {
                 if (!(mCardNumber.matches(REGEX_VISA_CARD_NUMBER)) && !(mCardNumber.matches(REGEX_MASTERCARD_NUMBER))) {
