@@ -95,7 +95,6 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         robiImageView = (ImageView) view.findViewById(R.id.robi);
         teletalkImageView = (ImageView) view.findViewById(R.id.teletalk);
         banglalinkImageView = (ImageView) view.findViewById(R.id.banglalink);
-
         gpImageView.setOnClickListener(this);
         airtelImageView.setOnClickListener(this);
         banglalinkImageView.setOnClickListener(this);
@@ -110,6 +109,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
             public void onClick(View view) {
                 String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
                 mMobileNumber = mobileNumber;
+                mMobileNumber = mobileNumber.substring(0, 4) + "-" + mobileNumber.substring(4, mobileNumber.length());
                 mNumberEditText.setText(mMobileNumber);
                 mName = ProfileInfoCacheManager.getUserName();
                 mProfileImageUrl = ProfileInfoCacheManager.getProfileImageUrl();
@@ -155,6 +155,21 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 }
             }
         });
+        mNumberEditText.setSelection(mNumberEditText.getText().length());
+        mNumberEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (mNumberEditText.getText().toString().equals("+880-1")) {
+                        mNumberEditText.setSelection(6);
+                    } else {
+                        mNumberEditText.setSelection(mNumberEditText.getText().length());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         mNumberEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -163,12 +178,19 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mName = "";
-                mProfileImageUrl = "";
+                if (s.toString().length() < 6) {
+                    mNumberEditText.setText("+880-1");
+                }
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (mNumberEditText.getText().toString().equals("+880-1")) {
+                    mNumberEditText.setSelection(6);
+                } else {
+                    mNumberEditText.setSelection(mNumberEditText.getText().length());
+                }
 
             }
         });
@@ -236,6 +258,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 mName = data.getStringExtra(Constants.NAME);
                 mProfileImageUrl = data.getStringExtra(Constants.PROFILE_PICTURE);
                 if (mMobileNumber != null) {
+                    mMobileNumber = mMobileNumber.substring(0, 4) + "-" + mMobileNumber.substring(4, mMobileNumber.length());
                     mNumberEditText.setText(mMobileNumber);
                 }
             }

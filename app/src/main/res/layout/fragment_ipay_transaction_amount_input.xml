@@ -131,6 +131,62 @@
                     android:background="#66d8cd" />
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:visibility="gone"
+                    android:id="@+id/default_top_up_amount"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="@dimen/value8"
+                    android:weightSum="4">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:id="@+id/text_view_taka_fifty"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="50Tk"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"
+                        android:id="@+id/text_view_taka_hundred"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="100Tk"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"
+                        android:id="@+id/text_view_taka_two_hundred"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="200Tk"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_weight="1"
+                        android:id="@+id/text_view_taka_five_hundred"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="500Tk"
+                        android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/balance_info_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

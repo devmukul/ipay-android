@@ -10,15 +10,15 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:layout_above="@+id/continue_button">
+        android:layout_above="@+id/continue_button"
+        android:fillViewport="true">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="32dp"
-            android:gravity="center"
             android:layout_marginRight="32dp"
+            android:gravity="center"
             android:paddingBottom="@dimen/value30">
 
             <ImageView
@@ -88,7 +88,8 @@
                     android:layout_marginBottom="8dp"
                     android:background="@android:color/transparent"
                     android:fontFamily="sans-serif-light"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
+                    android:inputType="phone"
                     android:text="+880-1"
                     android:textColor="#212121"
                     android:textSize="26sp" />
@@ -140,7 +141,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="#666666"
                     android:gravity="center"
                     android:text="Pre-paid Package"
                     android:textColor="#666666" />
@@ -150,7 +150,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="#666666"
                     android:gravity="center"
                     android:text="Pre-paid Package"
                     android:textColor="#666666" />
@@ -162,8 +161,8 @@
         android:id="@+id/continue_button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="@dimen/value10"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/value10"
         android:background="#00c0af"
         android:text="Continue"
         android:textColor="@color/colorWhite" />

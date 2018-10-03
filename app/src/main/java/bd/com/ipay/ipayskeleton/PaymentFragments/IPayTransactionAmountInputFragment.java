@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +48,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class IPayTransactionAmountInputFragment extends Fragment {
+public class IPayTransactionAmountInputFragment extends Fragment implements View.OnClickListener {
 
     public MandatoryBusinessRules mMandatoryBusinessRules;
     private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
@@ -59,6 +60,13 @@ public class IPayTransactionAmountInputFragment extends Fragment {
     private int operatorType;
     private int operatorCode;
     private String profilePicture;
+    private LinearLayout mTopUpDefaultAmountLayout;
+    private TextView mTakaFiftyTextView;
+    private TextView mTakaHundredTextView;
+    private TextView mTakaTwoHundredTextView;
+    private TextView mTakaFiveHundredTextView;
+
+    private EditText mAmountDummyEditText;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,10 +103,20 @@ public class IPayTransactionAmountInputFragment extends Fragment {
         final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
         final TextView nameTextView = view.findViewById(R.id.name_text_view);
         final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
-        final EditText amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
+        mAmountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
         final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
         final Button continueButton = view.findViewById(R.id.continue_button);
         final View balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
+        mTopUpDefaultAmountLayout = (LinearLayout) view.findViewById(R.id.default_top_up_amount);
+        mTakaFiftyTextView = (TextView) view.findViewById(R.id.text_view_taka_fifty);
+        mTakaHundredTextView = (TextView) view.findViewById(R.id.text_view_taka_hundred);
+        mTakaTwoHundredTextView = (TextView) view.findViewById(R.id.text_view_taka_two_hundred);
+        mTakaFiveHundredTextView = (TextView) view.findViewById(R.id.text_view_taka_five_hundred);
+
+        mTakaFiveHundredTextView.setOnClickListener(this);
+        mTakaTwoHundredTextView.setOnClickListener(this);
+        mTakaHundredTextView.setOnClickListener(this);
+        mTakaFiftyTextView.setOnClickListener(this);
 
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -113,18 +131,22 @@ public class IPayTransactionAmountInputFragment extends Fragment {
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 transactionDescriptionTextView.setText(R.string.request_money_from);
                 balanceInfoLayout.setVisibility(View.GONE);
+                mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 transactionDescriptionTextView.setText(R.string.send_money_to);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
+                mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
                 transactionDescriptionTextView.setText(R.string.top_up_to);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
+                mTopUpDefaultAmountLayout.setVisibility(View.VISIBLE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
                 transactionDescriptionTextView.setText(R.string.empty_string);
+                mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 break;
         }
         nameTextView.setText(name);
@@ -136,7 +158,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 .into(profileImageView);
         ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(Double.valueOf(SharedPrefManager.getUserBalance()))));
 
-        amountDummyEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter() {
+        mAmountDummyEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
                 if (source != null) {
@@ -161,13 +183,13 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 return super.filter(source, start, end, dest, dstart, dend);
             }
         }});
-        amountDummyEditText.setOnClickListener(new View.OnClickListener() {
+        mAmountDummyEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                amountDummyEditText.setSelection(amountDummyEditText.getText().length());
+                mAmountDummyEditText.setSelection(mAmountDummyEditText.getText().length());
             }
         });
-        amountDummyEditText.addTextChangedListener(new TextWatcher() {
+        mAmountDummyEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -178,13 +200,17 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 double result = 0;
                 String addSuffix = "";
                 final String resultString;
-                if (charSequence != null)
+                if (charSequence != null) {
                     resultString = charSequence.toString();
-                else
+                    if (!resultString.equals("50") && !resultString.equals("100") &&
+                            !resultString.equals("200") && !resultString.equals("500")) {
+                        setUpDefaultTopUpAmountTextViewColorsUnselected(new TextView(getContext()));
+                    }
+                } else
                     resultString = null;
                 if (resultString != null && resultString.length() > 0) {
                     if (resultString.matches("[0]+")) {
-                        amountDummyEditText.setText("");
+                        mAmountDummyEditText.setText("");
                     }
 
                     if (resultString.charAt(0) != '.' || resultString.length() > 1)
@@ -224,8 +250,8 @@ public class IPayTransactionAmountInputFragment extends Fragment {
         });
 
         if (getActivity() != null) {
-            amountDummyEditText.requestFocus();
-            Utilities.showKeyboard(getActivity(), amountDummyEditText);
+            mAmountDummyEditText.requestFocus();
+            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
         }
     }
 
@@ -296,4 +322,95 @@ public class IPayTransactionAmountInputFragment extends Fragment {
                 mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(transactionType));
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.text_view_taka_fifty:
+                mTakaFiftyTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount_selected));
+                mTakaFiftyTextView.setTextColor(getResources().getColor(R.color.colorTopUpAmount));
+                mAmountDummyEditText.setText("50");
+                Utilities.hideKeyboard(getActivity());
+                setUpDefaultTopUpAmountTextViewColorsUnselected(mTakaFiftyTextView);
+                break;
+            case R.id.text_view_taka_hundred:
+                mTakaHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount_selected));
+                mTakaHundredTextView.setTextColor(getResources().getColor(R.color.colorTopUpAmount));
+                mAmountDummyEditText.setText("100");
+                setUpDefaultTopUpAmountTextViewColorsUnselected(mTakaHundredTextView);
+                Utilities.hideKeyboard(getActivity());
+                break;
+            case R.id.text_view_taka_two_hundred:
+                mTakaTwoHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount_selected));
+                mTakaTwoHundredTextView.setTextColor(getResources().getColor(R.color.colorTopUpAmount));
+                mAmountDummyEditText.setText("200");
+                setUpDefaultTopUpAmountTextViewColorsUnselected(mTakaTwoHundredTextView);
+                Utilities.hideKeyboard(getActivity());
+                break;
+            case R.id.text_view_taka_five_hundred:
+                mTakaFiveHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount_selected));
+                mTakaFiveHundredTextView.setTextColor(getResources().getColor(R.color.colorTopUpAmount));
+                mAmountDummyEditText.setText("500");
+                setUpDefaultTopUpAmountTextViewColorsUnselected(mTakaFiveHundredTextView);
+                Utilities.hideKeyboard(getActivity());
+                break;
+
+        }
+    }
+
+    private void setUpDefaultTopUpAmountTextViewColorsUnselected(TextView textView) {
+        if (textView.getId() == R.id.text_view_taka_fifty) {
+            mTakaHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaTwoHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaTwoHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaFiveHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiveHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+        } else if (textView.getId() == R.id.text_view_taka_hundred) {
+
+            mTakaFiftyTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiftyTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaTwoHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaTwoHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaFiveHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiveHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+        } else if (textView.getId() == R.id.text_view_taka_two_hundred) {
+
+            mTakaHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaFiftyTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiftyTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaFiveHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiveHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+        } else if (textView.getId() == R.id.text_view_taka_five_hundred) {
+
+            mTakaHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaTwoHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaTwoHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaFiftyTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiftyTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+        } else {
+            mTakaFiftyTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiftyTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaTwoHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaTwoHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            mTakaFiveHundredTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount));
+            mTakaFiveHundredTextView.setTextColor(getResources().getColor(R.color.colorWhite));
+        }
+    }
 }
