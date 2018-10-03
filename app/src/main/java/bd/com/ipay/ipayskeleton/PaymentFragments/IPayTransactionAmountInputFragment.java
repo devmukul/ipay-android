@@ -285,7 +285,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             } else {
                 final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                 final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-                if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY && amount.compareTo(balance) > 0) {
+                if (((transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP)) && amount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
                 } else {
                     final BigDecimal minimumAmount = mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
@@ -338,9 +338,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.text_view_taka_fifty:
+                mAmountDummyEditText.setText("50");
                 mTakaFiftyTextView.setBackground(getResources().getDrawable(R.drawable.background_default_top_up_amount_selected));
                 mTakaFiftyTextView.setTextColor(getResources().getColor(R.color.colorTopUpAmount));
-                mAmountDummyEditText.setText("50");
                 Utilities.hideKeyboard(getActivity());
                 setUpDefaultTopUpAmountTextViewColorsUnselected(mTakaFiftyTextView);
                 break;
