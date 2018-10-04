@@ -72,13 +72,17 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
-            name = getArguments().getString(Constants.NAME);
-            mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
-            profilePicture = getArguments().getString(Constants.PHOTO_URI);
-            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
-            operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
+        try {
+            if (getArguments() != null) {
+                transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
+                name = getArguments().getString(Constants.NAME);
+                mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
+                profilePicture = getArguments().getString(Constants.PHOTO_URI);
+                operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+                operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
@@ -150,7 +154,13 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 break;
         }
-        nameTextView.setText(name);
+        if (name != null && !name.equals("")) {
+            nameTextView.setText(name);
+        } else {
+            if (transactionType == ServiceIdConstants.TOP_UP) {
+                nameTextView.setVisibility(View.GONE);
+            }
+        }
         Glide.with(this)
                 .load(profilePicture)
                 .placeholder(R.drawable.ic_profile)

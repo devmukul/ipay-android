@@ -88,12 +88,16 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
-            name = getArguments().getString(Constants.NAME);
-            mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
-            profilePicture = getArguments().getString(Constants.PHOTO_URI);
-            amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+        try {
+            if (getArguments() != null) {
+                transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
+                name = getArguments().getString(Constants.NAME);
+                mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
+                profilePicture = getArguments().getString(Constants.PHOTO_URI);
+                amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+            }
+        }catch (Exception e){
+
         }
         if (transactionType == ServiceIdConstants.TOP_UP) {
             operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);

@@ -27,7 +27,7 @@
             android:layout_marginBottom="@dimen/value24"
             android:layout_marginLeft="@dimen/value32"
             android:layout_marginRight="@dimen/value32"
-            android:lineSpacingExtra="8sp"
+            android:lineSpacingExtra="6sp"
             android:shadowColor="#0c000000"
             android:shadowDy="1"
             android:shadowRadius="1"
@@ -42,8 +42,8 @@
             android:layout_marginBottom="@dimen/value20">
 
             <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_marginLeft="48dp"
                 android:layout_marginTop="3dp"
                 android:src="@drawable/drawable_left_tick" />
@@ -56,7 +56,7 @@
                 android:lineSpacingExtra="5sp"
                 android:text="@string/top_up_step_one"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -65,8 +65,8 @@
             android:layout_marginBottom="@dimen/value20">
 
             <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_marginLeft="48dp"
                 android:layout_marginTop="3dp"
                 android:src="@drawable/drawable_left_tick" />
@@ -79,7 +79,7 @@
                 android:lineSpacingExtra="5sp"
                 android:text="@string/top_up_step_two"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,8 +87,8 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_marginLeft="48dp"
                 android:layout_marginTop="3dp"
                 android:src="@drawable/drawable_left_tick" />
@@ -102,7 +102,7 @@
                 android:lineSpacingExtra="5sp"
                 android:text="@string/send_money_step_three"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </LinearLayout>
         <!--  <TextView
               android:layout_width="match_parent"

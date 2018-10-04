@@ -290,6 +290,10 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                     bundle.putString(Constants.PHOTO_URI, mProfileImageUrl);
                 }
                 ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+                ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
             }
 
         } catch (Exception e) {
