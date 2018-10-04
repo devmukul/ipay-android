@@ -158,7 +158,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             nameTextView.setText(name);
         } else {
             if (transactionType == ServiceIdConstants.TOP_UP) {
-                nameTextView.setVisibility(View.GONE);
+                nameTextView.setText(mobileNumber);
             }
         }
         Glide.with(this)

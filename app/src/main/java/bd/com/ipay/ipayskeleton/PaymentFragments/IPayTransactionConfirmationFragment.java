@@ -191,8 +191,12 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 Utilities.showKeyboard(getContext(), mNoteEditText);
             }
         }
-
-        nameTextView.setText(name);
+        if(name != null) {
+            nameTextView.setText(name);
+        }
+        else{
+            nameTextView.setText(mobileNumber);
+        }
         Glide.with(this)
                 .load(profilePicture)
                 .placeholder(R.drawable.ic_profile)
