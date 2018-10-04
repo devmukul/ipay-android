@@ -1246,7 +1246,7 @@
     <string name="your_ipay_balance">Your available iPay balance is</string>
     <string name="send_money_success_description">We will notify receiver that you have sent money. You can see the details in your transaction in case you need them further.</string>
     <string name="request_money_success_description">We will notify receiver that you requested money. We will notify you when he accepts or rejects your request.</string>
-    <string name="fetching_user_info">Fetching user info</string>
+    <string name="fetching_user_info">Fetching user info…</string>
     <string name="request_money_helper_text">Running low balance in your iPay wallet? Request other members to transfer money to your iPay wallet</string>
     <string name="request_money_step_two">insert <b>amount</b> you want to request</string>
     <string name="request_money_from">YOU ARE REQUESTING MONEY FROM</string>
@@ -1257,7 +1257,6 @@
     <string name="lanka_bangla_bill_pay_message">Please enter your LankaBangla Visa/MasterCard number</string>
     <string name="card_number">Card number</string>
     <string name="credit_balance">Credit balance</string>
-    <string name="minimum_pay">Minimum pay</string>
     <string name="amount_to_pay">Amount to pay</string>
     <string name="lanka_bangla">LankaBangla</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
@@ -1274,5 +1273,14 @@
     <string name="please_enter_a_pin">Please enter a pin</string>
     <string name="go_back_to_wallet">Go back to Wallet</string>
     <string name="minimum_pin_length_message">Pin must be at least 4 digits.</string>
-    <string name="total_outstanding">Total outstanding</string>
+    <string name="lanka_bangla_card_number_input_message">Please enter your LankaBangla Visa or Master Card Number</string>
+    <string name="card_hint">XXXX</string>
+    <string name="invalid_card_number_message">Enter a valid card number.</string>
+    <string name="empty_card_number_message">Enter a card number.</string>
+    <string name="bill_details">Bill Details</string>
+    <string name="pay_this_bill">Pay This Bill</string>
+    <string name="dummy_card_number">4554 4500 0074 7203</string>
+    <string name="dummy_amount">Tk. 10,000.00</string>
+    <string name="total_outstanding">Total Outstanding</string>
+    <string name="minimum_pay">Minimum Pay</string>
 </resources>

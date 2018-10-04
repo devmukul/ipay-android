@@ -55,7 +55,7 @@
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/sender_profile_picture_image_url"
+                    android:id="@+id/sender_profile_picture_image_view"
                     android:layout_width="@dimen/value80"
                     android:layout_height="@dimen/value80"
                     android:scaleType="centerCrop"
@@ -71,7 +71,7 @@
                     android:src="@drawable/success_arrow" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/receiver_profile_picture_image_url"
+                    android:id="@+id/receiver_profile_picture_image_view"
                     android:layout_width="@dimen/value80"
                     android:layout_height="@dimen/value80"
                     android:scaleType="centerCrop"

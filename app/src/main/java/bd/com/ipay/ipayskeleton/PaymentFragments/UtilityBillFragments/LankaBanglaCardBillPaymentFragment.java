@@ -42,7 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCardBillPayRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
@@ -72,7 +72,7 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
     private String cardType;
 
     private HttpRequestGetAsyncTask mGetLankaBanglaCardUserInfo = null;
-    private LankaBanglaCustomerResponse lankaBanglaCustomerResponse;
+    private LankaBanglaCustomerInfoResponse lankaBanglaCustomerInfoResponse;
     private HttpRequestPostAsyncTask mLankaBanglaCardBillPayTask = null;
     private LankaBanglaCardBillPayRequest mLankaBanglaCardBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
@@ -240,13 +240,13 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
             }
 
             if (cardType.equals(Constants.VISA)) {
-                mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_VISA_CUSTOMER + mCardNumber;
+                mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO + mCardNumber;
 
             } else if (cardType.equals(Constants.MASTERCARD)) {
-                mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER + mCardNumber;
+                mUri = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO + mCardNumber;
             }
 
-            mGetLankaBanglaCardUserInfo = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER, mUri,
+            mGetLankaBanglaCardUserInfo = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO, mUri,
                     getActivity(), this, false);
             mGetLankaBanglaCardUserInfo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             mProgressDialog.show();
@@ -280,15 +280,15 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
     private void setupView() {
         numberFormat.setMinimumFractionDigits(2);
         numberFormat.setMaximumFractionDigits(2);
-        mNameTextView.setText(lankaBanglaCustomerResponse.getName());
-        mMinimumPayView.setText(lankaBanglaCustomerResponse.getMinimumPay());
-        mCreditBalanceView.setText(lankaBanglaCustomerResponse.getCreditBalance());
-        mCardNumberView.setText(lankaBanglaCustomerResponse.getCardNumber());
+        mNameTextView.setText(lankaBanglaCustomerInfoResponse.getName());
+        mMinimumPayView.setText(lankaBanglaCustomerInfoResponse.getMinimumPay());
+        mCreditBalanceView.setText(lankaBanglaCustomerInfoResponse.getCreditBalance());
+        mCardNumberView.setText(lankaBanglaCustomerInfoResponse.getCardNumber());
         mContinueButton.setText(R.string.pay_bill);
         infoView.setVisibility(View.VISIBLE);
         mCustomerIDView.setVisibility(View.GONE);
-        mMinimumPayAmount = lankaBanglaCustomerResponse.getMinimumPay();
-        mCreditBalanceAmount = lankaBanglaCustomerResponse.getCreditBalance();
+        mMinimumPayAmount = lankaBanglaCustomerInfoResponse.getMinimumPay();
+        mCreditBalanceAmount = lankaBanglaCustomerInfoResponse.getCreditBalance();
     }
 
     @Override
@@ -305,12 +305,12 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
             try {
                 Gson gson = new Gson();
                 switch (result.getApiCommand()) {
-                    case Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER:
-                        lankaBanglaCustomerResponse = gson.fromJson(result.getJsonString(), LankaBanglaCustomerResponse.class);
+                    case Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO:
+                        lankaBanglaCustomerInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaCustomerInfoResponse.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                             setupView();
                         } else {
-                            Toast.makeText(getContext(), lankaBanglaCustomerResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), lankaBanglaCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
                         mGetLankaBanglaCardUserInfo = null;
                         break;
