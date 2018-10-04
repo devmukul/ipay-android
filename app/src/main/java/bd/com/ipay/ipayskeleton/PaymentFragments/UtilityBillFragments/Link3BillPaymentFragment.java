@@ -182,7 +182,7 @@ public class Link3BillPaymentFragment extends BaseFragment implements HttpRespon
 
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mLinkThreeBillPayRequest);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_LINK_THREE_BILL_PAY,
                 Constants.BASE_URL_UTILITY + Constants.URL_LINK_THREE_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
