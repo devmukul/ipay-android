@@ -17,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthServicesListWithOTPRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCardBillPayRequest;
 
 
 public class TwoFactorAuthServicesAsynctaskMap {
@@ -131,6 +132,14 @@ public class TwoFactorAuthServicesAsynctaskMap {
                     billPayRequest.setOtp(otp);
                 json = gson.toJson(billPayRequest);
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BANGLALION_BILL_PAY, uri, json, context, false);
+                return mHttpPostAsyncTask;
+
+            case Constants.COMMAND_LANKABANGLA_BILL_PAY:
+                LankaBanglaCardBillPayRequest lankaBanglaCardBillPayRequest = gson.fromJson(json, LankaBanglaCardBillPayRequest.class);
+                if (otp != null)
+                    lankaBanglaCardBillPayRequest.setOtp(otp);
+                json = gson.toJson(lankaBanglaCardBillPayRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY, uri, json, context, false);
                 return mHttpPostAsyncTask;
 
             default:

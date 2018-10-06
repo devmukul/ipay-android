@@ -88,11 +88,11 @@ public abstract class IPayAbstractCardNumberInputFragment extends Fragment {
 
 	public void showErrorMessage(String errorMessage) {
 		if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
-			Snackbar snackbar = Snackbar.make(continueButton, errorMessage, Snackbar.LENGTH_LONG);
+			Snackbar snackbar = Snackbar.make(continueButton, errorMessage, Snackbar.LENGTH_SHORT);
 			View snackbarView = snackbar.getView();
 			snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
 			ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
-			layoutParams.height = getResources().getDimensionPixelSize(R.dimen.value50);
+			layoutParams.height = continueButton.getHeight();
 			snackbarView.setLayoutParams(layoutParams);
 			TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
 			textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));

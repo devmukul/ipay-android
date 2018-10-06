@@ -103,20 +103,20 @@ public class LankaBanglaBillTypeSelectorBottomSheetFragment extends BottomSheetD
                 if (selectedRadioID == R.id.credit_amount) {
                     if (ifUserEligibleToPay(mCreditAmount)) {
                         selectedAmount = mCreditAmount;
-                        selectedBillType = Constants.credit_balance;
+                        selectedBillType = Constants.CREDIT_BALANCE;
                         attemptBillPayWithPinCheck();
                     }
                 } else if (selectedRadioID == R.id.minimum_amount) {
                     if (ifUserEligibleToPay(mMinAmount)) {
                         selectedAmount = mMinAmount;
-                        selectedBillType = Constants.minimum_pay;
+                        selectedBillType = Constants.MINIMUM_PAY;
                         attemptBillPayWithPinCheck();
                     }
                 } else if (selectedRadioID == R.id.other_amount) {
                     if (!isFieldEmpty()) {
                         if (ifUserEligibleToPay(otherAmount)) {
                             selectedAmount = otherAmount;
-                            selectedBillType = Constants.others;
+                            selectedBillType = Constants.OTHER;
                             attemptBillPayWithPinCheck();
                         }
                     }

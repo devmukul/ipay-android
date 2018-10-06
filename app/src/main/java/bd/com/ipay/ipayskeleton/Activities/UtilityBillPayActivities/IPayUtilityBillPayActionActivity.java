@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.LankaBanglaCardNumberInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -57,7 +58,12 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		Utilities.hideKeyboard(this);
-
+		for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+			if (fragment instanceof IPayAbstractTransactionSuccessFragment) {
+				finish();
+				return;
+			}
+		}
 		if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
 			getSupportFragmentManager().popBackStackImmediate();
 		} else {

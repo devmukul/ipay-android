@@ -74,6 +74,18 @@ public class CardNumberValidator {
 		return isNumber ? entry.replaceAll("\\D", "") : entry.replaceAll("\\s+|-", "");
 	}
 
+	public static String deSanitizeEntry(String entry, char separator) {
+		entry = entry.replace(String.valueOf(separator), "");
+
+		int interval = 4;
+
+		StringBuilder stringBuilder = new StringBuilder(entry);
+		for (int i = 0; i < entry.length() / interval; i++) {
+			stringBuilder.insert(((i + 1) * interval) + i, separator);
+		}
+		return stringBuilder.toString();
+	}
+
 	public static Cards getLikelyType(String num) {
 		num = sanitizeEntry(num, true);
 		Cards[] cards = Cards.values();

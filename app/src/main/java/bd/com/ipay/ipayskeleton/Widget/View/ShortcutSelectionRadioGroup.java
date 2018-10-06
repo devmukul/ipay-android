@@ -21,15 +21,25 @@ public class ShortcutSelectionRadioGroup extends RadioGroup {
 
 	@Override
 	public void addView(View child) {
+		updateChild(child);
+		super.addView(child);
+	}
+
+	private void updateChild(View child) {
 		if (child instanceof RadioButton) {
 			((RadioButton) child).setButtonDrawable(android.R.color.transparent);
 			child.setBackgroundResource(R.drawable.background_shortcut_selection_radio_button);
 			((RadioButton) child).setTextColor(ResourcesCompat.getColorStateList(getResources(), R.color.shortcut_selection_radio_button_text_color, getContext().getTheme()));
-			final LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
+
+			final LayoutParams layoutParams;
+			if (child.getLayoutParams() == null) {
+				layoutParams = new LayoutParams(getContext(), null);
+			} else {
+				layoutParams = (LayoutParams) child.getLayoutParams();
+			}
 			int margin = getResources().getDimensionPixelSize(R.dimen.value4);
 			layoutParams.setMargins(margin, margin, margin, margin);
 			child.setLayoutParams(layoutParams);
 		}
-		super.addView(child);
 	}
 }

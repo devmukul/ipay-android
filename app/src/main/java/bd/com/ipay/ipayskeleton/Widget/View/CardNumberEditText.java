@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
 public class CardNumberEditText extends AppCompatEditText {
 
 	private static final int INDEX_NOT_FOUND = -1;
-	private String separator = "-";
+	private String separator = " ";
 	private int maximumCreditCardLength = 19;
 	private String mPreviousText;
 	private int currentCardIcon = -1;

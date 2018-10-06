@@ -1,27 +1,17 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Locale;
-
+import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -34,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widget.View.BillDetailsDialog;
 
 public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberInputFragment implements HttpResponseListener {
 
@@ -131,57 +122,45 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 		mProgressDialog.dismissDialog();
 	}
 
-	private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-
-	private void showLankaBanglaUserInfo(LankaBanglaCustomerInfoResponse lankaBanglaCustomerInfoResponse) {
+	private void showLankaBanglaUserInfo(final LankaBanglaCustomerInfoResponse lankaBanglaCustomerInfoResponse) {
 		if (getActivity() == null)
 			return;
 
-		@SuppressLint("InflateParams") final View customTitleView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_dialog_custom_title, null, false);
-		@SuppressLint("InflateParams") final View customView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_dialog_card_customer_info_bill, null, false);
-
-		numberFormat.setMinimumFractionDigits(2);
-		numberFormat.setMaximumFractionDigits(2);
-		final ImageButton closeButton = customTitleView.findViewById(R.id.close_button);
-		final TextView titleTextView = customTitleView.findViewById(R.id.title_text_view);
-
-
-		final TextView totalOutstandingTextView = customView.findViewById(R.id.total_outstanding_text_view);
-		final TextView cardNumberTextView = customView.findViewById(R.id.card_number_text_view);
-		final ImageView billClientLogoImageView = customView.findViewById(R.id.bill_client_logo_image_view);
-		final ImageView cardLogoImageView = customView.findViewById(R.id.card_logo_image_view);
-		final TextView minimumAmountTextView = customView.findViewById(R.id.minimum_amount_text_view);
-		final TextView cardHolderNameTextView = customView.findViewById(R.id.card_holder_name_text_view);
-		final Button payBillButton = customView.findViewById(R.id.pay_bill_button);
-
-		billClientLogoImageView.setImageResource(R.drawable.ic_lankabd2);
-		cardNumberTextView.setText(getCardNumber());
-		cardHolderNameTextView.setText(lankaBanglaCustomerInfoResponse.getName());
+		final BillDetailsDialog billDetailsDialog = new BillDetailsDialog(getContext());
+		billDetailsDialog.setTitle(getString(R.string.bill_details));
+		billDetailsDialog.setClientLogoImageResource(R.drawable.ic_lankabd2);
 		CardNumberValidator.Cards cards = CardNumberValidator.getCardType(lankaBanglaCustomerInfoResponse.getCardNumber());
 		if (cards != null)
-			cardLogoImageView.setImageResource(cards.getCardIconId());
-		totalOutstandingTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(lankaBanglaCustomerInfoResponse.getCreditBalance()))));
-		minimumAmountTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(lankaBanglaCustomerInfoResponse.getMinimumPay()))));
-		final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-				.setCustomTitle(customTitleView)
-				.setCancelable(false)
-				.setView(customView)
-				.create();
-		alertDialog.show();
+			billDetailsDialog.setBillTitleInfo(CardNumberValidator.deSanitizeEntry(lankaBanglaCustomerInfoResponse.getCardNumber(), ' '), cards.getCardIconId());
+		else
+			billDetailsDialog.setBillTitleInfo(CardNumberValidator.deSanitizeEntry(lankaBanglaCustomerInfoResponse.getCardNumber(), ' '));
+		billDetailsDialog.setBillSubTitleInfo(lankaBanglaCustomerInfoResponse.getName());
 
-		titleTextView.setText(R.string.bill_details);
-		closeButton.setOnClickListener(new View.OnClickListener() {
+		billDetailsDialog.setTotalBillInfo(getString(R.string.total_outstanding).toUpperCase(), Integer.parseInt(lankaBanglaCustomerInfoResponse.getCreditBalance()));
+		billDetailsDialog.setMinimumBillInfo(getString(R.string.minimum_pay).toUpperCase(), Integer.parseInt(lankaBanglaCustomerInfoResponse.getMinimumPay()));
+
+		billDetailsDialog.setCloseButtonAction(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				alertDialog.dismiss();
+				billDetailsDialog.cancel();
 			}
 		});
-
-		payBillButton.setOnClickListener(new View.OnClickListener() {
+		billDetailsDialog.setPayBillButtonAction(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				billDetailsDialog.cancel();
+				Bundle bundle = new Bundle();
+				bundle.putInt(LankaBanglaAmountInputFragment.TOTAL_OUTSTANDING_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getCreditBalance()));
+				bundle.putInt(LankaBanglaAmountInputFragment.MINIMUM_PAY_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getMinimumPay()));
+				bundle.putString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, lankaBanglaCustomerInfoResponse.getCardNumber());
 
+				final LankaBanglaAmountInputFragment lankaBanglaAmountInputFragment = new LankaBanglaAmountInputFragment();
+
+				if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
+					((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(lankaBanglaAmountInputFragment, bundle, 2, true);
+				}
 			}
 		});
+		billDetailsDialog.show();
 	}
 }

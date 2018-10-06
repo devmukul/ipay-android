@@ -185,6 +185,7 @@ public class Constants {
 	public static final String COMMAND_DESCO_BILL_PAY = "COMMAND_DESCO_BILL_PAY";
 	public static final String CARNIVAL_BILL_PAY = "CARNIVAL_BILL_PAY";
 	public static final String AMBER_BILL_PAY = "AMBER BILL PAY";
+	public static final String LANKA_BANGLA_BILL_PAY = "LANKA BANGLA BILL PAY";
 	public static final String AMBERIT = "AMBERIT";
 	public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
 	public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
@@ -196,6 +197,7 @@ public class Constants {
 	public static final String VISA = "VISA";
 	public static final String MASTERCARD = "MASTERCARD";
 	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+	public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
 	public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
 	public static final String LANKABANGLA = "LANKABANGLA";
 	public static final String COMMAND_LANKABANGLA_BILL_PAY = "COMMAND_LANKABANGLA_BILL_PAY";
@@ -910,8 +912,7 @@ public class Constants {
 	public static final String ORDER_CHECKOUT_FAILED = "failed";
 	public static final String ORDER_CHECKOUT_CANCELLED = "cancelled";
 
-	public static String credit_balance = "Credit balance";
-	public static String minimum_pay = "Minimum pay";
-	public static String others = "Other";
-	public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "/lankabangla/mastercard/";
+	public static String CREDIT_BALANCE = "Credit balance";
+	public static String MINIMUM_PAY = "Minimum pay";
+	public static String OTHER = "Other";
 }
