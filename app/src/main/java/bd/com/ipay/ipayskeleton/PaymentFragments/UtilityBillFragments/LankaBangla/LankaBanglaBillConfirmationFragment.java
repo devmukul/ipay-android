@@ -28,10 +28,14 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 
 	protected static final String BILL_AMOUNT_KEY = "BILL_AMOUNT";
 	protected static final String AMOUNT_TYPE_KEY = "AMOUNT_TYPE";
+	private final Gson gson = new Gson();
+
+	private HttpRequestPostAsyncTask lankaBanglaCardBillPayTask = null;
+
 	private String amountType;
 	private Number billAmount;
 	private String cardNumber;
-	private final Gson gson = new Gson();
+
 	private String uri;
 	private LankaBanglaCardBillPayRequest lankaBanglaCardBillPayRequest;
 
@@ -84,8 +88,6 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 		}
 		return true;
 	}
-
-	private HttpRequestPostAsyncTask lankaBanglaCardBillPayTask = null;
 
 	@Override
 	protected void performContinueAction() {
