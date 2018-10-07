@@ -64,7 +64,6 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 	private GetProviderResponse mUtilityProviderResponse;
 	private List<ProviderCategory> mUtilityProviderTypeList;
 
-    //private LinearLayout mScrollViewHolder;
     private View mTopUpView;
     private View mPayByQCView;
     private View mMakePaymentView;

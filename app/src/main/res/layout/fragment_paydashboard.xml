@@ -194,6 +194,39 @@
                     android:weightSum="4">
 
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/amberit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="4dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/amberit_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            card_view:layout_constraintDimensionRatio="1:1"
+                            card_view:srcCompat="@drawable/ic_amber_it"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/semiround_white_default"
+                            android:scaleType="centerInside"
+                            android:padding="2dp"
+                            android:elevation="@dimen/value2"/>
+                        <TextView
+                            android:id="@+id/nameView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/amberIT"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11"
+                            card_view:layout_constraintTop_toBottomOf="@+id/amberit_image"/>
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
                         android:id="@+id/billPayView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -288,38 +321,6 @@
                             card_view:layout_constraintTop_toBottomOf="@+id/carnival_image"/>
                     </android.support.constraint.ConstraintLayout>
 
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/amberit"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="4dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/amberit_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:srcCompat="@drawable/ic_amber_it"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:scaleType="centerInside"
-                            android:padding="2dp"
-                            android:elevation="@dimen/value2"/>
-                        <TextView
-                            android:id="@+id/nameView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/amberIT"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/amberit_image"/>
-                    </android.support.constraint.ConstraintLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -361,20 +362,19 @@
                     </android.support.constraint.ConstraintLayout>
 
                     <android.support.constraint.ConstraintLayout
-                        android:id="@+id/west_zone"
+                        android:id="@+id/linkThreeBill"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="4dp"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:orientation="vertical">
 
                         <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/west_zone_image"
+                            android:id="@+id/linkThree_image"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             card_view:layout_constraintDimensionRatio="1:1"
-                            android:src="@drawable/wzone"
+                            android:src="@drawable/link3"
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/semiround_white_default"
                             card_view:riv_corner_radius="@dimen/value2"
@@ -387,10 +387,10 @@
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
                             android:singleLine="true"
-                            android:text="@string/WestZone"
+                            android:text="@string/link_three"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/west_zone_image"/>
+                            card_view:layout_constraintTop_toBottomOf="@+id/linkThree_image"/>
                     </android.support.constraint.ConstraintLayout>
 
                     <android.support.constraint.ConstraintLayout
@@ -467,7 +467,7 @@
                     android:weightSum="4">
 
                     <android.support.constraint.ConstraintLayout
-                        android:id="@+id/linkThreeBill"
+                        android:id="@+id/west_zone"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -476,11 +476,11 @@
                         android:visibility="gone">
 
                         <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/linkThree_image"
+                            android:id="@+id/west_zone_image"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             card_view:layout_constraintDimensionRatio="1:1"
-                            android:src="@drawable/link3"
+                            android:src="@drawable/wzone"
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/semiround_white_default"
                             card_view:riv_corner_radius="@dimen/value2"
@@ -493,11 +493,12 @@
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
                             android:singleLine="true"
-                            android:text="@string/link_three"
+                            android:text="@string/WestZone"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/linkThree_image"/>
+                            card_view:layout_constraintTop_toBottomOf="@+id/west_zone_image"/>
                     </android.support.constraint.ConstraintLayout>
+
                 </LinearLayout>
             </LinearLayout>
 
