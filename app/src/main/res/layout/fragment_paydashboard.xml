@@ -378,7 +378,6 @@
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/semiround_white_default"
                             card_view:riv_corner_radius="@dimen/value2"
-                            android:scaleType="centerInside"
                             android:padding="2dp"/>
                         <TextView
                             android:layout_width="match_parent"
