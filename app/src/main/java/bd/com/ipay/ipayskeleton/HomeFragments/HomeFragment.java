@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
@@ -154,7 +155,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		LinearLayout mSendMoneyButton = view.findViewById(R.id.continue_button);
 		LinearLayout mRequestMoneyButton = view.findViewById(R.id.button_request_money);
 		LinearLayout mPayByQRCodeButton = view.findViewById(R.id.button_pay_by_qr_code);
-		LinearLayout mInviteFriendButton = view.findViewById(R.id.button_invite_friend);
+		LinearLayout mMakePaymentButton = view.findViewById(R.id.button_make_payment);
 		LinearLayout mTopUpButton = view.findViewById(R.id.button_topup);
 		LinearLayout mIPayHereButton = view.findViewById(R.id.button_ipay_here);
 		ImageView mShowQRCodeButton = view.findViewById(R.id.show_qr_code_button);
@@ -248,12 +249,23 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 			}
 		});
 
-		mInviteFriendButton.setOnClickListener(new View.OnClickListener() {
+		mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
 			@Override
-			@ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
 			public void onClick(View v) {
-				Intent inviteActivityIntent = new Intent(getActivity(), InviteFriendActivity.class);
-				startActivity(inviteActivityIntent);
+				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+					DialogUtils.showServiceNotAllowedDialog(getContext());
+					return;
+				}
+				PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+					@Override
+					public void ifPinAdded() {
+						Intent intent = new Intent(getActivity(), PaymentActivity.class);
+						intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
+						startActivity(intent);
+					}
+				});
+				makePaymentPinChecker.execute();
+
 			}
 		});
 
@@ -459,12 +471,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
 		final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
 		final Integer statusCode = transactionHistory.getStatusCode();
-		final Double balance = transactionHistory.getAccountBalance();
-		if (balance != null) {
-			mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
-		}
-
 		mNetAmountView.setText(netAmountWithSign);
+		mBalanceTextView.setVisibility(View.GONE);
 
 		switch (statusCode) {
 			case Constants.TRANSACTION_STATUS_ACCEPTED: {
@@ -642,7 +650,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
 	private void transitionBottomSheetBackgroundColor(float slideOffset) {
 		int colorFrom = getResources().getColor(R.color.colorTransparent);
-		int colorTo = getResources().getColor(R.color.colorBlackAlpha60);
+		int colorTo = getResources().getColor(R.color.colorPrimary);
 		mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
 				colorFrom, colorTo));
 	}

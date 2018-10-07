@@ -5,13 +5,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -60,7 +63,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private GetProviderResponse mUtilityProviderResponse;
     private List<ProviderCategory> mUtilityProviderTypeList;
 
-    private LinearLayout mScrollViewHolder;
+    //private LinearLayout mScrollViewHolder;
     private View mTopUpView;
     private View mPayByQCView;
     private View mMakePaymentView;
@@ -78,6 +81,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
     private PinChecker pinChecker;
+    private RecyclerView mTrendingListRecyclerView;
+    private TrendingListAdapter mTrendingListAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,7 +99,6 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_paydashboard, container, false);
-        mScrollViewHolder = (LinearLayout) v.findViewById(R.id.scrollViewHolder);
         mTopUpView = v.findViewById(R.id.topUpView);
         mPayByQCView = v.findViewById(R.id.payByQCView);
         mProviderAvailabilityMap = new HashMap<>();
@@ -110,6 +114,12 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mLankaBanglaView = v.findViewById(R.id.lankaBanglaView);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
+
+        mTrendingListRecyclerView = v.findViewById(R.id.trending_business_recycler_view_parent);
+        mTrendingListRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mTrendingListRecyclerView.setLayoutManager(mLayoutManager);
+
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
         getServiceProviderList();
@@ -419,7 +429,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mScrollViewHolder.getVisibility() == View.VISIBLE) {
+                if (!trendingBusinessListRefreshLayout.isRefreshing()) {
                     getTrendingBusinessList();
                 } else {
                     trendingBusinessListRefreshLayout.setRefreshing(false);
@@ -470,31 +480,32 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Gson gson = new Gson();
 
-                    mScrollViewHolder.removeAllViews();
-
                     mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), GetAllTrendingBusinessResponse.class);
                     mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
-                    for (TrendingBusinessList trendingBusiness : mTrendingBusinessList) {
+                    mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
+                    mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
 
-                        String mBusinessType = trendingBusiness.getBusinessType();
-                        CustomDashBoardTitleView customDashBoardTitleView = new CustomDashBoardTitleView(getContext());
-                        customDashBoardTitleView.setTitleView(mBusinessType);
-                        mScrollViewHolder.addView(customDashBoardTitleView);
-
-                        RecyclerView recyclerView = new RecyclerView(getContext());
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER;
-                        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(layoutParams);
-                        recyclerView.setLayoutParams(params);
-                        recyclerView.setNestedScrollingEnabled(false);
-
-                        List<BusinessList> mBusinessAccountEntryList = trendingBusiness.getBusinessList();
-                        PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
-                        recyclerView.setAdapter(payDashBoardItemAdapter);
-                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                        mScrollViewHolder.addView(recyclerView);
-                        mScrollViewHolder.setVisibility(View.VISIBLE);
-                    }
+//                    for (TrendingBusinessList trendingBusiness : mTrendingBusinessList) {
+//
+//                        String mBusinessType = trendingBusiness.getBusinessType();
+//                        CustomDashBoardTitleView customDashBoardTitleView = new CustomDashBoardTitleView(getContext());
+//                        customDashBoardTitleView.setTitleView(mBusinessType);
+//                        mScrollViewHolder.addView(customDashBoardTitleView);
+//
+//                        RecyclerView recyclerView = new RecyclerView(getContext());
+//                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                        layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER;
+//                        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(layoutParams);
+//                        recyclerView.setLayoutParams(params);
+//                        recyclerView.setNestedScrollingEnabled(false);
+//
+//                        List<BusinessList> mBusinessAccountEntryList = trendingBusiness.getBusinessList();
+//                        PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
+//                        recyclerView.setAdapter(payDashBoardItemAdapter);
+//                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+//                        mScrollViewHolder.addView(recyclerView);
+//                        mScrollViewHolder.setVisibility(View.VISIBLE);
+//                    }
 
                 } else {
                     if (getActivity() != null) {
@@ -530,6 +541,53 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 
             if (getActivity() != null) {
                 Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
+            }
+        }
+    }
+
+
+    public class TrendingListAdapter extends     RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
+
+        //private List<Movie> moviesList;
+
+        private List<TrendingBusinessList> trendingBusinessList;
+
+        public TrendingListAdapter(List<TrendingBusinessList> trendingBusinessList) {
+            this.trendingBusinessList = trendingBusinessList;
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_trending_business_category, parent, false);
+
+            return new MyViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+            holder.titleView.setText(trendingBusinessList.get(position).getBusinessType());
+            holder.trendingBusinessCAtegory.setNestedScrollingEnabled(false);
+            List<BusinessList> mBusinessAccountEntryList = trendingBusinessList.get(position).getBusinessList();
+            PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
+            holder.trendingBusinessCAtegory.setAdapter(payDashBoardItemAdapter);
+            holder.trendingBusinessCAtegory.setLayoutManager(new GridLayoutManager(getContext(), 4));
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return trendingBusinessList.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            public TextView titleView;
+            public RecyclerView trendingBusinessCAtegory;
+
+            public MyViewHolder(View view) {
+                super(view);
+                titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
+                trendingBusinessCAtegory = (RecyclerView)view.findViewById(R.id.trending_business_recycler_view_category);
             }
         }
     }
