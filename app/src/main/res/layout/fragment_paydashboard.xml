@@ -428,7 +428,7 @@
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:padding="@dimen/activity_horizontal_margin_card"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <com.makeramen.roundedimageview.RoundedImageView
                                 android:layout_width="@dimen/value80"
