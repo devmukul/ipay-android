@@ -99,13 +99,13 @@
                     android:id="@+id/pin_layout_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                     android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/pin_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
@@ -122,25 +122,30 @@
                         android:background="#19000000" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/note_edit_text"
+                <LinearLayout
+                    android:id="@+id/note_layout_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/value28"
-                    android:background="@android:color/transparent"
-                    android:fontFamily="@font/open_sans"
-                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/note_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"android:background="@android:color/transparent"
+                    android:fontFamily="@font/open_sans"android:gravity="center"
                     android:inputType="text"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:textSize="18sp"
                     tools:hint="@string/short_note_optional_hint"
-                    tools:ignore="LabelFor" />
+                     />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#19000000" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#19000000" />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

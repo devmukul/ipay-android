@@ -42,18 +42,17 @@ public class IPayTransactionSuccessFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getArguments() != null) {
-			transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
-			name = getArguments().getString(Constants.NAME);
-			senderProfilePicture = getArguments().getString(Constants.SENDER_IMAGE_URL);
-			receiverProfilePicture = getArguments().getString(Constants.RECEIVER_IMAGE_URL);
-			amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
-			bankAccountList = getArguments().getParcelable(Constants.SELECTED_BANK_ACCOUNT);
-		}
-		numberFormat.setMinimumFractionDigits(0);
-		numberFormat.setMaximumFractionDigits(2);
-		numberFormat.setMinimumIntegerDigits(1);
-	}
+        if (getArguments() != null) {
+            transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
+            name = getArguments().getString(Constants.NAME);
+            senderProfilePicture = getArguments().getString(Constants.SENDER_IMAGE_URL);
+            receiverProfilePicture = getArguments().getString(Constants.RECEIVER_IMAGE_URL);
+            amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+        bankAccountList = getArguments().getParcelable(Constants.SELECTED_BANK_ACCOUNT);}
+        numberFormat.setMinimumFractionDigits(0);
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumIntegerDigits(1);
+    }
 
 	@Nullable
 	@Override

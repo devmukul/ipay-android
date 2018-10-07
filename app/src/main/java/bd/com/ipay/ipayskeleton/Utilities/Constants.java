@@ -185,6 +185,7 @@ public class Constants {
 	public static final String COMMAND_DESCO_BILL_PAY = "COMMAND_DESCO_BILL_PAY";
 	public static final String CARNIVAL_BILL_PAY = "CARNIVAL_BILL_PAY";
 	public static final String AMBER_BILL_PAY = "AMBER BILL PAY";
+	public static final String LANKA_BANGLA_BILL_PAY = "LANKA BANGLA BILL PAY";
 	public static final String AMBERIT = "AMBERIT";
 	public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
 	public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
@@ -193,6 +194,16 @@ public class Constants {
 	public static final String FROM_CONTACT = "FROM_CONTACT";
 	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
 	public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
+	public static final String VISA = "VISA";
+	public static final String MASTERCARD = "MASTERCARD";
+	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+	public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
+	public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
+	public static final String LANKABANGLA = "LANKABANGLA";
+	public static final String COMMAND_LANKABANGLA_BILL_PAY = "COMMAND_LANKABANGLA_BILL_PAY";
+	public static final String URL_LANKABANGLA_VISA_BILL_PAY = "lankabangla/visa/billpay";
+	public static final String URL_LANKABANGLA_MASTERCARD_BILL_PAY = "lankabangla/mastercard/billpay";
+
 	public static String ROLEID = "ROLEID";
 	public static final String OUTLET_ID = "OUTLET_ID";
 	public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -635,6 +646,7 @@ public class Constants {
 	public static final String COMMAND_DELETE_CONTACTS = "COMMAND_DELETE_CONTACTS";
 	public static final String COMMAND_UPDATE_CONTACTS = "COMMAND_UPDATE_CONTACTS";
 	public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
+	public static final String COMMAND_GET_BUSINESS_RULE_V2 = "COMMAND_GET_BUSINESS_RULE_V2";
 	public static final String COMMAND_UPDATE_BUSINESS_ROLE_INVITATION = "COMMAND_UPDATE_BUSINESS_ROLE_INVITATION";
 	public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
 	public static final String COMMAND_GET_TRENDING_BUSINESS_LIST = "COMMAND_GET_TRENDING_BUSINESS_LIST";
@@ -902,4 +914,7 @@ public class Constants {
 	public static final String ORDER_CHECKOUT_FAILED = "failed";
 	public static final String ORDER_CHECKOUT_CANCELLED = "cancelled";
 
+	public static String CREDIT_BALANCE = "Credit balance";
+	public static String MINIMUM_PAY = "Minimum pay";
+	public static String OTHER = "Other";
 }

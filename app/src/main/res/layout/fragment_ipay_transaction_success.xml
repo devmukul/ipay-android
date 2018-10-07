@@ -98,6 +98,10 @@
                     android:layout_width="@dimen/value80"
                     android:layout_height="@dimen/value80"
                     android:scaleType="centerCrop"
+                    app:riv_border_color="#e4e4e4"
+                    app:riv_border_width="1dip"
+                    app:riv_oval="true"
+                    tools:src="@drawable/ic_profile"
                     app:riv_oval="true"
                     tools:src="@tools:sample/avatars" />
             </LinearLayout>
