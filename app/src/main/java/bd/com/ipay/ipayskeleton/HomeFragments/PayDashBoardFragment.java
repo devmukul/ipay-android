@@ -485,28 +485,6 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
                     mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
 
-//                    for (TrendingBusinessList trendingBusiness : mTrendingBusinessList) {
-//
-//                        String mBusinessType = trendingBusiness.getBusinessType();
-//                        CustomDashBoardTitleView customDashBoardTitleView = new CustomDashBoardTitleView(getContext());
-//                        customDashBoardTitleView.setTitleView(mBusinessType);
-//                        mScrollViewHolder.addView(customDashBoardTitleView);
-//
-//                        RecyclerView recyclerView = new RecyclerView(getContext());
-//                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                        layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER;
-//                        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(layoutParams);
-//                        recyclerView.setLayoutParams(params);
-//                        recyclerView.setNestedScrollingEnabled(false);
-//
-//                        List<BusinessList> mBusinessAccountEntryList = trendingBusiness.getBusinessList();
-//                        PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
-//                        recyclerView.setAdapter(payDashBoardItemAdapter);
-//                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-//                        mScrollViewHolder.addView(recyclerView);
-//                        mScrollViewHolder.setVisibility(View.VISIBLE);
-//                    }
-
                 } else {
                     if (getActivity() != null) {
                         Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
