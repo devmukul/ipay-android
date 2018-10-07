@@ -327,39 +327,39 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     private void setAppropriateOperatorIconSelected(int operatorCode) {
         switch (operatorCode) {
             case 1:
-                gpImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
-                robiImageView.clearColorFilter();
-                airtelImageView.clearColorFilter();
-                banglalinkImageView.clearColorFilter();
-                teletalkImageView.clearColorFilter();
+                gpImageView.setImageResource(R.drawable.selected_network);
+                airtelImageView.setImageResource(R.drawable.airtel_icon);
+                robiImageView.setImageResource(R.drawable.robi_icon);
+                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
+                banglalinkImageView.setImageResource(R.drawable.bl_icon);
                 break;
             case 3:
-                robiImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
-                airtelImageView.clearColorFilter();
-                banglalinkImageView.clearColorFilter();
-                teletalkImageView.clearColorFilter();
-                gpImageView.clearColorFilter();
+                robiImageView.setImageResource(R.drawable.selected_network);
+                airtelImageView.setImageResource(R.drawable.airtel_icon);
+                gpImageView.setImageResource(R.drawable.gp_icon);
+                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
+                banglalinkImageView.setImageResource(R.drawable.bl_icon);
                 break;
             case 4:
-                airtelImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
-                banglalinkImageView.clearColorFilter();
-                teletalkImageView.clearColorFilter();
-                gpImageView.clearColorFilter();
-                robiImageView.clearColorFilter();
+                airtelImageView.setImageResource(R.drawable.selected_network);
+                banglalinkImageView.setImageResource(R.drawable.bl_icon);
+                robiImageView.setImageResource(R.drawable.robi_icon);
+                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
+                gpImageView.setImageResource(R.drawable.gp_icon);
                 break;
             case 5:
-                banglalinkImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
-                airtelImageView.clearColorFilter();
-                robiImageView.clearColorFilter();
-                teletalkImageView.clearColorFilter();
-                gpImageView.clearColorFilter();
+                banglalinkImageView.setImageResource(R.drawable.selected_network);
+                airtelImageView.setImageResource(R.drawable.airtel_icon);
+                robiImageView.setImageResource(R.drawable.robi_icon);
+                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
+                gpImageView.setImageResource(R.drawable.gp_icon);
                 break;
             case 6:
-                teletalkImageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorLightGray), android.graphics.PorterDuff.Mode.MULTIPLY);
-                airtelImageView.clearColorFilter();
-                banglalinkImageView.clearColorFilter();
-                gpImageView.clearColorFilter();
-                robiImageView.clearColorFilter();
+                teletalkImageView.setImageResource(R.drawable.selected_network);
+                airtelImageView.setImageResource(R.drawable.airtel_icon);
+                robiImageView.setImageResource(R.drawable.robi_icon);
+                gpImageView.setImageResource(R.drawable.gp_icon);
+                banglalinkImageView.setImageResource(R.drawable.bl_icon);
                 break;
         }
     }
