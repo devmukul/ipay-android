@@ -111,8 +111,8 @@ public class CarnivalBillPayFragment extends BaseFragment implements HttpRespons
         if (getActivity() == null)
             return;
         String jsonString = new Gson().toJson(mCarnivalBillPayRequest);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_CARNIVAL_BILL_PAY,
+                Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
 
     }

@@ -122,8 +122,8 @@ public class WestzoneBillPaymentFragment extends BaseFragment implements HttpRes
 
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mWestZoneBillPayRequest);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_WEST_ZONE_BILL_PAY,
+                Constants.BASE_URL_UTILITY + Constants.URL_WEST_ZONE_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
 
     }

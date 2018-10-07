@@ -117,8 +117,8 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
 
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mDescoBillPayRequest);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_DESCO_BILL_PAY,
+                Constants.BASE_URL_UTILITY + Constants.URL_DESCO_BILL_PAY, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
 
     }

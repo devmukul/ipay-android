@@ -164,9 +164,17 @@ public class LankaBanglaCardBillPaymentFragment extends BaseFragment implements 
     private void launchOTPVerification() {
         if (getActivity() == null)
             return;
+        final String urlEndpoint;
+        if (cardType.equals("VISA")){
+            urlEndpoint=Constants.URL_LANKABANGLA_VISA_BILL_PAY;
+        }else if (cardType.equals("VISA")){
+            urlEndpoint=Constants.URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER;
+        }else {
+            return;
+        }
         String jsonString = new Gson().toJson(mLankaBanglaCardBillPayRequest);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_BANGLALION_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_BANGLALION_BILL_PAY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_LANKABANGLA_BILL_PAY,
+                Constants.BASE_URL_UTILITY + urlEndpoint, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
 
     }
