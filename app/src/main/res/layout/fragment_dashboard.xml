@@ -34,9 +34,9 @@
             android:id="@+id/navigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:itemBackground="@drawable/tab_color_bottom_navigation_bar"
-            app:itemIconTint="@color/colorWhite"
-            app:itemTextColor="@color/colorWhite"
+            android:background="@drawable/bottom_navigation_background"
+            app:itemIconTint="@drawable/tab_color_bottom_navigation_bar"
+            app:itemTextColor="@drawable/text_color_bottom_navigation_bar"
             app:menu="@menu/bottom_navigation"/>
 
     </LinearLayout>
