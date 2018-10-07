@@ -59,7 +59,7 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		nameTextView = view.findViewById(R.id.name_text_view);
 		senderProfilePictureImageView = view.findViewById(R.id.sender_profile_picture_image_view);
 		receiverProfilePictureImageView = view.findViewById(R.id.receiver_profile_picture_image_view);
-		arrowImageView = view.findViewById(R.id.arrow_image_view);
+		arrowImageView = view.findViewById(R.id.arrow_icon_image_view);
 
 		senderProfilePictureImageView.setVisibility(View.GONE);
 		arrowImageView.setVisibility(View.GONE);

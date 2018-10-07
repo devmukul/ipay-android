@@ -132,14 +132,15 @@
                     <EditText
                         android:id="@+id/note_edit_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"android:background="@android:color/transparent"
-                    android:fontFamily="@font/open_sans"android:gravity="center"
-                    android:inputType="text"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:textSize="18sp"
-                    tools:hint="@string/short_note_optional_hint"
-                     />
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/open_sans"
+                        android:gravity="center"
+                        android:inputType="text"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:textSize="18sp"
+                        tools:hint="@string/short_note_optional_hint" />
 
                     <View
                         android:layout_width="match_parent"
