@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -270,6 +271,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 			shortCutOptionList.add(shortCutOption);
 
 		final RadioButton radioButton = new RadioButton(getContext());
+		radioButton.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans));
 		radioButton.setId(shortCutOption.id);
 		radioButton.setGravity(Gravity.CENTER);
 
