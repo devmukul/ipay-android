@@ -175,7 +175,7 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 							case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
 							case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
 								customProgressDialog.dismissDialog();
-								launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(lankaBanglaCardBillPayRequest), Constants.LANKA_BANGLA_BILL_PAY, uri);
+								launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(lankaBanglaCardBillPayRequest), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
 								final String errorMessage;
@@ -191,7 +191,7 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 								if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
 									customProgressDialog.dismissDialog();
 									Toaster.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT);
-									launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(mGenericBillPayResponse), Constants.LANKA_BANGLA_BILL_PAY, uri);
+									launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(mGenericBillPayResponse), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
 								} else {
 									customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
 									sendFailedEventTracking(mGenericBillPayResponse.getMessage(), billAmount);
