@@ -376,7 +376,7 @@
             android:label="@string/bill_pay"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
