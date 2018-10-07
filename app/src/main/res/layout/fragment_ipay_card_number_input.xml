@@ -26,8 +26,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/value50"
         android:gravity="center"
+        android:paddingBottom="@dimen/value50"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ScrollView
@@ -86,8 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/value50"
         android:layout_gravity="bottom"
-        android:fontFamily="@font/open_sans"
         android:background="@color/colorPrimaryButton"
+        android:fontFamily="@font/open_sans"
         android:text="@string/continue_send_money"
         android:textColor="@color/colorWhite" />
 </android.support.design.widget.CoordinatorLayout>
