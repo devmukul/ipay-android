@@ -94,6 +94,14 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 
 		if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
 			mGetLankaBanglaCardUserInfoAsyncTask = null;
+			if (result!=null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND){
+				LankaBanglaCustomerInfoResponse lankaBanglaCustomerInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaCustomerInfoResponse.class);
+				if (!TextUtils.isEmpty(lankaBanglaCustomerInfoResponse.getMessage())) {
+					Toaster.makeText(getActivity(), lankaBanglaCustomerInfoResponse.getMessage(), Toast.LENGTH_SHORT);
+				} else {
+					Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+				}
+			}
 		} else {
 			try {
 				switch (result.getApiCommand()) {
