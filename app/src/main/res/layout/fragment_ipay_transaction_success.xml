@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,13 +56,17 @@
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/sender_profile_picture_image_url"
+                    android:id="@+id/sender_profile_picture_image_view"
                     android:layout_width="@dimen/value80"
                     android:layout_height="@dimen/value80"
                     android:scaleType="centerCrop"
+                    app:riv_border_color="#e4e4e4"
+                    app:riv_border_width="1dip"
+                    app:riv_oval="true"
                     tools:src="@drawable/ic_profile" />
 
                 <ImageView
+                    android:id="@+id/arrow_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -71,10 +76,15 @@
                     android:src="@drawable/success_arrow" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/receiver_profile_picture_image_url"
+                    android:id="@+id/receiver_profile_picture_image_view"
                     android:layout_width="@dimen/value80"
                     android:layout_height="@dimen/value80"
                     android:scaleType="centerCrop"
+                    app:riv_border_color="#e4e4e4"
+
+
+                    app:riv_border_width="1dip"
+                    app:riv_oval="true"
                     tools:src="@drawable/ic_profile" />
             </LinearLayout>
 

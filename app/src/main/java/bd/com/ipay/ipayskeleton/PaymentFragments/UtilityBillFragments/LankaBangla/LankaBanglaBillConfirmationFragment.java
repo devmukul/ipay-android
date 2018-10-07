@@ -1,0 +1,211 @@
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCardBillPayRequest;
+import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionConfirmationFragment;
+import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+
+public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransactionConfirmationFragment {
+
+	protected static final String BILL_AMOUNT_KEY = "BILL_AMOUNT";
+	protected static final String AMOUNT_TYPE_KEY = "AMOUNT_TYPE";
+	private final Gson gson = new Gson();
+
+	private HttpRequestPostAsyncTask lankaBanglaCardBillPayTask = null;
+
+	private String amountType;
+	private Number billAmount;
+	private String cardNumber;
+
+	private String uri;
+	private LankaBanglaCardBillPayRequest lankaBanglaCardBillPayRequest;
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			amountType = getArguments().getString(AMOUNT_TYPE_KEY, Constants.OTHER);
+			billAmount = (Number) getArguments().getSerializable(BILL_AMOUNT_KEY);
+			cardNumber = getArguments().getString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, "");
+		}
+	}
+
+	@Override
+	protected void setupViewProperties() {
+		setTransactionImageResource(R.drawable.ic_lankabd2);
+		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
+		setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
+		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
+	}
+
+	@Override
+	protected boolean isPinRequired() {
+		return true;
+	}
+
+	@Override
+	protected boolean canUserAddNote() {
+		return false;
+	}
+
+	@Override
+	protected String getTrackerCategory() {
+		return Constants.LANKA_BANGLA_BILL_PAY;
+	}
+
+	@Override
+	protected boolean verifyInput() {
+		final String errorMessage;
+		if (TextUtils.isEmpty(getPin())) {
+			errorMessage = getString(R.string.please_enter_a_pin);
+		} else if (getPin().length() != 4) {
+			errorMessage = getString(R.string.minimum_pin_length_message);
+		} else {
+			errorMessage = null;
+		}
+		if (errorMessage != null) {
+			showErrorMessage(errorMessage);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	protected void performContinueAction() {
+		if (!Utilities.isConnectionAvailable(getContext())) {
+			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
+		}
+		if (lankaBanglaCardBillPayTask == null) {
+			lankaBanglaCardBillPayRequest = new LankaBanglaCardBillPayRequest(cardNumber, billAmount.toString(), amountType, getPin());
+			String json = gson.toJson(lankaBanglaCardBillPayRequest);
+			CardNumberValidator.Cards cards = CardNumberValidator.getCardType(cardNumber);
+			if (cards != null) {
+				if (cards == CardNumberValidator.Cards.VISA) {
+					uri = Constants.BASE_URL_UTILITY + Constants.URL_LANKABANGLA_VISA_BILL_PAY;
+				} else if (cards == CardNumberValidator.Cards.MASTERCARD) {
+					uri = Constants.BASE_URL_UTILITY + Constants.URL_LANKABANGLA_MASTERCARD_BILL_PAY;
+				} else {
+					return;
+				}
+			} else {
+				return;
+			}
+			lankaBanglaCardBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY,
+					uri, json, getActivity(), this, false);
+			lankaBanglaCardBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
+			customProgressDialog.setLoadingMessage(getString(R.string.payment_processing));
+			customProgressDialog.showDialog();
+		}
+	}
+
+	@Override
+	public void httpResponseReceiver(GenericHttpResponse result) {
+		if (getActivity() == null)
+			return;
+
+		if (HttpErrorHandler.isErrorFound(result, getContext(), customProgressDialog)) {
+			customProgressDialog.dismissDialog();
+			lankaBanglaCardBillPayTask = null;
+		} else {
+			hideOtpDialog();
+			try {
+				switch (result.getApiCommand()) {
+					case Constants.COMMAND_LANKABANGLA_BILL_PAY:
+						final GenericBillPayResponse mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
+						switch (result.getStatus()) {
+							case Constants.HTTP_RESPONSE_STATUS_PROCESSING:
+								customProgressDialog.dismissDialog();
+								Toaster.makeText(getContext(), R.string.request_on_process, Toast.LENGTH_SHORT);
+								if (getActivity() != null) {
+									Utilities.hideKeyboard(getActivity());
+									getActivity().finish();
+								}
+								break;
+							case Constants.HTTP_RESPONSE_STATUS_OK:
+								sendSuccessEventTracking(billAmount);
+								customProgressDialog.setTitle(R.string.success);
+								customProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										customProgressDialog.dismissDialog();
+										Bundle bundle = new Bundle();
+										bundle.putString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, cardNumber);
+										bundle.putSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY, billAmount);
+										if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
+											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaBillSuccessFragment(), bundle, 4, true);
+										}
+
+									}
+								}, 2000);
+								if (getActivity() != null)
+									Utilities.hideKeyboard(getActivity());
+								break;
+							case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
+								customProgressDialog.setTitle(R.string.failed);
+								customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										((MyApplication) getActivity().getApplication()).launchLoginPage(mGenericBillPayResponse.getMessage());
+									}
+								}, 2000);
+								sendBlockedEventTracking(billAmount);
+								break;
+							case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
+							case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
+								customProgressDialog.dismissDialog();
+								launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(lankaBanglaCardBillPayRequest), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
+								break;
+							case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
+								final String errorMessage;
+								if (!TextUtils.isEmpty(mGenericBillPayResponse.getMessage())) {
+									errorMessage = mGenericBillPayResponse.getMessage();
+								} else {
+									errorMessage = getString(R.string.server_down);
+								}
+								customProgressDialog.setTitle(R.string.failed);
+								customProgressDialog.showFailureAnimationAndMessage(errorMessage);
+								break;
+							default:
+								if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+									customProgressDialog.dismissDialog();
+									Toaster.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT);
+									launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(mGenericBillPayResponse), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
+								} else {
+									customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+									sendFailedEventTracking(mGenericBillPayResponse.getMessage(), billAmount);
+								}
+								break;
+						}
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				customProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
+				sendFailedEventTracking(e.getMessage(), billAmount);
+			}
+			lankaBanglaCardBillPayTask = null;
+		}
+	}
+}
