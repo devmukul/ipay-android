@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -44,9 +43,7 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 	}
 
 	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
+	protected void setupViewProperties() {
 		addShortCutOption(1, getString(R.string.total_outstanding).toUpperCase(), totalOutstandingAmount);
 		addShortCutOption(2, getString(R.string.minimum_pay).toUpperCase(), minimumPayAmount);
 

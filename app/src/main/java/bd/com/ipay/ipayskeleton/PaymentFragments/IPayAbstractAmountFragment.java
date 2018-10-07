@@ -99,7 +99,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+	public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -211,7 +211,10 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		if (getContext() != null)
 			Utilities.showKeyboard(getContext(), amountDummyEditText);
 		setAmount(0, "");
+		setupViewProperties();
 	}
+
+	protected abstract void setupViewProperties();
 
 	private void shouldRemoveCheck(double result) {
 		int checkedId = shortcutSelectionRadioGroup.getCheckedRadioButtonId();
