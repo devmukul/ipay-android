@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +102,10 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
     private void attemptGoNextPage() {
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mBusinessName = mBusinessNameView.getText().toString().trim();
-        SignupOrLoginActivity.mCompanyName = mCompanyNameView.getText().toString().trim();
+        String companyName = mCompanyNameView.getText().toString().trim();
+        if(!TextUtils.isEmpty(companyName)) {
+            SignupOrLoginActivity.mCompanyName = companyName;
+        }
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
         SignupOrLoginActivity.mTypeofBusiness = mSelectedBusinessTypeId;
 

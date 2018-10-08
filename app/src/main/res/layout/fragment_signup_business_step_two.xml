@@ -39,7 +39,7 @@
                     style="@style/CustomEditTextLogInSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_business_name"
+                    android:hint="@string/prompt_doing_business_as"
                     android:inputType="textCapWords"
                     android:maxLines="1"
                     android:singleLine="true"
