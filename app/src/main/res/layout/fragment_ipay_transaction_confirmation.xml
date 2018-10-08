@@ -34,8 +34,6 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/value32"
-            android:layout_marginRight="@dimen/value32"
             android:background="@android:color/transparent"
             android:fadingEdge="none"
             android:scrollbars="none">
@@ -43,6 +41,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/value32"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -51,6 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:fontFamily="@font/open_sans"
                     android:gravity="center"
                     android:textColor="#666666"
                     android:textSize="18sp"
@@ -61,21 +61,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:fontFamily="@font/open_sans_semibold"
                     android:gravity="center"
                     android:textColor="#212121"
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     tools:text="@string/dummy_name" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/profile_image_view"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circular_background"
+                    android:contentDescription="@string/card"
+                    android:scaleType="fitCenter"
                     app:riv_border_color="#e4e4e4"
                     app:riv_border_width="1dip"
                     app:riv_oval="true"
-                    tools:src="@drawable/ic_lankabd2" />
+                    tools:src="@tools:sample/avatars" />
 
                 <LinearLayout
                     android:id="@+id/pin_layout_holder"
@@ -89,17 +92,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:hint="@string/enter_pin"
                         android:inputType="numberPassword"
                         android:maxLength="4"
                         android:paddingTop="8dp"
-                        android:paddingBottom="8dp" />
+                        android:paddingBottom="8dp"
+                        android:textSize="18sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="@android:color/darker_gray" />
+                        android:background="#19000000" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -114,17 +119,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
+                        android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:inputType="text"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
-                        android:textSize="@dimen/value18"
+                        android:textSize="18sp"
                         tools:hint="@string/short_note_optional_hint" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="@android:color/darker_gray" />
+                        android:background="#19000000" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -137,6 +143,8 @@
         android:layout_height="@dimen/value50"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimaryButton"
+        android:fontFamily="@font/open_sans"
+        android:text="@string/continue_send_money"
         android:textColor="@color/colorWhite"
-        tools:text="@string/send_money" />
+        android:textSize="14sp" />
 </android.support.design.widget.CoordinatorLayout>

@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankRequestRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
@@ -77,13 +77,13 @@ public class TwoFactorAuthServicesAsynctaskMap {
 				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST, uri, json, context, false);
 				return mHttpPostAsyncTask;
 
-			case Constants.COMMAND_ADD_MONEY:
-				AddMoneyRequest addMoneyRequest = gson.fromJson(json, AddMoneyRequest.class);
-				if (otp != null)
-					addMoneyRequest.setOtp(otp);
-				json = gson.toJson(addMoneyRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY, uri, json, context, false);
-				return mHttpPostAsyncTask;
+            case Constants.COMMAND_ADD_MONEY_FROM_BANK:
+                AddMoneyByBankRequestRequest addMoneyByBankRequestRequest = gson.fromJson(json, AddMoneyByBankRequestRequest.class);
+                if (otp != null)
+                    addMoneyByBankRequestRequest.setOtp(otp);
+                json = gson.toJson(addMoneyByBankRequestRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY_FROM_BANK, uri, json, context, false);
+                return mHttpPostAsyncTask;
 
 			case Constants.COMMAND_WITHDRAW_MONEY:
 				WithdrawMoneyRequest withdrawMoneyRequest = gson.fromJson(json, WithdrawMoneyRequest.class);
@@ -93,58 +93,55 @@ public class TwoFactorAuthServicesAsynctaskMap {
 				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY, uri, json, context, false);
 				return mHttpPostAsyncTask;
 
-			case Constants.COMMAND_PAYMENT:
-				PaymentRequest paymentRequest = gson.fromJson(json, PaymentRequest.class);
-				if (otp != null)
-					paymentRequest.setOtp(otp);
-				json = gson.toJson(paymentRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT, uri, json, context, false);
-				return mHttpPostAsyncTask;
+            case Constants.COMMAND_PAYMENT:
+                PaymentRequest paymentRequest = gson.fromJson(json, PaymentRequest.class);
+                if (otp != null)
+                    paymentRequest.setOtp(otp);
+                json = gson.toJson(paymentRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT, uri, json, context, false);
+                return mHttpPostAsyncTask;
+            case Constants.COMMAND_PAYMENT_BY_DEEP_LINK:
+                PaymentRequestByDeepLink paymentRequestByDeepLink = gson.fromJson(json, PaymentRequestByDeepLink.class);
+                if (otp != null) {
+                    paymentRequestByDeepLink.setOtp(otp);
+                }
+                json = gson.toJson(paymentRequestByDeepLink);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK, uri, json, context,false);
+                return mHttpPostAsyncTask;
 
-			case Constants.COMMAND_PAYMENT_BY_DEEP_LINK:
-				PaymentRequestByDeepLink paymentRequestByDeepLink = gson.fromJson(json, PaymentRequestByDeepLink.class);
-				if (otp != null) {
-					paymentRequestByDeepLink.setOtp(otp);
-				}
-				json = gson.toJson(paymentRequestByDeepLink);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK, uri, json, context, false);
-				return mHttpPostAsyncTask;
+            case Constants.COMMAND_SEND_PAYMENT_REQUEST:
+                SendNewPaymentRequest mSendNewPaymentRequest = gson.fromJson(json, SendNewPaymentRequest.class);
+                if (otp != null)
+                    mSendNewPaymentRequest.setOtp(otp);
+                json = gson.toJson(mSendNewPaymentRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_PAYMENT_REQUEST, uri, json, context, false);
+                return mHttpPostAsyncTask;
+            case Constants.COMMAND_ACCEPT_REQUESTS_MONEY:
+                RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest
+                        = gson.fromJson(json, RequestMoneyAcceptRejectOrCancelRequest.class);
+                if (otp != null)
+                    requestMoneyAcceptRejectOrCancelRequest.setOtp(otp);
+                json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY, uri, json, context, false);
+                return mHttpPostAsyncTask;
+            case Constants.COMMAND_ACCEPT_PAYMENT_REQUEST:
+                RequestMoneyAcceptRejectOrCancelRequest mRequestMoneyAcceptRejectOrCancelRequest =
+                        gson.fromJson(json, RequestMoneyAcceptRejectOrCancelRequest.class);
+                if (otp != null)
+                    mRequestMoneyAcceptRejectOrCancelRequest.setOtp(otp);
+                json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST, uri, json, context, false);
+                return mHttpPostAsyncTask;
 
-			case Constants.COMMAND_SEND_PAYMENT_REQUEST:
-				SendNewPaymentRequest mSendNewPaymentRequest = gson.fromJson(json, SendNewPaymentRequest.class);
-				if (otp != null)
-					mSendNewPaymentRequest.setOtp(otp);
-				json = gson.toJson(mSendNewPaymentRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_PAYMENT_REQUEST, uri, json, context, false);
-				return mHttpPostAsyncTask;
+            case Constants.COMMAND_BANGLALION_BILL_PAY:
+                BanglalionBillPayRequest billPayRequest = gson.fromJson(json, BanglalionBillPayRequest.class);
+                if (otp != null)
+                    billPayRequest.setOtp(otp);
+                json = gson.toJson(billPayRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BANGLALION_BILL_PAY, uri, json, context, false);
+                return mHttpPostAsyncTask;
 
-			case Constants.COMMAND_ACCEPT_REQUESTS_MONEY:
-				RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest
-						= gson.fromJson(json, RequestMoneyAcceptRejectOrCancelRequest.class);
-				if (otp != null)
-					requestMoneyAcceptRejectOrCancelRequest.setOtp(otp);
-				json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY, uri, json, context, false);
-				return mHttpPostAsyncTask;
-
-			case Constants.COMMAND_ACCEPT_PAYMENT_REQUEST:
-				RequestMoneyAcceptRejectOrCancelRequest mRequestMoneyAcceptRejectOrCancelRequest =
-						gson.fromJson(json, RequestMoneyAcceptRejectOrCancelRequest.class);
-				if (otp != null)
-					mRequestMoneyAcceptRejectOrCancelRequest.setOtp(otp);
-				json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST, uri, json, context, false);
-				return mHttpPostAsyncTask;
-
-			case Constants.COMMAND_BANGLALION_BILL_PAY:
-				BanglalionBillPayRequest billPayRequest = gson.fromJson(json, BanglalionBillPayRequest.class);
-				if (otp != null)
-					billPayRequest.setOtp(otp);
-				json = gson.toJson(billPayRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BANGLALION_BILL_PAY, uri, json, context, false);
-				return mHttpPostAsyncTask;
-
-			case Constants.COMMAND_DPDC_BILL_PAY:
+            case Constants.COMMAND_DPDC_BILL_PAY:
 				DpdcBillPayRequest dpdcBillPayRequest = gson.fromJson(json, DpdcBillPayRequest.class);
 				if (otp != null)
 					dpdcBillPayRequest.setOtp(otp);
@@ -206,9 +203,8 @@ public class TwoFactorAuthServicesAsynctaskMap {
 					lankaBanglaCardBillPayRequest.setOtp(otp);
 				json = gson.toJson(lankaBanglaCardBillPayRequest);
 				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY, uri, json, context, false);
-				return mHttpPostAsyncTask;
-			default:
-				return null;
-		}
-	}
+				return mHttpPostAsyncTask;default:
+                return null;
+        }
+    }
 }

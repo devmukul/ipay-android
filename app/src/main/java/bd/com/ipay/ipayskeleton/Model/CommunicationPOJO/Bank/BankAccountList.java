@@ -79,6 +79,7 @@ public class BankAccountList implements Parcelable {
         bankName = in.readString();
         branchName = in.readString();
         bankCode = in.readString();
+        bankDocuments = in.createTypedArrayList(BankDocument.CREATOR);
     }
 
     @Override
@@ -102,6 +103,7 @@ public class BankAccountList implements Parcelable {
         dest.writeString(bankName);
         dest.writeString(branchName);
         dest.writeString(bankCode);
+        dest.writeTypedList(bankDocuments);
     }
 
     @Override
