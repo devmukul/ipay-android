@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -157,7 +158,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             nameTextView.setText(name);
         } else {
             if (transactionType == ServiceIdConstants.TOP_UP) {
-                nameTextView.setText(mobileNumber);
+                nameTextView.setText(ContactEngine.formatMobileNumberBD(mobileNumber));
             }
         }
 

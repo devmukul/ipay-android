@@ -87,7 +87,7 @@ public class BusinessRuleCacheManager {
 												updateAddMoneyByBankBusinessRule(mMandatoryBusinessRules, rule);
 												break;
                                             case ServiceIdConstants.TOP_UP:
-                                                updateTopupBusinessRule(mMandatoryBusinessRules,businessRuleArray);
+                                                updateTopupBusinessRule(mMandatoryBusinessRules,rule);
 											case ServiceIdConstants.WITHDRAW_MONEY:
 												updateWithdrawMoneyBusinessRule(mMandatoryBusinessRules, rule);
 												break;
