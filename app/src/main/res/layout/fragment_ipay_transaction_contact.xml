@@ -129,6 +129,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_transaction"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center"
         android:orientation="vertical"
         app:behavior_hideable="true"
@@ -146,8 +147,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/value32"
-            android:layout_marginRight="@dimen/value32"
             android:layout_marginTop="@dimen/value50"
+            android:layout_marginRight="@dimen/value32"
             android:text="@string/ok_got_it" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

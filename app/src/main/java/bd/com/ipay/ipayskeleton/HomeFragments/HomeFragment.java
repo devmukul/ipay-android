@@ -37,11 +37,9 @@ import java.util.Locale;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -185,7 +183,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 					PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
 						@Override
 						public void ifPinAdded() {
-							Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+							Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+							intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY);
 							startActivity(intent);
 						}
 					});
@@ -214,7 +213,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 				PinChecker withdrawMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
 					@Override
 					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
+						Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+						intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY);
 						startActivity(intent);
 					}
 				});

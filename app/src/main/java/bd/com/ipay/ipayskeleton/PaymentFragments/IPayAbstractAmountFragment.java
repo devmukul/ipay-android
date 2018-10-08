@@ -5,14 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,6 +55,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widget.View.ShortcutSelectionRadioGroup;
+import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public abstract class IPayAbstractAmountFragment extends Fragment {
 	private TextView transactionDescriptionTextView;
@@ -205,7 +205,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		});
 
 		if (!TextUtils.isEmpty(SharedPrefManager.getUserBalance())) {
-			ipayBalanceTextView.setText(numberFormat.format(new BigDecimal(SharedPrefManager.getUserBalance())));
+			ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(SharedPrefManager.getUserBalance()))));
 		}
 
 		if (getContext() != null)
@@ -230,7 +230,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 	public void setInputType(int inputType) {
-		if (inputType == InputType.TYPE_CLASS_NUMBER || inputType == InputType.TYPE_NUMBER_FLAG_DECIMAL)
+		if (inputType == InputType.TYPE_CLASS_NUMBER || inputType == (InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER))
 			amountDummyEditText.setInputType(inputType);
 	}
 
@@ -269,7 +269,11 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		if (!shortCutOptionList.contains(shortCutOption))
 			shortCutOptionList.add(shortCutOption);
 
+		if (getContext() == null)
+			return;
+
 		final RadioButton radioButton = new RadioButton(getContext());
+		radioButton.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans));
 		radioButton.setId(shortCutOption.id);
 		radioButton.setGravity(Gravity.CENTER);
 
@@ -282,10 +286,17 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 	public void setTransactionImageResource(int imageResource) {
-		Glide.with(getContext()).load(imageResource)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(transactionImageView);
+		if (getContext() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+			} else {
+				Glide.with(getContext()).load(imageResource)
+						.asBitmap()
+						.transform(new CircleTransform(getContext()))
+						.crossFade()
+						.into(transactionImageView);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -298,15 +309,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 
 	protected void showErrorMessage(String errorMessage) {
 		if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
-			Snackbar snackbar = Snackbar.make(continueButton, errorMessage, Snackbar.LENGTH_SHORT);
-			View snackbarView = snackbar.getView();
-			snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-			ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
-			layoutParams.height = continueButton.getHeight();
-			snackbarView.setLayoutParams(layoutParams);
-			TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-			textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));
-			snackbar.show();
+			IPaySnackbar.error(continueButton, errorMessage, IPaySnackbar.LENGTH_LONG).show();
 		}
 	}
 

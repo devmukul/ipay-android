@@ -62,26 +62,18 @@ public class IPayTransactionSuccessFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 		final TextView transactionSuccessMessageTextView = view.findViewById(R.id.transaction_success_message_text_view);
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
-		final RoundedImageView receiverProfilePictureImageUrl = view.findViewById(R.id.receiver_profile_picture_image_view);
-		final RoundedImageView senderProfilePictureImageUrl = view.findViewById(R.id.sender_profile_picture_image_view);
+		final RoundedImageView receiverProfilePictureImageView = view.findViewById(R.id.receiver_profile_picture_image_view);
+		final RoundedImageView senderProfilePictureImageView = view.findViewById(R.id.sender_profile_picture_image_view);
 		final TextView successDescriptionTextView = view.findViewById(R.id.success_description_text_view);
 		final Button goToWalletButton = view.findViewById(R.id.go_to_wallet_button);
 		final String amountValue = getString(R.string.balance_holder, numberFormat.format(amount));
-		final Spannable spannableAmount;
-
 		switch (transactionType) {
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-				spannableAmount = new SpannableString(getString(R.string.send_money_success_message, amountValue));
-				spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), 18, 18 + amountValue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), 18, 18 + amountValue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				transactionSuccessMessageTextView.setText(spannableAmount, TextView.BufferType.SPANNABLE);
+				updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.send_money_success_message, amountValue), 18, 18 + amountValue.length());
 				successDescriptionTextView.setText(R.string.send_money_success_description);
 				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-				spannableAmount = new SpannableString(getString(R.string.request_money_success_message, amountValue));
-				spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), 23, 23 + amountValue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), 23, 23 + amountValue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				transactionSuccessMessageTextView.setText(spannableAmount, TextView.BufferType.SPANNABLE);
+				updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.request_money_success_message, amountValue), 23, 23 + amountValue.length());
 				successDescriptionTextView.setText(R.string.request_money_success_description);
 				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
@@ -90,21 +82,25 @@ public class IPayTransactionSuccessFragment extends Fragment {
 				successDescriptionTextView.setText(R.string.empty_string);
 				break;
 		}
-		nameTextView.setText(name);
-
-		Glide.with(this)
-				.load(senderProfilePicture)
-				.placeholder(R.drawable.ic_profile)
-				.error(R.drawable.ic_profile)
-				.transform(new CircleTransform(getContext()))
-				.into(senderProfilePictureImageUrl);
-
-		Glide.with(this)
-				.load(receiverProfilePicture)
-				.placeholder(R.drawable.ic_profile)
-				.error(R.drawable.ic_profile)
-				.transform(new CircleTransform(getContext()))
-				.into(receiverProfilePictureImageUrl);
+		if (name != null) {
+			nameTextView.setText(name);
+		}
+		if (senderProfilePicture != null) {
+			Glide.with(this)
+					.load(senderProfilePicture)
+					.placeholder(R.drawable.ic_profile)
+					.error(R.drawable.ic_profile)
+					.transform(new CircleTransform(getContext()))
+					.into(senderProfilePictureImageView);
+		}
+		if (receiverProfilePicture != null) {
+			Glide.with(this)
+					.load(receiverProfilePicture)
+					.placeholder(R.drawable.ic_profile)
+					.error(R.drawable.ic_profile)
+					.transform(new CircleTransform(getContext()))
+					.into(receiverProfilePictureImageView);
+		}
 
 		goToWalletButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -113,5 +109,13 @@ public class IPayTransactionSuccessFragment extends Fragment {
 					getActivity().finish();
 			}
 		});
+	}
+
+	private void updateTransactionDescription(TextView textView, String string, int startPoint, int endPoint) {
+		final Spannable spannableAmount;
+		spannableAmount = new SpannableString(string);
+		spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), startPoint, endPoint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), startPoint, endPoint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		textView.setText(spannableAmount, TextView.BufferType.SPANNABLE);
 	}
 }

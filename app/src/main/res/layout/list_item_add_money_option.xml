@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value32"
+        android:layout_marginLeft="@dimen/value32"
+        android:layout_marginTop="@dimen/value12"
+        android:layout_marginEnd="@dimen/value32"
+        android:layout_marginRight="@dimen/value32"
+        android:layout_marginBottom="@dimen/value12">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/option_icon_image_view"
+            android:layout_width="72dip"
+            android:layout_height="72dip"
+            android:contentDescription="@string/card"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:src="@drawable/ic_bank_icon" />
+
+        <TextView
+            android:id="@+id/option_title_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dip"
+            android:layout_marginLeft="8dip"
+            android:fontFamily="@font/open_sans_semibold"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/option_icon_image_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/debit_credit_card" />
+
+        <TextView
+            android:id="@+id/option_description_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dip"
+            android:layout_marginLeft="8dip"
+            android:fontFamily="@font/open_sans"
+            android:textColor="#666666"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/option_icon_image_view"
+            app:layout_constraintTop_toBottomOf="@+id/option_title_text_view"
+            tools:text="@string/add_money_card_option_message" />
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginStart="@dimen/value32"
+        android:layout_marginLeft="@dimen/value32"
+        android:layout_marginEnd="@dimen/value32"
+        android:layout_marginRight="@dimen/value32"
+        android:background="#33acacac" />
+</LinearLayout>
