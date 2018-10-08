@@ -57,9 +57,9 @@ public class BusinessRuleCacheManager {
 		final String mUri = new GetBusinessRuleRequestBuilder(serviceId).getGeneratedUri();
 		final String apiCommand;
 		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT) {
-			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE;
-		} else {
 			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE_V2;
+		} else {
+			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE;
 		}
 		final HttpRequestGetAsyncTask mGetBusinessRuleTask = new HttpRequestGetAsyncTask(apiCommand,
 				mUri, context, new HttpResponseListener() {
@@ -70,10 +70,10 @@ public class BusinessRuleCacheManager {
 
 						final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(getTag(serviceId));
 						if (apiCommand.equals(Constants.COMMAND_GET_BUSINESS_RULE_V2)) {
+							updateBusinessRule(mMandatoryBusinessRules, new Gson().fromJson(result.getJsonString(), BusinessRuleV2.class).getRules());
+						} else {
 							final BusinessRule[] businessRuleArray = new Gson().fromJson(result.getJsonString(), BusinessRule[].class);
 							updateBusinessRule(mMandatoryBusinessRules, businessRuleArray);
-						} else {
-							updateBusinessRule(mMandatoryBusinessRules, new Gson().fromJson(result.getJsonString(), BusinessRuleV2.class).getRules());
 						}
 						BusinessRuleCacheManager.setBusinessRules(getTag(serviceId), mMandatoryBusinessRules);
 						Intent intent = new Intent();
