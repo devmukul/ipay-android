@@ -9,109 +9,140 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 
 
 public class BusinessRuleCacheManager {
-    private static SharedPreferences pref;
-    public static final String SERVICE_ID_KEY = "SERVICE_ID";
+	private static SharedPreferences pref;
+	public static final String SERVICE_ID_KEY = "SERVICE_ID";
 
-    public static void initialize(Context context) {
-        pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-    }
+	static void initialize(Context context) {
+		pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+	}
 
-    public static boolean ifContainsBusinessRule(String tag) {
-        return (pref.contains(tag));
-    }
+	static boolean ifContainsBusinessRule(String tag) {
+		return (pref.contains(tag));
+	}
 
-    public static void setBusinessRules(String tag, MandatoryBusinessRules mandatoryBusinessRules) {
-        if (tag.isEmpty())
-            return;
-        SharedPreferences.Editor prefsEditor = pref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(mandatoryBusinessRules);
-        prefsEditor.putString(tag, json);
-        prefsEditor.apply();
-    }
+	public static void setBusinessRules(String tag, MandatoryBusinessRules mandatoryBusinessRules) {
+		if (tag.isEmpty())
+			return;
+		SharedPreferences.Editor prefsEditor = pref.edit();
+		Gson gson = new Gson();
+		String json = gson.toJson(mandatoryBusinessRules);
+		prefsEditor.putString(tag, json);
+		prefsEditor.apply();
+	}
 
-    public static MandatoryBusinessRules getBusinessRules(String tag) {
-        if (tag.isEmpty())
-            return null;
-        Gson gson = new Gson();
-        String json = pref.getString(tag, "");
-        return gson.fromJson(json, MandatoryBusinessRules.class);
-    }
+	public static MandatoryBusinessRules getBusinessRules(String tag) {
+		if (tag.isEmpty())
+			return null;
+		Gson gson = new Gson();
+		String json = pref.getString(tag, "");
+		return gson.fromJson(json, MandatoryBusinessRules.class);
+	}
 
-    public static void fetchBusinessRule(final Context context, final int serviceId) {
-        String mUri = new GetBusinessRuleRequestBuilder(serviceId).getGeneratedUri();
-        final HttpRequestGetAsyncTask mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, context, new HttpResponseListener() {
-            @Override
-            public void httpResponseReceiver(GenericHttpResponse result) {
-                if (!HttpErrorHandler.isErrorFound(result, context, null)) {
-                    try {
+	public static void fetchBusinessRule(final Context context, final int serviceId) {
+		final String mUri = new GetBusinessRuleRequestBuilder(serviceId).getGeneratedUri();
+		final String apiCommand;
+		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT) {
+			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE;
+		} else {
+			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE_V2;
+		}
+		final HttpRequestGetAsyncTask mGetBusinessRuleTask = new HttpRequestGetAsyncTask(apiCommand,
+				mUri, context, new HttpResponseListener() {
+			@Override
+			public void httpResponseReceiver(GenericHttpResponse result) {
+				if (!HttpErrorHandler.isErrorFound(result, context, null)) {
+					try {
 
-                        BusinessRule[] businessRuleArray = new Gson().fromJson(result.getJsonString(), BusinessRule[].class);
-                        final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(getTag(serviceId));
-                        if (businessRuleArray != null) {
-                            for (BusinessRule rule : businessRuleArray) {
+						final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(getTag(serviceId));
+						if (apiCommand.equals(Constants.COMMAND_GET_BUSINESS_RULE_V2)) {
+							final BusinessRule[] businessRuleArray = new Gson().fromJson(result.getJsonString(), BusinessRule[].class);
+							updateBusinessRule(mMandatoryBusinessRules, businessRuleArray);
+						} else {
+							updateBusinessRule(mMandatoryBusinessRules, new Gson().fromJson(result.getJsonString(), BusinessRuleV2.class).getRules());
+						}
+						BusinessRuleCacheManager.setBusinessRules(getTag(serviceId), mMandatoryBusinessRules);
+						Intent intent = new Intent();
+						intent.setAction(Constants.BUSINESS_RULE_UPDATE_BROADCAST);
+						intent.putExtra(SERVICE_ID_KEY, getTag(serviceId));
+						LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+					} catch (Exception e) {
+						e.printStackTrace();
+						DialogUtils.showDialogForBusinessRuleNotAvailable(context);
+					}
+				}
+			}
+		}, true);
+		mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 
-                                //Send money
+	private static void updateBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule[] businessRuleArray) {
+		if (businessRuleArray != null) {
+			for (BusinessRule rule : businessRuleArray) {
+				if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+					mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+					mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				} else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_VERIFICATION_REQUIRED)) {
+					mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_PIN_REQUIRED)) {
+					mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+					mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+					mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				} else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED)) {
+					mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED)) {
+					mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+					UtilityBillPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+					UtilityBillPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED)) {
+					UtilityBillPaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+				} else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED)) {
+					UtilityBillPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+				}
+			}
+		}
+	}
 
-                                if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                    mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                    mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_VERIFICATION_REQUIRED)) {
-                                    mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_PIN_REQUIRED)) {
-                                    mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+	private static void updateBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, List<Rule> businessRuleList) {
+		if (businessRuleList != null) {
+			for (Rule rule : businessRuleList) {
+				switch (rule.getRuleName()) {
+					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+						mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+						break;
+					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+						mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+						break;
+					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED:
+						mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+						break;
+					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED:
+						mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+						break;
+				}
+			}
+		}
+	}
 
-                                    //Request Money
-
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                    mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                    mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED)) {
-                                    mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED)) {
-                                    mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-
-                                    //Top Up
-
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT)) {
-                                    mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
-                                    mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_TOP_UP_VERIFICATION_REQUIRED)) {
-                                    mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_TOP_UP_PIN_REQUIRED)) {
-                                    mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-                                }
-
-                            }
-                            BusinessRuleCacheManager.setBusinessRules(getTag(serviceId), mMandatoryBusinessRules);
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.BUSINESS_RULE_UPDATE_BROADCAST);
-                            intent.putExtra(SERVICE_ID_KEY, getTag(serviceId));
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        DialogUtils.showDialogForBusinessRuleNotAvailable(context);
-                    }
-                }
-            }
-        }, true);
-        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
 
     public static String getTag(final int serviceId) {
         switch (serviceId) {
@@ -121,6 +152,8 @@ public class BusinessRuleCacheManager {
                 return Constants.REQUEST_MONEY;
             case ServiceIdConstants.TOP_UP:
                 return Constants.TOP_UP;
+            case ServiceIdConstants.UTILITY_BILL_PAYMENT:
+                return Constants.UTILITY_BILL_PAYMENT;
             default:
                 return "";
         }
