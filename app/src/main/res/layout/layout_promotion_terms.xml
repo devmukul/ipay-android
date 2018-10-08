@@ -49,6 +49,8 @@
                 android:id="@+id/start_date_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/value8"
+                android:layout_marginLeft="@dimen/value8"
                 android:layout_marginTop="@dimen/value4"
                 android:gravity="center"
                 android:textSize="16sp"
@@ -74,6 +76,8 @@
                 android:id="@+id/end_date_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/value8"
+                android:layout_marginLeft="@dimen/value8"
                 android:gravity="center"
                 android:textSize="16sp"
                 tools:text="@tools:sample/date/ddmmyy" />
@@ -84,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/value8"
             android:gravity="center"
-            android:text="@string/terms_of_service"
+            android:text="@string/terms_of_promotion"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
