@@ -24,7 +24,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -36,23 +35,22 @@ public class IPayTransactionSuccessFragment extends Fragment {
 	private BigDecimal amount;
 	private String senderProfilePicture;
 	private String receiverProfilePicture;
-	private BankAccountList bankAccountList;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
-            name = getArguments().getString(Constants.NAME);
-            senderProfilePicture = getArguments().getString(Constants.SENDER_IMAGE_URL);
-            receiverProfilePicture = getArguments().getString(Constants.RECEIVER_IMAGE_URL);
-            amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
-        bankAccountList = getArguments().getParcelable(Constants.SELECTED_BANK_ACCOUNT);}
-        numberFormat.setMinimumFractionDigits(0);
-        numberFormat.setMaximumFractionDigits(2);
-        numberFormat.setMinimumIntegerDigits(1);
-    }
+		if (getArguments() != null) {
+			transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
+			name = getArguments().getString(Constants.NAME);
+			senderProfilePicture = getArguments().getString(Constants.SENDER_IMAGE_URL);
+			receiverProfilePicture = getArguments().getString(Constants.RECEIVER_IMAGE_URL);
+			amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+		}
+		numberFormat.setMinimumFractionDigits(0);
+		numberFormat.setMaximumFractionDigits(2);
+		numberFormat.setMinimumIntegerDigits(1);
+	}
 
 	@Nullable
 	@Override
@@ -73,22 +71,6 @@ public class IPayTransactionSuccessFragment extends Fragment {
 		final Button goToWalletButton = view.findViewById(R.id.go_to_wallet_button);
 		final String amountValue = getString(R.string.balance_holder, numberFormat.format(amount));
 		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
-				updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.add_money_bank_success_message, amountValue), 30, 30 + amountValue.length());
-				successDescriptionTextView.setText(R.string.add_money_bank_success_description);
-				senderProfilePictureImageView.setVisibility(View.GONE);
-				nameTextView.setText(bankAccountList.getBankName());
-				receiverProfilePictureImageView.setImageResource(bankAccountList.getBankIcon(getContext()));
-				arrowIconImageView.setVisibility(View.GONE);
-				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
-				updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.withdraw_money_bank_success_message, amountValue), 35, 35 + amountValue.length());
-				successDescriptionTextView.setText(R.string.withdrw_money_success_description);
-				senderProfilePictureImageView.setVisibility(View.GONE);
-				nameTextView.setText(bankAccountList.getBankName());
-				receiverProfilePictureImageView.setImageResource(bankAccountList.getBankIcon(getContext()));
-				arrowIconImageView.setVisibility(View.GONE);
-				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.add_money_card_success_message, amountValue), 19, 19 + amountValue.length());
 				successDescriptionTextView.setText(R.string.add_money_card_success_description);

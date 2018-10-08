@@ -636,6 +636,7 @@ public class Constants {
 	public static final String COMMAND_INTRODUCE_ACTION = "COMMAND_INTRODUCE_ACTION";
 	public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
 	public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
+	public static final String COMMAND_BANK_TRANSACTION = "COMMAND_WITHDRAW_MONEY";
 	public static final String COMMAND_UPLOAD_DOCUMENT = "COMMAND_UPLOAD_DOCUMENT";
 	public static final String COMMAND_GET_DOCUMENT_ACCESS_TOKEN = "COMMAND_GET_DOCUMENT_ACCESS_TOKEN";
 	public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments;
 
 
 import android.arch.lifecycle.Observer;
@@ -24,6 +24,8 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Adapters.OnItemClickListener;
 import bd.com.ipay.ipayskeleton.Adapters.UserBankListAdapter;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankAmountInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -106,10 +108,16 @@ public class IPayChooseBankOptionFragment extends ProgressFragment {
 					if (transactionType != IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID) {
 						BusinessRuleCacheManager.fetchBusinessRule(getActivity(), transactionType);
 						Bundle bundle = new Bundle();
-						bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
 						bundle.putParcelable(Constants.SELECTED_BANK_ACCOUNT, iPayChooseBankOptionViewModel.getBankAccount(position));
 						if (getActivity() instanceof IPayTransactionActionActivity) {
-							((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
+							switch (transactionType) {
+								case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
+									((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromBankAmountInputFragment(), bundle, 1, true);
+									break;
+								case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
+									((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayWithdrawMoneyFromBankAmountInputFragment(), bundle, 1, true);
+									break;
+							}
 						}
 					}
 				}

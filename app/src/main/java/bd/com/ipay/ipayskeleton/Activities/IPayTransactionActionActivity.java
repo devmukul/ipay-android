@@ -10,12 +10,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyOptionFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayChooseBankOptionFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyOptionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPayTransactionContactFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankOptionFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -56,11 +56,11 @@ public class IPayTransactionActionActivity extends BaseActivity {
 				break;
 			case TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchToChooseBankOptionFragment(bundle);
+				switchToAddMoneyFromBankOptionFragment(bundle);
 				break;
 			case TRANSACTION_TYPE_WITHDRAW_MONEY:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchToWithdrawMoneyOptionFragment(bundle);
+				switchToWithdrawMoneyFromBankOptionFragment(bundle);
 				break;
 			case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
@@ -92,12 +92,12 @@ public class IPayTransactionActionActivity extends BaseActivity {
 		switchFragment(new IPayAddMoneyOptionFragment(), bundle, 0, false);
 	}
 
-	private void switchToWithdrawMoneyOptionFragment(@NonNull Bundle bundle) {
-		switchFragment(new IPayWithdrawMoneyOptionFragment(), bundle, 0, false);
+	private void switchToWithdrawMoneyFromBankOptionFragment(@NonNull Bundle bundle) {
+		switchFragment(new IPayWithdrawMoneyFromBankOptionFragment(), bundle, 0, false);
 	}
 
-	private void switchToChooseBankOptionFragment(@NonNull Bundle bundle) {
-		switchFragment(new IPayChooseBankOptionFragment(), bundle, 1, false);
+	private void switchToAddMoneyFromBankOptionFragment(@NonNull Bundle bundle) {
+		switchFragment(new IPayAddMoneyFromBankOptionFragment(), bundle, 0, false);
 	}
 
 	private void switchToTransactionContactsFragment(@NonNull Bundle bundle) {
@@ -116,7 +116,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
 		switchFragment(new IPayTransactionSuccessFragment(), bundle, 3, true);
 	}
 
-	private void switchFragment(@NonNull Fragment fragment, @NonNull Bundle bundle, int maxBackStackEntryCount, boolean shouldAnimate) {
+	public void switchFragment(@NonNull Fragment fragment, @NonNull Bundle bundle, int maxBackStackEntryCount, boolean shouldAnimate) {
 		if (getSupportFragmentManager().getBackStackEntryCount() > maxBackStackEntryCount) {
 			getSupportFragmentManager().popBackStackImmediate();
 		}

@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Adapters.AddMoneyOptionAdapter;
 import bd.com.ipay.ipayskeleton.Adapters.OnItemClickListener;
 import bd.com.ipay.ipayskeleton.Model.AddMoneyOption;
+import bd.com.ipay.ipayskeleton.PaymentFragments.IPayChooseBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

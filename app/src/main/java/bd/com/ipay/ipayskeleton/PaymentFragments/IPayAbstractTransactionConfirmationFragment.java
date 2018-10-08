@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public abstract class IPayAbstractTransactionConfirmationFragment extends Fragment implements HttpResponseListener {
 	protected Tracker mTracker;
@@ -156,6 +154,11 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		return pin != null ? pin.toString() : "";
 	}
 
+	protected String getNote() {
+		final Editable note = noteEditText.getText();
+		return !TextUtils.isEmpty(note) ? note.toString() : null;
+	}
+
 	protected final void sendSuccessEventTracking(Number amount) {
 		Utilities.sendSuccessEventTracker(mTracker, getTrackerCategory(), ProfileInfoCacheManager.getAccountId(), amount.longValue());
 	}
@@ -176,15 +179,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 
 	protected void showErrorMessage(String errorMessage) {
 		if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
-			Snackbar snackbar = Snackbar.make(transactionConfirmationButton, errorMessage, Snackbar.LENGTH_SHORT);
-			View snackbarView = snackbar.getView();
-			snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-			ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
-			layoutParams.height = transactionConfirmationButton.getHeight();
-			snackbarView.setLayoutParams(layoutParams);
-			TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-			textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));
-			snackbar.show();
+			IPaySnackbar.error(transactionConfirmationButton, errorMessage, IPaySnackbar.LENGTH_SHORT).show();
 		}
 	}
 

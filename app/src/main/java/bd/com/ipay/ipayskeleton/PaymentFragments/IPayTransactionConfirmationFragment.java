@@ -47,11 +47,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankRequestRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.IPayTransactionResponse;
@@ -78,7 +75,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 	private BigDecimal amount;
 	private String mobileNumber;
 	private String profilePicture;
-	private BankAccountList bankAccountList;
 
 	private EditText mNoteEditText;
 	private EditText mPinEditText;
@@ -98,7 +94,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 			mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
 			profilePicture = getArguments().getString(Constants.PHOTO_URI);
 			amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
-			bankAccountList = getArguments().getParcelable(Constants.SELECTED_BANK_ACCOUNT);
 		}
 		numberFormat.setMinimumFractionDigits(0);
 		numberFormat.setMaximumFractionDigits(2);
@@ -160,27 +155,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 				transactionConfirmationButton.setText(R.string.add_money);
 				cardImageView.setVisibility(View.VISIBLE);
 				profileImageView.setVisibility(View.GONE);
-				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
-				pinLayoutHolder.setVisibility(View.VISIBLE);
-				updateTransactionDescription(transactionDescriptionTextView,
-						getString(R.string.add_money_confirmation_message, amountValue), 15, 15 + amountValue.length());
-				mNoteEditText.setHint(R.string.short_note_optional_hint);
-				transactionConfirmationButton.setText(R.string.add_money);
-				nameTextView.setText(bankAccountList.getBankName());
-				Glide.with(this)
-						.load(bankAccountList.getBankIcon(getContext()))
-						.into(profileImageView);
-				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
-				updateTransactionDescription(transactionDescriptionTextView,
-						getString(R.string.withdraw_money_confirmation_message, amountValue), 20, 20 + amountValue.length());
-				mNoteEditText.setHint(R.string.short_note_optional_hint);
-				transactionConfirmationButton.setText(R.string.withdraw_money);
-				nameTextView.setText(bankAccountList.getBankName());
-				Glide.with(this)
-						.load(bankAccountList.getBankIcon(getContext()))
-						.into(profileImageView);
 				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
 				pinLayoutHolder.setVisibility(View.GONE);
@@ -317,18 +291,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 		final String url;
 		final String note = mNoteEditText.getText().toString();
 		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
-				apiCommand = Constants.COMMAND_ADD_MONEY_FROM_BANK;
-				requestJson = gson.toJson(new AddMoneyByBankRequestRequest(bankAccountList.getBankAccountId(), amount.doubleValue(), note, mPinEditText.getText().toString()));
-				url = Constants.BASE_URL_SM + Constants.URL_ADD_MONEY_FROM_BANK;
-				mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
-				apiCommand = Constants.COMMAND_WITHDRAW_MONEY;
-				requestJson = gson.toJson(new WithdrawMoneyRequest(bankAccountList.getBankAccountId(), amount.doubleValue(), note, mPinEditText.getText().toString()));
-				url = Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY;
-				mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
-				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				apiCommand = Constants.COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD;
 				requestJson = gson.toJson(new AddMoneyByCreditOrDebitCardRequest(amount.doubleValue(), note, null));
@@ -388,8 +350,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 					}
 					break;
 				case Constants.COMMAND_SEND_MONEY:
-				case Constants.COMMAND_ADD_MONEY_FROM_BANK:
-				case Constants.COMMAND_WITHDRAW_MONEY:
 				case Constants.COMMAND_REQUEST_MONEY:
 					httpRequestPostAsyncTask = null;
 					IPayTransactionResponse iPayTransactionResponse = new Gson().fromJson(result.getJsonString(), IPayTransactionResponse.class);
@@ -411,7 +371,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 									bundle.putString(Constants.RECEIVER_IMAGE_URL, profilePicture);
 									bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
 									bundle.putString(Constants.SENDER_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
-									bundle.putParcelable(Constants.SELECTED_BANK_ACCOUNT, bankAccountList);
 									bundle.putSerializable(Constants.AMOUNT, amount);
 									if (getActivity() instanceof IPayTransactionActionActivity)
 										((IPayTransactionActionActivity) getActivity()).switchToTransactionSuccessFragment(bundle);
@@ -462,10 +421,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
 	private String getTrackerCategory() {
 		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY:
-				return "Add Money";
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
-				return "Withdraw Money";
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
 				return "Send Money";
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
@@ -479,18 +434,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 	private void launchOTPVerification(long otpValidFor) {
 		if (getActivity() != null) {
 			switch (transactionType) {
-				case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_ADD_MONEY_FROM_BANK,
-							Constants.BASE_URL_SM + Constants.URL_ADD_MONEY_FROM_BANK, Constants.METHOD_POST, otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
-					break;
-				case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_WITHDRAW_MONEY,
-							Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, Constants.METHOD_POST, otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
-					break;
 				case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
 					mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_SEND_MONEY,
 							Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, Constants.METHOD_POST, otpValidFor);

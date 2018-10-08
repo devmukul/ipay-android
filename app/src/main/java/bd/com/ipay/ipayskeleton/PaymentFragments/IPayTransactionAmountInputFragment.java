@@ -33,7 +33,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -58,7 +57,6 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 	private String name;
 	private String mobileNumber;
 	private String profilePicture;
-	private BankAccountList bankAccountList;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +66,6 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 			name = getArguments().getString(Constants.NAME);
 			mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
 			profilePicture = getArguments().getString(Constants.PHOTO_URI);
-			bankAccountList = getArguments().getParcelable(Constants.SELECTED_BANK_ACCOUNT);
 		}
 		numberFormat.setMinimumFractionDigits(0);
 		numberFormat.setMaximumFractionDigits(2);
@@ -110,20 +107,6 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 		}
 
 		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
-				transactionDescriptionTextView.setText(R.string.add_money_from_title);
-				nameTextView.setText(bankAccountList.getBankName());
-				Glide.with(this)
-						.load(bankAccountList.getBankIcon(getContext()))
-						.into(profileImageView);
-				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
-				transactionDescriptionTextView.setText(R.string.withdraw_money_to_title);
-				nameTextView.setText(bankAccountList.getBankName());
-				Glide.with(this)
-						.load(bankAccountList.getBankIcon(getContext()))
-						.into(profileImageView);
-				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				transactionDescriptionTextView.setText(R.string.add_money_from_title);
 				balanceInfoLayout.setVisibility(View.VISIBLE);
@@ -233,7 +216,6 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 					bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
 					bundle.putString(Constants.NAME, name);
 					bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
-					bundle.putParcelable(Constants.SELECTED_BANK_ACCOUNT, bankAccountList);
 					bundle.putString(Constants.PHOTO_URI, profilePicture);
 					final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
 					bundle.putSerializable(Constants.AMOUNT, amount);

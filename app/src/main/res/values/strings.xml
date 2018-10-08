@@ -1246,7 +1246,7 @@
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
     <string name="add_money_bank_success_description">You have successfully requested add money from bank to your iPay wallet. It may take 3&#8211;5 business day to complete. You can see the details in your transaction in case you need them further.</string>
-    <string name="withdrw_money_success_description">You have successfully requested withdraw money to bank from your iPay wallet. It may take 3&#8211;5 business day to complete. You can see the details in your transaction in case you need them further.</string>
+    <string name="withdraw_money_success_description">You have successfully requested withdraw money to bank from your iPay wallet. It may take 3&#8211;5 business day to complete. You can see the details in your transaction in case you need them further.</string>
     <string name="add_money_card_success_description">You have successfully added balance to your iPay wallet. You can see the details in your transaction in case you need them further.</string>
     <string name="send_money_success_description">We will notify receiver that you have sent money. You can see the details in your transaction in case you need them further.</string>
     <string name="pay_bill_success_description">You have successfully paid your bill from you iPay wallet. You can see the details in your transaction in case you need them further.</string>
@@ -1270,13 +1270,13 @@
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">00</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
-    <string name="add_money_confirmation_message">YOU ARE ADDING %1$s FROM</string>
-    <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING %1$s TO</string>
+    <string name="add_money_confirmation_message">YOU ARE ADDING Tk.%1$s FROM</string>
+    <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk.%1$s TO</string>
     <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk.%1$s FOR</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
     <string name="add_money_card_success_message">SUCCESSFULLY ADDED %1$s FROM</string>
-    <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD %1$s FROM</string>
-    <string name="withdraw_money_bank_success_message">SUCCESSFULLY REQUESTED TO WITHDRAW %1$s TO</string>
+    <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk.%1$s FROM</string>
+    <string name="withdraw_money_bank_success_message">SUCCESSFULLY REQUESTED TO WITHDRAW Tk.%1$s TO</string>
     <string name="pay_bill_success_message">YOU HAVE PAID Tk.%1$s FOR</string>
     <string name="request_money_confirmation_message">YOU ARE REQUESTING %1$s FROM</string>
     <string name="request_money_success_message">SUCCESSFULLY REQUESTED %1$s FROM</string>
@@ -1291,10 +1291,11 @@
     <string name="money_from_bank">MONEY FROM BANK</string>
     <string name="add_money_card_option_message">Add money from card is the fastest way. It will take few minutes to update your balance.</string>
     <string name="add_money_bank_option_message">Add money from bank is the most reliable way to update your balance. It takes 3&#8211;5 bank working day to add balance in your wallet.</string>
-    <string name="add_money_message">Update iPay balance from Bank or Cards will give you freedom to shop send money or transfer.</string>
-    <string name="withdraw_money_message">You can withdraw money from iPay wallet anytime. To withdraw money from iPay wallet, you need to choose desired bank.</string>
     <string name="choose_a_convenient_way">Choose a \nconvenient way</string>
+    <string name="add_money_message">Update iPay balance from Bank or Cards will give you freedom to shop send money or transfer.</string>
+    <string name="add_money_securely">Add \nmoney securely</string>
     <string name="withdraw_money_anytime">Withdraw \nmoney anytime</string>
+    <string name="withdraw_money_bank_option_message">You can withdraw money from iPay wallet anytime. To withdraw money from iPay wallet, you need to choose desired bank.</string>
     <string name="fetching_bank_list">Fetching \nbank list…</string>
     <string name="dummy_bank_name">Eastern Bank Limited</string>
     <string name="dummy_bank_account">123***890</string>
