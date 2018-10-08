@@ -369,24 +369,24 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
 
         switch (v.getId()) {
             case R.id.airtel:
-                operatorCode = 4;
-                setAppropriateOperatorIconSelected(4);
+                operatorCode = Constants.OPERATOR_CODE_AIRTEL;
+                setAppropriateOperatorIconSelected(Constants.OPERATOR_CODE_AIRTEL);
                 break;
             case R.id.teletalk:
-                operatorCode = 6;
-                setAppropriateOperatorIconSelected(6);
+                operatorCode = Constants.OPERATOR_CODE_TELETALK;
+                setAppropriateOperatorIconSelected(Constants.OPERATOR_CODE_TELETALK);
                 break;
             case R.id.banglalink:
-                operatorCode = 5;
-                setAppropriateOperatorIconSelected(5);
+                operatorCode = Constants.OPERATOR_CODE_BANGLALINK;
+                setAppropriateOperatorIconSelected(Constants.OPERATOR_CODE_BANGLALINK);
                 break;
             case R.id.gp:
-                operatorCode = 1;
-                setAppropriateOperatorIconSelected(1);
+                operatorCode = Constants.OPERATOR_CODE_GP;
+                setAppropriateOperatorIconSelected(Constants.OPERATOR_CODE_GP);
                 break;
             case R.id.robi:
-                operatorCode = 3;
-                setAppropriateOperatorIconSelected(3);
+                operatorCode = Constants.OPERATOR_CODE_ROBI;
+                setAppropriateOperatorIconSelected(Constants.OPERATOR_CODE_ROBI);
                 break;
         }
     }

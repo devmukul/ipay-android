@@ -12,6 +12,12 @@ public class Constants {
 	public static final String ApplicationPackage = "bd.com.ipay.android";
 	public static final String ApplicationTitle = "iPay";
 
+	public static final int OPERATOR_CODE_GP = 1;
+	public static final int OPERATOR_CODE_ROBI = 3;
+	public static final int OPERATOR_CODE_AIRTEL = 4;
+	public static final int OPERATOR_CODE_BANGLALINK = 5;
+	public static final int OPERATOR_CODE_TELETALK = 6;
+
 	public static final String ERROR = "ERROR";
 	public static final String USER_AGENT = "User-Agent";
 	public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
