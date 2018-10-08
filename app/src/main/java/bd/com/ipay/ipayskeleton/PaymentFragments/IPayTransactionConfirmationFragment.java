@@ -74,6 +74,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
     private CustomProgressDialog mCustomProgressDialog;
 
+    private String mPin;
+
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     protected Tracker mTracker;
@@ -232,9 +234,10 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
         switch (transactionType) {
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 apiCommand = Constants.COMMAND_REQUEST_MONEY;
+                mPin = mPinEditText.getText().toString().trim();
                 requestJson = gson.toJson(new SendMoneyRequest(ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber()), ContactEngine.formatMobileNumberBD(mobileNumber),
-                        amount.toString(), note, mPinEditText.getText().toString()));
-                url = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY;
+                        amount.toString(), note));
+                url = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY_V3;
                 mCustomProgressDialog.setMessage(getString(R.string.sending_money));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
@@ -347,6 +350,9 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
         if (getActivity() != null) {
             switch (transactionType) {
                 case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
+                    SendMoneyRequest sendMoneyRequest = new Gson().fromJson(requestJson, SendMoneyRequest.class);
+                    sendMoneyRequest.setPin(mPin);
+                    requestJson = new Gson().toJson(sendMoneyRequest);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_SEND_MONEY,
                             Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, Constants.METHOD_POST, otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);

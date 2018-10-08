@@ -442,6 +442,7 @@ public class Constants {
 
     // Transaction REST
     public static final String URL_SEND_MONEY = "transaction/send/v2";
+    public static final String URL_SEND_MONEY_V3 = "send/v3";
 
     // Trusted Network REST
     public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";

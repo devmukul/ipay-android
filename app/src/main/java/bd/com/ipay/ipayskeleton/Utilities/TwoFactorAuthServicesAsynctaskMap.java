@@ -63,8 +63,13 @@ public class TwoFactorAuthServicesAsynctaskMap {
 
             case Constants.COMMAND_SEND_MONEY:
                 SendMoneyRequest sendMoneyRequest = gson.fromJson(json, SendMoneyRequest.class);
-                if (otp != null)
-                    sendMoneyRequest.setOtp(otp);
+                String pin = sendMoneyRequest.getPin();
+                if (pin != null) {
+                    mHttpPostAsyncTask.setPinAsHeader(pin);
+                }
+                if (otp != null) {
+                    mHttpPostAsyncTask.setOtpAsHeader(otp);
+                }
                 json = gson.toJson(sendMoneyRequest);
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY, uri, json, context, false);
                 return mHttpPostAsyncTask;
@@ -95,13 +100,16 @@ public class TwoFactorAuthServicesAsynctaskMap {
 
             case Constants.COMMAND_PAYMENT:
                 PaymentRequest paymentRequest = gson.fromJson(json, PaymentRequest.class);
-                String pin = paymentRequest.getPin();
-                if (otp != null)
-                    paymentRequest.setOtp(otp);
+                pin = paymentRequest.getPin();
                 json = gson.toJson(paymentRequest);
+
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT, uri, json, context, false);
-                mHttpPostAsyncTask.setPinAsHeader(pin);
-                mHttpPostAsyncTask.setOtpAsHeader(otp);
+                if (pin != null) {
+                    mHttpPostAsyncTask.setPinAsHeader(pin);
+                }
+                if (otp != null) {
+                    mHttpPostAsyncTask.setOtpAsHeader(otp);
+                }
                 return mHttpPostAsyncTask;
 
             case Constants.COMMAND_PAYMENT_BY_DEEP_LINK:
