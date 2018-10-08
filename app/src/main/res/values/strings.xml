@@ -1294,4 +1294,5 @@
     <string name="top_up_helper">To topup you or your beloved one\'s mobile,insert number or search from contact</string>
     <string name="top_up_helper_text">You can top up to you and your loved ones from your ipay wallet </string>
     <string name="top_up_to">MOBILE TOP-UP TO</string>
+    <string name="total_outstanding">Total Outstanding</string>
 </resources>

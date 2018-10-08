@@ -197,6 +197,8 @@ public class Constants {
 	public static final String VISA = "VISA";
 	public static final String MASTERCARD = "MASTERCARD";
 	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+    public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
+	public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
 	public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
 	public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
 	public static final String LANKABANGLA = "LANKABANGLA";
