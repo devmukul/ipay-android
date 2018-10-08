@@ -127,7 +127,6 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 			customProgressDialog.dismissDialog();
 			lankaBanglaCardBillPayTask = null;
 		} else {
-			hideOtpDialog();
 			try {
 				switch (result.getApiCommand()) {
 					case Constants.COMMAND_LANKABANGLA_BILL_PAY:
@@ -142,9 +141,13 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 								}
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_OK:
+								if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+									mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+								} else {
+									customProgressDialog.setTitle(R.string.success);
+									customProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
+								}
 								sendSuccessEventTracking(billAmount);
-								customProgressDialog.setTitle(R.string.success);
-								customProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
 								new Handler().postDelayed(new Runnable() {
 									@Override
 									public void run() {
@@ -162,20 +165,23 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 									Utilities.hideKeyboard(getActivity());
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
-								customProgressDialog.setTitle(R.string.failed);
-								customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+								if (getActivity() != null) {
+									customProgressDialog.setTitle(R.string.failed);
+									customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+									sendBlockedEventTracking(billAmount);
+								}
 								new Handler().postDelayed(new Runnable() {
 									@Override
 									public void run() {
 										((MyApplication) getActivity().getApplication()).launchLoginPage(mGenericBillPayResponse.getMessage());
 									}
 								}, 2000);
-								sendBlockedEventTracking(billAmount);
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
 							case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
 								customProgressDialog.dismissDialog();
-								launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(lankaBanglaCardBillPayRequest), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
+								Toast.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
+								launchOTPVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(lankaBanglaCardBillPayRequest), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
 								final String errorMessage;
@@ -188,13 +194,26 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 								customProgressDialog.showFailureAnimationAndMessage(errorMessage);
 								break;
 							default:
-								if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-									customProgressDialog.dismissDialog();
-									Toaster.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT);
-									launchOtpVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(mGenericBillPayResponse), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
-								} else {
-									customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+								if (getActivity() != null) {
+									if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
+										customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
+									} else {
+										Toast.makeText(getContext(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
+									}
+
+									if (mGenericBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+										if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+											mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+											customProgressDialog.dismissDialog();
+										}
+									} else {
+										if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+											mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+										}
+									}
+									//Google Analytic event
 									sendFailedEventTracking(mGenericBillPayResponse.getMessage(), billAmount);
+									break;
 								}
 								break;
 						}

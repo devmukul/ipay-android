@@ -34,7 +34,7 @@ public class IPayAddMoneyFromBankConfirmationFragment extends IPayAbstractBankTr
 	@Override
 	protected void setupViewProperties() {
 		setTransactionDescription(getStyledTransactionDescription(R.string.add_money_confirmation_message, transactionAmount));
-		setName(bankAccountList.getAccountNumber());
+		setName(bankAccountList.getBankName());
 		setTransactionImageResource(bankAccountList.getBankIcon(getContext()));
 		setNoteEditTextHint(getString(R.string.short_note_optional_hint));
 	}

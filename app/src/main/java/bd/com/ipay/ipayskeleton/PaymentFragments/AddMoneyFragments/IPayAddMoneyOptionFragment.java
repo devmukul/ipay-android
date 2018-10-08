@@ -26,7 +26,6 @@ import bd.com.ipay.ipayskeleton.Model.AddMoneyOption;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayChooseBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -82,10 +81,8 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 					case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 						BusinessRuleCacheManager.fetchBusinessRule(getContext(), IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
 						Bundle bundle = new Bundle();
-						bundle.putString(Constants.NAME, getString(selectedAddMoneyOption.getOptionTitleResourceId()));
-						bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
 						if (getActivity() instanceof IPayTransactionActionActivity) {
-							((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
+							((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 1, true);
 						}
 						break;
 				}

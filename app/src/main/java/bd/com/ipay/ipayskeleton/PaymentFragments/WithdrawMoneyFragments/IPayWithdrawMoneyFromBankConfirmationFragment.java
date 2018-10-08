@@ -28,7 +28,7 @@ public class IPayWithdrawMoneyFromBankConfirmationFragment extends IPayAbstractB
 	@Override
 	protected void setupViewProperties() {
 		setTransactionDescription(getStyledTransactionDescription(R.string.withdraw_money_confirmation_message, transactionAmount));
-		setName(bankAccountList.getAccountNumber());
+		setName(bankAccountList.getBankName());
 		setTransactionImageResource(bankAccountList.getBankIcon(getContext()));
 		setNoteEditTextHint(getString(R.string.short_note_optional_hint));
 	}
@@ -42,10 +42,5 @@ public class IPayWithdrawMoneyFromBankConfirmationFragment extends IPayAbstractB
 	@Override
 	protected String getTrackerCategory() {
 		return "Withdraw Money from Bank";
-	}
-
-	@Override
-	protected boolean verifyInput() {
-		return false;
 	}
 }

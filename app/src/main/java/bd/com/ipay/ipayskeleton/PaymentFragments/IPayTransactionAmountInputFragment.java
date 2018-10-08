@@ -107,12 +107,6 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 		}
 
 		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-				transactionDescriptionTextView.setText(R.string.add_money_from_title);
-				balanceInfoLayout.setVisibility(View.VISIBLE);
-				cardImageView.setVisibility(View.VISIBLE);
-				profileImageView.setVisibility(View.GONE);
-				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
 				transactionDescriptionTextView.setText(R.string.request_money_from);
 				balanceInfoLayout.setVisibility(View.GONE);

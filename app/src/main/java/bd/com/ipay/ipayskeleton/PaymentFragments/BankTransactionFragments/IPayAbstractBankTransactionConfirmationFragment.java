@@ -39,6 +39,7 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 			transactionAmount = (Number) getArguments().getSerializable(TRANSACTION_AMOUNT_KEY);
 			bankAccountList = getArguments().getParcelable(Constants.SELECTED_BANK_ACCOUNT);
 		}
+		mCustomProgressDialog = new CustomProgressDialog(getContext());
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 
 	@Override
 	protected boolean verifyInput() {
-		if (!TextUtils.isEmpty(getPin())) {
+		if (TextUtils.isEmpty(getPin())) {
 			showErrorMessage(getString(R.string.please_enter_a_pin));
 			return false;
 		} else if (getPin().length() != 4) {
@@ -66,6 +67,13 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 
 	@Override
 	protected void performContinueAction() {
+		mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
+
+		if (getApiCommand().equals(Constants.COMMAND_ADD_MONEY_FROM_BANK))
+			mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
+		else if (getApiCommand().equals(Constants.COMMAND_WITHDRAW_MONEY))
+			mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
+		mCustomProgressDialog.showDialog();
 		httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(getApiCommand(), getUrl(), getRequestJson(), getActivity(), this, false);
 		httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
@@ -92,8 +100,9 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 
 					switch (result.getStatus()) {
 						case Constants.HTTP_RESPONSE_STATUS_OK:
-							if (isOtpDialogShowing())
-								hideOtpDialog();
+							if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+								mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+							}
 							mCustomProgressDialog.setTitle(R.string.success);
 							mCustomProgressDialog.showSuccessAnimationAndMessage(iPayTransactionResponse.getMessage());
 							if (getActivity() != null)
@@ -114,7 +123,7 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 						case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
 							mCustomProgressDialog.dismissDialog();
 							Toast.makeText(getActivity(), iPayTransactionResponse.getMessage(), Toast.LENGTH_SHORT).show();
-							launchOtpVerification(iPayTransactionResponse.getOtpValidFor(), getRequestJson(), getApiCommand(), getUrl());
+							launchOTPVerification(iPayTransactionResponse.getOtpValidFor(), getRequestJson(), getApiCommand(), getUrl());
 							break;
 						case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
 							if (getActivity() != null) {
@@ -126,22 +135,23 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 							break;
 						default:
 							if (getActivity() != null) {
-								if (!isOtpDialogShowing()) {
+								if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
 									mCustomProgressDialog.showFailureAnimationAndMessage(iPayTransactionResponse.getMessage());
 								} else {
 									Toast.makeText(getContext(), iPayTransactionResponse.getMessage(), Toast.LENGTH_LONG).show();
 								}
 
 								if (iPayTransactionResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-									if (!isOtpDialogShowing()) {
-										launchOtpVerification(iPayTransactionResponse.getOtpValidFor(), getRequestJson(), getApiCommand(), getUrl());
+									if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+										mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
 										mCustomProgressDialog.dismissDialog();
 									}
 								} else {
-									if (!isOtpDialogShowing()) {
-										hideOtpDialog();
+									if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+										mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
 									}
 								}
+								//Google Analytic event
 								sendFailedEventTracking(iPayTransactionResponse.getMessage(), transactionAmount);
 								break;
 							}

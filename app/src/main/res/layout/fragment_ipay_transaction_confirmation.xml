@@ -67,33 +67,18 @@
                     android:textSize="16sp"
                     tools:text="@string/dummy_name" />
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/profile_image_view"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/circular_background"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_profile"
-                        app:riv_oval="true"
-                        tools:src="@tools:sample/avatars" />
-
-                    <ImageView
-                        android:id="@+id/card_image_view"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/circular_background"
-                        android:contentDescription="@string/card"
-                        android:padding="@dimen/value12"
-                        android:scaleType="fitCenter"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/ic_debit_credit_card_icon" />
-                </FrameLayout>
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/profile_image_view"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circular_background"
+                    android:contentDescription="@string/card"
+                    android:scaleType="fitCenter"
+                    app:riv_border_color="#e4e4e4"
+                    app:riv_border_width="1dip"
+                    app:riv_oval="true"
+                    tools:src="@tools:sample/avatars" />
 
                 <LinearLayout
                     android:id="@+id/pin_layout_holder"

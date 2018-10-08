@@ -48,19 +48,24 @@ public class IPayWithdrawMoneyFromBankAmountInputFragment extends IPayAbstractBa
 		}
 
 		final String errorMessage;
-		if (getAmount() == null) {
-			errorMessage = getString(R.string.please_enter_amount);
-		} else {
-			final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
-			final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-			if (amount.compareTo(balance) > 0) {
-				errorMessage = getString(R.string.insufficient_balance);
+		if (SharedPrefManager.ifContainsUserBalance()) {
+			if (getAmount() == null) {
+				errorMessage = getString(R.string.please_enter_amount);
 			} else {
-				final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
-				final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-				errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
+				final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
+				final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+				if (amount.compareTo(balance) > 0) {
+					errorMessage = getString(R.string.insufficient_balance);
+				} else {
+					final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
+					final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+					errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
+				}
 			}
+		} else {
+			errorMessage = getString(R.string.balance_not_available);
 		}
+
 		if (errorMessage != null) {
 			showErrorMessage(errorMessage);
 			return false;

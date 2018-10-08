@@ -1,11 +1,13 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -89,13 +91,21 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		successDescriptionTextView.setText(successDescription, TextView.BufferType.SPANNABLE);
 	}
 
-	protected void setSenderImage(@SuppressWarnings("SameParameterValue") int imageResource) {
+	@SuppressWarnings("unused")
+	protected void setSenderImage(int imageResource) {
 		arrowImageView.setVisibility(View.VISIBLE);
 		senderProfilePictureImageView.setVisibility(View.VISIBLE);
-		Glide.with(getContext()).load(imageResource)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(senderProfilePictureImageView);
+		if (getContext() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				senderProfilePictureImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+			} else {
+				Glide.with(getContext()).load(imageResource)
+						.asBitmap()
+						.transform(new CircleTransform(getContext()))
+						.crossFade()
+						.into(senderProfilePictureImageView);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -108,11 +118,18 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 				.into(senderProfilePictureImageView);
 	}
 
-	protected void setReceiverImage(@SuppressWarnings("SameParameterValue") int imageResource) {
-		Glide.with(getContext()).load(imageResource)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(receiverProfilePictureImageView);
+	protected void setReceiverImage(int imageResource) {
+		if (getContext() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				receiverProfilePictureImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+			} else {
+				Glide.with(getContext()).load(imageResource)
+						.asBitmap()
+						.transform(new CircleTransform(getContext()))
+						.crossFade()
+						.into(receiverProfilePictureImageView);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")

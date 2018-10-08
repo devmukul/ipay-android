@@ -27,6 +27,5 @@ public class EnableDisableSMSBroadcastReceiver {
 	 */
 	public void disableBroadcastReceiver(Context context) {
 		LocalBroadcastManager.getInstance(context).unregisterReceiver(mSMSReader);
-		context.unregisterReceiver(mSMSReader);
 	}
 }

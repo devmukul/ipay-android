@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -64,21 +63,11 @@ public class IPayTransactionSuccessFragment extends Fragment {
 		final TextView transactionSuccessMessageTextView = view.findViewById(R.id.transaction_success_message_text_view);
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
 		final RoundedImageView receiverProfilePictureImageView = view.findViewById(R.id.receiver_profile_picture_image_view);
-		final ImageView arrowIconImageView = view.findViewById(R.id.arrow_icon_image_view);
 		final RoundedImageView senderProfilePictureImageView = view.findViewById(R.id.sender_profile_picture_image_view);
-		final ImageView cardImageView = view.findViewById(R.id.card_image_view);
 		final TextView successDescriptionTextView = view.findViewById(R.id.success_description_text_view);
 		final Button goToWalletButton = view.findViewById(R.id.go_to_wallet_button);
 		final String amountValue = getString(R.string.balance_holder, numberFormat.format(amount));
 		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-				updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.add_money_card_success_message, amountValue), 19, 19 + amountValue.length());
-				successDescriptionTextView.setText(R.string.add_money_card_success_description);
-				cardImageView.setVisibility(View.VISIBLE);
-				senderProfilePictureImageView.setVisibility(View.GONE);
-				receiverProfilePictureImageView.setVisibility(View.GONE);
-				arrowIconImageView.setVisibility(View.GONE);
-				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
 				updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.send_money_success_message, amountValue), 18, 18 + amountValue.length());
 				successDescriptionTextView.setText(R.string.send_money_success_description);

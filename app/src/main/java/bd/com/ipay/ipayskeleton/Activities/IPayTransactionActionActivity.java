@@ -9,12 +9,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankOptionFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyOptionFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPayTransactionContactFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -64,8 +66,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
 				break;
 			case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				bundle.putString(Constants.NAME, getString(R.string.debit_credit_card));
-				switchToAmountInputFragment(bundle);
+				switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 0, true);
 				break;
 			case TRANSACTION_TYPE_SEND_MONEY:
 			case TRANSACTION_TYPE_REQUEST_MONEY:
@@ -151,7 +152,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
 
 		if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
 			for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-				if (fragment instanceof IPayTransactionSuccessFragment) {
+				if (fragment instanceof IPayTransactionSuccessFragment || fragment instanceof IPayAbstractTransactionSuccessFragment) {
 					finish();
 					return;
 				} else if (fragment instanceof IPayAddMoneyOptionFragment) {

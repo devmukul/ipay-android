@@ -33,7 +33,6 @@
                 android:layout_marginTop="@dimen/value28"
                 android:fontFamily="@font/open_sans_light"
                 android:gravity="center"
-                android:lineSpacingExtra="15sp"
                 android:textColor="#212121"
                 android:textSize="16sp"
                 tools:text="@string/send_money_confirmation_dummy_message" />
@@ -55,31 +54,18 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/sender_profile_picture_image_view"
-                        android:layout_width="@dimen/value80"
-                        android:layout_height="@dimen/value80"
-                        android:scaleType="centerCrop"
-                        app:riv_oval="true"
-                        tools:src="@tools:sample/avatars" />
-
-                    <ImageView
-                        android:id="@+id/card_image_view"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/circular_background"
-                        android:contentDescription="@string/card"
-                        android:padding="@dimen/value12"
-                        android:scaleType="fitCenter"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/ic_debit_credit_card_icon" />
-                </FrameLayout>
-
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/sender_profile_picture_image_view"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circular_background"
+                    android:contentDescription="@string/card"
+                    android:scaleType="fitCenter"
+                    app:riv_border_color="#e4e4e4"
+                    app:riv_border_width="1dip"
+                    app:riv_oval="true"
+                    tools:src="@tools:sample/avatars" />
 
                 <ImageView
                     android:id="@+id/arrow_icon_image_view"
@@ -95,9 +81,12 @@
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/receiver_profile_picture_image_view"
-                    android:layout_width="@dimen/value80"
-                    android:layout_height="@dimen/value80"
-                    android:scaleType="centerCrop"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circular_background"
+                    android:contentDescription="@string/card"
+                    android:scaleType="fitCenter"
                     app:riv_border_color="#e4e4e4"
                     app:riv_border_width="1dip"
                     app:riv_oval="true"

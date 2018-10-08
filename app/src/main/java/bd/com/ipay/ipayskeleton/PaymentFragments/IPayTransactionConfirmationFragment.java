@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +39,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -48,7 +46,6 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.IPayTransactionResponse;
@@ -66,7 +63,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public class IPayTransactionConfirmationFragment extends Fragment implements HttpResponseListener {
-	private static final int CARD_PAYMENT_WEB_VIEW_REQUEST = 2001;
 	private MandatoryBusinessRules mandatoryBusinessRules;
 	private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 
@@ -147,15 +143,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 				mNoteEditText.setHint(R.string.short_note_optional_hint);
 				transactionConfirmationButton.setText(R.string.send_money);
 				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-				pinLayoutHolder.setVisibility(View.GONE);
-				updateTransactionDescription(transactionDescriptionTextView,
-						getString(R.string.add_money_confirmation_message, amountValue), 15, 15 + amountValue.length());
-				mNoteEditText.setHint(R.string.short_note_optional_hint);
-				transactionConfirmationButton.setText(R.string.add_money);
-				cardImageView.setVisibility(View.VISIBLE);
-				profileImageView.setVisibility(View.GONE);
-				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
 				pinLayoutHolder.setVisibility(View.GONE);
 				updateTransactionDescription(transactionDescriptionTextView,
@@ -216,42 +203,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 				confirmTransaction();
 			}
 		});
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			case CARD_PAYMENT_WEB_VIEW_REQUEST:
-				if (data != null) {
-					final int transactionStatusCode = data.getIntExtra(Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS, CardPaymentWebViewActivity.CARD_TRANSACTION_CANCELED);
-					switch (transactionStatusCode) {
-						case CardPaymentWebViewActivity.CARD_TRANSACTION_CANCELED:
-							if (getActivity() != null)
-								getActivity().finish();
-							break;
-						case CardPaymentWebViewActivity.CARD_TRANSACTION_FAILED:
-							if (getActivity() != null)
-								getActivity().finish();
-							Utilities.sendFailedEventTracker(mTracker, "Add money by card", ProfileInfoCacheManager.getAccountId(), getString(R.string.add_money_from_credit_or_debit_card_failed_message), amount.longValue());
-							break;
-						case CardPaymentWebViewActivity.CARD_TRANSACTION_SUCCESSFUL:
-							ProfileInfoCacheManager.addSourceOfFund(true);
-							Utilities.sendSuccessEventTracker(mTracker, "Add money by card", ProfileInfoCacheManager.getAccountId(), amount.longValue());
-							Bundle bundle = new Bundle();
-							bundle.putString(Constants.NAME, name);
-							bundle.putString(Constants.TRANSACTION_ID, data.getStringExtra(Constants.TRANSACTION_ID));
-							bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
-							bundle.putSerializable(Constants.AMOUNT, amount);
-							if (getActivity() instanceof IPayTransactionActionActivity)
-								((IPayTransactionActionActivity) getActivity()).switchToTransactionSuccessFragment(bundle);
-							break;
-					}
-				}
-				break;
-			default:
-				super.onActivityResult(requestCode, resultCode, data);
-				break;
-		}
 	}
 
 	private void updateTransactionDescription(TextView textView, String string, int startPoint, int endPoint) {
@@ -328,27 +279,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 			mCustomProgressDialog.dismissDialog();
 		} else {
 			switch (result.getApiCommand()) {
-				case Constants.COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD:
-					httpRequestPostAsyncTask = null;
-					mCustomProgressDialog.dismissDialog();
-					final AddMoneyByCreditOrDebitCardResponse mAddMoneyByCreditOrDebitResponse = gson.fromJson(result.getJsonString(), AddMoneyByCreditOrDebitCardResponse.class);
-					switch (result.getStatus()) {
-						case Constants.HTTP_RESPONSE_STATUS_OK:
-							Intent intent = new Intent(getActivity(), CardPaymentWebViewActivity.class);
-							intent.putExtra(Constants.CARD_PAYMENT_URL, mAddMoneyByCreditOrDebitResponse.getForwardUrl());
-							startActivityForResult(intent, CARD_PAYMENT_WEB_VIEW_REQUEST);
-							break;
-						case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
-						case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
-							if (getActivity() != null)
-								Toaster.makeText(getActivity(), mAddMoneyByCreditOrDebitResponse.getMessage(), Toast.LENGTH_SHORT);
-							break;
-						default:
-							if (getActivity() != null)
-								Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-							break;
-					}
-					break;
 				case Constants.COMMAND_SEND_MONEY:
 				case Constants.COMMAND_REQUEST_MONEY:
 					httpRequestPostAsyncTask = null;

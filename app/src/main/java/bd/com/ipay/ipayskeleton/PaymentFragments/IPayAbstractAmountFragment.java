@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -285,10 +286,17 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 	public void setTransactionImageResource(int imageResource) {
-		Glide.with(getContext()).load(imageResource)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(transactionImageView);
+		if (getContext() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+			} else {
+				Glide.with(getContext()).load(imageResource)
+						.asBitmap()
+						.transform(new CircleTransform(getContext()))
+						.crossFade()
+						.into(transactionImageView);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
