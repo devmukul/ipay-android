@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -120,7 +119,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
 		final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
 		final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
-		final ImageView cardImageView = view.findViewById(R.id.card_image_view);
 		final Button transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
 
 		if (getActivity() instanceof AppCompatActivity) {
@@ -169,7 +167,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 			nameTextView.setText(name);
 		if (!TextUtils.isEmpty(profilePicture)) {
 			profileImageView.setVisibility(View.VISIBLE);
-			cardImageView.setVisibility(View.GONE);
 			Glide.with(this)
 					.load(profilePicture)
 					.placeholder(R.drawable.ic_profile)
