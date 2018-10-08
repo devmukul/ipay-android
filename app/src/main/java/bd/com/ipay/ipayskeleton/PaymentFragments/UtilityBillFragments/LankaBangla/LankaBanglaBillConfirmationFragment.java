@@ -134,6 +134,8 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 						switch (result.getStatus()) {
 							case Constants.HTTP_RESPONSE_STATUS_PROCESSING:
 								customProgressDialog.dismissDialog();
+								if (getActivity() != null)
+									Utilities.hideKeyboard(getActivity());
 								Toaster.makeText(getContext(), R.string.request_on_process, Toast.LENGTH_SHORT);
 								if (getActivity() != null) {
 									Utilities.hideKeyboard(getActivity());
