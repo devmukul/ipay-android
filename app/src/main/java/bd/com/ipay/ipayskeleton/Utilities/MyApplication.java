@@ -34,238 +34,235 @@ import okhttp3.OkHttpClient;
 
 public class MyApplication extends MultiDexApplication implements HttpResponseListener {
 
-    // Variables for token timer
-    private static Timer mTokenTimer;
-    private static TimerTask mTokenTimerTask;
-    //Google Analytic
-    private static GoogleAnalytics sAnalytics;
-    private static Tracker sTracker;
-    private static MyApplication myApplicationInstance;
-    // 5 Minutes inactive time
-    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
-    public boolean isAppInBackground = false;
-    // Variables for user inactivity
-    private Timer mUserInactiveTimer;
-    private TimerTask mUserInactiveTimerTask;
-    private HttpRequestPostAsyncTask mLogoutTask = null;
-    private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
-    private LogoutResponse mLogOutResponse;
-    private OkHttpClient okHttpClient;
+	// Variables for token timer
+	private static Timer mTokenTimer;
+	private static TimerTask mTokenTimerTask;
+	//Google Analytic
+	private static GoogleAnalytics sAnalytics;
+	private static Tracker sTracker;
+	private static MyApplication myApplicationInstance;
+	public boolean isAppInBackground = false;
+	// Variables for user inactivity
+	private Timer mUserInactiveTimer;
+	private HttpRequestPostAsyncTask mLogoutTask = null;
+	private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
+	private OkHttpClient okHttpClient;
 
-    public static MyApplication getMyApplicationInstance() {
-        return myApplicationInstance;
-    }
+	public static MyApplication getMyApplicationInstance() {
+		return myApplicationInstance;
+	}
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        myApplicationInstance = this;
-        okHttpClient = new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS).build();
-        SharedPrefManager.initialize(getApplicationContext());
-        ProfileInfoCacheManager.initialize(getApplicationContext());
-        ACLManager.initialize(this);
-        TokenManager.initialize(this);
-        Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
-        BusinessRuleCacheManager.initialize(this);
-        setDefaultBusinessRules();
-        Utilities.resetIntercomInformation();
-        sAnalytics = GoogleAnalytics.getInstance(this);
-    }
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		myApplicationInstance = this;
+		okHttpClient = new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
+				.connectTimeout(60, TimeUnit.SECONDS).build();
+		SharedPrefManager.initialize(getApplicationContext());
+		ProfileInfoCacheManager.initialize(getApplicationContext());
+		ACLManager.initialize(this);
+		TokenManager.initialize(this);
+		Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
+		BusinessRuleCacheManager.initialize(this);
+		setDefaultBusinessRules();
+		Utilities.resetIntercomInformation();
+		sAnalytics = GoogleAnalytics.getInstance(this);
+	}
 
-    public OkHttpClient getOkHttpClient() {
-        return okHttpClient;
-    }
+	public OkHttpClient getOkHttpClient() {
+		return okHttpClient;
+	}
 
-    public void startUserInactivityDetectorTimer() {
-        if (mUserInactiveTimer != null)
-            mUserInactiveTimer.cancel();
+	public void startUserInactivityDetectorTimer() {
+		if (mUserInactiveTimer != null)
+			mUserInactiveTimer.cancel();
 
-        this.mUserInactiveTimer = new Timer();
-        this.mUserInactiveTimerTask = new TimerTask() {
-            public void run() {
-                forceLogoutForInactivity();
-            }
-        };
+		this.mUserInactiveTimer = new Timer();
+		TimerTask mUserInactiveTimerTask = new TimerTask() {
+			public void run() {
+				forceLogoutForInactivity();
+			}
+		};
 
-        this.mUserInactiveTimer.schedule(mUserInactiveTimerTask,
-                AUTO_LOGOUT_TIMEOUT);
-    }
+		// 5 Minutes inactive time
+		long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
+		this.mUserInactiveTimer.schedule(mUserInactiveTimerTask,
+				AUTO_LOGOUT_TIMEOUT);
+	}
 
-    public void stopUserInactivityDetectorTimer() {
-        if (this.mUserInactiveTimer != null) {
-            this.mUserInactiveTimer.cancel();
-            this.mUserInactiveTimer = null;
-        }
-    }
+	public void stopUserInactivityDetectorTimer() {
+		if (this.mUserInactiveTimer != null) {
+			this.mUserInactiveTimer.cancel();
+			this.mUserInactiveTimer = null;
+		}
+	}
 
-    /**
-     * set Default Business Rules is to cache the offline business rules
-     */
-    private void setDefaultBusinessRules() {
-        for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
-            if (!BusinessRuleCacheManager.ifContainsBusinessRule(serviceTag)) {
-                MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
-                mandatoryBusinessRules.setDefaultRules();
-                BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
-            }
-        }
-    }
+	/**
+	 * set Default Business Rules is to cache the offline business rules
+	 */
+	private void setDefaultBusinessRules() {
+		for (String serviceTag : BusinessRuleConstants.SERVICE_BUSINESS_RULE_TAGS) {
+			if (!BusinessRuleCacheManager.ifContainsBusinessRule(serviceTag)) {
+				MandatoryBusinessRules mandatoryBusinessRules = new MandatoryBusinessRules(serviceTag);
+				mandatoryBusinessRules.setDefaultRules();
+				BusinessRuleCacheManager.setBusinessRules(serviceTag, mandatoryBusinessRules);
+			}
+		}
+	}
 
-    public void attemptLogout() {
-        if (mLogoutTask != null) {
-            return;
-        }
+	public void attemptLogout() {
+		if (mLogoutTask != null) {
+			return;
+		}
 
-        String mUserID = ProfileInfoCacheManager.getMobileNumber();
+		String mUserID = ProfileInfoCacheManager.getMobileNumber();
 
-        LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mLogoutModel);
+		LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
+		Gson gson = new Gson();
+		String json = gson.toJson(mLogoutModel);
 
-        mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getApplicationContext(), false);
-        mLogoutTask.mHttpResponseListener = this;
+		mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
+				Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getApplicationContext(), false);
+		mLogoutTask.mHttpResponseListener = this;
 
-        mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+		mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 
-    public void startTokenTimer() {
-        stopTokenTimer();
+	public void startTokenTimer() {
+		stopTokenTimer();
 
-        this.mTokenTimer = new Timer();
-        this.mTokenTimerTask = new TimerTask() {
-            public void run() {
-                refreshToken();
-            }
-        };
+		mTokenTimer = new Timer();
+		mTokenTimerTask = new TimerTask() {
+			public void run() {
+				refreshToken();
+			}
+		};
 
-        this.mTokenTimer.schedule(mTokenTimerTask,
-                TokenManager.getiPayTokenTimeInMs());
-    }
+		mTokenTimer.schedule(mTokenTimerTask,
+				TokenManager.getiPayTokenTimeInMs());
+	}
 
-    private void stopTokenTimer() {
-        if (this.mTokenTimerTask != null) {
-            this.mTokenTimerTask.cancel();
-        }
+	private void stopTokenTimer() {
+		if (mTokenTimerTask != null) {
+			mTokenTimerTask.cancel();
+		}
 
-        if (this.mTokenTimer != null) {
-            this.mTokenTimer.cancel();
-        }
-    }
+		if (mTokenTimer != null) {
+			mTokenTimer.cancel();
+		}
+	}
 
-    public void refreshToken() {
-        Logger.logW("Token_Timer", "Refresh token called");
+	public void refreshToken() {
+		Logger.logW("Token_Timer", "Refresh token called");
 
-        if (mRefreshTokenAsyncTask != null) {
-            mRefreshTokenAsyncTask.cancel(true);
-            mRefreshTokenAsyncTask = null;
-        }
+		if (mRefreshTokenAsyncTask != null) {
+			mRefreshTokenAsyncTask.cancel(true);
+			mRefreshTokenAsyncTask = null;
+		}
 
-        GetRefreshTokenRequest mGetRefreshTokenRequest = new GetRefreshTokenRequest(TokenManager.getRefreshToken());
-        Gson gson = new Gson();
-        String json = gson.toJson(mGetRefreshTokenRequest);
-        mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_TOKEN,
-                Constants.BASE_URL_MM + Constants.URL_GET_REFRESH_TOKEN, json, getApplicationContext(), true);
-        mRefreshTokenAsyncTask.mHttpResponseListener = this;
+		GetRefreshTokenRequest mGetRefreshTokenRequest = new GetRefreshTokenRequest(TokenManager.getRefreshToken());
+		Gson gson = new Gson();
+		String json = gson.toJson(mGetRefreshTokenRequest);
+		mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_TOKEN,
+				Constants.BASE_URL_MM + Constants.URL_GET_REFRESH_TOKEN, json, getApplicationContext(), true);
+		mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
-        mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+		mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 
-    public void forceLogoutForInactivity() {
-        if (Utilities.isConnectionAvailable(getApplicationContext())) attemptLogout();
-        else launchLoginPage(getString(R.string.please_log_in_again));
-        Utilities.resetIntercomInformation();
-    }
+	public void forceLogoutForInactivity() {
+		if (Utilities.isConnectionAvailable(getApplicationContext())) attemptLogout();
+		else launchLoginPage(getString(R.string.please_log_in_again));
+		Utilities.resetIntercomInformation();
+	}
 
-    // Launch login page for token timeout/un-authorized/logout called for user inactivity
-    public void launchLoginPage(String message) {
-        boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
+	// Launch login page for token timeout/un-authorized/logout called for user inactivity
+	public void launchLoginPage(String message) {
+		boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
-        // If the user is not logged in already, no need to launch the Login page.
-        // Return from here
-        if (!loggedIn) return;
-        if (ProfileInfoCacheManager.isAccountSwitched()) {
-            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
-            ProfileInfoCacheManager.updateBusinessInfoCache(null);
-            ProfileInfoCacheManager.saveMainUserBusinessInfo(null);
-            ProfileInfoCacheManager.updateProfileInfoCache(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
-        }
-        if (!isAppInBackground) {
-            ProfileInfoCacheManager.setLoggedInStatus(false);
+		// If the user is not logged in already, no need to launch the Login page.
+		// Return from here
+		if (!loggedIn) return;
+		if (ProfileInfoCacheManager.isAccountSwitched()) {
+			TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+			ProfileInfoCacheManager.updateBusinessInfoCache(null);
+			ProfileInfoCacheManager.saveMainUserBusinessInfo(null);
+			ProfileInfoCacheManager.updateProfileInfoCache(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
+		}
+		if (!isAppInBackground) {
+			ProfileInfoCacheManager.setLoggedInStatus(false);
 
-            Intent intent = new Intent(getApplicationContext(), SignupOrLoginActivity.class);
-            if (message != null)
-                intent.putExtra(Constants.MESSAGE, message);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
+			Intent intent = new Intent(getApplicationContext(), SignupOrLoginActivity.class);
+			if (message != null)
+				intent.putExtra(Constants.MESSAGE, message);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			startActivity(intent);
+		}
 
-        SharedPrefManager.setRememberMeActive(false);
-        clearTokenAndTimer();
-    }
+		SharedPrefManager.setRememberMeActive(false);
+		clearTokenAndTimer();
+	}
 
-    // Clear token and timer after logout
-    public void clearTokenAndTimer() {
-        stopUserInactivityDetectorTimer();
-        stopTokenTimer();
-        TokenManager.invalidateToken();
-    }
+	// Clear token and timer after logout
+	public void clearTokenAndTimer() {
+		stopUserInactivityDetectorTimer();
+		stopTokenTimer();
+		TokenManager.invalidateToken();
+	}
 
-    /**
-     * Gets the default {@link Tracker} for this {@link Application}.
-     *
-     * @return tracker
-     */
-    synchronized public Tracker getDefaultTracker() {
-        if (sTracker == null) {
-            if (!BuildConfig.DEBUG) {
-                sTracker = sAnalytics.newTracker(R.xml.global_tracker_for_live);
-            } else {
-                sTracker = sAnalytics.newTracker(R.xml.global_tracker);
-            }
-        }
-        return sTracker;
-    }
+	/**
+	 * Gets the default {@link Tracker} for this {@link Application}.
+	 *
+	 * @return tracker
+	 */
+	synchronized public Tracker getDefaultTracker() {
+		if (sTracker == null) {
+			if (!BuildConfig.DEBUG) {
+				sTracker = sAnalytics.newTracker(R.xml.global_tracker_for_live);
+			} else {
+				sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+			}
+		}
+		return sTracker;
+	}
 
+	@Override
+	public void httpResponseReceiver(GenericHttpResponse result) {
 
-    @Override
-    public void httpResponseReceiver(GenericHttpResponse result) {
+		if (HttpErrorHandler.isErrorFound(result, getApplicationContext(), null)) {
+			mLogoutTask = null;
+			mRefreshTokenAsyncTask = null;
+			return;
+		}
 
-        if (HttpErrorHandler.isErrorFound(result, getApplicationContext(), null)) {
-            mLogoutTask = null;
-            mRefreshTokenAsyncTask = null;
-            return;
-        }
+		Gson gson = new Gson();
 
-        Gson gson = new Gson();
+		if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
+			try {
+				LogoutResponse mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
+				launchLoginPage(getApplicationContext().getString(R.string.please_log_in_again));
 
-        if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
-            try {
-                mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
-                launchLoginPage(getApplicationContext().getString(R.string.please_log_in_again));
+				// Launched login page for both success and failure case. Handled the failure here.
+				if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
+					Toast.makeText(getApplicationContext(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                // Launched login page for both success and failure case. Handled the failure here.
-                if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
-                    Toast.makeText(getApplicationContext(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(getApplicationContext(), R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
+			}
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
-            }
+			mLogoutTask = null;
 
-            mLogoutTask = null;
+		} else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
+			try {
+				if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
+					launchLoginPage(getString(R.string.please_log_in_again));
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
-            try {
-                if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
-                    launchLoginPage(getString(R.string.please_log_in_again));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mRefreshTokenAsyncTask = null;
-        }
-    }
+			mRefreshTokenAsyncTask = null;
+		}
+	}
 }

@@ -184,12 +184,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.AddMoneyActivity"
-            android:label="@string/add_money"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
             android:name=".Activities.PaymentActivities.WithdrawMoneyActivity"
             android:label="@string/withdraw_money"
             android:screenOrientation="portrait"
@@ -277,12 +271,6 @@
         <activity
             android:name=".Activities.PaymentActivities.TopUpReviewActivity"
             android:label="@string/mobile_topup"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".Activities.PaymentActivities.AddMoneyReviewActivity"
-            android:label="@string/add_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />
@@ -404,6 +392,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name="com.facebook.FacebookActivity"

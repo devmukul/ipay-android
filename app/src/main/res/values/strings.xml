@@ -758,8 +758,8 @@
     <string name="search">Search</string>
     <string name="member_since">Member Since</string>
     <string name="select_district">District</string>
-    <string name="add_bank_prompt">You need to add bank accounts to add or withdraw money. Do you want to link a bank account now?</string>
-    <string name="verify_bank_prompt">You need to have at least one verified bank account to add or withdraw money. Do you want to verify a bank account now?</string>
+    <string name="add_bank_prompt">You need to add bank accounts to add or withdraw money.</string>
+    <string name="verify_bank_prompt">You need to have at least one verified bank account to add or withdraw money.</string>
     <string name="add_bank">Add Bank</string>
     <string name="verify_bank">Verify Bank</string>
     <string name="bank_successfully_placed_for_verification">Bank successfully placed for verification.</string>
@@ -1246,6 +1246,9 @@
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
+    <string name="add_money_bank_success_description">You have successfully requested add money from bank to your iPay wallet. It may take 3&#8211;5 business day to complete. You can see the details in your transaction in case you need them further.</string>
+    <string name="withdraw_money_success_description">You have successfully requested withdraw money to bank from your iPay wallet. It may take 3&#8211;5 business day to complete. You can see the details in your transaction in case you need them further.</string>
+    <string name="add_money_card_success_description">You have successfully added balance to your iPay wallet. You can see the details in your transaction in case you need them further.</string>
     <string name="send_money_success_description">We will notify receiver that you have sent money. You can see the details in your transaction in case you need them further.</string>
     <string name="pay_bill_success_description">You have successfully paid your bill from you iPay wallet. You can see the details in your transaction in case you need them further.</string>
     <string name="request_money_success_description">We will notify receiver that you requested money. We will notify you when he accepts or rejects your request.</string>
@@ -1253,6 +1256,8 @@
     <string name="request_money_helper_text">Running low balance in your iPay wallet? Request other members to transfer money to your iPay wallet</string>
     <string name="request_money_step_two">insert <b>amount</b> you want to request</string>
     <string name="request_money_from">YOU ARE REQUESTING MONEY FROM</string>
+    <string name="add_money_from_title">YOU ARE ADDING MONEY FROM</string>
+    <string name="withdraw_money_to_title">YOU ARE WITHDRAWING MONEY TO</string>
     <string name="send_money_confirm">Send Money Confirm</string>
     <string name="request_money_confirm">Request Money Confirm</string>
     <string name="amberIT">AmberIT</string>
@@ -1264,10 +1269,15 @@
     <string name="lanka_bangla">LankaBangla</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
-    <string name="zero_amount">0</string>
+    <string name="zero_amount">00</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
+    <string name="add_money_confirmation_message">YOU ARE ADDING Tk.%1$s FROM</string>
+    <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk.%1$s TO</string>
     <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk.%1$s FOR</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
+    <string name="add_money_card_success_message">SUCCESSFULLY ADDED %1$s FROM</string>
+    <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk.%1$s FROM</string>
+    <string name="withdraw_money_bank_success_message">SUCCESSFULLY REQUESTED TO WITHDRAW Tk.%1$s TO</string>
     <string name="pay_bill_success_message">YOU HAVE PAID Tk.%1$s FOR</string>
     <string name="request_money_confirmation_message">YOU ARE REQUESTING %1$s FROM</string>
     <string name="request_money_success_message">SUCCESSFULLY REQUESTED %1$s FROM</string>
@@ -1278,6 +1288,19 @@
     <string name="please_enter_a_pin">Please enter a pin</string>
     <string name="go_back_to_wallet">Go back to Wallet</string>
     <string name="minimum_pin_length_message">Pin must be at least 4 digits.</string>
+    <string name="debit_credit_card">DEBIT/CREDIT CARD</string>
+    <string name="money_from_bank">MONEY FROM BANK</string>
+    <string name="add_money_card_option_message">Add money from card is the fastest way. It will take few minutes to update your balance.</string>
+    <string name="add_money_bank_option_message">Add money from bank is the most reliable way to update your balance. It takes 3&#8211;5 bank working day to add balance in your wallet.</string>
+    <string name="choose_a_convenient_way">Choose a \nconvenient way</string>
+    <string name="add_money_message">Update iPay balance from Bank or Cards will give you freedom to shop send money or transfer.</string>
+    <string name="add_money_securely">Add \nmoney securely</string>
+    <string name="withdraw_money_anytime">Withdraw \nmoney anytime</string>
+    <string name="withdraw_money_bank_option_message">You can withdraw money from iPay wallet anytime. To withdraw money from iPay wallet, you need to choose desired bank.</string>
+    <string name="fetching_bank_list">Fetching \nbank list…</string>
+    <string name="dummy_bank_name">Eastern Bank Limited</string>
+    <string name="dummy_bank_account">123***890</string>
+    <string name="add_money_from_bank">Add Money from Bank</string>
     <string name="lanka_bangla_card_number_input_message">Please enter your LankaBangla Visa or Master Card Number</string>
     <string name="card_hint">XXXX</string>
     <string name="invalid_card_number_message">Enter a valid card number.</string>

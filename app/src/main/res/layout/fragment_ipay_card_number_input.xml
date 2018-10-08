@@ -26,8 +26,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/value50"
         android:gravity="center"
+        android:paddingBottom="@dimen/value50"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ScrollView
@@ -53,6 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/value8"
+                    android:fontFamily="@font/open_sans"
                     android:gravity="center"
                     android:textColor="#666666"
                     android:textSize="14sp"
@@ -67,6 +68,7 @@
                     android:layout_marginTop="@dimen/value28"
                     android:background="@android:color/transparent"
                     android:drawablePadding="@dimen/value8"
+                    android:fontFamily="@font/open_sans_light"
                     android:inputType="number"
                     tools:hint="@string/lanka_bangla_card_number" />
 
@@ -85,6 +87,7 @@
         android:layout_height="@dimen/value50"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimaryButton"
+        android:fontFamily="@font/open_sans"
         android:text="@string/continue_send_money"
         android:textColor="@color/colorWhite" />
 </android.support.design.widget.CoordinatorLayout>
