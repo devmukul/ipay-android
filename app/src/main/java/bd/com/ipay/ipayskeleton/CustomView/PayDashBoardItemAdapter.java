@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.target.ImageViewTarget;
 
 import java.util.List;
 
@@ -39,6 +42,7 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImageView;
         private TextView mTextView;
+        private int mColorPalette;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -53,11 +57,11 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
             mTextView.setText(name);
 
             try {
+
                 final DrawableTypeRequest<String> glide = Glide.with(context).load(imageUrl);
 
                 glide
                         .diskCacheStrategy(DiskCacheStrategy.ALL);
-
 
                 glide
                         .placeholder(R.drawable.ic_business_logo_round)
@@ -69,6 +73,8 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -130,7 +136,7 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_dashboard_item, parent, false));
+        return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trending_business, parent, false));
     }
 
     @Override
@@ -155,5 +161,4 @@ public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
 }
-
 
