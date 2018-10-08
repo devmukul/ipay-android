@@ -62,8 +62,9 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
@@ -144,6 +145,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private double longitude = 0.0;
 
     private Context mContext;
+
+    private String mPin;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -454,7 +457,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             if (thanaDistrict != null && !thanaDistrict.isEmpty()) {
                                 mThanaAndDistrictTextView.setText(thanaDistrict);
                             }
-
                             outletView.setVisibility(View.GONE);
                         }
                     });
@@ -467,7 +469,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     profileView.setVisibility(GONE);
                     outletView.setVisibility(GONE);
                     mOutletEditText.getText().clear();
@@ -844,6 +846,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
     private void attemptPayment(String pin) {
 
+        mPin = pin;
         mReceiver = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString().trim());
         mAmount = mAmountEditText.getText().toString().trim();
         String referenceNumber = mRefNumberEditText.getText().toString().trim();
@@ -857,12 +860,13 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mCustomProgressDialog.showDialog();
         mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiver),
-                mAmount, description, pin, referenceNumber, mOutletId, latitude, longitude);
+                mAmount, description, referenceNumber, mOutletId, latitude, longitude);
 
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity(), false);
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3, json, getActivity(), false);
+        mPaymentTask.setPinAsHeader(pin);
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -955,24 +959,26 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
+                    BusinessRuleV2 businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRuleV2.class);
+                    List<Rule> rules = businessRuleArray.getRules();
 
-                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
-
-                    if (businessRuleArray != null) {
-                        for (BusinessRule rule : businessRuleArray) {
-                            if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+                    for (Rule rule : rules) {
+                        switch (rule.getRuleName()) {
+                            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT_V3:
                                 PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+                                break;
+                            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT_V3:
                                 PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                            } else if (rule.getRuleID().contains(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED)) {
+                                break;
+                            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED_V3:
                                 PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED)) {
+                                break;
+                            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED_V3:
                                 PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED)) {
-                                PaymentActivity.mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
-                            }
+                                break;
                         }
                     }
+
                     BusinessRuleCacheManager.setBusinessRules(Constants.MAKE_PAYMENT, PaymentActivity.mMandatoryBusinessRules);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1146,13 +1152,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
                             mCustomProgressDialog.showFailureAnimationAndMessage(mPaymentResponse.getMessage());
                         } else {
-                            if (mCustomProgressDialog != null) {
-                                mCustomProgressDialog.showFailureAnimationAndMessage(mPaymentResponse.getMessage());
-                            } else {
-                                Toast.makeText(mContext, mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            }
+                            Toast.makeText(mContext, mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
-
                         if (mPaymentResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
@@ -1200,9 +1201,10 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     }
 
     private void launchOTPVerification() {
+        mPaymentRequest.setPin(mPin);
         String jsonString = new Gson().toJson(mPaymentRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT, Constants.METHOD_POST);
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
