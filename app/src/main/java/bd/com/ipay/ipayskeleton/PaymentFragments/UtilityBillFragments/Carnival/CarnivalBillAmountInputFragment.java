@@ -42,7 +42,8 @@ public class CarnivalBillAmountInputFragment extends IPayAbstractAmountFragment 
 
 	@Override
 	protected void setupViewProperties() {
-		addShortCutOption(1, getString(R.string.package_rate).toUpperCase(), packageRate);
+		if (packageRate > 0)
+			addShortCutOption(1, getString(R.string.package_rate).toUpperCase(), packageRate);
 
 		setBalanceInfoLayoutVisibility(View.VISIBLE);
 		setTransactionDescription(getString(R.string.paying_bill_message));
