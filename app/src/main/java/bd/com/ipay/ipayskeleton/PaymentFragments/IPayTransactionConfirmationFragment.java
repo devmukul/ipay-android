@@ -418,6 +418,13 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                     break;
+
+                case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_TOPUP_REQUEST,
+                            Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST, otpValidFor);
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+                    break;
             }
         }
     }
