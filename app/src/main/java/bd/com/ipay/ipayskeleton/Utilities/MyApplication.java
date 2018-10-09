@@ -254,14 +254,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 			mLogoutTask = null;
 
 		} else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
-			try {
-				if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
-					launchLoginPage(getString(R.string.please_log_in_again));
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
+			// No action need to be done.
 			mRefreshTokenAsyncTask = null;
 		}
 	}
