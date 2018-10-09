@@ -13,39 +13,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
+
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
-public abstract class IPayAbstractCardNumberInputFragment extends Fragment {
+public abstract class IPayAbstractUserIdInputFragment extends Fragment {
 
-	private ImageView cardIconImageView;
-	private TextView cardMessageTextView;
-	private EditText cardNumberEditText;
+	private RoundedImageView merchantIconImageView;
+	private TextView inputMessageTextView;
+	private EditText userIdEditText;
 	private Button continueButton;
 
 	@Nullable
 	@Override
 	public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_ipay_card_number_input, container, false);
+		return inflater.inflate(R.layout.fragment_ipay_user_id_input, container, false);
 	}
 
 	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+	public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
-		cardIconImageView = view.findViewById(R.id.card_icon_image_view);
-		cardMessageTextView = view.findViewById(R.id.card_message_image_view);
-		cardNumberEditText = view.findViewById(R.id.card_number_edit_text);
 		continueButton = view.findViewById(R.id.continue_button);
+		merchantIconImageView = view.findViewById(R.id.merchant_icon_image_view);
+		inputMessageTextView = view.findViewById(R.id.input_message_text_view);
+		userIdEditText = view.findViewById(R.id.user_id_edit_text);
+
 		if (getActivity() instanceof AppCompatActivity) {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 			final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 			if (actionBar != null)
 				actionBar.setDisplayHomeAsUpEnabled(true);
 		}
+
 		continueButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -54,34 +60,38 @@ public abstract class IPayAbstractCardNumberInputFragment extends Fragment {
 				}
 			}
 		});
+		setupViewProperties();
 	}
 
-	public void setCardNumberHint(String hint) {
-		if (!TextUtils.isEmpty(hint)) {
-			cardNumberEditText.setHint(hint);
+	protected void setTitle(CharSequence title) {
+		if (getActivity() != null) {
+			getActivity().setTitle(title);
 		}
 	}
 
-	public String getCardNumber() {
-		if (cardNumberEditText.getText() != null)
-			return cardNumberEditText.getText().toString();
-		else
-			return "";
+	protected void setMerchantIconImage(int imageSource) {
+		merchantIconImageView.setImageResource(imageSource);
 	}
 
-	public void setCardIconImageResource(int imageResource) {
-		cardIconImageView.setImageResource(imageResource);
+	protected void setMerchantIconImage(String imageUrl) {
+		Glide.with(getActivity())
+				.load(imageUrl)
+				.transform(new CircleTransform(getActivity()))
+				.crossFade()
+				.into(merchantIconImageView);
 	}
 
-	public void setMessage(String message) {
-		if (TextUtils.isEmpty(message)) {
-			cardMessageTextView.setVisibility(View.GONE);
-			cardMessageTextView.setText("");
-		} else {
-			cardMessageTextView.setVisibility(View.VISIBLE);
-			cardMessageTextView.setText(message);
-		}
+	protected void setInputMessage(CharSequence inputMessage) {
+		inputMessageTextView.setVisibility(View.VISIBLE);
+		inputMessageTextView.setText(inputMessage, TextView.BufferType.SPANNABLE);
+	}
 
+	protected void setUserIdHint(CharSequence userIdHint) {
+		userIdEditText.setHint(userIdHint);
+	}
+
+	protected String getUserId() {
+		return TextUtils.isEmpty(userIdEditText.getText()) ? null : userIdEditText.getText().toString().trim();
 	}
 
 	protected void showErrorMessage(String errorMessage) {
@@ -93,4 +103,6 @@ public abstract class IPayAbstractCardNumberInputFragment extends Fragment {
 	protected abstract boolean verifyInput();
 
 	protected abstract void performContinueAction();
+
+	protected abstract void setupViewProperties();
 }

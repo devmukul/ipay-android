@@ -49,6 +49,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 	private TextView transactionDescriptionTextView;
 	private RoundedImageView transactionImageView;
 	private TextView nameTextView;
+	private TextView userNameTextView;
 	private Button transactionConfirmationButton;
 	protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 	protected OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -82,6 +83,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		transactionImageView = view.findViewById(R.id.profile_image_view);
 		nameTextView = view.findViewById(R.id.name_text_view);
+		userNameTextView = view.findViewById(R.id.user_name_text_view);
 		pinEditText = view.findViewById(R.id.pin_edit_text);
 		noteEditText = view.findViewById(R.id.note_edit_text);
 
@@ -130,6 +132,11 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 
 	protected void setName(CharSequence name) {
 		nameTextView.setText(name, TextView.BufferType.SPANNABLE);
+	}
+
+	protected void setUserName(CharSequence userName) {
+		userNameTextView.setVisibility(View.VISIBLE);
+		userNameTextView.setText(userName, TextView.BufferType.SPANNABLE);
 	}
 
 	protected void setTransactionConfirmationButtonTitle(CharSequence title) {

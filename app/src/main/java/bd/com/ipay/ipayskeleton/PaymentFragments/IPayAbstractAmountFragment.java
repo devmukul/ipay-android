@@ -61,6 +61,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	private TextView transactionDescriptionTextView;
 	private TextView amountTextView;
 	private TextView nameTextView;
+	private TextView userNameTextView;
 	private EditText amountDummyEditText;
 	private RoundedImageView transactionImageView;
 	private View balanceInfoLayout;
@@ -108,6 +109,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		continueButton = view.findViewById(R.id.continue_button);
 		amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
 		nameTextView = view.findViewById(R.id.name_text_view);
+		userNameTextView = view.findViewById(R.id.user_name_text_view);
 		transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		transactionImageView = view.findViewById(R.id.transaction_image_view);
 		amountTextView = view.findViewById(R.id.amount_text_view);
@@ -247,8 +249,13 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		balanceInfoLayout.setVisibility(visibility);
 	}
 
-	public void setName(String name) {
-		nameTextView.setText(name);
+	public void setName(CharSequence name) {
+		nameTextView.setText(name, TextView.BufferType.SPANNABLE);
+	}
+
+	public void setUserName(CharSequence userName) {
+		userNameTextView.setVisibility(View.VISIBLE);
+		userNameTextView.setText(userName, TextView.BufferType.SPANNABLE);
 	}
 
 	public void addShortCutOption(int id, String title, int value) {
