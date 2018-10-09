@@ -50,8 +50,8 @@
                     android:id="@+id/transaction_description_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:layout_marginLeft="@dimen/value32"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/value32"
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
@@ -63,7 +63,6 @@
                     android:id="@+id/name_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
                     android:fontFamily="@font/open_sans_semibold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
@@ -71,11 +70,24 @@
                     android:textStyle="bold"
                     tools:text="@string/dummy_name" />
 
+                <TextView
+                    android:id="@+id/user_name_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:text="@string/dummy_name"
+                    tools:visibility="visible" />
+
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/transaction_image_view"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                     android:background="@drawable/circular_background"
                     android:contentDescription="@string/card"
                     android:scaleType="fitCenter"
