@@ -40,12 +40,13 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:id="@+id/gp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.96"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/gp"
+                        android:id="@+id/gp_image"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center_horizontal"
@@ -61,12 +62,13 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:id="@+id/robi"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.96"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/robi"
+                        android:id="@+id/robi_image"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center_horizontal"
@@ -82,12 +84,13 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:id="@+id/banglalink"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/banglalink"
+                        android:id="@+id/banglalink_image"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center_horizontal"
@@ -104,12 +107,13 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:id="@+id/airtel"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.96"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/airtel"
+                        android:id="@+id/airtel_image"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center_horizontal"
@@ -126,12 +130,13 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:id="@+id/teletalk"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.96"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/teletalk"
+                        android:id="@+id/teletalk_image"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center_horizontal"

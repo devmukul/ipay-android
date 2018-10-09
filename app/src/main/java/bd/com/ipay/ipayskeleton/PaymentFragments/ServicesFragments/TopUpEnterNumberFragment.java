@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -59,11 +60,11 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     private Button mContinueButton;
 
 
-    private ImageView gpImageView;
-    private ImageView airtelImageView;
-    private ImageView robiImageView;
-    private ImageView teletalkImageView;
-    private ImageView banglalinkImageView;
+    private LinearLayout gpLayout;
+    private LinearLayout airtelLayout;
+    private LinearLayout robiLayout;
+    private LinearLayout teletalkLayout;
+    private LinearLayout banglalinkLayout;
 
     private int operatorCode;
 
@@ -90,16 +91,16 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         mContactImageView = (ImageView) view.findViewById(R.id.contact_image_view);
         mTypeSelector = (RadioGroup) view.findViewById(R.id.type_selector);
         mContinueButton = (Button) view.findViewById(R.id.continue_button);
-        gpImageView = (ImageView) view.findViewById(R.id.gp);
-        airtelImageView = (ImageView) view.findViewById(R.id.airtel);
-        robiImageView = (ImageView) view.findViewById(R.id.robi);
-        teletalkImageView = (ImageView) view.findViewById(R.id.teletalk);
-        banglalinkImageView = (ImageView) view.findViewById(R.id.banglalink);
-        gpImageView.setOnClickListener(this);
-        airtelImageView.setOnClickListener(this);
-        banglalinkImageView.setOnClickListener(this);
-        teletalkImageView.setOnClickListener(this);
-        robiImageView.setOnClickListener(this);
+        gpLayout = (LinearLayout) view.findViewById(R.id.gp);
+        airtelLayout = (LinearLayout) view.findViewById(R.id.airtel);
+        robiLayout = (LinearLayout) view.findViewById(R.id.robi);
+        teletalkLayout = (LinearLayout) view.findViewById(R.id.teletalk);
+        banglalinkLayout = (LinearLayout) view.findViewById(R.id.banglalink);
+        gpLayout.setOnClickListener(this);
+        airtelLayout.setOnClickListener(this);
+        banglalinkLayout.setOnClickListener(this);
+        teletalkLayout.setOnClickListener(this);
+        robiLayout.setOnClickListener(this);
         setUpButtonActions();
     }
 
@@ -327,39 +328,39 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     private void setAppropriateOperatorIconSelected(int operatorCode) {
         switch (operatorCode) {
             case 1:
-                gpImageView.setImageResource(R.drawable.selected_network);
-                airtelImageView.setImageResource(R.drawable.airtel_icon);
-                robiImageView.setImageResource(R.drawable.robi_icon);
-                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
-                banglalinkImageView.setImageResource(R.drawable.bl_icon);
+                ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.selected_network);
+                ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
+                ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.robi_icon);
+                ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
+                ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.bl_icon);
                 break;
             case 3:
-                robiImageView.setImageResource(R.drawable.selected_network);
-                airtelImageView.setImageResource(R.drawable.airtel_icon);
-                gpImageView.setImageResource(R.drawable.gp_icon);
-                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
-                banglalinkImageView.setImageResource(R.drawable.bl_icon);
+                ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.selected_network);
+                ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
+                ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
+                ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
+                ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.bl_icon);
                 break;
             case 4:
-                airtelImageView.setImageResource(R.drawable.selected_network);
-                banglalinkImageView.setImageResource(R.drawable.bl_icon);
-                robiImageView.setImageResource(R.drawable.robi_icon);
-                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
-                gpImageView.setImageResource(R.drawable.gp_icon);
+                ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.selected_network);
+                ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.robi_icon);
+                ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
+                ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
+                ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.bl_icon);
                 break;
             case 5:
-                banglalinkImageView.setImageResource(R.drawable.selected_network);
-                airtelImageView.setImageResource(R.drawable.airtel_icon);
-                robiImageView.setImageResource(R.drawable.robi_icon);
-                teletalkImageView.setImageResource(R.drawable.teletalk_icon);
-                gpImageView.setImageResource(R.drawable.gp_icon);
+                ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.selected_network);
+                ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
+                ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
+                ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
+                ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.robi_icon);
                 break;
             case 6:
-                teletalkImageView.setImageResource(R.drawable.selected_network);
-                airtelImageView.setImageResource(R.drawable.airtel_icon);
-                robiImageView.setImageResource(R.drawable.robi_icon);
-                gpImageView.setImageResource(R.drawable.gp_icon);
-                banglalinkImageView.setImageResource(R.drawable.bl_icon);
+                ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.selected_network);
+                ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
+                ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
+                ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.robi_icon);
+                ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.bl_icon);
                 break;
         }
     }

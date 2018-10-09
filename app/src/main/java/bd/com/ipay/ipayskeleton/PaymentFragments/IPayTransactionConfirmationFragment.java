@@ -132,9 +132,13 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
         final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
         final TextView nameTextView = view.findViewById(R.id.name_text_view);
         final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
+        final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
         final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
         final Button transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
 
+        if (transactionType == ServiceIdConstants.TOP_UP) {
+            noteLayoutHolder.setVisibility(View.GONE);
+        }
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
