@@ -16,8 +16,6 @@
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:gravity="center"
             android:paddingBottom="@dimen/value30">
 
@@ -33,16 +31,18 @@
                 android:id="@+id/topup_helper_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:layout_below="@id/icon_topup"
                 android:layout_marginBottom="@dimen/value20"
                 android:orientation="horizontal"
                 android:weightSum="5">
 
                 <LinearLayout
-                    android:layout_width="0dp"
                     android:id="@+id/gp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.96"
+                    android:layout_weight="0.95"
                     android:orientation="vertical">
 
                     <ImageView
@@ -61,10 +61,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
                     android:id="@+id/robi"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.96"
+                    android:layout_weight="0.95"
                     android:orientation="vertical">
 
                     <ImageView
@@ -83,8 +83,8 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
                     android:id="@+id/banglalink"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:orientation="vertical">
@@ -106,10 +106,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
                     android:id="@+id/airtel"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.96"
+                    android:layout_weight="0.95"
                     android:orientation="vertical">
 
                     <ImageView
@@ -129,10 +129,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
                     android:id="@+id/teletalk"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.96"
+                    android:layout_weight="0.95"
                     android:orientation="vertical">
 
                     <ImageView
@@ -157,6 +157,8 @@
                 android:id="@+id/number_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:layout_below="@id/topup_helper_text_view">
 
                 <EditText
@@ -186,6 +188,8 @@
                 android:id="@+id/edit_text_background"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
                 android:layout_below="@+id/number_layout"
                 android:background="#19000000" />
 
@@ -208,6 +212,8 @@
                 android:id="@+id/type_selector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 android:layout_below="@id/my_number_topup_text_view"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
