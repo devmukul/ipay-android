@@ -43,12 +43,6 @@ public class MoneyBackIPayPromotionViewHolder extends PromotionViewHolder {
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public void bindTo(Promotion promotion) {
-		if (promotion.isActive())
-			itemView.setVisibility(View.VISIBLE);
-		else {
-			itemView.setVisibility(View.GONE);
-			return;
-		}
 		promotionTitleTextView.setText(promotion.getCampaignTitle());
 		promotionSubDetailsTextView.setText(promotion.getPromotionDetails());
 		Glide.with(itemView.getContext()).load(Constants.BASE_URL_FTP_SERVER + promotion.getImageUrl()).into(promotionImageView);
