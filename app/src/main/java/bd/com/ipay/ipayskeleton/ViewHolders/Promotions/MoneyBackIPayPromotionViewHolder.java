@@ -1,11 +1,10 @@
 package bd.com.ipay.ipayskeleton.ViewHolders.Promotions;
 
 import android.annotation.SuppressLint;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.SeekBar;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +19,7 @@ public class MoneyBackIPayPromotionViewHolder extends PromotionViewHolder {
 	private final TextView promotionSubDetailsTextView;
 	private final TextView offerRedeemCountTextView;
 	private final ImageView promotionImageView;
-	private final SeekBar totalTransactionCountBar;
+	private final ProgressBar totalTransactionProgressBar;
 
 	public MoneyBackIPayPromotionViewHolder(View itemView, OnOfferActionsListener onOfferActionsListener) {
 		super(itemView, onOfferActionsListener);
@@ -28,7 +27,7 @@ public class MoneyBackIPayPromotionViewHolder extends PromotionViewHolder {
 		promotionSubDetailsTextView = itemView.findViewById(R.id.promotion_sub_details_text_view);
 		offerRedeemCountTextView = itemView.findViewById(R.id.offer_redeem_count_text_view);
 		promotionImageView = itemView.findViewById(R.id.promotion_image_view);
-		totalTransactionCountBar = itemView.findViewById(R.id.total_transaction_count_bar);
+		totalTransactionProgressBar = itemView.findViewById(R.id.total_transaction_progress_bar);
 
 		final ImageButton termsButton = itemView.findViewById(R.id.terms_button);
 
@@ -43,24 +42,12 @@ public class MoneyBackIPayPromotionViewHolder extends PromotionViewHolder {
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public void bindTo(Promotion promotion) {
-		if (promotion.isActive())
-			itemView.setVisibility(View.VISIBLE);
-		else {
-			itemView.setVisibility(View.GONE);
-			return;
-		}
 		promotionTitleTextView.setText(promotion.getCampaignTitle());
 		promotionSubDetailsTextView.setText(promotion.getPromotionDetails());
 		Glide.with(itemView.getContext()).load(Constants.BASE_URL_FTP_SERVER + promotion.getImageUrl()).into(promotionImageView);
 		MoneyBackIPayMetaData moneyBackIPayMetaData = promotion.getMedata(MoneyBackIPayMetaData.class);
 
-		totalTransactionCountBar.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-				return true;
-			}
-		});
 		offerRedeemCountTextView.setText(promotion.getConsumptionDetails());
-		totalTransactionCountBar.setProgress((int) ((moneyBackIPayMetaData.getConsumedOfferAmount() / (moneyBackIPayMetaData.getMaximumOfferAmount() * 1.0)) * 100));
+		totalTransactionProgressBar.setProgress((int) ((moneyBackIPayMetaData.getConsumedOfferAmount() / (moneyBackIPayMetaData.getMaximumOfferAmount() * 1.0)) * 100));
 	}
 }
