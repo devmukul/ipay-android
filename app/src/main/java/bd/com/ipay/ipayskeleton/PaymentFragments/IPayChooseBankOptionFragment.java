@@ -53,6 +53,13 @@ public class IPayChooseBankOptionFragment extends ProgressFragment {
 			@Override
 			public void onChanged(@Nullable List<BankAccountList> bankAccountLists) {
 				if (bankAccountLists != null) {
+					for (int i = 0; i < bankAccountLists.size(); ) {
+						if (bankAccountLists.get(i).getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+							i++;
+						} else {
+							bankAccountLists.remove(i);
+						}
+					}
 					userBankListAdapter.submitList(bankAccountLists);
 					setContentShown(true);
 				}
@@ -100,6 +107,7 @@ public class IPayChooseBankOptionFragment extends ProgressFragment {
 		userBankStatusErrorViewHolder = view.findViewById(R.id.user_bank_status_error_view_holder);
 		bankStatusErrorMessageTextView = view.findViewById(R.id.bank_status_error_message_text_view);
 		bankStatusErrorActionButton = view.findViewById(R.id.bank_status_error_action_button);
+		userBankListRecyclerView.setHasFixedSize(false);
 		setContentShown(false);
 		if (getContext() != null) {
 			userBankListAdapter = new UserBankListAdapter(getContext(), new OnItemClickListener() {
