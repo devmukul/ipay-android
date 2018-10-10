@@ -173,7 +173,7 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 				if (getActivity() != null) {
 					AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
 							.setView(customView)
-							.setPositiveButton(android.R.string.cancel, null)
+							.setPositiveButton(android.R.string.ok, null)
 							.create();
 					alertDialog.show();
 				}
