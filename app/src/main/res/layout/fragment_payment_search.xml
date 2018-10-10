@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <SearchView
+        android:id="@+id/search_business"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTransparent"
+        android:iconifiedByDefault="false"
+        android:padding="@dimen/value4"
+        android:queryBackground="@color/colorTransparent"
+        android:queryHint="@string/search"
+        android:submitBackground="@color/colorTransparent"
+        android:layout_below="@+id/title_view"/>
+
+    <LinearLayout
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/search_business"
+        android:background="#E0E0E0"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/address_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/value5"
+        android:layout_marginLeft="@dimen/value20"
+        android:layout_marginRight="@dimen/value20"
+        android:layout_below="@+id/divider"
+        android:visibility="gone">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

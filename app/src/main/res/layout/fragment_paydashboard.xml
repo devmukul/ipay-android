@@ -1,526 +1,542 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/trending_business_list_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:padding="@dimen/value8">
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+    </bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/trending_business_list_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        android:padding="@dimen/value8"
+        android:layout_below="@+id/searchView">
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                android:paddingTop="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/value5"
-                android:singleLine="true"
-                android:text="@string/top"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_size_small" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:orientation="horizontal"
-                android:weightSum="4">
-
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/topUpView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/topup_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/semiround_white_default"
-                        android:elevation="@dimen/value2"
-                        android:padding="@dimen/value15"
-                        android:src="@drawable/ic_home_topup"
-                        card_view:layout_constraintDimensionRatio="1:1"
-                        card_view:riv_corner_radius="@dimen/value2" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                        android:ellipsize="marquee"
-                        android:gravity="center_horizontal"
-                        android:singleLine="true"
-                        android:text="@string/mobile_topup"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_extra_smaller_value11"
-                        card_view:layout_constraintTop_toBottomOf="@+id/topup_image" />
-                </android.support.constraint.ConstraintLayout>
-
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/payByQCView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/qr_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/semiround_white_default"
-                        android:elevation="@dimen/value2"
-                        android:padding="@dimen/value15"
-                        android:src="@drawable/ic_home_pay_by_qr"
-                        card_view:layout_constraintDimensionRatio="1:1"
-                        card_view:riv_corner_radius="@dimen/value2" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                        android:ellipsize="marquee"
-                        android:gravity="center_horizontal"
-                        android:singleLine="true"
-                        android:text="@string/pay_by_QR_code"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_extra_smaller_value11"
-                        card_view:layout_constraintTop_toBottomOf="@+id/qr_image" />
-
-                </android.support.constraint.ConstraintLayout>
-
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/makePaymentView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/make_payment_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/semiround_white_default"
-                        android:elevation="@dimen/value2"
-                        android:padding="@dimen/value15"
-                        android:src="@drawable/ic_home_payment"
-                        card_view:layout_constraintDimensionRatio="1:1"
-                        card_view:riv_corner_radius="@dimen/value2" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                        android:ellipsize="marquee"
-                        android:gravity="center_horizontal"
-                        android:singleLine="true"
-                        android:text="@string/make_payment"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_extra_smaller_value11"
-                        card_view:layout_constraintTop_toBottomOf="@+id/make_payment_image" />
-                </android.support.constraint.ConstraintLayout>
-
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/requestPaymentView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="4dp"
-                    android:visibility="gone">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/request_payment_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/semiround_white_default"
-                        android:elevation="@dimen/value2"
-                        android:padding="@dimen/value15"
-                        android:src="@drawable/background_icon_request_payment"
-                        card_view:layout_constraintDimensionRatio="1:1"
-                        card_view:riv_corner_radius="@dimen/value2" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                        android:ellipsize="marquee"
-                        android:gravity="center_horizontal"
-                        android:singleLine="true"
-                        android:text="@string/request_payment"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_extra_smaller_value11"
-                        card_view:layout_constraintTop_toBottomOf="@+id/request_payment_image" />
-                </android.support.constraint.ConstraintLayout>
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                android:paddingTop="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/value5"
-                android:singleLine="true"
-                android:text="@string/bill_pay"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_size_small" />
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/value5"
+                    android:singleLine="true"
+                    android:text="@string/top"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/text_size_small" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="1dp"
+                    android:orientation="horizontal"
+                    android:weightSum="4">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/topUpView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/topup_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:src="@drawable/ic_home_topup"
+                            card_view:layout_constraintDimensionRatio="1:1"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/mobile_topup"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11"
+                            card_view:layout_constraintTop_toBottomOf="@+id/topup_image" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/payByQCView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/qr_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:src="@drawable/ic_home_pay_by_qr"
+                            card_view:layout_constraintDimensionRatio="1:1"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/pay_by_QR_code"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11"
+                            card_view:layout_constraintTop_toBottomOf="@+id/qr_image" />
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/makePaymentView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/make_payment_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:src="@drawable/ic_home_payment"
+                            card_view:layout_constraintDimensionRatio="1:1"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/make_payment"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11"
+                            card_view:layout_constraintTop_toBottomOf="@+id/make_payment_image" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/requestPaymentView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="4dp"
+                        android:visibility="gone">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/request_payment_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/semiround_white_default"
+                            android:elevation="@dimen/value2"
+                            android:padding="@dimen/value15"
+                            android:src="@drawable/background_icon_request_payment"
+                            card_view:layout_constraintDimensionRatio="1:1"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/request_payment"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11"
+                            card_view:layout_constraintTop_toBottomOf="@+id/request_payment_image" />
+                    </android.support.constraint.ConstraintLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/value5"
+                    android:singleLine="true"
+                    android:text="@string/bill_pay"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/text_size_small" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/value8"
+                        android:layout_marginBottom="@dimen/value8"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/amberit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <ImageView
+                                android:id="@+id/amberit_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:elevation="@dimen/value2"
+                                android:padding="2dp"
+                                android:scaleType="centerInside"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:srcCompat="@drawable/ic_amber_it" />
+
+                            <TextView
+                                android:id="@+id/nameView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/amberIT"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/amberit_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/billPayView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/blion_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/banglalion"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:riv_corner_radius="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/banglalion"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/blion_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/brilliant_recharge_view"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/brilliant_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:src="@drawable/brilliant_logo"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:riv_corner_radius="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/brilliant"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/brilliant_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/carnival"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <ImageView
+                                android:id="@+id/carnival_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:elevation="@dimen/value2"
+                                android:padding="2dp"
+                                android:scaleType="centerInside"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:srcCompat="@drawable/ic_carnival" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/carnival"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/carnival_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/lankaBanglaView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/lankaBangla_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_lankabd2"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:riv_corner_radius="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/lanka_bangla"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/lankaBangla_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/linkThreeBill"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/linkThree_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:src="@drawable/link_three_logo"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:riv_corner_radius="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/link_three"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/linkThree_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/desco"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp"
+                            android:visibility="gone">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/desco_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/desco"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:riv_corner_radius="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/desco"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/desco_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/dpdc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp"
+                            android:visibility="gone">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/dpdc_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/dpdc"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:riv_corner_radius="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/dpdc"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/dpdc_image" />
+                        </android.support.constraint.ConstraintLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/west_zone"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp"
+                            android:visibility="gone">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/west_zone_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/wzone"
+                                card_view:layout_constraintDimensionRatio="1:1"
+                                card_view:riv_corner_radius="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/WestZone"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                card_view:layout_constraintTop_toBottomOf="@+id/west_zone_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/trending_business_recycler_view_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/value8"
-                    android:layout_marginBottom="@dimen/value8"
-                    android:orientation="horizontal"
-                    android:weightSum="4">
+                    android:nestedScrollingEnabled="false" />
 
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/amberit"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp">
-
-                        <ImageView
-                            android:id="@+id/amberit_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:elevation="@dimen/value2"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:srcCompat="@drawable/ic_amber_it" />
-
-                        <TextView
-                            android:id="@+id/nameView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/amberIT"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/amberit_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/billPayView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/blion_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/banglalion"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/banglalion"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/blion_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/brilliant_recharge_view"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/brilliant_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:padding="2dp"
-                            android:src="@drawable/brilliant_logo"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/brilliant"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/brilliant_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/carnival"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp">
-
-                        <ImageView
-                            android:id="@+id/carnival_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:elevation="@dimen/value2"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:srcCompat="@drawable/ic_carnival" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/carnival"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/carnival_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="4">
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/lankaBanglaView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/lankaBangla_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_lankabd2"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/lanka_bangla"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/lankaBangla_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/linkThreeBill"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/linkThree_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:padding="2dp"
-                            android:src="@drawable/link_three_logo"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/link_three"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/linkThree_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/desco"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp"
-                        android:visibility="gone">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/desco_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/desco"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/desco"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/desco_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/dpdc"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp"
-                        android:visibility="gone">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/dpdc_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/dpdc"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/dpdc"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/dpdc_image" />
-                    </android.support.constraint.ConstraintLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="4">
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/west_zone"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="4dp"
-                        android:visibility="gone">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/west_zone_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/semiround_white_default"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/wzone"
-                            card_view:layout_constraintDimensionRatio="1:1"
-                            card_view:riv_corner_radius="@dimen/value2" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                            android:ellipsize="marquee"
-                            android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/WestZone"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/west_zone_image" />
-                    </android.support.constraint.ConstraintLayout>
-
-                </LinearLayout>
             </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/trending_business_recycler_view_parent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/value8"
-                android:nestedScrollingEnabled="false" />
-
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.v4.widget.SwipeRefreshLayout>
