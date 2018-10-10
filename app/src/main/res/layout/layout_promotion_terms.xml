@@ -41,7 +41,7 @@
                 android:layout_marginTop="@dimen/value4"
                 android:gravity="center"
                 android:text="@string/start_date_title"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#212121"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/end_date_title"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#212121"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -89,7 +89,7 @@
             android:layout_marginTop="@dimen/value8"
             android:gravity="center"
             android:text="@string/terms_of_promotion"
-            android:textColor="@color/colorPrimary"
+            android:textColor="#212121"
             android:textSize="16sp"
             android:textStyle="bold" />
 

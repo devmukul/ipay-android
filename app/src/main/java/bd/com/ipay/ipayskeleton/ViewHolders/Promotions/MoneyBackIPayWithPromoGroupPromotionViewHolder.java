@@ -34,12 +34,6 @@ public class MoneyBackIPayWithPromoGroupPromotionViewHolder extends MoneyBackIPa
 
 	@Override
 	public void bindTo(Promotion promotion) {
-		if (promotion.isActive())
-			itemView.setVisibility(View.VISIBLE);
-		else {
-			itemView.setVisibility(View.GONE);
-			return;
-		}
 		super.bindTo(promotion);
 		promotionTitleTextView.setText(promotion.getCampaignTitle());
 		promotionSubDetailsTextView.setText(promotion.getPromotionDetails());
