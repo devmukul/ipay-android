@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
                 android:gravity="center_vertical"
-                android:text="@string/add_money_from_bank"
+                android:text="@string/adding_money_from_bank"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
