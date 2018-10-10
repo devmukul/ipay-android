@@ -41,7 +41,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
 	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
 	// 6001
 	public static final int TRANSACTION_TYPE_REQUEST_MONEY = ServiceIdConstants.REQUEST_MONEY;
-    public static final int TRANSACTION_TYPE_TOP_UP = ServiceIdConstants.TOP_UP;
+	// 2001
+	public static final int TRANSACTION_TYPE_TOP_UP = ServiceIdConstants.TOP_UP;
 
 	private int transactionType;
 
@@ -83,18 +84,18 @@ public class IPayTransactionActionActivity extends BaseActivity {
 				}
 				break;
 			case TRANSACTION_TYPE_TOP_UP:
-                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-                if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
-                        !getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
-                    switchToTransactionContactsFragment(bundle);
-                } else {
-                    bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-                    bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
-                    bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
-                    switchToAmountInputFragment(bundle);
-                }
-                break;
-            case TRANSACTION_TYPE_INVALID:
+				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+				if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
+						!getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+					switchToTransactionContactsFragment(bundle);
+				} else {
+					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
+					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
+					switchToAmountInputFragment(bundle);
+				}
+				break;
+			case TRANSACTION_TYPE_INVALID:
 			default:
 				Toaster.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT);
 				finish();

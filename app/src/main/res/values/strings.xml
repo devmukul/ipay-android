@@ -1242,6 +1242,7 @@
     <string name="ok_got_it">OK, I got it !</string>
     <string name="send_money_step_three">Write some <b>Note</b>, Done !</string>
     <string name="request_money_step_three">@string/send_money_step_three</string>
+    <string name="top_up_step_three">Done !</string>
     <string name="send_money_step_two">Insert <b>amount</b> you want to send</string>
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
