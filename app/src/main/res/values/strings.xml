@@ -1312,4 +1312,5 @@
     <string name="minimum_pay">Minimum Pay</string>
     <string name="paying_bill_message">YOU ARE PAYING BILL TO</string>
     <string name="request_on_process">Request Processing</string>
+    <string name="lanka_bangla_dps_number">LankaBangla Dps Account Number</string>
 </resources>

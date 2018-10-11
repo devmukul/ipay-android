@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla;
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,7 +21,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
+public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragment {
 
 	static final String TOTAL_OUTSTANDING_AMOUNT_KEY = "TOTAL_OUTSTANDING";
 	static final String MINIMUM_PAY_AMOUNT_KEY = "MINIMUM_PAY";
@@ -129,17 +129,17 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 
 		Bundle bundle = new Bundle();
 		bundle.putString(CARD_NUMBER_KEY, cardNumber);
-		bundle.putSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
+		bundle.putSerializable(LankaBanglaDpsBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
 
 		if (getAmount().intValue() == minimumPayAmount)
-			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
+			bundle.putString(LankaBanglaDpsBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
 		else if (getAmount().intValue() == totalOutstandingAmount)
-			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);
+			bundle.putString(LankaBanglaDpsBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);
 		else
-			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.OTHER);
+			bundle.putString(LankaBanglaDpsBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.OTHER);
 
 		if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaBillConfirmationFragment(), bundle, 3, true);
+			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillConfirmationFragment(), bundle, 3, true);
 		}
 	}
 

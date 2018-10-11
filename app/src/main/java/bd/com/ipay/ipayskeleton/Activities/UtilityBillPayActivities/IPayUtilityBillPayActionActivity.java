@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.LankaBanglaCardNumberInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaCardNumberInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
