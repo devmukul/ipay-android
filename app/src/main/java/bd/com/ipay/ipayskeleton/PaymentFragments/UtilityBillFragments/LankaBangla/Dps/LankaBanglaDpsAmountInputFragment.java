@@ -14,8 +14,6 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractAmountFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
-import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -23,128 +21,116 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragment {
 
-	static final String TOTAL_OUTSTANDING_AMOUNT_KEY = "TOTAL_OUTSTANDING";
-	static final String MINIMUM_PAY_AMOUNT_KEY = "MINIMUM_PAY";
-	static final String CARD_NUMBER_KEY = "CARD_NUMBER";
-
-	private int totalOutstandingAmount;
-	private int minimumPayAmount;
-	private String cardNumber;
+    static final String ACCOUNT_NUMBER = "ACCOUNT_NUMBER";
+    public static final String INSTALLMENT_AMOUNT = "INSTALLMENT_AMOUNT";
 
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			totalOutstandingAmount = getArguments().getInt(TOTAL_OUTSTANDING_AMOUNT_KEY, 0);
-			minimumPayAmount = getArguments().getInt(MINIMUM_PAY_AMOUNT_KEY, 0);
-			cardNumber = getArguments().getString(CARD_NUMBER_KEY, "");
-		}
-	}
+    private String installmentAmount;
+    private String accountNumber;
 
-	@Override
-	protected void setupViewProperties() {
-		if (totalOutstandingAmount > 0)
-			addShortCutOption(1, getString(R.string.total_outstanding).toUpperCase(), totalOutstandingAmount);
-		if (minimumPayAmount > 0)
-			addShortCutOption(2, getString(R.string.minimum_pay).toUpperCase(), minimumPayAmount);
 
-		setBalanceInfoLayoutVisibility(View.VISIBLE);
-		setTransactionDescription(getString(R.string.paying_bill_message));
-		setInputType(InputType.TYPE_CLASS_NUMBER);
-		setTransactionImageResource(R.drawable.ic_lankabd2);
-		setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
-	}
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	@Override
-	protected InputFilter getInputFilter() {
-		return new InputFilter() {
-			@Override
-			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-				if (source != null) {
-					try {
-						String formattedSource = source.subSequence(start, end).toString();
+        if (getArguments() != null) {
+            installmentAmount = getArguments().getString(INSTALLMENT_AMOUNT, "");
+            accountNumber = getArguments().getString(ACCOUNT_NUMBER, "");
+        }
+    }
 
-						String destPrefix = dest.subSequence(0, dstart).toString();
+    @Override
+    protected void setupViewProperties() {
+        setBalanceInfoLayoutVisibility(View.VISIBLE);
+        setTransactionDescription(getString(R.string.paying_bill_message));
+        setInputType(InputType.TYPE_CLASS_NUMBER);
+        setTransactionImageResource(R.drawable.ic_lankabd2);
+        setName(accountNumber);
+        ((IPayAbstractAmountFragment) this).setAmount(installmentAmount);
+        setAmountFocusableFalse();
+        disableAmountField();
 
-						String destSuffix = dest.subSequence(dend, dest.length()).toString();
+    }
 
-						String resultString = destPrefix + formattedSource + destSuffix;
+    @Override
+    protected InputFilter getInputFilter() {
+        return new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if (source != null) {
+                    try {
+                        String formattedSource = source.subSequence(start, end).toString();
 
-						resultString = resultString.replace(",", ".");
+                        String destPrefix = dest.subSequence(0, dstart).toString();
 
-						double result = Double.valueOf(resultString);
-						if (result > Integer.MAX_VALUE)
-							return "";
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				return null;
-			}
-		};
-	}
+                        String destSuffix = dest.subSequence(dend, dest.length()).toString();
 
-	@Override
-	protected boolean verifyInput() {
-		if (!Utilities.isValueAvailable(businessRules.getMIN_AMOUNT_PER_PAYMENT())
-				|| !Utilities.isValueAvailable(businessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-			DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-			return false;
-		} else if (businessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
-			DialogUtils.showDialogVerificationRequired(getActivity());
-			return false;
-		}
+                        String resultString = destPrefix + formattedSource + destSuffix;
 
-		final String errorMessage;
-		if (SharedPrefManager.ifContainsUserBalance()) {
-			if (getAmount() == null) {
-				errorMessage = getString(R.string.please_enter_amount);
-			} else {
-				final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
-				final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+                        resultString = resultString.replace(",", ".");
 
-				if (amount.compareTo(balance) > 0) {
-					errorMessage = getString(R.string.insufficient_balance);
-				} else {
-					final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
-					final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-					errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
-				}
-			}
-		} else {
-			errorMessage = getString(R.string.balance_not_available);
-		}
-		if (errorMessage != null) {
-			showErrorMessage(errorMessage);
-			return false;
-		}
-		return true;
-	}
+                        double result = Double.valueOf(resultString);
+                        if (result > Integer.MAX_VALUE)
+                            return "";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+    }
 
-	@Override
-	protected void performContinueAction() {
-		if (getAmount() == null)
-			return;
+    @Override
+    protected boolean verifyInput() {
+        if (!Utilities.isValueAvailable(businessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(businessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        } else if (businessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
 
-		Bundle bundle = new Bundle();
-		bundle.putString(CARD_NUMBER_KEY, cardNumber);
-		bundle.putSerializable(LankaBanglaDpsBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
+        final String errorMessage;
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            if (getAmount() == null) {
+                errorMessage = getString(R.string.please_enter_amount);
+            } else {
+                final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
+                final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
-		if (getAmount().intValue() == minimumPayAmount)
-			bundle.putString(LankaBanglaDpsBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
-		else if (getAmount().intValue() == totalOutstandingAmount)
-			bundle.putString(LankaBanglaDpsBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);
-		else
-			bundle.putString(LankaBanglaDpsBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.OTHER);
+                if (amount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
+                } else {
+                    final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+                    errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
+                }
+            }
+        } else {
+            errorMessage = getString(R.string.balance_not_available);
+        }
+        if (errorMessage != null) {
+            showErrorMessage(errorMessage);
+            return false;
+        }
+        return true;
+    }
 
-		if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillConfirmationFragment(), bundle, 3, true);
-		}
-	}
+    @Override
+    protected void performContinueAction() {
+        Bundle bundle = new Bundle();
+        bundle.putString(ACCOUNT_NUMBER, accountNumber);
+        bundle.putString(INSTALLMENT_AMOUNT, installmentAmount);
 
-	@Override
-	protected int getServiceId() {
-		return ServiceIdConstants.UTILITY_BILL_PAYMENT;
-	}
+        if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
+            ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillConfirmationFragment(), bundle, 3, true);
+        }
+    }
+
+    @Override
+    protected int getServiceId() {
+        return ServiceIdConstants.UTILITY_BILL_PAYMENT;
+    }
 }

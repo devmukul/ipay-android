@@ -58,324 +58,337 @@ import bd.com.ipay.ipayskeleton.Widget.View.ShortcutSelectionRadioGroup;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public abstract class IPayAbstractAmountFragment extends Fragment {
-	private TextView transactionDescriptionTextView;
-	private TextView amountTextView;
-	private TextView nameTextView;
-	private EditText amountDummyEditText;
-	private RoundedImageView transactionImageView;
-	private View balanceInfoLayout;
-	private Button continueButton;
-	private List<ShortCutOption> shortCutOptionList;
-	private ShortcutSelectionRadioGroup shortcutSelectionRadioGroup;
-	private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private TextView transactionDescriptionTextView;
+    private TextView amountTextView;
+    private TextView nameTextView;
+    private EditText amountDummyEditText;
+    private RoundedImageView transactionImageView;
+    private View balanceInfoLayout;
+    private Button continueButton;
+    private List<ShortCutOption> shortCutOptionList;
+    private ShortcutSelectionRadioGroup shortcutSelectionRadioGroup;
+    private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 
-	protected MandatoryBusinessRules businessRules;
+    protected MandatoryBusinessRules businessRules;
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		numberFormat.setMinimumFractionDigits(0);
-		numberFormat.setMaximumFractionDigits(2);
-		numberFormat.setMinimumIntegerDigits(2);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        numberFormat.setMinimumFractionDigits(0);
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumIntegerDigits(2);
 
-		businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
+        businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
 
-		if (getContext() != null)
-			LocalBroadcastManager.getInstance(getContext()).registerReceiver(mBusinessRuleUpdateBroadcastReceiver, new IntentFilter(Constants.BUSINESS_RULE_UPDATE_BROADCAST));
-	}
+        if (getContext() != null)
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(mBusinessRuleUpdateBroadcastReceiver, new IntentFilter(Constants.BUSINESS_RULE_UPDATE_BROADCAST));
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-		if (getContext() != null)
-			LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mBusinessRuleUpdateBroadcastReceiver);
-	}
+        if (getContext() != null)
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mBusinessRuleUpdateBroadcastReceiver);
+    }
 
-	@Nullable
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_ipay_transaction_amount_input_new, container, false);
-	}
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_ipay_transaction_amount_input_new, container, false);
+    }
 
-	@Override
-	public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+    public void setAmountFocusableFalse() {
+        this.amountDummyEditText.setFocusable(false);
+        amountTextView.setFocusable(false);
+    }
 
-		final Toolbar toolbar = view.findViewById(R.id.toolbar);
-		final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
+    @Override
+    public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-		continueButton = view.findViewById(R.id.continue_button);
-		amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
-		nameTextView = view.findViewById(R.id.name_text_view);
-		transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
-		transactionImageView = view.findViewById(R.id.transaction_image_view);
-		amountTextView = view.findViewById(R.id.amount_text_view);
-		shortcutSelectionRadioGroup = view.findViewById(R.id.shortcut_selection_radio_group);
-		balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
+        final Toolbar toolbar = view.findViewById(R.id.toolbar);
+        final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
 
-		if (getActivity() instanceof AppCompatActivity) {
-			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-			ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-			if (actionBar != null) {
-				actionBar.setDisplayHomeAsUpEnabled(true);
-			}
-			getActivity().setTitle(R.string.empty_string);
-		}
+        continueButton = view.findViewById(R.id.continue_button);
+        amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
+        nameTextView = view.findViewById(R.id.name_text_view);
+        transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
+        transactionImageView = view.findViewById(R.id.transaction_image_view);
+        amountTextView = view.findViewById(R.id.amount_text_view);
+        shortcutSelectionRadioGroup = view.findViewById(R.id.shortcut_selection_radio_group);
+        balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
 
-		amountDummyEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (amountDummyEditText.getText() != null)
-					amountDummyEditText.setSelection(amountDummyEditText.getText().length());
-			}
-		});
-		amountDummyEditText.setFilters(new InputFilter[]{getInputFilter()});
+        if (getActivity() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+            getActivity().setTitle(R.string.empty_string);
+        }
 
-		amountDummyEditText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-			}
+        amountDummyEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (amountDummyEditText.getText() != null)
+                    amountDummyEditText.setSelection(amountDummyEditText.getText().length());
+            }
+        });
+        amountDummyEditText.setFilters(new InputFilter[]{getInputFilter()});
 
-			@Override
-			public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-				double result = 0;
+        amountDummyEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
 
-				String addSuffix = "";
-				final String resultString;
-				if (charSequence != null)
-					resultString = charSequence.toString();
-				else
-					resultString = null;
-				if (resultString != null && resultString.length() > 0) {
-					if (resultString.matches("[0]+")) {
-						amountTextView.setText("");
-					}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                double result = 0;
 
-					if (resultString.charAt(0) != '.' || resultString.length() > 1)
-						result = Double.valueOf(resultString);
-					if (resultString.endsWith(".") || resultString.endsWith(".0") || resultString.endsWith(".00"))
-						addSuffix = resultString.substring(resultString.indexOf('.'), resultString.length());
-					else if (resultString.matches("[0-9]*\\.[1-9]0"))
-						addSuffix = "0";
-				}
-				shouldRemoveCheck(result);
-				setAmount(result, addSuffix);
-			}
+                String addSuffix = "";
+                final String resultString;
+                if (charSequence != null)
+                    resultString = charSequence.toString();
+                else
+                    resultString = null;
+                if (resultString != null && resultString.length() > 0) {
+                    if (resultString.matches("[0]+")) {
+                        amountTextView.setText("");
+                    }
 
-			@Override
-			public void afterTextChanged(Editable s) {
+                    if (resultString.charAt(0) != '.' || resultString.length() > 1)
+                        result = Double.valueOf(resultString);
+                    if (resultString.endsWith(".") || resultString.endsWith(".0") || resultString.endsWith(".00"))
+                        addSuffix = resultString.substring(resultString.indexOf('.'), resultString.length());
+                    else if (resultString.matches("[0-9]*\\.[1-9]0"))
+                        addSuffix = "0";
+                }
+                shouldRemoveCheck(result);
+                setAmount(result, addSuffix);
+            }
 
-			}
-		});
+            @Override
+            public void afterTextChanged(Editable s) {
 
-		shortcutSelectionRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				if (group.findViewById(checkedId) != null && !((RadioButton) group.findViewById(checkedId)).isChecked()) {
-					return;
-				}
+            }
+        });
 
-				int index = shortCutOptionList.indexOf(new ShortCutOption(checkedId));
-				if (index == -1)
-					return;
-				amountDummyEditText.setText(String.valueOf(shortCutOptionList.get(index).amountValue));
-				Utilities.hideKeyboard(getActivity(), amountDummyEditText);
-			}
-		});
+        shortcutSelectionRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (group.findViewById(checkedId) != null && !((RadioButton) group.findViewById(checkedId)).isChecked()) {
+                    return;
+                }
 
-		amountTextView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				v.clearFocus();
-				if (getContext() != null)
-					Utilities.showKeyboard(getContext(), amountDummyEditText);
-				if (amountDummyEditText.getText() != null)
-					amountDummyEditText.setSelection(amountDummyEditText.getText().length());
-			}
-		});
+                int index = shortCutOptionList.indexOf(new ShortCutOption(checkedId));
+                if (index == -1)
+                    return;
+                amountDummyEditText.setText(String.valueOf(shortCutOptionList.get(index).amountValue));
+                Utilities.hideKeyboard(getActivity(), amountDummyEditText);
+            }
+        });
 
-		continueButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (verifyInput()) {
-					performContinueAction();
-				}
-			}
-		});
+        amountTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.clearFocus();
+                if (getContext() != null)
+                    Utilities.showKeyboard(getContext(), amountDummyEditText);
+                if (amountDummyEditText.getText() != null)
+                    amountDummyEditText.setSelection(amountDummyEditText.getText().length());
+            }
+        });
 
-		if (!TextUtils.isEmpty(SharedPrefManager.getUserBalance())) {
-			ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(SharedPrefManager.getUserBalance()))));
-		}
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (verifyInput()) {
+                    performContinueAction();
+                }
+            }
+        });
 
-		if (getContext() != null)
-			Utilities.showKeyboard(getContext(), amountDummyEditText);
-		setAmount(0, "");
-		setupViewProperties();
-	}
+        if (!TextUtils.isEmpty(SharedPrefManager.getUserBalance())) {
+            ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(SharedPrefManager.getUserBalance()))));
+        }
 
-	protected abstract void setupViewProperties();
+        if (getContext() != null)
+            Utilities.showKeyboard(getContext(), amountDummyEditText);
+        setAmount(0, "");
+        setupViewProperties();
+    }
 
-	private void shouldRemoveCheck(double result) {
-		int checkedId = shortcutSelectionRadioGroup.getCheckedRadioButtonId();
-		if (shortCutOptionList != null) {
-			int index = shortCutOptionList.indexOf(new ShortCutOption(checkedId));
-			if (index != -1) {
-				ShortCutOption shortCutOption = shortCutOptionList.get(index);
-				if (shortCutOption.amountValue != result) {
-					shortcutSelectionRadioGroup.clearCheck();
-				}
-			}
-		}
-	}
+    public void disableAmountField() {
+        amountDummyEditText.setEnabled(false);
+    }
 
-	public void setInputType(int inputType) {
-		if (inputType == InputType.TYPE_CLASS_NUMBER || inputType == (InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER))
-			amountDummyEditText.setInputType(inputType);
-	}
+    protected abstract void setupViewProperties();
 
-	private void setAmount(double result, String addSuffix) {
-		SuperscriptSpan superscriptSpan = new SuperscriptSpan();
-		AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(getResources().getDimensionPixelSize(R.dimen.super_script_size));
-		final Spannable spannable = new SpannableString(String.format("%s%sTk", numberFormat.format(result), addSuffix));
-		spannable.setSpan(superscriptSpan, spannable.length() - 2, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		spannable.setSpan(absoluteSizeSpan, spannable.length() - 2, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		amountTextView.setText(spannable, TextView.BufferType.SPANNABLE);
-	}
+    private void shouldRemoveCheck(double result) {
+        int checkedId = shortcutSelectionRadioGroup.getCheckedRadioButtonId();
+        if (shortCutOptionList != null) {
+            int index = shortCutOptionList.indexOf(new ShortCutOption(checkedId));
+            if (index != -1) {
+                ShortCutOption shortCutOption = shortCutOptionList.get(index);
+                if (shortCutOption.amountValue != result) {
+                    shortcutSelectionRadioGroup.clearCheck();
+                }
+            }
+        }
+    }
 
-	public void setBalanceInfoLayoutVisibility(int visibility) {
-		balanceInfoLayout.setVisibility(visibility);
-	}
+    public void setInputType(int inputType) {
+        if (inputType == InputType.TYPE_CLASS_NUMBER || inputType == (InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER))
+            amountDummyEditText.setInputType(inputType);
+    }
 
-	public void setName(String name) {
-		nameTextView.setText(name);
-	}
+    private void setAmount(double result, String addSuffix) {
+        SuperscriptSpan superscriptSpan = new SuperscriptSpan();
+        AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(getResources().getDimensionPixelSize(R.dimen.super_script_size));
+        final Spannable spannable = new SpannableString(String.format("%s%sTk", numberFormat.format(result), addSuffix));
+        spannable.setSpan(superscriptSpan, spannable.length() - 2, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(absoluteSizeSpan, spannable.length() - 2, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        amountTextView.setText(spannable, TextView.BufferType.SPANNABLE);
+    }
 
-	public void addShortCutOption(int id, String title, int value) {
-		shortcutSelectionRadioGroup.setVisibility(View.VISIBLE);
+    public void setBalanceInfoLayoutVisibility(int visibility) {
+        balanceInfoLayout.setVisibility(visibility);
+    }
 
-		if (shortCutOptionList == null) {
-			shortCutOptionList = new ArrayList<>();
-		}
+    public void setName(String name) {
+        nameTextView.setText(name);
+    }
 
-		if (shortcutSelectionRadioGroup.findViewById(id) != null) {
-			return;
-		}
+    public void addShortCutOption(int id, String title, int value) {
+        shortcutSelectionRadioGroup.setVisibility(View.VISIBLE);
 
-		final Spannable spannable = new SpannableString(String.format(Locale.US, "%s\nTK. %s", title, numberFormat.format(value)));
-		spannable.setSpan(new StyleSpan(Typeface.BOLD), title.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		ShortCutOption shortCutOption = new ShortCutOption(id, spannable, value);
+        if (shortCutOptionList == null) {
+            shortCutOptionList = new ArrayList<>();
+        }
 
-		if (!shortCutOptionList.contains(shortCutOption))
-			shortCutOptionList.add(shortCutOption);
+        if (shortcutSelectionRadioGroup.findViewById(id) != null) {
+            return;
+        }
 
-		if (getContext() == null)
-			return;
+        final Spannable spannable = new SpannableString(String.format(Locale.US, "%s\nTK. %s", title, numberFormat.format(value)));
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), title.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ShortCutOption shortCutOption = new ShortCutOption(id, spannable, value);
 
-		final RadioButton radioButton = new RadioButton(getContext());
-		radioButton.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans));
-		radioButton.setId(shortCutOption.id);
-		radioButton.setGravity(Gravity.CENTER);
+        if (!shortCutOptionList.contains(shortCutOption))
+            shortCutOptionList.add(shortCutOption);
 
-		radioButton.setText(shortCutOption.title, TextView.BufferType.SPANNABLE);
-		shortcutSelectionRadioGroup.addView(radioButton);
-	}
+        if (getContext() == null)
+            return;
 
-	public void setTransactionDescription(String transactionDescription) {
-		transactionDescriptionTextView.setText(transactionDescription);
-	}
+        final RadioButton radioButton = new RadioButton(getContext());
+        radioButton.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans));
+        radioButton.setId(shortCutOption.id);
+        radioButton.setGravity(Gravity.CENTER);
 
-	public void setTransactionImageResource(int imageResource) {
-		if (getContext() != null) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
-			} else {
-				Glide.with(getContext()).load(imageResource)
-						.asBitmap()
-						.transform(new CircleTransform(getContext()))
-						.crossFade()
-						.into(transactionImageView);
-			}
-		}
-	}
+        radioButton.setText(shortCutOption.title, TextView.BufferType.SPANNABLE);
+        shortcutSelectionRadioGroup.addView(radioButton);
+    }
 
-	@SuppressWarnings("unused")
-	public void setTransactionImage(String imageUrl) {
-		Glide.with(getContext()).load(imageUrl)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(transactionImageView);
-	}
+    public void setTransactionDescription(String transactionDescription) {
+        transactionDescriptionTextView.setText(transactionDescription);
+    }
 
-	protected void showErrorMessage(String errorMessage) {
-		if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
-			IPaySnackbar.error(continueButton, errorMessage, IPaySnackbar.LENGTH_LONG).show();
-		}
-	}
+    public void setTransactionImageResource(int imageResource) {
+        if (getContext() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+            } else {
+                Glide.with(getContext()).load(imageResource)
+                        .asBitmap()
+                        .transform(new CircleTransform(getContext()))
+                        .crossFade()
+                        .into(transactionImageView);
+            }
+        }
+    }
 
-	@Nullable
-	public Number getAmount() {
-		if (TextUtils.isEmpty(amountTextView.getText())) {
-			return null;
-		} else {
-			try {
-				return numberFormat.parse(amountTextView.getText().toString());
-			} catch (ParseException e) {
-				return 0.0;
-			}
-		}
-	}
+    @SuppressWarnings("unused")
+    public void setTransactionImage(String imageUrl) {
+        Glide.with(getContext()).load(imageUrl)
+                .transform(new CircleTransform(getContext()))
+                .crossFade()
+                .into(transactionImageView);
+    }
 
-	protected abstract InputFilter getInputFilter();
+    protected void showErrorMessage(String errorMessage) {
+        if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
+            IPaySnackbar.error(continueButton, errorMessage, IPaySnackbar.LENGTH_LONG).show();
+        }
+    }
 
-	protected abstract boolean verifyInput();
+    @Nullable
+    public Number getAmount() {
+        if (TextUtils.isEmpty(amountTextView.getText())) {
+            return null;
+        } else {
+            try {
+                return numberFormat.parse(amountTextView.getText().toString());
+            } catch (ParseException e) {
+                return 0.0;
+            }
+        }
+    }
 
-	protected abstract void performContinueAction();
+    public void setAmount(String amount) {
+        amountDummyEditText.setText(amount);
+    }
 
-	protected abstract int getServiceId();
+    protected abstract InputFilter getInputFilter();
 
-	class ShortCutOption {
-		private final int id;
-		private final CharSequence title;
-		private final int amountValue;
+    protected abstract boolean verifyInput();
 
-		ShortCutOption(int id) {
-			this(id, null, 0);
-		}
+    protected abstract void performContinueAction();
 
-		ShortCutOption(int id, CharSequence title, int amountValue) {
-			this.id = id;
-			this.title = title;
-			this.amountValue = amountValue;
-		}
+    protected abstract int getServiceId();
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+    class ShortCutOption {
+        private final int id;
+        private final CharSequence title;
+        private final int amountValue;
 
-			ShortCutOption that = (ShortCutOption) o;
+        ShortCutOption(int id) {
+            this(id, null, 0);
+        }
 
-			return id == that.id;
-		}
+        ShortCutOption(int id, CharSequence title, int amountValue) {
+            this.id = id;
+            this.title = title;
+            this.amountValue = amountValue;
+        }
 
-		@Override
-		public int hashCode() {
-			return id;
-		}
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
-		@Override
-		public String toString() {
-			return "ShortCutOption{" + "id=" + id + ", title=" + title + ", amountValue=" + amountValue + '}';
-		}
-	}
+            ShortCutOption that = (ShortCutOption) o;
 
-	private final BroadcastReceiver mBusinessRuleUpdateBroadcastReceiver = new BroadcastReceiver() {
+            return id == that.id;
+        }
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getIntExtra(BusinessRuleCacheManager.SERVICE_ID_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID) == getServiceId())
-				businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
-		}
-	};
+        @Override
+        public int hashCode() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return "ShortCutOption{" + "id=" + id + ", title=" + title + ", amountValue=" + amountValue + '}';
+        }
+    }
+
+    private final BroadcastReceiver mBusinessRuleUpdateBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getIntExtra(BusinessRuleCacheManager.SERVICE_ID_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID) == getServiceId())
+                businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
+        }
+    };
 }

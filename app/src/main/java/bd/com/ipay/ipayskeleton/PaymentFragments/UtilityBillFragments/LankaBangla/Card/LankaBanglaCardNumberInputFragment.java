@@ -37,7 +37,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 		super.onViewCreated(view, savedInstanceState);
 
 		if (getActivity() != null)
-			getActivity().setTitle(R.string.lanka_bangla);
+			getActivity().setTitle(R.string.lanka_bangla_card);
 
 		setCardIconImageResource(R.drawable.ic_debit_credit_card_icon);
 		setMessage(getString(R.string.lanka_bangla_card_number_input_message));
@@ -80,7 +80,8 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 			default:
 				return;
 		}
-		mGetLankaBanglaCardUserInfoAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO, url, getContext(), this, false);
+		mGetLankaBanglaCardUserInfoAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO,
+				url, getContext(), this, false);
 		mGetLankaBanglaCardUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		mProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
 		mProgressDialog.setMessage(getString(R.string.fetching_user_info));

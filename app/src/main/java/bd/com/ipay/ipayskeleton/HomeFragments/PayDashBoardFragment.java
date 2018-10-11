@@ -5,15 +5,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +29,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.CustomDashBoardTitleView;
 import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
@@ -77,6 +73,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mDozeBillPayView;
     private View mLankaBanglaView;
     private View mAmberITBillPayView;
+    private View mLankaBanglaDpsView;
     private HashMap<String, String> mProviderAvailabilityMap;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -111,7 +108,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mDozeBillPayView = v.findViewById(R.id.carnival);
         mDpdcBillPayView = v.findViewById(R.id.dpdc);
         mAmberITBillPayView = v.findViewById(R.id.amberit);
-        mLankaBanglaView = v.findViewById(R.id.lankaBanglaView);
+        mLankaBanglaView = v.findViewById(R.id.lankaBanglaViewCard);
+        mLankaBanglaDpsView = v.findViewById(R.id.lankaBanglaViewDps);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
 
@@ -318,6 +316,30 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 					public void ifPinAdded() {
 						Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
 						intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_CARD);
+						startActivity(intent);
+					}
+				});
+				pinChecker.execute();
+			}
+		});
+		mLankaBanglaDpsView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+					DialogUtils.showServiceNotAllowedDialog(getContext());
+					return;
+				} else if (mProviderAvailabilityMap.get(Constants.LANKABANGLA) != null) {
+					if (!mProviderAvailabilityMap.get(Constants.LANKABANGLA).
+							equals(getString(R.string.active))) {
+						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LANKABANGLA));
+						return;
+					}
+				}
+				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+					@Override
+					public void ifPinAdded() {
+						Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+						intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_DPS);
 						startActivity(intent);
 					}
 				});

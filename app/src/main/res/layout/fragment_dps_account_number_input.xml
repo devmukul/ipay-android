@@ -18,7 +18,7 @@
             android:background="@color/colorPrimary"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:titleTextColor="@android:color/white"
-            tools:title="@string/lanka_bangla">
+            tools:title="@string/lanka_bangla_card">
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -55,22 +55,21 @@
                     android:layout_marginTop="@dimen/value8"
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
+                    android:text="@string/lanka_bangla_card_number_input_message"
                     android:textColor="#666666"
                     android:textSize="14sp"
-                    android:visibility="gone"
-                    tools:text="@string/lanka_bangla_card_number_input_message"
                     tools:visibility="visible" />
 
                 <EditText
-                    android:id="@+id/card_number_edit_text"
+                    android:id="@+id/dps_number_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/value28"
                     android:background="@android:color/transparent"
                     android:drawablePadding="@dimen/value8"
                     android:fontFamily="@font/open_sans_light"
-                    android:inputType="number"
-                    tools:hint="@string/lanka_bangla_dps_number" />
+                    android:hint="@string/lanka_bangla_dps_number"
+                    android:inputType="number" />
 
                 <View
                     android:layout_width="match_parent"
