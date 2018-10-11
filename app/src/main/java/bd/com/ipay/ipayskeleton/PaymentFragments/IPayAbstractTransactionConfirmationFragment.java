@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -79,6 +80,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
 		final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
 		final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
+		final ScrollView scrollView = view.findViewById(R.id.scroll_view);
 		transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
 		transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		transactionImageView = view.findViewById(R.id.profile_image_view);
@@ -96,10 +98,37 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 			getActivity().setTitle(R.string.empty_string);
 		}
 
+		pinEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					int bottom = pinEditText.getBottom() + scrollView.getPaddingBottom();
+					int sy = scrollView.getScrollY();
+					int sh = scrollView.getHeight();
+					int delta = bottom - (sy + sh);
+					scrollView.smoothScrollBy(0, delta);
+				}
+			}
+		});
+
+		noteEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					int bottom = scrollView.getChildAt(scrollView.getChildCount() - 1).getBottom();
+					int sy = scrollView.getScrollY();
+					int sh = scrollView.getHeight();
+					int delta = bottom - (sy + sh);
+					scrollView.smoothScrollBy(0, delta);
+				}
+			}
+		});
+
 		transactionConfirmationButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (verifyInput()) {
+					Utilities.hideKeyboard(getContext(), pinEditText.getVisibility() == View.VISIBLE ? pinEditText : noteEditText);
 					performContinueAction();
 				}
 			}
@@ -114,14 +143,6 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 			noteLayoutHolder.setVisibility(View.VISIBLE);
 		else
 			noteLayoutHolder.setVisibility(View.GONE);
-
-		if (getContext() != null) {
-			if (isPinRequired()) {
-				Utilities.showKeyboard(getContext(), pinEditText);
-			} else if (canUserAddNote()) {
-				Utilities.showKeyboard(getContext(), noteEditText);
-			}
-		}
 
 		setupViewProperties();
 	}
@@ -202,7 +223,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 	protected CharSequence getStyledTransactionDescription(@StringRes int transactionStringId, Number amount) {
 		final String amountValue = numberFormat.format(amount);
 		final String spannedString = getString(transactionStringId, amountValue);
-		int position = spannedString.indexOf(String.format("Tk.%s", amountValue));
+		int position = spannedString.indexOf(String.format("Tk. %s", amountValue));
 		final Spannable spannableAmount = new SpannableString(getString(transactionStringId, amountValue));
 		spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

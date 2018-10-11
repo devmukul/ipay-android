@@ -86,6 +86,20 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (amountDummyEditText != null && amountDummyEditText.isFocused() && getContext() != null)
+			Utilities.showKeyboard(getContext(), amountDummyEditText);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (amountDummyEditText != null && amountDummyEditText.isFocused() && getContext() != null)
+			Utilities.hideKeyboard(getContext(), amountDummyEditText);
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
@@ -201,6 +215,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (verifyInput()) {
+					Utilities.hideKeyboard(getContext(), amountDummyEditText);
 					performContinueAction();
 				}
 			}
@@ -209,9 +224,6 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		if (!TextUtils.isEmpty(SharedPrefManager.getUserBalance())) {
 			ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(SharedPrefManager.getUserBalance()))));
 		}
-
-		if (getContext() != null)
-			Utilities.showKeyboard(getContext(), amountDummyEditText);
 		setAmount(0, "");
 		setupViewProperties();
 	}
