@@ -1,11 +1,13 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -59,7 +61,7 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		nameTextView = view.findViewById(R.id.name_text_view);
 		senderProfilePictureImageView = view.findViewById(R.id.sender_profile_picture_image_view);
 		receiverProfilePictureImageView = view.findViewById(R.id.receiver_profile_picture_image_view);
-		arrowImageView = view.findViewById(R.id.arrow_image_view);
+		arrowImageView = view.findViewById(R.id.arrow_icon_image_view);
 
 		senderProfilePictureImageView.setVisibility(View.GONE);
 		arrowImageView.setVisibility(View.GONE);
@@ -89,13 +91,21 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		successDescriptionTextView.setText(successDescription, TextView.BufferType.SPANNABLE);
 	}
 
-	protected void setSenderImage(@SuppressWarnings("SameParameterValue") int imageResource) {
+	@SuppressWarnings("unused")
+	protected void setSenderImage(int imageResource) {
 		arrowImageView.setVisibility(View.VISIBLE);
 		senderProfilePictureImageView.setVisibility(View.VISIBLE);
-		Glide.with(getContext()).load(imageResource)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(senderProfilePictureImageView);
+		if (getContext() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				senderProfilePictureImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+			} else {
+				Glide.with(getContext()).load(imageResource)
+						.asBitmap()
+						.transform(new CircleTransform(getContext()))
+						.crossFade()
+						.into(senderProfilePictureImageView);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -108,11 +118,18 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 				.into(senderProfilePictureImageView);
 	}
 
-	protected void setReceiverImage(@SuppressWarnings("SameParameterValue") int imageResource) {
-		Glide.with(getContext()).load(imageResource)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(receiverProfilePictureImageView);
+	protected void setReceiverImage(int imageResource) {
+		if (getContext() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				receiverProfilePictureImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+			} else {
+				Glide.with(getContext()).load(imageResource)
+						.asBitmap()
+						.transform(new CircleTransform(getContext()))
+						.crossFade()
+						.into(receiverProfilePictureImageView);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -126,7 +143,7 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 	protected CharSequence getStyledTransactionDescription(@StringRes int transactionStringId, Number amount) {
 		final String amountValue = numberFormat.format(amount);
 		final String spannedString = getString(transactionStringId, amountValue);
-		int position = spannedString.indexOf(String.format("Tk.%s", amountValue));
+		int position = spannedString.indexOf(String.format("Tk. %s", amountValue));
 		final Spannable spannableAmount = new SpannableString(getString(transactionStringId, amountValue));
 		spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/progress_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/value32"
+    android:paddingLeft="@dimen/value32"
+    android:paddingTop="12dip"
+    android:paddingEnd="@dimen/value32"
+    android:paddingRight="@dimen/value32"
+    android:paddingBottom="12dip"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <TextView
+        android:id="@+id/progress_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_light"
+        android:lineSpacingExtra="3sp"
+        android:textColor="#212121"
+        android:textSize="28sp"
+        tools:text="@string/fetching_bank_list" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="16dip"
+        android:indeterminateOnly="true" />
+</LinearLayout>

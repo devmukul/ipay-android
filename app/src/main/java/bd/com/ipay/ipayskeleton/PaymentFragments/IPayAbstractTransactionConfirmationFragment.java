@@ -1,14 +1,13 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public abstract class IPayAbstractTransactionConfirmationFragment extends Fragment implements HttpResponseListener {
 	protected Tracker mTracker;
@@ -51,7 +52,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 	private TextView nameTextView;
 	private Button transactionConfirmationButton;
 	protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-	private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
+	protected OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 	protected CustomProgressDialog customProgressDialog;
 
 	@Override
@@ -78,6 +79,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
 		final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
 		final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
+		final ScrollView scrollView = view.findViewById(R.id.scroll_view);
 		transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
 		transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		transactionImageView = view.findViewById(R.id.profile_image_view);
@@ -94,10 +96,37 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 			getActivity().setTitle(R.string.empty_string);
 		}
 
+		pinEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					int bottom = pinEditText.getBottom() + scrollView.getPaddingBottom();
+					int sy = scrollView.getScrollY();
+					int sh = scrollView.getHeight();
+					int delta = bottom - (sy + sh);
+					scrollView.smoothScrollBy(0, delta);
+				}
+			}
+		});
+
+		noteEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					int bottom = scrollView.getChildAt(scrollView.getChildCount() - 1).getBottom();
+					int sy = scrollView.getScrollY();
+					int sh = scrollView.getHeight();
+					int delta = bottom - (sy + sh);
+					scrollView.smoothScrollBy(0, delta);
+				}
+			}
+		});
+
 		transactionConfirmationButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (verifyInput()) {
+					Utilities.hideKeyboard(getContext(), pinEditText.getVisibility() == View.VISIBLE ? pinEditText : noteEditText);
 					performContinueAction();
 				}
 			}
@@ -112,14 +141,6 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 			noteLayoutHolder.setVisibility(View.VISIBLE);
 		else
 			noteLayoutHolder.setVisibility(View.GONE);
-
-		if (getContext() != null) {
-			if (isPinRequired()) {
-				Utilities.showKeyboard(getContext(), pinEditText);
-			} else if (canUserAddNote()) {
-				Utilities.showKeyboard(getContext(), noteEditText);
-			}
-		}
 
 		setupViewProperties();
 	}
@@ -137,10 +158,17 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 	}
 
 	protected void setTransactionImageResource(@SuppressWarnings("SameParameterValue") int imageResource) {
-		Glide.with(getContext()).load(imageResource)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.into(transactionImageView);
+		if (getContext() != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+			} else {
+				Glide.with(getContext()).load(imageResource)
+						.asBitmap()
+						.transform(new CircleTransform(getContext()))
+						.crossFade()
+						.into(transactionImageView);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -154,6 +182,11 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 	protected String getPin() {
 		final Editable pin = pinEditText.getText();
 		return pin != null ? pin.toString() : "";
+	}
+
+	protected String getNote() {
+		final Editable note = noteEditText.getText();
+		return !TextUtils.isEmpty(note) ? note.toString() : null;
 	}
 
 	protected final void sendSuccessEventTracking(Number amount) {
@@ -176,46 +209,28 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 
 	protected void showErrorMessage(String errorMessage) {
 		if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
-			Snackbar snackbar = Snackbar.make(transactionConfirmationButton, errorMessage, Snackbar.LENGTH_SHORT);
-			View snackbarView = snackbar.getView();
-			snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-			ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
-			layoutParams.height = transactionConfirmationButton.getHeight();
-			snackbarView.setLayoutParams(layoutParams);
-			TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-			textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));
-			snackbar.show();
+			IPaySnackbar.error(transactionConfirmationButton, errorMessage, IPaySnackbar.LENGTH_SHORT).show();
 		}
 	}
 
 	protected CharSequence getStyledTransactionDescription(@StringRes int transactionStringId, Number amount) {
 		final String amountValue = numberFormat.format(amount);
 		final String spannedString = getString(transactionStringId, amountValue);
-		int position = spannedString.indexOf(String.format("Tk.%s", amountValue));
+		int position = spannedString.indexOf(String.format("Tk. %s", amountValue));
 		final Spannable spannableAmount = new SpannableString(getString(transactionStringId, amountValue));
 		spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return spannableAmount;
 	}
 
-	protected void hideOtpDialog() {
-		if (isOtpDialogShowing()) {
-			mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismiss();
+	protected void launchOTPVerification(long otpValidFor, String requestJson, String apiCommand, String url) {
+		if (getActivity() != null) {
+			mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, apiCommand,
+					url, Constants.METHOD_POST, otpValidFor);
+			mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
+			mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+
 		}
-	}
-
-	protected boolean isOtpDialogShowing() {
-		return mOTPVerificationForTwoFactorAuthenticationServicesDialog != null && mOTPVerificationForTwoFactorAuthenticationServicesDialog.isShowing();
-	}
-
-	protected void launchOtpVerification(long otpValidFor, String requestJson, @SuppressWarnings("SameParameterValue") String apiCommand, String url) {
-		if (getActivity() == null)
-			return;
-
-		mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, apiCommand,
-				url, Constants.METHOD_POST, otpValidFor);
-		mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
-		mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
 	}
 
 	protected abstract void setupViewProperties();
