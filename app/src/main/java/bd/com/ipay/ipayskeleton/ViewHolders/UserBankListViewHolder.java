@@ -7,7 +7,6 @@ import android.widget.TextView;
 import bd.com.ipay.ipayskeleton.Adapters.OnItemClickListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class UserBankListViewHolder extends IPayViewHolder<BankAccountList> {
 
@@ -36,13 +35,8 @@ public class UserBankListViewHolder extends IPayViewHolder<BankAccountList> {
 
 	@Override
 	public void bindTo(BankAccountList bankAccountList) {
-		if (bankAccountList.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
-			itemView.setVisibility(View.VISIBLE);
-			bankIconImageView.setImageResource(bankAccountList.getBankIcon(itemView.getContext()));
-			bankNameTextView.setText(bankAccountList.getBankName());
-			bankAccountIdTextView.setText(bankAccountList.getAccountNumber());
-		} else {
-			itemView.setVisibility(View.GONE);
-		}
+		bankIconImageView.setImageResource(bankAccountList.getBankIcon(itemView.getContext()));
+		bankNameTextView.setText(bankAccountList.getBankName());
+		bankAccountIdTextView.setText(bankAccountList.getAccountNumber());
 	}
 }
