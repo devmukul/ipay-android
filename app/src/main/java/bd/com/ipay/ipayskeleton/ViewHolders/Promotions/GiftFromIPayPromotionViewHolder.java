@@ -59,12 +59,6 @@ public class GiftFromIPayPromotionViewHolder extends PromotionViewHolder {
 
 	@Override
 	public void bindTo(Promotion promotion) {
-		if (promotion.isActive())
-			itemView.setVisibility(View.VISIBLE);
-		else {
-			itemView.setVisibility(View.GONE);
-			return;
-		}
 		GiftFromIPayMetaData giftFromIPayMetaData = promotion.getMedata(GiftFromIPayMetaData.class);
 		promotionTitleTextView.setText(promotion.getCampaignTitle());
 		promotionSubDetailsTextView.setText(promotion.getPromotionDetails());

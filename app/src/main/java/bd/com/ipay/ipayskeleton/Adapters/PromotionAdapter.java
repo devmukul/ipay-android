@@ -56,7 +56,7 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionViewHolder> 
 
 	@Override
 	public int getItemViewType(int position) {
-		if (this.mPromotionList != null && this.mPromotionList.get(position) != null && this.mPromotionList.get(position).isActive())
+		if (this.mPromotionList != null && this.mPromotionList.get(position) != null)
 			return PromotionConstants.getItemViewType(this.mPromotionList.get(position).getCampaignType());
 		else
 			return PromotionConstants.INVALID_VIEW_TYPE;

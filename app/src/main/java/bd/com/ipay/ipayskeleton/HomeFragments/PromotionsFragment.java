@@ -115,6 +115,7 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 		promotionsRefreshLayout = view.findViewById(R.id.promotions_refresh_layout);
 		mNoPromotionAvailableMessageTextView = view.findViewById(R.id.no_promotion_available_message_text_view);
 
+		recyclerView.setHasFixedSize(false);
 		promotionAdapter = new PromotionAdapter(getContext(), new PromotionViewHolder.OnOfferActionsListener() {
 
 			@Override
@@ -172,7 +173,7 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 				if (getActivity() != null) {
 					AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
 							.setView(customView)
-							.setPositiveButton(android.R.string.cancel, null)
+							.setPositiveButton(android.R.string.ok, null)
 							.create();
 					alertDialog.show();
 				}

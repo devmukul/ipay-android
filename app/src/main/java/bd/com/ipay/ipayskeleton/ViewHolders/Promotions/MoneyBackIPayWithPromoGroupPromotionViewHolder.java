@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import bd.com.ipay.ipayskeleton.Model.Promotion.MoneyBackIPayWithPromoGroupMetaData;
 import bd.com.ipay.ipayskeleton.Model.Promotion.Promotion;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -14,12 +15,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class MoneyBackIPayWithPromoGroupPromotionViewHolder extends MoneyBackIPayPromotionViewHolder {
 
 	private final TextView promotionTitleTextView;
+	private final TextView promotionCodeTextView;
 	private final TextView promotionSubDetailsTextView;
 	private final ImageView promotionImageView;
 
 	public MoneyBackIPayWithPromoGroupPromotionViewHolder(View itemView, OnOfferActionsListener onOfferActionsListener) {
 		super(itemView, onOfferActionsListener);
 		promotionTitleTextView = itemView.findViewById(R.id.promotion_title_text_view);
+		promotionCodeTextView = itemView.findViewById(R.id.promotion_code_text_view);
 		promotionSubDetailsTextView = itemView.findViewById(R.id.promotion_sub_details_text_view);
 		promotionImageView = itemView.findViewById(R.id.promotion_image_view);
 		final ImageButton termsButton = itemView.findViewById(R.id.terms_button);
@@ -34,14 +37,9 @@ public class MoneyBackIPayWithPromoGroupPromotionViewHolder extends MoneyBackIPa
 
 	@Override
 	public void bindTo(Promotion promotion) {
-		if (promotion.isActive())
-			itemView.setVisibility(View.VISIBLE);
-		else {
-			itemView.setVisibility(View.GONE);
-			return;
-		}
 		super.bindTo(promotion);
 		promotionTitleTextView.setText(promotion.getCampaignTitle());
+		promotionCodeTextView.setText(String.format("Promo: %s", promotion.getMedata(MoneyBackIPayWithPromoGroupMetaData.class).getPromoCode()));
 		promotionSubDetailsTextView.setText(promotion.getPromotionDetails());
 		Glide.with(itemView.getContext()).load(Constants.BASE_URL_FTP_SERVER + promotion.getImageUrl()).into(promotionImageView);
 	}
