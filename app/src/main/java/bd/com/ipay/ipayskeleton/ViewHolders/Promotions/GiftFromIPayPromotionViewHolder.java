@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -66,7 +67,7 @@ public class GiftFromIPayPromotionViewHolder extends PromotionViewHolder {
 
 		totalTransactionCountBar.setStepSize(1);
 		totalTransactionCountBar.setNumStars(giftFromIPayMetaData.getTransactionCountPerRedeem());
-		totalTransactionCountBar.setRating(giftFromIPayMetaData.getTransactionCountPerRedeem() - giftFromIPayMetaData.getTransactionRequiredForNextRedeem());
+		totalTransactionCountBar.setRating(new BigDecimal(giftFromIPayMetaData.getTransactionCountPerRedeem() - giftFromIPayMetaData.getTransactionRequiredForNextRedeem()).floatValue());
 		offerRedeemCountTextView.setText(promotion.getConsumptionDetails());
 		final Date currentDate = Calendar.getInstance().getTime();
 		ConstraintSet constraintSet = new ConstraintSet();
