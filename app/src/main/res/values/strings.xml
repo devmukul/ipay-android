@@ -330,6 +330,7 @@
     <string name="contact_person">Contact person</string>
     <string name="account">Account</string>
     <string name="account_name">Account Name</string>
+    <string name="select_account_name">Select Account Name</string>
     <string name="uploading_profile_picture">Uploading profile picture</string>
     <string name="uploading">Uploading</string>
     <string name="submitting_request_money">Submitting your request for money</string>
