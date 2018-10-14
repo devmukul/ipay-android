@@ -1,34 +1,61 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.CustomBusinessContact;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MakePaymentContactsSearchView extends FrameLayout {
+public class MakePaymentContactsSearchView extends FrameLayout implements SearchView.OnQueryTextListener{
 
     private SearchView mCustomAutoCompleteView;
+
+    private RecyclerView mTransactionHistoryRecyclerView;
+    private BusinessContactListAdapter mTransactionHistoryAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private List<CustomBusinessContact> userTransactionHistories;
+
 //    private BusinessContactListAdapter mBusinessContactsAdapter;
 
     private List<BusinessContact> mBusinessContactList;
@@ -40,9 +67,7 @@ public class MakePaymentContactsSearchView extends FrameLayout {
     private String mOutlet = "";
 
     private Context mContext;
-//    private CustomFocusListener mCustomFocusListener;
-//
-//    private CustomTextChangeListener customTextChangeListener;
+    private CustomFocusListener mCustomFocusListener;
 
     public MakePaymentContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -66,247 +91,284 @@ public class MakePaymentContactsSearchView extends FrameLayout {
         View view = inflater.inflate(R.layout.fragment_payment_search, this, true);
 
         mCustomAutoCompleteView = (SearchView) view.findViewById(R.id.search_business);
+        mCustomAutoCompleteView.setIconified(false);
+        mCustomAutoCompleteView.setOnQueryTextListener(this);
+        mCustomAutoCompleteView.clearFocus();
 
-//        mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
-//
-//        mCustomAutoCompleteView.setOnFocusChangeListener(new OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (mCustomFocusListener != null)
-//                    mCustomFocusListener.onFocusChange(v, hasFocus);
-//                if (!hasFocus) {
-//                    String inputString = mCustomAutoCompleteView.getText().toString().trim();
-//
-//                    if (mName.isEmpty() && mImageURL.isEmpty())
-//                        customTextChangeListener.onTextChange(inputString);
-//                    else
-//                        customTextChangeListener.onTextChange(inputString, mName, mImageURL, mAddress, mThanaDistrict, mOutlet);
-//                }
-//            }
-//        });
-//
-//        mBusinessContactList = new ArrayList<>();
-//        setBusinessContactAdapter(mBusinessContactList);
+        mTransactionHistoryRecyclerView = (RecyclerView) view.findViewById(R.id.address_recycler_view);
+        mLayoutManager = new LinearLayoutManager(mContext);
+
+        mCustomAutoCompleteView.setOnQueryTextFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    mTransactionHistoryRecyclerView.setVisibility(VISIBLE);
+                else
+                    mTransactionHistoryRecyclerView.setVisibility(GONE);
+            }
+        });
+
+        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
+        readBusinessContactsFromDB();
     }
 
-//    public void setOnCustomFocusChangeListener(CustomFocusListener mCustomFocusListener) {
-//        this.mCustomFocusListener = mCustomFocusListener;
-//    }
-//
-//    public class CustomAutoCompleteTextChangedListener implements TextWatcher {
-//
-//        CustomAutoCompleteTextChangedListener() {
-//        }
-//
-//        @Override
-//        public void afterTextChanged(Editable s) {
-//        }
-//
-//        @Override
-//        public void beforeTextChanged(CharSequence s, int start, int count,
-//                                      int after) {
-//        }
-//
-//        @Override
-//        public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-//            mQuery = userInput.toString();
-//
-//            if (!mQuery.matches("[0-9+]+") && userInput.length() > 2) {
-//                try {
-//                    // Query the database based on the user input
-//                    readBusinessContactsFromDB();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                mBusinessContactList.clear();
-//                setBusinessContactAdapter(mBusinessContactList);
-//            }
-//        }
-//    }
-//
-//    public void setCustomTextChangeListener(CustomTextChangeListener customTextChangeListener) {
-//        this.customTextChangeListener = customTextChangeListener;
-//    }
-//
-//    public interface CustomTextChangeListener {
-//        void onTextChange(String inputText);
-//
-//        void onTextChange(String inputText, String name, String imageURL, String address, String thanaDistrict, String outlet);
-//    }
-//
-//    public void clearSelectedData() {
-//        mName = "";
-//        mImageURL = "";
-//        mAddress = "";
-//        mThanaDistrict = "";
-//        mOutlet = "";
-//    }
-//
-//    public Editable getText() {
-//        return mCustomAutoCompleteView.getText();
-//    }
-//
-//
-//    public void setError(String error) {
-//        mCustomAutoCompleteView.setError(error);
-//    }
-//
-//    public void setText(String text) {
-//        mCustomAutoCompleteView.setText(text);
-//        mCustomAutoCompleteView.setSelection(text.length());
-//        mCustomAutoCompleteView.setError(null);
-//
-//        hideSuggestionList();
-//    }
-//
-//    public void hideSuggestionList() {
-//        mCustomAutoCompleteView.dismissDropDown();
-//    }
-//
-//    private List<BusinessContact> getBusinessContactList(Cursor cursor) {
-//        List<BusinessContact> mBusinessContacts;
-//        int businessNameIndex;
-//        int phoneNumberIndex;
-//        int profilePictureUrlIndex;
-//        int businessTypeIndex;
-//        int businessAddressIndex;
-//        int businessThanaIndex;
-//        int businessDistrictIndex;
-//        int businessOutletIndex;
-//
-//
-//        mBusinessContacts = new ArrayList<>();
-//
-//        if (cursor != null) {
-//            mBusinessContacts.clear();
-//            businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
-//            phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-//            profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
-//            businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
-//            businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
-//            businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
-//            businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
-//            businessOutletIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_OUTLET);
-//
-//            if (cursor.moveToFirst())
-//                do {
-//                    String businessName = cursor.getString(businessNameIndex);
-//                    String mobileNumber = cursor.getString(phoneNumberIndex);
-//                    String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
-//                    int businessTypeID = cursor.getInt(businessTypeIndex);
-//                    String businessAddress = cursor.getString(businessAddressIndex);
-//                    String businessThana = cursor.getString(businessThanaIndex);
-//                    String businessDistrict = cursor.getString(businessDistrictIndex);
-//                    String businessOutlet = cursor.getString(businessOutletIndex);
-//
-//                    BusinessContact businessContact = new BusinessContact();
-//                    businessContact.setBusinessName(businessName);
-//                    businessContact.setMobileNumber(mobileNumber);
-//                    businessContact.setProfilePictureUrl(profilePictureUrl);
-//                    businessContact.setAddressString(businessAddress);
-//                    businessContact.setThanaString(businessThana);
-//                    businessContact.setDistrictString(businessDistrict);
-//                    businessContact.setOutletString(businessOutlet);
-//
-//                    if (CommonData.getBusinessTypes() != null) {
-//                        BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
-//                        if (businessType != null)
-//                            businessContact.setBusinessType(businessType.getName());
+    public void setOnCustomFocusChangeListener(CustomFocusListener mCustomFocusListener) {
+        this.mCustomFocusListener = mCustomFocusListener;
+    }
+
+    private List<CustomBusinessContact> getBusinessContactList(Cursor cursor) {
+        List<CustomBusinessContact> mBusinessContacts;
+        int businessNameIndex;
+        int phoneNumberIndex;
+        int profilePictureUrlIndex;
+        int businessTypeIndex;
+        int businessAddressIndex;
+        int businessThanaIndex;
+        int businessDistrictIndex;
+        int businessOutletIndex;
+
+
+        mBusinessContacts = new ArrayList<>();
+
+        if (cursor != null) {
+            mBusinessContacts.clear();
+            businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
+            phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
+            profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
+            businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
+            businessAddressIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_ADDRESS);
+            businessThanaIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_THANA);
+            businessDistrictIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_DISTRICT);
+            businessOutletIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_OUTLET);
+
+            if (cursor.moveToFirst())
+                do {
+                    String businessName = cursor.getString(businessNameIndex);
+                    String mobileNumber = cursor.getString(phoneNumberIndex);
+                    String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
+                    int businessTypeID = cursor.getInt(businessTypeIndex);
+                    String businessAddress = cursor.getString(businessAddressIndex);
+                    String businessThana = cursor.getString(businessThanaIndex);
+                    String businessDistrict = cursor.getString(businessDistrictIndex);
+                    String businessOutlet = cursor.getString(businessOutletIndex);
+
+                    System.out.println("Bus Type "+businessTypeID);
+
+                    if(!TextUtils.isEmpty(businessOutlet)) {
+                        Outlets[] outlets = new Gson().fromJson(businessOutlet, Outlets[].class);
+                        if(outlets.length>0) {
+                            for (Outlets outlet : outlets) {
+                                CustomBusinessContact businessContact = new CustomBusinessContact();
+                                businessContact.setTypeInList("Outlet");
+                                businessContact.setBusinessName(businessName);
+                                businessContact.setMobileNumber(mobileNumber);
+
+                                if (CommonData.getBusinessTypes() != null) {
+                                    BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
+                                    if (businessType != null)
+                                        businessContact.setBusinessType(businessType.getName());
+                                }
+                                businessContact.setProfilePictureUrl(outlet.getOutletLogoUrl());
+                                businessContact.setAddressString(outlet.getAddressString());
+                                businessContact.setThanaString(outlet.getOutletAddress().getThanaName());
+                                businessContact.setDistrictString(outlet.getOutletAddress().getDistrictName());
+                                businessContact.setOutletName(outlet.getOutletName());
+                                businessContact.setOutletId(outlet.getOutletId());
+                                mBusinessContacts.add(businessContact);
+                            }
+                        }else {
+
+                            CustomBusinessContact businessContact = new CustomBusinessContact();
+                            businessContact.setTypeInList("Business");
+                            businessContact.setBusinessName(businessName);
+                            businessContact.setMobileNumber(mobileNumber);
+                            businessContact.setProfilePictureUrl(profilePictureUrl);
+                            businessContact.setAddressString(businessAddress);
+                            businessContact.setThanaString(businessThana);
+                            businessContact.setDistrictString(businessDistrict);
+
+                            if (CommonData.getBusinessTypes() != null) {
+                                BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
+                                if (businessType != null)
+                                    businessContact.setBusinessType(businessType.getName());
+                            }
+
+                            mBusinessContacts.add(businessContact);
+                        }
+                    }else {
+                        CustomBusinessContact businessContact = new CustomBusinessContact();
+                        businessContact.setTypeInList("Business");
+                        businessContact.setBusinessName(businessName);
+                        businessContact.setMobileNumber(mobileNumber);
+                        businessContact.setProfilePictureUrl(profilePictureUrl);
+                        businessContact.setAddressString(businessAddress);
+                        businessContact.setThanaString(businessThana);
+                        businessContact.setDistrictString(businessDistrict);
+
+                        if (CommonData.getBusinessTypes() != null) {
+                            BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
+                            if (businessType != null)
+                                businessContact.setBusinessType(businessType.getName());
+                        }
+
+                        mBusinessContacts.add(businessContact);
+                    }
+
+                } while (cursor.moveToNext());
+        }
+
+        return mBusinessContacts;
+    }
+
+    private void readBusinessContactsFromDB() {
+        Cursor mCursor;
+        DataHelper dataHelper = DataHelper.getInstance(mContext);
+        mCursor = dataHelper.searchBusinessAccounts(mQuery);
+
+        try {
+            if (mCursor != null) {
+                userTransactionHistories = getBusinessContactList(mCursor);
+                setBusinessContactAdapter(userTransactionHistories);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (mCursor != null) {
+                mCursor.close();
+            }
+        }
+    }
+
+    private void setBusinessContactAdapter(List<CustomBusinessContact> businessContactList) {
+        mTransactionHistoryAdapter = new BusinessContactListAdapter(mContext, businessContactList);
+        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        mTransactionHistoryAdapter.getFilter().filter(query);
+        return true;
+    }
+
+    private class BusinessContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
+
+        Context c;
+        List<CustomBusinessContact> userTransactionHistories;
+        List<CustomBusinessContact> mFilteredOutlets;
+
+        public BusinessContactListAdapter(Context c, List<CustomBusinessContact> userTransactionHistories) {
+            this.c = c;
+            this.userTransactionHistories = userTransactionHistories;
+            this.mFilteredOutlets = userTransactionHistories;
+        }
+
+        @Override
+        public Filter getFilter() {
+
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+
+                    String charString = charSequence.toString();
+                    System.out.println(">>>>Q  "+charString);
+
+                    if (charString.isEmpty()) {
+                        mFilteredOutlets = userTransactionHistories;
+                    } else {
+                        List<CustomBusinessContact> filteredList = new ArrayList<>();
+
+                        for (CustomBusinessContact outletsList : userTransactionHistories) {
+
+                            if (!TextUtils.isEmpty(outletsList.getBusinessName()) && outletsList.getBusinessName().toLowerCase().contains(charString.toLowerCase())) {
+                                filteredList.add(outletsList);
+                            }else if(!TextUtils.isEmpty(outletsList.getAddressString()) && outletsList.getAddressString().toLowerCase().contains(charString.toLowerCase())){
+                                filteredList.add(outletsList);
+                            }else if(!TextUtils.isEmpty(outletsList.getOutletName()) && outletsList.getOutletName().toLowerCase().contains(charString.toLowerCase())){
+                                filteredList.add(outletsList);
+                            }
+                        }
+
+                        mFilteredOutlets = filteredList;
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = mFilteredOutlets;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    mFilteredOutlets = (List<CustomBusinessContact>) filterResults.values;
+//                    if (mFilteredOutlets.size() == 0) {
+//                        noResultTextView.setVisibility(View.VISIBLE);
+//                    }else{
+//                        noResultTextView.setVisibility(View.GONE);
 //                    }
-//
-//                    mBusinessContacts.add(businessContact);
-//
-//                } while (cursor.moveToNext());
-//        }
-//
-//        return mBusinessContacts;
-//    }
-//
-//    private void readBusinessContactsFromDB() {
-//        Cursor mCursor;
-//        DataHelper dataHelper = DataHelper.getInstance(mContext);
-//        mCursor = dataHelper.searchBusinessAccounts(mQuery);
-//
-//        try {
-//            if (mCursor != null) {
-//                mBusinessContactList = getBusinessContactList(mCursor);
-//                setBusinessContactAdapter(mBusinessContactList);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (mCursor != null) {
-//                mCursor.close();
-//            }
-//        }
-//    }
-//
-//    private void setBusinessContactAdapter(List<BusinessContact> businessContactList) {
-//        mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
-//        mCustomAutoCompleteView.setAdapter(mBusinessContactsAdapter);
-//    }
-//
-//    public class BusinessContactListAdapter extends ArrayAdapter<BusinessContact> {
-//        private LayoutInflater inflater;
-//
-//        private TextView businessNameView;
-//        private TextView businessTypeView;
-//        private ProfileImageView profilePictureView;
-//        private TextView businessAddressView;
-//
-//        BusinessContactListAdapter(Context context, List<BusinessContact> objects) {
-//            super(context, 0, objects);
-//            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        }
-//
-//        @Override
-//        @NonNull
-//        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-//            View view = convertView;
-//
-//            if (view == null)
-//                view = inflater.inflate(R.layout.list_item_business_contact, parent, false);
-//
-//            businessNameView = (TextView) view.findViewById(R.id.business_name);
-//            businessTypeView = (TextView) view.findViewById(R.id.business_type);
-//            profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
-//            businessAddressView = (TextView) view.findViewById(R.id.business_address);
-//
-//            return bindView(view, position);
-//        }
-//
-//        public View bindView(View view, int position) {
-//            BusinessContact businessContact = getItem(position);
-//
-//            if (businessContact == null) {
-//                return view;
-//            }
-//
-//            final String businessName = businessContact.getBusinessName();
-//            final String mobileNumber = businessContact.getMobileNumber();
-//            final String businessType = businessContact.getBusinessType();
-//            final String profilePictureUrl = businessContact.getProfilePictureUrl();
-//            final String businessAddress = businessContact.getAddressString();
-//            final String businessThana = businessContact.getThanaString();
-//            final String businessDistrict = businessContact.getDistrictString();
-//            final String businessOutlet = businessContact.getOutletString();
-//
-//            if (businessName != null && !businessName.isEmpty())
-//                businessNameView.setText(businessName);
-//
-//            if (businessType != null) {
-//                businessTypeView.setText(businessType);
-//                businessTypeView.setVisibility(VISIBLE);
-//            }
-//            if (businessAddress != null && !businessAddress.isEmpty()) {
-//                businessAddressView.setText(businessAddress);
-//            }
-//            profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
-//
-//            view.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
+                    notifyDataSetChanged();
+                }
+            };
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView businessNameView;
+            private TextView businessTypeView;
+            private ProfileImageView profilePictureView;
+            private TextView businessAddressView;
+
+
+
+            public ViewHolder(final View itemView) {
+                super(itemView);
+                businessNameView = (TextView) itemView.findViewById(R.id.business_name);
+                businessTypeView = (TextView) itemView.findViewById(R.id.business_type);
+                profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                businessAddressView = (TextView) itemView.findViewById(R.id.business_address);
+            }
+
+            public void bindView(final int pos) {
+
+                final CustomBusinessContact businessContact = mFilteredOutlets.get(pos);
+
+                final String businessName = businessContact.getBusinessName();
+                final String mobileNumber = businessContact.getMobileNumber();
+                final String businessType = businessContact.getBusinessType();
+                final String profilePictureUrl = businessContact.getProfilePictureUrl();
+                final String businessAddress = businessContact.getAddressString();
+                final String businessThana = businessContact.getThanaString();
+                final String businessDistrict = businessContact.getDistrictString();
+                final String businessOutlet = businessContact.getOutletName();
+
+                if(businessContact.getTypeInList().equals("Outlet")){
+                    if (businessOutlet != null && !businessOutlet.isEmpty())
+                        businessNameView.setText(businessOutlet);
+                }else{
+
+                    if (businessName != null && !businessName.isEmpty())
+                        businessNameView.setText(businessName);
+                }
+
+
+
+                if (businessType != null) {
+                    businessTypeView.setText(businessType);
+                    businessTypeView.setVisibility(VISIBLE);
+                }
+                if (businessAddress != null && !businessAddress.isEmpty()) {
+                    businessAddressView.setText(businessAddress);
+                }
+                profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switchToMakePaymentActivity(pos);
+
 //                    setText(mobileNumber);
 //
 //                    mName = businessName;
@@ -316,15 +378,79 @@ public class MakePaymentContactsSearchView extends FrameLayout {
 //                    mOutlet = businessOutlet;
 //                    mCustomAutoCompleteView.clearFocus();
 //                    Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
-//                }
-//            });
-//
-//            return view;
-//        }
-//    }
-//
-//    public interface CustomFocusListener {
-//        void onFocusChange(View v, boolean hasFocus);
-//    }
+                    }
+                });
+            }
+        }
+
+
+
+        // Now define the view holder for Normal list item
+        class NormalViewHolder extends BusinessContactListAdapter.ViewHolder {
+            NormalViewHolder(final View itemView) {
+                super(itemView);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Do whatever you want on clicking the normal items
+
+
+                    }
+                });
+            }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new BusinessContactListAdapter.NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_contact, parent, false));
+
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                BusinessContactListAdapter.NormalViewHolder vh = (BusinessContactListAdapter.NormalViewHolder) holder;
+                vh.bindView(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mFilteredOutlets == null)
+                return 0;
+            else
+                return mFilteredOutlets.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+        private void switchToMakePaymentActivity(int position) {
+            Intent intent = new Intent(mContext, PaymentActivity.class);
+            intent.putExtra(Constants.NAME, mFilteredOutlets.get(position).getBusinessName());
+            intent.putExtra(Constants.ADDRESS, mFilteredOutlets.get(position).getAddressString());
+            intent.putExtra(Constants.DISTRICT, mFilteredOutlets.get(position).getDistrictString());
+            intent.putExtra(Constants.THANA, mFilteredOutlets.get(position).getThanaString());
+            intent.putExtra(Constants.MOBILE_NUMBER, mFilteredOutlets.get(position).getMobileNumber());
+            intent.putExtra(Constants.PHOTO_URI, mFilteredOutlets.get(position).getProfilePictureUrl());
+            intent.putExtra(Constants.OUTLET_ID, mFilteredOutlets.get(position).getOutletId());
+            intent.putExtra(Constants.OUTLET_NAME, mFilteredOutlets.get(position).getOutletName());
+            intent.putExtra(Constants.FROM_BRANCHING, true);
+            mContext.startActivity(intent);
+        }
+
+    }
+
+    public interface CustomFocusListener {
+        void onFocusChange(View v, boolean hasFocus);
+    }
+
+
+
 }
 

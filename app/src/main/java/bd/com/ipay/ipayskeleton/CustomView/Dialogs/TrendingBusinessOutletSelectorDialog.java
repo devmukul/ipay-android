@@ -61,8 +61,6 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
         mSearchView = (SearchView) view.findViewById(R.id.search_outlet);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
-
-        // prevent auto focus on Dialog launch
         mSearchView.clearFocus();
 
         getWindow().setLayout(

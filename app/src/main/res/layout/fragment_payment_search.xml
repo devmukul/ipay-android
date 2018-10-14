@@ -10,11 +10,13 @@
         android:layout_height="wrap_content"
         android:background="@color/colorTransparent"
         android:iconifiedByDefault="false"
-        android:padding="@dimen/value4"
+        android:paddingTop="@dimen/value4"
+        android:paddingBottom="@dimen/value4"
         android:queryBackground="@color/colorTransparent"
         android:queryHint="@string/search"
         android:submitBackground="@color/colorTransparent"
-        android:layout_below="@+id/title_view"/>
+        android:layout_below="@+id/title_view"
+        android:focusable="false"/>
 
     <LinearLayout
         android:id="@+id/divider"
@@ -30,8 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/value5"
-        android:layout_marginLeft="@dimen/value20"
-        android:layout_marginRight="@dimen/value20"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/divider"
         android:visibility="gone">
 
