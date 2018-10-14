@@ -132,9 +132,9 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 		bundle.putSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
 
 		if (getAmount().intValue() == minimumPayAmount)
-			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
-		else if (getAmount().intValue() == totalOutstandingAmount)
 			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);
+		else if (getAmount().intValue() == totalOutstandingAmount)
+			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
 		else
 			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.OTHER);
 
