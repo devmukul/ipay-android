@@ -44,8 +44,10 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 
 	@Override
 	protected void setupViewProperties() {
-		addShortCutOption(1, getString(R.string.total_outstanding).toUpperCase(), totalOutstandingAmount);
-		addShortCutOption(2, getString(R.string.minimum_pay).toUpperCase(), minimumPayAmount);
+		if (totalOutstandingAmount > 0)
+			addShortCutOption(1, getString(R.string.total_outstanding).toUpperCase(), totalOutstandingAmount);
+		if (minimumPayAmount > 0)
+			addShortCutOption(2, getString(R.string.minimum_pay).toUpperCase(), minimumPayAmount);
 
 		setBalanceInfoLayoutVisibility(View.VISIBLE);
 		setTransactionDescription(getString(R.string.paying_bill_message));
@@ -130,9 +132,9 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 		bundle.putSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
 
 		if (getAmount().intValue() == minimumPayAmount)
-			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
-		else if (getAmount().intValue() == totalOutstandingAmount)
 			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);
+		else if (getAmount().intValue() == totalOutstandingAmount)
+			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
 		else
 			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.OTHER);
 

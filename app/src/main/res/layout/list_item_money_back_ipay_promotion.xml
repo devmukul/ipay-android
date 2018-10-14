@@ -64,76 +64,43 @@
                     tools:text="@tools:sample/lorem/random" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/claim_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4sp"
-                android:background="@drawable/background_primary_button"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:paddingBottom="@dimen/value8"
-                android:paddingEnd="@dimen/value16"
-                android:paddingStart="@dimen/value16"
-                android:paddingTop="@dimen/value8"
-                android:text="@string/claim"
-                android:textColor="@color/button_text_color"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/promotion_image_view" />
-
-            <RatingBar
-                android:id="@+id/total_transaction_count_bar"
-                style="?android:attr/ratingBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ProgressBar
+                android:id="@+id/total_transaction_progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="24dip"
                 android:layout_margin="@dimen/value8"
+                android:background="@android:color/transparent"
                 android:clickable="false"
                 android:focusable="false"
-                android:numStars="20"
-                android:rating="4"
-                android:stepSize="1"
+                android:max="100"
+                android:paddingStart="0dip"
+                android:paddingLeft="0dip"
+                android:paddingEnd="0dip"
+                android:paddingRight="0dip"
+                android:progress="10"
+                android:progressDrawable="@drawable/drawable_offer_seek_bar"
+                android:thumb="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/claim_button"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/promotion_image_view" />
-
-            <TextView
-                android:id="@+id/available_redeem_count_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/value8"
-                android:layout_marginEnd="@dimen/value8"
-                android:layout_marginStart="@dimen/value8"
-                android:maxLines="1"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/claim_button"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/promotion_image_view"
-                tools:text="@string/you_have_already_redeemed_this_offer_times" />
+                app:layout_constraintTop_toBottomOf="@+id/promotion_image_view"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/offer_redeem_count_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/value8"
-                android:layout_marginEnd="@dimen/value8"
-                android:layout_marginStart="@dimen/value8"
+                android:layout_margin="@dimen/value8"
                 android:maxLines="1"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/claim_button"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/total_transaction_count_bar"
+                app:layout_constraintTop_toBottomOf="@+id/total_transaction_progress_bar"
                 tools:text="@string/you_have_already_redeemed_this_offer_times" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
