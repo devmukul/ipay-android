@@ -1304,7 +1304,7 @@
     <string name="lanka_bangla_card_number_input_message">Please enter your LankaBangla Visa or Master Card Number</string>
     <string name="invalid_card_number_message">Enter a valid card number.</string>
     <string name="empty_card_number_message">Enter a card number.</string>
-    <string name="empty_dps_number_message">Enter a Dps account number.</string>
+    <string name="empty_dps_number_message">Enter a DPS account number.</string>
     <string name="bill_details">Bill Details</string>
     <string name="pay_this_bill">Pay This Bill</string>
     <string name="dummy_card_number">4554 4500 0074 7203</string>
@@ -1313,10 +1313,11 @@
     <string name="minimum_pay">Minimum Pay</string>
     <string name="paying_bill_message">YOU ARE PAYING BILL TO</string>
     <string name="request_on_process">Request Processing</string>
-    <string name="lanka_bangla_dps_number">LankaBangla Dps Account Number</string>
+    <string name="lanka_bangla_dps_number">LankaBangla DPS Account Number</string>
     <string name="account_title">Account Title</string>
     <string name="account_maturity_date">Account Maturity Date</string>
     <string name="installment_amount">Installment Amount</string>
     <string name="branch_id">Branch ID</string>
-    <string name="lanka_bangla_dps">LankaBangla Dps</string>
+    <string name="lanka_bangla_dps">LankaBangla DPS</string>
+    <string name="lanka_bangla_dps_number_input_message">Please enter your LankaBangla DPS account number</string>
 </resources>

@@ -90,8 +90,8 @@
             android:id="@+id/account_title_view_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="12dp"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -123,8 +123,8 @@
             android:id="@+id/account_number_view_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="12dp"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -257,8 +257,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:padding="16dip"
         android:text="@string/pay_this_bill"
         android:textColor="#00c0af"
+        android:layout_margin="@dimen/value16"
         android:textStyle="bold" />
 </LinearLayout>

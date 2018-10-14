@@ -55,7 +55,7 @@
                     android:layout_marginTop="@dimen/value8"
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
-                    android:text="@string/lanka_bangla_card_number_input_message"
+                    android:text="@string/lanka_bangla_dps_number_input_message"
                     android:textColor="#666666"
                     android:textSize="14sp"
                     tools:visibility="visible" />

@@ -36,7 +36,7 @@ public class LankaBanglaDpsNumberInputFragment extends IpayAbstractDpsInputFragm
         super.onViewCreated(view, savedInstanceState);
 
         if (getActivity() != null)
-            getActivity().setTitle(R.string.lanka_bangla_card);
+            getActivity().setTitle(R.string.lanka_bangla_dps);
 
         mProgressDialog = new CustomProgressDialog(getActivity());
     }
@@ -44,7 +44,7 @@ public class LankaBanglaDpsNumberInputFragment extends IpayAbstractDpsInputFragm
     @Override
     public boolean verifyInput() {
         if (TextUtils.isEmpty(getDpsNumber())) {
-            showErrorMessage(getString(R.string.empty_card_number_message));
+            showErrorMessage(getString(R.string.empty_dps_number_message));
             return false;
         } else {
             return true;
