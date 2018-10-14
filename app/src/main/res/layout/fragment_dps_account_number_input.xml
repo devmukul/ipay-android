@@ -64,6 +64,7 @@
                     android:id="@+id/dps_number_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="@dimen/value28"
                     android:background="@android:color/transparent"
                     android:drawablePadding="@dimen/value8"
