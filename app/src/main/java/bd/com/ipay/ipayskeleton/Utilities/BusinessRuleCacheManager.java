@@ -55,7 +55,8 @@ public class BusinessRuleCacheManager {
 	public static void fetchBusinessRule(final Context context, final int serviceId) {
 		final String mUri = new GetBusinessRuleRequestBuilder(serviceId).getGeneratedUri();
 		final String apiCommand;
-		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT) {
+		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT || serviceId == ServiceIdConstants.SEND_MONEY ||
+				serviceId == ServiceIdConstants.MAKE_PAYMENT) {
 			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE_V2;
 		} else {
 			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE;

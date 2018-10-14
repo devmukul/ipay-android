@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney;
 public class SendMoneyRequest {
 
     private final String sender;
-    private final String receiver;
+    private final String receiverMobileNumber;
     private final double amount;
     private final String description;
     private String pin;
@@ -11,7 +11,7 @@ public class SendMoneyRequest {
 
     public SendMoneyRequest(String sender, String receiver, String amount, String description) {
         this.sender = sender;
-        this.receiver = receiver;
+        this.receiverMobileNumber = receiver;
         this.amount = Double.parseDouble(amount);
         this.description = description;
         this.otp = null;
@@ -20,7 +20,7 @@ public class SendMoneyRequest {
 
     public SendMoneyRequest(String sender, String receiver, String amount, String description, String pin, String otp) {
         this.sender = sender;
-        this.receiver = receiver;
+        this.receiverMobileNumber = receiver;
         this.amount = Double.parseDouble(amount);
         this.description = description;
         this.pin = pin;
