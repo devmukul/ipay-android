@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource">
 
-    <SearchView
-        android:id="@+id/search_business"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorTransparent"
-        android:iconifiedByDefault="false"
-        android:paddingTop="@dimen/value4"
-        android:paddingBottom="@dimen/value4"
-        android:queryBackground="@color/colorTransparent"
-        android:queryHint="@string/search"
-        android:submitBackground="@color/colorTransparent"
-        android:layout_below="@+id/title_view"
-        android:focusable="false"/>
+        android:id="@+id/serach_view">
+
+        <SearchView
+            android:id="@+id/search_business"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:iconifiedByDefault="false"
+            android:paddingTop="@dimen/value4"
+            android:paddingBottom="@dimen/value4"
+            android:queryBackground="@color/colorTransparent"
+            android:queryHint="@string/search"
+            android:submitBackground="@color/colorTransparent"
+            android:layout_below="@+id/title_view"
+            android:focusable="false"
+            android:layout_toLeftOf="@+id/qr_scan"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+        <ImageView
+            android:id="@+id/qr_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/oq_for_make_payment"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"/>
+
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/search_business"
+        android:layout_below="@+id/serach_view"
         android:background="#E0E0E0"
         android:orientation="vertical">
     </LinearLayout>

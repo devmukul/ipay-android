@@ -21,6 +21,7 @@ import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
@@ -44,10 +46,11 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MakePaymentContactsSearchView extends FrameLayout implements SearchView.OnQueryTextListener{
+public class MakePaymentContactsSearchView extends RelativeLayout implements SearchView.OnQueryTextListener{
 
     private SearchView mCustomAutoCompleteView;
 
@@ -65,6 +68,10 @@ public class MakePaymentContactsSearchView extends FrameLayout implements Search
     private String mAddress = "";
     private String mThanaDistrict = "";
     private String mOutlet = "";
+
+
+    private View mPayByQCView;
+    private PinChecker pinChecker;
 
     private Context mContext;
     private CustomFocusListener mCustomFocusListener;
@@ -90,6 +97,8 @@ public class MakePaymentContactsSearchView extends FrameLayout implements Search
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.fragment_payment_search, this, true);
 
+
+        mPayByQCView = view.findViewById(R.id.qr_scan);
         mCustomAutoCompleteView = (SearchView) view.findViewById(R.id.search_business);
         mCustomAutoCompleteView.setIconified(false);
         mCustomAutoCompleteView.setOnQueryTextListener(this);
@@ -101,15 +110,32 @@ public class MakePaymentContactsSearchView extends FrameLayout implements Search
         mCustomAutoCompleteView.setOnQueryTextFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
+                if(hasFocus) {
+                    readBusinessContactsFromDB();
                     mTransactionHistoryRecyclerView.setVisibility(VISIBLE);
-                else
+                }
+                else {
                     mTransactionHistoryRecyclerView.setVisibility(GONE);
+                }
+            }
+        });
+
+        mPayByQCView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pinChecker = new PinChecker(mContext, new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        intent = new Intent(mContext, QRCodePaymentActivity.class);
+                        mContext.startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
             }
         });
 
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
-        readBusinessContactsFromDB();
     }
 
     public void setOnCustomFocusChangeListener(CustomFocusListener mCustomFocusListener) {
@@ -152,7 +178,7 @@ public class MakePaymentContactsSearchView extends FrameLayout implements Search
                     String businessDistrict = cursor.getString(businessDistrictIndex);
                     String businessOutlet = cursor.getString(businessOutletIndex);
 
-                    System.out.println("Bus Type "+businessTypeID);
+                    System.out.println("Bus Type>> "+businessTypeID);
 
                     if(!TextUtils.isEmpty(businessOutlet)) {
                         Outlets[] outlets = new Gson().fromJson(businessOutlet, Outlets[].class);
