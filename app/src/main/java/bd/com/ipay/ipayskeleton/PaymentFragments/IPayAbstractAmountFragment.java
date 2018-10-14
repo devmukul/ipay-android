@@ -85,20 +85,20 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
     }
 
     @Override
-	public void onResume() {
-		super.onResume();
-		if (amountDummyEditText != null && amountDummyEditText.isFocused() && getContext() != null)
-			Utilities.showKeyboard(getContext(), amountDummyEditText);
-	}
+    public void onResume() {
+        super.onResume();
+        if (amountDummyEditText != null && amountDummyEditText.isFocused() && getContext() != null)
+            Utilities.showKeyboard(getContext(), amountDummyEditText);
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		if (amountDummyEditText != null && amountDummyEditText.isFocused() && getContext() != null)
-			Utilities.hideKeyboard(getContext(), amountDummyEditText);
-	}
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (amountDummyEditText != null && amountDummyEditText.isFocused() && getContext() != null)
+            Utilities.hideKeyboard(getContext(), amountDummyEditText);
+    }
 
-	@Override
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
@@ -214,26 +214,27 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
             }
         });
 
-		continueButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (verifyInput()) {
-					Utilities.hideKeyboard(getContext(), amountDummyEditText);performContinueAction();
-				}
-			}
-		});
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (verifyInput()) {
+                    Utilities.hideKeyboard(getContext(), amountDummyEditText);
+                    performContinueAction();
+                }
+            }
+        });
 
-		if (!TextUtils.isEmpty(SharedPrefManager.getUserBalance())) {
-			ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(SharedPrefManager.getUserBalance()))));
-		}
+        if (!TextUtils.isEmpty(SharedPrefManager.getUserBalance())) {
+            ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(new BigDecimal(SharedPrefManager.getUserBalance()))));
+        }
 
 
-		setAmount(0, "");
-		setupViewProperties();
-	}
+        setAmount(0, "");
+        setupViewProperties();
+    }
 
     public void disableAmountField() {
-        amountDummyEditText.setEnabled(false);
+        amountDummyEditText.setOnClickListener(null);
     }
 
     protected abstract void setupViewProperties();

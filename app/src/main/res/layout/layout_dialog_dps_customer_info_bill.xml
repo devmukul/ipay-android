@@ -90,6 +90,7 @@
             android:id="@+id/account_title_view_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
@@ -122,6 +123,7 @@
             android:id="@+id/account_number_view_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 

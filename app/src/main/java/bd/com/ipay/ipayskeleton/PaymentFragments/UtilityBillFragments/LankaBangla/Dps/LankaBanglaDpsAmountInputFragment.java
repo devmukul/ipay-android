@@ -46,10 +46,9 @@ public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragmen
         setInputType(InputType.TYPE_CLASS_NUMBER);
         setTransactionImageResource(R.drawable.ic_lankabd2);
         setName(accountNumber);
-        ((IPayAbstractAmountFragment) this).setAmount(installmentAmount);
+        setAmount(installmentAmount);
         setAmountFocusableFalse();
         disableAmountField();
-
     }
 
     @Override
