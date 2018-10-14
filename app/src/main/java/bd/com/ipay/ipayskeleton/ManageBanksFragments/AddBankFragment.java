@@ -250,7 +250,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
     private void setBankAccountNameAdapter(List<AccountName> accounyNameList) {
 
-        accountNameDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank), accounyNameList);
+        accountNameDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.account_name), accounyNameList);
         accountNameDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
