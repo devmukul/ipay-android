@@ -1273,13 +1273,13 @@
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">00</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
-    <string name="add_money_confirmation_message">YOU ARE ADDING Tk.%1$s FROM</string>
-    <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk.%1$s TO</string>
-    <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk.%1$s FOR</string>
+    <string name="add_money_confirmation_message">YOU ARE ADDING Tk. %1$s FROM</string>
+    <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk. %1$s TO</string>
+    <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk. %1$s FOR</string>
     <string name="top_up_confirmation_message">MOBILE TOP UP %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
-    <string name="add_money_card_success_message">SUCCESSFULLY ADDED\n Tk. %1$s \nFROM</string>
-    <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD\n Tk. %1$s \nFROM</string>
+    <string name="add_money_card_success_message">SUCCESSFULLY ADDED Tk. %1$s FROM</string>
+    <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk. %1$s FROM</string>
     <string name="withdraw_money_bank_success_message">SUCCESSFULLY REQUESTED TO WITHDRAW\n Tk. %1$s \nTO</string>
     <string name="pay_bill_success_message">YOU HAVE PAID Tk. %1$s FOR</string>
     <string name="request_money_confirmation_message">YOU ARE REQUESTING %1$s FROM</string>
