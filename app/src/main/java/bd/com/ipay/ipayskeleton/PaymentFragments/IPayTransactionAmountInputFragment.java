@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -90,8 +89,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
 		final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
-		final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
-		final ImageView cardImageView = view.findViewById(R.id.card_image_view);
+		final RoundedImageView profileImageView = view.findViewById(R.id.transaction_image_view);
 		final EditText amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
 		final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
 		mContinueButton = view.findViewById(R.id.continue_button);
@@ -125,7 +123,6 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 		}
 		if (!TextUtils.isEmpty(profilePicture)) {
 			profileImageView.setVisibility(View.VISIBLE);
-			cardImageView.setVisibility(View.GONE);
 			Glide.with(this)
 					.load(profilePicture)
 					.placeholder(R.drawable.ic_profile)
