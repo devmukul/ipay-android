@@ -9,13 +9,13 @@ public class SendMoneyRequest {
     private String pin;
     private String otp;
 
-    public SendMoneyRequest(String sender, String receiver, String amount, String description) {
+    public SendMoneyRequest(String sender, String receiver, String amount, String pin ,String description) {
         this.sender = sender;
         this.receiverMobileNumber = receiver;
         this.amount = Double.parseDouble(amount);
         this.description = description;
         this.otp = null;
-        this.pin = null;
+        this.pin = pin;
     }
 
     public SendMoneyRequest(String sender, String receiver, String amount, String description, String pin, String otp) {

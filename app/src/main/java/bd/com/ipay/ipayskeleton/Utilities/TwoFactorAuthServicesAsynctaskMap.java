@@ -63,12 +63,9 @@ public class TwoFactorAuthServicesAsynctaskMap {
 
             case Constants.COMMAND_SEND_MONEY:
                 SendMoneyRequest sendMoneyRequest = gson.fromJson(json, SendMoneyRequest.class);
-                String pin = sendMoneyRequest.getPin();
-                if (pin != null) {
-                    mHttpPostAsyncTask.setPinAsHeader(pin);
-                }
+                String pin ;
                 if (otp != null) {
-                    mHttpPostAsyncTask.setOtpAsHeader(otp);
+                    sendMoneyRequest.setOtp(otp);
                 }
                 json = gson.toJson(sendMoneyRequest);
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY, uri, json, context, false);
@@ -154,12 +151,12 @@ public class TwoFactorAuthServicesAsynctaskMap {
                 return mHttpPostAsyncTask;
 
             case Constants.COMMAND_DPDC_BILL_PAY:
-				DpdcBillPayRequest dpdcBillPayRequest = gson.fromJson(json, DpdcBillPayRequest.class);
-				if (otp != null)
-					dpdcBillPayRequest.setOtp(otp);
-				json = gson.toJson(dpdcBillPayRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DPDC_BILL_PAY, uri, json, context, false);
-				return mHttpPostAsyncTask;
+                DpdcBillPayRequest dpdcBillPayRequest = gson.fromJson(json, DpdcBillPayRequest.class);
+                if (otp != null)
+                    dpdcBillPayRequest.setOtp(otp);
+                json = gson.toJson(dpdcBillPayRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DPDC_BILL_PAY, uri, json, context, false);
+                return mHttpPostAsyncTask;
 
             case Constants.COMMAND_LINK_THREE_BILL_PAY:
                 LinkThreeBillPayRequest linkThreeBillPayRequest = gson.fromJson(json, LinkThreeBillPayRequest.class);
@@ -209,13 +206,14 @@ public class TwoFactorAuthServicesAsynctaskMap {
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BRILLIANT_RECHARGE, uri, json, context, false);
                 return mHttpPostAsyncTask;
 
-			case Constants.COMMAND_LANKABANGLA_BILL_PAY:
-				LankaBanglaCardBillPayRequest lankaBanglaCardBillPayRequest = gson.fromJson(json, LankaBanglaCardBillPayRequest.class);
-				if (otp != null)
-					lankaBanglaCardBillPayRequest.setOtp(otp);
-				json = gson.toJson(lankaBanglaCardBillPayRequest);
-				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY, uri, json, context, false);
-				return mHttpPostAsyncTask;default:
+            case Constants.COMMAND_LANKABANGLA_BILL_PAY:
+                LankaBanglaCardBillPayRequest lankaBanglaCardBillPayRequest = gson.fromJson(json, LankaBanglaCardBillPayRequest.class);
+                if (otp != null)
+                    lankaBanglaCardBillPayRequest.setOtp(otp);
+                json = gson.toJson(lankaBanglaCardBillPayRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY, uri, json, context, false);
+                return mHttpPostAsyncTask;
+            default:
                 return null;
         }
     }

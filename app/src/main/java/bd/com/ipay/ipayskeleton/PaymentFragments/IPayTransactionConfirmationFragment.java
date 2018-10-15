@@ -252,8 +252,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 apiCommand = Constants.COMMAND_SEND_MONEY;
                 requestJson = gson.toJson(new SendMoneyRequest(ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber()), ContactEngine.formatMobileNumberBD(mobileNumber),
-                        amount.toString(), note));
-                url = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY_V3;
+                        amount.toString(), mPin,note));
+                url = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY;
                 mCustomProgressDialog.setMessage(getString(R.string.sending_money));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
@@ -370,7 +370,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             switch (transactionType) {
                 case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                     SendMoneyRequest sendMoneyRequest = new Gson().fromJson(requestJson, SendMoneyRequest.class);
-                    sendMoneyRequest.setPin(mPin);
                     requestJson = new Gson().toJson(sendMoneyRequest);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_SEND_MONEY,
                             Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, Constants.METHOD_POST, otpValidFor);
