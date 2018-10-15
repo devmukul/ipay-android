@@ -61,7 +61,7 @@
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
                     android:textColor="#666666"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_name"
                     tools:text="@string/send_money_confirmation_dummy_message" />
 
                 <TextView

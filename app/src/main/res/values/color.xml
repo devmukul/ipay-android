@@ -22,7 +22,7 @@
     <color name="colorSecondaryButtonDisabled">#F8F8F8</color>
     <color name="colorPrimaryButtonText">#FFFFFF</color>
     <color name="colorSecondaryButtonText">#80000000</color>
-
+    <color name="colorTopUpAmount">#00a293</color>
     <color name="colorDivider">#DDDDDD</color>
     <color name="colorDividerGapGray">#f3f3f3</color>
     <color name="colorBackground">#F1F2F3</color>

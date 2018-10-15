@@ -12,6 +12,12 @@ public class Constants {
 	public static final String ApplicationPackage = "bd.com.ipay.android";
 	public static final String ApplicationTitle = "iPay";
 
+	public static final int OPERATOR_CODE_GP = 1;
+	public static final int OPERATOR_CODE_ROBI = 3;
+	public static final int OPERATOR_CODE_AIRTEL = 4;
+	public static final int OPERATOR_CODE_BANGLALINK = 5;
+	public static final int OPERATOR_CODE_TELETALK = 6;
+
 	public static final String ERROR = "ERROR";
 	public static final String USER_AGENT = "User-Agent";
 	public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
@@ -197,6 +203,8 @@ public class Constants {
 	public static final String VISA = "VISA";
 	public static final String MASTERCARD = "MASTERCARD";
 	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+    public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
+	public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
 	public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
 	public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
 	public static final String LANKABANGLA = "LANKABANGLA";
