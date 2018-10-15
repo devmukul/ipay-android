@@ -77,8 +77,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
             name = getArguments().getString(Constants.NAME);
             mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
-            profilePicture = getArguments().getString(Constants.PHOTO_URI);operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
-                operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
+            profilePicture = getArguments().getString(Constants.PHOTO_URI);
+            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+            operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,10 +107,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
 		final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
-		final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
-		final ImageView cardImageView = view.findViewById(R.id.card_image_view);
+		final RoundedImageView profileImageView = view.findViewById(R.id.transaction_image_view);
+		final EditText amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
         mAmountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
-		final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
+        final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
 		mContinueButton = view.findViewById(R.id.continue_button);
 		final View balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
         mTopUpDefaultAmountLayout = (LinearLayout) view.findViewById(R.id.default_top_up_amount);
@@ -164,7 +165,6 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
 
 		if (!TextUtils.isEmpty(profilePicture)) {
 			profileImageView.setVisibility(View.VISIBLE);
-			cardImageView.setVisibility(View.GONE);
 			Glide.with(this)
 					.load(profilePicture)
 					.placeholder(R.drawable.ic_profile)

@@ -58,7 +58,7 @@
                         android:fontFamily="@font/open_sans_light"
                         android:lineSpacingExtra="3sp"
                         android:textColor="#212121"
-                        android:textSize="32sp"
+                        android:textSize="28sp"
                         tools:text="@string/withdraw_money_anytime" />
 
                     <TextView
@@ -71,7 +71,6 @@
                         android:layout_marginEnd="@dimen/value32"
                         android:layout_marginRight="@dimen/value32"
                         android:fontFamily="@font/open_sans"
-                        android:lineSpacingExtra="3sp"
                         android:textColor="#666666"
                         android:textSize="14sp"
                         tools:text="@string/withdraw_money_bank_option_message" />

@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/open_sans_light"
         android:lineSpacingExtra="3sp"
-        android:textColor="#212121"
-        android:textSize="28sp"
+        android:textColor="#545454"
+        android:textSize="24sp"
         tools:text="@string/fetching_bank_list" />
 
     <ProgressBar
