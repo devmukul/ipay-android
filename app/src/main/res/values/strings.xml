@@ -1316,7 +1316,7 @@
     <string name="top_up_step_one">Insert <b>mobile number</b> or <b>Search</b> mobile number from contact</string>
     <string name="top_up_step_two">Insert <b>Amount</b> you want to recharge</string>
     <string name="top_up_helper">To topup you or your beloved one\'s mobile,insert number or search from contact</string>
-    <string name="top_up_helper_text">You can top up to you and your loved ones from your ipay wallet </string>
+    <string name="top_up_helper_text">Top-Up any mobile phone from your iPay wallet. We support top-ups to all operators </string>
     <string name="top_up_to">MOBILE TOP-UP TO</string>
     <string name="total_outstanding">Total outstanding</string>
 </resources>
