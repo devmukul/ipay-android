@@ -89,7 +89,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
 		final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
-		final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
+		final RoundedImageView profileImageView = view.findViewById(R.id.transaction_image_view);
 		final EditText amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
 		final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
 		mContinueButton = view.findViewById(R.id.continue_button);
