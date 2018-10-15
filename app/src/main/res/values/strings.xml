@@ -297,7 +297,7 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
-    <string name="top_up">Top Up</string>
+    <string name="top_up">Top-Up</string>
     <string name="promotions">Promotions</string>
     <string name="ipay_here">iPay Here</string>
     <string name="requesting_money">Money request processing…</string>
@@ -1318,4 +1318,5 @@
     <string name="top_up_helper">To topup you or your beloved one\'s mobile,insert number or search from contact</string>
     <string name="top_up_helper_text">You can top up to you and your loved ones from your ipay wallet </string>
     <string name="top_up_to">MOBILE TOP-UP TO</string>
+    <string name="total_outstanding">Total outstanding</string>
 </resources>

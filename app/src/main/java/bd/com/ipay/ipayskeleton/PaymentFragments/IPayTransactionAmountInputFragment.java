@@ -210,7 +210,6 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {if (transactionType == ServiceIdConstants.TOP_UP) {
                     beforeString = s.toString();
                 }
-
 			}
 
             @Override

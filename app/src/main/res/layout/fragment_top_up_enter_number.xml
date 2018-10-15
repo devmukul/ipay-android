@@ -31,10 +31,10 @@
                 android:id="@+id/topup_helper_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
                 android:layout_below="@id/icon_topup"
                 android:layout_marginBottom="@dimen/value20"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:orientation="horizontal"
                 android:weightSum="5">
 
@@ -157,9 +157,9 @@
                 android:id="@+id/number_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/topup_helper_text_view"
                 android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_below="@id/topup_helper_text_view">
+                android:layout_marginRight="24dp">
 
                 <EditText
                     android:id="@+id/number_edit_text"
@@ -170,6 +170,7 @@
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:inputType="phone"
+                    android:maxLength="15"
                     android:text="+880-1"
                     android:textColor="#212121"
                     android:textSize="26sp" />
@@ -188,9 +189,9 @@
                 android:id="@+id/edit_text_background"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginLeft="24dp"
                 android:layout_below="@+id/number_layout"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:background="#19000000" />
 
             <TextView
@@ -212,11 +213,10 @@
                 android:id="@+id/type_selector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/my_number_topup_text_view"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_below="@id/my_number_topup_text_view"
                 android:layout_marginTop="20dp"
-                android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -225,8 +225,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Pre-paid Package"
+                    android:text="Prepaid"
+                    android:paddingLeft="@dimen/value8"
                     android:textColor="#666666" />
 
                 <RadioButton
@@ -234,8 +234,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Post-paid Package"
+                    android:layout_marginLeft="@dimen/value20"
+                    android:paddingLeft="@dimen/value8"
+                    android:text="Postpaid"
                     android:textColor="#666666" />
             </RadioGroup>
         </RelativeLayout>

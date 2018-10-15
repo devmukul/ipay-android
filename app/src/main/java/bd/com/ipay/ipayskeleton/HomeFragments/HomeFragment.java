@@ -284,7 +284,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         mTopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
+            @ValidateAccess({ServiceIdConstants.TOP_UP})
             public void onClick(View v) {
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
