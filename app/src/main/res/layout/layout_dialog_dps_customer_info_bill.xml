@@ -51,7 +51,7 @@
             android:layout_marginStart="8dip"
             android:layout_marginTop="@dimen/value16"
             android:contentDescription="@string/card"
-           android:visibility="invisible"
+            android:visibility="invisible"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@id/bill_title_text_view"
             app:layout_constraintTop_toTopOf="parent"
@@ -91,8 +91,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/account_title_text_view"
@@ -124,8 +124,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/account_number_text_view"
@@ -151,6 +151,7 @@
                 android:textStyle="bold"
                 tools:text="@string/dummy_amount" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/account_maturity_date_view_holder"
             android:layout_width="match_parent"
@@ -182,6 +183,7 @@
                 android:textStyle="bold"
                 tools:text="@string/dummy_amount" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/installment_amount_view_holder"
             android:layout_width="match_parent"
@@ -213,6 +215,7 @@
                 android:textStyle="bold"
                 tools:text="@string/dummy_amount" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/branch_id_view_holder"
             android:layout_width="match_parent"
@@ -256,9 +259,9 @@
         android:id="@+id/pay_bill_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/value16"
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/pay_this_bill"
         android:textColor="#00c0af"
-        android:layout_margin="@dimen/value16"
         android:textStyle="bold" />
 </LinearLayout>
