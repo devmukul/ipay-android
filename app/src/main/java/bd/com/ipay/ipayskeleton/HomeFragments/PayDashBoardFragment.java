@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import static bd.com.ipay.ipayskeleton.Utilities.Constants.DESCO;
 
 public class PayDashBoardFragment extends BaseFragment implements HttpResponseListener {
 
+    private static final int REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH = 100;
     private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
     GetAllTrendingBusinessResponse mTrendingBusinessResponse;
     List<TrendingBusinessList> mTrendingBusinessList;
@@ -299,54 +301,54 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
             }
         });
 
-		mLankaBanglaView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.LANKABANGLA) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.LANKABANGLA).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LANKABANGLA));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
-						intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_CARD);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-		mLankaBanglaDpsView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.LANKABANGLA) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.LANKABANGLA).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LANKABANGLA));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
-						intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_DPS);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
+        mLankaBanglaView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.LANKABANGLA) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.LANKABANGLA).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LANKABANGLA));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_CARD);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mLankaBanglaDpsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.LANKABANGLA) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.LANKABANGLA).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LANKABANGLA));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_DPS);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
 
         mWestZoneBillPayView.setOnClickListener(new View.OnClickListener() {
@@ -587,6 +589,15 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 super(view);
                 titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
                 trendingBusinessCAtegory = (RecyclerView) view.findViewById(R.id.trending_business_recycler_view_category);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH) {
+            if (resultCode == Activity.RESULT_OK) {
+                ((DashBoardFragment) getParentFragment()).getViewPager().setCurrentItem(0);
             }
         }
     }
