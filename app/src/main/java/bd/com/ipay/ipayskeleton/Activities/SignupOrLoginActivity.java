@@ -45,6 +45,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mPasswordBusiness;
     public static String mNameBusiness;
     public static String mBusinessName;
+    public static String mCompanyName;
     public static String mMobileNumberBusiness;
     public static String mEmailBusiness;
     public static String mBirthdayBusinessHolder;

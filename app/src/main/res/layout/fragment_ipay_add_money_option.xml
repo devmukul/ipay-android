@@ -32,8 +32,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:background="@android:color/white">
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -44,7 +43,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="?attr/actionBarSize">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                         android:lineSpacingExtra="3sp"
                         android:text="@string/choose_a_convenient_way"
                         android:textColor="#212121"
-                        android:textSize="32sp" />
+                        android:textSize="28sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -69,7 +69,6 @@
                         android:layout_marginEnd="@dimen/value32"
                         android:layout_marginRight="@dimen/value32"
                         android:fontFamily="@font/open_sans"
-                        android:lineSpacingExtra="3sp"
                         android:text="@string/add_money_message"
                         android:textColor="#666666"
                         android:textSize="14sp" />

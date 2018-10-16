@@ -152,8 +152,8 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		final String spannedString = getString(transactionStringId, amountValue);
 		int position = spannedString.indexOf(String.format("Tk. %s", amountValue));
 		final Spannable spannableAmount = new SpannableString(getString(transactionStringId, amountValue));
-		spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), position, position + amountValue.length() + 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), position, position + amountValue.length() + 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), position, position + amountValue.length() + 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return spannableAmount;
 	}
 }

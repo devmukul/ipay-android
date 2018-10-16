@@ -165,7 +165,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 					resultString = null;
 				if (resultString != null && resultString.length() > 0) {
 					if (resultString.matches("[0]+")) {
-						amountTextView.setText("");
+						amountDummyEditText.setText("");
 					}
 
 					if (resultString.charAt(0) != '.' || resultString.length() > 1)
