@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla;
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
