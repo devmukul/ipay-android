@@ -55,6 +55,15 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.USER_NAME, value).apply();
     }
 
+    public static void setCompanyName(String value) {
+        pref.edit().putString(SharedPrefConstants.COMPANY_NAME, value).apply();
+    }
+
+    public static String getCompanyName() {
+        return pref.getString(SharedPrefConstants.COMPANY_NAME, "");
+    }
+
+
     /**
      * @return iPay Account Number
      */
@@ -212,6 +221,7 @@ public class ProfileInfoCacheManager {
     public static void updateBusinessInfoCache(GetBusinessInformationResponse businessInfo) {
         if (businessInfo != null) {
             setUserName(businessInfo.getBusinessName());
+            setCompanyName(businessInfo.getCompanyName());
             setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
             setVerificationStatus(businessInfo.getVerificationStatus());
         } else {

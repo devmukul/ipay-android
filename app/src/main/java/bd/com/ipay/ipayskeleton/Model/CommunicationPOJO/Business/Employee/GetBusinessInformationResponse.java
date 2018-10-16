@@ -8,6 +8,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserPr
 public class GetBusinessInformationResponse {
 
     private String businessName;
+    private String companyName;
     private int businessType;
     private String mobileNumber;
     private String verificationStatus;
@@ -15,6 +16,10 @@ public class GetBusinessInformationResponse {
 
     public String getBusinessName() {
         return businessName;
+    }
+
+    public String getCompanyName() {
+        return companyName;
     }
 
     public String getVerificationStatus() {

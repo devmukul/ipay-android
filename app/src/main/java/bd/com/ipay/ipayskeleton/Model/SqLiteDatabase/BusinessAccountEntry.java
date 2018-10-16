@@ -11,6 +11,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAd
 public class BusinessAccountEntry {
     public String mobileNumber;
     public String businessName;
+    public String companyName;
     public String email;
     public int businessType;
     public String profilePictureUrl;
@@ -20,11 +21,12 @@ public class BusinessAccountEntry {
     private UserAddressList addressList;
     private List<Outlets> outlets;
 
-    public BusinessAccountEntry(String mobileNumber, String businessName, String email,
+    public BusinessAccountEntry(String mobileNumber, String businessName, String companyName, String email,
                                 int businessType, String profilePictureUrl, String profilePictureUrlMedium,
                                 String profilePictureUrlHigh, int businessId, UserAddressList addressList,List<Outlets> outlets) {
         this.mobileNumber = mobileNumber;
         this.businessName = businessName;
+        this.companyName = companyName;
         this.email = email;
         this.businessType = businessType;
         this.profilePictureUrl = profilePictureUrl;
@@ -49,6 +51,14 @@ public class BusinessAccountEntry {
 
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getEmail() {
