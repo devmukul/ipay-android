@@ -102,8 +102,8 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         banglalinkLayout.setOnClickListener(this);
         teletalkLayout.setOnClickListener(this);
         robiLayout.setOnClickListener(this);
-        RadioButton radioButton = (RadioButton) view.findViewById(R.id.prepaid);
-        radioButton.setChecked(true);
+        RadioButton prepaidRadioButton = (RadioButton) view.findViewById(R.id.prepaid);
+        prepaidRadioButton.setChecked(true);
         mOperatorType = 1;
         setUpButtonActions();
     }
