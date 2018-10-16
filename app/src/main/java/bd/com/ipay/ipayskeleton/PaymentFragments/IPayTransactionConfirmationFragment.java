@@ -161,7 +161,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 mNoteEditText.setHint(R.string.short_note_optional_hint);
                 transactionConfirmationButton.setText(R.string.top_up);
                 break;
-            caseIPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
 				pinLayoutHolder.setVisibility(View.GONE);
 				updateTransactionDescription(transactionDescriptionTextView,
 						getString(R.string.request_money_confirmation_message, amountValue), 19, 19 + amountValue.length());
@@ -292,7 +292,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST;
                 mCustomProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
                 break;
-            caseIPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
 			default:
 				return;
 		}
