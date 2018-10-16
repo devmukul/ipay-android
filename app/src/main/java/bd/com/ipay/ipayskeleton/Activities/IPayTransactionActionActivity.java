@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import bd.com.ipay.ipayskeleton.HomeFragments.PayDashBoardFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyOptionFragment;
@@ -16,6 +17,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessF
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentNewFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPayTransactionContactFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -41,6 +43,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
 	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
 	// 6001
 	public static final int TRANSACTION_TYPE_REQUEST_MONEY = ServiceIdConstants.REQUEST_MONEY;
+	// 6002
+	public static final int TRANSACTION_TYPE_MAKE_PAYMENT = ServiceIdConstants.MAKE_PAYMENT;
 
 	private int transactionType;
 
@@ -67,6 +71,10 @@ public class IPayTransactionActionActivity extends BaseActivity {
 			case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
 				switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 0, true);
+				break;
+			case TRANSACTION_TYPE_MAKE_PAYMENT:
+				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+				switchToMakePaymentFragment(bundle);
 				break;
 			case TRANSACTION_TYPE_SEND_MONEY:
 			case TRANSACTION_TYPE_REQUEST_MONEY:
@@ -115,6 +123,10 @@ public class IPayTransactionActionActivity extends BaseActivity {
 
 	public void switchToTransactionSuccessFragment(@NonNull Bundle bundle) {
 		switchFragment(new IPayTransactionSuccessFragment(), bundle, 3, true);
+	}
+
+	private void switchToMakePaymentFragment(@NonNull Bundle bundle) {
+		switchFragment(new MakePaymentNewFragment(), bundle, 0, false);
 	}
 
 	public void switchFragment(@NonNull Fragment fragment, @NonNull Bundle bundle, int maxBackStackEntryCount, boolean shouldAnimate) {

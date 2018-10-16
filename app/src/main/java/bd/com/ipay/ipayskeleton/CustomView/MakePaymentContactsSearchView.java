@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
@@ -65,9 +66,13 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
     private String mQuery = "";
     private String mImageURL = "";
     private String mName = "";
+    private String mMobileNumber = "";
+    private Long mOutletId = null;
     private String mAddress = "";
     private String mThanaDistrict = "";
     private String mOutlet = "";
+
+    private CustomItemClickListener customItemClickListener;
 
 
     private View mPayByQCView;
@@ -115,7 +120,8 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                     mTransactionHistoryRecyclerView.setVisibility(VISIBLE);
                 }
                 else {
-                    mTransactionHistoryRecyclerView.setVisibility(GONE);
+                    if(mCustomAutoCompleteView.getQuery().toString().equals(""))
+                        mTransactionHistoryRecyclerView.setVisibility(GONE);
                 }
             }
         });
@@ -369,6 +375,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 final String businessThana = businessContact.getThanaString();
                 final String businessDistrict = businessContact.getDistrictString();
                 final String businessOutlet = businessContact.getOutletName();
+                final Long businessOutletId = businessContact.getOutletId();
 
                 if(businessContact.getTypeInList().equals("Outlet")){
                     if (businessOutlet != null && !businessOutlet.isEmpty())
@@ -393,7 +400,18 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        switchToMakePaymentActivity(pos);
+                        mName = businessName;
+                        mImageURL = profilePictureUrl;
+                        mAddress = businessAddress;
+                        mThanaDistrict = businessThana + ", " + businessDistrict;
+                        mOutlet = businessOutlet;
+                        mMobileNumber = mobileNumber;
+                        mOutletId = businessOutletId;
+                        customItemClickListener.onItemClick(mName, mobileNumber, mImageURL, mAddress, mOutletId);
+                        mCustomAutoCompleteView.clearFocus();
+                        Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
+
+//                        switchToMakePaymentActivity(pos);
 
 //                    setText(mobileNumber);
 //
@@ -457,6 +475,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
         }
 
         private void switchToMakePaymentActivity(int position) {
+
             Intent intent = new Intent(mContext, PaymentActivity.class);
             intent.putExtra(Constants.NAME, mFilteredOutlets.get(position).getBusinessName());
             intent.putExtra(Constants.ADDRESS, mFilteredOutlets.get(position).getAddressString());
@@ -474,6 +493,14 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
     public interface CustomFocusListener {
         void onFocusChange(View v, boolean hasFocus);
+    }
+
+    public void setCustomItemClickListener(CustomItemClickListener customItemClickListener) {
+        this.customItemClickListener = customItemClickListener;
+    }
+
+    public interface CustomItemClickListener {
+        void onItemClick (String name, String mobileNumber, String imageURL, String address, Long outletId) ;
     }
 
 

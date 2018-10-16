@@ -9,7 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/serach_view">
+        android:id="@+id/serach_view"
+        android:minHeight="@dimen/value48">
 
         <SearchView
             android:id="@+id/search_business"
@@ -24,17 +25,17 @@
             android:submitBackground="@color/colorTransparent"
             android:layout_below="@+id/title_view"
             android:focusable="false"
-            android:layout_toLeftOf="@+id/qr_scan"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+            android:layout_toLeftOf="@+id/qr_scan"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/qr_scan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/value48"
+            android:layout_height="@dimen/value48"
             android:src="@drawable/oq_for_make_payment"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_centerVertical="true"/>
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            android:layout_centerVertical="true"
+            android:background="@color/colorTransparent"/>
 
 
     </RelativeLayout>
@@ -54,8 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/value5"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
         android:layout_below="@+id/divider"
         android:visibility="gone">
 

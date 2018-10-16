@@ -258,9 +258,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 				PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
 					@Override
 					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), PaymentActivity.class);
-						intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
+						Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+						intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
 						startActivity(intent);
+//						Intent intent = new Intent(getActivity(), PaymentActivity.class);
+//						intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
+//						startActivity(intent);
 					}
 				});
 				makePaymentPinChecker.execute();

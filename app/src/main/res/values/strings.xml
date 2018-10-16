@@ -1245,6 +1245,7 @@
     <string name="send_money_step_two">Insert <b>amount</b> you want to send</string>
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
+    <string name="paying_money_to">YOU ARE PAYING MONEY TO</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
     <string name="add_money_bank_success_description">You have successfully requested add money from bank to your iPay wallet. It may take 3&#8211;5 business day to complete.\n See further details under \'transaction\'.</string>
     <string name="withdraw_money_success_description">You have successfully requested to withdraw money from your iPay wallet to your bank account. It will take 3&#8211;5 business days to complete the transaction/process.\n See further details under \'transaction\'.</string>

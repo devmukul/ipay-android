@@ -32,7 +32,9 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomDashBoardTitleView;
+import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
@@ -83,6 +85,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private PinChecker pinChecker;
     private RecyclerView mTrendingListRecyclerView;
     private TrendingListAdapter mTrendingListAdapter;
+	private MakePaymentContactsSearchView mMobileNumberEditText;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,6 +117,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mLankaBanglaView = v.findViewById(R.id.lankaBanglaView);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
+		mMobileNumberEditText = (MakePaymentContactsSearchView) v.findViewById(R.id.searchView);
 
         mTrendingListRecyclerView = v.findViewById(R.id.trending_business_recycler_view_parent);
         mTrendingListRecyclerView.setHasFixedSize(true);
@@ -434,6 +438,13 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 }
             }
         });
+
+//		mMobileNumberEditText.setCustomItemClickListener(new MakePaymentContactsSearchView.CustomItemClickListener() {
+//			@Override
+//			public void onItemClick(String name, String imageURL) {
+//				System.out.println(" Test Click "+name+" "+imageURL);
+//			}
+//		});
 
 		return v;
 	}

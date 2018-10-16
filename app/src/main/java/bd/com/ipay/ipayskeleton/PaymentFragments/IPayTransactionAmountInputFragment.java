@@ -46,6 +46,8 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
+import static android.view.View.GONE;
+
 public class IPayTransactionAmountInputFragment extends Fragment {
 
 	public MandatoryBusinessRules mMandatoryBusinessRules;
@@ -58,6 +60,9 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 	private String mobileNumber;
 	private String profilePicture;
 
+	private String mAddressString;
+	private Long mOutletId;
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,7 +70,8 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 			transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
 			name = getArguments().getString(Constants.NAME);
 			mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
-			profilePicture = getArguments().getString(Constants.PHOTO_URI);
+			mAddressString = getArguments().getString(Constants.ADDRESS);
+			mOutletId = getArguments().getLong(Constants.OUTLET_ID);
 		}
 		numberFormat.setMinimumFractionDigits(0);
 		numberFormat.setMaximumFractionDigits(2);
@@ -90,6 +96,7 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
 		final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
+		final TextView addressTextView = view.findViewById(R.id.address_text_view);
 		final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
 		final ImageView cardImageView = view.findViewById(R.id.card_image_view);
 		final EditText amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
@@ -115,6 +122,10 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 				transactionDescriptionTextView.setText(R.string.send_money_to);
 				balanceInfoLayout.setVisibility(View.VISIBLE);
 				break;
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+                transactionDescriptionTextView.setText(R.string.paying_money_to);
+                balanceInfoLayout.setVisibility(View.VISIBLE);
+                break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
 			default:
 				transactionDescriptionTextView.setText(R.string.empty_string);
@@ -123,6 +134,14 @@ public class IPayTransactionAmountInputFragment extends Fragment {
 		if (!TextUtils.isEmpty(name)) {
 			nameTextView.setText(name);
 		}
+
+		if (!TextUtils.isEmpty(name)) {
+			addressTextView.setVisibility(View.VISIBLE);
+            addressTextView.setText(mAddressString);
+		}else {
+			addressTextView.setVisibility(GONE);
+		}
+
 		if (!TextUtils.isEmpty(profilePicture)) {
 			profileImageView.setVisibility(View.VISIBLE);
 			cardImageView.setVisibility(View.GONE);
