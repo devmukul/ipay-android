@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.AccountName;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranchRequestBuilder;
@@ -73,6 +75,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private ArrayList<String> mDistrictNames;
     private ArrayList<BankBranch> mBranches;
     private ArrayList<String> mBranchNames;
+    private List<AccountName> accounNames = new ArrayList<>();
 
     private EditText mBankListSelection;
     private EditText mDistrictSelection;
@@ -82,6 +85,8 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private EditTextWithProgressBar mBankBranchEditTextProgressBar;
 
     private ResourceSelectorDialog<Bank> bankSelectorDialog;
+    private ResourceSelectorDialog<AccountName> accountNameDialog;
+
     private CustomSelectorDialog districtSelectorDialog;
     private CustomSelectorDialog bankBranchSelectorDialog;
 
@@ -99,6 +104,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private Button mChequebookCoverSelectorButton;
     private ChequebookCoverSelectorButtonClickListener chequebookCoverSelectorButtonClickListener;
     private TextView mChequebookCoverPageErrorTextView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -153,6 +159,11 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             mAccountNameEditText.setFocusable(true);
         } else {
             mAccountNameEditText.setFocusable(false);
+            if(!TextUtils.isEmpty(ProfileInfoCacheManager.getCompanyName()) && !ProfileInfoCacheManager.getCompanyName().trim().equalsIgnoreCase(ProfileInfoCacheManager.getUserName().trim())){
+                accounNames.add(new AccountName(ProfileInfoCacheManager.getUserName()));
+                accounNames.add(new AccountName(ProfileInfoCacheManager.getCompanyName()));
+                setBankAccountNameAdapter(accounNames);
+            }
         }
 
         addBank.setOnClickListener(new View.OnClickListener() {
@@ -233,6 +244,25 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             @Override
             public void onClick(View v) {
                 bankSelectorDialog.show();
+            }
+        });
+    }
+
+    private void setBankAccountNameAdapter(List<AccountName> accounyNameList) {
+
+        accountNameDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_account_name), accounyNameList);
+        accountNameDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int id, String name) {
+                mAccountNameEditText.setError(null);
+                mAccountNameEditText.setText(name);
+            }
+        });
+
+        mAccountNameEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accountNameDialog.show();
             }
         });
     }

@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.BusinessContact;
 
 public class BusinessContact {
     private String businessName;
+    private String companyName;
     private String businessType;
     private String mobileNumber;
     private String profilePictureUrl;
@@ -16,6 +17,14 @@ public class BusinessContact {
 
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getBusinessType() {

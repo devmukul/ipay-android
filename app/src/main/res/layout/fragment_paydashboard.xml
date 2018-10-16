@@ -4,8 +4,7 @@
     android:id="@+id/trending_business_list_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:padding="@dimen/value8">
+    android:background="@color/colorBackground">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -14,7 +13,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusableInTouchMode="true"
+            android:padding="@dimen/activity_horizontal_margin_card">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -176,8 +177,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                android:paddingRight="@dimen/value5"
                 android:paddingTop="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/value5"
                 android:singleLine="true"
                 android:text="@string/bill_pay"
                 android:textAllCaps="true"
@@ -191,8 +192,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value8"
                     android:layout_marginTop="@dimen/value8"
+                    android:layout_marginBottom="@dimen/value8"
                     android:orientation="horizontal"
                     android:weightSum="4">
 
@@ -549,8 +550,8 @@
                 android:id="@+id/trending_business_recycler_view_parent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/value8"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                android:focusableInTouchMode="false"/>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

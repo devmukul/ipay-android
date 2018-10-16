@@ -39,7 +39,7 @@
                     style="@style/CustomEditTextLogInSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_business_name"
+                    android:hint="@string/prompt_doing_business_as"
                     android:inputType="textCapWords"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -47,6 +47,26 @@
 
                     <requestFocus />
                 </EditText>
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/DividerOnly" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/CustomTextInputLayout">
+
+                <EditText
+                    android:id="@+id/company_name"
+                    style="@style/CustomEditTextLogInSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_company_name"
+                    android:inputType="textCapWords"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_small_medium"/>
             </android.support.design.widget.TextInputLayout>
 
             <View style="@style/DividerOnly" />
