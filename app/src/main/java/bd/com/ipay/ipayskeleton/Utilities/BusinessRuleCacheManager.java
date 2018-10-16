@@ -52,47 +52,50 @@ public class BusinessRuleCacheManager {
         return gson.fromJson(json, MandatoryBusinessRules.class);
     }
 
-    public static void fetchBusinessRule(final Context context, final int serviceId) {
-        final String mUri = new GetBusinessRuleRequestBuilder(serviceId).getGeneratedUri();
-        final String apiCommand;
-        if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT ||
+	public static void fetchBusinessRule(final Context context, final int serviceId) {
+		final String mUri = new GetBusinessRuleRequestBuilder(serviceId).getGeneratedUri();
+		final String apiCommand;
+		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT ||
                 serviceId == ServiceIdConstants.MAKE_PAYMENT) {
-            apiCommand = Constants.COMMAND_GET_BUSINESS_RULE_V2;
-        } else {
-            apiCommand = Constants.COMMAND_GET_BUSINESS_RULE;
-        }
-        final HttpRequestGetAsyncTask mGetBusinessRuleTask = new HttpRequestGetAsyncTask(apiCommand,
-                mUri, context, new HttpResponseListener() {
-            @Override
-            public void httpResponseReceiver(GenericHttpResponse result) {
-                if (!HttpErrorHandler.isErrorFound(result, context, null)) {
-                    try {
-                        final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(getTag(serviceId));
-                        switch (apiCommand) {
-                            case Constants.COMMAND_GET_BUSINESS_RULE_V2:
-                                updateBusinessRule(mMandatoryBusinessRules, new Gson().fromJson(result.getJsonString(), BusinessRuleV2.class).getRules());
-                                break;
-                            case Constants.COMMAND_GET_BUSINESS_RULE:
-                                final BusinessRule[] businessRuleArray = new Gson().fromJson(result.getJsonString(), BusinessRule[].class);
-                                if (businessRuleArray != null) {
-                                    for (BusinessRule rule : businessRuleArray) {
-                                        switch (serviceId) {
-                                            case ServiceIdConstants.SEND_MONEY:
-                                                updateSendMoneyBusinessRules(mMandatoryBusinessRules, rule);
-                                                break;
-                                            case ServiceIdConstants.REQUEST_MONEY:
-                                                updateRequestMoneyBusinessRule(mMandatoryBusinessRules, rule);
-                                                break;
-                                            case ServiceIdConstants.ADD_MONEY_BY_BANK:
-                                                updateAddMoneyByBankBusinessRule(mMandatoryBusinessRules, rule);
-                                                break;
-                                            case ServiceIdConstants.WITHDRAW_MONEY:
-                                                updateWithdrawMoneyBusinessRule(mMandatoryBusinessRules, rule);
-                                                break;
-                                            case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-                                                updateAddMoneyByCardBusinessRule(mMandatoryBusinessRules, rule);
-                                                break;
-                                        }
+			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE_V2;
+		} else {
+			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE;
+		}
+		final HttpRequestGetAsyncTask mGetBusinessRuleTask = new HttpRequestGetAsyncTask(apiCommand,
+				mUri, context, new HttpResponseListener() {
+			@Override
+			public void httpResponseReceiver(GenericHttpResponse result) {
+				if (!HttpErrorHandler.isErrorFound(result, context, null)) {
+					try {
+
+						final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules(getTag(serviceId));
+						switch (apiCommand) {
+							case Constants.COMMAND_GET_BUSINESS_RULE_V2:
+							updateBusinessRule(mMandatoryBusinessRules, new Gson().fromJson(result.getJsonString(), BusinessRuleV2.class).getRules());
+						break;
+							case Constants.COMMAND_GET_BUSINESS_RULE:
+							final BusinessRule[] businessRuleArray = new Gson().fromJson(result.getJsonString(), BusinessRule[].class);
+							if ( businessRuleArray!= null) {
+									for (BusinessRule rule : businessRuleArray) {
+										switch (serviceId) {
+											case ServiceIdConstants.SEND_MONEY:
+												updateSendMoneyBusinessRules(mMandatoryBusinessRules, rule);
+												break;
+											case ServiceIdConstants.REQUEST_MONEY:
+												updateRequestMoneyBusinessRule(mMandatoryBusinessRules, rule);
+												break;
+											case ServiceIdConstants.ADD_MONEY_BY_BANK:
+												updateAddMoneyByBankBusinessRule(mMandatoryBusinessRules, rule);
+												break;
+                                            case ServiceIdConstants.TOP_UP:
+                                                updateTopupBusinessRule(mMandatoryBusinessRules,rule);
+											case ServiceIdConstants.WITHDRAW_MONEY:
+												updateWithdrawMoneyBusinessRule(mMandatoryBusinessRules, rule);
+												break;
+											case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+												updateAddMoneyByCardBusinessRule(mMandatoryBusinessRules, rule);
+												break;
+										}
 
                                     }
                                 }
@@ -153,6 +156,22 @@ public class BusinessRuleCacheManager {
                 break;
         }
     }
+	private static void updateTopupBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule rule) {
+        switch (rule.getRuleID()) {
+			case BusinessRuleConstants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT:
+				mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				break;
+			case BusinessRuleConstants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT:
+				mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				break;
+			case BusinessRuleConstants.SERVICE_RULE_TOP_UP_VERIFICATION_REQUIRED:
+				mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+				break;
+			case BusinessRuleConstants.SERVICE_RULE_TOP_UP_PIN_REQUIRED:
+				mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+				break;
+		}
+	}
 
     private static void updateSendMoneyBusinessRules(MandatoryBusinessRules mandatoryBusinessRules, BusinessRule rule) {
         switch (rule.getRuleID()) {
@@ -227,13 +246,15 @@ public class BusinessRuleCacheManager {
             case ServiceIdConstants.SEND_MONEY:
                 return Constants.SEND_MONEY;
             case ServiceIdConstants.ADD_MONEY_BY_BANK:
-                return Constants.ADD_MONEY_BY_BANK;
-            case ServiceIdConstants.WITHDRAW_MONEY:
-                return Constants.WITHDRAW_MONEY;
-            case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-                return Constants.ADD_MONEY_BY_CARD;
-            case ServiceIdConstants.REQUEST_MONEY:
+				return Constants.ADD_MONEY_BY_BANK;
+			case ServiceIdConstants.WITHDRAW_MONEY:
+				return Constants.WITHDRAW_MONEY;
+			case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+				return Constants.ADD_MONEY_BY_CARD;
+			case ServiceIdConstants.REQUEST_MONEY:
                 return Constants.REQUEST_MONEY;
+            case ServiceIdConstants.TOP_UP:
+                return Constants.TOP_UP;
             case ServiceIdConstants.UTILITY_BILL_PAYMENT:
                 return Constants.UTILITY_BILL_PAYMENT;
             default:
