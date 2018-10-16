@@ -19,10 +19,10 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -52,13 +52,13 @@ import static bd.com.ipay.ipayskeleton.Utilities.Constants.DESCO;
 
 public class PayDashBoardFragment extends BaseFragment implements HttpResponseListener {
 
-	private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
-	GetAllTrendingBusinessResponse mTrendingBusinessResponse;
-	List<TrendingBusinessList> mTrendingBusinessList;
+    private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
+    GetAllTrendingBusinessResponse mTrendingBusinessResponse;
+    List<TrendingBusinessList> mTrendingBusinessList;
 
-	private HttpRequestGetAsyncTask mGetUtilityProviderListTask;
-	private GetProviderResponse mUtilityProviderResponse;
-	private List<ProviderCategory> mUtilityProviderTypeList;
+    private HttpRequestGetAsyncTask mGetUtilityProviderListTask;
+    private GetProviderResponse mUtilityProviderResponse;
+    private List<ProviderCategory> mUtilityProviderTypeList;
 
     private View mTopUpView;
     private View mPayByQCView;
@@ -81,16 +81,16 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private RecyclerView mTrendingListRecyclerView;
     private TrendingListAdapter mTrendingListAdapter;
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mTracker = Utilities.getTracker(getActivity());
-	}
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -123,180 +123,181 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         getServiceProviderList();
 
 
-		if (ProfileInfoCacheManager.isBusinessAccount())
-			mRequestPaymentView.setVisibility(View.VISIBLE);
+        if (ProfileInfoCacheManager.isBusinessAccount())
+            mRequestPaymentView.setVisibility(View.VISIBLE);
 
-		mTopUpView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), TopUpActivity.class);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-
-
-		mPayByQCView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent;
-						intent = new Intent(getActivity(), QRCodePaymentActivity.class);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-
-		mMakePaymentView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), PaymentActivity.class);
-						intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-
-			}
-		});
-
-		mRequestPaymentView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent;
-						intent = new Intent(getActivity(), RequestPaymentActivity.class);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-
-		mBillPayView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.BLION) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.BLION).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(BLION));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, Constants.BANGLALION);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-		mLink3BillPayView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.LINK3) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.LINK3).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LINK3));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, Constants.LINK3);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-		mBrilliantRechargeView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.BRILLIANT) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.BRILLIANT).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.BRILLIANT));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, Constants.BRILLIANT);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
+        mTopUpView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
 
-		mAmberITBillPayView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.AMBERIT) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.AMBERIT).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.AMBERIT));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, Constants.AMBERIT);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
+        mPayByQCView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mMakePaymentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                        intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+
+            }
+        });
+
+        mRequestPaymentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        intent = new Intent(getActivity(), RequestPaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.BLION) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.BLION).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(BLION));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.BANGLALION);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mLink3BillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.LINK3) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.LINK3).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LINK3));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.LINK3);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mBrilliantRechargeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.BRILLIANT) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.BRILLIANT).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.BRILLIANT));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.BRILLIANT);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+
+        mAmberITBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.AMBERIT) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.AMBERIT).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.AMBERIT));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.AMBERIT);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
 		mLankaBanglaView.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -348,103 +349,103 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 		});
 
 
-		mWestZoneBillPayView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.WESTZONE) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.WESTZONE).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.WESTZONE));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, Constants.WESTZONE);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-		mDescoBillPayView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(DESCO) != null) {
-					if (!mProviderAvailabilityMap.get(DESCO).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DESCO)
-						);
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, DESCO);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-		mDozeBillPayView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.CARNIVAL) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.CARNIVAL).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.CARNIVAL));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, Constants.CARNIVAL);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
-		mDpdcBillPayView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
-					DialogUtils.showServiceNotAllowedDialog(getContext());
-					return;
-				} else if (mProviderAvailabilityMap.get(Constants.DPDC) != null) {
-					if (!mProviderAvailabilityMap.get(Constants.DPDC).
-							equals(getString(R.string.active))) {
-						DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DPDC));
-						return;
-					}
-				}
-				pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-						intent.putExtra(Constants.SERVICE, Constants.DPDC);
-						startActivity(intent);
-					}
-				});
-				pinChecker.execute();
-			}
-		});
+        mWestZoneBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.WESTZONE) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.WESTZONE).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.WESTZONE));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.WESTZONE);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mDescoBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(DESCO) != null) {
+                    if (!mProviderAvailabilityMap.get(DESCO).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DESCO)
+                        );
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, DESCO);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mDozeBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.CARNIVAL) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.CARNIVAL).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.CARNIVAL));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.CARNIVAL);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mDpdcBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.DPDC) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.DPDC).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.DPDC));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
+                        intent.putExtra(Constants.SERVICE, Constants.DPDC);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
         trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -457,85 +458,85 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
             }
         });
 
-		return v;
-	}
+        return v;
+    }
 
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
-	private void getTrendingBusinessList() {
-		if (mGetTrendingBusinessListTask != null) {
-			return;
-		}
+    private void getTrendingBusinessList() {
+        if (mGetTrendingBusinessListTask != null) {
+            return;
+        }
 
-		mGetTrendingBusinessListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
-				Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity(), false);
-		mGetTrendingBusinessListTask.mHttpResponseListener = this;
-		mGetTrendingBusinessListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+        mGetTrendingBusinessListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity(), false);
+        mGetTrendingBusinessListTask.mHttpResponseListener = this;
+        mGetTrendingBusinessListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-	private void getServiceProviderList() {
-		if (mGetUtilityProviderListTask != null) {
-			return;
-		}
+    private void getServiceProviderList() {
+        if (mGetUtilityProviderListTask != null) {
+            return;
+        }
 
-		mGetUtilityProviderListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST,
-				Constants.BASE_URL_UTILITY + Constants.URL_GET_PROVIDER, getActivity(), false);
-		mGetUtilityProviderListTask.mHttpResponseListener = this;
-		mGetUtilityProviderListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+        mGetUtilityProviderListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST,
+                Constants.BASE_URL_UTILITY + Constants.URL_GET_PROVIDER, getActivity(), false);
+        mGetUtilityProviderListTask.mHttpResponseListener = this;
+        mGetUtilityProviderListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-	@Override
-	public void httpResponseReceiver(GenericHttpResponse result) {
-		if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
-			mGetTrendingBusinessListTask = null;
-			mGetUtilityProviderListTask = null;
-			trendingBusinessListRefreshLayout.setRefreshing(false);
-			return;
-		}
-		try {
-			if (result.getApiCommand().equals(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST)) {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-					Gson gson = new Gson();
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
+            mGetTrendingBusinessListTask = null;
+            mGetUtilityProviderListTask = null;
+            trendingBusinessListRefreshLayout.setRefreshing(false);
+            return;
+        }
+        try {
+            if (result.getApiCommand().equals(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    Gson gson = new Gson();
 
                     mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), GetAllTrendingBusinessResponse.class);
                     mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                     mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
                     mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
 
-				} else {
-					if (getActivity() != null) {
-						Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
-					}
-				}
-				mGetTrendingBusinessListTask = null;
-				trendingBusinessListRefreshLayout.setRefreshing(false);
-			} else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST)) {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-					mUtilityProviderResponse = new Gson().fromJson(result.getJsonString(), GetProviderResponse.class);
-					mUtilityProviderTypeList = mUtilityProviderResponse.getProviderCategories();
-					if (mUtilityProviderTypeList != null && mUtilityProviderTypeList.size() != 0) {
-						for (int i = 0; i < mUtilityProviderTypeList.size(); i++) {
-							for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
-								Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
-								if (!provider.isActive()) {
-									if (provider.getStatusMessage() != null) {
-										mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), provider.getStatusMessage());
-									} else {
-										mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
-									}
-								} else {
-									mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
-								}
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+                } else {
+                    if (getActivity() != null) {
+                        Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
+                    }
+                }
+                mGetTrendingBusinessListTask = null;
+                trendingBusinessListRefreshLayout.setRefreshing(false);
+            } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mUtilityProviderResponse = new Gson().fromJson(result.getJsonString(), GetProviderResponse.class);
+                    mUtilityProviderTypeList = mUtilityProviderResponse.getProviderCategories();
+                    if (mUtilityProviderTypeList != null && mUtilityProviderTypeList.size() != 0) {
+                        for (int i = 0; i < mUtilityProviderTypeList.size(); i++) {
+                            for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
+                                Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
+                                if (!provider.isActive()) {
+                                    if (provider.getStatusMessage() != null) {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), provider.getStatusMessage());
+                                    } else {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
+                                    }
+                                } else {
+                                    mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
 
             if (getActivity() != null) {
                 Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
@@ -544,7 +545,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     }
 
 
-    public class TrendingListAdapter extends     RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
+    public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
 
         //private List<Movie> moviesList;
 
@@ -585,7 +586,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
             public MyViewHolder(View view) {
                 super(view);
                 titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
-                trendingBusinessCAtegory = (RecyclerView)view.findViewById(R.id.trending_business_recycler_view_category);
+                trendingBusinessCAtegory = (RecyclerView) view.findViewById(R.id.trending_business_recycler_view_category);
             }
         }
     }

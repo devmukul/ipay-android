@@ -17,9 +17,9 @@ public class GiftFromIPayMetaData extends PromotionMetaData {
 	@SerializedName("redeemConsumed")
 	private int redeemConsumed;
 	@SerializedName("transactionRequiredForNextRedeem")
-	private int transactionRequiredForNextRedeem;
+	private double transactionRequiredForNextRedeem;
 	@SerializedName("minimumTransactionAmount")
-	private int minimumTransactionAmount;
+	private double minimumTransactionAmount;
 	@SerializedName("businessAccountId")
 	private int businessAccountId;
 	@SerializedName("redeemPath")
@@ -29,7 +29,8 @@ public class GiftFromIPayMetaData extends PromotionMetaData {
 		super();
 	}
 
-	public GiftFromIPayMetaData(int transactionCount, int transactionCountPerRedeem, int redeemAvailable, int redeemConsumed, int transactionRequiredForNextRedeem, int minimumTransactionAmount, int businessAccountId, String redeemPath) {
+	public GiftFromIPayMetaData(int transactionCount, int transactionCountPerRedeem, int redeemAvailable, int redeemConsumed, double transactionRequiredForNextRedeem, double minimumTransactionAmount, int businessAccountId, String redeemPath) {
+
 		this.transactionCount = transactionCount;
 		this.transactionCountPerRedeem = transactionCountPerRedeem;
 		this.redeemAvailable = redeemAvailable;
@@ -40,7 +41,7 @@ public class GiftFromIPayMetaData extends PromotionMetaData {
 		this.redeemPath = redeemPath;
 	}
 
-	public GiftFromIPayMetaData(Date startDate, Date endDate, int transactionCount, int transactionCountPerRedeem, int redeemAvailable, int redeemConsumed, int transactionRequiredForNextRedeem, int minimumTransactionAmount, int businessAccountId, String redeemPath) {
+	public GiftFromIPayMetaData(Date startDate, Date endDate, int transactionCount, int transactionCountPerRedeem, int redeemAvailable, int redeemConsumed, double transactionRequiredForNextRedeem, double minimumTransactionAmount, int businessAccountId, String redeemPath) {
 		super(startDate, endDate);
 		this.transactionCount = transactionCount;
 		this.transactionCountPerRedeem = transactionCountPerRedeem;
@@ -85,19 +86,19 @@ public class GiftFromIPayMetaData extends PromotionMetaData {
 		this.redeemConsumed = redeemConsumed;
 	}
 
-	public int getTransactionRequiredForNextRedeem() {
+	public double getTransactionRequiredForNextRedeem() {
 		return transactionRequiredForNextRedeem;
 	}
 
-	public void setTransactionRequiredForNextRedeem(int transactionRequiredForNextRedeem) {
+	public void setTransactionRequiredForNextRedeem(double transactionRequiredForNextRedeem) {
 		this.transactionRequiredForNextRedeem = transactionRequiredForNextRedeem;
 	}
 
-	public int getMinimumTransactionAmount() {
+	public double getMinimumTransactionAmount() {
 		return minimumTransactionAmount;
 	}
 
-	public void setMinimumTransactionAmount(int minimumTransactionAmount) {
+	public void setMinimumTransactionAmount(double minimumTransactionAmount) {
 		this.minimumTransactionAmount = minimumTransactionAmount;
 	}
 
@@ -122,6 +123,7 @@ public class GiftFromIPayMetaData extends PromotionMetaData {
 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
 
 		GiftFromIPayMetaData that = (GiftFromIPayMetaData) o;
 
@@ -129,20 +131,26 @@ public class GiftFromIPayMetaData extends PromotionMetaData {
 		if (transactionCountPerRedeem != that.transactionCountPerRedeem) return false;
 		if (redeemAvailable != that.redeemAvailable) return false;
 		if (redeemConsumed != that.redeemConsumed) return false;
-		if (transactionRequiredForNextRedeem != that.transactionRequiredForNextRedeem) return false;
-		if (minimumTransactionAmount != that.minimumTransactionAmount) return false;
+		if (Double.compare(that.transactionRequiredForNextRedeem, transactionRequiredForNextRedeem) != 0)
+			return false;
+		if (Double.compare(that.minimumTransactionAmount, minimumTransactionAmount) != 0)
+			return false;
 		if (businessAccountId != that.businessAccountId) return false;
 		return redeemPath != null ? redeemPath.equals(that.redeemPath) : that.redeemPath == null;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = transactionCount;
+		int result = super.hashCode();
+		long temp;
+		result = 31 * result + transactionCount;
 		result = 31 * result + transactionCountPerRedeem;
 		result = 31 * result + redeemAvailable;
 		result = 31 * result + redeemConsumed;
-		result = 31 * result + transactionRequiredForNextRedeem;
-		result = 31 * result + minimumTransactionAmount;
+		temp = Double.doubleToLongBits(transactionRequiredForNextRedeem);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(minimumTransactionAmount);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		result = 31 * result + businessAccountId;
 		result = 31 * result + (redeemPath != null ? redeemPath.hashCode() : 0);
 		return result;

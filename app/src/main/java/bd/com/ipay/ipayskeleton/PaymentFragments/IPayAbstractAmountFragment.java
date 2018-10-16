@@ -160,16 +160,16 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 double result = 0;
 
-                String addSuffix = "";
-                final String resultString;
-                if (charSequence != null)
-                    resultString = charSequence.toString();
-                else
-                    resultString = null;
-                if (resultString != null && resultString.length() > 0) {
-                    if (resultString.matches("[0]+")) {
-                        amountTextView.setText("");
-                    }
+				String addSuffix = "";
+				final String resultString;
+				if (charSequence != null)
+					resultString = charSequence.toString();
+				else
+					resultString = null;
+				if (resultString != null && resultString.length() > 0) {
+					if (resultString.matches("[0]+")) {
+						amountDummyEditText.setText("");
+					}
 
                     if (resultString.charAt(0) != '.' || resultString.length() > 1)
                         result = Double.valueOf(resultString);
