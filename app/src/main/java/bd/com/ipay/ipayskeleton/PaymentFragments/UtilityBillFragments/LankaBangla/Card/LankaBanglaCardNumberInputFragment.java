@@ -95,7 +95,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 
 		if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
 			mGetLankaBanglaCardUserInfoAsyncTask = null;
-			if (result!=null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND){
+			if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
 				LankaBanglaCustomerInfoResponse lankaBanglaCustomerInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaCustomerInfoResponse.class);
 				if (!TextUtils.isEmpty(lankaBanglaCustomerInfoResponse.getMessage())) {
 					Toaster.makeText(getActivity(), lankaBanglaCustomerInfoResponse.getMessage(), Toast.LENGTH_SHORT);
@@ -162,7 +162,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 				bundle.putInt(LankaBanglaAmountInputFragment.TOTAL_OUTSTANDING_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getCreditBalance()));
 				bundle.putInt(LankaBanglaAmountInputFragment.MINIMUM_PAY_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getMinimumPay()));
 				bundle.putString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, lankaBanglaCustomerInfoResponse.getCardNumber());
-
+				Utilities.hideKeyboard(getActivity());
 				final LankaBanglaAmountInputFragment lankaBanglaAmountInputFragment = new LankaBanglaAmountInputFragment();
 
 				if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
