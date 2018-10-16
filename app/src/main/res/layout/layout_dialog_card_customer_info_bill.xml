@@ -161,7 +161,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:padding="16dip"
+        android:layout_margin="@dimen/value16"
         android:text="@string/pay_this_bill"
         android:textColor="#00c0af"
         android:textStyle="bold" />
