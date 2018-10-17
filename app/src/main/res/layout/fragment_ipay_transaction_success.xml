@@ -21,8 +21,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:contentDescription="@string/empty_string"
                 android:src="@drawable/success_icon" />
 
@@ -45,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/value32"
                 android:layout_marginRight="@dimen/value32"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:fontFamily="@font/open_sans_semibold"
                 android:gravity="center"
                 android:text="@string/dummy_name"
@@ -55,44 +54,46 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value16"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/sender_profile_picture_image_view"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_gravity="center"
                     android:background="@drawable/circular_background"
                     android:contentDescription="@string/card"
                     android:scaleType="fitCenter"
-                    app:riv_border_color="#e4e4e4"
-                    app:riv_border_width="1dip"
+                    app:riv_border_color="#d9d9d9"
+                    app:riv_border_width="0.5dip"
                     app:riv_oval="true"
                     tools:src="@tools:sample/avatars" />
 
                 <ImageView
                     android:id="@+id/arrow_icon_image_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dip"
+                    android:layout_height="24dip"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/value12"
                     android:layout_marginLeft="@dimen/value12"
                     android:layout_marginEnd="@dimen/value12"
                     android:layout_marginRight="@dimen/value12"
                     android:contentDescription="@string/empty_string"
+                    android:scaleType="center"
                     android:src="@drawable/success_arrow" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/receiver_profile_picture_image_view"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_gravity="center"
                     android:background="@drawable/circular_background"
                     android:contentDescription="@string/card"
                     android:scaleType="fitCenter"
-                    app:riv_border_color="#e4e4e4"
-                    app:riv_border_width="1dip"
+                    app:riv_border_color="#d9d9d9"
+                    app:riv_border_width="0.5dip"
                     app:riv_oval="true"
                     tools:src="@tools:sample/avatars" />
             </LinearLayout>
@@ -105,7 +106,7 @@
                 android:fontFamily="@font/open_sans"
                 android:gravity="center"
                 android:textColor="#333333"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="12sp"
                 tools:text="@string/request_money_success_description" />
 
             <Button
@@ -114,7 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/value24"
-                android:text="@string/go_back_to_wallet" />
+                android:text="@string/go_back_to_wallet"
+                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 

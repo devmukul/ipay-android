@@ -31,6 +31,8 @@ public class TransactionHelperFragment extends Fragment {
                 return inflater.inflate(R.layout.fragment_send_money_helper, container, false);
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 return inflater.inflate(R.layout.fragment_request_money_helper, container, false);
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                return inflater.inflate(R.layout.fragment_top_up_helper, container, false);
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
                 return null;

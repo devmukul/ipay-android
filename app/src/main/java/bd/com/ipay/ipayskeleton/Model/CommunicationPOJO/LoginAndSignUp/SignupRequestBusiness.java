@@ -12,6 +12,7 @@ public class SignupRequestBusiness {
     private final String password;
     private final String otp;
     private final String businessName;
+    private final String companyName;
     private final long businessType;
     private final String personalEmail;
     private final String personalMobileNumber;
@@ -27,6 +28,7 @@ public class SignupRequestBusiness {
         password = builder.password;
         otp = builder.otp;
         businessName = builder.businessName;
+        companyName = builder.companyName;
         businessType = builder.businessType;
         personalEmail = builder.personalEmail;
         personalMobileNumber = builder.personalMobileNumber;
@@ -43,6 +45,7 @@ public class SignupRequestBusiness {
         private String password;
         private String otp;
         private String businessName;
+        private String companyName;
         private long businessType;
         private String personalEmail;
         private String personalMobileNumber;
@@ -90,6 +93,11 @@ public class SignupRequestBusiness {
 
         public Builder businessName(String val) {
             businessName = val;
+            return this;
+        }
+
+        public Builder companyName(String val) {
+            companyName = val;
             return this;
         }
 

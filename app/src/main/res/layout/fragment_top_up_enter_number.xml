@@ -1,0 +1,256 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/colorWhite"
+    android:clickable="true"
+    android:gravity="center">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/continue_button"
+        android:fillViewport="true">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="@dimen/value30">
+
+            <ImageView
+                android:id="@+id/icon_topup"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/topup_icon_for_topup_service" />
+
+            <LinearLayout
+                android:id="@+id/topup_helper_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/icon_topup"
+                android:layout_marginBottom="@dimen/value20"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <LinearLayout
+                    android:id="@+id/gp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.95"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/gp_image"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/gp_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="GP" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/robi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.95"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/robi_image"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/robi_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Robi" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/banglalink"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/banglalink_image"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/bl_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Banglalink" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/airtel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.95"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/airtel_image"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/airtel_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Airtel" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/teletalk"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.95"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/teletalk_image"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/teletalk_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Teletalk" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/number_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topup_helper_text_view"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp">
+
+                <EditText
+                    android:id="@+id/number_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxLength="15"
+                    android:text="+880-1"
+                    android:textColor="#212121"
+                    android:textSize="26sp" />
+
+                <ImageView
+                    android:id="@+id/contact_image_view"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/value5"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_contact_picker" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/edit_text_background"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/number_layout"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:background="#19000000" />
+
+            <TextView
+                android:id="@+id/my_number_topup_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edit_text_background"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/value16"
+                android:fontFamily="sans-serif"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="6sp"
+                android:text="TOP-UP MY NUMBER"
+                android:textColor="#00b2a2"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <RadioGroup
+                android:id="@+id/type_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/my_number_topup_text_view"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RadioButton
+                    android:id="@+id/prepaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Prepaid"
+                    android:checked="true"
+                    android:paddingLeft="@dimen/value8"
+                    android:textColor="#666666" />
+
+                <RadioButton
+                    android:id="@+id/post_paid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:layout_marginLeft="@dimen/value20"
+                    android:paddingLeft="@dimen/value8"
+                    android:text="Postpaid"
+                    android:textColor="#666666" />
+            </RadioGroup>
+        </RelativeLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/value10"
+        android:background="#00c0af"
+        android:text="Continue"
+        android:textColor="@color/colorWhite" />
+</RelativeLayout>

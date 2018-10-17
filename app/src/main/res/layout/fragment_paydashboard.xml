@@ -4,8 +4,7 @@
     android:id="@+id/trending_business_list_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:padding="@dimen/value8">
+    android:background="@color/colorBackground">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -14,15 +13,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusableInTouchMode="true"
+            android:padding="@dimen/activity_horizontal_margin_card">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                android:paddingTop="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/value5"
+                android:paddingTop="@dimen/activity_horizontal_margin"
                 android:singleLine="true"
                 android:text="@string/top"
                 android:textAllCaps="true"
@@ -337,7 +338,7 @@
                     android:weightSum="4">
 
                     <android.support.constraint.ConstraintLayout
-                        android:id="@+id/lankaBanglaView"
+                        android:id="@+id/lankaBanglaViewCard"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -345,7 +346,7 @@
                         android:padding="4dp">
 
                         <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/lankaBangla_image"
+                            android:id="@+id/lankaBangla_image_card"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_gravity="center_horizontal"
@@ -362,11 +363,42 @@
                             android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
-                            android:singleLine="true"
-                            android:text="@string/lanka_bangla"
+                            android:text="@string/lanka_bangla_card"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11"
-                            card_view:layout_constraintTop_toBottomOf="@+id/lankaBangla_image" />
+                            card_view:layout_constraintTop_toBottomOf="@+id/lankaBangla_image_card" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/lankaBanglaViewDps"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/lankaBangla_image_dps"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/semiround_white_default"
+                            android:padding="2dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_lankabd2"
+                            card_view:layout_constraintDimensionRatio="1:1"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:text="@string/lanka_bangla_dps"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11"
+                            card_view:layout_constraintTop_toBottomOf="@+id/lankaBangla_image_dps" />
                     </android.support.constraint.ConstraintLayout>
 
                     <android.support.constraint.ConstraintLayout
@@ -518,8 +550,8 @@
                 android:id="@+id/trending_business_recycler_view_parent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/value8"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                android:focusableInTouchMode="false"/>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

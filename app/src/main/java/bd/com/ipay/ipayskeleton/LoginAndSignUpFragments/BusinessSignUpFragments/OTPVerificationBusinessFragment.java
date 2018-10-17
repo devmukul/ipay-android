@@ -184,6 +184,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                     .password(SignupOrLoginActivity.mPasswordBusiness)
                     .otp(otp)
                     .businessName(SignupOrLoginActivity.mBusinessName)
+                    .companyName(SignupOrLoginActivity.mCompanyName)
                     .businessType(SignupOrLoginActivity.mTypeofBusiness)
                     .personalEmail(SignupOrLoginActivity.mEmailBusiness)
                     .personalMobileNumber(SignupOrLoginActivity.mMobileNumberPersonal)
