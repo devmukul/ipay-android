@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -71,8 +72,10 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		goToWalletButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (getActivity() != null)
+				if (getActivity() != null) {
+					getActivity().setResult(Activity.RESULT_OK);
 					getActivity().finish();
+				}
 			}
 		});
 

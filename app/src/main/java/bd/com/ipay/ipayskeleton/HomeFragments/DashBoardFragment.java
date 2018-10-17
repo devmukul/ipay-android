@@ -87,6 +87,10 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
         return v;
     }
 
+    public ViewPager getViewPager() {
+        return viewPager;
+    }
+
     private void setTitle() {
         if (getActivity() instanceof HomeActivity && ((HomeActivity) getActivity()).getSupportActionBar() != null) {
             ActionBar actionBar = ((HomeActivity) getActivity()).getSupportActionBar();

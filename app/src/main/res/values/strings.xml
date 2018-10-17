@@ -1271,9 +1271,8 @@
     <string name="lanka_bangla_bill_pay_message">Please enter your LankaBangla Visa/MasterCard number</string>
     <string name="card_number">Card number</string>
     <string name="credit_balance">Credit balance</string>
-    <string name="minimum_pay">Minimum pay</string>
     <string name="amount_to_pay">Amount to pay</string>
-    <string name="lanka_bangla">LankaBangla</string>
+    <string name="lanka_bangla_card">LankaBangla Card</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">00</string>
@@ -1315,19 +1314,28 @@
     <string name="card_hint">XXXX</string>
     <string name="invalid_card_number_message">Enter a valid card number.</string>
     <string name="empty_card_number_message">Enter a card number.</string>
+    <string name="empty_dps_number_message">Enter a DPS account number.</string>
     <string name="bill_details">Bill Details</string>
     <string name="pay_this_bill">Pay This Bill</string>
     <string name="dummy_card_number">4554 4500 0074 7203</string>
     <string name="dummy_amount">Tk. 10,000.00</string>
+    <string name="minimum_pay">Minimum Pay</string>
     <string name="paying_bill_message">YOU ARE PAYING BILL TO</string>
     <string name="request_on_process">Request Processing</string>
     <string name="subscriber_id">Subscriber ID</string>
     <string name="carnival_id">Carnival ID</string>
     <string name="package_rate">Package Rate</string>
+    <string name="lanka_bangla_dps_number">LankaBangla DPS Account Number</string>
+    <string name="account_title">Account Title</string>
+    <string name="account_maturity_date">Account Maturity Date</string>
+    <string name="installment_amount">Installment Amount</string>
+    <string name="branch_id">Branch ID</string>
+    <string name="lanka_bangla_dps">LankaBangla DPS</string>
+    <string name="lanka_bangla_dps_number_input_message">Please enter your LankaBangla DPS account number</string>
     <string name="top_up_step_one">Insert <b>mobile number</b> or <b>Search</b> mobile number from contact</string>
     <string name="top_up_step_two">Insert <b>Amount</b> you want to recharge</string>
     <string name="top_up_helper">To topup you or your beloved one\'s mobile,insert number or search from contact</string>
-    <string name="top_up_helper_text">Top-Up any mobile phone from your iPay wallet. We support top-ups to all operators </string>
+    <string name="top_up_helper_text">Top-Up any mobile phone from your iPay wallet. We support Top-Up to all operators </string>
     <string name="top_up_to">MOBILE TOP-UP TO</string>
     <string name="total_outstanding">Total outstanding</string>
 </resources>

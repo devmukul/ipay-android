@@ -46,7 +46,7 @@
                     android:layout_width="72dip"
                     android:layout_height="72dip"
                     android:padding="@dimen/value8"
-                    app:srcCompat="@drawable/ic_debit_credit_card_icon" />
+                    app:srcCompat="@drawable/dps_icon" />
 
                 <TextView
                     android:id="@+id/card_message_image_view"
@@ -55,22 +55,22 @@
                     android:layout_marginTop="@dimen/value8"
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
+                    android:text="@string/lanka_bangla_dps_number_input_message"
                     android:textColor="#666666"
                     android:textSize="14sp"
-                    android:visibility="gone"
-                    tools:text="@string/lanka_bangla_card_number_input_message"
                     tools:visibility="visible" />
 
-                <bd.com.ipay.ipayskeleton.Widget.View.CardNumberEditText
-                    android:id="@+id/card_number_edit_text"
+                <EditText
+                    android:id="@+id/dps_number_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="@dimen/value28"
                     android:background="@android:color/transparent"
                     android:drawablePadding="@dimen/value8"
                     android:fontFamily="@font/open_sans_light"
-                    android:inputType="number"
-                    tools:hint="@string/lanka_bangla_card_number" />
+                    android:hint="@string/lanka_bangla_dps_number"
+                    android:inputType="number" />
 
                 <View
                     android:layout_width="match_parent"

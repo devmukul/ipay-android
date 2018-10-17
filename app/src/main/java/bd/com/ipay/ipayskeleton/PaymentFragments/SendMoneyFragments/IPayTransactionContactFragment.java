@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.TopUpEnterNum
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IPayTransactionContactFragment extends Fragment {
 
@@ -148,6 +149,8 @@ public class IPayTransactionContactFragment extends Fragment {
 		switch (item.getItemId()) {
 			case R.id.menu_help:
 				if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+					if (getActivity() != null)
+						Utilities.hideKeyboard(getActivity());
 					bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 				}
 			default:
