@@ -83,6 +83,10 @@
                             style="@style/TextViewInfoLeftAlign" />
 
                         <TextView
+                            android:id="@+id/textview_company_name"
+                            style="@style/TextViewInfoLeftAlign" />
+
+                        <TextView
                             android:id="@+id/textview_business_type"
                             style="@style/TextViewInfoLeftAlign" />
 

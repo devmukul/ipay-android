@@ -1,25 +1,17 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
+package bd.com.ipay.ipayskeleton.ContactFragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,29 +33,25 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionHelperFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
-public class IPayMakePaymentFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class IPayContactListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener, HttpResponseListener {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
-    private int isFirstLoad = 0;
     private RecyclerView mContactListRecyclerView;
     private Button mContinueButton;
     private SearchView mContactSearchView;
     private TextView mContactListEmptyMessageTextView;
     private TextView mSearchedNumberTextView;
     private TextView mActionNameTextView;
-    private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
     private String mQuery = "";
     private String mPhoneNumber;
 
@@ -83,13 +71,46 @@ public class IPayMakePaymentFragment extends Fragment implements LoaderManager.L
     private int transactionType;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mProgressDialog = new ProgressDialog(getActivity());
+
         if (getArguments() != null) {
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_ipay_contact_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mActionNameTextView = view.findViewById(R.id.action_name_text_view);
+        mSearchedNumberTextView = view.findViewById(R.id.searched_number_text_view);
+        mContactSearchView = view.findViewById(R.id.contact_search_view);
+        mSearchedNumberLayout = view.findViewById(R.id.searched_number_layout);
+        mContactListEmptyMessageTextView = view.findViewById(R.id.contact_list_empty_message_text_view);
+        mContactListRecyclerView = view.findViewById(R.id.contact_list_recycler_view);
+        mContinueButton = view.findViewById(R.id.continue_button);
+
+        mContactSearchView.setIconified(false);
+        mContactSearchView.setOnQueryTextListener(this);
+        mContactSearchView.clearFocus();
+
+        mAdapter = new ContactListAdapter();
+        mContactListRecyclerView.setAdapter(mAdapter);
+        mContinueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPhoneNumber = mQuery;
+                getProfileInfo(mQuery);
+            }
+        });
+        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, IPayContactListFragment.this).forceLoad();
     }
 
     @Override
@@ -98,131 +119,6 @@ public class IPayMakePaymentFragment extends Fragment implements LoaderManager.L
         resetSearchKeyword();
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_ipay_transaction_contact, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mActionNameTextView = view.findViewById(R.id.action_name_text_view);
-        mSearchedNumberTextView = view.findViewById(R.id.searched_number_text_view);
-        mContactSearchView = view.findViewById(R.id.contact_search_view);
-        mSearchedNumberLayout = view.findViewById(R.id.searched_number_layout);
-        mContactListEmptyMessageTextView = view.findViewById(R.id.contact_list_empty_message_text_view);
-        mContactListRecyclerView = view.findViewById(R.id.contact_list_recycler_view);
-
-        final Button helperBottomSheetDismissButton = view.findViewById(R.id.helper_bottom_sheet_dismiss_button);
-        final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        mContinueButton = view.findViewById(R.id.continue_button);
-        final LinearLayout helpBottomSheetLayout = view.findViewById(R.id.help_bottom_sheet_layout);
-
-        if (getActivity() instanceof AppCompatActivity) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null)
-                actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        mContactSearchView.setIconified(false);
-        mContactSearchView.setOnQueryTextListener(this);
-        mContactSearchView.clearFocus();
-
-        mAdapter = new ContactListAdapter();
-        mContactListRecyclerView.setAdapter(mAdapter);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isFirstLoad = 1;
-                mAdapter.notifyDataSetChanged();
-            }
-        }, 1000);
-
-        if (getFragmentManager() != null) {
-            final TransactionHelperFragment transactionHelperFragment = new TransactionHelperFragment();
-            transactionHelperFragment.setArguments(getArguments());
-            getFragmentManager().beginTransaction().replace(R.id.help_fragment_container, transactionHelperFragment).commit();
-        }
-
-        bottomSheetBehavior = BottomSheetBehavior.from(helpBottomSheetLayout);
-        switch (transactionType) {
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-                getActivity().setTitle(R.string.send_money);
-                if (SharedPrefManager.ifFirstSendMoney()) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                break;
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-                getActivity().setTitle(R.string.request_money);
-                if (SharedPrefManager.ifFirstRequestMoney()) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                break;
-        }
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    switch (transactionType) {
-                        case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-                            SharedPrefManager.setIfFirstSendMoney(false);
-                            break;
-                        case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-                            SharedPrefManager.setIfFirstRequestMoney(false);
-                            break;
-                    }
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-
-        mContinueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPhoneNumber = mQuery;
-                getProfileInfo(mQuery);
-            }
-        });
-        helperBottomSheetDismissButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-            }
-        });
-        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, IPayMakePaymentFragment.this).forceLoad();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.transaction_contact_option_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.menu_help:
-                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     private void getProfileInfo(String mobileNumber) {
         if (mGetProfileInfoTask != null) {
@@ -270,11 +166,11 @@ public class IPayMakePaymentFragment extends Fragment implements LoaderManager.L
                 // TODO hack
                 /*
                  * Caution: It takes some time to load invite response from the server. So if you are
-                 * loading this Fragment from Contacts page, it is very much possible that invitee list
-                 * will be null. This is generally not a problem because invitee list is not used
-                 * in Contacts fragment when doing database query. It is used in the database query
-                 * from invite fragment, but by that time the invitee list should already have loaded.
-                 */
+				 * loading this Fragment from Contacts page, it is very much possible that invitee list
+				 * will be null. This is generally not a problem because invitee list is not used
+				 * in Contacts fragment when doing database query. It is used in the database query
+				 * from invite fragment, but by that time the invitee list should already have loaded.
+				 */
                 Cursor cursor = dataHelper.searchContacts(mQuery, true, false, false,
                         false, false, false, null);
 
@@ -409,11 +305,7 @@ public class IPayMakePaymentFragment extends Fragment implements LoaderManager.L
             if (mCursor == null || mCursor.isClosed()) {
                 return 0;
             } else {
-                if (isFirstLoad == 0) {
-                    return 10;
-                } else {
-                    return mCursor.getCount();
-                }
+                return mCursor.getCount();
             }
         }
 
@@ -462,9 +354,9 @@ public class IPayMakePaymentFragment extends Fragment implements LoaderManager.L
                 final String mobileNumber = mCursor.getString(phoneNumberIndex);
                 final String profilePictureUrlQualityMedium = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityMediumIndex);
 
-                /*
-                 * We need to show original name on the top if exists
-                 */
+				/*
+				 * We need to show original name on the top if exists
+				 */
                 if (originalName != null && !originalName.isEmpty()) {
                     name1View.setText(originalName);
                     name2View.setVisibility(View.VISIBLE);

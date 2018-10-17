@@ -2,4 +2,5 @@
 <resources>
     <dimen name="margin_size_medium_small">8dp</dimen>
     <dimen name="text_size_transaction_value">64sp</dimen>
+    <dimen name="text_size_name">16sp</dimen>
 </resources>

@@ -18,7 +18,7 @@
             android:background="@color/colorPrimary"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:titleTextColor="@android:color/white"
-            tools:title="@string/lanka_bangla">
+            tools:title="@string/lanka_bangla_card">
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>

@@ -1068,6 +1068,10 @@
         <item name="android:background">@drawable/background_button_oval_ipay_transaction_action</item>
     </style>
 
+    <style name="ButtonPrimary.IPayTransactionAction.Normal" parent="ButtonPrimary">
+        <item name="android:background">@drawable/background_button_ipay_transaction_action</item>
+    </style>
+
     <style name="ButtonPrimaryWithNote" parent="ButtonPrimary">
         <item name="android:layout_gravity">center</item>
         <item name="android:paddingTop">@dimen/value10</item>

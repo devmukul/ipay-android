@@ -11,24 +11,25 @@ public class MoneyBackIPayWithPromoGroupMetaData extends MoneyBackIPayMetaData {
 	private String promoCode;
 
 	public MoneyBackIPayWithPromoGroupMetaData() {
-		super();
 	}
 
 	public MoneyBackIPayWithPromoGroupMetaData(String promoCode) {
+
 		this.promoCode = promoCode;
 	}
 
-	public MoneyBackIPayWithPromoGroupMetaData(int moneyBackPercentage, int maximumOfferAmount, int consumedOfferAmount, int remainingOfferAmount, List<Integer> merchantList, String promoCode) {
+	public MoneyBackIPayWithPromoGroupMetaData(double moneyBackPercentage, double maximumOfferAmount, double consumedOfferAmount, double remainingOfferAmount, List<Integer> merchantList, String promoCode) {
 		super(moneyBackPercentage, maximumOfferAmount, consumedOfferAmount, remainingOfferAmount, merchantList);
 		this.promoCode = promoCode;
 	}
 
-	public MoneyBackIPayWithPromoGroupMetaData(Date startDate, Date endDate, int moneyBackPercentage, int maximumOfferAmount, int consumedOfferAmount, int remainingOfferAmount, List<Integer> merchantList, String promoCode) {
+	public MoneyBackIPayWithPromoGroupMetaData(Date startDate, Date endDate, double moneyBackPercentage, double maximumOfferAmount, double consumedOfferAmount, double remainingOfferAmount, List<Integer> merchantList, String promoCode) {
 		super(startDate, endDate, moneyBackPercentage, maximumOfferAmount, consumedOfferAmount, remainingOfferAmount, merchantList);
 		this.promoCode = promoCode;
 	}
 
 	public String getPromoCode() {
+
 		return promoCode;
 	}
 
@@ -38,6 +39,7 @@ public class MoneyBackIPayWithPromoGroupMetaData extends MoneyBackIPayMetaData {
 
 	@Override
 	public boolean equals(Object o) {
+
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;

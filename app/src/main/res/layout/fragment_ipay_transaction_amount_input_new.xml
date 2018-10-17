@@ -55,8 +55,8 @@
                     android:layout_marginRight="@dimen/value32"
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
-                    android:textColor="#ccf3f0"
-                    android:textSize="18sp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/text_size_name"
                     tools:text="@string/send_money_to" />
 
                 <TextView
@@ -69,24 +69,25 @@
                     android:fontFamily="@font/open_sans_semibold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     tools:text="@string/dummy_name" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/transaction_image_view"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/value8"
                     android:background="@drawable/circular_background"
                     android:contentDescription="@string/card"
                     android:scaleType="fitCenter"
-                    app:riv_border_color="#e4e4e4"
-                    app:riv_border_width="1dip"
+                    app:riv_border_color="#d9d9d9"
+                    app:riv_border_width="0.5dip"
                     app:riv_oval="true"
                     tools:src="@tools:sample/avatars" />
 
-                <RelativeLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center">
@@ -112,7 +113,7 @@
                     <TextView
                         android:id="@+id/amount_text_view"
                         android:layout_width="match_parent"
-                        android:layout_height="80dip"
+                        android:layout_height="100dip"
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:focusable="true"
@@ -124,18 +125,17 @@
                         android:text="@string/zero_amount"
                         android:textColor="@color/colorWhite"
                         android:textColorHint="@color/colorWhite"
-                        android:textSize="@dimen/text_size_transaction_value"
-                        app:autoSizeMaxTextSize="@dimen/text_size_transaction_value"
+                        android:textSize="64sp"
+                        app:autoSizeMaxTextSize="64sp"
                         app:autoSizeMinTextSize="20sp"
                         app:autoSizeStepGranularity="2sp"
                         app:autoSizeTextType="uniform" />
-                </RelativeLayout>
+                </FrameLayout>
 
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-
                     android:background="#66ffffff" />
 
 
@@ -164,8 +164,8 @@
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:text="@string/your_ipay_balance"
-                        android:textColor="#ccf3f0"
-                        android:textSize="14sp" />
+                        android:textColor="@color/colorWhite"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/ipay_balance_text_view"
@@ -174,7 +174,7 @@
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         tools:text="@string/dummy_amount" />
                 </LinearLayout>
             </LinearLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,12 +26,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dip"
+        android:layout_above="@+id/transaction_confirmation_button"
         android:background="@android:color/transparent"
         android:gravity="center"
         android:orientation="vertical">
 
         <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -41,9 +42,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/value32"
+                android:layout_marginStart="@dimen/value32"
+                android:layout_marginLeft="@dimen/value32"
+                android:layout_marginEnd="@dimen/value32"
+                android:layout_marginRight="@dimen/value32"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="@dimen/value50"
+                android:paddingBottom="@dimen/value50">
 
                 <TextView
                     android:id="@+id/transaction_description_text_view"
@@ -55,7 +61,7 @@
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
                     android:textColor="#666666"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_size_name"
                     tools:text="@string/send_money_confirmation_dummy_message" />
 
                 <TextView
@@ -64,23 +70,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/value32"
                     android:layout_marginRight="@dimen/value32"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+
                     android:fontFamily="@font/open_sans_semibold"
                     android:gravity="center"
                     android:textColor="#212121"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     tools:text="@string/dummy_name" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/profile_image_view"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/value8"
                     android:background="@drawable/circular_background"
                     android:contentDescription="@string/card"
                     android:scaleType="fitCenter"
-                    app:riv_border_color="#e4e4e4"
-                    app:riv_border_width="1dip"
+                    app:riv_border_color="#d9d9d9"
+                    app:riv_border_width="0.5dip"
                     app:riv_oval="true"
                     tools:src="@tools:sample/avatars" />
 
@@ -88,7 +95,7 @@
                     android:id="@+id/pin_layout_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                    android:layout_marginTop="32dip"
                     android:orientation="vertical">
 
                     <EditText
@@ -101,13 +108,13 @@
                         android:hint="@string/enter_pin"
                         android:inputType="numberPassword"
                         android:maxLength="4"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
+                        android:textColor="#212121"
                         android:textSize="18sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
+                        android:layout_marginTop="8dip"
                         android:background="#19000000" />
                 </LinearLayout>
 
@@ -115,7 +122,7 @@
                     android:id="@+id/note_layout_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/value28"
+                    android:layout_marginTop="@dimen/value16"
                     android:orientation="vertical">
 
                     <EditText
@@ -126,14 +133,14 @@
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:inputType="text"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
+                        android:textColor="#212121"
                         android:textSize="18sp"
                         tools:hint="@string/short_note_optional_hint" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
+                        android:layout_marginTop="8dip"
                         android:background="#19000000" />
                 </LinearLayout>
 
@@ -143,12 +150,12 @@
 
     <Button
         android:id="@+id/transaction_confirmation_button"
+        style="@style/ButtonPrimary.IPayTransactionAction.Normal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/value50"
-        android:layout_gravity="bottom"
-        android:background="@color/colorPrimaryButton"
+        android:layout_alignParentBottom="true"
         android:fontFamily="@font/open_sans"
         android:text="@string/continue_send_money"
         android:textColor="@color/colorWhite"
         android:textSize="14sp" />
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

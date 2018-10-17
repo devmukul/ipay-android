@@ -50,21 +50,27 @@
                     android:id="@+id/transaction_description_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/value32"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/value32"
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
-                    android:textColor="#ccf3f0"
-                    android:textSize="18sp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/text_size_name"
                     tools:text="@string/send_money_to" />
 
                 <TextView
                     android:id="@+id/name_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/value32"
+                    android:layout_marginRight="@dimen/value32"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
                     android:fontFamily="@font/open_sans_semibold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
                     tools:text="@string/dummy_name" />
 
                 <TextView
@@ -78,34 +84,19 @@
                     android:textSize="12sp"
                     android:visibility="gone"/>
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin_card">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/profile_image_view"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/circular_background"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_profile"
-                        app:riv_oval="true"
-                        tools:src="@tools:sample/avatars" />
-
-                    <ImageView
-                        android:id="@+id/card_image_view"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/circular_background"
-                        android:contentDescription="@string/card"
-                        android:padding="@dimen/value12"
-                        android:scaleType="fitCenter"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/ic_debit_credit_card_icon" />
-                </FrameLayout>
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/transaction_image_view"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/value8"
+                    android:background="@drawable/circular_background"
+                    android:contentDescription="@string/card"
+                    android:scaleType="fitCenter"
+                    app:riv_border_color="#d9d9d9"
+                    app:riv_border_width="0.5dip"
+                    app:riv_oval="true"
+                    tools:src="@tools:sample/avatars" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -166,6 +157,62 @@
                     android:background="#66ffffff" />
 
                 <LinearLayout
+                    android:id="@+id/default_top_up_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="@dimen/value8"
+                    android:visibility="gone"
+                    android:weightSum="4">
+
+                    <TextView
+                        android:id="@+id/text_view_taka_fifty"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="50Tk"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/text_view_taka_hundred"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="100Tk"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/text_view_taka_two_hundred"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="200Tk"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/text_view_taka_five_hundred"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_default_top_up_amount"
+                        android:gravity="center"
+                        android:text="500Tk"
+                        android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/balance_info_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -178,8 +225,8 @@
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:text="@string/your_ipay_balance"
-                        android:textColor="#ccf3f0"
-                        android:textSize="14sp" />
+                        android:textColor="@color/colorWhite"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/ipay_balance_text_view"
@@ -188,7 +235,7 @@
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

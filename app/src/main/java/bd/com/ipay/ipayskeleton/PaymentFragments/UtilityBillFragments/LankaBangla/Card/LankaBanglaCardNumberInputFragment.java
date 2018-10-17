@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla;
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,7 +37,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 		super.onViewCreated(view, savedInstanceState);
 
 		if (getActivity() != null)
-			getActivity().setTitle(R.string.lanka_bangla);
+			getActivity().setTitle(R.string.lanka_bangla_card);
 
 		setCardIconImageResource(R.drawable.ic_debit_credit_card_icon);
 		setMessage(getString(R.string.lanka_bangla_card_number_input_message));
@@ -80,7 +80,8 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 			default:
 				return;
 		}
-		mGetLankaBanglaCardUserInfoAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO, url, getContext(), this, false);
+		mGetLankaBanglaCardUserInfoAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO,
+				url, getContext(), this, false);
 		mGetLankaBanglaCardUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		mProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
 		mProgressDialog.setMessage(getString(R.string.fetching_user_info));
@@ -94,7 +95,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 
 		if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
 			mGetLankaBanglaCardUserInfoAsyncTask = null;
-			if (result!=null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND){
+			if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
 				LankaBanglaCustomerInfoResponse lankaBanglaCustomerInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaCustomerInfoResponse.class);
 				if (!TextUtils.isEmpty(lankaBanglaCustomerInfoResponse.getMessage())) {
 					Toaster.makeText(getActivity(), lankaBanglaCustomerInfoResponse.getMessage(), Toast.LENGTH_SHORT);
@@ -161,7 +162,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 				bundle.putInt(LankaBanglaAmountInputFragment.TOTAL_OUTSTANDING_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getCreditBalance()));
 				bundle.putInt(LankaBanglaAmountInputFragment.MINIMUM_PAY_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getMinimumPay()));
 				bundle.putString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, lankaBanglaCustomerInfoResponse.getCardNumber());
-
+				Utilities.hideKeyboard(getActivity());
 				final LankaBanglaAmountInputFragment lankaBanglaAmountInputFragment = new LankaBanglaAmountInputFragment();
 
 				if (getActivity() instanceof IPayUtilityBillPayActionActivity) {

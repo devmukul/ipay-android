@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla;
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -132,9 +132,9 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 		bundle.putSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
 
 		if (getAmount().intValue() == minimumPayAmount)
-			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
-		else if (getAmount().intValue() == totalOutstandingAmount)
 			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);
+		else if (getAmount().intValue() == totalOutstandingAmount)
+			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
 		else
 			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.OTHER);
 
