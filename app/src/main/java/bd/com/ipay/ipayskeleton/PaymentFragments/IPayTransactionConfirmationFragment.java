@@ -401,6 +401,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 return "Send Money";
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 return "Request Money";
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                return "Top Up";
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
                 return "";
