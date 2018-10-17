@@ -7,11 +7,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.Selection;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -40,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public class TopUpEnterNumberFragment extends Fragment implements HttpResponseListener, View.OnClickListener {
 
@@ -55,8 +54,6 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     private String mMobileNumber;
     private String mName;
     private String mProfileImageUrl;
-    private int mOperatorType;
-    private String mOperator;
 
     private Button mContinueButton;
 
@@ -80,31 +77,26 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         View view = inflater.inflate(R.layout.fragment_top_up_enter_number, container, false);
         mProgressDialog = new ProgressDialog(getContext());
         setUpView(view);
-        mOperator = "";
-        mOperatorType = -1;
         operatorCode = -1;
         return view;
     }
 
     private void setUpView(View view) {
-        mNumberEditText = (EditText) view.findViewById(R.id.number_edit_text);
-        mMyNumberTopUpTextView = (TextView) view.findViewById(R.id.my_number_topup_text_view);
-        mContactImageView = (ImageView) view.findViewById(R.id.contact_image_view);
-        mTypeSelector = (RadioGroup) view.findViewById(R.id.type_selector);
-        mContinueButton = (Button) view.findViewById(R.id.continue_button);
-        gpLayout = (LinearLayout) view.findViewById(R.id.gp);
-        airtelLayout = (LinearLayout) view.findViewById(R.id.airtel);
-        robiLayout = (LinearLayout) view.findViewById(R.id.robi);
-        teletalkLayout = (LinearLayout) view.findViewById(R.id.teletalk);
-        banglalinkLayout = (LinearLayout) view.findViewById(R.id.banglalink);
+        mNumberEditText =  view.findViewById(R.id.number_edit_text);
+        mMyNumberTopUpTextView =  view.findViewById(R.id.my_number_topup_text_view);
+        mContactImageView =  view.findViewById(R.id.contact_image_view);
+        mTypeSelector =  view.findViewById(R.id.type_selector);
+        mContinueButton =  view.findViewById(R.id.continue_button);
+        gpLayout =  view.findViewById(R.id.gp);
+        airtelLayout =  view.findViewById(R.id.airtel);
+        robiLayout =  view.findViewById(R.id.robi);
+        teletalkLayout =  view.findViewById(R.id.teletalk);
+        banglalinkLayout =  view.findViewById(R.id.banglalink);
         gpLayout.setOnClickListener(this);
         airtelLayout.setOnClickListener(this);
         banglalinkLayout.setOnClickListener(this);
         teletalkLayout.setOnClickListener(this);
         robiLayout.setOnClickListener(this);
-        RadioButton prepaidRadioButton = (RadioButton) view.findViewById(R.id.prepaid);
-        prepaidRadioButton.setChecked(true);
-        mOperatorType = 1;
         setUpButtonActions();
     }
 
@@ -127,16 +119,6 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
-        mTypeSelector.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.prepaid) {
-                    mOperatorType = 1;
-                } else if (i == R.id.post_paid) {
-                    mOperatorType = 2;
-                }
-            }
-        });
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +130,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                         bundle.putString(Constants.NAME, mName);
                         bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
-                        bundle.putInt(Constants.OPERATOR_TYPE, mOperatorType);
+                        bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                         bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
                         if (mProfileImageUrl != null) {
                             if (!mProfileImageUrl.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
@@ -157,7 +139,9 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                                 bundle.putString(Constants.PHOTO_URI, mProfileImageUrl);
                             }
                         }
-                        ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
+                        if (getActivity() instanceof  IPayTransactionActionActivity) {
+	                        ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
+                        }
                     }
                 }
             }
@@ -170,7 +154,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                     if (mNumberEditText.getText().toString().equals("+880-1")) {
                         mNumberEditText.setSelection(6);
                     } else {
-                        mNumberEditText.setSelection(mNumberEditText.getText().length());
+                        Selection.setSelection(mNumberEditText.getText(), mNumberEditText.getText().length());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -210,16 +194,8 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     }
 
     private void showErrorMessage(String errorMessage) {
-        if (getActivity() != null && getView() != null) {
-            Snackbar snackbar = Snackbar.make(getView(), errorMessage, Snackbar.LENGTH_LONG);
-            View snackbarView = snackbar.getView();
-            snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-            ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
-            layoutParams.height = getResources().getDimensionPixelSize(R.dimen.value50);
-            snackbarView.setLayoutParams(layoutParams);
-            TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));
-            snackbar.show();
+        if (getActivity() != null && mContinueButton != null) {
+            IPaySnackbar.error(mContinueButton,errorMessage,IPaySnackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -227,7 +203,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         if (mNumberEditText.getText() == null) {
             showErrorMessage("Please enter a mobile number");
             return false;
-        } else if (mNumberEditText.getText().toString() == null || mNumberEditText.getText().toString().equals("")) {
+        } else if (TextUtils.isEmpty(mNumberEditText.getText())) {
             showErrorMessage("Please enter a mobile number");
             return false;
         } else {
@@ -236,7 +212,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
             if (!mMobileNumber.matches(InputValidator.MOBILE_NUMBER_REGEX)) {
                 showErrorMessage("Please enter a valid mobile number");
                 return false;
-            } else if (mOperatorType != 1 && mOperatorType != 2) {
+            } else if (mTypeSelector.getCheckedRadioButtonId()==-1) {
                 showErrorMessage("Please select Prepaid/Postpaid");
                 return false;
             } else if (operatorCode != 1 && operatorCode != 3 && operatorCode != 4 && operatorCode != 5 && operatorCode != 6) {
@@ -287,7 +263,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                 bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
-                bundle.putInt(Constants.OPERATOR_TYPE, mOperatorType);
+                bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                 ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
                 return;
             }
@@ -304,7 +280,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 bundle.putString(Constants.NAME, mName);
                 bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                 bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
-                bundle.putInt(Constants.OPERATOR_TYPE, mOperatorType);
+                bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                 bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
                 if (mProfileImageUrl != null) {
                     if (!mProfileImageUrl.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
@@ -318,7 +294,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                 bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
-                bundle.putInt(Constants.OPERATOR_TYPE, mOperatorType);
+                bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                 ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
 
             }
@@ -326,6 +302,17 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private int getOperatorType() {
+        switch (mTypeSelector.getCheckedRadioButtonId()){
+            case R.id.prepaid:
+                return  1;
+            case R.id.post_paid:
+                return 2;
+            default:
+                return 1;
         }
     }
 
