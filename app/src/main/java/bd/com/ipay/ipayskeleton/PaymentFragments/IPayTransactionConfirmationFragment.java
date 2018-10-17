@@ -96,13 +96,11 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
                 profilePicture = getArguments().getString(Constants.PHOTO_URI);
                 amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+	            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+	            operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
             }
         } catch (Exception e) {
-
-        }
-        if (transactionType == ServiceIdConstants.TOP_UP) {
-            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
-            operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
+        	e.printStackTrace();
         }
         numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
