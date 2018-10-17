@@ -237,7 +237,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	public void setAmountFieldEnabled(boolean isEnabled) {
 		this.amountDummyEditText.setFocusable(isEnabled);
 		amountTextView.setFocusable(isEnabled);
-		amountDummyEditText.setOnClickListener(isEnabled ? amountFieldClickAction : null);
+		amountTextView.setOnClickListener(isEnabled ? amountFieldClickAction : null);
 	}
 
     public void setInputType(int inputType) {
