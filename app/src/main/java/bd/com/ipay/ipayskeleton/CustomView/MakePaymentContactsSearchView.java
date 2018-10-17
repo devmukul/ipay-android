@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MakePaymentContactsSearchView extends RelativeLayout implements SearchView.OnQueryTextListener{
@@ -84,6 +85,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
     public MakePaymentContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context);
+
     }
 
     public MakePaymentContactsSearchView(Context context, AttributeSet attrs) {
@@ -94,6 +96,15 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
     public MakePaymentContactsSearchView(Context context) {
         super(context);
         initView(context);
+    }
+
+    private void resetSearchKeyword() {
+        if (mCustomAutoCompleteView != null && !mQuery.isEmpty()) {
+            Logger.logD("Loader", "Resetting.. Previous query: " + mQuery);
+
+            mQuery = "";
+            mCustomAutoCompleteView.setQuery("", false);
+        }
     }
 
     private void initView(Context context) {
@@ -141,6 +152,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
             }
         });
 
+        resetSearchKeyword();
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
     }
 
@@ -283,8 +295,11 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
     @Override
     public boolean onQueryTextChange(String query) {
-        mTransactionHistoryAdapter.getFilter().filter(query);
-        return true;
+        if(mTransactionHistoryAdapter != null && query!=null && !TextUtils.isEmpty(query)){
+            mTransactionHistoryAdapter.getFilter().filter(query);
+            return true;
+        }
+        return false;
     }
 
     private class BusinessContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
@@ -307,8 +322,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 protected FilterResults performFiltering(CharSequence charSequence) {
 
                     String charString = charSequence.toString();
-                    System.out.println(">>>>Q  "+charString);
-
                     if (charString.isEmpty()) {
                         mFilteredOutlets = userTransactionHistories;
                     } else {
@@ -377,6 +390,8 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 final String businessOutlet = businessContact.getOutletName();
                 final Long businessOutletId = businessContact.getOutletId();
 
+                System.out.println(" Outlet Id "+businessOutletId);
+
                 if(businessContact.getTypeInList().equals("Outlet")){
                     if (businessOutlet != null && !businessOutlet.isEmpty())
                         businessNameView.setText(businessOutlet);
@@ -400,28 +415,22 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        resetSearchKeyword();
+                        mCustomAutoCompleteView.setQuery(null, false);
+                        mCustomAutoCompleteView.clearFocus();
+                        Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
                         mName = businessName;
                         mImageURL = profilePictureUrl;
                         mAddress = businessAddress;
-                        mThanaDistrict = businessThana + ", " + businessDistrict;
                         mOutlet = businessOutlet;
                         mMobileNumber = mobileNumber;
-                        mOutletId = businessOutletId;
-                        customItemClickListener.onItemClick(mName, mobileNumber, mImageURL, mAddress, mOutletId);
-                        mCustomAutoCompleteView.clearFocus();
-                        Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
-
-//                        switchToMakePaymentActivity(pos);
-
-//                    setText(mobileNumber);
-//
-//                    mName = businessName;
-//                    mImageURL = profilePictureUrl;
-//                    mAddress = businessAddress;
-//                    mThanaDistrict = businessThana + ", " + businessDistrict;
-//                    mOutlet = businessOutlet;
-//                    mCustomAutoCompleteView.clearFocus();
-//                    Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
+                        if(businessContact.getTypeInList().equals("Outlet")){
+                            mName = businessOutlet;
+                        }else{
+                            mName = businessName;
+                        }
+                        System.out.println(" Outlet Id Clicked"+businessOutletId);
+                        customItemClickListener.onItemClick(mName, mobileNumber, mImageURL, mAddress, businessOutletId);
                     }
                 });
             }
@@ -474,20 +483,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
             return super.getItemViewType(position);
         }
 
-        private void switchToMakePaymentActivity(int position) {
 
-            Intent intent = new Intent(mContext, PaymentActivity.class);
-            intent.putExtra(Constants.NAME, mFilteredOutlets.get(position).getBusinessName());
-            intent.putExtra(Constants.ADDRESS, mFilteredOutlets.get(position).getAddressString());
-            intent.putExtra(Constants.DISTRICT, mFilteredOutlets.get(position).getDistrictString());
-            intent.putExtra(Constants.THANA, mFilteredOutlets.get(position).getThanaString());
-            intent.putExtra(Constants.MOBILE_NUMBER, mFilteredOutlets.get(position).getMobileNumber());
-            intent.putExtra(Constants.PHOTO_URI, mFilteredOutlets.get(position).getProfilePictureUrl());
-            intent.putExtra(Constants.OUTLET_ID, mFilteredOutlets.get(position).getOutletId());
-            intent.putExtra(Constants.OUTLET_NAME, mFilteredOutlets.get(position).getOutletName());
-            intent.putExtra(Constants.FROM_BRANCHING, true);
-            mContext.startActivity(intent);
-        }
 
     }
 

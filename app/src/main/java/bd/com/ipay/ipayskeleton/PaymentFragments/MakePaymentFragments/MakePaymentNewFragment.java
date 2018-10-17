@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -23,11 +24,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.DrawableTypeRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -44,8 +49,8 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
-import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.GetAllTrendingBusinessResponse;
@@ -114,8 +119,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private ProgressDialog mProgressDialog;
-
-    private IPayTransactionContactFragment.ContactListAdapter mAdapter;
     private Cursor mCursor;
 
     private int nameIndex;
@@ -194,17 +197,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
         bottomSheetBehavior = BottomSheetBehavior.from(helpBottomSheetLayout);
         switch (transactionType) {
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-                getActivity().setTitle(R.string.send_money);
-                if (SharedPrefManager.ifFirstSendMoney()) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                break;
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-                getActivity().setTitle(R.string.request_money);
-                if (SharedPrefManager.ifFirstRequestMoney()) {
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+                getActivity().setTitle(R.string.make_payment);
+                if (SharedPrefManager.ifFirstMakePayment()) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 } else {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -217,11 +212,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
                     switch (transactionType) {
-                        case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-                            SharedPrefManager.setIfFirstSendMoney(false);
-                            break;
-                        case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-                            SharedPrefManager.setIfFirstRequestMoney(false);
+                        case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+                            SharedPrefManager.setIfFirstMakePayment(false);
                             break;
                     }
                 }
@@ -560,14 +552,15 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mMobileNumberEditText.setCustomItemClickListener(new MakePaymentContactsSearchView.CustomItemClickListener() {
             @Override
             public void onItemClick(String name, String mobileNumber, String imageURL, String address, Long outletId) {
-                System.out.println(" Test Click "+name+" "+imageURL);
 
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.NAME, name);
                 bundle.putString(Constants.PHOTO_URI, imageURL);
                 bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
                 bundle.putString(Constants.ADDRESS, address);
-                bundle.putLong(Constants.OUTLET_ID, outletId);
+                if(outletId!=null)
+                    bundle.putLong(Constants.OUTLET_ID, outletId);
+
                 bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                 if (getActivity() instanceof IPayTransactionActionActivity) {
                     ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
@@ -724,5 +717,156 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                 trendingBusinessCAtegory = (RecyclerView)view.findViewById(R.id.trending_business_recycler_view_category);
             }
         }
+    }
+
+    public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private List<BusinessList> mBusinessAccountEntryList;
+        private TrendingBusinessOutletSelectorDialog mMerchantBranchSelectorDialog;
+        Context context;
+
+        public PayDashBoardItemAdapter(List<BusinessList> mBusinessAccountEntryList, Context context) {
+            this.mBusinessAccountEntryList = mBusinessAccountEntryList;
+            this.context = context;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private ImageView mImageView;
+            private TextView mTextView;
+            private int mColorPalette;
+
+            public ViewHolder(final View itemView) {
+                super(itemView);
+                mImageView = (ImageView) itemView.findViewById(R.id.imageView);
+                mTextView = (TextView) itemView.findViewById(R.id.nameView);
+            }
+
+            public void bindView(final int pos) {
+                final BusinessList merchantDetails = mBusinessAccountEntryList.get(pos);
+                final String name = merchantDetails.getMerchantName();
+                final String imageUrl = Constants.BASE_URL_FTP_SERVER + merchantDetails.getBusinessLogo();
+                mTextView.setText(name);
+
+                try {
+
+                    final DrawableTypeRequest<String> glide = Glide.with(context).load(imageUrl);
+
+                    glide
+                            .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+                    glide
+                            .placeholder(R.drawable.ic_business_logo_round)
+                            .error(R.drawable.ic_business_logo_round)
+                            .crossFade()
+                            .dontAnimate()
+                            .into(mImageView);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                            DialogUtils.showServiceNotAllowedDialog(context);
+                        } else {
+
+                            PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
+                                @Override
+                                public void ifPinAdded() {
+                                    if (mBusinessAccountEntryList.get(pos).getOutlets()!=null && mBusinessAccountEntryList.get(pos).getOutlets().size() > 0) {
+                                        if (mBusinessAccountEntryList.get(pos).getOutlets().size() > 1) {
+                                            mMerchantBranchSelectorDialog = new TrendingBusinessOutletSelectorDialog(context, mBusinessAccountEntryList.get(pos));
+                                            mMerchantBranchSelectorDialog.showDialog();
+                                            mMerchantBranchSelectorDialog.setCustomItemClickListener(new TrendingBusinessOutletSelectorDialog.CustomItemClickListener() {
+                                                @Override
+                                                public void onItemClick(String name, String mobileNumber, String imageURL, String address, Long outletId) {
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putString(Constants.NAME, name);
+                                                    bundle.putString(Constants.PHOTO_URI, imageURL);
+                                                    bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
+                                                    bundle.putString(Constants.ADDRESS, address);
+                                                    bundle.putLong(Constants.OUTLET_ID, outletId);
+
+                                                    bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
+                                                    if (getActivity() instanceof IPayTransactionActionActivity) {
+                                                        ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString(Constants.NAME, merchantDetails.getOutlets().get(0).getOutletName());
+                                            bundle.putString(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
+                                            bundle.putString(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
+                                            bundle.putString(Constants.ADDRESS, merchantDetails.getOutlets().get(0).getAddressString());
+                                            bundle.putLong(Constants.OUTLET_ID, merchantDetails.getOutlets().get(0).getOutletId());
+
+                                            bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
+                                            if (getActivity() instanceof IPayTransactionActionActivity) {
+                                                ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
+                                            }
+                                        }
+                                    } else {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(Constants.NAME, merchantDetails.getMerchantName());
+                                        bundle.putString(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
+                                        bundle.putString(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
+                                        bundle.putString(Constants.ADDRESS, merchantDetails.getAddressString());
+
+                                        bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
+                                        if (getActivity() instanceof IPayTransactionActionActivity) {
+                                            ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
+                                        }
+                                    }
+                                }
+                            });
+                            payByQCPinChecker.execute();
+                        }
+                    }
+                });
+            }
+        }
+
+        class NormalViewHolder extends ViewHolder {
+            NormalViewHolder(View itemView) {
+                super(itemView);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+            }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trending_business, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                NormalViewHolder vh = (NormalViewHolder) holder;
+                vh.bindView(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return mBusinessAccountEntryList.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+
     }
 }

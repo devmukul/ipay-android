@@ -200,6 +200,7 @@ public class Constants {
 	public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
 	public static final String FROM_CONTACT = "FROM_CONTACT";
 	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
+    public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
 	public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
 	public static final String VISA = "VISA";
 	public static final String MASTERCARD = "MASTERCARD";

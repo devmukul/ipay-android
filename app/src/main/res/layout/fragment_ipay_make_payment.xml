@@ -405,10 +405,10 @@
                                         android:ellipsize="marquee"
                                         android:gravity="center_horizontal"
                                         android:singleLine="true"
-                                        android:text="@string/lanka_bangla"
+                                        android:text="@string/lanka_bangla_card"
                                         android:textColor="@color/colorBlack"
                                         android:textSize="@dimen/text_size_extra_smaller_value11"
-                                        app:layout_constraintTop_toBottomOf="@+id/lankaBangla_image" />
+                                        app:layout_constraintTop_toBottomOf="@+id/lankaBangla_image_card" />
                                 </android.support.constraint.ConstraintLayout>
 
                                 <android.support.constraint.ConstraintLayout

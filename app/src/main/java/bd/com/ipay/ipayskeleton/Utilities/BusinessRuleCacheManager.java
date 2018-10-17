@@ -83,6 +83,9 @@ public class BusinessRuleCacheManager {
 											case ServiceIdConstants.REQUEST_MONEY:
 												updateRequestMoneyBusinessRule(mMandatoryBusinessRules, rule);
 												break;
+                                            case ServiceIdConstants.MAKE_PAYMENT:
+                                                updateMakePaymentBusinessRule(mMandatoryBusinessRules, rule);
+                                                break;
 											case ServiceIdConstants.ADD_MONEY_BY_BANK:
 												updateAddMoneyByBankBusinessRule(mMandatoryBusinessRules, rule);
 												break;
@@ -155,6 +158,24 @@ public class BusinessRuleCacheManager {
 				break;
 		}
 	}
+
+	private static void updateMakePaymentBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule rule) {
+		switch (rule.getRuleID()) {
+			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+				mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				break;
+			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+				mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+				break;
+			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED:
+				mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+				break;
+			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED:
+				mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+				break;
+		}
+	}
+
 	private static void updateTopupBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule rule) {
         switch (rule.getRuleID()) {
 			case BusinessRuleConstants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT:
@@ -252,6 +273,8 @@ public class BusinessRuleCacheManager {
 				return Constants.ADD_MONEY_BY_CARD;
 			case ServiceIdConstants.REQUEST_MONEY:
                 return Constants.REQUEST_MONEY;
+            case ServiceIdConstants.MAKE_PAYMENT:
+                return Constants.MAKE_PAYMENT;
             case ServiceIdConstants.TOP_UP:
                 return Constants.TOP_UP;
             case ServiceIdConstants.UTILITY_BILL_PAYMENT:

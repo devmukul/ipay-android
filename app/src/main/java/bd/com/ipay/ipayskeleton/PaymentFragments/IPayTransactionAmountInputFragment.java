@@ -73,7 +73,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
     private EditText mAmountDummyEditText;
 
     private String mAddressString;
-    private Long mOutletId;
+    private Long mOutletId = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,7 +87,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
                 operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
                 mAddressString = getArguments().getString(Constants.ADDRESS);
-                mOutletId = getArguments().getLong(Constants.OUTLET_ID);
+                if(getArguments().containsKey(Constants.OUTLET_ID)) {
+                    mOutletId = getArguments().getLong(Constants.OUTLET_ID);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -285,6 +287,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                     bundle.putString(Constants.PHOTO_URI, profilePicture);
                     bundle.putInt(Constants.OPERATOR_TYPE, operatorType);
                     bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                    bundle.putString(Constants.ADDRESS, mAddressString);
+                    if(mOutletId!=null)
+                        bundle.putLong(Constants.OUTLET_ID, mOutletId);
                     final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                     bundle.putSerializable(Constants.AMOUNT, amount);
                     if (getActivity() instanceof IPayTransactionActionActivity) {
@@ -294,10 +299,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             }
         });
 
-        if (getActivity() != null) {
-            mAmountDummyEditText.requestFocus();
-            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
-        }
+//        if (getActivity() != null) {
+//            mAmountDummyEditText.requestFocus();
+//            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
+//        }
     }
 
     private boolean isValidInputs() {
