@@ -855,7 +855,7 @@
     <string name="add_a_contact">Add a Contact</string>
     <string name="invite_a_contact">Invite a Contact</string>
     <string name="progress_dialog_adding_contact">Adding contact…</string>
-    <string name="dialog_requesting_top_up">Preparing for Top Up…</string>
+    <string name="dialog_requesting_top_up">Preparing for Top-Up…</string>
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
     <string name="forget_password_link">https://app.ipay.com.bd/forgot-password</string>
@@ -1278,7 +1278,7 @@
     <string name="add_money_confirmation_message">YOU ARE ADDING Tk. %1$s FROM</string>
     <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk. %1$s TO</string>
     <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk. %1$s FOR</string>
-    <string name="top_up_confirmation_message">MOBILE TOP UP %1$s TO</string>
+    <string name="top_up_confirmation_message">MOBILE TOP-UP %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
     <string name="add_money_card_success_message">SUCCESSFULLY ADDED Tk. %1$s FROM</string>
     <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk. %1$s FROM</string>
