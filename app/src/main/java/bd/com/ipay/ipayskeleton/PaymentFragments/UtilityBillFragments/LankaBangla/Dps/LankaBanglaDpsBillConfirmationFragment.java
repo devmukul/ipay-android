@@ -143,7 +143,7 @@ public class LankaBanglaDpsBillConfirmationFragment extends IPayAbstractTransact
 										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER, accountNumber);
 										bundle.putSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT, billAmount);
 										if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillSuccessFragment(), bundle, 4, true);
+											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillSuccessFragment(), bundle, 3, true);
 										}
 
 									}

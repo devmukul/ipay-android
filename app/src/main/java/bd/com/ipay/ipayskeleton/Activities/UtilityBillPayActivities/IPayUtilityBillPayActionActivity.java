@@ -10,10 +10,9 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival.CarnivalIdInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaCardNumberInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps.LankaBanglaDpsNumberInputFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival.CarnivalIdInputFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.LankaBanglaCardNumberInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LinkThree.LinkThreeSubscriberIdInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -46,8 +45,7 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
 				switchFragment(new CarnivalIdInputFragment(), bundle, 0, false);
 				break;
 			case BILL_PAY_LANKABANGLA_DPS:
-                final Bundle bundle2 = new Bundle();
-                switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle2, 1, false);
+                switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle, 0, false);
                 break;default:
 				finish();
 		}

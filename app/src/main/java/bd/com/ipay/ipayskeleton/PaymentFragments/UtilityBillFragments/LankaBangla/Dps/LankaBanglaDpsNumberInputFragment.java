@@ -144,7 +144,7 @@ public class LankaBanglaDpsNumberInputFragment extends IpayAbstractDpsInputFragm
                 final LankaBanglaDpsAmountInputFragment lankaBanglaDpsAmountInputFragment = new LankaBanglaDpsAmountInputFragment();
 
                 if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-                    ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(lankaBanglaDpsAmountInputFragment, bundle, 2, true);
+                    ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(lankaBanglaDpsAmountInputFragment, bundle, 1, true);
                 }
             }
         });
