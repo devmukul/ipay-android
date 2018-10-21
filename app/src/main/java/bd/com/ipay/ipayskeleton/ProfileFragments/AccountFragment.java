@@ -123,7 +123,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
 
-        mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
+        mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action_for_profile_picture));
 
         setProfileInformation();
         setVisibilityOfProfilePicUploadButton();
