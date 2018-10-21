@@ -93,7 +93,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         mProgressDialog = new ProgressDialog(getActivity());
         mUploadPhotoButton = (Button) view.findViewById(R.id.button_upload_profile_pic);
         mSelectPhotoButton = (Button) view.findViewById(R.id.button_select_profile_pic);
-        mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
+        mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action_for_profile_picture));
         mUploadImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mUploadImageView.setProfilePicture(R.drawable.ic_onboard_profile_pic_upload_helper);
         mDocumentHelperTextView = (TextView) view.findViewById(R.id.profile_pic_upload_helper_title);
