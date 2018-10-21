@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import static bd.com.ipay.ipayskeleton.Utilities.Constants.DESCO;
 
 public class PayDashBoardFragment extends BaseFragment implements HttpResponseListener {
 
+    private static final int REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH = 100;
     private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
     GetAllTrendingBusinessResponse mTrendingBusinessResponse;
     List<TrendingBusinessList> mTrendingBusinessList;
@@ -73,6 +75,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mDozeBillPayView;
     private View mLankaBanglaView;
     private View mAmberITBillPayView;
+    private View mLankaBanglaDpsView;
     private HashMap<String, String> mProviderAvailabilityMap;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -107,7 +110,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mDozeBillPayView = v.findViewById(R.id.carnival);
         mDpdcBillPayView = v.findViewById(R.id.dpdc);
         mAmberITBillPayView = v.findViewById(R.id.amberit);
-        mLankaBanglaView = v.findViewById(R.id.lankaBanglaView);
+        mLankaBanglaView = v.findViewById(R.id.lankaBanglaViewCard);
+        mLankaBanglaDpsView = v.findViewById(R.id.lankaBanglaViewDps);
         mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
 
@@ -315,7 +319,31 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
                         intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_CARD);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+        mLankaBanglaDpsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.LANKABANGLA) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.LANKABANGLA).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.LANKABANGLA));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_DPS);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                     }
                 });
                 pinChecker.execute();
@@ -561,6 +589,15 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 super(view);
                 titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
                 trendingBusinessCAtegory = (RecyclerView) view.findViewById(R.id.trending_business_recycler_view_category);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH) {
+            if (resultCode == Activity.RESULT_OK) {
+                ((DashBoardFragment) getParentFragment()).getViewPager().setCurrentItem(0);
             }
         }
     }

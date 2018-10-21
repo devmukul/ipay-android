@@ -35,6 +35,7 @@ public class DBConstants {
     // Business table
     public static final String KEY_BUSINESS_MOBILE_NUMBER = "mobile_number";
     public static final String KEY_BUSINESS_NAME = "business_name";
+    public static final String KEY_COMPANY_NAME = "company_name";
     public static final String BUSINESS_EMAIL = "email";
     public static final String KEY_BUSINESS_TYPE = "business_type";
     public static final String KEY_BUSINESS_ACCOUNT_ID = "business_id";

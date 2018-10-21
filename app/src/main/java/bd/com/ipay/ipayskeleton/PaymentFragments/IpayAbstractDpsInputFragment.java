@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments;
 
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,73 +17,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.R;
 
-public abstract class IPayAbstractCardNumberInputFragment extends Fragment {
-
-    private ImageView cardIconImageView;
-    private TextView cardMessageTextView;
-    private EditText cardNumberEditText;
+public abstract class IpayAbstractDpsInputFragment extends Fragment {
     private Button continueButton;
+    private EditText dpsNumberEditText;
 
     @Nullable
     @Override
-    public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_ipay_card_number_input, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_dps_account_number_input, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        cardIconImageView = view.findViewById(R.id.card_icon_image_view);
-        cardMessageTextView = view.findViewById(R.id.card_message_image_view);
-        cardNumberEditText = view.findViewById(R.id.card_number_edit_text);
-        continueButton = view.findViewById(R.id.continue_button);
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             if (actionBar != null)
                 actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        dpsNumberEditText = (EditText) view.findViewById(R.id.dps_number_edit_text);
+        continueButton = (Button) view.findViewById(R.id.continue_button);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (verifyInput()) {
-                    performContinueAction();
+                    performButtonAction();
                 }
+
             }
         });
-    }
 
-    public void setCardNumberHint(String hint) {
-        if (!TextUtils.isEmpty(hint)) {
-            cardNumberEditText.setHint(hint);
-        }
-    }
-
-    public String getCardNumber() {
-        if (cardNumberEditText.getText() != null)
-            return cardNumberEditText.getText().toString();
-        else
-            return "";
-    }
-
-    public void setCardIconImageResource(int imageResource) {
-        cardIconImageView.setImageResource(imageResource);
-    }
-
-    public void setMessage(String message) {
-        if (TextUtils.isEmpty(message)) {
-            cardMessageTextView.setVisibility(View.GONE);
-            cardMessageTextView.setText("");
-        } else {
-            cardMessageTextView.setVisibility(View.VISIBLE);
-            cardMessageTextView.setText(message);
-        }
     }
 
     public void showErrorMessage(String errorMessage) {
@@ -99,7 +69,21 @@ public abstract class IPayAbstractCardNumberInputFragment extends Fragment {
         }
     }
 
-    protected abstract boolean verifyInput();
+    public String getDpsNumber() {
+        if(dpsNumberEditText.getText() == null ){
+            return "";
+        }
+        else {
+            if(dpsNumberEditText.getText().toString() == null || dpsNumberEditText.getText().toString().equals("")){
+                return "";
+            }
+            else{
+                return dpsNumberEditText.getText().toString();
+            }
+        }
+    }
 
-    protected abstract void performContinueAction();
+    public abstract boolean verifyInput();
+
+    public abstract void performButtonAction();
 }
