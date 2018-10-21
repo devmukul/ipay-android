@@ -35,6 +35,7 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 	private String amountType;
 	private Number billAmount;
 	private String cardNumber;
+	private String cardUserName;
 
 	private String uri;
 	private LankaBanglaCardBillPayRequest lankaBanglaCardBillPayRequest;
@@ -46,6 +47,7 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 			amountType = getArguments().getString(AMOUNT_TYPE_KEY, Constants.OTHER);
 			billAmount = (Number) getArguments().getSerializable(BILL_AMOUNT_KEY);
 			cardNumber = getArguments().getString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, "");
+			cardUserName = getArguments().getString(LankaBanglaAmountInputFragment.CARD_USER_NAME_KEY, "");
 		}
 	}
 
@@ -54,6 +56,7 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 		setTransactionImageResource(R.drawable.ic_lankabd2);
 		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
 		setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
+		setUserName(cardUserName);
 		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
 	}
 

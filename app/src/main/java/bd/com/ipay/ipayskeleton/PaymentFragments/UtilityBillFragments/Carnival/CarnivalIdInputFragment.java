@@ -124,7 +124,8 @@ public class CarnivalIdInputFragment extends IPayAbstractUserIdInputFragment imp
 				bundle.putString(CarnivalBillAmountInputFragment.CARNIVAL_ID_KEY, getUserId());
 				bundle.putString(CarnivalBillAmountInputFragment.USER_NAME_KEY, carnivalCustomerInfoResponse.getName());
 				bundle.putInt(CarnivalBillAmountInputFragment.PACKAGE_RATE_KEY, new BigDecimal(carnivalCustomerInfoResponse.getCurrentPackageRate()).intValue());
-
+				if (getActivity() != null)
+					Utilities.hideKeyboard(getActivity());
 				if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
 					((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new CarnivalBillAmountInputFragment(), bundle, 1, true);
 				}

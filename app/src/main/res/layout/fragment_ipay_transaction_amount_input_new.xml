@@ -65,7 +65,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/value32"
                     android:layout_marginRight="@dimen/value32"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
                     android:fontFamily="@font/open_sans_semibold"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
@@ -80,7 +79,7 @@
                     android:fontFamily="@font/open_sans"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:visibility="gone"
                     tools:text="@string/dummy_name"
                     tools:visibility="visible" />

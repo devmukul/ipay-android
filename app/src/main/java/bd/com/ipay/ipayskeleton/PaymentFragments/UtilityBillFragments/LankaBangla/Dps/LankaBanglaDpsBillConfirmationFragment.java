@@ -30,6 +30,7 @@ public class LankaBanglaDpsBillConfirmationFragment extends IPayAbstractTransact
 	private HttpRequestPostAsyncTask lankaBanglaDpsPayTask = null;
 
 	private String accountNumber;
+	private String accountUserName;
 
 	private Number billAmount;
 
@@ -41,8 +42,9 @@ public class LankaBanglaDpsBillConfirmationFragment extends IPayAbstractTransact
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			accountNumber = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER, "");
-			billAmount = (Number) getArguments().getSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT);
+			accountNumber = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, "");
+			accountUserName = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, "");
+			billAmount = (Number) getArguments().getSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY);
 		}
 	}
 
@@ -51,6 +53,7 @@ public class LankaBanglaDpsBillConfirmationFragment extends IPayAbstractTransact
 		setTransactionImageResource(R.drawable.ic_lankabd2);
 		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
 		setName(accountNumber);
+		setUserName(accountUserName);
 		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
 	}
 
@@ -140,8 +143,9 @@ public class LankaBanglaDpsBillConfirmationFragment extends IPayAbstractTransact
 									public void run() {
 										customProgressDialog.dismissDialog();
 										Bundle bundle = new Bundle();
-										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER, accountNumber);
-										bundle.putSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT, billAmount);
+										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, accountNumber);
+										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, accountUserName);
+										bundle.putSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY, billAmount);
 										if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
 											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillSuccessFragment(), bundle, 3, true);
 										}

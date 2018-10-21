@@ -82,7 +82,8 @@ public class LinkThreeSubscriberIdInputFragment extends IPayAbstractUserIdInputF
 							Bundle bundle = new Bundle();
 							bundle.putString(LinkThreeBillAmountInputFragment.SUBSCRIBER_ID_KEY, getUserId());
 							bundle.putString(LinkThreeBillAmountInputFragment.USER_NAME_KEY, linkThreeSubscriberInfoResponse.getSubscriberName());
-
+							if (getActivity() != null)
+								Utilities.hideKeyboard(getActivity());
 							if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
 								((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LinkThreeBillAmountInputFragment(), bundle, 1, true);
 							}
