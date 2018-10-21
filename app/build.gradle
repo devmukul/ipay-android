@@ -50,6 +50,7 @@ android {
         for (String key : envProperties.keySet()) {
             buildConfigField "String", key.replaceAll("\\.", "_").toUpperCase(), "\"" + envProperties[key] + "\""
         }
+        manifestPlaceholders = [iPayUrl: (envProperties["base.url.ipay"] as String).replace("https://", "")]
         vectorDrawables.useSupportLibrary = true
     }
 

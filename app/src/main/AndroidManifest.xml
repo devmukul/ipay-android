@@ -85,19 +85,11 @@
                     android:scheme="ipay" />
 
                 <data
-                    android:host="@string/ipay_dev_host"
-                    android:scheme="https" />
-
-                <data
-                    android:host="@string/ipay_demo_host"
-                    android:scheme="https" />
-
-                <data
                     android:host="www.ipay.com.bd"
                     android:scheme="https" />
 
                 <data
-                    android:host="@string/ipay_live_host"
+                    android:host="${iPayUrl}"
                     android:scheme="https" />
 
                 <data
