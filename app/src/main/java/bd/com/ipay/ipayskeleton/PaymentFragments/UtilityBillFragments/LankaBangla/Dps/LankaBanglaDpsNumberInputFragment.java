@@ -48,7 +48,8 @@ public class LankaBanglaDpsNumberInputFragment extends IPayAbstractUserIdInputFr
 		mGetLankaBanglaDpsUserInfoAsyncTask = new HttpRequestGetAsyncTask(
 				Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO, url, getContext(), false);
 		mGetLankaBanglaDpsUserInfoAsyncTask.mHttpResponseListener = this;
-		customProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_fetching_customer_info));
+		customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
+		customProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
 		customProgressDialog.showDialog();
 		mGetLankaBanglaDpsUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
