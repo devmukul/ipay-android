@@ -37,6 +37,7 @@ public class ServiceIdConstants {
 
     // Add Money Service
     public static final int ADD_MONEY_BY_BANK = 3001;
+    public static final int ADD_MONEY_BY_BANK_INSTANTLY = 3003;
     public static final int ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = 3011;
 
     // Withdraw Money Service
