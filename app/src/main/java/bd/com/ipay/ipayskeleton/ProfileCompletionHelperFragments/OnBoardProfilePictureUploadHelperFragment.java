@@ -117,7 +117,13 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                 if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
                     showRepeatedPhotoSelectAlertDialog();
                 } else {
-                    profilePictureHelperDialog.show();
+                    if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                        Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                        startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
+                    } else {
+                        Utilities.requestRequiredPermissions(OnBoardProfilePictureUploadHelperFragment.this,
+                                REQUEST_CODE_PERMISSION, DocumentPicker.PROFILE_PICTURE_PERMISSION);
+                    }
                 }
             }
         });
@@ -128,7 +134,13 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                 if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
                     showRepeatedPhotoSelectAlertDialog();
                 } else {
-                    profilePictureHelperDialog.show();
+                    if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                        Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                        startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
+                    } else {
+                        Utilities.requestRequiredPermissions(OnBoardProfilePictureUploadHelperFragment.this,
+                                REQUEST_CODE_PERMISSION, DocumentPicker.PROFILE_PICTURE_PERMISSION);
+                    }
                 }
             }
         });
@@ -148,7 +160,13 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                 .setMessage(R.string.upload_profile_photo_again)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        profilePictureHelperDialog.show();
+                        if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                            Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                            startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
+                        } else {
+                            Utilities.requestRequiredPermissions(OnBoardProfilePictureUploadHelperFragment.this,
+                                    REQUEST_CODE_PERMISSION, DocumentPicker.PROFILE_PICTURE_PERMISSION);
+                        }
                     }
                 }).show();
     }
@@ -222,7 +240,13 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        profilePictureHelperDialog.show();
+                        if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                            Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                            startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
+                        } else {
+                            Utilities.requestRequiredPermissions(OnBoardProfilePictureUploadHelperFragment.this,
+                                    REQUEST_CODE_PERMISSION, DocumentPicker.PROFILE_PICTURE_PERMISSION);
+                        }
                     }
                 });
         mProfilePictureErrorDialog = mProfilePictureErrorDialogBuilder.build();
@@ -233,8 +257,9 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
-                    selectProfilePictureIntent(mSelectedOptionForImage);
+                if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                    Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                    startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
                 } else {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
                 }

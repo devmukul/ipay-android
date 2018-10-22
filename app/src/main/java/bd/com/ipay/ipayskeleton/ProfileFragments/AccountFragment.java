@@ -55,6 +55,7 @@ import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 public class AccountFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PERMISSION_PERSONAL = 1002;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
     private ProfileImageView mProfilePictureView;
@@ -123,7 +124,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
 
-        mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action_for_profile_picture));
+        mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
 
         setProfileInformation();
         setVisibilityOfProfilePicUploadButton();
@@ -154,7 +155,18 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                 @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
                 public void onClick(View v) {
                     if (!ProfileInfoCacheManager.isAccountVerified()) {
-                        photoSelectionHelperDialog.show();
+                        if (ProfileInfoCacheManager.isBusinessAccount()) {
+                            photoSelectionHelperDialog.show();
+                        } else {
+                            if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                                Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                                startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
+                            } else {
+                                Utilities.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION_PERSONAL, DocumentPicker.PROFILE_PICTURE_PERMISSION);
+                            }
+
+                        }
+
                     } else
                         DialogUtils.showProfilePictureUpdateRestrictionDialog(getContext());
                 }
@@ -308,7 +320,17 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        photoSelectionHelperDialog.show();
+                        if (ProfileInfoCacheManager.isBusinessAccount()) {
+                            photoSelectionHelperDialog.show();
+                        } else {
+                            if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                                Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                                startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
+                            } else {
+                                Utilities.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION_PERSONAL, DocumentPicker.PROFILE_PICTURE_PERMISSION);
+                            }
+
+                        }
                     }
                 });
         mProfilePictureErrorDialog = mProfilePictureErrorDialogBuilder.build();
@@ -321,6 +343,14 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             case REQUEST_CODE_PERMISSION:
                 if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
                     selectProfilePictureIntent(mSelectedOptionForImage);
+                } else {
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+                }
+                break;
+            case REQUEST_CODE_PERMISSION_PERSONAL:
+                if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.PROFILE_PICTURE_PERMISSION)) {
+                    Intent intent = DocumentPicker.createCameraIntent(getContext(), Constants.CAMERA_FRONT, "profile_picture.jpg");
+                    startActivityForResult(intent, ACTION_PICK_PROFILE_PICTURE);
                 } else {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
                 }
