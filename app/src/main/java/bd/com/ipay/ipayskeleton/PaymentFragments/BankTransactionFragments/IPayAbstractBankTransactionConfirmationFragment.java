@@ -54,12 +54,16 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 
 	@Override
 	protected boolean verifyInput() {
-		if (TextUtils.isEmpty(getPin())) {
-			showErrorMessage(getString(R.string.please_enter_a_pin));
-			return false;
-		} else if (getPin().length() != 4) {
-			showErrorMessage(getString(R.string.minimum_pin_length_message));
-			return false;
+		if (isPinRequired()) {
+			if (TextUtils.isEmpty(getPin())) {
+				showErrorMessage(getString(R.string.please_enter_a_pin));
+				return false;
+			} else if (getPin().length() != 4) {
+				showErrorMessage(getString(R.string.minimum_pin_length_message));
+				return false;
+			} else {
+				return true;
+			}
 		} else {
 			return true;
 		}
@@ -69,10 +73,17 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 	protected void performContinueAction() {
 		mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
 
-		if (getApiCommand().equals(Constants.COMMAND_ADD_MONEY_FROM_BANK))
-			mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-		else if (getApiCommand().equals(Constants.COMMAND_WITHDRAW_MONEY))
-			mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
+		switch (getApiCommand()) {
+			case Constants.COMMAND_ADD_MONEY_FROM_BANK:
+				mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
+				break;
+			case Constants.COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY:
+				mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_instantly_in_progress));
+				break;
+			case Constants.COMMAND_WITHDRAW_MONEY:
+				mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
+				break;
+		}
 		mCustomProgressDialog.showDialog();
 		httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(getApiCommand(), getUrl(), getRequestJson(), getActivity(), this, false);
 		httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -94,6 +105,7 @@ public abstract class IPayAbstractBankTransactionConfirmationFragment extends IP
 		} else {
 			switch (result.getApiCommand()) {
 				case Constants.COMMAND_ADD_MONEY_FROM_BANK:
+				case Constants.COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY:
 				case Constants.COMMAND_WITHDRAW_MONEY:
 					httpRequestPostAsyncTask = null;
 					final IPayTransactionResponse iPayTransactionResponse = new Gson().fromJson(result.getJsonString(), IPayTransactionResponse.class);

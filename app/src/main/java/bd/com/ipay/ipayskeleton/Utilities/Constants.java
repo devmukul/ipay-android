@@ -328,6 +328,7 @@ public class Constants {
     public static final String URL_GET_CARD = "user/card";
     // Bank Transaction REST
     public static final String URL_ADD_MONEY_FROM_BANK = "banktransaction/cashin/v2";
+    public static final String URL_ADD_MONEY_FROM_BANK_INSTANTLY = "credit";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
 
     // Bank Verify Rest
@@ -645,6 +646,7 @@ public class Constants {
     public static final String COMMAND_GET_RECOMMENDATION_REQUESTS = "COMMAND_GET_RECOMMENDATION_REQUESTS";
     public static final String COMMAND_ADD_MONEY = "COMMAND_ADD_MONEY";
     public static final String COMMAND_ADD_MONEY_FROM_BANK = "COMMAND_ADD_MONEY_FROM_BANK";
+    public static final String COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY = "COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY";
     public static final String COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD = "COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD";
     public static final String COMMAND_INTRODUCE_ACTION = "COMMAND_INTRODUCE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";

@@ -228,6 +228,7 @@
     <string name="progress_dialog_saving_new_pass">Saving new password…</string>
     <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account. You can use this feature once your linked bank account gets verified!</string>
     <string name="progress_dialog_add_money_in_progress">Request submitting for add money</string>
+    <string name="progress_dialog_add_money_instantly_in_progress">Request submitting for instant money</string>
     <string name="progress_dialog_withdraw_money_in_progress">Request submitting for money withdrawal</string>
     <string name="sending_money">Sending money in progress. Please wait…</string>
     <string name="progress_dialog_text_payment">Payment in progress. Please wait…</string>

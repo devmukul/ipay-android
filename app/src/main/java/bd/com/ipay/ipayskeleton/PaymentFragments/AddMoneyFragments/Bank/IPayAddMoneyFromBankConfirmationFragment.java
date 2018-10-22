@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank;
 import android.os.Bundle;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankRequestRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankRequest;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -17,7 +17,7 @@ public class IPayAddMoneyFromBankConfirmationFragment extends IPayAbstractBankTr
 
 	@Override
 	protected String getRequestJson() {
-		return gson.toJson(new AddMoneyByBankRequestRequest(bankAccountList.getBankAccountId(), transactionAmount.doubleValue(), getNote(), getPin()));
+		return gson.toJson(new AddMoneyByBankRequest(bankAccountList.getBankAccountId(), transactionAmount.doubleValue(), getNote(), getPin()));
 	}
 
 	@Override
