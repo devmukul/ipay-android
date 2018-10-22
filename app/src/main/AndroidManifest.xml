@@ -217,12 +217,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.EducationPaymentActivity"
-            android:label="@string/education"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".Activities.DrawerActivities.ManageBanksActivity"
             android:label="@string/manage_bank_accounts"
             android:screenOrientation="portrait"

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps;
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,39 +19,38 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragment {
+public class CarnivalBillAmountInputFragment extends IPayAbstractAmountFragment {
 
-	static final String ACCOUNT_NUMBER_KEY = "ACCOUNT_NUMBER";
-	static final String ACCOUNT_USER_NAME_KEY = "ACCOUNT_USER_NAME";
-	public static final String INSTALLMENT_AMOUNT_KEY = "INSTALLMENT_AMOUNT";
+	static final String USER_NAME_KEY = "USER_NAME";
+	static final String CARNIVAL_ID_KEY = "CARNIVAL_ID";
+	static final String PACKAGE_RATE_KEY = "PACKAGE_RATE";
 
-
-	private String installmentAmount;
-	private String accountNumber;
-	private String accountUserName;
+	private String userName;
+	private String carnivalId;
+	private int packageRate;
 
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		if (getArguments() != null) {
-			installmentAmount = getArguments().getString(INSTALLMENT_AMOUNT_KEY, "");
-			accountNumber = getArguments().getString(ACCOUNT_NUMBER_KEY, "");
-			accountUserName = getArguments().getString(ACCOUNT_USER_NAME_KEY, "");
+			userName = getArguments().getString(USER_NAME_KEY, "");
+			carnivalId = getArguments().getString(CARNIVAL_ID_KEY, "");
+			packageRate = getArguments().getInt(PACKAGE_RATE_KEY, 0);
 		}
 	}
 
 	@Override
 	protected void setupViewProperties() {
+		if (packageRate > 0)
+			addShortCutOption(1, getString(R.string.package_rate).toUpperCase(), packageRate);
+
 		setBalanceInfoLayoutVisibility(View.VISIBLE);
 		setTransactionDescription(getString(R.string.paying_bill_message));
 		setInputType(InputType.TYPE_CLASS_NUMBER);
-		setTransactionImageResource(R.drawable.ic_lankabd2);
-		setName(accountNumber);
-		setUserName(accountUserName);
-		setAmount(installmentAmount);
-		setAmountFieldEnabled(false);
+		setTransactionImageResource(R.drawable.ic_carnival);
+		setName(carnivalId);
+		setUserName(userName);
 	}
 
 	@Override
@@ -122,13 +121,16 @@ public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragmen
 
 	@Override
 	protected void performContinueAction() {
+		if (getAmount() == null)
+			return;
+
 		Bundle bundle = new Bundle();
-		bundle.putString(ACCOUNT_NUMBER_KEY, accountNumber);
-		bundle.putString(ACCOUNT_USER_NAME_KEY, accountUserName);
-		bundle.putSerializable(INSTALLMENT_AMOUNT_KEY, getAmount());
+		bundle.putString(CARNIVAL_ID_KEY, carnivalId);
+		bundle.putString(USER_NAME_KEY, userName);
+		bundle.putSerializable(CarnivalBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
 
 		if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillConfirmationFragment(), bundle, 2, true);
+			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new CarnivalBillConfirmationFragment(), bundle, 2, true);
 		}
 	}
 

@@ -34,6 +34,7 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 	private TextView transactionSuccessMessageTextView;
 	private TextView successDescriptionTextView;
 	private TextView nameTextView;
+	private TextView userNameTextView;
 	private RoundedImageView senderProfilePictureImageView;
 	private RoundedImageView receiverProfilePictureImageView;
 	private ImageView arrowImageView;
@@ -60,6 +61,7 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		transactionSuccessMessageTextView = view.findViewById(R.id.transaction_success_message_text_view);
 		successDescriptionTextView = view.findViewById(R.id.success_description_text_view);
 		nameTextView = view.findViewById(R.id.name_text_view);
+		userNameTextView = view.findViewById(R.id.user_name_text_view);
 		senderProfilePictureImageView = view.findViewById(R.id.sender_profile_picture_image_view);
 		receiverProfilePictureImageView = view.findViewById(R.id.receiver_profile_picture_image_view);
 		arrowImageView = view.findViewById(R.id.arrow_icon_image_view);
@@ -88,6 +90,11 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 
 	protected void setName(CharSequence name) {
 		nameTextView.setText(name, TextView.BufferType.SPANNABLE);
+	}
+
+	protected void setUserName(CharSequence userName) {
+		userNameTextView.setVisibility(View.VISIBLE);
+		userNameTextView.setText(userName, TextView.BufferType.SPANNABLE);
 	}
 
 	protected void setSuccessDescription(CharSequence successDescription) {
