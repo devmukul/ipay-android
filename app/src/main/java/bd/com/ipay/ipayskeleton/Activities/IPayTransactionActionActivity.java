@@ -9,8 +9,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankOptionFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromCardAmountInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank.IPayAddMoneyFromBankOptionFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank.Instant.IPayAddMoneyFromBankInstantlyOptionFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card.IPayAddMoneyFromCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyOptionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionAmountInputFragment;
@@ -37,6 +38,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
 	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_BANK = ServiceIdConstants.ADD_MONEY_BY_BANK;
 	// 3002
 	public static final int TRANSACTION_TYPE_WITHDRAW_MONEY = ServiceIdConstants.WITHDRAW_MONEY;
+	// 3003
+	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY = ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY;
 	// 3011
 	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
 	// 6001
@@ -56,15 +59,19 @@ public class IPayTransactionActionActivity extends BaseActivity {
 		bundle.putInt(TRANSACTION_TYPE_KEY, transactionType);
 		switch (transactionType) {
 			case TRANSACTION_TYPE_ADD_MONEY:
-				switchToAddMoneyOptionFragment(bundle);
+				switchFragment(new IPayAddMoneyOptionFragment(), bundle, 0, false);
 				break;
 			case TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchToAddMoneyFromBankOptionFragment(bundle);
+				switchFragment(new IPayAddMoneyFromBankOptionFragment(), bundle, 0, false);
+				break;
+			case TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY:
+				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+				switchFragment(new IPayAddMoneyFromBankInstantlyOptionFragment(), bundle, 0, false);
 				break;
 			case TRANSACTION_TYPE_WITHDRAW_MONEY:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchToWithdrawMoneyFromBankOptionFragment(bundle);
+				switchFragment(new IPayWithdrawMoneyFromBankOptionFragment(), bundle, 0, false);
 				break;
 			case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
@@ -101,18 +108,6 @@ public class IPayTransactionActionActivity extends BaseActivity {
 				finish();
 				break;
 		}
-	}
-
-	private void switchToAddMoneyOptionFragment(@NonNull Bundle bundle) {
-		switchFragment(new IPayAddMoneyOptionFragment(), bundle, 0, false);
-	}
-
-	private void switchToWithdrawMoneyFromBankOptionFragment(@NonNull Bundle bundle) {
-		switchFragment(new IPayWithdrawMoneyFromBankOptionFragment(), bundle, 0, false);
-	}
-
-	private void switchToAddMoneyFromBankOptionFragment(@NonNull Bundle bundle) {
-		switchFragment(new IPayAddMoneyFromBankOptionFragment(), bundle, 0, false);
 	}
 
 	private void switchToTransactionContactsFragment(@NonNull Bundle bundle) {

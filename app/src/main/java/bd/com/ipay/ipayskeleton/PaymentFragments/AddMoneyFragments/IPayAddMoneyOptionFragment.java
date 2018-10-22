@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Adapters.AddMoneyOptionAdapter;
 import bd.com.ipay.ipayskeleton.Adapters.OnItemClickListener;
 import bd.com.ipay.ipayskeleton.Model.AddMoneyOption;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card.IPayAddMoneyFromCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayChooseBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -71,6 +72,19 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 							addBankOptionFragment = new IPayChooseBankOptionFragment();
 							Bundle bundle = new Bundle();
 							bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK);
+							addBankOptionFragment.setArguments(bundle);
+							if (getFragmentManager() != null)
+								getFragmentManager().beginTransaction()
+										.replace(R.id.bank_option_fragment_container, addBankOptionFragment)
+										.commit();
+						}
+						break;
+					case ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY:
+						if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+							bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+							addBankOptionFragment = new IPayChooseBankOptionFragment();
+							Bundle bundle = new Bundle();
+							bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY);
 							addBankOptionFragment.setArguments(bundle);
 							if (getFragmentManager() != null)
 								getFragmentManager().beginTransaction()

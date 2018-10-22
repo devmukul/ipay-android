@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card;
 
 import android.content.Intent;
 import android.os.AsyncTask;

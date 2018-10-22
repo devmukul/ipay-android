@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank.Instant;
 
 import android.os.Bundle;
 import android.text.InputType;
@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class IPayAddMoneyFromBankAmountInputFragment extends IPayAbstractBankTransactionAmountInputFragment {
+public class IPayAddMoneyFromBankInstantlyAmountInputFragment extends IPayAbstractBankTransactionAmountInputFragment {
 	@Override
 	protected void setupViewProperties() {
 		setTransactionDescription(getString(R.string.add_money_from_title));
@@ -31,7 +31,7 @@ public class IPayAddMoneyFromBankAmountInputFragment extends IPayAbstractBankTra
 			final Bundle bundle = new Bundle();
 			bundle.putParcelable(Constants.SELECTED_BANK_ACCOUNT, bankAccountList);
 			bundle.putSerializable(IPayAbstractBankTransactionConfirmationFragment.TRANSACTION_AMOUNT_KEY, getAmount());
-			((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromBankConfirmationFragment(), bundle, 2, true);
+			((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromBankInstantlyConfirmationFragment(), bundle, 2, true);
 		}
 	}
 

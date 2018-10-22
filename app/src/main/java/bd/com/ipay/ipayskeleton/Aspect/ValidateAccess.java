@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ValidateAccess {
 
-    int[] value() default {-1};
+	int[] value() default {-1};
 
+	int[] or() default {-1};
 }
