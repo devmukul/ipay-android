@@ -47,8 +47,7 @@ public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragmen
         setTransactionImageResource(R.drawable.ic_lankabd2);
         setName(accountNumber);
         setAmount(installmentAmount);
-        setAmountFocusableFalse();
-        disableAmountField();
+        setAmountFieldEnabled(false);
     }
 
     @Override
@@ -121,7 +120,7 @@ public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragmen
     protected void performContinueAction() {
         Bundle bundle = new Bundle();
         bundle.putString(ACCOUNT_NUMBER, accountNumber);
-        bundle.putString(INSTALLMENT_AMOUNT, installmentAmount);
+        bundle.putSerializable(INSTALLMENT_AMOUNT, getAmount());
 
         if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
             ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillConfirmationFragment(), bundle, 3, true);

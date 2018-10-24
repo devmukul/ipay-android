@@ -112,11 +112,6 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_ipay_transaction_amount_input_new, container, false);
     }
 
-    public void setAmountFocusableFalse() {
-        this.amountDummyEditText.setFocusable(false);
-        amountTextView.setFocusable(false);
-    }
-
     @Override
     public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -203,16 +198,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
             }
         });
 
-        amountTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.clearFocus();
-                if (getContext() != null)
-                    Utilities.showKeyboard(getContext(), amountDummyEditText);
-                if (amountDummyEditText.getText() != null)
-                    amountDummyEditText.setSelection(amountDummyEditText.getText().length());
-            }
-        });
+        setAmountFieldEnabled(true);
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,10 +219,6 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
         setupViewProperties();
     }
 
-    public void disableAmountField() {
-        amountDummyEditText.setOnClickListener(null);
-    }
-
     protected abstract void setupViewProperties();
 
     private void shouldRemoveCheck(double result) {
@@ -251,6 +233,12 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
             }
         }
     }
+
+	public void setAmountFieldEnabled(boolean isEnabled) {
+		this.amountDummyEditText.setFocusable(isEnabled);
+		amountTextView.setFocusable(isEnabled);
+		amountTextView.setOnClickListener(isEnabled ? amountFieldClickAction : null);
+	}
 
     public void setInputType(int inputType) {
         if (inputType == InputType.TYPE_CLASS_NUMBER || inputType == (InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER))
@@ -396,6 +384,17 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
             return "ShortCutOption{" + "id=" + id + ", title=" + title + ", amountValue=" + amountValue + '}';
         }
     }
+
+	private final View.OnClickListener amountFieldClickAction = new  View.OnClickListener() {
+ 		@Override
+		public void onClick(View v) {
+			v.clearFocus();
+			if (getContext() != null)
+				Utilities.showKeyboard(getContext(), amountDummyEditText);
+			if (amountDummyEditText.getText() != null)
+				amountDummyEditText.setSelection(amountDummyEditText.getText().length());
+		}
+	};
 
     private final BroadcastReceiver mBusinessRuleUpdateBroadcastReceiver = new BroadcastReceiver() {
 

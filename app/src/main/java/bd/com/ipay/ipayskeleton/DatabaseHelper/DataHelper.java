@@ -124,8 +124,8 @@ public class DataHelper {
 
             SQLiteDatabase db = dOpenHelper.getWritableDatabase();
             db.beginTransaction();
-
             try {
+	            db.execSQL("DELETE FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS);
                 for (BusinessAccountEntry mBusinessAccountEntry : businessAccountEntries) {
                     ContentValues values = new ContentValues();
                     values.put(DBConstants.KEY_BUSINESS_MOBILE_NUMBER, mBusinessAccountEntry.getMobileNumber());

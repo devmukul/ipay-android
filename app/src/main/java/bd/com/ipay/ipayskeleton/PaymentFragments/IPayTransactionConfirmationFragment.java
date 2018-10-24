@@ -102,13 +102,15 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
                 profilePicture = getArguments().getString(Constants.PHOTO_URI);
                 amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+	            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+	            operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
                 mAddressString = getArguments().getString(Constants.ADDRESS);
                 if(getArguments().containsKey(Constants.OUTLET_ID)) {
                     mOutletId = getArguments().getLong(Constants.OUTLET_ID);
                 }
             }
         } catch (Exception e) {
-
+        	e.printStackTrace();
         }
         if (transactionType == ServiceIdConstants.TOP_UP) {
             operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
@@ -436,6 +438,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 return "Make Payment";
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 return "Request Money";
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                return "Top Up";
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
                 return "";
