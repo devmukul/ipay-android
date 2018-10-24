@@ -149,7 +149,6 @@ public class LinkThreeBillConfirmationFragment extends IPayAbstractTransactionCo
 										if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
 											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LinkThreeBillSuccessFragment(), bundle, 3, true);
 										}
-
 									}
 								}, 2000);
 								if (getActivity() != null)
