@@ -72,7 +72,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 	private View mWestZoneBillPayView;
 	private View mDescoBillPayView;
 	private View mDpdcBillPayView;
-	private View mDozeBillPayView;
+	private View mCarnivalBillPayView;
 	private View mLankaBanglaView;
 	private View mAmberITBillPayView;
 	private View mLankaBanglaDpsView;
@@ -107,7 +107,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 		mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
 		mDescoBillPayView = v.findViewById(R.id.desco);
 		mWestZoneBillPayView = v.findViewById(R.id.west_zone);
-		mDozeBillPayView = v.findViewById(R.id.carnival);
+		mCarnivalBillPayView = v.findViewById(R.id.carnival);
 		mDpdcBillPayView = v.findViewById(R.id.dpdc);
 		mAmberITBillPayView = v.findViewById(R.id.amberit);
 		mLankaBanglaView = v.findViewById(R.id.lankaBanglaViewCard);
@@ -244,7 +244,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
                         intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LINK_THREE);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                     }
                 });
                 pinChecker.execute();
@@ -400,7 +400,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker.execute();
             }
         });
-        mDozeBillPayView.setOnClickListener(new View.OnClickListener() {
+        mCarnivalBillPayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
@@ -418,7 +418,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
                         intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_CARNIVAL);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                     }
                 });
                 pinChecker.execute();
