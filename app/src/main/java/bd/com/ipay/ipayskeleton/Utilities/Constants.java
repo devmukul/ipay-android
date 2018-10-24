@@ -195,23 +195,22 @@ public class Constants {
 	public static final String LANKA_BANGLA_BILL_PAY = "LANKA BANGLA BILL PAY";
 	public static final String LANKA_BANGLA_DPS_BILL_PAY = "LANKA BANGLA DPS BILL PAY";
 	public static final String AMBERIT = "AMBERIT";
-	public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
-	public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
-	public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
-	public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
-	public static final String FROM_CONTACT = "FROM_CONTACT";
-	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
-	public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
-	public static final String VISA = "VISA";
-	public static final String MASTERCARD = "MASTERCARD";
-	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+    public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
+    public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
+    public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
+    public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
+    public static final String FROM_CONTACT = "FROM_CONTACT";
+    public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
+    public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
+    public static final String VISA = "VISA";
+    public static final String MASTERCARD = "MASTERCARD";
+    public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
 	public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
 	public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
-    public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
+	public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
-    public static final String URL_LANKABANGLA_DPS_BILL_PAY = "lankabangla/dps/billpay";
-	public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
+    public static final String URL_LANKABANGLA_DPS_BILL_PAY = "lankabangla/dps/billpay";public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
 	public static final String LANKABANGLA = "LANKABANGLA";
 	public static final String COMMAND_LANKABANGLA_BILL_PAY = "COMMAND_LANKABANGLA_BILL_PAY";
 	public static final String URL_LANKABANGLA_VISA_BILL_PAY = "lankabangla/visa/billpay";
@@ -436,6 +435,10 @@ public class Constants {
     public static final String URL_PAYMENT_REVERT = "payment-revert";
 
     public static final String URL_PAYMENT = "payment/v2";
+    public static final String URL_PAYMENT_V3 = "payment/v3";
+
+    public static final String X_IPAY_OTP = "X-iPay-OTP";
+    public static final String X_IPAY_PIN = "X-iPay-PIN";
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
@@ -451,6 +454,7 @@ public class Constants {
 
     // Transaction REST
     public static final String URL_SEND_MONEY = "transaction/send/v2";
+    public static final String URL_SEND_MONEY_V3 = "send/v3";
 
     // Trusted Network REST
     public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
