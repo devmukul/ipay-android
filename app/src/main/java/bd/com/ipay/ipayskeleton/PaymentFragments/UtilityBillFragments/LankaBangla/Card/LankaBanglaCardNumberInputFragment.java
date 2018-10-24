@@ -162,6 +162,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 				bundle.putInt(LankaBanglaAmountInputFragment.TOTAL_OUTSTANDING_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getCreditBalance()));
 				bundle.putInt(LankaBanglaAmountInputFragment.MINIMUM_PAY_AMOUNT_KEY, Integer.parseInt(lankaBanglaCustomerInfoResponse.getMinimumPay()));
 				bundle.putString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, lankaBanglaCustomerInfoResponse.getCardNumber());
+				bundle.putString(LankaBanglaAmountInputFragment.CARD_USER_NAME_KEY, lankaBanglaCustomerInfoResponse.getName());
 				Utilities.hideKeyboard(getActivity());
 				final LankaBanglaAmountInputFragment lankaBanglaAmountInputFragment = new LankaBanglaAmountInputFragment();
 

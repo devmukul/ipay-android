@@ -26,10 +26,12 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 	static final String TOTAL_OUTSTANDING_AMOUNT_KEY = "TOTAL_OUTSTANDING";
 	static final String MINIMUM_PAY_AMOUNT_KEY = "MINIMUM_PAY";
 	static final String CARD_NUMBER_KEY = "CARD_NUMBER";
+	static final String CARD_USER_NAME_KEY = "CARD_USER_NAME";
 
 	private int totalOutstandingAmount;
 	private int minimumPayAmount;
 	private String cardNumber;
+	private String cardUserName;
 
 
 	@Override
@@ -39,6 +41,7 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 			totalOutstandingAmount = getArguments().getInt(TOTAL_OUTSTANDING_AMOUNT_KEY, 0);
 			minimumPayAmount = getArguments().getInt(MINIMUM_PAY_AMOUNT_KEY, 0);
 			cardNumber = getArguments().getString(CARD_NUMBER_KEY, "");
+			cardUserName = getArguments().getString(CARD_USER_NAME_KEY, "");
 		}
 	}
 
@@ -54,6 +57,7 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 		setInputType(InputType.TYPE_CLASS_NUMBER);
 		setTransactionImageResource(R.drawable.ic_lankabd2);
 		setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
+		setUserName(cardUserName);
 	}
 
 	@Override
@@ -130,6 +134,7 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 		Bundle bundle = new Bundle();
 		bundle.putString(CARD_NUMBER_KEY, cardNumber);
 		bundle.putSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
+		bundle.putSerializable(LankaBanglaAmountInputFragment.CARD_USER_NAME_KEY, cardUserName);
 
 		if (getAmount().intValue() == minimumPayAmount)
 			bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);

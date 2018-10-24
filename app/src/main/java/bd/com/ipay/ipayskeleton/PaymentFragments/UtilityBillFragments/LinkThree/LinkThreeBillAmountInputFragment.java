@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps;
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LinkThree;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,26 +19,21 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragment {
+public class LinkThreeBillAmountInputFragment extends IPayAbstractAmountFragment {
 
-	static final String ACCOUNT_NUMBER_KEY = "ACCOUNT_NUMBER";
-	static final String ACCOUNT_USER_NAME_KEY = "ACCOUNT_USER_NAME";
-	public static final String INSTALLMENT_AMOUNT_KEY = "INSTALLMENT_AMOUNT";
+	static final String USER_NAME_KEY = "USER_NAME";
+	static final String SUBSCRIBER_ID_KEY = "SUBSCRIBER_ID";
 
-
-	private String installmentAmount;
-	private String accountNumber;
-	private String accountUserName;
+	private String userName;
+	private String subscriberId;
 
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		if (getArguments() != null) {
-			installmentAmount = getArguments().getString(INSTALLMENT_AMOUNT_KEY, "");
-			accountNumber = getArguments().getString(ACCOUNT_NUMBER_KEY, "");
-			accountUserName = getArguments().getString(ACCOUNT_USER_NAME_KEY, "");
+			userName = getArguments().getString(USER_NAME_KEY, "");
+			subscriberId = getArguments().getString(SUBSCRIBER_ID_KEY, "");
 		}
 	}
 
@@ -47,11 +42,9 @@ public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragmen
 		setBalanceInfoLayoutVisibility(View.VISIBLE);
 		setTransactionDescription(getString(R.string.paying_bill_message));
 		setInputType(InputType.TYPE_CLASS_NUMBER);
-		setTransactionImageResource(R.drawable.ic_lankabd2);
-		setName(accountNumber);
-		setUserName(accountUserName);
-		setAmount(installmentAmount);
-		setAmountFieldEnabled(false);
+		setTransactionImageResource(R.drawable.link_three_logo);
+		setName(subscriberId);
+		setUserName(userName);
 	}
 
 	@Override
@@ -122,13 +115,16 @@ public class LankaBanglaDpsAmountInputFragment extends IPayAbstractAmountFragmen
 
 	@Override
 	protected void performContinueAction() {
+		if (getAmount() == null)
+			return;
+
 		Bundle bundle = new Bundle();
-		bundle.putString(ACCOUNT_NUMBER_KEY, accountNumber);
-		bundle.putString(ACCOUNT_USER_NAME_KEY, accountUserName);
-		bundle.putSerializable(INSTALLMENT_AMOUNT_KEY, getAmount());
+		bundle.putString(SUBSCRIBER_ID_KEY, subscriberId);
+		bundle.putString(USER_NAME_KEY, userName);
+		bundle.putSerializable(LinkThreeBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
 
 		if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillConfirmationFragment(), bundle, 2, true);
+			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LinkThreeBillConfirmationFragment(), bundle, 2, true);
 		}
 	}
 
