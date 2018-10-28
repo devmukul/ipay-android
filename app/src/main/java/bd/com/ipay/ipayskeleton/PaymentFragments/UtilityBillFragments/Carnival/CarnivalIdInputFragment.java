@@ -79,6 +79,7 @@ public class CarnivalIdInputFragment extends IPayAbstractUserIdInputFragment imp
 		} else {
 			switch (result.getApiCommand()) {
 				case Constants.COMMAND_GET_CARNIVAL_CUSTOMER_INFO:
+					mGetCustomerInfoTask = null;
 					final CarnivalCustomerInfoResponse carnivalCustomerInfoResponse = gson.fromJson(result.getJsonString(), CarnivalCustomerInfoResponse.class);
 					customProgressDialog.dismissDialog();
 					mGetCustomerInfoTask = null;
