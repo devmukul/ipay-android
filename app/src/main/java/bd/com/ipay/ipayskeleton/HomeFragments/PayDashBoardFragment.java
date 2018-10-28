@@ -76,6 +76,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 	private View mLankaBanglaView;
 	private View mAmberITBillPayView;
 	private View mLankaBanglaDpsView;
+	private View mCreditCardBillPayView;
     private HashMap<String, String> mProviderAvailabilityMap;
 	private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -110,6 +111,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 		mCarnivalBillPayView = v.findViewById(R.id.carnival);
 		mDpdcBillPayView = v.findViewById(R.id.dpdc);
 		mAmberITBillPayView = v.findViewById(R.id.amberit);
+		mCreditCardBillPayView = v.findViewById(R.id.credit_card_bill);
 		mLankaBanglaView = v.findViewById(R.id.lankaBanglaViewCard);
         mLankaBanglaDpsView = v.findViewById(R.id.lankaBanglaViewDps);
 		mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
@@ -122,7 +124,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 
 		getActivity().setTitle(R.string.pay);
 		getTrendingBusinessList();
-		getServiceProviderList();
+		//getServiceProviderList();
 
 
         if (ProfileInfoCacheManager.isBusinessAccount())
@@ -147,6 +149,31 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
             }
         });
 
+
+        mCreditCardBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                } else if (mProviderAvailabilityMap.get(Constants.CREDIT_CARD) != null) {
+                    if (!mProviderAvailabilityMap.get(Constants.CREDIT_CARD).
+                            equals(getString(R.string.active))) {
+                        DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(Constants.CREDIT_CARD_WITH_SPACE));
+                        return;
+                    }
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.CREDIT_CARD);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
         mPayByQCView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -573,7 +600,6 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 			PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
 			holder.trendingBusinessCAtegory.setAdapter(payDashBoardItemAdapter);
 			holder.trendingBusinessCAtegory.setLayoutManager(new GridLayoutManager(getContext(), 4));
-
 		}
 
 		@Override

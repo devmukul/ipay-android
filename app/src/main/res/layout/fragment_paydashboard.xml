@@ -432,6 +432,37 @@
                             android:textSize="@dimen/text_size_extra_smaller_value11"
                             card_view:layout_constraintTop_toBottomOf="@+id/linkThree_image" />
                     </android.support.constraint.ConstraintLayout>
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/credit_card_bill"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/credit_card_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/semiround_white_default"
+                            android:padding="2dp"
+                            android:src="@drawable/card_icon_for_source_of_fund"
+                            card_view:layout_constraintDimensionRatio="1:1"
+                            card_view:riv_corner_radius="@dimen/value2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:ellipsize="marquee"
+                            android:gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="@string/link_three"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_extra_smaller_value11"
+                            card_view:layout_constraintTop_toBottomOf="@+id/credit_card_image" />
+                    </android.support.constraint.ConstraintLayout>
 
                     <android.support.constraint.ConstraintLayout
                         android:id="@+id/desco"
