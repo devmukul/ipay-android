@@ -1337,4 +1337,5 @@
     <string name="card_info_helper_text">Please enter your card information to pay your bill</string>
     <string name="credit_card_number">Credit Card Number</string>
     <string name="save_card_info">Save My Card Info</string>
+    <string name="credit_card">Credit Card</string>
 </resources>

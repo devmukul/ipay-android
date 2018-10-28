@@ -447,7 +447,7 @@
                             android:layout_gravity="center_horizontal"
                             android:background="@drawable/semiround_white_default"
                             android:padding="2dp"
-                            android:src="@drawable/card_icon_for_source_of_fund"
+                            android:src="@drawable/ic_debit_credit_card_icon"
                             card_view:layout_constraintDimensionRatio="1:1"
                             card_view:riv_corner_radius="@dimen/value2" />
 
@@ -458,7 +458,7 @@
                             android:ellipsize="marquee"
                             android:gravity="center_horizontal"
                             android:singleLine="true"
-                            android:text="@string/link_three"
+                            android:text="@string/credit_card"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_extra_smaller_value11"
                             card_view:layout_constraintTop_toBottomOf="@+id/credit_card_image" />

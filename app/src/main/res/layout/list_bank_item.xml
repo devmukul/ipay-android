@@ -4,15 +4,18 @@
     android:layout_height="match_parent">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
         android:id="@+id/bank_icon"
-        android:layout_centerHorizontal="true"/>
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/value16"
+        android:layout_marginRight="@dimen/value16" />
+
     <TextView
+        android:id="@+id/bank_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/value16"
-        android:id="@+id/bank_name"
-        android:layout_below="@id/bank_icon"/>
+        android:layout_below="@+id/bank_icon"
+        android:layout_margin="@dimen/value16" />
 
 </RelativeLayout>

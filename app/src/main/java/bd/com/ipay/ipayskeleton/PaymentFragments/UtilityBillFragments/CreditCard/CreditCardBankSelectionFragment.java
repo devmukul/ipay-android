@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -37,6 +39,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
     private ArrayList<Bank> mBankList;
     private HttpRequestGetAsyncTask mGetBankListAsyncTask;
     private LinearLayout mProgressLayout;
+    private LinearLayout mCardInfoLayout;
     private BankListAdapter bankListAdapter;
 
     @Nullable
@@ -53,6 +56,12 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
         mProgressLayout = (LinearLayout) view.findViewById(R.id.progress_layout);
         bankListAdapter = new BankListAdapter();
         mBankListRecyclerView.setAdapter(bankListAdapter);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        mCardInfoLayout = view.findViewById(R.id.card_info_layout);
+        ((IPayUtilityBillPayActionActivity) getActivity()).setSupportActionBar(toolbar);
+        ((IPayUtilityBillPayActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActivity().setTitle("Credit Card Bill Pay");
+        attemptGetBankList();
     }
 
     public int getBankIcon(Bank bank) {
@@ -110,9 +119,17 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
         }
 
         @Override
-        public void onBindViewHolder(@NonNull BankViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final BankViewHolder holder, final int position) {
             holder.bankNameTextView.setText(mBankList.get(position).getBankName());
             holder.bankIconImageView.setImageResource(getBankIcon(mBankList.get(position)));
+            holder.bankIconImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notifyDataSetChanged();
+                    holder.bankIconImageView.setImageResource(R.drawable.selected_network);
+                    mCardInfoLayout.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         @Override
