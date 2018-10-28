@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.BusinessContact;
 
 public class CustomBusinessContact {
 
+    private String businessId;
     private String typeInList;
     private String businessName;
     private String mobileNumber;
@@ -24,9 +25,25 @@ public class CustomBusinessContact {
         this.outletId = outletId;
         this.businessType = businessType;
         this.profilePictureUrl = profilePictureUrl;
-        AddressString = addressString;
+        this.AddressString = addressString;
         this.thanaString = thanaString;
         this.districtString = districtString;
+    }
+
+    public CustomBusinessContact(String businessId, String typeInList, String businessName, String businessType, String addressString) {
+        this.businessId = businessId;
+        this.typeInList = typeInList;
+        this.businessName = businessName;
+        this.businessType = businessType;
+        this.AddressString = addressString;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getBusinessName() {

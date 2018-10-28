@@ -368,16 +368,31 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/button_ipay_here"
+                            android:id="@+id/button_request_paymnet"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/request_payment"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/request_payment" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/button_invite_to_ipay"
                             style="@style/HomeImageLinearLayoutStyleHorizontal"
                             android:layout_weight="1">
 
                             <TextView
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                                android:drawableTop="@drawable/background_icon_ipay_here"
+                                android:drawableTop="@drawable/invite_icon"
                                 android:ellipsize="marquee"
                                 android:singleLine="true"
-                                android:text="@string/ipay_here" />
+                                android:text="@string/invite_people_to_ipay" />
 
                         </LinearLayout>
 

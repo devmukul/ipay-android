@@ -428,4 +428,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     private void hideProgressDialog() {
         mProgressDialog.dismiss();
     }
+
+
 }

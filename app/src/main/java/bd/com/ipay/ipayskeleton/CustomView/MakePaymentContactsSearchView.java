@@ -74,13 +74,13 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
     private String mOutlet = "";
 
     private CustomItemClickListener customItemClickListener;
+    private CustomBillPaymentClickListener customBillPaymentClickListener;
 
 
     private View mPayByQCView;
     private PinChecker pinChecker;
 
     private Context mContext;
-    private CustomFocusListener mCustomFocusListener;
 
     public MakePaymentContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -156,10 +156,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    public void setOnCustomFocusChangeListener(CustomFocusListener mCustomFocusListener) {
-        this.mCustomFocusListener = mCustomFocusListener;
-    }
-
     private List<CustomBusinessContact> getBusinessContactList(Cursor cursor) {
         List<CustomBusinessContact> mBusinessContacts;
         int businessNameIndex;
@@ -174,8 +170,18 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
         mBusinessContacts = new ArrayList<>();
 
+        mBusinessContacts.clear();
+        //Add Bill Provider
+        mBusinessContacts.add(new CustomBusinessContact(Constants.AMBERIT, "Bill_Pay", mContext.getString(R.string.amberIT), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.BLION, "Bill_Pay", mContext.getString(R.string.banglalion), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.BRILLIANT, "Bill_Pay", mContext.getString(R.string.brilliant), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.CARNIVAL, "Bill_Pay", mContext.getString(R.string.carnival), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.LANKABANGLA, "Bill_Pay", mContext.getString(R.string.lanka_bangla_card), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.LANKABANGLA, "Bill_Pay", mContext.getString(R.string.lanka_bangla_dps), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.LINK3, "Bill_Pay", mContext.getString(R.string.link_three), "Bill Pay", ""));
+
+
         if (cursor != null) {
-            mBusinessContacts.clear();
             businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
             phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
             profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
@@ -195,8 +201,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                     String businessThana = cursor.getString(businessThanaIndex);
                     String businessDistrict = cursor.getString(businessDistrictIndex);
                     String businessOutlet = cursor.getString(businessOutletIndex);
-
-                    System.out.println("Bus Type>> "+businessTypeID);
 
                     if(!TextUtils.isEmpty(businessOutlet)) {
                         Outlets[] outlets = new Gson().fromJson(businessOutlet, Outlets[].class);
@@ -328,7 +332,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                         List<CustomBusinessContact> filteredList = new ArrayList<>();
 
                         for (CustomBusinessContact outletsList : userTransactionHistories) {
-
                             if (!TextUtils.isEmpty(outletsList.getBusinessName()) && outletsList.getBusinessName().toLowerCase().contains(charString.toLowerCase())) {
                                 filteredList.add(outletsList);
                             }else if(!TextUtils.isEmpty(outletsList.getAddressString()) && outletsList.getAddressString().toLowerCase().contains(charString.toLowerCase())){
@@ -349,11 +352,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     mFilteredOutlets = (List<CustomBusinessContact>) filterResults.values;
-//                    if (mFilteredOutlets.size() == 0) {
-//                        noResultTextView.setVisibility(View.VISIBLE);
-//                    }else{
-//                        noResultTextView.setVisibility(View.GONE);
-//                    }
                     notifyDataSetChanged();
                 }
             };
@@ -380,57 +378,79 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
                 final CustomBusinessContact businessContact = mFilteredOutlets.get(pos);
 
+                final String typeInList = businessContact.getTypeInList();
                 final String businessName = businessContact.getBusinessName();
                 final String mobileNumber = businessContact.getMobileNumber();
                 final String businessType = businessContact.getBusinessType();
                 final String profilePictureUrl = businessContact.getProfilePictureUrl();
                 final String businessAddress = businessContact.getAddressString();
-                final String businessThana = businessContact.getThanaString();
-                final String businessDistrict = businessContact.getDistrictString();
                 final String businessOutlet = businessContact.getOutletName();
                 final Long businessOutletId = businessContact.getOutletId();
 
-                System.out.println(" Outlet Id "+businessOutletId);
+                System.out.println(" Outlet Id <><><"+typeInList);
 
-                if(businessContact.getTypeInList().equals("Outlet")){
+                if(typeInList.equals("Outlet")){
                     if (businessOutlet != null && !businessOutlet.isEmpty())
                         businessNameView.setText(businessOutlet);
                 }else{
-
                     if (businessName != null && !businessName.isEmpty())
                         businessNameView.setText(businessName);
                 }
-
-
 
                 if (businessType != null) {
                     businessTypeView.setText(businessType);
                     businessTypeView.setVisibility(VISIBLE);
                 }
-                if (businessAddress != null && !businessAddress.isEmpty()) {
-                    businessAddressView.setText(businessAddress);
+
+                if(typeInList.equals("Bill_Pay")){
+                    businessAddressView.setText("");
+                }else{
+                    if (businessAddress != null && !businessAddress.isEmpty()) {
+                        businessAddressView.setText(businessAddress);
+                    }
                 }
-                profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
+
+                if (!typeInList.equals("Bill_Pay")) {
+                    profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
+                }else{
+                    if(businessName.equalsIgnoreCase(mContext.getString(R.string.amberIT)))
+                        profilePictureView.setProfilePicture(R.drawable.ic_amber_it);
+                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.banglalion)))
+                        profilePictureView.setProfilePicture(R.drawable.banglalion);
+                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.brilliant)))
+                        profilePictureView.setProfilePicture(R.drawable.brilliant_logo);
+                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.carnival)))
+                        profilePictureView.setProfilePicture(R.drawable.carnival_2);
+                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_card)))
+                        profilePictureView.setProfilePicture(R.drawable.lbf_credit_card);
+                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_dps)))
+                        profilePictureView.setProfilePicture(R.drawable.lbf_credit_card_dps);
+                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.link_three)))
+                        profilePictureView.setProfilePicture(R.drawable.link_three_logo);
+                }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(businessContact.getTypeInList().equals("Bill_Pay")){
+                            customBillPaymentClickListener.onItemClick(businessName, businessContact.getBusinessId());
+                        }else {
+                            mName = businessName;
+                            mImageURL = Constants.BASE_URL_FTP_SERVER + profilePictureUrl;
+                            mAddress = businessAddress;
+                            mOutlet = businessOutlet;
+                            mMobileNumber = mobileNumber;
+                            if (businessContact.getTypeInList().equals("Outlet")) {
+                                mName = businessOutlet;
+                            } else {
+                                mName = businessName;
+                            }
+                            customItemClickListener.onItemClick(mName, mobileNumber, mImageURL, mAddress, businessOutletId);
+                        }
                         resetSearchKeyword();
                         mCustomAutoCompleteView.setQuery(null, false);
                         mCustomAutoCompleteView.clearFocus();
                         Utilities.hideKeyboard(mContext, mCustomAutoCompleteView);
-                        mName = businessName;
-                        mImageURL = profilePictureUrl;
-                        mAddress = businessAddress;
-                        mOutlet = businessOutlet;
-                        mMobileNumber = mobileNumber;
-                        if(businessContact.getTypeInList().equals("Outlet")){
-                            mName = businessOutlet;
-                        }else{
-                            mName = businessName;
-                        }
-                        System.out.println(" Outlet Id Clicked"+businessOutletId);
-                        customItemClickListener.onItemClick(mName, mobileNumber, mImageURL, mAddress, businessOutletId);
                     }
                 });
             }
@@ -487,16 +507,20 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
     }
 
-    public interface CustomFocusListener {
-        void onFocusChange(View v, boolean hasFocus);
-    }
-
     public void setCustomItemClickListener(CustomItemClickListener customItemClickListener) {
         this.customItemClickListener = customItemClickListener;
     }
 
     public interface CustomItemClickListener {
         void onItemClick (String name, String mobileNumber, String imageURL, String address, Long outletId) ;
+    }
+
+    public void setCustomBillPaymentClickListener(CustomBillPaymentClickListener customBillPaymentClickListener) {
+        this.customBillPaymentClickListener = customBillPaymentClickListener;
+    }
+
+    public interface CustomBillPaymentClickListener {
+        void onItemClick (String name, String id) ;
     }
 
 

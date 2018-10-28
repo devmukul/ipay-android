@@ -158,4 +158,12 @@ public class SharedPrefManager {
 	public static boolean ifFirstMakePayment() {
 		return pref.getBoolean(Constants.IS_FIRST_MAKE_PAYMENT, true);
 	}
+
+	public static String getTrendingBusiness(String defaultValue) {
+		return pref.getString(SharedPrefConstants.KEY_TRENDING_JSON, defaultValue);
+	}
+
+	public static void setTrendingBusiness(String value) {
+		pref.edit().putString(SharedPrefConstants.KEY_TRENDING_JSON, value).apply();
+	}
 }
