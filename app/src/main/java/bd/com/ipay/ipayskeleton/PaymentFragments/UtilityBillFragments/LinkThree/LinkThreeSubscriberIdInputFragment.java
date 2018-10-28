@@ -77,6 +77,7 @@ public class LinkThreeSubscriberIdInputFragment extends IPayAbstractUserIdInputF
                 case Constants.COMMAND_GET_LINK_THREE_CUSTOMER_INFO:
                     try {
                         final GetLinkThreeSubscriberInfoResponse linkThreeSubscriberInfoResponse = gson.fromJson(result.getJsonString(), GetLinkThreeSubscriberInfoResponse.class);
+                        mGetCustomerInfoTask = null;
                         customProgressDialog.dismissDialog();
                         switch (result.getStatus()) {
                             case Constants.HTTP_RESPONSE_STATUS_OK:

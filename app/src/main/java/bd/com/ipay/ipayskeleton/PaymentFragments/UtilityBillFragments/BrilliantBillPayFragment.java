@@ -32,7 +32,6 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BrilliantBillPayRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BrilliantRechargeResponse;
@@ -80,7 +79,7 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
 		mProgressDialog = new ProgressDialog(getContext());
 		mCustomProgressDialog = new CustomProgressDialog(getContext());
 		if (UtilityBillPaymentActivity.mMandatoryBusinessRules == null) {
-			UtilityBillPaymentActivity.mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.UTILITY_BILL_PAYMENT);
+			UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
 		}
 		attemptGetBusinessRule(Constants.SERVICE_ID_UTILITY_BILL);
 		mContinueButton.setOnClickListener(new View.OnClickListener() {

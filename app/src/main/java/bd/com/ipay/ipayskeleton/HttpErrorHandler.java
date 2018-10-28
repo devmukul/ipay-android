@@ -14,155 +14,155 @@ import bd.com.ipay.ipayskeleton.ViewModel.ProgressDialogListener;
 
 public class HttpErrorHandler {
 
-	public static boolean isErrorFound(GenericHttpResponse result, Context context, Dialog alertDialog) {
-		if (alertDialog instanceof CustomProgressDialog) {
-			if (result == null) {
-				((CustomProgressDialog) alertDialog).
-						showFailureAnimationAndMessage(context.getString(R.string.service_not_available));
-				return true;
-			} else if (result.getErrorMessage() != null) {
-				((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage(result.getErrorMessage());
-				return true;
-			} else {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-					try {
-						GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
-								fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-						((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage(genericResponseWithMessageOnly.getMessage());
-					} catch (Exception e) {
-						((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage("Not found");
-					}
-					return true;
-				} else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-					((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage("Internal Server Error");
-					return true;
-				}
-				return false;
-			}
-		} else {
-			if (alertDialog != null) {
-				alertDialog.dismiss();
-			}
-			if (result == null) {
-				return true;
-			} else if (result.getErrorMessage() != null) {
-				if (!result.isSilent()) {
-					Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
-					return true;
-				} else {
-					return true;
-				}
-			} else {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-					try {
-						GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
-								fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-						if (!result.isSilent())
-							Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+    public static boolean isErrorFound(GenericHttpResponse result, Context context, Dialog alertDialog) {
+        if (alertDialog instanceof CustomProgressDialog) {
+            if (result == null) {
+                ((CustomProgressDialog) alertDialog).
+                        showFailureAnimationAndMessage(context.getString(R.string.service_not_available));
+                return true;
+            } else if (result.getErrorMessage() != null) {
+                ((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage(result.getErrorMessage());
+                return true;
+            } else {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    try {
+                        GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                                fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                        ((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage(genericResponseWithMessageOnly.getMessage());
+                    } catch (Exception e) {
+                        ((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage("Not found");
+                    }
+                    return true;
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+                    ((CustomProgressDialog) alertDialog).showFailureAnimationAndMessage("Internal Server Error");
+                    return true;
+                }
+                return false;
+            }
+        } else {
+            if (alertDialog != null) {
+                alertDialog.dismiss();
+            }
+            if (result == null) {
+                return true;
+            } else if (result.getErrorMessage() != null) {
+                if (!result.isSilent()) {
+                    Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    return true;
+                } else {
+                    return true;
+                }
+            } else {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    try {
+                        GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                                fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                        if (!result.isSilent())
+                            Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
 
-					} catch (Exception e) {
-						Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
 
-					}
-					return true;
-				} else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-					if (!result.isSilent())
-						Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
-					return true;
-				}
-				return false;
-			}
-		}
-	}
+                    }
+                    return true;
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+                    if (!result.isSilent())
+                        Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                return false;
+            }
+        }
+    }
 
-	public static boolean isErrorFoundForProgressDialogListener(GenericHttpResponse result, Context context, ProgressDialogListener alertDialog) {
-		if (alertDialog != null) {
-			if (result == null) {
-				alertDialog.showFailureAnimationAndMessage(context.getString(R.string.service_not_available));
-				return true;
-			} else if (result.getErrorMessage() != null) {
-				alertDialog.showFailureAnimationAndMessage(result.getErrorMessage());
-				return true;
-			} else {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-					try {
-						GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
-								fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-						alertDialog.showFailureAnimationAndMessage(genericResponseWithMessageOnly.getMessage());
-					} catch (Exception e) {
-						alertDialog.showFailureAnimationAndMessage("Not found");
-					}
-					return true;
-				} else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-					alertDialog.showFailureAnimationAndMessage("Internal Server Error");
-					return true;
-				}
-				return false;
-			}
-		} else {
-			if (result == null) {
-				return true;
-			} else if (result.getErrorMessage() != null) {
-				if (!result.isSilent()) {
-					Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
-					return true;
-				} else {
-					return true;
-				}
-			} else {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-					try {
-						GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
-								fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-						if (!result.isSilent())
-							Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+    public static boolean isErrorFoundForProgressDialogListener(GenericHttpResponse result, Context context, ProgressDialogListener alertDialog) {
+        if (alertDialog != null) {
+            if (result == null) {
+                alertDialog.showFailureAnimationAndMessage(context.getString(R.string.service_not_available));
+                return true;
+            } else if (result.getErrorMessage() != null) {
+                alertDialog.showFailureAnimationAndMessage(result.getErrorMessage());
+                return true;
+            } else {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    try {
+                        GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                                fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                        alertDialog.showFailureAnimationAndMessage(genericResponseWithMessageOnly.getMessage());
+                    } catch (Exception e) {
+                        alertDialog.showFailureAnimationAndMessage("Not found");
+                    }
+                    return true;
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+                    alertDialog.showFailureAnimationAndMessage("Internal Server Error");
+                    return true;
+                }
+                return false;
+            }
+        } else {
+            if (result == null) {
+                return true;
+            } else if (result.getErrorMessage() != null) {
+                if (!result.isSilent()) {
+                    Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    return true;
+                } else {
+                    return true;
+                }
+            } else {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    try {
+                        GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                                fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                        if (!result.isSilent())
+                            Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
 
-					} catch (Exception e) {
-						if (!result.isSilent())
-							Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        if (!result.isSilent())
+                            Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
 
-					}
-					return true;
-				} else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-					if (!result.isSilent())
-						Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
-					return true;
-				}
-				return false;
-			}
-		}
-	}
+                    }
+                    return true;
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+                    if (!result.isSilent())
+                        Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                return false;
+            }
+        }
+    }
 
-	public static boolean isErrorFound(GenericHttpResponse result, Context context) {
-		if (result == null) {
-			return true;
-		} else if (result.getErrorMessage() != null) {
-			if (!result.isSilent()) {
-				Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
-				return true;
-			} else {
-				return true;
-			}
-		} else {
-			if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-				try {
-					GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
-							fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-					if (!result.isSilent())
-						Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+    public static boolean isErrorFound(GenericHttpResponse result, Context context) {
+        if (result == null) {
+            return true;
+        } else if (result.getErrorMessage() != null) {
+            if (!result.isSilent()) {
+                Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+                return true;
+            } else {
+                return true;
+            }
+        } else {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                try {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                            fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    if (!result.isSilent())
+                        Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
 
-				} catch (Exception e) {
-					if (!result.isSilent())
-						Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    if (!result.isSilent())
+                        Toast.makeText(context, "Not found", Toast.LENGTH_LONG).show();
 
-				}
-				return true;
-			} else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-				if (!result.isSilent())
-					Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
-				return true;
-			}
-			return false;
-		}
-	}
+                }
+                return true;
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+                if (!result.isSilent())
+                    Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
+                return true;
+            }
+            return false;
+        }
+    }
 }
