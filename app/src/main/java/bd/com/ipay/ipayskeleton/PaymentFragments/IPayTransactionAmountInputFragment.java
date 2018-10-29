@@ -59,7 +59,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
     private String name;
     private String mobileNumber;
     private int operatorType;
-    private int operatorCode;
+    private String operatorCode;
     private String profilePicture;
     private LinearLayout mTopUpDefaultAmountLayout;
     private TextView mTakaFiftyTextView;
@@ -78,7 +78,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 name = getArguments().getString(Constants.NAME);
                 mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
                 profilePicture = getArguments().getString(Constants.PHOTO_URI);
-                operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+                operatorCode = getArguments().getString(Constants.OPERATOR_CODE);
                 operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
             }
         } catch (Exception e) {
@@ -263,7 +263,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                     bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
                     bundle.putString(Constants.PHOTO_URI, profilePicture);
                     bundle.putInt(Constants.OPERATOR_TYPE, operatorType);
-                    bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                    bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                     final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                     bundle.putSerializable(Constants.AMOUNT, amount);
                     if (getActivity() instanceof IPayTransactionActionActivity) {
