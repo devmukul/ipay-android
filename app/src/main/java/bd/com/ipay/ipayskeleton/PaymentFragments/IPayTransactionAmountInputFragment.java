@@ -300,10 +300,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             }
         });
 
-        if (getActivity() != null) {
-            mAmountDummyEditText.requestFocus();
-            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
-        }
+//        if (getActivity() != null) {
+//            mAmountDummyEditText.requestFocus();
+//            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
+//        }
     }
 
     private boolean isValidInputs() {

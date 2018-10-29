@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,13 +19,14 @@ import android.widget.LinearLayout;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.ContactFragments.IPayContactListFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionHelperFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.TopUpEnterNumberFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class IPayTransactionContactFragment extends Fragment {
+public class IPayMakePaymentFragment extends Fragment {
 
 	private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
 	private int transactionType;
@@ -49,15 +50,11 @@ public class IPayTransactionContactFragment extends Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		if (transactionType == ServiceIdConstants.TOP_UP) {
-			getChildFragmentManager().beginTransaction().replace(R.id.contact_fragment_container, new TopUpEnterNumberFragment()).commit();
-		} else {
-			final Bundle bundle = new Bundle();
-			bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
-			final IPayContactListFragment iPayContactListFragment = new IPayContactListFragment();
-			iPayContactListFragment.setArguments(bundle);
-			getChildFragmentManager().beginTransaction().replace(R.id.contact_fragment_container, iPayContactListFragment).commit();
-		}
+		final Bundle bundle = new Bundle();
+		bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
+		final MakePaymentNewFragment iPayContactListFragment = new MakePaymentNewFragment();
+		iPayContactListFragment.setArguments(bundle);
+		getChildFragmentManager().beginTransaction().replace(R.id.contact_fragment_container, iPayContactListFragment).commit();
 
 		final Button helperBottomSheetDismissButton = view.findViewById(R.id.helper_bottom_sheet_dismiss_button);
 		final Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -77,47 +74,18 @@ public class IPayTransactionContactFragment extends Fragment {
 		}
 
 		bottomSheetBehavior = BottomSheetBehavior.from(helpBottomSheetLayout);
-		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-				getActivity().setTitle(R.string.send_money);
-				if (SharedPrefManager.ifFirstSendMoney()) {
-					bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-				} else {
-					bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-				}
-				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-				getActivity().setTitle(R.string.request_money);
-				if (SharedPrefManager.ifFirstRequestMoney()) {
-					bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-				} else {
-					bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-				}
-				break;
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
-				getActivity().setTitle(R.string.top_up);
-				if (SharedPrefManager.ifFirstTopUp()) {
-					bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-				} else {
-					bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-				}
-				break;
+		getActivity().setTitle(R.string.make_payment);
+		if (SharedPrefManager.ifFirstTopUp()) {
+			bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+		} else {
+			bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 		}
 
 		bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 			@Override
 			public void onStateChanged(@NonNull View bottomSheet, int newState) {
 				if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
-					switch (transactionType) {
-						case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-							SharedPrefManager.setIfFirstSendMoney(false);
-							break;
-						case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-							SharedPrefManager.setIfFirstRequestMoney(false);
-							break;
-						case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
-							SharedPrefManager.setIfFirstTopUp(false);
-					}
+					SharedPrefManager.setIfFirstMakePayment(false);
 				}
 			}
 

@@ -309,21 +309,35 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     }
 
     private void switchActivity(Class tClass) {
-        Intent intent = new Intent(getActivity(), tClass);
+//        Intent intent = new Intent(getActivity(), tClass);
+//        intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
+//        intent.putExtra(Constants.FROM_QR_SCAN, true);
+//        intent.putExtra(Constants.NAME, brandName);
+//        intent.putExtra(Constants.PHOTO_URI, imageUrl);
+//        intent.putExtra(Constants.COUNTRY, country);
+//        intent.putExtra(Constants.DISTRICT, district);
+//        intent.putExtra(Constants.ADDRESS, address);
+//        intent.putExtra(Constants.THANA, thana);
+//        if (outletId != null) {
+//            intent.putExtra(Constants.OUTLET_ID, outletId);
+//        }
+//        intent.putExtra(Constants.OUTLET_NAME, outletName);
+//
+//        startActivity(intent);
+
+        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
         intent.putExtra(Constants.FROM_QR_SCAN, true);
-        intent.putExtra(Constants.NAME, brandName);
-        intent.putExtra(Constants.PHOTO_URI, imageUrl);
-        intent.putExtra(Constants.COUNTRY, country);
-        intent.putExtra(Constants.DISTRICT, district);
+        if(TextUtils.isEmpty(outletName))
+            intent.putExtra(Constants.NAME, brandName);
+        else
+            intent.putExtra(Constants.NAME, outletName);
+        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + imageUrl);
         intent.putExtra(Constants.ADDRESS, address);
-        intent.putExtra(Constants.THANA, thana);
-        intent.putExtra(Constants.FROM_QR_SCAN, true);
         if (outletId != null) {
             intent.putExtra(Constants.OUTLET_ID, outletId);
         }
-        intent.putExtra(Constants.OUTLET_NAME, outletName);
-
         startActivity(intent);
         if (getActivity() != null)
             getActivity().finish();

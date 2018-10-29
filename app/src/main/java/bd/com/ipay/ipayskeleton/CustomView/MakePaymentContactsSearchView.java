@@ -420,7 +420,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.brilliant)))
                         profilePictureView.setProfilePicture(R.drawable.brilliant_logo);
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.carnival)))
-                        profilePictureView.setProfilePicture(R.drawable.carnival_2);
+                        profilePictureView.setProfilePicture(R.drawable.ic_carnival);
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_card)))
                         profilePictureView.setProfilePicture(R.drawable.lbf_credit_card);
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_dps)))

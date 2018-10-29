@@ -30,7 +30,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.GetAllTrendingBusinessResponse;
@@ -570,8 +569,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 			holder.titleView.setText(trendingBusinessList.get(position).getBusinessType());
 			holder.trendingBusinessCAtegory.setNestedScrollingEnabled(false);
 			List<BusinessList> mBusinessAccountEntryList = trendingBusinessList.get(position).getBusinessList();
-			PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
-			holder.trendingBusinessCAtegory.setAdapter(payDashBoardItemAdapter);
+//			PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
+//			holder.trendingBusinessCAtegory.setAdapter(payDashBoardItemAdapter);
 			holder.trendingBusinessCAtegory.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
 		}

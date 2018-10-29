@@ -86,7 +86,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 	private GetProviderResponse mUtilityProviderResponse;
 	private List<ProviderCategory> mUtilityProviderTypeList;
 
-    //private View mRequestPaymentView;
+    private View mRequestPaymentView;
     private View mBillPayView;
     private View mLink3BillPayView;
     private View mBrilliantRechargeView;
@@ -135,16 +135,10 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
-        setHasOptionsMenu(true);
         mProgressDialog = new ProgressDialog(getActivity());
         if (getArguments() != null) {
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
         }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -156,7 +150,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProviderAvailabilityMap = new HashMap<>();
-        //mRequestPaymentView = view.findViewById(R.id.requestPaymentView);
+        mRequestPaymentView = view.findViewById(R.id.requestPaymentView);
         mBillPayView = view.findViewById(R.id.billPayView);
         mLink3BillPayView = view.findViewById(R.id.linkThreeBill);
         mDescoBillPayView = view.findViewById(R.id.desco);
@@ -174,62 +168,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mTrendingListRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mTrendingListRecyclerView.setLayoutManager(mLayoutManager);
-
-        final Button helperBottomSheetDismissButton = view.findViewById(R.id.helper_bottom_sheet_dismiss_button);
-        final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        final LinearLayout helpBottomSheetLayout = view.findViewById(R.id.help_bottom_sheet_layout);
-
-        if (getActivity() instanceof AppCompatActivity) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null)
-                actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (getFragmentManager() != null) {
-            final TransactionHelperFragment transactionHelperFragment = new TransactionHelperFragment();
-            transactionHelperFragment.setArguments(getArguments());
-            getFragmentManager().beginTransaction().replace(R.id.help_fragment_container, transactionHelperFragment).commit();
-        }
-
-        bottomSheetBehavior = BottomSheetBehavior.from(helpBottomSheetLayout);
-        switch (transactionType) {
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-                getActivity().setTitle(R.string.make_payment);
-                if (SharedPrefManager.ifFirstMakePayment()) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                break;
-        }
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    switch (transactionType) {
-                        case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-                            SharedPrefManager.setIfFirstMakePayment(false);
-                            break;
-                    }
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-
-        helperBottomSheetDismissButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-            }
-        });
 
         trendingJson = SharedPrefManager.getTrendingBusiness(null);
         if(!TextUtils.isEmpty(trendingJson)){
@@ -377,12 +315,20 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     case Constants.AMBERIT:
                     case Constants.WESTZONE:
                     case Constants.DESCO:
-                    case Constants.CARNIVAL:
                     case Constants.DPDC:
-                    case Constants.LINK3:
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         intent.putExtra(Constants.SERVICE, provider);
                         startActivity(intent);
+                        break;
+                    case Constants.LINK3:
+                        intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LINK_THREE);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                        break;
+                    case Constants.CARNIVAL:
+                        intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_CARNIVAL);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                         break;
                     case Constants.BLION:
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
@@ -471,7 +417,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                     mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
                     mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
-                    mTrendingListRecyclerView.notifyAll();
 
 				}
 				mGetTrendingBusinessListTask = null;

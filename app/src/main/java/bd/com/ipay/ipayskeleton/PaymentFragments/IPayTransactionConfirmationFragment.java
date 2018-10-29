@@ -293,7 +293,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 		final String apiCommand;
 		final String url;
 		final String note = mNoteEditText.getText().toString();
-		mPin = mPinEditText.getText().toString().trim();switch (transactionType) {
+		mPin = mPinEditText.getText().toString().trim();
+		switch (transactionType) {
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				apiCommand = Constants.COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD;
 				requestJson = gson.toJson(new AddMoneyByCreditOrDebitCardRequest(amount.doubleValue(), note, null));
@@ -311,7 +312,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 apiCommand = Constants.COMMAND_PAYMENT;
                 requestJson = gson.toJson(new PaymentRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
                         amount.toString(), note, mPinEditText.getText().toString(), mOutletId, 0.0, 0.0));
-                url = Constants.BASE_URL_SM + Constants.URL_PAYMENT;
+                url = Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3;
                 mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
                 break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
@@ -335,6 +336,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 return;
         }
         httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(apiCommand, url, requestJson, getContext(), this, false);
+		if(transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT)
+            httpRequestPostAsyncTask.setPinAsHeader(mPin);
         httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
         mCustomProgressDialog.showDialog();
