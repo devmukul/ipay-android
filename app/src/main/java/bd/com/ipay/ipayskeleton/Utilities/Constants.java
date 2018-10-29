@@ -219,6 +219,7 @@ public class Constants {
     public static final String COMMAND_LANKABANGLA_BILL_PAY = "COMMAND_LANKABANGLA_BILL_PAY";
     public static final String URL_LANKABANGLA_VISA_BILL_PAY = "lankabangla/visa/billpay";
     public static final String URL_LANKABANGLA_MASTERCARD_BILL_PAY = "lankabangla/mastercard/billpay";
+    public static final String URL_CREDIT_CARD_BILL_PAY = "credit-card/billpay";
 
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
@@ -589,6 +590,7 @@ public class Constants {
     public static final long MIN_REQUIRED_REFRESH_TOKEN_TIME = 24 * 60 * 60 * 1000;   // Refresh token should be called at least after 24 hours
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
+    public static final String COMMAND_CREDIT_CARD_BILL_PAY = "COMMAND_CREDIT_CARD_BILL_PAY";
     public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
     public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";

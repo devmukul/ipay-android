@@ -29,6 +29,13 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
     public static final String BILL_PAY_LANKABANGLA_DPS = "LANKABANGLA_DPS";
     public static final String CREDIT_CARD = "CREDIT_CARD";
 
+    public static final String CARD_NUMBER_KEY = "CARD_NUMBER";
+    public static final String CARD_USER_NAME_KEY = "CARD_USER_NAME";
+    public static final String SAVE_CARD_INFO = "SAVE_CARD_INFO";
+    public static final String BANK_ICON = "BANK_ICON";
+
+    public static final String BILL_AMOUNT_KEY = "BILL_AMOUNT";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
