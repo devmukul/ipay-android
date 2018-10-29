@@ -67,8 +67,8 @@
                 <bd.com.ipay.ipayskeleton.Widget.View.CardNumberEditText
                     android:id="@+id/card_number"
                     android:layout_width="match_parent"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
-
                     android:drawablePadding="@dimen/value8"
                     android:fontFamily="@font/open_sans_light"
                     android:inputType="number"
@@ -79,6 +79,7 @@
                     android:id="@+id/card_holder_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:layout_margin="@dimen/value16"
                     android:hint="Card Holder Name" />
             </LinearLayout>

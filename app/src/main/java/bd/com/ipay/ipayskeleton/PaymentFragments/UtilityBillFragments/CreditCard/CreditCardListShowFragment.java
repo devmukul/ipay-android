@@ -31,7 +31,8 @@ public class CreditCardListShowFragment extends Fragment {
         @NonNull
         @Override
         public CardListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_my_cards, parent, false);
+            return new CardListViewHolder(view);
         }
 
         @Override
