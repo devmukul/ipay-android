@@ -5,7 +5,7 @@ public class TopupRequest {
     private final long senderAccountID;
     private final String receiverMobileNumber;
     private final int mobileNumberType;
-    private final int operatorCode;
+    private final String operatorCode;
     private final double amount;
     private final String countryCode;
     private final int senderAccountUserType;
@@ -14,7 +14,7 @@ public class TopupRequest {
     private String otp;
 
     public TopupRequest(long senderAccountID, String receiverMobileNumber,
-                        int mobileNumberType, int operatorCode, double amount, String countryCode,
+                        int mobileNumberType, String operatorCode, double amount, String countryCode,
                         int senderAccountUserType, int senderAccountUserClass, String pin) {
         this.senderAccountID = senderAccountID;
         this.receiverMobileNumber = receiverMobileNumber;
