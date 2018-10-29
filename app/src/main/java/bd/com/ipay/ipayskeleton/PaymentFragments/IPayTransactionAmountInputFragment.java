@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -164,6 +165,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 transactionDescriptionTextView.setText(R.string.top_up_to);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
                 mTopUpDefaultAmountLayout.setVisibility(View.VISIBLE);
+                mAmountDummyEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
@@ -186,15 +188,14 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             addressTextView.setVisibility(GONE);
         }
 
-        if (!TextUtils.isEmpty(profilePicture)) {
-            profileImageView.setVisibility(View.VISIBLE);
-            Glide.with(this)
-                    .load(profilePicture)
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
-                    .transform(new CircleTransform(getContext()))
-                    .into(profileImageView);
-        }
+        profileImageView.setVisibility(View.VISIBLE);
+        Glide.with(this)
+                .load(profilePicture)
+                .placeholder(R.drawable.ic_profile)
+                .error(R.drawable.ic_profile)
+                .transform(new CircleTransform(getContext()))
+                .into(profileImageView);
+
         ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(Double.valueOf(SharedPrefManager.getUserBalance()))));
 
         mAmountDummyEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter() {
@@ -299,10 +300,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             }
         });
 
-//        if (getActivity() != null) {
-//            mAmountDummyEditText.requestFocus();
-//            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
-//        }
+        if (getActivity() != null) {
+            mAmountDummyEditText.requestFocus();
+            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
+        }
     }
 
     private boolean isValidInputs() {

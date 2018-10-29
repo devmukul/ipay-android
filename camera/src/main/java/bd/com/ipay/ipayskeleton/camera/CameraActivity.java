@@ -80,6 +80,11 @@ public class CameraActivity extends AppCompatActivity {
         String tempFileName = getIntent().getStringExtra(DOCUMENT_NAME);
         fileName = !TextUtils.isEmpty(tempFileName) ? tempFileName : "document.jpg";
         cameraFace = getIntent().getIntExtra(CAMERA_FACING_NAME, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
+        if (cameraFace == com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT) {
+            mCameraChangeButton.setVisibility(View.GONE);
+        } else {
+            mCameraChangeButton.setVisibility(View.VISIBLE);
+        }
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             createCameraSource(true, Camera.Parameters.FLASH_MODE_OFF, cameraFace);
         } else {

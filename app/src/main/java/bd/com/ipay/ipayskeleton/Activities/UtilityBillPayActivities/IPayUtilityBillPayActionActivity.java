@@ -10,8 +10,10 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival.CarnivalIdInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaCardNumberInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps.LankaBanglaDpsNumberInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LinkThree.LinkThreeSubscriberIdInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -20,29 +22,34 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public final class IPayUtilityBillPayActionActivity extends BaseActivity {
 
     public static final String BILL_PAY_LANKABANGLA_CARD = "LANKABANGLA_CARD";
-    public static final String BILL_PAY_PARTY_NAME_KEY = "BILL_PAY_PARTY_NAME";
+    public static final String BILL_PAY_LINK_THREE = "LINK_THREE";
+	public static final String BILL_PAY_CARNIVAL = "CARNIVAL";
+	public static final String BILL_PAY_PARTY_NAME_KEY = "BILL_PAY_PARTY_NAME";
     public static final String BILL_PAY_LANKABANGLA_DPS = "LANKABANGLA_DPS";
 
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ipay_utility_bill_pay_action);
-        final String billPayPartyName = getIntent().getStringExtra(BILL_PAY_PARTY_NAME_KEY);
-        BusinessRuleCacheManager.fetchBusinessRule(this, ServiceIdConstants.UTILITY_BILL_PAYMENT);
-        switch (billPayPartyName) {
-            case BILL_PAY_LANKABANGLA_CARD:
-                final Bundle bundle = new Bundle();
-                switchFragment(new LankaBanglaCardNumberInputFragment(), bundle, 1, false);
-                break;
-            case BILL_PAY_LANKABANGLA_DPS:
-                final Bundle bundle2 = new Bundle();
-                switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle2, 1, false);
-                break;
-            default:
-                finish();
-        }
-    }
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_ipay_utility_bill_pay_action);
+		final String billPayPartyName = getIntent().getStringExtra(BILL_PAY_PARTY_NAME_KEY);
+		BusinessRuleCacheManager.fetchBusinessRule(this, ServiceIdConstants.UTILITY_BILL_PAYMENT);
+		final Bundle bundle = new Bundle();switch (billPayPartyName) {
+			case BILL_PAY_LANKABANGLA_CARD:
+				switchFragment(new LankaBanglaCardNumberInputFragment(), bundle , 0, false);
+				break;
+			case BILL_PAY_LINK_THREE:
+				switchFragment( new LinkThreeSubscriberIdInputFragment(), bundle, 0, false);
+				break;
+				case BILL_PAY_CARNIVAL:
+				switchFragment(new CarnivalIdInputFragment(), bundle, 0, false);
+				break;
+			case BILL_PAY_LANKABANGLA_DPS:
+                switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle, 0, false);
+                break;default:
+				finish();
+		}
+	}
 
     public void switchFragment(@NonNull Fragment fragment, @NonNull Bundle bundle, int maxBackStackEntryCount, boolean shouldAnimate) {
         if (getSupportFragmentManager().getBackStackEntryCount() > maxBackStackEntryCount) {

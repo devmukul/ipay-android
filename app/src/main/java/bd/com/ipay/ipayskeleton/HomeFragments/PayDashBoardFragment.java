@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,13 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.DrawableTypeRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -35,10 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
-import bd.com.ipay.ipayskeleton.CustomView.CustomDashBoardTitleView;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardItemAdapter;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.GetAllTrendingBusinessResponse;
@@ -46,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.Trend
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetProviderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Provider;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.ProviderCategory;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentNewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -71,27 +62,26 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private GetProviderResponse mUtilityProviderResponse;
     private List<ProviderCategory> mUtilityProviderTypeList;
 
-    private View mTopUpView;
-    private View mPayByQCView;
-    private View mMakePaymentView;
-    private View mRequestPaymentView;
-    private View mBillPayView;
-    private View mLink3BillPayView;
-    private View mBrilliantRechargeView;
-    private View mWestZoneBillPayView;
-    private View mDescoBillPayView;
-    private View mDpdcBillPayView;
-    private View mDozeBillPayView;
-    private View mLankaBanglaView;
-    private View mAmberITBillPayView;
-    private View mLankaBanglaDpsView;
+	private View mTopUpView;
+	private View mPayByQCView;
+	private View mMakePaymentView;
+	private View mRequestPaymentView;
+	private View mBillPayView;
+	private View mLink3BillPayView;
+	private View mBrilliantRechargeView;
+	private View mWestZoneBillPayView;
+	private View mDescoBillPayView;
+	private View mDpdcBillPayView;
+	private View mCarnivalBillPayView;
+	private View mLankaBanglaView;
+	private View mAmberITBillPayView;
+	private View mLankaBanglaDpsView;
     private HashMap<String, String> mProviderAvailabilityMap;
-    private SwipeRefreshLayout trendingBusinessListRefreshLayout;
+	private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
-    private PinChecker pinChecker;
-    private RecyclerView mTrendingListRecyclerView;
-    private TrendingListAdapter mTrendingListAdapter;
-	private MakePaymentContactsSearchView mMobileNumberEditText;
+	private PinChecker pinChecker;
+	private RecyclerView mTrendingListRecyclerView;
+	private TrendingListAdapter mTrendingListAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,36 +94,35 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         super.onResume();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_paydashboard, container, false);
-        mTopUpView = v.findViewById(R.id.topUpView);
-        mPayByQCView = v.findViewById(R.id.payByQCView);
-        mProviderAvailabilityMap = new HashMap<>();
-        mMakePaymentView = v.findViewById(R.id.makePaymentView);
-        mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
-        mBillPayView = v.findViewById(R.id.billPayView);
-        mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
-        mDescoBillPayView = v.findViewById(R.id.desco);
-        mWestZoneBillPayView = v.findViewById(R.id.west_zone);
-        mDozeBillPayView = v.findViewById(R.id.carnival);
-        mDpdcBillPayView = v.findViewById(R.id.dpdc);
-        mAmberITBillPayView = v.findViewById(R.id.amberit);
-        mLankaBanglaView = v.findViewById(R.id.lankaBanglaViewCard);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		View v = inflater.inflate(R.layout.fragment_paydashboard, container, false);
+		mTopUpView = v.findViewById(R.id.topUpView);
+		mPayByQCView = v.findViewById(R.id.payByQCView);
+		mProviderAvailabilityMap = new HashMap<>();
+		mMakePaymentView = v.findViewById(R.id.makePaymentView);
+		mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
+		mBillPayView = v.findViewById(R.id.billPayView);
+		mLink3BillPayView = v.findViewById(R.id.linkThreeBill);
+		mDescoBillPayView = v.findViewById(R.id.desco);
+		mWestZoneBillPayView = v.findViewById(R.id.west_zone);
+		mCarnivalBillPayView = v.findViewById(R.id.carnival);
+		mDpdcBillPayView = v.findViewById(R.id.dpdc);
+		mAmberITBillPayView = v.findViewById(R.id.amberit);
+		mLankaBanglaView = v.findViewById(R.id.lankaBanglaViewCard);
         mLankaBanglaDpsView = v.findViewById(R.id.lankaBanglaViewDps);
-        mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
-        trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
-		mMobileNumberEditText = (MakePaymentContactsSearchView) v.findViewById(R.id.searchView);
+		mBrilliantRechargeView = v.findViewById(R.id.brilliant_recharge_view);
+		trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
 
-        mTrendingListRecyclerView = v.findViewById(R.id.trending_business_recycler_view_parent);
-        mTrendingListRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mTrendingListRecyclerView.setLayoutManager(mLayoutManager);
+		mTrendingListRecyclerView = v.findViewById(R.id.trending_business_recycler_view_parent);
+		mTrendingListRecyclerView.setHasFixedSize(true);
+		RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+		mTrendingListRecyclerView.setLayoutManager(mLayoutManager);
 
-        getActivity().setTitle(R.string.pay);
-        getTrendingBusinessList();
-        getServiceProviderList();
+		getActivity().setTitle(R.string.pay);
+		getTrendingBusinessList();
+		getServiceProviderList();
 
 
         if (ProfileInfoCacheManager.isBusinessAccount())
@@ -253,9 +242,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
                     public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-                        intent.putExtra(Constants.SERVICE, Constants.LINK3);
-                        startActivity(intent);
+                        Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LINK_THREE);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                     }
                 });
                 pinChecker.execute();
@@ -411,7 +400,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker.execute();
             }
         });
-        mDozeBillPayView.setOnClickListener(new View.OnClickListener() {
+        mCarnivalBillPayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
@@ -427,9 +416,9 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
                     public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
-                        intent.putExtra(Constants.SERVICE, Constants.CARNIVAL);
-                        startActivity(intent);
+                        Intent intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_CARNIVAL);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                     }
                 });
                 pinChecker.execute();
@@ -460,26 +449,19 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
             }
         });
 
-        trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (!trendingBusinessListRefreshLayout.isRefreshing()) {
-                    getTrendingBusinessList();
-                } else {
-                    trendingBusinessListRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
+		trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				if (!trendingBusinessListRefreshLayout.isRefreshing()) {
+					getTrendingBusinessList();
+				} else {
+					trendingBusinessListRefreshLayout.setRefreshing(false);
+				}
+			}
+		});
 
-//		mMobileNumberEditText.setCustomItemClickListener(new MakePaymentContactsSearchView.CustomItemClickListener() {
-//			@Override
-//			public void onItemClick(String name, String imageURL) {
-//				System.out.println(" Test Click "+name+" "+imageURL);
-//			}
-//		});
-
-		return v;
-	}
+        return v;
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -521,10 +503,10 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Gson gson = new Gson();
 
-                    mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), GetAllTrendingBusinessResponse.class);
-                    mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
-                    mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
-                    mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
+					mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), GetAllTrendingBusinessResponse.class);
+					mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
+					mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
+					mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
 
                 } else {
                     if (getActivity() != null) {
@@ -558,58 +540,58 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         } catch (Exception e) {
             e.printStackTrace();
 
-            if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
-            }
-        }
-    }
+			if (getActivity() != null) {
+				Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
+			}
+		}
+	}
 
 
-    public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
+	public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
 
-        //private List<Movie> moviesList;
+		//private List<Movie> moviesList;
 
-        private List<TrendingBusinessList> trendingBusinessList;
+		private List<TrendingBusinessList> trendingBusinessList;
 
-        public TrendingListAdapter(List<TrendingBusinessList> trendingBusinessList) {
-            this.trendingBusinessList = trendingBusinessList;
-        }
+		public TrendingListAdapter(List<TrendingBusinessList> trendingBusinessList) {
+			this.trendingBusinessList = trendingBusinessList;
+		}
 
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_item_trending_business_category, parent, false);
+		@Override
+		public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+			View itemView = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_item_trending_business_category, parent, false);
 
-            return new MyViewHolder(itemView);
-        }
+			return new MyViewHolder(itemView);
+		}
 
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            holder.titleView.setText(trendingBusinessList.get(position).getBusinessType());
-            holder.trendingBusinessCAtegory.setNestedScrollingEnabled(false);
-            List<BusinessList> mBusinessAccountEntryList = trendingBusinessList.get(position).getBusinessList();
-            PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
-            holder.trendingBusinessCAtegory.setAdapter(payDashBoardItemAdapter);
-            holder.trendingBusinessCAtegory.setLayoutManager(new GridLayoutManager(getContext(), 4));
+		@Override
+		public void onBindViewHolder(MyViewHolder holder, int position) {
+			holder.titleView.setText(trendingBusinessList.get(position).getBusinessType());
+			holder.trendingBusinessCAtegory.setNestedScrollingEnabled(false);
+			List<BusinessList> mBusinessAccountEntryList = trendingBusinessList.get(position).getBusinessList();
+			PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
+			holder.trendingBusinessCAtegory.setAdapter(payDashBoardItemAdapter);
+			holder.trendingBusinessCAtegory.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
-        }
+		}
 
-        @Override
-        public int getItemCount() {
-            return trendingBusinessList.size();
-        }
+		@Override
+		public int getItemCount() {
+			return trendingBusinessList.size();
+		}
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            public TextView titleView;
-            public RecyclerView trendingBusinessCAtegory;
+		public class MyViewHolder extends RecyclerView.ViewHolder {
+			public TextView titleView;
+			public RecyclerView trendingBusinessCAtegory;
 
-            public MyViewHolder(View view) {
-                super(view);
-                titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
-                trendingBusinessCAtegory = (RecyclerView) view.findViewById(R.id.trending_business_recycler_view_category);
-            }
-        }
-    }
+			public MyViewHolder(View view) {
+				super(view);
+				titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
+				trendingBusinessCAtegory = (RecyclerView) view.findViewById(R.id.trending_business_recycler_view_category);
+			}
+		}
+	}
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -618,140 +600,5 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                 ((DashBoardFragment) getParentFragment()).getViewPager().setCurrentItem(0);
             }
         }
-    }
-
-
-    public class PayDashBoardItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private List<BusinessList> mBusinessAccountEntryList;
-        private TrendingBusinessOutletSelectorDialog mMerchantBranchSelectorDialog;
-        Context context;
-
-        public PayDashBoardItemAdapter(List<BusinessList> mBusinessAccountEntryList, Context context) {
-            this.mBusinessAccountEntryList = mBusinessAccountEntryList;
-            this.context = context;
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private ImageView mImageView;
-            private TextView mTextView;
-            private int mColorPalette;
-
-            public ViewHolder(final View itemView) {
-                super(itemView);
-                mImageView = (ImageView) itemView.findViewById(R.id.imageView);
-                mTextView = (TextView) itemView.findViewById(R.id.nameView);
-            }
-
-            public void bindView(final int pos) {
-                final BusinessList merchantDetails = mBusinessAccountEntryList.get(pos);
-                final String name = merchantDetails.getMerchantName();
-                final String imageUrl = Constants.BASE_URL_FTP_SERVER + merchantDetails.getBusinessLogo();
-                mTextView.setText(name);
-
-                try {
-
-                    final DrawableTypeRequest<String> glide = Glide.with(context).load(imageUrl);
-
-                    glide
-                            .diskCacheStrategy(DiskCacheStrategy.ALL);
-
-                    glide
-                            .placeholder(R.drawable.ic_business_logo_round)
-                            .error(R.drawable.ic_business_logo_round)
-                            .crossFade()
-                            .dontAnimate()
-                            .into(mImageView);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
-                            DialogUtils.showServiceNotAllowedDialog(context);
-                        } else {
-
-                            PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
-                                @Override
-                                public void ifPinAdded() {
-                                    if (mBusinessAccountEntryList.get(pos).getOutlets()!=null && mBusinessAccountEntryList.get(pos).getOutlets().size() > 0) {
-                                        if (mBusinessAccountEntryList.get(pos).getOutlets().size() > 1) {
-                                            mMerchantBranchSelectorDialog = new TrendingBusinessOutletSelectorDialog(context, mBusinessAccountEntryList.get(pos));
-                                            mMerchantBranchSelectorDialog.showDialog();
-                                        } else {
-                                            Intent intent = new Intent(context, PaymentActivity.class);
-                                            intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-                                            intent.putExtra(Constants.ADDRESS, merchantDetails.getOutlets().get(0).getAddressString());
-                                            intent.putExtra(Constants.DISTRICT, merchantDetails.getOutlets().get(0).getOutletAddress().getDistrictName());
-                                            intent.putExtra(Constants.THANA, merchantDetails.getOutlets().get(0).getOutletAddress().getThanaName());
-                                            intent.putExtra(Constants.OUTLET_NAME, merchantDetails.getOutlets().get(0).getOutletName());
-                                            intent.putExtra(Constants.OUTLET_ID, merchantDetails.getOutlets().get(0).getOutletId());
-                                            intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
-                                            intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
-                                            intent.putExtra(Constants.FROM_BRANCHING, true);
-                                            context.startActivity(intent);
-                                        }
-                                    } else {
-                                        Intent intent = new Intent(context, PaymentActivity.class);
-                                        intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-                                        intent.putExtra(Constants.ADDRESS, merchantDetails.getAddressString());
-                                        intent.putExtra(Constants.DISTRICT, merchantDetails.getDistrictString());
-                                        intent.putExtra(Constants.THANA, merchantDetails.getThanaString());
-                                        intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
-                                        intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
-                                        intent.putExtra(Constants.FROM_BRANCHING, true);
-                                        context.startActivity(intent);
-                                    }
-                                }
-                            });
-                            payByQCPinChecker.execute();
-                        }
-                    }
-                });
-            }
-        }
-
-        class NormalViewHolder extends ViewHolder {
-            NormalViewHolder(View itemView) {
-                super(itemView);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
-            }
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trending_business, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                NormalViewHolder vh = (NormalViewHolder) holder;
-                vh.bindView(position);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBusinessAccountEntryList.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return super.getItemViewType(position);
-        }
-
-
     }
 }
