@@ -131,7 +131,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                             Bundle bundle = new Bundle();
                             bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                             bundle.putString(Constants.NAME, contactData.name);
-                            bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                            bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                             bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                             if (contactData.photoUri != null) {
                                 if (!contactData.photoUri.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
