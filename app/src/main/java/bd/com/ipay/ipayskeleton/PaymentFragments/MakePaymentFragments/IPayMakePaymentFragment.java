@@ -75,7 +75,7 @@ public class IPayMakePaymentFragment extends Fragment {
 
 		bottomSheetBehavior = BottomSheetBehavior.from(helpBottomSheetLayout);
 		getActivity().setTitle(R.string.make_payment);
-		if (SharedPrefManager.ifFirstTopUp()) {
+		if (SharedPrefManager.ifFirstMakePayment()) {
 			bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 		} else {
 			bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
