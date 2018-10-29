@@ -1341,4 +1341,5 @@
     <string name="make_payment_step_three">Write some <b>Note</b>, Done!</string>
     <string name="top_up_to">MOBILE TOP-UP TO</string>
     <string name="total_outstanding">Total outstanding</string>
+    <string name="take_photo">Take Photo</string>
 </resources>
