@@ -11,6 +11,7 @@ public class LankaBanglaBillSuccessFragment extends IPayAbstractTransactionSucce
 
 	private Number billAmount;
 	private String cardNumber;
+	private String cardUserName;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -18,6 +19,7 @@ public class LankaBanglaBillSuccessFragment extends IPayAbstractTransactionSucce
 		if (getArguments() != null) {
 			billAmount = (Number) getArguments().getSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY);
 			cardNumber = getArguments().getString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, "");
+			cardUserName = getArguments().getString(LankaBanglaAmountInputFragment.CARD_USER_NAME_KEY, "");
 		}
 	}
 
@@ -26,6 +28,7 @@ public class LankaBanglaBillSuccessFragment extends IPayAbstractTransactionSucce
 		setTransactionSuccessMessage(getStyledTransactionDescription(R.string.pay_bill_success_message, billAmount));
 		setSuccessDescription(getString(R.string.pay_bill_success_description));
 		setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
+		setUserName(cardUserName);
 		setReceiverImage(R.drawable.ic_lankabd2);
 	}
 }

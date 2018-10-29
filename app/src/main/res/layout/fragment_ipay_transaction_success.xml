@@ -48,8 +48,21 @@
                 android:fontFamily="@font/open_sans_semibold"
                 android:gravity="center"
                 android:text="@string/dummy_name"
-                android:textColor="@color/colorBlack87"
-                android:textSize="14sp" />
+                android:textColor="#212121"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/user_name_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans"
+                android:gravity="center"
+                android:textColor="#212121"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="@string/dummy_name"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"

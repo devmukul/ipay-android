@@ -205,8 +205,6 @@ public class UtilityProviderListFragment extends BaseFragment implements HttpRes
                     ((UtilityBillPaymentActivity) getActivity()).switchToWestZoneBillPayFragment();
                 } else if (name.toLowerCase().equals(Constants.BRILLIANT.toLowerCase())) {
                     ((UtilityBillPaymentActivity) getActivity()).switchToBrilliantRechargeFragment();
-                } else if (name.toLowerCase().equals(Constants.LINK3.toLowerCase())) {
-                    ((UtilityBillPaymentActivity) getActivity()).switchToLink3BillPayment();
                 }
             }
 
