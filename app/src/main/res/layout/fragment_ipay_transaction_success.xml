@@ -120,6 +120,32 @@
                 android:textSize="12sp"
                 tools:text="@string/request_money_success_description" />
 
+            <LinearLayout
+                android:id="@+id/rating_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value24"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#212121"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center"
+                    android:text="Rate to improve our service" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/value12"
+                    style="@style/ImageRatingBar"/>
+
+
+            </LinearLayout>
+
             <Button
                 android:id="@+id/go_to_wallet_button"
                 style="@style/ButtonPrimary.IPayTransactionAction"
