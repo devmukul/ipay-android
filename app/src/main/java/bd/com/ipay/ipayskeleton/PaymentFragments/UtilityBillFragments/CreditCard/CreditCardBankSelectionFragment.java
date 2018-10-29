@@ -54,6 +54,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
     private CardNumberEditText mCardNumberEditText;
     private EditText mNameEditText;
     private int selectedBankIconId;
+    private String selectedBankCode;
 
     @Nullable
     @Override
@@ -87,6 +88,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
                                 mCardNumberEditText.getText().toString());
                         bundle.putString(IPayUtilityBillPayActionActivity.CARD_USER_NAME_KEY,
                                 mNameEditText.getText().toString());
+                        bundle.putString(IPayUtilityBillPayActionActivity.BANK_CODE, selectedBankCode);
                         bundle.putBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, mSaveCardNumberCheckBox.isChecked());
                         bundle.putInt(IPayUtilityBillPayActionActivity.BANK_ICON, selectedBankIconId);
                         ((IPayUtilityBillPayActionActivity) getActivity()).
@@ -190,10 +192,6 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
         }
     }
 
-    private void notifyItemListChanged(int pos) {
-        bankListAdapter.notifyItemChanged(pos);
-    }
-
     public class BankListAdapter extends RecyclerView.Adapter<BankListAdapter.BankViewHolder> {
         @NonNull
         @Override
@@ -218,6 +216,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
                     selectedBankIconId = getBankIcon(mBankList.get(position));
                     holder.bankIconImageView.setImageResource(R.drawable.selected_network);
                     clickedPosition = position;
+                    selectedBankCode = mBankList.get(position).getBankCode();
                     mCardInfoLayout.setVisibility(View.VISIBLE);
                     notifyDataSetChanged();
                     mSaveCardNumberCheckBox.setVisibility(View.VISIBLE);

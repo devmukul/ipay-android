@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <Button
+        android:id="@+id/new_bill_button"
+        style="@style/ButtonPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/value16"
+        android:text="@string/new_bill_pay" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/card_list"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/value16"
+        tools:listitem ="@layout/list_item_my_cards"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_bill_button"></android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

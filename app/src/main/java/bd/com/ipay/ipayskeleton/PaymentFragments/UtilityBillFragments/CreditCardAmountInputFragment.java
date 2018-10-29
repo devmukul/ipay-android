@@ -29,6 +29,7 @@ public class CreditCardAmountInputFragment extends IPayAbstractAmountFragment {
     private String cardUserName;
     private boolean saveCardInfo;
     private int bankIconId;
+    private String selectedBankCode;
 
 
     @Override
@@ -39,6 +40,7 @@ public class CreditCardAmountInputFragment extends IPayAbstractAmountFragment {
             cardUserName = getArguments().getString(CARD_USER_NAME_KEY, "");
             saveCardInfo = getArguments().getBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, false);
             bankIconId = getArguments().getInt(IPayUtilityBillPayActionActivity.BANK_ICON, 0);
+            selectedBankCode = getArguments().getString(IPayUtilityBillPayActionActivity.BANK_CODE, "");
         }
     }
 
@@ -128,6 +130,7 @@ public class CreditCardAmountInputFragment extends IPayAbstractAmountFragment {
         bundle.putSerializable(CARD_USER_NAME_KEY, cardUserName);
         bundle.putSerializable(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, saveCardInfo);
         bundle.putSerializable(IPayUtilityBillPayActionActivity.BANK_ICON, bankIconId);
+        bundle.putSerializable(IPayUtilityBillPayActionActivity.BANK_CODE, selectedBankCode);
 
         if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
             ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new CreditCardBillPaymentConfirmationFragment(), bundle, 3, true);

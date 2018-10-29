@@ -13,10 +13,10 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.CreditCardBillPayRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCardBillPayRequest;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionConfirmationFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaBillSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardBillSuccessFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -31,7 +31,7 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
     protected static final String AMOUNT_TYPE_KEY = "AMOUNT_TYPE";
     private final Gson gson = new Gson();
 
-    private HttpRequestPostAsyncTask lankaBanglaCardBillPayTask = null;
+    private HttpRequestPostAsyncTask creditCardBillPayTask = null;
 
     private String amountType;
     private Number billAmount;
@@ -39,9 +39,10 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
     private String cardUserName;
     private boolean saveCardInfo;
     private int bankIconId;
+    private String selectedBankCode;
 
     private String uri;
-    private LankaBanglaCardBillPayRequest lankaBanglaCardBillPayRequest;
+    private CreditCardBillPayRequest creditCardBillPayRequest;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
             cardUserName = getArguments().getString(IPayUtilityBillPayActionActivity.CARD_USER_NAME_KEY, "");
             saveCardInfo = getArguments().getBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, false);
             bankIconId = getArguments().getInt(IPayUtilityBillPayActionActivity.BANK_ICON, 0);
+            selectedBankCode = getArguments().getString(IPayUtilityBillPayActionActivity.BANK_CODE, "");
         }
     }
 
@@ -101,24 +103,19 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
         if (!Utilities.isConnectionAvailable(getContext())) {
             Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
         }
-        if (lankaBanglaCardBillPayTask == null) {
-            lankaBanglaCardBillPayRequest = new LankaBanglaCardBillPayRequest(cardNumber, billAmount.toString(), amountType, getPin());
-            String json = gson.toJson(lankaBanglaCardBillPayRequest);
+        if (creditCardBillPayTask == null) {
+            creditCardBillPayRequest = new CreditCardBillPayRequest(billAmount.toString(), getPin(), "",
+                    cardNumber, cardUserName, saveCardInfo, selectedBankCode);
+            String json = gson.toJson(creditCardBillPayRequest);
             CardNumberValidator.Cards cards = CardNumberValidator.getCardType(cardNumber);
             if (cards != null) {
-                if (cards == CardNumberValidator.Cards.VISA) {
-                    uri = Constants.BASE_URL_UTILITY + Constants.URL_LANKABANGLA_VISA_BILL_PAY;
-                } else if (cards == CardNumberValidator.Cards.MASTERCARD) {
-                    uri = Constants.BASE_URL_UTILITY + Constants.URL_LANKABANGLA_MASTERCARD_BILL_PAY;
-                } else {
-                    return;
-                }
+                uri = Constants.BASE_URL_SM + Constants.URL_CREDIT_CARD_BILL_PAY;
             } else {
                 return;
             }
-            lankaBanglaCardBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY,
+            creditCardBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREDIT_CARD_BILL_PAY,
                     uri, json, getActivity(), this, false);
-            lankaBanglaCardBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            creditCardBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
             customProgressDialog.setLoadingMessage(getString(R.string.payment_processing));
             customProgressDialog.showDialog();
@@ -131,12 +128,11 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
             return;
 
         if (HttpErrorHandler.isErrorFound(result, getContext(), customProgressDialog)) {
-            customProgressDialog.dismissDialog();
-            lankaBanglaCardBillPayTask = null;
+            creditCardBillPayTask = null;
         } else {
             try {
                 switch (result.getApiCommand()) {
-                    case Constants.COMMAND_LANKABANGLA_BILL_PAY:
+                    case Constants.COMMAND_CREDIT_CARD_BILL_PAY:
                         final GenericBillPayResponse mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
                         switch (result.getStatus()) {
                             case Constants.HTTP_RESPONSE_STATUS_PROCESSING:
@@ -164,8 +160,10 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
                                         Bundle bundle = new Bundle();
                                         bundle.putString(IPayUtilityBillPayActionActivity.CARD_NUMBER_KEY, cardNumber);
                                         bundle.putSerializable(IPayUtilityBillPayActionActivity.BILL_AMOUNT_KEY, billAmount);
+                                        bundle.putString(IPayUtilityBillPayActionActivity.CARD_USER_NAME_KEY, cardUserName);
+                                        bundle.putInt(IPayUtilityBillPayActionActivity.BANK_ICON, bankIconId);
                                         if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-                                            ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaBillSuccessFragment(), bundle, 4, true);
+                                            ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new CreditCardBillSuccessFragment(), bundle, 4, true);
                                         }
 
                                     }
@@ -190,7 +188,7 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
                             case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
                                 customProgressDialog.dismissDialog();
                                 Toast.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                                launchOTPVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(lankaBanglaCardBillPayRequest), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
+                                launchOTPVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(creditCardBillPayRequest), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
                                 break;
                             case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
                                 final String errorMessage;
@@ -233,7 +231,7 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
                 customProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
                 sendFailedEventTracking(e.getMessage(), billAmount);
             }
-            lankaBanglaCardBillPayTask = null;
+            creditCardBillPayTask = null;
         }
     }
 }

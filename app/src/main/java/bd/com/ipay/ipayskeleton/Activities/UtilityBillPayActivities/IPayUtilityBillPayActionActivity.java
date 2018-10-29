@@ -35,6 +35,7 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
     public static final String BANK_ICON = "BANK_ICON";
 
     public static final String BILL_AMOUNT_KEY = "BILL_AMOUNT";
+    public static final String BANK_CODE = "BANK_CODE";
 
 
     @Override
