@@ -310,8 +310,10 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 				break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 apiCommand = Constants.COMMAND_PAYMENT;
-                requestJson = gson.toJson(new PaymentRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
-                        amount.toString(), note, mPinEditText.getText().toString(), mOutletId, 0.0, 0.0));
+                PaymentRequest paymentRequest = new PaymentRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
+                        amount.toString(), note, mPinEditText.getText().toString(), mOutletId, 0.0, 0.0);
+                paymentRequest.setPin(mPin);
+                requestJson = gson.toJson(paymentRequest);
                 url = Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3;
                 mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
                 break;
@@ -459,7 +461,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                     break;
                 case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_PAYMENT,
-                            Constants.BASE_URL_SM + Constants.URL_PAYMENT, Constants.METHOD_POST, otpValidFor);
+                            Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3, Constants.METHOD_POST, otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                     break;
