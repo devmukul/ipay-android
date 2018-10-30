@@ -207,7 +207,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
         public void onBindViewHolder(@NonNull final BankViewHolder holder, final int position) {
             holder.bankNameTextView.setText(mBankList.get(position).getBankName());
             if (clickedPosition == position) {
-                holder.bankIconImageView.setImageResource(R.drawable.selected_network);
+                holder.bankIconImageView.setImageResource(R.drawable.ic_selected);
 
             } else {
                 holder.bankIconImageView.setImageResource(getBankIcon(mBankList.get(position)));
@@ -216,13 +216,25 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
                 @Override
                 public void onClick(View v) {
                     selectedBankIconId = getBankIcon(mBankList.get(position));
-                    holder.bankIconImageView.setImageResource(R.drawable.selected_network);
+                    holder.bankIconImageView.setImageResource(R.drawable.ic_selected);
                     clickedPosition = position;
                     selectedBankCode = mBankList.get(position).getBankCode();
                     mCardInfoLayout.setVisibility(View.VISIBLE);
                     notifyDataSetChanged();
                 }
             });
+            holder.parentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedBankIconId = getBankIcon(mBankList.get(position));
+                    holder.bankIconImageView.setImageResource(R.drawable.ic_selected);
+                    clickedPosition = position;
+                    selectedBankCode = mBankList.get(position).getBankCode();
+                    mCardInfoLayout.setVisibility(View.VISIBLE);
+                    notifyDataSetChanged();
+                }
+            });
+
         }
 
         @Override
@@ -233,12 +245,14 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
         public class BankViewHolder extends RecyclerView.ViewHolder {
             public TextView bankNameTextView;
             private ImageView bankIconImageView;
+            private View parentView;
 
 
             public BankViewHolder(View itemView) {
                 super(itemView);
                 bankIconImageView = (ImageView) itemView.findViewById(R.id.bank_icon);
                 bankNameTextView = (TextView) itemView.findViewById(R.id.bank_name);
+                parentView = itemView;
             }
         }
     }
