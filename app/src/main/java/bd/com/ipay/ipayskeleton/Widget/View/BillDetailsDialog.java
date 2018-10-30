@@ -87,14 +87,12 @@ public class BillDetailsDialog {
 	}
 
 	public void setClientLogoImageResource(int imageResource) {
-		requestManager.load(imageResource)
-				.transform(circleTransform)
-				.crossFade()
-				.into(billClientLogoImageView);
+		billClientLogoImageView.setImageResource(imageResource);
 	}
 
 	@SuppressWarnings("unused")
 	public void setClientLogoImage(String imageUrl) {
+
 		requestManager.load(imageUrl)
 				.transform(circleTransform)
 				.crossFade()

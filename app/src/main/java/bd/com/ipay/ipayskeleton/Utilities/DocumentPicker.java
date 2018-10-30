@@ -32,6 +32,7 @@ public class DocumentPicker {
     private static final String TEMP_DOCUMENT_NAME = "document.jpg";
 
     public static final String[] DOCUMENT_PICK_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static final String[] PROFILE_PICTURE_PERMISSION = {Manifest.permission.CAMERA};
     private static final int OPTION_CAMERA = 0;
     private static final int OPTION_EXTERNAL_STORAGE = 1;
     private static final String TEMP_DOCUMENT_NAME_WITH_INDEX = "document_%d.jpg";
@@ -79,7 +80,7 @@ public class DocumentPicker {
     }
 
     @NonNull
-    private static Intent createCameraIntent(Context context, int CameraFacing, String fileName) {
+    public static Intent createCameraIntent(Context context, int CameraFacing, String fileName) {
         Intent returnIntent;
         returnIntent = new Intent(context, CameraActivity.class);
         returnIntent.putExtra(CameraActivity.CAMERA_FACING_NAME, CameraFacing);

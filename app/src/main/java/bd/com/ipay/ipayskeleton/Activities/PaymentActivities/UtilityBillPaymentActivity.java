@@ -11,10 +11,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.AmberITBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantBillPayFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CarnivalBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DpdcBillPaymentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Link3BillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.WestzoneBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -36,8 +34,6 @@ public class UtilityBillPaymentActivity extends BaseActivity {
 				String service = getIntent().getStringExtra(Constants.SERVICE);
 				if (service.equals(Constants.BANGLALION)) {
 					switchToBanglalionBillPayFragment();
-				} else if (service.equals(Constants.LINK3)) {
-					switchToLink3BillPayment();
 				} else if (service.equals(Constants.BRILLIANT)) {
 					switchToBrilliantRechargeFragment();
 				} else if (service.equals(Constants.WESTZONE)) {
@@ -46,8 +42,6 @@ public class UtilityBillPaymentActivity extends BaseActivity {
 					switchToDescoBillPayFragment();
 				} else if (service.equals(Constants.DPDC)) {
 					switchToDpdcBillPaymentFragment();
-				} else if (service.equals(Constants.CARNIVAL)) {
-					switchToDozeBillPaymentFragment();
 				} else if (service.equals(Constants.AMBERIT)) {
 					switchToAmberITBillPaymentFragment();
 				}
@@ -56,11 +50,6 @@ public class UtilityBillPaymentActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 
-	}
-
-	private void switchToDozeBillPaymentFragment() {
-		getSupportFragmentManager().beginTransaction().
-				replace(R.id.fragment_container, new CarnivalBillPayFragment()).commit();
 	}
 
 
@@ -98,11 +87,6 @@ public class UtilityBillPaymentActivity extends BaseActivity {
 	public void switchToBrilliantRechargeFragment() {
 		getSupportFragmentManager().beginTransaction().
 				replace(R.id.fragment_container, new BrilliantBillPayFragment()).commit();
-	}
-
-	public void switchToLink3BillPayment() {
-		getSupportFragmentManager().beginTransaction().
-				replace(R.id.fragment_container, new Link3BillPaymentFragment()).commit();
 	}
 
 	public void switchToBanglalionBillPayFragment() {

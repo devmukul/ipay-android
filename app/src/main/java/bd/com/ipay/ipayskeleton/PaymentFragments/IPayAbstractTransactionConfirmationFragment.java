@@ -50,7 +50,8 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
     private TextView transactionDescriptionTextView;
     private RoundedImageView transactionImageView;
     private TextView nameTextView;
-    private Button transactionConfirmationButton;
+    private TextView userNameTextView;
+	private Button transactionConfirmationButton;
     protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
     protected OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
     protected CustomProgressDialog customProgressDialog;
@@ -73,19 +74,19 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
         return inflater.inflate(R.layout.fragment_ipay_transaction_confirmation, container, false);
     }
 
-    @Override
-    public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
-        final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
-        final ScrollView scrollView = view.findViewById(R.id.scroll_view);
-        transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
-        transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
-        transactionImageView = view.findViewById(R.id.profile_image_view);
-        nameTextView = view.findViewById(R.id.name_text_view);
-        pinEditText = view.findViewById(R.id.pin_edit_text);
-        noteEditText = view.findViewById(R.id.note_edit_text);
+	@Override
+	public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		final Toolbar toolbar = view.findViewById(R.id.toolbar);
+		final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
+		final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
+		final ScrollView scrollView = view.findViewById(R.id.scroll_view);
+		transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
+		transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
+		transactionImageView = view.findViewById(R.id.profile_image_view);
+		nameTextView = view.findViewById(R.id.name_text_view);
+		userNameTextView = view.findViewById(R.id.user_name_text_view);pinEditText = view.findViewById(R.id.pin_edit_text);
+		noteEditText = view.findViewById(R.id.note_edit_text);
 
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -153,9 +154,12 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
         nameTextView.setText(name, TextView.BufferType.SPANNABLE);
     }
 
-    protected void setTransactionConfirmationButtonTitle(CharSequence title) {
-        transactionConfirmationButton.setText(title, TextView.BufferType.SPANNABLE);
-    }
+	protected void setUserName(CharSequence userName) {
+		userNameTextView.setVisibility(View.VISIBLE);
+		userNameTextView.setText(userName, TextView.BufferType.SPANNABLE);
+	}protected void setTransactionConfirmationButtonTitle(CharSequence title) {
+		transactionConfirmationButton.setText(title, TextView.BufferType.SPANNABLE);
+	}
 
     protected void setTransactionImageResource(@SuppressWarnings("SameParameterValue") int imageResource) {
         if (getContext() != null) {
