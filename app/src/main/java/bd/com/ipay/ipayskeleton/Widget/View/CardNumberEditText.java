@@ -36,6 +36,7 @@ public class CardNumberEditText extends AppCompatEditText {
 		@Override
 		public void onTextChanged(CharSequence text, int start, int before, int count) {
 			if (text != null) {
+
 				final String currentText = text.toString();
 				setCardDrawable(currentText);
 				if (mPreviousText != null && text.length() > mPreviousText.length()) {

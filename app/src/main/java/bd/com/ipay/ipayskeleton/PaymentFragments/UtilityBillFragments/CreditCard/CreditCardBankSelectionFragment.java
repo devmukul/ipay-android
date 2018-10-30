@@ -49,7 +49,8 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
     private LinearLayout mCardInfoLayout;
     private BankListAdapter bankListAdapter;
     private int clickedPosition;
-    private CheckBox mSaveCardNumberCheckBox;
+    private TextView mTermsAndConditionsTextView;
+    private CheckBox saveCardCheckBox;
 
     private CardNumberEditText mCardNumberEditText;
     private EditText mNameEditText;
@@ -70,11 +71,12 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
         mProgressLayout = (LinearLayout) view.findViewById(R.id.progress_layout);
         bankListAdapter = new BankListAdapter();
         mBankListRecyclerView.setAdapter(bankListAdapter);
-        mSaveCardNumberCheckBox = (CheckBox) view.findViewById(R.id.save_card_number);
+        mTermsAndConditionsTextView = (TextView) view.findViewById(R.id.save_card_number);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         mCardNumberEditText = view.findViewById(R.id.card_number);
         mNameEditText = view.findViewById(R.id.card_holder_name);
         mCardInfoLayout = view.findViewById(R.id.card_info_layout);
+        saveCardCheckBox = view.findViewById(R.id.save_card_checkbox);
         mContinueButton = view.findViewById(R.id.continue_button);
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +91,8 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
                         bundle.putString(IPayUtilityBillPayActionActivity.CARD_USER_NAME_KEY,
                                 mNameEditText.getText().toString());
                         bundle.putString(IPayUtilityBillPayActionActivity.BANK_CODE, selectedBankCode);
-                        bundle.putBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, mSaveCardNumberCheckBox.isChecked());
                         bundle.putInt(IPayUtilityBillPayActionActivity.BANK_ICON, selectedBankIconId);
+                        bundle.putBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, saveCardCheckBox.isChecked());
                         ((IPayUtilityBillPayActionActivity) getActivity()).
                                 switchFragment(new CreditCardAmountInputFragment(), bundle, 2, true);
 
@@ -178,7 +180,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressLayout.setVisibility(View.GONE);
                         mBankList = new Gson().fromJson(result.getJsonString(), GetAvailableCreditCardBanks.class).getBankList();
-                        mBankListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+                        mBankListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                         mBankListRecyclerView.setAdapter(bankListAdapter);
                         bankListAdapter.notifyDataSetChanged();
                     } else {
@@ -219,7 +221,6 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
                     selectedBankCode = mBankList.get(position).getBankCode();
                     mCardInfoLayout.setVisibility(View.VISIBLE);
                     notifyDataSetChanged();
-                    mSaveCardNumberCheckBox.setVisibility(View.VISIBLE);
                 }
             });
         }

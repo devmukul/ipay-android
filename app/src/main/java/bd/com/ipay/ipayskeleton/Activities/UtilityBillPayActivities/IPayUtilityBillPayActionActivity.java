@@ -8,10 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.MyCard;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival.CarnivalIdInputFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardBankSelectionFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardListShowFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaCardNumberInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps.LankaBanglaDpsNumberInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LinkThree.LinkThreeSubscriberIdInputFragment;
@@ -37,6 +40,8 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
     public static final String BILL_AMOUNT_KEY = "BILL_AMOUNT";
     public static final String BANK_CODE = "BANK_CODE";
 
+    public ArrayList<MyCard> myCards;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +61,7 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
                 switchFragment(new CarnivalIdInputFragment(), bundle, 0, false);
                 break;
             case CREDIT_CARD:
-                switchFragment(new CreditCardBankSelectionFragment(), bundle, 0, false);
+                switchFragment(new CreditCardListShowFragment(), bundle, 0, false);
                 break;
 
             case BILL_PAY_LANKABANGLA_DPS:

@@ -1300,6 +1300,8 @@
     <string name="withdraw_money_anytime">Withdraw \nmoney anytime</string>
     <string name="withdraw_money_bank_option_message">You can withdraw money from your iPay wallet anytime. To withdraw money, you need to choose your preferred bank.</string>
     <string name="fetching_bank_list">Fetching \nbank list…</string>
+    <string name="fetching_cards">Fetching \nSaved cards</string>
+    <string name="select_from_saved_cards">Or \nSelect Card from the list</string>
     <string name="dummy_bank_name">Eastern Bank Limited</string>
     <string name="dummy_bank_account">123***890</string>
     <string name="adding_money_from_bank">Adding Money from Bank</string>
@@ -1339,6 +1341,7 @@
     <string name="save_card_info">Save My Card Info</string>
     <string name="credit_card">Credit Card</string>
     <string name="enter_a_name">Enter Card Holder Name</string>
-    <string name="card_bill_alert_message">To settle your bill payment request. It will take 3-5 business days</string>
+    <string name="card_bill_alert_message">*To settle your bill payment request. It will take 3-5 business days</string>
     <string name="new_bill_pay">New Bill Pay</string>
+    <string name="instant_bill_pay">Instant bill pay</string>
 </resources>

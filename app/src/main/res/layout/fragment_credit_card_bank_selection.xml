@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
@@ -62,26 +63,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <bd.com.ipay.ipayskeleton.Widget.View.CardNumberEditText
                     android:id="@+id/card_number"
                     android:layout_width="match_parent"
-                    android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/value8"
-                    android:fontFamily="@font/open_sans_light"
-                    android:inputType="number"
                     android:layout_margin="@dimen/value16"
-                    android:hint="Card Number" />
+                    android:paddingRight="@dimen/value20"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
+                    android:hint="Card Number"
+                    android:inputType="number" />
 
                 <EditText
                     android:id="@+id/card_holder_name"
+                    style="@android:style/Widget.EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_margin="@dimen/value16"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
                     android:hint="Card Holder Name" />
+
+                <CheckBox
+                    android:id="@+id/save_card_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/value16"
+                    android:layout_marginRight="@dimen/value16"
+                    android:text="Save my card info" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -94,22 +106,22 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <CheckBox
+        <TextView
             android:id="@+id/save_card_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/continue_button"
             android:layout_marginBottom="@dimen/value10"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="@dimen/value16"
-            android:text="@string/card_bill_alert_message"
-            android:visibility="gone" />
+            android:text="@string/card_bill_alert_message" />
 
         <Button
             android:id="@+id/continue_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value10"
             android:background="@color/colorPrimaryLight"
             android:text="@string/continue_send_money"
             android:textColor="@color/colorWhite" />

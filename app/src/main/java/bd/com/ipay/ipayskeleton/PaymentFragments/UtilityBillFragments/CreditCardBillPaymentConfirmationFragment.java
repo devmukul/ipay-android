@@ -62,7 +62,6 @@ public class CreditCardBillPaymentConfirmationFragment extends IPayAbstractTrans
         setTransactionImageResource(bankIconId);
         setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
         setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
-        setUserName(cardUserName);
         setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
     }
 

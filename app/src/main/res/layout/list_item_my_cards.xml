@@ -4,11 +4,10 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/value5">
 
-    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-        android:id="@+id/profile_picture"
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/bank_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -22,7 +21,7 @@
         android:layout_marginLeft="-8dp"
         android:layout_marginStart="-8dp"
         android:layout_marginTop="12dp"
-        android:layout_toRightOf="@+id/profile_picture">
+        android:layout_toRightOf="@+id/bank_icon">
 
         <TextView
             android:id="@+id/card_number"
@@ -39,12 +38,19 @@
             android:id="@+id/card_holder_name"
             style="@style/TextStylePrimaryMedium"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_number"
             android:singleLine="true"
             android:textColor="@color/colorTextPrimary"
             android:textSize="12sp" />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/info_holder"
+        android:layout_marginLeft="@dimen/value16"
+        android:layout_marginRight="@dimen/value16"
+        android:background="@color/colorLightGray"></View>
 
 </RelativeLayout>
