@@ -3,31 +3,19 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,30 +28,25 @@ import java.util.HashMap;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.GetAllTrendingBusinessResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.TrendingBusinessList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetProviderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Provider;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.ProviderCategory;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPayTransactionContactFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionHelperFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -71,9 +54,6 @@ import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-
-import static bd.com.ipay.ipayskeleton.Utilities.Constants.BLION;
-import static bd.com.ipay.ipayskeleton.Utilities.Constants.DESCO;
 
 public class MakePaymentNewFragment extends BaseFragment implements HttpResponseListener {
 
@@ -86,7 +66,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 	private GetProviderResponse mUtilityProviderResponse;
 	private List<ProviderCategory> mUtilityProviderTypeList;
 
-    //private View mRequestPaymentView;
     private View mBillPayView;
     private View mLink3BillPayView;
     private View mBrilliantRechargeView;
@@ -104,47 +83,19 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private RecyclerView mTrendingListRecyclerView;
     private TrendingListAdapter mTrendingListAdapter;
 	private MakePaymentContactsSearchView mMobileNumberEditText;
-
-    private int isFirstLoad = 0;
-    private RecyclerView mContactListRecyclerView;
-    private Button mContinueButton;
-    private SearchView mContactSearchView;
-    private TextView mContactListEmptyMessageTextView;
-    private TextView mSearchedNumberTextView;
-    private TextView mActionNameTextView;
-    private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
-    private String mQuery = "";
-    private String mPhoneNumber;
-
-
-    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private ProgressDialog mProgressDialog;
-    private Cursor mCursor;
-
-    private int nameIndex;
-    private int originalNameIndex;
-    private int phoneNumberIndex;
-    private int profilePictureUrlQualityMediumIndex;
-    private LinearLayout mSearchedNumberLayout;
     private String trendingJson;
 
     private int transactionType;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
-        setHasOptionsMenu(true);
         mProgressDialog = new ProgressDialog(getActivity());
         if (getArguments() != null) {
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
         }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -156,7 +107,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProviderAvailabilityMap = new HashMap<>();
-        //mRequestPaymentView = view.findViewById(R.id.requestPaymentView);
         mBillPayView = view.findViewById(R.id.billPayView);
         mLink3BillPayView = view.findViewById(R.id.linkThreeBill);
         mDescoBillPayView = view.findViewById(R.id.desco);
@@ -174,62 +124,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mTrendingListRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mTrendingListRecyclerView.setLayoutManager(mLayoutManager);
-
-        final Button helperBottomSheetDismissButton = view.findViewById(R.id.helper_bottom_sheet_dismiss_button);
-        final Toolbar toolbar = view.findViewById(R.id.toolbar);
-        final LinearLayout helpBottomSheetLayout = view.findViewById(R.id.help_bottom_sheet_layout);
-
-        if (getActivity() instanceof AppCompatActivity) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null)
-                actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (getFragmentManager() != null) {
-            final TransactionHelperFragment transactionHelperFragment = new TransactionHelperFragment();
-            transactionHelperFragment.setArguments(getArguments());
-            getFragmentManager().beginTransaction().replace(R.id.help_fragment_container, transactionHelperFragment).commit();
-        }
-
-        bottomSheetBehavior = BottomSheetBehavior.from(helpBottomSheetLayout);
-        switch (transactionType) {
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-                getActivity().setTitle(R.string.make_payment);
-                if (SharedPrefManager.ifFirstMakePayment()) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                break;
-        }
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    switch (transactionType) {
-                        case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-                            SharedPrefManager.setIfFirstMakePayment(false);
-                            break;
-                    }
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-
-        helperBottomSheetDismissButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-            }
-        });
 
         trendingJson = SharedPrefManager.getTrendingBusiness(null);
         if(!TextUtils.isEmpty(trendingJson)){
@@ -354,7 +248,11 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     payBill(id, null);
             }
         });
+    }
 
+    private void getAllBusinessAccountsList() {
+        GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
+        new GetAllBusinessListAsyncTask(getContext(), mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void payBill(final String provider, final String type){
@@ -377,12 +275,20 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     case Constants.AMBERIT:
                     case Constants.WESTZONE:
                     case Constants.DESCO:
-                    case Constants.CARNIVAL:
                     case Constants.DPDC:
-                    case Constants.LINK3:
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         intent.putExtra(Constants.SERVICE, provider);
                         startActivity(intent);
+                        break;
+                    case Constants.LINK3:
+                        intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LINK_THREE);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                        break;
+                    case Constants.CARNIVAL:
+                        intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_CARNIVAL);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                         break;
                     case Constants.BLION:
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
@@ -412,25 +318,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 	public void onResume() {
 		super.onResume();
 	}
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.transaction_contact_option_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.menu_help:
-                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
 	private void getTrendingBusinessList() {
 		if (mGetTrendingBusinessListTask != null) {
@@ -471,7 +358,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                     mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
                     mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
-                    mTrendingListRecyclerView.notifyAll();
 
 				}
 				mGetTrendingBusinessListTask = null;
@@ -509,9 +395,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
 
     public class TrendingListAdapter extends     RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
-
-        //private List<Movie> moviesList;
-
         private List<TrendingBusinessList> trendingBusinessList;
 
         public TrendingListAdapter(List<TrendingBusinessList> trendingBusinessList) {
@@ -534,7 +417,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             PayDashBoardItemAdapter payDashBoardItemAdapter = new PayDashBoardItemAdapter(mBusinessAccountEntryList, getActivity());
             holder.trendingBusinessCAtegory.setAdapter(payDashBoardItemAdapter);
             holder.trendingBusinessCAtegory.setLayoutManager(new GridLayoutManager(getContext(), 4));
-
         }
 
         @Override
@@ -545,7 +427,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView titleView;
             public RecyclerView trendingBusinessCAtegory;
-
             public MyViewHolder(View view) {
                 super(view);
                 titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
@@ -568,7 +449,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         public class ViewHolder extends RecyclerView.ViewHolder {
             private ImageView mImageView;
             private TextView mTextView;
-            private int mColorPalette;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -586,20 +466,17 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
                     final DrawableTypeRequest<String> glide = Glide.with(context).load(imageUrl);
 
-                    glide
-                            .diskCacheStrategy(DiskCacheStrategy.ALL);
+                    glide.diskCacheStrategy(DiskCacheStrategy.ALL);
 
-                    glide
-                            .placeholder(R.drawable.ic_business_logo_round)
-                            .error(R.drawable.ic_business_logo_round)
-                            .crossFade()
-                            .dontAnimate()
-                            .into(mImageView);
+                    glide.placeholder(R.drawable.ic_business_logo_round)
+                        .error(R.drawable.ic_business_logo_round)
+                        .crossFade()
+                        .dontAnimate()
+                        .into(mImageView);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -668,12 +545,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         class NormalViewHolder extends ViewHolder {
             NormalViewHolder(View itemView) {
                 super(itemView);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
             }
         }
 

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.PaymentFragments.IPayChooseBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public abstract class IPayAbstractBankTransactionOptionFragment extends Fragment {

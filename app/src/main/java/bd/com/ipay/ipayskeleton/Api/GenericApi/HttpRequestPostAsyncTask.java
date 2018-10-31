@@ -14,6 +14,8 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
 
     private final String mJsonString;
 
+    private String pinAsHeader;
+    private String otpAsHeader;
 
     public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString,
                                     Context mContext, HttpResponseListener listener, boolean isSilent) {
@@ -23,6 +25,22 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
 
     public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext, boolean isSilent) {
         this(API_COMMAND, mUri, mJsonString, mContext, null, isSilent);
+    }
+
+    public String getPinAsHeader() {
+        return pinAsHeader;
+    }
+
+    public void setPinAsHeader(String pinAsHeader) {
+        this.pinAsHeader = pinAsHeader;
+    }
+
+    public String getOtpAsHeader() {
+        return otpAsHeader;
+    }
+
+    public void setOtpAsHeader(String otpAsHeader) {
+        this.otpAsHeader = otpAsHeader;
     }
 
     @Override
@@ -45,6 +63,12 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
                 .header(Constants.TOKEN, TokenManager.getToken())
                 .post(requestBody)
                 .url(mUri);
+        if (this.pinAsHeader != null && !this.pinAsHeader.isEmpty()) {
+            requestBuilder.header(Constants.X_IPAY_PIN, pinAsHeader);
+        }
+        if (this.otpAsHeader != null && !this.otpAsHeader.isEmpty()) {
+            requestBuilder.header(Constants.X_IPAY_OTP, otpAsHeader);
+        }
         if (TokenManager.getOnAccountId() != null && TokenManager.getOnAccountId() != "") {
             requestBuilder.header(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
         }

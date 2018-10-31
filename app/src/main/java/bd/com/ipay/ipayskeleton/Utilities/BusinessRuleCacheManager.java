@@ -55,7 +55,8 @@ public class BusinessRuleCacheManager {
 	public static void fetchBusinessRule(final Context context, final int serviceId) {
 		final String mUri = new GetBusinessRuleRequestBuilder(serviceId).getGeneratedUri();
 		final String apiCommand;
-		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT) {
+		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT ||
+                serviceId == ServiceIdConstants.MAKE_PAYMENT) {
 			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE_V2;
 		} else {
 			apiCommand = Constants.COMMAND_GET_BUSINESS_RULE;
@@ -84,7 +85,7 @@ public class BusinessRuleCacheManager {
 												updateRequestMoneyBusinessRule(mMandatoryBusinessRules, rule);
 												break;
                                             case ServiceIdConstants.MAKE_PAYMENT:
-                                                updateMakePaymentBusinessRule(mMandatoryBusinessRules, rule);
+                                                updateMakePaymentBusinessRules(mMandatoryBusinessRules, rule);
                                                 break;
 											case ServiceIdConstants.ADD_MONEY_BY_BANK:
 												updateAddMoneyByBankBusinessRule(mMandatoryBusinessRules, rule);
@@ -99,83 +100,65 @@ public class BusinessRuleCacheManager {
 												break;
 										}
 
-									}
-								}
-								break;
-							default:
-								return;
-						}
+                                    }
+                                }
+                                break;
+                            default:
+                                return;
+                        }
 
-						BusinessRuleCacheManager.setBusinessRules(getTag(serviceId), mMandatoryBusinessRules);
-						Intent intent = new Intent();
-						intent.setAction(Constants.BUSINESS_RULE_UPDATE_BROADCAST);
-						intent.putExtra(SERVICE_ID_KEY, serviceId);
-						LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-					} catch (Exception e) {
-						e.printStackTrace();
-						DialogUtils.showDialogForBusinessRuleNotAvailable(context);
-					}
-				}
-			}
-		}, true);
-		mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+                        BusinessRuleCacheManager.setBusinessRules(getTag(serviceId), mMandatoryBusinessRules);
+                        Intent intent = new Intent();
+                        intent.setAction(Constants.BUSINESS_RULE_UPDATE_BROADCAST);
+                        intent.putExtra(SERVICE_ID_KEY, serviceId);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(context);
+                    }
+                }
+            }
+        }, true);
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-	private static void updateBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, List<Rule> businessRuleList) {
-		if (businessRuleList != null) {
-			for (Rule rule : businessRuleList) {
-				switch (rule.getRuleName()) {
-					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
-						mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-						break;
-					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
-						mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-						break;
-					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED:
-						mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-						break;
-					case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED:
-						mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-						break;
-				}
-			}
-		}
-	}
+    private static void updateBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, List<Rule> businessRuleList) {
+        if (businessRuleList != null) {
+            for (Rule rule : businessRuleList) {
+                switch (rule.getRuleName()) {
+                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+                        mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                        break;
+                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+                        mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                        break;
+                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED:
+                        mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                        break;
+                    case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED:
+                        mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                        break;
+                }
+            }
+        }
+    }
 
-	private static void updateRequestMoneyBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule rule) {
-		switch (rule.getRuleID()) {
-			case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT:
-				mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT:
-				mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED:
-				mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED:
-				mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-				break;
-		}
-	}
-
-	private static void updateMakePaymentBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule rule) {
-		switch (rule.getRuleID()) {
-			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
-				mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
-				mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED:
-				mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED:
-				mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-				break;
-		}
-	}
-
+    private static void updateRequestMoneyBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule rule) {
+        switch (rule.getRuleID()) {
+            case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED:
+                mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED:
+                mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                break;
+        }
+    }
 	private static void updateTopupBusinessRule(MandatoryBusinessRules mMandatoryBusinessRules, BusinessRule rule) {
         switch (rule.getRuleID()) {
 			case BusinessRuleConstants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT:
@@ -193,78 +176,100 @@ public class BusinessRuleCacheManager {
 		}
 	}
 
-	private static void updateSendMoneyBusinessRules(MandatoryBusinessRules mandatoryBusinessRules, BusinessRule rule) {
-		switch (rule.getRuleID()) {
-			case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT:
-				mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT:
-				mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_VERIFICATION_REQUIRED:
-				mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_PIN_REQUIRED:
-				mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-				break;
-		}
-	}
+    private static void updateSendMoneyBusinessRules(MandatoryBusinessRules mandatoryBusinessRules, BusinessRule rule) {
+        switch (rule.getRuleID()) {
+            case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_VERIFICATION_REQUIRED:
+                mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_SEND_MONEY_PIN_REQUIRED:
+                mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                break;
+        }
+    }
 
-	private static void updateAddMoneyByBankBusinessRule(final MandatoryBusinessRules mandatoryBusinessRules, final BusinessRule rule) {
-		switch (rule.getRuleID()) {
-			case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT:
-				mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT:
-				mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_VERIFICATION_REQUIRED:
-				mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_PIN_REQUIRED:
-				mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-				break;
-		}
-	}
+    private static void updateMakePaymentBusinessRules(MandatoryBusinessRules mandatoryBusinessRules, BusinessRule rule) {
+        switch (rule.getRuleID()) {
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT_V3:
+                mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT_V3:
+                mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED_V3:
+                mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED_V3:
+                mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED_V3:
+                mandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
+                break;
+        }
+    }
 
-	private static void updateWithdrawMoneyBusinessRule(final MandatoryBusinessRules mandatoryBusinessRules, final BusinessRule rule) {
-		switch (rule.getRuleID()) {
-			case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT:
-				mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT:
-				mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_VERIFICATION_REQUIRED:
-				mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_PIN_REQUIRED:
-				mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-				break;
-		}
-	}
+    private static void updateAddMoneyByBankBusinessRule(final MandatoryBusinessRules mandatoryBusinessRules, final BusinessRule rule) {
+        switch (rule.getRuleID()) {
+            case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_VERIFICATION_REQUIRED:
+                mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_PIN_REQUIRED:
+                mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                break;
+        }
+    }
 
-	private static void updateAddMoneyByCardBusinessRule(final MandatoryBusinessRules mandatoryBusinessRules, final BusinessRule rule) {
-		switch (rule.getRuleID()) {
-			case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE:
-				mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE:
-				mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_VERIFICATION_REQUIRED:
-				mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-				break;
-			case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_PIN_REQUIRED:
-				mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-				break;
-		}
-	}
+    private static void updateWithdrawMoneyBusinessRule(final MandatoryBusinessRules mandatoryBusinessRules, final BusinessRule rule) {
+        switch (rule.getRuleID()) {
+            case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_VERIFICATION_REQUIRED:
+                mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_WITHDRAW_MONEY_PIN_REQUIRED:
+                mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                break;
+        }
+    }
+
+    private static void updateAddMoneyByCardBusinessRule(final MandatoryBusinessRules mandatoryBusinessRules, final BusinessRule rule) {
+        switch (rule.getRuleID()) {
+            case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE:
+                mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE:
+                mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_VERIFICATION_REQUIRED:
+                mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_PIN_REQUIRED:
+                mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                break;
+        }
+    }
 
     public static String getTag(final int serviceId) {
         switch (serviceId) {
             case ServiceIdConstants.SEND_MONEY:
                 return Constants.SEND_MONEY;
+            case ServiceIdConstants.MAKE_PAYMENT:
+                return Constants.MAKE_PAYMENT;
             case ServiceIdConstants.ADD_MONEY_BY_BANK:
 				return Constants.ADD_MONEY_BY_BANK;
 			case ServiceIdConstants.WITHDRAW_MONEY:
@@ -273,8 +278,6 @@ public class BusinessRuleCacheManager {
 				return Constants.ADD_MONEY_BY_CARD;
 			case ServiceIdConstants.REQUEST_MONEY:
                 return Constants.REQUEST_MONEY;
-            case ServiceIdConstants.MAKE_PAYMENT:
-                return Constants.MAKE_PAYMENT;
             case ServiceIdConstants.TOP_UP:
                 return Constants.TOP_UP;
             case ServiceIdConstants.UTILITY_BILL_PAYMENT:

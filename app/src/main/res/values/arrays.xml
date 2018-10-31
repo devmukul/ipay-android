@@ -45,6 +45,10 @@
         <item>Select from gallery</item>
     </string-array>
 
+    <string-array name="upload_picker_action_for_profile_picture">
+        <item>@string/take_a_picture_message</item>
+    </string-array>
+
     <string-array name="upload_picker_action_for_document">
         <item>@string/take_a_picture_message_for_document</item>
         <item>Upload your document from gallery</item>

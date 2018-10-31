@@ -27,11 +27,26 @@
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/topup_icon_for_topup_service" />
 
+            <TextView
+                android:id="@+id/topup_helper_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="#666666"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/value36"
+                android:layout_marginRight="@dimen/value36"
+                android:layout_centerHorizontal="true"
+                android:text="Select operator and insert number or search from Contacts "
+                android:layout_below="@id/icon_topup"
+                android:layout_marginBottom="@dimen/value24"
+                android:fontFamily="@font/open_sans"/>
+
             <LinearLayout
                 android:id="@+id/topup_helper_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/icon_topup"
+                android:layout_below="@id/topup_helper_text"
                 android:layout_marginBottom="@dimen/value20"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"

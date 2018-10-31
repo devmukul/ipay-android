@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
@@ -41,6 +43,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.CustomBusinessContact;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
@@ -60,8 +63,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
     private BusinessContactListAdapter mTransactionHistoryAdapter;
     private LinearLayoutManager mLayoutManager;
     private List<CustomBusinessContact> userTransactionHistories;
-
-//    private BusinessContactListAdapter mBusinessContactsAdapter;
 
     private List<BusinessContact> mBusinessContactList;
     private String mQuery = "";
@@ -338,6 +339,8 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                                 filteredList.add(outletsList);
                             }else if(!TextUtils.isEmpty(outletsList.getOutletName()) && outletsList.getOutletName().toLowerCase().contains(charString.toLowerCase())){
                                 filteredList.add(outletsList);
+                            }else if(!TextUtils.isEmpty(outletsList.getMobileNumber()) && outletsList.getMobileNumber().toLowerCase().contains(charString.toLowerCase())){
+                                filteredList.add(outletsList);
                             }
                         }
 
@@ -387,8 +390,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 final String businessOutlet = businessContact.getOutletName();
                 final Long businessOutletId = businessContact.getOutletId();
 
-                System.out.println(" Outlet Id <><><"+typeInList);
-
                 if(typeInList.equals("Outlet")){
                     if (businessOutlet != null && !businessOutlet.isEmpty())
                         businessNameView.setText(businessOutlet);
@@ -420,7 +421,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.brilliant)))
                         profilePictureView.setProfilePicture(R.drawable.brilliant_logo);
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.carnival)))
-                        profilePictureView.setProfilePicture(R.drawable.carnival_2);
+                        profilePictureView.setProfilePicture(R.drawable.ic_carnival);
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_card)))
                         profilePictureView.setProfilePicture(R.drawable.lbf_credit_card);
                     else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_dps)))

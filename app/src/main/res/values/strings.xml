@@ -314,8 +314,6 @@
     <string name="withdraw_money">Withdraw Money</string>
     <string name="withdraw_money_history">Withdraw Money History</string>
     <string name="events">Events</string>
-    <string name="education">Education</string>
-    <string name="education_payment">Education Payment</string>
     <string name="my_qr_code">My QR Code</string>
     <string name="qr_code">QR Code</string>
     <string name="scan_the_qr_code">Please scan the QR Code to send money to this person</string>
@@ -855,7 +853,7 @@
     <string name="add_a_contact">Add a Contact</string>
     <string name="invite_a_contact">Invite a Contact</string>
     <string name="progress_dialog_adding_contact">Adding contact…</string>
-    <string name="dialog_requesting_top_up">Preparing for Top Up…</string>
+    <string name="dialog_requesting_top_up">Preparing for Top-Up…</string>
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
     <string name="forget_password_link">https://app.ipay.com.bd/forgot-password</string>
@@ -1169,10 +1167,7 @@
     <string name="payment_failed">Payment Failed</string>
     <string name="cant_fetch_details">Failed to fetch order details</string>
 
-    <string name="ipay_live_host">app.ipay.com.bd</string>
     <string name="ipay_live_host_without_www">ipay.com.bd</string>
-    <string name="ipay_demo_host">demo.ipay.com.bd</string>
-    <string name="ipay_dev_host">dev.ipay.com.bd</string>
     <string name="connection_time_out">Connection time out</string>
     <string name="network_unreachable">Network is unreachable</string>
     <string name="OK">OK</string>
@@ -1208,6 +1203,8 @@
     <string name="vat_amount">Vat Amount</string>
     <string name="bill_status">Bill Status</string>
     <string name="enter_customer_id">Please enter a customer ID</string>
+    <string name="enter_subscriber_id">Please enter your Subscriber ID</string>
+    <string name="enter_carnival_id">Please enter your Carnival ID</string>
     <string name="bill_number">Bill Number</string>
     <string name="WestZone">WestZone</string>
     <string name="bill_pay">Bill Pay</string>
@@ -1281,7 +1278,7 @@
     <string name="add_money_confirmation_message">YOU ARE ADDING Tk. %1$s FROM</string>
     <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk. %1$s TO</string>
     <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk. %1$s FOR</string>
-    <string name="top_up_confirmation_message">MOBILE TOP UP %1$s TO</string>
+    <string name="top_up_confirmation_message">MOBILE TOP-UP %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
     <string name="make_payment_success_message">SUCCESSFULLY PAID %1$s TO</string>
     <string name="add_money_card_success_message">SUCCESSFULLY ADDED Tk. %1$s FROM</string>
@@ -1311,6 +1308,9 @@
     <string name="dummy_bank_account">123***890</string>
     <string name="adding_money_from_bank">Adding Money from Bank</string>
     <string name="lanka_bangla_card_number_input_message">Please enter your LankaBangla Visa or Master Card Number</string>
+    <string name="link_three_subscriber_id_input_message">Please enter your Link3 Subscriber ID</string>
+    <string name="carnival_id_input_message">Please enter your Carnival ID</string>
+    <string name="card_hint">XXXX</string>
     <string name="invalid_card_number_message">Enter a valid card number.</string>
     <string name="empty_card_number_message">Enter a card number.</string>
     <string name="empty_dps_number_message">Enter a DPS account number.</string>
@@ -1321,6 +1321,9 @@
     <string name="minimum_pay">Minimum Pay</string>
     <string name="paying_bill_message">YOU ARE PAYING BILL TO</string>
     <string name="request_on_process">Request Processing</string>
+    <string name="subscriber_id">Subscriber ID</string>
+    <string name="carnival_id">Carnival ID</string>
+    <string name="package_rate">Package Rate</string>
     <string name="lanka_bangla_dps_number">LankaBangla DPS Account Number</string>
     <string name="account_title">Account Title</string>
     <string name="account_maturity_date">Account Maturity Date</string>
@@ -1338,4 +1341,5 @@
     <string name="make_payment_step_three">Write some <b>Note</b>, Done!</string>
     <string name="top_up_to">MOBILE TOP-UP TO</string>
     <string name="total_outstanding">Total outstanding</string>
+    <string name="take_photo">Take Photo</string>
 </resources>

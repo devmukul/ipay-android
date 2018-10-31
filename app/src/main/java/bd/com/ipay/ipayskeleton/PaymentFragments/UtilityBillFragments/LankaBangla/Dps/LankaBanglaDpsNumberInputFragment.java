@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBang
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,136 +17,142 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaDpsUserInfoResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.IpayAbstractDpsInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractUserIdInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widget.View.DpsBillDetailsDialog;
 
-public class LankaBanglaDpsNumberInputFragment extends IpayAbstractDpsInputFragment implements HttpResponseListener {
+public class LankaBanglaDpsNumberInputFragment extends IPayAbstractUserIdInputFragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetLankaBanglaDpsUserInfoAsyncTask = null;
-    private final Gson gson = new GsonBuilder().create();
-    private CustomProgressDialog mProgressDialog;
+	private HttpRequestGetAsyncTask mGetLankaBanglaDpsUserInfoAsyncTask = null;
+	private final Gson gson = new GsonBuilder().create();
+	private CustomProgressDialog customProgressDialog;
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		customProgressDialog = new CustomProgressDialog(getContext());
+	}
 
-        if (getActivity() != null)
-            getActivity().setTitle(R.string.lanka_bangla_dps);
+	@Override
+	protected void performContinueAction() {
+		if (!Utilities.isConnectionAvailable(getContext())) {
+			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
+		} else if (mGetLankaBanglaDpsUserInfoAsyncTask != null) {
+			return;
+		}
 
-        mProgressDialog = new CustomProgressDialog(getActivity());
-    }
+		String url = Constants.BASE_URL_UTILITY + Constants.LANKABANGLA_DPS_USER + getUserId();
+		mGetLankaBanglaDpsUserInfoAsyncTask = new HttpRequestGetAsyncTask(
+				Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO, url, getContext(), false);
+		mGetLankaBanglaDpsUserInfoAsyncTask.mHttpResponseListener = this;
+		customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
+		customProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
+		customProgressDialog.showDialog();
+		mGetLankaBanglaDpsUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 
-    @Override
-    public boolean verifyInput() {
-        if (TextUtils.isEmpty(getDpsNumber())) {
-            showErrorMessage(getString(R.string.empty_dps_number_message));
-            return false;
-        } else {
-            return true;
-        }
-    }
+	@Override
+	public boolean verifyInput() {
+		if (TextUtils.isEmpty(getUserId())) {
+			showErrorMessage(getString(R.string.empty_dps_number_message));
+			return false;
+		} else {
+			return true;
+		}
+	}
 
-    @Override
-    public void performButtonAction() {
-        if (verifyInput()) {
-            attemptGetLankaBanglaDpsUser();
-        }
-    }
+	@Override
+	protected void setupViewProperties() {
+		setTitle(getString(R.string.lanka_bangla_dps));
+		setMerchantIconImage(R.drawable.ic_lankabd2);
+		setInputMessage(getString(R.string.lanka_bangla_dps_number_input_message));
+		setUserIdHint(getString(R.string.lanka_bangla_dps_number));
+	}
 
-    private void attemptGetLankaBanglaDpsUser() {
-        String url = Constants.BASE_URL_UTILITY + Constants.LANKABANGLA_DPS_USER + getDpsNumber();
-        mGetLankaBanglaDpsUserInfoAsyncTask = new HttpRequestGetAsyncTask(
-                Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO, url, getContext(), false);
-        mGetLankaBanglaDpsUserInfoAsyncTask.mHttpResponseListener = this;
-        mProgressDialog.setLoadingMessage("Please wait");
-        mProgressDialog.showDialog();
-        mGetLankaBanglaDpsUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+	@Override
+	public void httpResponseReceiver(GenericHttpResponse result) {
+		if (getActivity() == null)
+			return;
 
-    @Override
-    public void httpResponseReceiver(GenericHttpResponse result) {
-        if (getActivity() == null)
-            return;
+		if (HttpErrorHandler.isErrorFound(result, getContext(), customProgressDialog)) {
+			mGetLankaBanglaDpsUserInfoAsyncTask = null;
+			if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+				LankaBanglaDpsUserInfoResponse lankaBanglaDpsUserInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaDpsUserInfoResponse.class);
+				if (!TextUtils.isEmpty(lankaBanglaDpsUserInfoResponse.getMessage())) {
+					Toaster.makeText(getActivity(), lankaBanglaDpsUserInfoResponse.getMessage(), Toast.LENGTH_SHORT);
+				} else {
+					Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+				}
+			}
+		} else {
+			try {
+				switch (result.getApiCommand()) {
+					case Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO:
+						mGetLankaBanglaDpsUserInfoAsyncTask = null;
+						LankaBanglaDpsUserInfoResponse lankaBanglaDpsUserInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaDpsUserInfoResponse.class);
+						switch (result.getStatus()) {
+							case Constants.HTTP_RESPONSE_STATUS_OK:
+								showLankaBanglaUserInfo(lankaBanglaDpsUserInfoResponse);
+								break;
+							default:
+								if (!TextUtils.isEmpty(lankaBanglaDpsUserInfoResponse.getMessage())) {
+									Toaster.makeText(getActivity(), lankaBanglaDpsUserInfoResponse.getMessage(), Toast.LENGTH_SHORT);
+								} else {
+									Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+								}
+								break;
+						}
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+			}
+		}
+		customProgressDialog.dismissDialog();
+	}
 
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
-            mGetLankaBanglaDpsUserInfoAsyncTask = null;
-            if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                LankaBanglaDpsUserInfoResponse lankaBanglaDpsUserInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaDpsUserInfoResponse.class);
-                if (!TextUtils.isEmpty(lankaBanglaDpsUserInfoResponse.getMessage())) {
-                    Toaster.makeText(getActivity(), lankaBanglaDpsUserInfoResponse.getMessage(), Toast.LENGTH_SHORT);
-                } else {
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-            }
-        } else {
-            try {
-                switch (result.getApiCommand()) {
-                    case Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO:
-                        mGetLankaBanglaDpsUserInfoAsyncTask = null;
-                        LankaBanglaDpsUserInfoResponse lankaBanglaDpsUserInfoResponse = gson.fromJson(result.getJsonString(), LankaBanglaDpsUserInfoResponse.class);
-                        switch (result.getStatus()) {
-                            case Constants.HTTP_RESPONSE_STATUS_OK:
-                                showLankaBanglaUserInfo(lankaBanglaDpsUserInfoResponse);
-                                break;
-                            default:
-                                if (!TextUtils.isEmpty(lankaBanglaDpsUserInfoResponse.getMessage())) {
-                                    Toaster.makeText(getActivity(), lankaBanglaDpsUserInfoResponse.getMessage(), Toast.LENGTH_SHORT);
-                                } else {
-                                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                                }
-                                break;
-                        }
-                        break;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-            }
-        }
-        mProgressDialog.dismissDialog();
-    }
+	private void showLankaBanglaUserInfo(final LankaBanglaDpsUserInfoResponse lankaBanglaCustomerInfoResponse) {
+		if (getActivity() == null)
+			return;
 
-    private void showLankaBanglaUserInfo(final LankaBanglaDpsUserInfoResponse lankaBanglaCustomerInfoResponse) {
-        if (getActivity() == null)
-            return;
+		final DpsBillDetailsDialog billDetailsDialog = new DpsBillDetailsDialog(getContext());
+		billDetailsDialog.setTitle(getString(R.string.bill_details));
+		billDetailsDialog.setClientLogoImageResource(R.drawable.ic_lankabd2);
 
-        final DpsBillDetailsDialog billDetailsDialog = new DpsBillDetailsDialog(getContext());
-        billDetailsDialog.setTitle(getString(R.string.bill_details));
-        billDetailsDialog.setClientLogoImageResource(R.drawable.ic_lankabd2);
+		billDetailsDialog.setBillTitleInfo(lankaBanglaCustomerInfoResponse.getAccountNumber());
+		billDetailsDialog.setBillSubTitleInfo(lankaBanglaCustomerInfoResponse.getAccountTitle());
+		billDetailsDialog.setAccountName(lankaBanglaCustomerInfoResponse.getAccountTitle());
+		billDetailsDialog.setAccountNumber(lankaBanglaCustomerInfoResponse.getAccountNumber());
+		billDetailsDialog.setBranchID(lankaBanglaCustomerInfoResponse.getBranchId());
+		billDetailsDialog.setMaturityDate(lankaBanglaCustomerInfoResponse.getAccountMaturityDate());
+		billDetailsDialog.setInstallmentAmount(Long.toString(lankaBanglaCustomerInfoResponse.getInstallmentAmount()));
 
-        billDetailsDialog.setBillTitleInfo(lankaBanglaCustomerInfoResponse.getAccountNumber());
-        billDetailsDialog.setBillSubTitleInfo(lankaBanglaCustomerInfoResponse.getAccountTitle());
-        billDetailsDialog.setAccountName(lankaBanglaCustomerInfoResponse.getAccountTitle());
-        billDetailsDialog.setAccountNumber(lankaBanglaCustomerInfoResponse.getAccountNumber());
-        billDetailsDialog.setBranchID(lankaBanglaCustomerInfoResponse.getBranchId());
-        billDetailsDialog.setMaturityDate(lankaBanglaCustomerInfoResponse.getAccountMaturityDate());
-        billDetailsDialog.setInstallmentAmount(Long.toString(lankaBanglaCustomerInfoResponse.getInstallmentAmount()));
+		billDetailsDialog.setCloseButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				billDetailsDialog.cancel();
+			}
+		});
+		billDetailsDialog.setPayBillButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				billDetailsDialog.cancel();
+				Bundle bundle = new Bundle();
+				bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, getUserId());
+				bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, lankaBanglaCustomerInfoResponse.getAccountTitle());
+				bundle.putString(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY, Long.toString(lankaBanglaCustomerInfoResponse.getInstallmentAmount()));
+				Utilities.hideKeyboard(getActivity());
+				final LankaBanglaDpsAmountInputFragment lankaBanglaDpsAmountInputFragment = new LankaBanglaDpsAmountInputFragment();
 
-        billDetailsDialog.setCloseButtonAction(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                billDetailsDialog.cancel();
-            }
-        });
-        billDetailsDialog.setPayBillButtonAction(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                billDetailsDialog.cancel();
-                Bundle bundle = new Bundle();
-                bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER, getDpsNumber());
-                bundle.putString(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT, Long.toString(lankaBanglaCustomerInfoResponse.getInstallmentAmount()));
-                Utilities.hideKeyboard(getActivity());
-                final LankaBanglaDpsAmountInputFragment lankaBanglaDpsAmountInputFragment = new LankaBanglaDpsAmountInputFragment();
-
-                if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-                    ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(lankaBanglaDpsAmountInputFragment, bundle, 2, true);
-                }
-            }
-        });
-        billDetailsDialog.show();
-    }
+				if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
+					((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(lankaBanglaDpsAmountInputFragment, bundle, 1, true);
+				}
+			}
+		});
+		billDetailsDialog.show();
+	}
 }
