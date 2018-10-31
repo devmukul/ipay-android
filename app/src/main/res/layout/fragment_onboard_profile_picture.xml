@@ -74,7 +74,7 @@
                 style="@style/ButtonPrimaryOnBoard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/select_photo" />
+                android:text="@string/take_photo" />
 
         </LinearLayout>
 

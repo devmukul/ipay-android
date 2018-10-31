@@ -67,7 +67,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
     private LinearLayout teletalkLayout;
     private LinearLayout banglalinkLayout;
 
-    private int operatorCode;
+    private String operatorCode;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask;
 
@@ -80,7 +80,6 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         View view = inflater.inflate(R.layout.fragment_top_up_enter_number, container, false);
         mProgressDialog = new ProgressDialog(getContext());
         setUpView(view);
-        operatorCode = -1;
         return view;
     }
 
@@ -132,7 +131,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                             Bundle bundle = new Bundle();
                             bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                             bundle.putString(Constants.NAME, contactData.name);
-                            bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                            bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                             bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                             if (contactData.photoUri != null) {
                                 if (!contactData.photoUri.toLowerCase().contains(Constants.BASE_URL_FTP_SERVER.toLowerCase())) {
@@ -152,7 +151,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                         bundle.putString(Constants.NAME, mName);
-                        bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                        bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                         bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                         bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
                         if (mProfileImageUrl != null) {
@@ -264,7 +263,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
             } else if (mTypeSelector.getCheckedRadioButtonId() == -1) {
                 showErrorMessage("Please select Prepaid/Postpaid");
                 return false;
-            } else if (operatorCode != 1 && operatorCode != 3 && operatorCode != 4 && operatorCode != 5 && operatorCode != 6) {
+            } else if (operatorCode == null || TextUtils.isEmpty(operatorCode)) {
                 showErrorMessage("Please select an operator");
                 return false;
             }
@@ -311,7 +310,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 mProgressDialog.dismiss();
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
-                bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                 bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                 ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
                 return;
@@ -328,7 +327,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.NAME, mName);
                 bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
-                bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                 bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                 bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, ServiceIdConstants.TOP_UP);
                 if (mProfileImageUrl != null) {
@@ -342,7 +341,7 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
             } else {
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
-                bundle.putInt(Constants.OPERATOR_CODE, operatorCode);
+                bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                 bundle.putInt(Constants.OPERATOR_TYPE, getOperatorType());
                 ((IPayTransactionActionActivity) (getActivity())).switchToAmountInputFragment(bundle);
 
@@ -365,37 +364,37 @@ public class TopUpEnterNumberFragment extends Fragment implements HttpResponseLi
         }
     }
 
-    private void setAppropriateOperatorIconSelected(int operatorCode) {
+    private void setAppropriateOperatorIconSelected(String operatorCode) {
         switch (operatorCode) {
-            case 1:
+            case "GP":
                 ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.selected_network);
                 ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
                 ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.robi_icon);
                 ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
                 ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.bl_icon);
                 break;
-            case 3:
+            case "Robi":
                 ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.selected_network);
                 ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
                 ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
                 ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
                 ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.bl_icon);
                 break;
-            case 4:
+            case "Airtel":
                 ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.selected_network);
                 ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.robi_icon);
                 ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
                 ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
                 ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.bl_icon);
                 break;
-            case 5:
+            case "Banglalink":
                 ((ImageView) banglalinkLayout.findViewById(R.id.banglalink_image)).setImageResource(R.drawable.selected_network);
                 ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
                 ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
                 ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.teletalk_icon);
                 ((ImageView) robiLayout.findViewById(R.id.robi_image)).setImageResource(R.drawable.robi_icon);
                 break;
-            case 6:
+            case "Teletalk":
                 ((ImageView) teletalkLayout.findViewById(R.id.teletalk_image)).setImageResource(R.drawable.selected_network);
                 ((ImageView) airtelLayout.findViewById(R.id.airtel_image)).setImageResource(R.drawable.airtel_icon);
                 ((ImageView) gpLayout.findViewById(R.id.gp_image)).setImageResource(R.drawable.gp_icon);
