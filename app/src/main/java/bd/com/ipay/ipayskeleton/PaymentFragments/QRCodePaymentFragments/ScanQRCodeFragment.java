@@ -103,8 +103,11 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                         try {
                             outletId = Long.parseLong(stringArray[1].trim().replaceAll("[^0-9]", ""));
                         } catch (Exception e) {
+                            outletId = null;
                             e.printStackTrace();
                         }
+                    }else{
+                        outletId = null;
                     }
 
                     final Handler mHandler = new Handler();

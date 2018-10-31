@@ -85,7 +85,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
 					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
 					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
                     bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
-					bundle.putString(Constants.OUTLET_ID, getIntent().getStringExtra(Constants.OUTLET_ID));
+                    if(getIntent().hasExtra(Constants.OUTLET_ID))
+						bundle.putString(Constants.OUTLET_ID, getIntent().getStringExtra(Constants.OUTLET_ID));
 					switchToAmountInputFragment(bundle);
 				}
 				break;
