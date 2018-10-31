@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -97,8 +98,10 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 				.title(R.string.title_otp_verification_for_change_password)
 				.customView(R.layout.dialog_otp_verification_change_password, true)
 				.show();
+		mOTPInputDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 		view = mOTPInputDialog.getCustomView();
+
 
 		if (view == null)
 			return;

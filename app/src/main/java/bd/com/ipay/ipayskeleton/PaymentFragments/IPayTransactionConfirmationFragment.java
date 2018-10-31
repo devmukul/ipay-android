@@ -78,7 +78,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
     private EditText mNoteEditText;
     private EditText mPinEditText;
 
-    private int operatorCode;
+    private String operatorCode;
     private int operatorType;
     private CustomProgressDialog mCustomProgressDialog;
 
@@ -87,26 +87,28 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
     protected Tracker mTracker;
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		try {if (getArguments() != null) {
-			transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
-			name = getArguments().getString(Constants.NAME);
-			mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
-			profilePicture = getArguments().getString(Constants.PHOTO_URI);
-			amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);}
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            if (getArguments() != null) {
+                transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
+                name = getArguments().getString(Constants.NAME);
+                mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
+                profilePicture = getArguments().getString(Constants.PHOTO_URI);
+                amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+	         }
         } catch (Exception e) {
-
+        	e.printStackTrace();
         }
         if (transactionType == ServiceIdConstants.TOP_UP) {
-            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+            operatorCode = getArguments().getString(Constants.OPERATOR_CODE);
             operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
-		}
-		numberFormat.setMinimumFractionDigits(0);
-		numberFormat.setMaximumFractionDigits(2);
-		numberFormat.setMinimumIntegerDigits(1);
-		mandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(transactionType));
+        }
+        numberFormat.setMinimumFractionDigits(0);
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumIntegerDigits(1);
+        mandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(transactionType));
 
         if (getActivity() != null) {
             mTracker = Utilities.getTracker(getActivity());
