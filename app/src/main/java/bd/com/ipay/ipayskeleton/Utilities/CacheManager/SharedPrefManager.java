@@ -150,4 +150,20 @@ public class SharedPrefManager {
     public static boolean ifFirstTopUp() {
         return pref.getBoolean(Constants.IS_FIRST_TOP_UP, true);
     }
+
+	public static void setIfFirstMakePayment(boolean isFirstMakePayment) {
+		pref.edit().putBoolean(Constants.IS_FIRST_MAKE_PAYMENT, isFirstMakePayment).apply();
+	}
+
+	public static boolean ifFirstMakePayment() {
+		return pref.getBoolean(Constants.IS_FIRST_MAKE_PAYMENT, true);
+	}
+
+	public static String getTrendingBusiness(String defaultValue) {
+		return pref.getString(SharedPrefConstants.KEY_TRENDING_JSON, defaultValue);
+	}
+
+	public static void setTrendingBusiness(String value) {
+		pref.edit().putString(SharedPrefConstants.KEY_TRENDING_JSON, value).apply();
+	}
 }

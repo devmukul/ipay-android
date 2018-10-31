@@ -16,6 +16,8 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessF
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.IPayMakePaymentFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentNewFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPayTransactionContactFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -41,6 +43,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
 	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
 	// 6001
 	public static final int TRANSACTION_TYPE_REQUEST_MONEY = ServiceIdConstants.REQUEST_MONEY;
+	// 6002
+	public static final int TRANSACTION_TYPE_MAKE_PAYMENT = ServiceIdConstants.MAKE_PAYMENT;
 	// 2001
 	public static final int TRANSACTION_TYPE_TOP_UP = ServiceIdConstants.TOP_UP;
 
@@ -69,6 +73,22 @@ public class IPayTransactionActionActivity extends BaseActivity {
 			case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
 				switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 0, true);
+				break;
+			case TRANSACTION_TYPE_MAKE_PAYMENT:
+				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+				if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
+						!getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+					switchToMakePaymentFragment(bundle);
+				} else {
+					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
+					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
+					if(getIntent().hasExtra(Constants.ADDRESS))
+                    	bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
+                    if(getIntent().hasExtra(Constants.OUTLET_ID))
+						bundle.putString(Constants.OUTLET_ID, getIntent().getStringExtra(Constants.OUTLET_ID));
+					switchToAmountInputFragment(bundle);
+				}
 				break;
 			case TRANSACTION_TYPE_SEND_MONEY:
 			case TRANSACTION_TYPE_REQUEST_MONEY:
@@ -130,6 +150,10 @@ public class IPayTransactionActionActivity extends BaseActivity {
 	public void switchToTransactionSuccessFragment(@NonNull Bundle bundle) {
 		switchFragment(new IPayTransactionSuccessFragment(), bundle, 3, true);
 	}
+
+    private void switchToMakePaymentFragment(@NonNull Bundle bundle) {
+        switchFragment(new IPayMakePaymentFragment(), bundle, 0, true);
+    }
 
 	public void switchFragment(@NonNull Fragment fragment, @NonNull Bundle bundle, int maxBackStackEntryCount, boolean shouldAnimate) {
 		if (getSupportFragmentManager().getBackStackEntryCount() > maxBackStackEntryCount) {

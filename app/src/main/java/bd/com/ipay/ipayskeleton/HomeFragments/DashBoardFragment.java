@@ -24,13 +24,13 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class DashBoardFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private final int HOME_TAB = 0;
-    private final int PAY_TAB = 1;
+    private final int IPAY_HERE_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
-    private final int CONTACTS_TAB = 3;
+    private final int PROMOTION_TAB = 3;
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
-    private PayDashBoardFragment mPayFragment;
+    private IpayHereFragment mIPayHereFragment;
     private PromotionsFragment mPromotionsFragment;
     private TransactionHistoryHolderFragment mTransactionHistoryFragment;
 
@@ -46,7 +46,7 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
         mPromotionsFragment = new PromotionsFragment();
-        mPayFragment = new PayDashBoardFragment();
+        mIPayHereFragment = new IpayHereFragment();
 
         viewPager = v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
@@ -107,15 +107,15 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
             case R.id.navigation_wallet:
                 viewPager.setCurrentItem(HOME_TAB);
                 break;
-            case R.id.navigation_pay:
-                viewPager.setCurrentItem(PAY_TAB);
+            case R.id.navigation_ipay_here:
+                viewPager.setCurrentItem(IPAY_HERE_TAB);
                 break;
             case R.id.navigation_transaction:
                 BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
                 viewPager.setCurrentItem(TRANSACTION_HISTORY_TAB);
                 break;
             case R.id.navigation_promotions:
-                viewPager.setCurrentItem(CONTACTS_TAB);
+                viewPager.setCurrentItem(PROMOTION_TAB);
                 break;
         }
         return true;
@@ -132,11 +132,11 @@ public class DashBoardFragment extends Fragment implements BottomNavigationView.
             switch (pos) {
                 case HOME_TAB:
                     return mHomeFragment;
-                case PAY_TAB:
-                    return mPayFragment;
+                case IPAY_HERE_TAB:
+                    return mIPayHereFragment;
                 case TRANSACTION_HISTORY_TAB:
                     return mTransactionHistoryFragment;
-                case CONTACTS_TAB:
+                case PROMOTION_TAB:
                     return mPromotionsFragment;
                 default:
                     return new Fragment();

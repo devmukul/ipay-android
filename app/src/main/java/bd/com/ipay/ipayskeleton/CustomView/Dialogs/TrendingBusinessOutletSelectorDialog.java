@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Merchants.BusinessList;
@@ -37,6 +38,8 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
     private String photoUrl;
 
     private SearchView mSearchView;
+
+    private CustomItemClickListener customItemClickListener;
 
 
     public TrendingBusinessOutletSelectorDialog(@NonNull Context context, BusinessList merchantDetails) {
@@ -61,8 +64,6 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
         mSearchView = (SearchView) view.findViewById(R.id.search_outlet);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
-
-        // prevent auto focus on Dialog launch
         mSearchView.clearFocus();
 
         getWindow().setLayout(
@@ -243,18 +244,17 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
         }
 
         private void switchToMakePaymentActivity(int position) {
-            Intent intent = new Intent(context, PaymentActivity.class);
-            intent.putExtra(Constants.NAME, merchantDetails.getMerchantName());
-            intent.putExtra(Constants.ADDRESS, mFilteredOutlets.get(position).getAddressString());
-            intent.putExtra(Constants.DISTRICT, mFilteredOutlets.get(position).getOutletAddress().getDistrictName());
-            intent.putExtra(Constants.THANA, mFilteredOutlets.get(position).getOutletAddress().getThanaName());
-            intent.putExtra(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
-            intent.putExtra(Constants.PHOTO_URI, merchantDetails.getBusinessLogo());
-            intent.putExtra(Constants.OUTLET_ID, mFilteredOutlets.get(position).getOutletId());
-            intent.putExtra(Constants.OUTLET_NAME, mFilteredOutlets.get(position).getOutletName());
-            intent.putExtra(Constants.FROM_BRANCHING, true);
-            context.startActivity(intent);
             TrendingBusinessOutletSelectorDialog.this.dismiss();
+            customItemClickListener.onItemClick(mFilteredOutlets.get(position).getOutletName(), merchantDetails.getMerchantMobileNumber(),
+                    merchantDetails.getBusinessLogo(), mFilteredOutlets.get(position).getAddressString(), mFilteredOutlets.get(position).getOutletId());
         }
+    }
+
+    public void setCustomItemClickListener(CustomItemClickListener customItemClickListener) {
+        this.customItemClickListener = customItemClickListener;
+    }
+
+    public interface CustomItemClickListener {
+        void onItemClick (String name, String mobileNumber, String imageURL, String address, Long outletId) ;
     }
 }
