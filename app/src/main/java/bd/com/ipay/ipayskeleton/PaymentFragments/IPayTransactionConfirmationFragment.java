@@ -84,7 +84,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
     private EditText mNoteEditText;
     private EditText mPinEditText;
 
-    private int operatorCode;
+    private String operatorCode;
     private int operatorType;
     private CustomProgressDialog mCustomProgressDialog;
 
@@ -112,7 +112,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
         	e.printStackTrace();
         }
         if (transactionType == ServiceIdConstants.TOP_UP) {
-            operatorCode = getArguments().getInt(Constants.OPERATOR_CODE);
+            operatorCode = getArguments().getString(Constants.OPERATOR_CODE);
             operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
         }
         numberFormat.setMinimumFractionDigits(0);
