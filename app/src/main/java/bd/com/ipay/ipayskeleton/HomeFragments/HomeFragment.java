@@ -35,10 +35,13 @@ import java.util.List;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayHereActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
+import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -153,8 +156,18 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		LinearLayout mPayByQRCodeButton = view.findViewById(R.id.button_pay_by_qr_code);
 		LinearLayout mMakePaymentButton = view.findViewById(R.id.button_make_payment);
 		LinearLayout mTopUpButton = view.findViewById(R.id.button_topup);
-		LinearLayout mIPayHereButton = view.findViewById(R.id.button_ipay_here);
+		LinearLayout mInviteFriendButton = view.findViewById(R.id.button_invite_to_ipay);
 		ImageView mShowQRCodeButton = view.findViewById(R.id.show_qr_code_button);
+		LinearLayout mRequestPaymentButton = view.findViewById(R.id.button_request_paymnet);
+
+        if (ProfileInfoCacheManager.isBusinessAccount()){
+            mRequestPaymentButton.setVisibility(View.VISIBLE);
+            mInviteFriendButton.setVisibility(View.GONE);
+        }else {
+            mRequestPaymentButton.setVisibility(View.GONE);
+            mInviteFriendButton.setVisibility(View.VISIBLE);
+        }
+
 
 		mTransactionDescriptionView = view.findViewById(R.id.activity_description);
 		mTimeView = view.findViewById(R.id.time);
@@ -254,8 +267,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 				PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
 					@Override
 					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), PaymentActivity.class);
-						intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
+						Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+						intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
 						startActivity(intent);
 					}
 				});
@@ -299,11 +312,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 			}
 		});
 
-		mIPayHereButton.setOnClickListener(new View.OnClickListener() {
+		mInviteFriendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent requestMoneyActivityIntent = new Intent(getActivity(), IPayHereActivity.class);
-				startActivity(requestMoneyActivityIntent);
+				Intent intent = new Intent(getActivity(), InviteFriendActivity.class);
+				startActivity(intent);
 			}
 		});
 
@@ -326,6 +339,25 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 				startActivity(intent);
 			}
 		});
+
+        mRequestPaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        intent = new Intent(getActivity(), RequestPaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
 		// Refresh balance each time home_activity page appears
 		if (Utilities.isConnectionAvailable(getActivity())) {

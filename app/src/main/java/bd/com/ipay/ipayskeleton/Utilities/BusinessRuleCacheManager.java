@@ -84,6 +84,9 @@ public class BusinessRuleCacheManager {
 											case ServiceIdConstants.REQUEST_MONEY:
 												updateRequestMoneyBusinessRule(mMandatoryBusinessRules, rule);
 												break;
+                                            case ServiceIdConstants.MAKE_PAYMENT:
+                                                updateMakePaymentBusinessRules(mMandatoryBusinessRules, rule);
+                                                break;
 											case ServiceIdConstants.ADD_MONEY_BY_BANK:
 												updateAddMoneyByBankBusinessRule(mMandatoryBusinessRules, rule);
 												break;
@@ -191,6 +194,26 @@ public class BusinessRuleCacheManager {
 		}
 	}
 
+    private static void updateMakePaymentBusinessRules(MandatoryBusinessRules mandatoryBusinessRules, BusinessRule rule) {
+        switch (rule.getRuleID()) {
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT_V3:
+                mandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT_V3:
+                mandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED_V3:
+                mandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED_V3:
+                mandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                break;
+            case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED_V3:
+                mandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
+                break;
+        }
+    }
+
 	private static void updateAddMoneyByBankBusinessRule(final MandatoryBusinessRules mandatoryBusinessRules, final BusinessRule rule) {
 		switch (rule.getRuleID()) {
 			case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT:
@@ -246,7 +269,9 @@ public class BusinessRuleCacheManager {
 		switch (serviceId) {
 			case ServiceIdConstants.SEND_MONEY:
 				return Constants.SEND_MONEY;
-			case ServiceIdConstants.ADD_MONEY_BY_BANK:
+			case ServiceIdConstants.MAKE_PAYMENT:
+                return Constants.MAKE_PAYMENT;
+            case ServiceIdConstants.ADD_MONEY_BY_BANK:
 				return Constants.ADD_MONEY_BY_BANK;
 			case ServiceIdConstants.WITHDRAW_MONEY:
 				return Constants.WITHDRAW_MONEY;
