@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import bd.com.ipay.ipayskeleton.HomeFragments.PayDashBoardFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyOptionFragment;
@@ -84,7 +83,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
 					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
 					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
 					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
-                    bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
+					if(getIntent().hasExtra(Constants.ADDRESS))
+                    	bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
                     if(getIntent().hasExtra(Constants.OUTLET_ID))
 						bundle.putString(Constants.OUTLET_ID, getIntent().getStringExtra(Constants.OUTLET_ID));
 					switchToAmountInputFragment(bundle);

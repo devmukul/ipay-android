@@ -454,9 +454,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 			@Override
 			@ValidateAccess(ServiceIdConstants.MAKE_PAYMENT)
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), PaymentActivity.class);
+
+				Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+				intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
 				intent.putExtra(Constants.MOBILE_NUMBER, number);
-				intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
+				intent.putExtra(Constants.NAME, name);
+				intent.putExtra(Constants.PHOTO_URI, imageUrl);
+				intent.putExtra(Constants.FROM_CONTACT, true);
 				startActivity(intent);
 
 				if (mBottomSheetLayout.isSheetShowing()) {
