@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
@@ -33,9 +34,9 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDial
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetailsRequestBuilder;
@@ -44,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.OrderDetails
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PayOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -80,7 +82,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (PaymentActivity.mMandatoryBusinessRules == null) {
-            PaymentActivity.mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.MAKE_PAYMENT);
+            PaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
         }
 
         if (getActivity() != null) {
@@ -279,25 +281,23 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
                         mCustomProgressDialog.dismiss();
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         try {
-                            BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+                            BusinessRuleV2 businessRule = gson.fromJson(result.getJsonString(), BusinessRuleV2.class);
+                            List<Rule> rules = businessRule.getRules();
 
-                            if (businessRuleArray != null) {
-                                for (BusinessRule rule : businessRuleArray) {
-                                    switch (rule.getRuleID()) {
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+                            if (rules != null) {
+                                for (Rule rule : rules) {
+                                    switch (rule.getRuleName()) {
+                                        case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
                                             PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                             break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+                                        case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
                                             PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                             break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED:
+                                        case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_VERIFICATION_REQUIRED:
                                             PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                                             break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED:
+                                        case BusinessRuleConstants.SERVICE_RULE_UTILITY_BILL_PAYMENT_PIN_REQUIRED:
                                             PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-                                            break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED:
-                                            PaymentActivity.mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
                                             break;
                                     }
                                 }
