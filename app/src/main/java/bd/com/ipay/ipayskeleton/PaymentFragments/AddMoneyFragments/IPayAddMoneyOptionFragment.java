@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 		final List<AddMoneyOption> addMoneyOptionList = Utilities.getAddMoneyOptions();
 		final LinearLayout bankListBottomSheetLayout = view.findViewById(R.id.bank_option_bottom_sheet_layout);
 		final ImageButton closeAddBankOptionButton = view.findViewById(R.id.close_add_bank_option_button);
+		final TextView bottomSheetTitleTextView = view.findViewById(R.id.bottom_sheet_title_text_view);
 		bottomSheetBehavior = BottomSheetBehavior.from(bankListBottomSheetLayout);
 
 		if (getActivity() == null || !(getActivity() instanceof AppCompatActivity)) {
@@ -71,6 +73,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 							bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 							addBankOptionFragment = new IPayChooseBankOptionFragment();
 							Bundle bundle = new Bundle();
+							bottomSheetTitleTextView.setText(R.string.adding_money_from_bank);
 							bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK);
 							addBankOptionFragment.setArguments(bundle);
 							if (getFragmentManager() != null)
@@ -84,6 +87,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 							bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 							addBankOptionFragment = new IPayChooseBankOptionFragment();
 							Bundle bundle = new Bundle();
+							bottomSheetTitleTextView.setText(R.string.instant_money);
 							bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY);
 							addBankOptionFragment.setArguments(bundle);
 							if (getFragmentManager() != null)

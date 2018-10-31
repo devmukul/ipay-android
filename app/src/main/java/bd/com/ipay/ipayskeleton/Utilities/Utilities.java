@@ -946,7 +946,7 @@ public class Utilities {
 		final List<AddMoneyOption> addMoneyOptionList = new ArrayList<>();
 		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY)) {
 			addMoneyOptionList.add(new AddMoneyOption(ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY,
-					R.drawable.ic_bank_icon,
+					R.drawable.ic_instant_money_icon,
 					R.string.instant_add_money, R.string.add_money_instant_option_message));
 		}
 		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {

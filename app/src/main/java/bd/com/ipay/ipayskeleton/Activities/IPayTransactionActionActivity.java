@@ -16,8 +16,9 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyO
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionContactFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPayTransactionContactFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPaySendMoneyAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -87,7 +88,11 @@ public class IPayTransactionActionActivity extends BaseActivity {
 					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
 					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
 					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
-					switchToAmountInputFragment(bundle);
+					if (transactionType == TRANSACTION_TYPE_SEND_MONEY) {
+						switchFragment(new IPaySendMoneyAmountInputFragment(), bundle, 1, false);
+					} else {
+						switchToAmountInputFragment(bundle);
+					}
 				}
 				break;
 			case TRANSACTION_TYPE_TOP_UP:

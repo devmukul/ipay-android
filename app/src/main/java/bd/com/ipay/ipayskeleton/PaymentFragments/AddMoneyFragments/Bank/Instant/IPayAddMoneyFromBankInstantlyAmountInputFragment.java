@@ -6,10 +6,12 @@ import android.text.InputType;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.CreditBalanceResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -19,10 +21,12 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class IPayAddMoneyFromBankInstantlyAmountInputFragment extends IPayAbstractBankTransactionAmountInputFragment {
 	@Override
 	protected void setupViewProperties() {
-		setTransactionDescription(getString(R.string.add_money_from_title));
+		setTransactionDescription(getString(R.string.add_instant_money_from_title));
 		setName(bankAccountList.getBankName());
+		setUserName(bankAccountList.getAccountNumber());
 		setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
 		setTransactionImageResource(bankAccountList.getBankIcon(getContext()));
+		setBalanceType(BalanceType.CREDIT_BALANCE);
 	}
 
 	@Override
@@ -37,6 +41,11 @@ public class IPayAddMoneyFromBankInstantlyAmountInputFragment extends IPayAbstra
 
 	@Override
 	protected boolean verifyInput() {
+		final CreditBalanceResponse creditBalanceResponse = SharedPrefManager.getCreditBalance();
+		if (!creditBalanceResponse.isEntitledForInstantMoney()) {
+			DialogUtils.showDialogForNotEntitledForInstantMoney(getActivity());
+			return false;
+		}
 		if (!Utilities.isValueAvailable(businessRules.getMIN_AMOUNT_PER_PAYMENT())
 				|| !Utilities.isValueAvailable(businessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 			DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
@@ -51,9 +60,14 @@ public class IPayAddMoneyFromBankInstantlyAmountInputFragment extends IPayAbstra
 			errorMessage = getString(R.string.please_enter_amount);
 		} else {
 			final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
-			final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
-			final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT();
-			errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
+
+			if (amount.compareTo(creditBalanceResponse.getAvailableCredit()) > 0) {
+				errorMessage = getString(R.string.insufficient_balance);
+			} else {
+				final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
+				final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT().min(creditBalanceResponse.getAvailableCredit());
+				errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
+			}
 		}
 		if (errorMessage != null) {
 			showErrorMessage(errorMessage);

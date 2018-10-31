@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.CreditBalanceResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class SharedPrefManager {
@@ -33,6 +36,14 @@ public class SharedPrefManager {
 
 	public static String getUserBalance() {
 		return pref.getString(SharedPrefConstants.USER_BALANCE, "0.0");
+	}
+
+	public static CreditBalanceResponse getCreditBalance() {
+		return new Gson().fromJson(pref.getString(SharedPrefConstants.CREDIT_BALANCE, "{}"), CreditBalanceResponse.class);
+	}
+
+	public static void setCreditBalance(CreditBalanceResponse creditBalanceResponse) {
+		pref.edit().putString(SharedPrefConstants.CREDIT_BALANCE, new Gson().toJson(creditBalanceResponse)).apply();
 	}
 
 	public static void setUserBalance(String value) {
@@ -143,11 +154,11 @@ public class SharedPrefManager {
 		return pref.getBoolean(Constants.IS_FIRST_REQUEST_MONEY, true);
 	}
 
-    public static void setIfFirstTopUp(boolean isFirstSendMoney) {
-        pref.edit().putBoolean(Constants.IS_FIRST_TOP_UP, isFirstSendMoney).apply();
-    }
+	public static void setIfFirstTopUp(boolean isFirstSendMoney) {
+		pref.edit().putBoolean(Constants.IS_FIRST_TOP_UP, isFirstSendMoney).apply();
+	}
 
-    public static boolean ifFirstTopUp() {
-        return pref.getBoolean(Constants.IS_FIRST_TOP_UP, true);
-    }
+	public static boolean ifFirstTopUp() {
+		return pref.getBoolean(Constants.IS_FIRST_TOP_UP, true);
+	}
 }

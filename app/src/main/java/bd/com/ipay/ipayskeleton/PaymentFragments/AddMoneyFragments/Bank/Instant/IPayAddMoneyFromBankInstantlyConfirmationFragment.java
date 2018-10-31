@@ -38,15 +38,16 @@ public class IPayAddMoneyFromBankInstantlyConfirmationFragment extends IPayAbstr
 
 	@Override
 	protected void setupViewProperties() {
-		setTransactionDescription(getStyledTransactionDescription(R.string.add_money_confirmation_message, transactionAmount));
+		setTransactionDescription(getStyledTransactionDescription(R.string.add_instant_money_confirmation_message, transactionAmount));
 		setName(bankAccountList.getBankName());
+		setUserName(bankAccountList.getAccountNumber());
 		setTransactionImageResource(bankAccountList.getBankIcon(getContext()));
 		setNoteEditTextHint(getString(R.string.short_note_optional_hint));
 	}
 
 	@Override
 	protected String getTrackerCategory() {
-		return "Add Money from Bank Instantly";
+		return "Instant Add Money";
 	}
 
 }
