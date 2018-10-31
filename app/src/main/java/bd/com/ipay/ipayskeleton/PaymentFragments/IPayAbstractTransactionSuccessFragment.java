@@ -113,6 +113,8 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 						.asBitmap()
 						.transform(new CircleTransform(getContext()))
 						.crossFade()
+						.placeholder(R.drawable.ic_profile)
+						.error(R.drawable.ic_profile)
 						.into(senderProfilePictureImageView);
 			}
 		}

@@ -397,6 +397,8 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		Glide.with(getContext()).load(imageUrl)
 				.transform(new CircleTransform(getContext()))
 				.crossFade()
+				.placeholder(R.drawable.ic_profile)
+				.error(R.drawable.ic_profile)
 				.into(transactionImageView);
 	}
 

@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -58,7 +56,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereRespons
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.NearbyBusinessResponseList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class IpayHereFragment extends BaseFragment implements PlaceSelectionListener, OnMapReadyCallback,

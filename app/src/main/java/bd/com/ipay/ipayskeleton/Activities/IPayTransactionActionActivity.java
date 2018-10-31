@@ -19,7 +19,6 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFrag
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionContactFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.IPayMakePaymentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentNewFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPaySendMoneyAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
