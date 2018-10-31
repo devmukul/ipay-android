@@ -479,6 +479,10 @@ public class Utilities {
 		return amount.compareTo(BigDecimal.ZERO) >= 0;
 	}
 
+	public static BigDecimal getMinPossibleBalance(BigDecimal valueOne) {
+		return valueOne.max(BigDecimal.ZERO);
+	}
+
 	public static String formatTakaWithComma(double amount) {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance();
 		numberFormat.setMinimumFractionDigits(2);

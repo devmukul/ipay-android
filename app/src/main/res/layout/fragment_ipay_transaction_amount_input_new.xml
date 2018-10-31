@@ -196,7 +196,7 @@
                             tools:text="@string/dummy_amount" />
 
                         <ImageButton
-                            android:id="@+id/balanceBreakDownloadImageButton"
+                            android:id="@+id/balance_break_download_image_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dip"

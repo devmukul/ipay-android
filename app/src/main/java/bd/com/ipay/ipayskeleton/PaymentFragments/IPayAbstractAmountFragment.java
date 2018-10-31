@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -77,7 +79,15 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	private List<ShortCutOption> shortCutOptionList;
 	private ShortcutSelectionRadioGroup shortcutSelectionRadioGroup;
 	private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.US);
 
+	private TextView originalBalanceTitleTextView;
+	private TextView debitableBalanceTitleTextView;
+	private TextView finalBalanceTitleTextView;
+	private TextView finalBalanceTextView;
+	private TextView debitableBalanceTextView;
+	private TextView originalBalanceTextView;
+	private ImageButton balanceBreakDownloadImageButton;
 	protected MandatoryBusinessRules businessRules;
 
 	@Override
@@ -86,6 +96,9 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		numberFormat.setMinimumFractionDigits(0);
 		numberFormat.setMaximumFractionDigits(2);
 		numberFormat.setMinimumIntegerDigits(2);
+
+		balanceBreakDownFormat.setMinimumFractionDigits(2);
+		balanceBreakDownFormat.setMaximumFractionDigits(2);
 
 		businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
 
@@ -139,6 +152,8 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
 		ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
 		balanceInfoTitleTextView = view.findViewById(R.id.balance_info_title_text_view);
+		ImageButton balanceBreakDownloadImageButton = view.findViewById(R.id.balance_break_download_image_button);
+		setupBalanceBreakDownDialog();
 
 		if (getActivity() instanceof AppCompatActivity) {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -225,6 +240,43 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		setBalanceType(BalanceType.MAIN_BALANCE);
 		setAmount(0, "");
 		setupViewProperties();
+	}
+
+	private void setupBalanceBreakDownDialog() {
+		if (getContext() != null) {
+			final LayoutInflater inflater = LayoutInflater.from(getContext());
+			final View dialogTitleView = inflater.inflate(R.layout.layout_dialog_custom_title, null, false);
+			final View dialogBodyView = inflater.inflate(R.layout.layout_dialog_balance_break_down, null, false);
+
+			final TextView titleTextView = dialogTitleView.findViewById(R.id.title_text_view);
+			final ImageButton closeButton = dialogTitleView.findViewById(R.id.close_button);
+
+			originalBalanceTitleTextView = dialogBodyView.findViewById(R.id.original_balance_title_text_view);
+			debitableBalanceTitleTextView = dialogBodyView.findViewById(R.id.debitable_balance_title_text_view);
+			finalBalanceTitleTextView = dialogBodyView.findViewById(R.id.final_balance_title_text_view);
+			finalBalanceTextView = dialogBodyView.findViewById(R.id.final_balance_text_view);
+			debitableBalanceTextView = dialogBodyView.findViewById(R.id.debitable_balance_text_view);
+			originalBalanceTextView = dialogBodyView.findViewById(R.id.original_balance_text_view);
+			final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+					.setCustomTitle(dialogTitleView)
+					.setView(dialogBodyView)
+					.create();
+
+			balanceBreakDownloadImageButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					alertDialog.show();
+				}
+			});
+
+			titleTextView.setText(R.string.balance_break_down);
+			closeButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					alertDialog.cancel();
+				}
+			});
+		}
 	}
 
 	protected abstract void setupViewProperties();
@@ -314,36 +366,77 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 				if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK && !TextUtils.isEmpty(result.getJsonString())) {
 					CreditBalanceResponse creditBalanceResponse = gson.fromJson(result.getJsonString(), CreditBalanceResponse.class);
 					if (creditBalanceResponse != null) {
+						setupBalanceBreakDownInfo(creditBalanceResponse, balanceType);
 						SharedPrefManager.setCreditBalance(creditBalanceResponse);
 						if (balanceType == BalanceType.SETTLED_BALANCE) {
-
 							final BigDecimal userBalance = new BigDecimal(SharedPrefManager.getUserBalance());
 							final BigDecimal unsettledBalance = creditBalanceResponse.getCreditLimit().subtract(creditBalanceResponse.getAvailableCredit());
 							final BigDecimal settledBalance = userBalance.subtract(unsettledBalance);
-
 							setBalanceInfo(settledBalance.compareTo(BigDecimal.ZERO) >= 0 ?
 									settledBalance : BigDecimal.ZERO);
 						} else if (balanceType == BalanceType.CREDIT_BALANCE) {
 							setBalanceInfo(creditBalanceResponse.getAvailableCredit());
 						}
 					} else {
-						if (balanceType == BalanceType.SETTLED_BALANCE) {
-							setBalanceInfo(new BigDecimal(SharedPrefManager.getUserBalance()));
-						} else if (balanceType == BalanceType.CREDIT_BALANCE) {
-							setBalanceInfo(BigDecimal.ZERO);
-						}
+						showDefaultBalance(balanceType);
 					}
 				} else {
-					if (balanceType == BalanceType.SETTLED_BALANCE) {
-						setBalanceInfo(new BigDecimal(SharedPrefManager.getUserBalance()));
-					} else if (balanceType == BalanceType.CREDIT_BALANCE) {
-						setBalanceInfo(BigDecimal.ZERO);
-					}
+					showDefaultBalance(balanceType);
 				}
 			}
 		}, true);
 		getCreditBalanceRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
+
+	private void showDefaultBalance(BalanceType balanceType) {
+		if (balanceType == BalanceType.SETTLED_BALANCE) {
+			setBalanceInfo(new BigDecimal(SharedPrefManager.getUserBalance()));
+		} else if (balanceType == BalanceType.CREDIT_BALANCE) {
+			setBalanceInfo(BigDecimal.ZERO);
+		}
+	}
+
+	private void setupBalanceBreakDownInfo(CreditBalanceResponse creditBalanceResponse, BalanceType balanceType) {
+		if (balanceType == BalanceType.MAIN_BALANCE) {
+			return;
+		} else if (balanceType == BalanceType.SETTLED_BALANCE && creditBalanceResponse.getAvailableCredit().equals(creditBalanceResponse.getCreditLimit())) {
+			return;
+		}
+
+		if (balanceType == BalanceType.CREDIT_BALANCE) {
+			originalBalanceTitleTextView.setText(R.string.total_credit_balance);
+			originalBalanceTextView.setText(getString(R.string.balance_holder,
+					numberFormat.format(creditBalanceResponse.getCreditLimit())));
+
+			debitableBalanceTitleTextView.setText(R.string.unsettled_balance);
+			debitableBalanceTextView.setText(getString(R.string.balance_holder,
+					numberFormat.format(Utilities.getMinPossibleBalance(
+							creditBalanceResponse.getCreditLimit()
+									.subtract(creditBalanceResponse.getAvailableCredit())))));
+
+			finalBalanceTitleTextView.setText(R.string.available_balance);
+			finalBalanceTitleTextView.setText(getString(R.string.balance_holder,
+					numberFormat.format(creditBalanceResponse.getAvailableCredit())));
+		} else if (balanceType == BalanceType.SETTLED_BALANCE) {
+			final BigDecimal userBalance = new BigDecimal(SharedPrefManager.getUserBalance());
+			final BigDecimal unSettledBalance = creditBalanceResponse.getCreditLimit()
+					.subtract(creditBalanceResponse.getAvailableCredit());
+			originalBalanceTitleTextView.setText(R.string.current_balance);
+			originalBalanceTextView.setText(getString(R.string.balance_holder,
+					numberFormat.format(userBalance)));
+
+			debitableBalanceTitleTextView.setText(R.string.unsettled_balance);
+			debitableBalanceTextView.setText(getString(R.string.balance_holder,
+					numberFormat.format(Utilities.getMinPossibleBalance(unSettledBalance))));
+
+			finalBalanceTitleTextView.setText(R.string.available_balance);
+			finalBalanceTitleTextView.setText(getString(R.string.balance_holder,
+					numberFormat.format(Utilities.getMinPossibleBalance(
+							userBalance.subtract(unSettledBalance)))));
+		}
+		balanceBreakDownloadImageButton.setVisibility(View.VISIBLE);
+	}
+
 
 	protected void addShortCutOption(int id, String title, int value) {
 		shortcutSelectionRadioGroup.setVisibility(View.VISIBLE);

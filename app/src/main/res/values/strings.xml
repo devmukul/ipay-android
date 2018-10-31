@@ -1353,4 +1353,9 @@
     <string name="total_outstanding">Total outstanding</string>
     <string name="take_photo">Take Photo</string>
     <string name="fetching_balance">Fetching Balance…</string>
+    <string name="balance_break_down">Balance Breakdown</string>
+    <string name="current_balance">Current Balance</string>
+    <string name="total_credit_balance">Total Credit Balance</string>
+    <string name="unsettled_balance">Unsettled Balance</string>
+    <string name="available_balance">Available Balance</string>
 </resources>
