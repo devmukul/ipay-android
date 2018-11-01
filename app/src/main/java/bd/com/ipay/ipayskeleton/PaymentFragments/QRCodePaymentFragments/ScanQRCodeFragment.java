@@ -323,7 +323,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
 		intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + imageUrl);
 		intent.putExtra(Constants.ADDRESS, address);
 		if (outletId != null) {
-			intent.putExtra(Constants.OUTLET_ID, outletId.toString());
+			intent.putExtra(Constants.OUTLET_ID, outletId.longValue());
 		}
 		startActivity(intent);
 		if (getActivity() != null)
