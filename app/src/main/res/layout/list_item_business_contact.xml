@@ -5,31 +5,27 @@
     android:background="@android:color/white"
     android:clickable="true"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+    android:paddingRight="@dimen/activity_horizontal_margin_card"
+    android:paddingTop="@dimen/value4"
+    android:paddingBottom="@dimen/value4">
 
-    <RelativeLayout
-        android:id="@+id/profile_picture_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:paddingBottom="@dimen/value6"
-        android:paddingTop="@dimen/value6">
+    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="@dimen/value48"
+        android:layout_height="@dimen/value48"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
 
-        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-            android:id="@+id/profile_picture"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin" />
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/info_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/profile_picture_holder">
+        android:layout_toRightOf="@+id/profile_picture"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+        android:layout_centerVertical="true"
+        android:paddingBottom="@dimen/activity_horizontal_margin_card">
 
         <TextView
             android:id="@+id/business_name"
@@ -37,12 +33,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:paddingBottom="2dp"
-            android:paddingTop="12dp"
             android:singleLine="true"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textColor="@color/colorOnBoardText"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:lineSpacingExtra="8sp"/>
 
         <TextView
             android:id="@+id/business_type"
@@ -50,11 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/business_name"
-            android:paddingBottom="2dp"
             android:singleLine="true"
-            android:textColor="@color/colorAsh"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:textColor="@color/colorOnBoardText"
+            android:textSize="12sp"
+            android:lineSpacingExtra="8sp"
             android:visibility="gone" />
 
         <TextView
@@ -64,10 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/business_type"
             android:gravity="left"
-            android:paddingBottom="12dp"
-            android:maxLines="1"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="14sp" />
+            android:textColor="@color/colorPaymentReviewNoteText"
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <View
@@ -75,6 +67,7 @@
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="6dp"
-        android:background="@color/colorDivider" />
+        android:background="@color/colorDivider"
+        android:layout_alignLeft="@+id/info_holder"/>
 
 </RelativeLayout>

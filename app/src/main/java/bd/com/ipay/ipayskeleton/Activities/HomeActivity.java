@@ -373,8 +373,12 @@ public class HomeActivity extends BaseActivity
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
-        mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
-                ProfileInfoCacheManager.getProfileImageUrl(), false);
+        if (mOptionMenuProfileImageView != null) {
+            mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
+                    ProfileInfoCacheManager.getProfileImageUrl(), false);
+            } else {
+                invalidateOptionsMenu();
+        }
     }
 
     private void attemptRequestForPermission() {
@@ -911,41 +915,6 @@ public class HomeActivity extends BaseActivity
             case Constants.COMMAND_POST_USER_LOCATION:
                 mLocationUpdateRequestAsyncTask = null;
                 break;
-
-//            case Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS:
-//                try {
-//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-//                        mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
-//                        mManagedBusinessAccountList = mGetManagedBusinessAccountsResponse.getBusinessList();
-//                        if (mManagedBusinessAccountList == null || mManagedBusinessAccountList.size() == 0)
-//                            mMoreBusinessListImageView.setVisibility(View.INVISIBLE);
-//                        else {
-//                            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
-//
-//                            mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
-//                            mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
-//                            mManageBusinessAcountAdapter.notifyDataSetChanged();
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                mGetBusinessAccountsAsyncTask = null;
-//                break;
-//            case Constants.COMMAND_REMOVE_AN_EMPLOYEE:
-//                mResignFromBusinessResponse = new Gson().fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
-//                try {
-//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-//                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
-//                        getManagedBusinessAccountList();
-//                    } else {
-//                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                mResignFromBusinessAsyncTask = null;
-//                break;
         }
     }
 

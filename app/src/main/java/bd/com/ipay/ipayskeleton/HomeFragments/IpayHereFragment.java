@@ -1,7 +1,7 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,11 +13,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +35,7 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -47,6 +52,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.Coordinate;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereRequestUrlBuilder;
@@ -57,7 +63,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class IPayHereActivity extends BaseActivity implements PlaceSelectionListener, OnMapReadyCallback,
+public class IpayHereFragment extends BaseFragment implements PlaceSelectionListener, OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener, HttpResponseListener,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
 
@@ -68,7 +74,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     private HttpRequestGetAsyncTask mIPayHereTask = null;
 
     private SupportMapFragment mapFragment;
-    private ProgressDialog mProgressDialog;
     private GoogleMap mMap;
 
     private IPayHereResponse mIPayHereResponse;
@@ -80,31 +85,37 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     private Button searchLocation;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ipay_here);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Utilities.hideKeyboard(this);
+    }
 
-        // Retrieve the PlaceAutocompleteFragment.
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLocationPermission();
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_ipay_here, container, false);
+        if (getActivity() != null)
+            getActivity().setTitle(R.string.ipay_here);
+
+        SupportPlaceAutocompleteFragment autocompleteFragment = new SupportPlaceAutocompleteFragment();
+        android.support.v4.app.FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragment_content, autocompleteFragment);
+        ft.commit();
         AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(Place.TYPE_COUNTRY)
-                .setCountry("BD")
-                .build();
+        .setTypeFilter(Place.TYPE_COUNTRY)
+        .setCountry("BD")
+        .build();
         // Register a listener to receive callbacks when a place has been selected or an error ha occurred.
         autocompleteFragment.setOnPlaceSelectedListener(this);
         autocompleteFragment.setFilter(autocompleteFilter);
-
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.please_wait));
-        mProgressDialog.setCancelable(false);
-        searchLocationView = (CardView) findViewById(R.id.search_this_place);
-        searchLocation = (Button) findViewById(R.id.seach_this_place_btn);
-
-        getLocationPermission();
+        searchLocationView = (CardView) v.findViewById(R.id.search_this_place);
+        searchLocation = (Button) v.findViewById(R.id.seach_this_place_btn);
 
         searchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +123,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                 LatLng initialLoc = mMap.getCameraPosition().target;
                 searchLocationView.setVisibility(View.INVISIBLE);
 
-                if (initialLoc != null) {
+                if (mMap != null && initialLoc != null) {
                     mMap.clear();
                     isStartedMoving = false;
                     mLatitude = String.valueOf(initialLoc.latitude);
@@ -123,6 +134,78 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
 
             }
         });
+        return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+
+        if (HttpErrorHandler.isErrorFound(result, getContext())) {
+            mIPayHereTask = null;
+            return;
+        }
+        Gson gson = new Gson();
+
+        switch (result.getApiCommand()) {
+
+            case Constants.COMMAND_GET_NEREBY_BUSSINESS:
+                try {
+                    mNearByBusinessResponse = new ArrayList<>();
+                    mIPayHereResponse = gson.fromJson(result.getJsonString(), IPayHereResponse.class);
+                    mNearByBusinessResponse = mIPayHereResponse.getNearbyBusinessResponseList();
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        readItems();
+                    } else {
+                        Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                mIPayHereTask = null;
+                break;
+        }
+
+    }
+
+    @Override
+    public void onCameraIdle() {
+        if (isStartedMoving)
+            searchLocationView.setVisibility(View.VISIBLE);
+        else
+            searchLocationView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            isStartedMoving = true;
+        }
+    }
+
+    @Override
+    public void onError(Status status) {
+        Toast.makeText(getContext(), "Place selection failed: " + status.getStatusMessage(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
     }
 
     @Override
@@ -173,7 +256,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
 
     private void getLocationsettings() {
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             buildAlertMessageNoGps();
         } else {
@@ -183,8 +266,11 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
 
     private void getLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Utilities.isNecessaryPermissionExists(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})) {
-                ActivityCompat.requestPermissions(IPayHereActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+            if (ActivityCompat.checkSelfPermission(getContext(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(),
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                getLocationWithoutPermision();
             } else {
                 getLocationsettings();
             }
@@ -193,9 +279,10 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void getLocation() {
         Location location;
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         } else {
@@ -224,16 +311,15 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         if (mIPayHereTask != null)
             return;
 
-        mProgressDialog.show();
         String url = IPayHereRequestUrlBuilder.generateUri(lattitude, longitude);
         mIPayHereTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEREBY_BUSSINESS,
-                url, IPayHereActivity.this, false);
+                url, getContext(), false);
         mIPayHereTask.mHttpResponseListener = this;
         mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setUpMap() {
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
@@ -254,7 +340,8 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     void startDemo() {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(mLatitude), Double.valueOf(mLongitude)), 15f));
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(false);
         } else {
             mMap.setMyLocationEnabled(true);
@@ -265,7 +352,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
     }
 
     protected void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Location Service Disabled")
                 .setMessage("iPay needs to access your location to show iPay enabled outlets near you.")
                 .setCancelable(false)
@@ -283,42 +370,6 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         alert.show();
     }
 
-    @Override
-    public void httpResponseReceiver(GenericHttpResponse result) {
-
-        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
-            mIPayHereTask = null;
-            return;
-        }
-        Gson gson = new Gson();
-
-        switch (result.getApiCommand()) {
-
-            case Constants.COMMAND_GET_NEREBY_BUSSINESS:
-                hideProgressDialog();
-
-                try {
-                    mNearByBusinessResponse = new ArrayList<>();
-                    mIPayHereResponse = gson.fromJson(result.getJsonString(), IPayHereResponse.class);
-                    mNearByBusinessResponse = mIPayHereResponse.getNearbyBusinessResponseList();
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        readItems();
-                    } else {
-                        Toast.makeText(IPayHereActivity.this, mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(IPayHereActivity.this, mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-                mIPayHereTask = null;
-                break;
-        }
-
-    }
-
     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         private View view;
@@ -328,7 +379,7 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         private TextView businessNameTextView;
 
         public CustomInfoWindowAdapter() {
-            view = IPayHereActivity.this.getLayoutInflater().inflate(R.layout.ipay_here_info_window_map,
+            view = getLayoutInflater().inflate(R.layout.ipay_here_info_window_map,
                     null);
         }
 
@@ -355,14 +406,14 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
                 String imageUrl = Constants.BASE_URL_FTP_SERVER + infoWindowData.getImageUrl();
                 if (not_first_time_showing_info_window) {
                     not_first_time_showing_info_window = false;
-                    Glide.with(IPayHereActivity.this)
+                    Glide.with(getActivity())
                             .load(imageUrl)
                             .placeholder(R.drawable.ic_business_logo_round)
                             .error(R.drawable.ic_business_logo_round)
                             .into(businessProfileImageView);
                 } else {
                     not_first_time_showing_info_window = true;
-                    Glide.with(IPayHereActivity.this).load(imageUrl)
+                    Glide.with(getActivity()).load(imageUrl)
                             .listener(new RequestListener<String, GlideDrawable>() {
                                 @Override
                                 public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -383,49 +434,5 @@ public class IPayHereActivity extends BaseActivity implements PlaceSelectionList
         }
     }
 
-    @Override
-    public void onCameraIdle() {
-        if (isStartedMoving)
-            searchLocationView.setVisibility(View.VISIBLE);
-        else
-            searchLocationView.setVisibility(View.INVISIBLE);
-    }
 
-    @Override
-    public void onCameraMoveStarted(int reason) {
-        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            isStartedMoving = true;
-        }
-    }
-
-    @Override
-    public void onError(Status status) {
-        Toast.makeText(this, "Place selection failed: " + status.getStatusMessage(),
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Utilities.hideKeyboard(this);
-            onBackPressed();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public Context setContext() {
-        return IPayHereActivity.this;
-    }
-
-    private void hideProgressDialog() {
-        mProgressDialog.dismiss();
-    }
 }

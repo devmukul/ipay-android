@@ -100,11 +100,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         otherPartyNumber = transactionHistory.getAdditionalInfo().getNumber();
         otherPartyName = transactionHistory.getAdditionalInfo().getName();
         outletName = transactionHistory.getOutletName();
-        System.out.println("Test otherPartyName "+otherPartyName);
-
-        System.out.println("Test outletName "+outletName);
-
-
 
         statusCode = transactionHistory.getStatusCode();
         status = transactionHistory.getStatus();

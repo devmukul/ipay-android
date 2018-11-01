@@ -49,6 +49,8 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
+import static android.view.View.GONE;
+
 public class IPayTransactionAmountInputFragment extends Fragment implements View.OnClickListener {
 
     public MandatoryBusinessRules mMandatoryBusinessRules;
@@ -70,6 +72,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
 
     private EditText mAmountDummyEditText;
 
+    private String mAddressString;
+    private Long mOutletId = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +86,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 profilePicture = getArguments().getString(Constants.PHOTO_URI);
                 operatorCode = getArguments().getString(Constants.OPERATOR_CODE);
                 operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
+                mAddressString = getArguments().getString(Constants.ADDRESS);
+                if(getArguments().containsKey(Constants.OUTLET_ID)) {
+                    mOutletId = getArguments().getLong(Constants.OUTLET_ID);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,6 +117,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         final Toolbar toolbar = view.findViewById(R.id.toolbar);
         final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
         final TextView nameTextView = view.findViewById(R.id.name_text_view);
+        final TextView addressTextView = view.findViewById(R.id.address_text_view);
         final RoundedImageView profileImageView = view.findViewById(R.id.transaction_image_view);
         final EditText amountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
         mAmountDummyEditText = view.findViewById(R.id.amount_dummy_edit_text);
@@ -145,6 +155,11 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 balanceInfoLayout.setVisibility(View.VISIBLE);
                 mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 break;
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+                transactionDescriptionTextView.setText(R.string.paying_money_to);
+                balanceInfoLayout.setVisibility(View.VISIBLE);
+                mTopUpDefaultAmountLayout.setVisibility(View.GONE);
+                break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
                 transactionDescriptionTextView.setText(R.string.top_up_to);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
@@ -163,6 +178,13 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             if (transactionType == ServiceIdConstants.TOP_UP) {
                 nameTextView.setText(ContactEngine.formatMobileNumberBD(mobileNumber));
             }
+        }
+
+        if (!TextUtils.isEmpty(mAddressString)) {
+            addressTextView.setVisibility(View.VISIBLE);
+            addressTextView.setText(mAddressString);
+        }else {
+            addressTextView.setVisibility(GONE);
         }
 
         profileImageView.setVisibility(View.VISIBLE);
@@ -265,6 +287,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                     bundle.putString(Constants.PHOTO_URI, profilePicture);
                     bundle.putInt(Constants.OPERATOR_TYPE, operatorType);
                     bundle.putString(Constants.OPERATOR_CODE, operatorCode);
+                    bundle.putString(Constants.ADDRESS, mAddressString);
+                    if(mOutletId!=null)
+                        bundle.putLong(Constants.OUTLET_ID, mOutletId);
                     final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                     bundle.putSerializable(Constants.AMOUNT, amount);
                     if (getActivity() instanceof IPayTransactionActionActivity) {
@@ -274,10 +299,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             }
         });
 
-        if (getActivity() != null) {
-            mAmountDummyEditText.requestFocus();
-            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
-        }
+//        if (getActivity() != null) {
+//            mAmountDummyEditText.requestFocus();
+//            Utilities.showKeyboard(getActivity(), mAmountDummyEditText);
+//        }
     }
 
     private boolean isValidInputs() {
@@ -299,7 +324,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             } else {
                 final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                 final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-                if (((transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP)) && amount.compareTo(balance) > 0) {
+                if (((transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT) ) && amount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
                 } else {
                     final BigDecimal minimumAmount = mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();

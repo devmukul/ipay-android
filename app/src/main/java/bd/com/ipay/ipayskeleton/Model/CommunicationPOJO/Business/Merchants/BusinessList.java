@@ -84,7 +84,7 @@ public class BusinessList
                     addressString = office.get(0).getAddressLine1();
 
                     if (!office.get(0).getAddressLine2().isEmpty())
-                        addressString += office.get(0).getAddressLine2();
+                        addressString = addressString+", "+office.get(0).getAddressLine2();
                 }
             }
         }
