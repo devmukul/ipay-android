@@ -152,7 +152,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
 		ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
 		balanceInfoTitleTextView = view.findViewById(R.id.balance_info_title_text_view);
-		ImageButton balanceBreakDownloadImageButton = view.findViewById(R.id.balance_break_download_image_button);
+		balanceBreakDownloadImageButton = view.findViewById(R.id.balance_break_download_image_button);
 		setupBalanceBreakDownDialog();
 
 		if (getActivity() instanceof AppCompatActivity) {
@@ -406,32 +406,32 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		if (balanceType == BalanceType.CREDIT_BALANCE) {
 			originalBalanceTitleTextView.setText(R.string.total_credit_balance);
 			originalBalanceTextView.setText(getString(R.string.balance_holder,
-					numberFormat.format(creditBalanceResponse.getCreditLimit())));
+					balanceBreakDownFormat.format(creditBalanceResponse.getCreditLimit())));
 
 			debitableBalanceTitleTextView.setText(R.string.unsettled_balance);
 			debitableBalanceTextView.setText(getString(R.string.balance_holder,
-					numberFormat.format(Utilities.getMinPossibleBalance(
+					balanceBreakDownFormat.format(Utilities.getMinPossibleBalance(
 							creditBalanceResponse.getCreditLimit()
 									.subtract(creditBalanceResponse.getAvailableCredit())))));
 
 			finalBalanceTitleTextView.setText(R.string.available_balance);
 			finalBalanceTitleTextView.setText(getString(R.string.balance_holder,
-					numberFormat.format(creditBalanceResponse.getAvailableCredit())));
+					balanceBreakDownFormat.format(creditBalanceResponse.getAvailableCredit())));
 		} else if (balanceType == BalanceType.SETTLED_BALANCE) {
 			final BigDecimal userBalance = new BigDecimal(SharedPrefManager.getUserBalance());
 			final BigDecimal unSettledBalance = creditBalanceResponse.getCreditLimit()
 					.subtract(creditBalanceResponse.getAvailableCredit());
 			originalBalanceTitleTextView.setText(R.string.current_balance);
 			originalBalanceTextView.setText(getString(R.string.balance_holder,
-					numberFormat.format(userBalance)));
+					balanceBreakDownFormat.format(userBalance)));
 
 			debitableBalanceTitleTextView.setText(R.string.unsettled_balance);
 			debitableBalanceTextView.setText(getString(R.string.balance_holder,
-					numberFormat.format(Utilities.getMinPossibleBalance(unSettledBalance))));
+					balanceBreakDownFormat.format(Utilities.getMinPossibleBalance(unSettledBalance))));
 
 			finalBalanceTitleTextView.setText(R.string.available_balance);
-			finalBalanceTitleTextView.setText(getString(R.string.balance_holder,
-					numberFormat.format(Utilities.getMinPossibleBalance(
+			finalBalanceTextView.setText(getString(R.string.balance_holder,
+					balanceBreakDownFormat.format(Utilities.getMinPossibleBalance(
 							userBalance.subtract(unSettledBalance)))));
 		}
 		balanceBreakDownloadImageButton.setVisibility(View.VISIBLE);
