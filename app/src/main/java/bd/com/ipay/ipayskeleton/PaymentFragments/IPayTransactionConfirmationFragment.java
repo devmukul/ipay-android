@@ -311,7 +311,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 apiCommand = Constants.COMMAND_PAYMENT;
                 PaymentRequest paymentRequest = new PaymentRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
-                        amount.toString(), note, mPinEditText.getText().toString(), mOutletId, 0.0, 0.0);
+                        amount.toString(), note, null, mOutletId, 0.0, 0.0);
                 paymentRequest.setPin(mPin);
                 requestJson = gson.toJson(paymentRequest);
                 url = Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3;
@@ -358,7 +358,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 case Constants.COMMAND_TOPUP_REQUEST:
                     final String apiCommand = result.getApiCommand();
                     httpRequestPostAsyncTask = null;
-                    IPayTransactionResponse iPayTransactionResponse = new Gson().fromJson(result.getJsonString(), IPayTransactionResponse.class);
+                    final IPayTransactionResponse iPayTransactionResponse = new Gson().fromJson(result.getJsonString(), IPayTransactionResponse.class);
                     switch (result.getStatus()) {
                         case Constants.HTTP_RESPONSE_STATUS_OK:
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
@@ -374,8 +374,12 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                     mCustomProgressDialog.hide();
                                     Bundle bundle = new Bundle();
                                     bundle.putString(Constants.NAME, name);
+                                    bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
                                     bundle.putString(Constants.RECEIVER_IMAGE_URL, profilePicture);
                                     bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
+                                    if (transactionType == ServiceIdConstants.MAKE_PAYMENT) {
+                                        bundle.putString(Constants.TRANSACTION_ID, iPayTransactionResponse.getTransactionId());
+                                    }
                                     bundle.putString(Constants.SENDER_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
                                     bundle.putSerializable(Constants.AMOUNT, amount);
                                     if (getActivity() instanceof IPayTransactionActionActivity) {

@@ -2,14 +2,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <bitmap
-            android:src="@drawable/star_without_rating"/>
+            android:src="@drawable/rating"/>
     </item>
     <item android:id="@android:id/secondaryProgress">
         <bitmap
-            android:src="@drawable/star_with_rating" />
+            android:src="@drawable/rating_rated" />
     </item>
     <item android:id="@android:id/progress">
         <bitmap
-            android:src="@drawable/star_with_rating" />
+            android:src="@drawable/rating_rated" />
     </item>
 </layer-list>
