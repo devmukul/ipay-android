@@ -90,10 +90,10 @@ public class IPayTransactionActionActivity extends BaseActivity {
 					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
 					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
 					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
-					if(getIntent().hasExtra(Constants.ADDRESS))
-                    	bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
-                    if(getIntent().hasExtra(Constants.OUTLET_ID))
-						bundle.putString(Constants.OUTLET_ID, getIntent().getStringExtra(Constants.OUTLET_ID));
+					if (getIntent().hasExtra(Constants.ADDRESS))
+						bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
+					if (getIntent().hasExtra(Constants.OUTLET_ID))
+						bundle.putLong(Constants.OUTLET_ID, getIntent().getLongExtra(Constants.OUTLET_ID, 0));
 					switchToAmountInputFragment(bundle);
 				}
 				break;
@@ -150,9 +150,9 @@ public class IPayTransactionActionActivity extends BaseActivity {
 		switchFragment(new IPayTransactionSuccessFragment(), bundle, 3, true);
 	}
 
-    private void switchToMakePaymentFragment(@NonNull Bundle bundle) {
-        switchFragment(new IPayMakePaymentFragment(), bundle, 0, true);
-    }
+	private void switchToMakePaymentFragment(@NonNull Bundle bundle) {
+		switchFragment(new IPayMakePaymentFragment(), bundle, 0, true);
+	}
 
 	public void switchFragment(@NonNull Fragment fragment, @NonNull Bundle bundle, int maxBackStackEntryCount, boolean shouldAnimate) {
 		if (getSupportFragmentManager().getBackStackEntryCount() > maxBackStackEntryCount) {

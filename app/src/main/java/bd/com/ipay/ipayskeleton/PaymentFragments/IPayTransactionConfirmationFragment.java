@@ -289,7 +289,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 apiCommand = Constants.COMMAND_PAYMENT;
                 PaymentRequest paymentRequest = new PaymentRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
-                        amount.toString(), note, mPinEditText.getText().toString(), mOutletId, 0.0, 0.0);
+                        amount.toString(), note, null, mOutletId, 0.0, 0.0);
                 paymentRequest.setPin(mPinEditText.getText().toString());
                 requestJson = gson.toJson(paymentRequest);
                 url = Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3;
