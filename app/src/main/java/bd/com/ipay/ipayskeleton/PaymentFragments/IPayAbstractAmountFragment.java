@@ -332,7 +332,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 	protected void setBalanceInfo(BigDecimal balance) {
-		ipayBalanceTextView.setText(getString(R.string.balance_holder, numberFormat.format(balance)));
+		ipayBalanceTextView.setText(getString(R.string.balance_holder, balanceBreakDownFormat.format(balance)));
 	}
 
 	public void setBalanceType(@NonNull BalanceType balanceType) {
@@ -415,7 +415,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 									.subtract(creditBalanceResponse.getAvailableCredit())))));
 
 			finalBalanceTitleTextView.setText(R.string.available_balance);
-			finalBalanceTitleTextView.setText(getString(R.string.balance_holder,
+			finalBalanceTextView.setText(getString(R.string.balance_holder,
 					balanceBreakDownFormat.format(creditBalanceResponse.getAvailableCredit())));
 		} else if (balanceType == BalanceType.SETTLED_BALANCE) {
 			final BigDecimal userBalance = new BigDecimal(SharedPrefManager.getUserBalance());
