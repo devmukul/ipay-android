@@ -254,16 +254,6 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         }
     }
 
-    private void getLocationsettings() {
-
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            buildAlertMessageNoGps();
-        } else {
-            getLocation();
-        }
-    }
-
     private void getLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(getContext(),
@@ -272,10 +262,10 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                             android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 getLocationWithoutPermision();
             } else {
-                getLocationsettings();
+                getLocation();
             }
         } else {
-            getLocationsettings();
+            getLocation();
         }
     }
 
