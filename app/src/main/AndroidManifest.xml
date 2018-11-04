@@ -372,7 +372,12 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".SourceOfFund.SourceOfFundActivity"></activity>
+        <activity
+            android:name=".SourceOfFund.SourceOfFundActivity"
+            android:label="@string/transaction"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
     </application>
 
 </manifest>

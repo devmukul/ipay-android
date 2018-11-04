@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="#00b5a5">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/back"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/value16"
-                android:src="@drawable/ic_back_black" />
+                app:srcCompat="@drawable/ic_arrow_back_white" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/add_new"
                 android:layout_toRightOf="@+id/back"
+                android:text="Source of Fund"
                 android:textColor="#ffffff"
-                android:textSize="16sp"
-                tools:text="Source of Fund" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/add_new"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/value16"
                 android:text="+ ADD NEW"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
     <TextView
+        android:id="@+id/no_source_of_fund"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="@dimen/value16"
-        android:id="@+id/no_source_of_fund"
-        android:visibility="gone"
         android:layout_centerInParent="true"
-        android:text="You don't have any iPay account as source of fund "/>
+        android:layout_margin="@dimen/value16"
+        android:gravity="center"
+        android:text="You don't have any iPay account as source of fund "
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/title"

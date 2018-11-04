@@ -30,6 +30,8 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetBeneficiaryListResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+import static android.view.View.GONE;
+
 public class SourceOfFundListShowFragment extends Fragment implements HttpResponseListener {
 
     private RecyclerView sourceOfFundListRecyclerView;
@@ -47,6 +49,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     private SourceOfFundListAdapter sourceOfFundListAdapter;
 
     private TextView noSourceOfFundTextView;
+    private TextView titleTextView;
 
     @Nullable
     @Override
@@ -59,8 +62,9 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         super.onViewCreated(view, savedInstanceState);
         backButton = view.findViewById(R.id.back);
         addNewTextView = view.findViewById(R.id.add_new);
-        noSourceOfFundTextView = (TextView)view.findViewById(R.id.no_source_of_fund);
-        noSourceOfFundTextView.setVisibility(View.GONE);
+        titleTextView = view.findViewById(R.id.title);
+        noSourceOfFundTextView = (TextView) view.findViewById(R.id.no_source_of_fund);
+        noSourceOfFundTextView.setVisibility(GONE);
         attemptGetBeneficiaryList();
         sourceOfFundListAdapter = new SourceOfFundListAdapter();
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -108,11 +112,14 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                     getBeneficiaryListResponse = new Gson().fromJson(result.getJsonString(), GetBeneficiaryListResponse.class);
                     beneficiaryArrayList = getBeneficiaryListResponse.getBeneficiary();
                     sourceOfFundListAdapter.notifyDataSetChanged();
-                    if(beneficiaryArrayList.size()>0){
-                        noSourceOfFundTextView.setVisibility(View.GONE);
-                    }
-                    else{
+                    if (beneficiaryArrayList.size() > 0) {
+                        noSourceOfFundTextView.setVisibility(GONE);
+                        titleTextView.setVisibility(View.VISIBLE);
+                        sourceOfFundListRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
                         noSourceOfFundTextView.setVisibility(View.VISIBLE);
+                        titleTextView.setVisibility(GONE);
+                        sourceOfFundListRecyclerView.setVisibility(GONE);
                     }
                 } else {
                     Toast.makeText(getContext(), getBeneficiaryListResponse.getMessage(), Toast.LENGTH_LONG).show();
