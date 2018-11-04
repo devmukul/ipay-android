@@ -162,7 +162,7 @@ public class IPaySendMoneyConfirmationFragment extends IPayAbstractTransactionCo
 							case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
 								customProgressDialog.dismissDialog();
 								Toast.makeText(getActivity(), iPayTransactionResponse.getMessage(), Toast.LENGTH_SHORT).show();
-								launchOTPVerification(iPayTransactionResponse.getOtpValidFor(), gson.toJson(sendMoneyRequest), Constants.SEND_MONEY, uri);
+								launchOTPVerification(iPayTransactionResponse.getOtpValidFor(), gson.toJson(sendMoneyRequest), Constants.COMMAND_SEND_MONEY, uri);
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
 								final String errorMessage;
