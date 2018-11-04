@@ -1342,4 +1342,5 @@
     <string name="top_up_to">MOBILE TOP-UP TO</string>
     <string name="total_outstanding">Total outstanding</string>
     <string name="take_photo">Take Photo</string>
+    <string name="link_ipay_account">Link iPay</string>
 </resources>

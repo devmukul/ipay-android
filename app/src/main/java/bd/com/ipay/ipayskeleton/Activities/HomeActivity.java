@@ -84,6 +84,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshT
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.SourceOfFundActivity;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -376,8 +377,8 @@ public class HomeActivity extends BaseActivity
         if (mOptionMenuProfileImageView != null) {
             mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), false);
-            } else {
-                invalidateOptionsMenu();
+        } else {
+            invalidateOptionsMenu();
         }
     }
 
@@ -497,6 +498,12 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = false;
     }
 
+    public void switchToIpaySourceOfFundActivity() {
+        Intent intent = new Intent(HomeActivity.this, SourceOfFundActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
     public void showPromoCodeDialog() {
 
         AddPromoDialogBuilder addPromoDialogBuilder = new AddPromoDialogBuilder(HomeActivity.this, new AddPromoDialogBuilder.AddPromoListener() {
@@ -575,6 +582,9 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_invite) {
 
             switchToInviteActivity();
+
+        } else if (id == R.id.nav_ipay_source_of_fund) {
+            switchToIpaySourceOfFundActivity();
 
         } else if (id == R.id.nav_promo) {
 
