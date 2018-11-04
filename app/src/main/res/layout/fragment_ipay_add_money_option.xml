@@ -38,8 +38,8 @@
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusableInTouchMode="false"
-                android:background="@android:color/white">
+                android:background="@android:color/white"
+                android:focusableInTouchMode="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -88,6 +88,7 @@
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 
+
     <LinearLayout
         android:id="@+id/bank_option_bottom_sheet_layout"
         android:layout_width="match_parent"
@@ -119,11 +120,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
                 android:gravity="center_vertical"
-                tools:text="@string/adding_money_from_bank"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="@string/adding_money_from_bank" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/add_money_bank_option_message_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_semibold"
+            android:padding="16dip"
+            android:textColor="#212121"
+            android:visibility="gone"
+            tools:text="@string/instant_money_message_alert" />
 
         <FrameLayout
             android:id="@+id/bank_option_fragment_container"

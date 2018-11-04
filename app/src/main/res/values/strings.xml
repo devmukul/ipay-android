@@ -1358,4 +1358,5 @@
     <string name="total_credit_balance">Total Credit Balance</string>
     <string name="unsettled_balance">Unsettled Balance</string>
     <string name="available_balance">Available Balance</string>
+    <string name="instant_money_message_alert">You can take Tk. %1$s as Instant Money. To get this balance you need to select a Bank. This Instant Money will be adjusted from your selected bank.</string>
 </resources>

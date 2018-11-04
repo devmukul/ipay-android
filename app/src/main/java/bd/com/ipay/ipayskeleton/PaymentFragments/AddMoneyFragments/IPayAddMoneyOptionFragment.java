@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,23 +18,46 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Adapters.AddMoneyOptionAdapter;
 import bd.com.ipay.ipayskeleton.Adapters.OnItemClickListener;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.Model.AddMoneyOption;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.CreditBalanceResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card.IPayAddMoneyFromCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayChooseBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IPayAddMoneyOptionFragment extends Fragment {
 
 	private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
+	private CreditBalanceResponse creditBalanceResponse;
+	private HttpRequestGetAsyncTask httpRequestGetAsyncTask;
+	private TextView bottomSheetTitleTextView;
+	private TextView addMoneyBankOptionMessageTextView;
+	private CustomProgressDialog customProgressDialog;
+	private final Gson gson = new GsonBuilder()
+			.create();
+	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.US);
 
 	@Nullable
 	@Override
@@ -50,13 +74,18 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 		final List<AddMoneyOption> addMoneyOptionList = Utilities.getAddMoneyOptions();
 		final LinearLayout bankListBottomSheetLayout = view.findViewById(R.id.bank_option_bottom_sheet_layout);
 		final ImageButton closeAddBankOptionButton = view.findViewById(R.id.close_add_bank_option_button);
-		final TextView bottomSheetTitleTextView = view.findViewById(R.id.bottom_sheet_title_text_view);
+		bottomSheetTitleTextView = view.findViewById(R.id.bottom_sheet_title_text_view);
+		addMoneyBankOptionMessageTextView = view.findViewById(R.id.add_money_bank_option_message_text_view);
 		bottomSheetBehavior = BottomSheetBehavior.from(bankListBottomSheetLayout);
+
+		balanceBreakDownFormat.setMinimumFractionDigits(2);
+		balanceBreakDownFormat.setMaximumFractionDigits(2);
 
 		if (getActivity() == null || !(getActivity() instanceof AppCompatActivity)) {
 			return;
 		}
-		addMoneyOptionRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.HORIZONTAL));
+		addMoneyOptionRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+				LinearLayoutManager.HORIZONTAL));
 
 		((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 		final ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -69,32 +98,26 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 				final AddMoneyOption selectedAddMoneyOption = addMoneyOptionList.get(position);
 				switch (selectedAddMoneyOption.getServiceId()) {
 					case ServiceIdConstants.ADD_MONEY_BY_BANK:
-						if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-							bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-							addBankOptionFragment = new IPayChooseBankOptionFragment();
-							Bundle bundle = new Bundle();
-							bottomSheetTitleTextView.setText(R.string.adding_money_from_bank);
-							bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK);
-							addBankOptionFragment.setArguments(bundle);
-							if (getFragmentManager() != null)
-								getFragmentManager().beginTransaction()
-										.replace(R.id.bank_option_fragment_container, addBankOptionFragment)
-										.commit();
-						}
+						showBankList(IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK);
 						break;
 					case ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY:
-						if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-							bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-							addBankOptionFragment = new IPayChooseBankOptionFragment();
-							Bundle bundle = new Bundle();
-							bottomSheetTitleTextView.setText(R.string.instant_money);
-							bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY);
-							addBankOptionFragment.setArguments(bundle);
-							if (getFragmentManager() != null)
-								getFragmentManager().beginTransaction()
-										.replace(R.id.bank_option_fragment_container, addBankOptionFragment)
-										.commit();
+						if (creditBalanceResponse != null && httpRequestGetAsyncTask == null) {
+							if (creditBalanceResponse.isEntitledForInstantMoney()) {
+								showBankList(IPayTransactionActionActivity.
+										TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY);
+							} else {
+								DialogUtils.showDialogForNotEntitledForInstantMoney(getActivity());
+							}
+						} else if (httpRequestGetAsyncTask != null) {
+							customProgressDialog = new CustomProgressDialog(getActivity());
+							customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
+							customProgressDialog.setMessage(getString(R.string.fetching_user_info));
+							customProgressDialog.showDialog();
+						} else {
+							Toaster.makeText(getActivity(),
+									R.string.service_not_available, Toast.LENGTH_SHORT);
 						}
+
 						break;
 					case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
 						BusinessRuleCacheManager.fetchBusinessRule(getContext(), IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
@@ -119,6 +142,80 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 				}
 			}
 		});
+
+		fetchCreditBalance();
+	}
+
+	private void fetchCreditBalance() {
+		httpRequestGetAsyncTask = new HttpRequestGetAsyncTask(
+				Constants.COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY_BALANCE,
+				Constants.BASE_URL_SM + Constants.URL_ADD_MONEY_FROM_BANK_INSTANTLY_BALANCE,
+				getActivity(),
+				new HttpResponseListener() {
+					@Override
+					public void httpResponseReceiver(GenericHttpResponse result) {
+						httpRequestGetAsyncTask = null;
+						if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+							creditBalanceResponse =
+									gson.fromJson(result.getJsonString(),
+											CreditBalanceResponse.class);
+							SharedPrefManager.setCreditBalance(creditBalanceResponse);
+							if (customProgressDialog != null) {
+								customProgressDialog.dismissDialog();
+								if (creditBalanceResponse.isEntitledForInstantMoney()) {
+									showBankList(IPayTransactionActionActivity
+											.TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY);
+								} else {
+									DialogUtils
+											.showDialogForNotEntitledForInstantMoney(getContext());
+								}
+							}
+						} else {
+							if (customProgressDialog != null) {
+								customProgressDialog.dismissDialog();
+								Toaster.makeText(getContext(),
+										R.string.service_not_available,
+										Toast.LENGTH_SHORT);
+							}
+						}
+					}
+				}, true);
+		httpRequestGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
+
+	private void showBankList(int transactionType) {
+		if (bottomSheetBehavior.getState() ==
+				BottomSheetBehavior.STATE_COLLAPSED ||
+				bottomSheetBehavior.getState() ==
+						BottomSheetBehavior.STATE_HIDDEN) {
+			bottomSheetBehavior
+					.setState(BottomSheetBehavior.STATE_EXPANDED);
+			addBankOptionFragment = new IPayChooseBankOptionFragment();
+			Bundle bundle = new Bundle();
+			switch (transactionType) {
+				case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY:
+					addMoneyBankOptionMessageTextView.setVisibility(View.GONE);
+					bottomSheetTitleTextView.setText(R.string.adding_money_from_bank);
+					break;
+				case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY:
+					if (creditBalanceResponse != null) {
+						addMoneyBankOptionMessageTextView.setVisibility(View.VISIBLE);
+						addMoneyBankOptionMessageTextView.setText(getString(R.string.instant_money_message_alert,
+								balanceBreakDownFormat.format(creditBalanceResponse.getCreditLimit())));
+					} else {
+						addMoneyBankOptionMessageTextView.setVisibility(View.GONE);
+					}
+					bottomSheetTitleTextView.setText(R.string.instant_money);
+					break;
+			}
+			bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY,
+					transactionType);
+			addBankOptionFragment.setArguments(bundle);
+			if (getFragmentManager() != null)
+				getFragmentManager().beginTransaction()
+						.replace(R.id.bank_option_fragment_container, addBankOptionFragment)
+						.commit();
+		}
 	}
 
 	private Fragment addBankOptionFragment;
