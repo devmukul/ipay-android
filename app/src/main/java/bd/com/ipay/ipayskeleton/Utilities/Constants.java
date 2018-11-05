@@ -286,6 +286,7 @@ public class Constants {
     public static final String BASE_URL_DATA_COLLECTOR = BuildConfig.BASE_URL_IPAY + "/data-collector/v1/";
     public static final String BASE_URL_OFFER = BuildConfig.BASE_URL_IPAY + "/offer_v2/api/v1/";
     public static final String BASE_URL_UTILITY = BuildConfig.BASE_URL_IPAY + "/api/utility/";
+    public static final String BASE_URL_CMS = BuildConfig.BASE_URL_IPAY + "/api/cms/";
     public static final String INTERCOM_API_KEY = BuildConfig.API_KEY_INTERCOM;
     public static final String INTERCOM_ANDROID_SDK_KEY = BuildConfig.SDK_KEY_INTERCOM;
 
@@ -558,6 +559,9 @@ public class Constants {
     //Promotions
     public static final String URL_PROMOTIONS = "promotions/";
 
+    //NewsRoom
+    public static final String URL_NEWSROOM = "news";
+
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -745,6 +749,7 @@ public class Constants {
 
     public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
     public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
+    public static final String COMMAND_GET_NEWS = "COMMAND_GET_NEWS";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 

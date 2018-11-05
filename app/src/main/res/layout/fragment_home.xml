@@ -420,7 +420,7 @@
 
         <fragment
             android:layout_width="match_parent"
-            android:name="bd.com.ipay.ipayskeleton.HomeFragments.OfferFragment"
+            android:name="bd.com.ipay.ipayskeleton.HomeFragments.NewsRoomFragment"
             android:layout_height="wrap_content"
             android:layout_marginTop="-6dp"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
