@@ -1343,4 +1343,6 @@
     <string name="total_outstanding">Total outstanding</string>
     <string name="take_photo">Take Photo</string>
     <string name="link_ipay_account">Link iPay</string>
+    <string name="source_of_fund_success">You have made a request to add Arifur Rahman as your source of fund. We will inform you when he accept this request.</string>
+    <string name="helper">Hasan Masud sent you a Source of fund request. Do you want to be a source of fund?\</string>
 </resources>

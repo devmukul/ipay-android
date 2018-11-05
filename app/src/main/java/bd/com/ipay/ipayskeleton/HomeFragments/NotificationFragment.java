@@ -19,9 +19,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,16 +34,19 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.NotificationActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetPendingRoleManagerInvitationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.BusinessRoleManagerInvitation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequest;
@@ -54,6 +59,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Pendi
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryRequest;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetBeneficiaryListResponse;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -80,6 +89,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetPendingRoleManagerRequestTask = null;
     private GetPendingRoleManagerInvitationResponse mGetPendingRoleManagerInvitationResponse;
 
+    private HttpRequestGetAsyncTask mGetBeneficiaryAsyncTask;
+    private GetBeneficiaryListResponse getBeneficiaryListResponse;
+    private List<Beneficiary> beneficiaryList;
+    private List<Beneficiary> beneficiaryPendingList;
+
+    private HttpRequestPutAsyncTask acceptOrRejectBeneficiaryAsyncTask;
+
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -105,6 +121,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private String mTitle;
     private String mDescriptionOfRequest;
 
+    private IpayProgressDialog ipayProgressDialog;
+
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
     private NotificationBroadcastReceiver notificationBroadcastReceiver;
     private Tracker mTracker;
@@ -129,6 +147,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
+        ipayProgressDialog = new IpayProgressDialog(getContext());
         mNotificationsRecyclerView.setAdapter(mNotificationListAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
@@ -184,6 +203,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getIntroductionRequestList(context);
         getPendingIntroducersList(context);
         getPendingInvitationRequestsForRoleManager(context);
+        getPendingBeneficiaryListResponse(context);
     }
 
     private void getPendingInvitationRequestsForRoleManager(Context context) {
@@ -199,11 +219,23 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private void getPendingBeneficiaryListResponse(Context context) {
+        if (mGetBeneficiaryAsyncTask != null) {
+            return;
+        } else {
+            String uri = Constants.BASE_URL_MM + Constants.URL_GET_BENEFICIARY;
+            mGetBeneficiaryAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BENEFICIARY, uri,
+                    context, this, false);
+            mGetBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     public void refreshNotificationLists(Context context) {
         refreshIntroductionRequestList(context);
         refreshMoneyAndPaymentRequestList(context);
         refreshPendingIntroducerList(context);
         refreshBusinessRoleManagerList(context);
+        refreshSourceOfFundBeneficiaryList(context);
     }
 
     @Override
@@ -299,6 +331,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private void refreshSourceOfFundBeneficiaryList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
+            beneficiaryPendingList = null;
+            getPendingBeneficiaryListResponse(context);
+        }
+    }
+
     private void refreshPendingIntroducerList(Context context) {
         if (Utilities.isConnectionAvailable(context)) {
             mPendingIntroducerList = null;
@@ -320,6 +359,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             notifications.addAll(mPendingIntroducerList);
         if (mBusinessRoleManagerRequestsList != null)
             notifications.addAll(mBusinessRoleManagerRequestsList);
+        if (beneficiaryPendingList != null) {
+            notifications.addAll(beneficiaryPendingList);
+        }
 
         // Date wise sort all notifications
         Collections.sort(notifications, new Comparator<Notification>() {
@@ -429,6 +471,16 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         startActivity(intent);
     }
 
+    private void getOnlyPendingEntriesSourceOfFund() {
+        beneficiaryPendingList = new ArrayList<>();
+        for (int i = 0; i < beneficiaryList.size(); i++) {
+            if (beneficiaryList.get(i).getStatus().equals("PENDING")) {
+                beneficiaryPendingList.add(beneficiaryList.get(i));
+            }
+        }
+
+    }
+
     private void launchBusinessRoleReviewFragment(final BusinessRoleManagerInvitation businessRoleManagerInvitation) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
@@ -451,6 +503,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mGetIntroductionRequestTask = null;
                 mGetPendingIntroducerListTask = null;
                 mGetPendingRoleManagerRequestTask = null;
+                acceptOrRejectBeneficiaryAsyncTask = null;
+                if (ipayProgressDialog != null) {
+                    ipayProgressDialog.dismiss();
+                }
                 setContentShown(true);
 
                 if (isAdded()) {
@@ -484,6 +540,23 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     }
 
                     mGetMoneyAndPaymentRequestTask = null;
+                    postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_GET_BENEFICIARY:
+                    try {
+                        getBeneficiaryListResponse = gson.fromJson(result.getJsonString(), GetBeneficiaryListResponse.class);
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            beneficiaryList = getBeneficiaryListResponse.getBeneficiary();
+                            getOnlyPendingEntriesSourceOfFund();
+                        } else {
+                            Toast.makeText(getContext(), getBeneficiaryListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    }
+                    mGetBeneficiaryAsyncTask = null;
                     postProcessNotificationList();
                     break;
 
@@ -523,6 +596,25 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                     mGetPendingIntroducerListTask = null;
                     postProcessNotificationList();
+                    break;
+
+                case Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY:
+                    try {
+                        ipayProgressDialog.dismiss();
+                        GenericResponseWithMessageOnly responseWithMessageOnly = gson.fromJson(result.getJsonString(),
+                                GenericResponseWithMessageOnly.class);
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            Intent intent = new Intent(getContext(), NotificationActivity.class);
+                            startActivity(intent);
+                            Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+
+                    }
+                    acceptOrRejectBeneficiaryAsyncTask = null;
                     break;
 
                 case Constants.COMMAND_GET_SERVICE_CHARGE:
@@ -576,6 +668,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
             mGetPendingRoleManagerRequestTask = null;
+            acceptOrRejectBeneficiaryAsyncTask = null;
 
         }
     }
@@ -600,7 +693,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 Notification notification = mNotifications.get(pos);
-                if (!(notification instanceof BusinessRoleManagerInvitation)) {
+                if (!(notification instanceof BusinessRoleManagerInvitation) && !(notification instanceof Beneficiary)) {
 
                     mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
                     mNameView.setText(notification.getName());
@@ -728,6 +821,53 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             }
         }
 
+        public class SourceOfFundBeneficiaryViewHolder extends NotificationViewHolder {
+            private RoundedImageView profileImageView;
+            private TextView timeTextView;
+            private TextView descriptionTextView;
+            private TextView acceptTextView;
+            private TextView rejectTextView;
+
+            public SourceOfFundBeneficiaryViewHolder(View itemView) {
+                super(itemView);
+                profileImageView = (RoundedImageView) itemView.findViewById(R.id.profile_image);
+                timeTextView = (TextView) itemView.findViewById(R.id.time);
+                descriptionTextView = (TextView) itemView.findViewById(R.id.description);
+                acceptTextView = (TextView) itemView.findViewById(R.id.accept);
+                rejectTextView = (TextView) itemView.findViewById(R.id.reject);
+            }
+
+            @Override
+            public void bindView(int pos) {
+                super.bindView(pos);
+                final int position = pos;
+                final Beneficiary beneficiary = (Beneficiary) mNotifications.get(pos);
+
+                Glide.with(getContext())
+                        .load(Constants.BASE_URL_FTP_SERVER + beneficiary.getImageUrl())
+                        .centerCrop()
+                        .error(getResources().getDrawable(R.drawable.user_brand_bg))
+                        .into(profileImageView);
+                timeTextView.setText(Utilities.formatDateWithTime(beneficiary.getUpdatedAt()));
+                String description = descriptionTextView.getText().toString();
+                description = description.replace("Hasan Masud", beneficiary.getName());
+                descriptionTextView.setText(description);
+                acceptTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        attemptAddBeneficiaryWithPinCheck(beneficiary.getId());
+
+                    }
+                });
+                rejectTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+        }
+
 
         public class PendingIntroductionListViewHolder extends NotificationViewHolder {
 
@@ -773,6 +913,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_role_manager_requests_notification_new,
                         parent, false);
                 return new BusinessRoleManagerViewHolder(v);
+            } else if (viewType == Constants.NOTIFICATION_TYPE_SOURCE_OF_FUND_BENEFICIARIES) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_get_beneficiaries,
+                        parent, false);
+                return new SourceOfFundBeneficiaryViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
                 return new MoneyAndPaymentRequestViewHolder(v);
@@ -799,6 +943,32 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         @Override
         public int getItemViewType(int position) {
             return mNotifications.get(position).getNotificationType();
+        }
+    }
+
+    private void attemptAddBeneficiaryWithPinCheck(final long id) {
+        new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+            @Override
+            public void ifPinCheckedAndAdded(String pin) {
+                attemptAddBeneficiary(pin, id);
+            }
+        });
+    }
+
+    private void attemptAddBeneficiary(String pin, long id) {
+        if (acceptOrRejectBeneficiaryAsyncTask != null) {
+            return;
+        } else {
+
+            AcceptOrRejectBeneficiaryRequest acceptOrRejectBeneficiaryRequest = new AcceptOrRejectBeneficiaryRequest
+                    (pin, "APPROVED");
+            acceptOrRejectBeneficiaryAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY,
+                    Constants.BASE_URL_MM +
+                            Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + id,
+                    new Gson().toJson(acceptOrRejectBeneficiaryRequest), getContext(), this, false);
+            acceptOrRejectBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ipayProgressDialog.setMessage("Please wait . . .");
+            ipayProgressDialog.show();
         }
     }
 

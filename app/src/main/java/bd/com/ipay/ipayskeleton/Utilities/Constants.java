@@ -208,8 +208,17 @@ public class Constants {
     public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
-    public static final String COMMAND_GET_BENEFICIARY_LIST = "COMMAND_GET_BENEFICIARY_LIST";
+    public static final String COMMAND_GET_SPONSOR_LIST = "COMMAND_GET_SPONSOR_LIST";
     public static final String URL_GET_BENEFICIARY = "ipay-source/beneficiary";
+    public static final String URL_GET_SPONSOR = "ipay-source/sponsor";
+    public static final String RELATION = "RELATION";
+    public static final String URL_ADD_SPONSOR = "ipay-source/sponsor";
+    public static final String COMMAND_ADD_SPONSOR = "COMMAND_ADD_SPONSOR";
+    public static final String COMMAND_REMOVE_SPONSOR = "COMMAND_REMOVE_SPONSOR";
+    public static final String URL_DELETE_SPONSOR = "ipay-source/";
+    public static final String COMMAND_GET_BENEFICIARY = "COMMAND_GET_BENEFICIARY";
+    public static final int NOTIFICATION_TYPE_SOURCE_OF_FUND_BENEFICIARIES = 10;
+    public static final String COMMAND_ACCEPT_OR_REJECT_BENEFICIARY = "COMMAND_ACCEPT_OR_REJECT_BENEFICIARY";
     public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
     public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
@@ -329,6 +338,10 @@ public class Constants {
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
     public static final String URL_GET_CARD = "user/card";
+
+    public static final String URL_ADD_BENEFICIARY = "ipay-source/beneficiary";
+    public static final String URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND = "/ipay-source/";
+
     // Bank Transaction REST
     public static final String URL_ADD_MONEY_FROM_BANK = "banktransaction/cashin/v2";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
@@ -364,6 +377,7 @@ public class Constants {
     public static final String URL_BUSINESS_RULE = "business-rule";
     public static final String URL_BUSINESS_RULE_V2 = "business-rule/v2";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
+
 
     // Introducer REST
     public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";

@@ -5,6 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00b5a5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/value16"
+                app:srcCompat="@drawable/ic_arrow_back_white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/add_new"
+                android:layout_toRightOf="@+id/back"
+                android:text="Source of Fund"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,24 +45,27 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
 
-            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/profile_image"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/user_brand_bg"
+                app:riv_oval="true" />
 
             <TextView
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
+                android:layout_below="@id/profile_image"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="OpenSans-SemiBold"
                 android:gravity="center_horizontal"
-                android:layout_below="@id/profile_image"
                 android:lineSpacingExtra="6sp"
                 android:textColor="#212121"
                 android:textSize="14sp"
+                android:visibility="gone"
                 tools:text="Arifur Rahman" />
 
             <TextView
@@ -137,11 +169,11 @@
     </ScrollView>
 
     <Button
+        android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="#00c0af"
-        android:id="@+id/done"
         android:text="DONE"
         android:textColor="@color/colorWhite" />
 

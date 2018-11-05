@@ -1,14 +1,35 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund.models;
 
 
-public class Beneficiary {
+import android.os.Parcel;
+
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
+public class Beneficiary implements Notification {
     private long id;
     private String initiatedBy;
     private long monthlyCreditLimit;
     private String relationship;
     private String status;
-    private String updatedAt;
+    private long updatedAt;
     private User user;
+
+    public static final Creator<Beneficiary> CREATOR = new Creator<Beneficiary>() {
+        @Override
+        public Beneficiary createFromParcel(Parcel in) {
+            return new Beneficiary(in);
+        }
+
+        @Override
+        public Beneficiary[] newArray(int size) {
+            return new Beneficiary[size];
+        }
+    };
+
+    public Beneficiary(Parcel in) {
+
+    }
 
     public long getId() {
         return id;
@@ -50,11 +71,11 @@ public class Beneficiary {
         this.status = status;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -64,5 +85,40 @@ public class Beneficiary {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String getNotificationTitle() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return user.getName();
+    }
+
+    @Override
+    public String getImageUrl() {
+        return user.getProfilePictureUrl();
+    }
+
+    @Override
+    public long getTime() {
+        return 0;
+    }
+
+    @Override
+    public int getNotificationType() {
+        return Constants.NOTIFICATION_TYPE_SOURCE_OF_FUND_BENEFICIARIES;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
