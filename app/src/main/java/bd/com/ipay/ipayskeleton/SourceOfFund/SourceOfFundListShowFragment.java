@@ -26,12 +26,15 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpDeleteWithBodyAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetBeneficiaryListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.RemoveSponsorRequest;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.RemoveSponsorOrBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -45,7 +48,10 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
 
     private ArrayList<Sponsor> sponsorArrayList;
 
+    private ArrayList<Beneficiary> beneficiaryArrayList;
+
     private HttpRequestGetAsyncTask getSponsorListAsyncTask;
+    private HttpRequestGetAsyncTask getBeneficiaryListAsyncTask;
 
     private HttpDeleteWithBodyAsyncTask deleteSponsorAsyncTask;
 
@@ -53,10 +59,18 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
 
     private ProgressDialog progressDialog;
 
-    private SourceOfFundListAdapter sourceOfFundListAdapter;
+    private SourceOfFundListAdapter sponsorAdapter;
+    private SourceOfFundListAdapter beneficiaryAdapter;
 
     private TextView noSourceOfFundTextView;
     private TextView titleTextView;
+
+    private TextView titleBeneficiaryTextView;
+    private RecyclerView beneficiaryRecyclerView;
+
+    private boolean isSponsorApiCalled;
+    private boolean isBeneficiaryApiCalled;
+
 
     @Nullable
     @Override
@@ -68,18 +82,24 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         backButton = view.findViewById(R.id.back);
+        isBeneficiaryApiCalled = false;
+        isSponsorApiCalled = false;
+        beneficiaryArrayList = new ArrayList<>();
+        sponsorArrayList = new ArrayList<>();
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
+        titleBeneficiaryTextView = view.findViewById(R.id.title_me_as_ipay_source);
+        beneficiaryRecyclerView = view.findViewById(R.id.beneficiary_recycler_view);
         addNewTextView = view.findViewById(R.id.add_new);
         titleTextView = view.findViewById(R.id.title);
         noSourceOfFundTextView = (TextView) view.findViewById(R.id.no_source_of_fund);
         noSourceOfFundTextView.setVisibility(GONE);
         attemptGetSponsorList();
-        sourceOfFundListAdapter = new SourceOfFundListAdapter();
+
         addNewTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +108,24 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         });
         sourceOfFundListRecyclerView = view.findViewById(R.id.source_of_fund_list_recycler_view);
         sourceOfFundListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        sourceOfFundListRecyclerView.setAdapter(sourceOfFundListAdapter);
+
+    }
+
+    private void removeRejectedEntriesForSponsors(ArrayList<Sponsor> sponsors) {
+        for (int i = 0; i < sponsors.size(); i++) {
+            if (!sponsors.get(i).getStatus().equals("REJECTED")) {
+                sponsorArrayList.add(sponsors.get(i));
+            }
+        }
+    }
+
+    private void removeRejectedEntriesForBeneficiaries(ArrayList<Beneficiary> beneficiaries) {
+        for (int i = 0; i < beneficiaries.size(); i++) {
+            if (!beneficiaries.get(i).getStatus().equals("REJECTED")) {
+                beneficiaryArrayList.add(beneficiaries.get(i));
+            }
+        }
+
     }
 
     private void attemptGetSponsorList() {
@@ -96,13 +133,39 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             return;
         } else {
             ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Please wait . . .");
+            ipayProgressDialog.setMessage("Fetching sponsors . . .");
             getSponsorListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
                     getContext(), this, false);
             getSponsorListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             ipayProgressDialog.show();
 
         }
+    }
+
+    private void attemptGetBeneficiaryList() {
+        if (getBeneficiaryListAsyncTask != null) {
+            return;
+        } else {
+            ipayProgressDialog = new IpayProgressDialog(getContext());
+            ipayProgressDialog.setMessage("Fetching beneficiaries . . .");
+            getBeneficiaryListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BENEFICIARY_LIST, Constants.BASE_URL_MM + Constants.URL_GET_BENEFICIARY,
+                    getContext(), this, false);
+            getBeneficiaryListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ipayProgressDialog.show();
+
+        }
+    }
+
+    private int ifNoBeneficiaryAndSponsor() {
+        int beneficiaryLength = 0;
+        int sponsorLength = 0;
+        if (beneficiaryArrayList != null) {
+            beneficiaryLength = beneficiaryArrayList.size();
+        }
+        if (sponsorArrayList != null) {
+            sponsorLength = sponsorArrayList.size();
+        }
+        return beneficiaryLength + sponsorLength;
     }
 
     @Override
@@ -116,25 +179,67 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             GetSponsorListResponse getSponsorListResponse = null;
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_SPONSOR_LIST)) {
+                    attemptGetBeneficiaryList();
+                    ipayProgressDialog.dismiss();
+                    isSponsorApiCalled = true;
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         getSponsorListResponse = new Gson().fromJson(result.getJsonString(), GetSponsorListResponse.class);
-                        sponsorArrayList = getSponsorListResponse.getSponsor();
-                        sourceOfFundListAdapter.notifyDataSetChanged();
+                        ArrayList<Sponsor> sponsors = getSponsorListResponse.getSponsor();
+                        removeRejectedEntriesForSponsors(sponsors);
                         if (sponsorArrayList.size() > 0) {
+                            sponsorAdapter = new SourceOfFundListAdapter("SPONSOR");
+                            sourceOfFundListRecyclerView.setAdapter(sponsorAdapter);
                             noSourceOfFundTextView.setVisibility(GONE);
                             titleTextView.setVisibility(View.VISIBLE);
                             sourceOfFundListRecyclerView.setVisibility(View.VISIBLE);
                         } else {
-                            noSourceOfFundTextView.setVisibility(View.VISIBLE);
                             titleTextView.setVisibility(GONE);
                             sourceOfFundListRecyclerView.setVisibility(GONE);
+
+                            if (isBeneficiaryApiCalled) {
+                                if (ifNoBeneficiaryAndSponsor() == 0) {
+                                    noSourceOfFundTextView.setVisibility(View.VISIBLE);
+                                } else {
+                                    noSourceOfFundTextView.setVisibility(GONE);
+                                }
+                            }
                         }
                     } else {
                         Toast.makeText(getContext(), getSponsorListResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     getSponsorListAsyncTask = null;
 
-                } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_SPONSOR)) {
+                } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BENEFICIARY_LIST)) {
+                    ipayProgressDialog.dismiss();
+                    isBeneficiaryApiCalled = true;
+                    GetBeneficiaryListResponse getBeneficiaryListResponse = new Gson().fromJson(result.getJsonString(),
+                            GetBeneficiaryListResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        ArrayList<Beneficiary> beneficiaryList = getBeneficiaryListResponse.getBeneficiary();
+                        removeRejectedEntriesForBeneficiaries(beneficiaryList);
+                        if (beneficiaryArrayList.size() > 0) {
+                            beneficiaryAdapter = new SourceOfFundListAdapter("BENEFICIARY");
+                            beneficiaryRecyclerView.setAdapter(beneficiaryAdapter);
+                            beneficiaryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        } else {
+                            titleBeneficiaryTextView.setVisibility(GONE);
+                            beneficiaryRecyclerView.setVisibility(GONE);
+                            if (isSponsorApiCalled) {
+                                if (ifNoBeneficiaryAndSponsor() == 0) {
+                                    noSourceOfFundTextView.setVisibility(View.VISIBLE);
+                                } else {
+                                    noSourceOfFundTextView.setVisibility(GONE);
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getBeneficiaryListResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    }
+                    getBeneficiaryListAsyncTask = null;
+
+                } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_SPONSOR_OR_BENEFICIARY)) {
                     GenericResponseWithMessageOnly responseWithMessageOnly = new Gson().fromJson
                             (result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -152,13 +257,14 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
 
     }
 
-    public void attemptRemoveSponsor(long id) {
+    public void attemptRemoveSponsorOrBeneficiary(long id, String pin) {
         if (deleteSponsorAsyncTask != null) {
             return;
         } else {
-            RemoveSponsorRequest removeSponsorRequest = new RemoveSponsorRequest("");
-            deleteSponsorAsyncTask = new HttpDeleteWithBodyAsyncTask(Constants.COMMAND_REMOVE_SPONSOR,
-                    Constants.BASE_URL_MM + Constants.URL_DELETE_SPONSOR + id, new Gson().toJson(removeSponsorRequest),
+            RemoveSponsorOrBeneficiaryRequest removeSponsorOrBeneficiaryRequest = new RemoveSponsorOrBeneficiaryRequest(pin);
+            deleteSponsorAsyncTask = new HttpDeleteWithBodyAsyncTask(Constants.COMMAND_REMOVE_SPONSOR_OR_BENEFICIARY,
+                    Constants.BASE_URL_MM + Constants.URL_DELETE_SPONSOR + id, new Gson().toJson
+                    (removeSponsorOrBeneficiaryRequest),
                     getContext(), this, false);
             deleteSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             ipayProgressDialog.setMessage("Please wait . . .");
@@ -167,6 +273,12 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     }
 
     public class SourceOfFundListAdapter extends RecyclerView.Adapter<SourceOfFundListAdapter.SourceOfFundViewHolder> {
+        private String type;
+
+        public SourceOfFundListAdapter(String type) {
+            this.type = type;
+        }
+
         @NonNull
         @Override
         public SourceOfFundViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -175,7 +287,15 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
 
         @Override
         public void onBindViewHolder(@NonNull SourceOfFundViewHolder holder, final int position) {
-            final Sponsor sponsor = sponsorArrayList.get(position);
+            if (type.equals("SPONSOR")) {
+                bindSponsorView(holder, sponsorArrayList.get(position));
+            } else {
+                bindBeneficiaryView(holder, beneficiaryArrayList.get(position));
+            }
+
+        }
+
+        public void bindSponsorView(SourceOfFundViewHolder holder, final Sponsor sponsor) {
             holder.profileImageView.setProfilePicture(sponsor.getUser().getProfilePictureUrl(), false);
             holder.nameTextView.setText(sponsor.getUser().getName());
             holder.numberTextView.setText(sponsor.getUser().getMobileNumber());
@@ -187,7 +307,16 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        attemptRemoveSponsor(sponsor.getId());
+                                        attemptRemoveSponsorOrBeneficiary(sponsor.getId(), "");
+                                    }
+                                }).setMessage("Do you want to remove this sponsor?")
+                                .show();
+                    } else {
+                        new AlertDialog.Builder(getContext())
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        attemptRemoveSponsorWithPinCheck(sponsor.getId());
                                     }
                                 }).setMessage("Do you want to remove this sponsor?")
                                 .show();
@@ -197,12 +326,43 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             });
         }
 
+        public void bindBeneficiaryView(SourceOfFundViewHolder holder, final Beneficiary beneficiary) {
+            holder.profileImageView.setProfilePicture(beneficiary.getUser().getProfilePictureUrl(), false);
+            holder.nameTextView.setText(beneficiary.getUser().getName());
+            holder.numberTextView.setText(beneficiary.getUser().getMobileNumber());
+            holder.deleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (beneficiary.getStatus().equals("PENDING")) {
+                        new AlertDialog.Builder(getContext())
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        attemptRemoveSponsorOrBeneficiary(beneficiary.getId(), "");
+                                    }
+                                }).setMessage("Do you want to remove this beneficiary?")
+                                .show();
+                    } else {
+                        new AlertDialog.Builder(getContext())
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        attemptRemoveSponsorWithPinCheck(beneficiary.getId());
+                                    }
+                                }).setMessage("Do you want to remove this beneficiary?")
+                                .show();
+                    }
+
+                }
+            });
+        }
+
         @Override
         public int getItemCount() {
-            if (sponsorArrayList == null) {
-                return 0;
-            } else {
+            if (type.equals("SPONSOR")) {
                 return sponsorArrayList.size();
+            } else {
+                return beneficiaryArrayList.size();
             }
         }
 
@@ -222,5 +382,14 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                 deleteImageView = (ImageView) itemView.findViewById(R.id.delete);
             }
         }
+    }
+
+    private void attemptRemoveSponsorWithPinCheck(final long id) {
+        new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+            @Override
+            public void ifPinCheckedAndAdded(String pin) {
+                attemptRemoveSponsorOrBeneficiary(id, pin);
+            }
+        });
     }
 }

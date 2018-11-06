@@ -15,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 
@@ -38,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRever
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -84,6 +87,8 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
     private Integer statusCode;
     private String status;
     private String outletName;
+    private TextView sponsorNumberView;
+    private RoundedImageView sponsorProfilePictureView;
 
 
     @Nullable
@@ -92,7 +97,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         View v = inflater.inflate(R.layout.fragment_transaction_details, container, false);
 
         transactionHistory = getArguments().getParcelable(Constants.TRANSACTION_DETAILS);
-        System.out.println("Test "+transactionHistory.toString());
+        System.out.println("Test " + transactionHistory.toString());
 
         serviceId = transactionHistory.getServiceID();
         purpose = transactionHistory.getPurpose();
@@ -103,6 +108,9 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 
         statusCode = transactionHistory.getStatusCode();
         status = transactionHistory.getStatus();
+
+        sponsorProfilePictureView = (RoundedImageView) v.findViewById(R.id.sponsor_image_view);
+        sponsorNumberView = (TextView) v.findViewById(R.id.sponsor_number);
 
         descriptionTextView = (TextView) v.findViewById(R.id.description);
         timeTextView = (TextView) v.findViewById(R.id.time);
@@ -133,6 +141,20 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         if (transactionHistory.getAccountBalance() != null)
             balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAccountBalance()));
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
+
+        if (transactionHistory.getMetaData() != null) {
+            MetaData metaData = transactionHistory.getMetaData();
+            sponsorNumberView.setVisibility(View.VISIBLE);
+            sponsorProfilePictureView.setVisibility(View.VISIBLE);
+            sponsorNumberView.setText("Paid By " + metaData.getSponsorName());
+
+            if (metaData.getSponsorProfilePictures() != null) {
+                Glide.with(getContext())
+                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
+                        .centerCrop()
+                        .into(sponsorProfilePictureView);
+            }
+        }
 
 
         if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
@@ -175,9 +197,9 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             otherImageView.setImageResource(iconId);
         }
 
-        if(!TextUtils.isEmpty(outletName)) {
-            mNameView.setText(otherPartyName+" ("+outletName+")");
-        }else{
+        if (!TextUtils.isEmpty(outletName)) {
+            mNameView.setText(otherPartyName + " (" + outletName + ")");
+        } else {
             mNameView.setText(otherPartyName);
         }
         mMobileNumberView.setText(otherPartyNumber);

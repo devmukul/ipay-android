@@ -1,14 +1,20 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund.models;
 
-/**
- * Created by sourav.saha on 11/4/18.
- */
 
 public class User {
 
     private String name;
     private String mobileNumber;
     private String profilePictureUrl;
+    private long accountId;
+
+    public long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
 
     public String getName() {
         return name;

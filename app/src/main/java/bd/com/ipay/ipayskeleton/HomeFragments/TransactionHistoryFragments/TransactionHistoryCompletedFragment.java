@@ -31,9 +31,11 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,6 +58,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -678,6 +681,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             private TextView mNetAmountView;
             private final ImageView mOtherImageView;
             private final ProfileImageView mProfileImageView;
+            private final RoundedImageView sponsorImageView;
             private ImageView mStatusIconView;
 
             public ViewHolder(final View itemView) {
@@ -691,11 +695,11 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mStatusIconView = (ImageView) itemView.findViewById(R.id.status_description_icon);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 mOtherImageView = (ImageView) itemView.findViewById(R.id.other_image);
+                sponsorImageView = (RoundedImageView) itemView.findViewById(R.id.sponsor);
             }
 
             public void bindView(int pos) {
                 final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
-
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
                 String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());
@@ -703,6 +707,17 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
                 final String outletName = transactionHistory.getOutletName();
+                final MetaData metaData = transactionHistory.getMetaData();
+                if (metaData != null) {
+                    if (metaData.isSponsoredByOther()) {
+                        sponsorImageView.setVisibility(View.VISIBLE);
+                        Glide.with(getContext())
+                                .load(Constants.BASE_URL_FTP_SERVER +
+                                        metaData.getSponsorProfilePictures().get(0).getUrl())
+                                .centerCrop()
+                                .into(sponsorImageView);
+                    }
+                }
 
                 if (balance != null) {
                     mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
@@ -737,9 +752,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 if (receiver != null && !receiver.equals("")) {
                     mReceiverView.setVisibility(View.VISIBLE);
-                    if(!TextUtils.isEmpty(outletName)) {
-                        mReceiverView.setText(receiver +" ("+outletName+")");
-                    }else{
+                    if (!TextUtils.isEmpty(outletName)) {
+                        mReceiverView.setText(receiver + " (" + outletName + ")");
+                    } else {
                         mReceiverView.setText(receiver);
                     }
                 } else mReceiverView.setVisibility(View.GONE);
@@ -767,7 +782,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
 
-                            System.out.println("Test "+transactionHistory.toString());
+                            System.out.println("Test " + transactionHistory.toString());
                             Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
                             intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
                             startActivity(intent);

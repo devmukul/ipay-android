@@ -2,8 +2,8 @@ package bd.com.ipay.ipayskeleton.SourceOfFund.models;
 
 
 
-public class RemoveSponsorRequest {
-    public RemoveSponsorRequest(String pin) {
+public class RemoveSponsorOrBeneficiaryRequest {
+    public RemoveSponsorOrBeneficiaryRequest(String pin) {
         this.pin = pin;
     }
 

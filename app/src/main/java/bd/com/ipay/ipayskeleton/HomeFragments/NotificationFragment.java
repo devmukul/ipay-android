@@ -346,7 +346,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private boolean isAllNotificationsLoaded() {
-        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null && mGetPendingRoleManagerRequestTask == null;
+        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null
+                && mGetPendingRoleManagerRequestTask == null && mGetBeneficiaryAsyncTask == null;
     }
 
     private List<Notification> mergeNotificationLists() {
@@ -606,6 +607,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                             Intent intent = new Intent(getContext(), NotificationActivity.class);
                             startActivity(intent);
+                            getActivity().finish();
                             Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
@@ -855,14 +857,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 acceptTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        attemptAddBeneficiaryWithPinCheck(beneficiary.getId());
-
+                        attemptAcceptOrRejectBeneficiary(beneficiary.getId(), "APPROVED");
                     }
                 });
                 rejectTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        attemptAcceptOrRejectBeneficiary(beneficiary.getId(), "REJECTED");
                     }
                 });
             }
@@ -946,22 +947,22 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void attemptAddBeneficiaryWithPinCheck(final long id) {
+    private void attemptAcceptOrRejectBeneficiary(final long id, final String action) {
         new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
             @Override
             public void ifPinCheckedAndAdded(String pin) {
-                attemptAddBeneficiary(pin, id);
+                attemptAddBeneficiary(pin, id, action);
             }
         });
     }
 
-    private void attemptAddBeneficiary(String pin, long id) {
+    private void attemptAddBeneficiary(String pin, long id, String action) {
         if (acceptOrRejectBeneficiaryAsyncTask != null) {
             return;
         } else {
 
             AcceptOrRejectBeneficiaryRequest acceptOrRejectBeneficiaryRequest = new AcceptOrRejectBeneficiaryRequest
-                    (pin, "APPROVED");
+                    (Constants.DEFAULT_CREDIT_LIMIT, pin, action);
             acceptOrRejectBeneficiaryAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY,
                     Constants.BASE_URL_MM +
                             Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + id,

@@ -476,13 +476,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         if (getSponsorListAsyncTask != null) {
             return;
         } else {
-            ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Please wait . . .");
             getSponsorListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
-                    getContext(), this, false);
+                    getContext(), this, true);
             getSponsorListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.show();
-
         }
     }
 

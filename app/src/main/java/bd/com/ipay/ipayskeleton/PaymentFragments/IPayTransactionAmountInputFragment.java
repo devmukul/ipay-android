@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
+import bd.com.ipay.ipayskeleton.SourceOfFund.view.SponsorSelectorDialog;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -72,6 +74,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
     private TextView mTakaTwoHundredTextView;
     private TextView mTakaFiveHundredTextView;
     private View sponsorView;
+    private TextView sponsorNameTextView;
+    private ImageView cancelSponsorImageView;
+    private SponsorSelectorDialog sponsorSelectorDialog;
+    private Sponsor selectedSponsor;
 
     private EditText mAmountDummyEditText;
 
@@ -131,6 +137,19 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         mContinueButton = view.findViewById(R.id.continue_button);
         final View balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
         sponsorView = view.findViewById(R.id.source_of_fund_view);
+        sponsorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sponsorSelectorDialog = new SponsorSelectorDialog(getContext(), sponsorList, new SponsorSelectorDialog.SponsorSelectorListener() {
+                    @Override
+                    public void onSponsorSelected(Sponsor sponsor) {
+                        selectedSponsor = sponsor;
+                        sponsorNameTextView.setText("Pay by: " + sponsor.getUser().getName());
+                        cancelSponsorImageView.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
         mTopUpDefaultAmountLayout = (LinearLayout) view.findViewById(R.id.default_top_up_amount);
         mTakaFiftyTextView = (TextView) view.findViewById(R.id.text_view_taka_fifty);
         mTakaHundredTextView = (TextView) view.findViewById(R.id.text_view_taka_hundred);
@@ -141,6 +160,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         mTakaTwoHundredTextView.setOnClickListener(this);
         mTakaHundredTextView.setOnClickListener(this);
         mTakaFiftyTextView.setOnClickListener(this);
+
+        sponsorNameTextView = (TextView) view.findViewById(R.id.name);
+        cancelSponsorImageView = (ImageView) view.findViewById(R.id.cancel);
 
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -163,12 +185,22 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+
                 transactionDescriptionTextView.setText(R.string.paying_money_to);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
                 mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 if (sponsorList != null) {
                     if (sponsorList.size() > 0) {
                         sponsorView.setVisibility(View.VISIBLE);
+                        cancelSponsorImageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sponsorNameTextView.setText("TAP TO PAY FROM OTHER SOURCE");
+                                cancelSponsorImageView.setVisibility(GONE);
+                                selectedSponsor = null;
+                            }
+                        });
+
                     }
                 }
                 break;
@@ -300,6 +332,9 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                     bundle.putInt(Constants.OPERATOR_TYPE, operatorType);
                     bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                     bundle.putString(Constants.ADDRESS, mAddressString);
+                    if (selectedSponsor != null) {
+                        bundle.putLong(Constants.SPONSOR_ACCOUNT_ID, selectedSponsor.getUser().getAccountId());
+                    }
                     if (mOutletId != null)
                         bundle.putLong(Constants.OUTLET_ID, mOutletId);
                     final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));

@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_horizontal_margin" />
+    <RelativeLayout
+        android:id="@+id/profile_pic_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/sponsor"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignRight="@id/profile_picture"
+            android:layout_marginTop="@dimen/value35"
+            android:visibility="gone"
+            app:riv_oval="true"
+            tools:src="@drawable/user_brand_bg" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/other_image"
@@ -29,7 +47,7 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin_card"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin_card"
-        android:layout_toRightOf="@+id/profile_picture"
+        android:layout_toRightOf="@+id/profile_pic_holder"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -52,9 +70,9 @@
                 android:id="@+id/activity_description"
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:fontFamily="sans-serif-light"
+                android:textColor="@color/colorPaymentReviewPrimaryText"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPaymentReviewPrimaryText"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/status_description_icon"
@@ -63,15 +81,15 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/value5"
-                android:layout_toRightOf="@id/activity_description"/>
+                android:layout_toRightOf="@id/activity_description" />
 
             <TextView
                 android:id="@+id/net_amount"
                 style="@style/TransactionHistoryRightTextViewStyle"
                 android:fontFamily="sans-serif-light"
+                android:textColor="@color/colorAmountText"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorAmountText"/>
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -85,13 +103,13 @@
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:layout_toLeftOf="@+id/amount"
                 android:textColor="@color/colorPaymentReviewNoteText"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/amount"
                 style="@style/TransactionHistoryRightTextViewStyle"
                 android:textColor="@color/colorPaymentReviewNoteText"
-                android:textSize="11sp"/>
+                android:textSize="11sp" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -101,6 +119,6 @@
         style="@style/DividerOnly"
         android:layout_below="@id/description_layout"
         android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-        android:layout_toRightOf="@id/profile_picture" />
+        android:layout_toRightOf="@+id/profile_pic_holder" />
 
 </RelativeLayout>

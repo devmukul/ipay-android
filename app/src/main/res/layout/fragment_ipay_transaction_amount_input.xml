@@ -210,7 +210,7 @@
                         android:textColor="@color/colorWhite" />
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/source_of_fund_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -222,13 +222,23 @@
                     android:visibility="gone">
 
                     <TextView
+                        android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/cancel"
                         android:gravity="center_horizontal"
+                        android:text="TAP TO PAY FROM OTHER SOURCE"
                         android:textColor="#ffffff"
-                        android:textSize="14sp"
-                        tools:text="TAP TO PAY FROM OTHER SOURCE" />
-                </LinearLayout>
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/cancel"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_close_white_24dp" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/balance_info_layout"

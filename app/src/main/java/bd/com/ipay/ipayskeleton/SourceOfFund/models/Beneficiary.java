@@ -8,7 +8,7 @@ import java.io.Serializable;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class Beneficiary implements Notification ,Serializable {
+public class Beneficiary   implements Notification ,Serializable,CommonData {
     private long id;
     private String initiatedBy;
     private long monthlyCreditLimit;

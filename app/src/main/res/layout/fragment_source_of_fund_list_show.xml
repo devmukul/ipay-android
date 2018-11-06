@@ -65,7 +65,8 @@
         android:fontFamily="@font/open_sans_semibold"
         android:text="iPAY USER"
         android:textColor="#666666"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/source_of_fund_list_recycler_view"
@@ -73,6 +74,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_marginLeft="@dimen/value16"
-        android:layout_marginTop="@dimen/value12"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="@dimen/value12" />
+
+    <TextView
+        android:id="@+id/title_me_as_ipay_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/source_of_fund_list_recycler_view"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="@dimen/value12"
+        android:fontFamily="@font/open_sans_semibold"
+        android:text="ME AS SOURCE OF FUND"
+        android:textColor="#666666"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/beneficiary_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_me_as_ipay_source"
+        android:layout_marginLeft="@dimen/value16"
+        android:layout_marginTop="@dimen/value12" />
 
 </RelativeLayout>
