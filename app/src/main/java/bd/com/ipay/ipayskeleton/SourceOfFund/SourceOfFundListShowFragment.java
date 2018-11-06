@@ -78,7 +78,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         titleTextView = view.findViewById(R.id.title);
         noSourceOfFundTextView = (TextView) view.findViewById(R.id.no_source_of_fund);
         noSourceOfFundTextView.setVisibility(GONE);
-        attemptGetBeneficiaryList();
+        attemptGetSponsorList();
         sourceOfFundListAdapter = new SourceOfFundListAdapter();
         addNewTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +91,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         sourceOfFundListRecyclerView.setAdapter(sourceOfFundListAdapter);
     }
 
-    private void attemptGetBeneficiaryList() {
+    private void attemptGetSponsorList() {
         if (getSponsorListAsyncTask != null) {
             return;
         } else {
@@ -139,7 +139,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                             (result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
-                        attemptGetBeneficiaryList();
+                        attemptGetSponsorList();
                     } else {
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     }

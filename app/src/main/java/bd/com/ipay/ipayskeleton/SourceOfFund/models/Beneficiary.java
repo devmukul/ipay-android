@@ -3,10 +3,12 @@ package bd.com.ipay.ipayskeleton.SourceOfFund.models;
 
 import android.os.Parcel;
 
+import java.io.Serializable;
+
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class Beneficiary implements Notification {
+public class Beneficiary implements Notification ,Serializable {
     private long id;
     private String initiatedBy;
     private long monthlyCreditLimit;

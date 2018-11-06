@@ -3,25 +3,15 @@ package bd.com.ipay.ipayskeleton.CustomView;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Paint;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -31,27 +21,17 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
-import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
-import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.CustomBusinessContact;
-import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -78,7 +58,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
     private CustomBillPaymentClickListener customBillPaymentClickListener;
 
 
-    private View mPayByQCView;
+    public View mPayByQCView;
     private PinChecker pinChecker;
 
     private Context mContext;

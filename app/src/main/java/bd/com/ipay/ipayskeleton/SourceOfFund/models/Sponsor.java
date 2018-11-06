@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund.models;
 
 
-public class Sponsor {
+import java.io.Serializable;
+
+public class Sponsor implements Serializable {
     private long id;
     private String initiatedBy;
     private long monthlyCreditLimit;

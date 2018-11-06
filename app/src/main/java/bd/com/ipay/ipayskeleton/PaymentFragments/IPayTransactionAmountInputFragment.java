@@ -31,11 +31,13 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -69,8 +71,11 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
     private TextView mTakaHundredTextView;
     private TextView mTakaTwoHundredTextView;
     private TextView mTakaFiveHundredTextView;
+    private View sponsorView;
 
     private EditText mAmountDummyEditText;
+
+    private ArrayList<Sponsor> sponsorList;
 
     private String mAddressString;
     private Long mOutletId = null;
@@ -87,7 +92,8 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 operatorCode = getArguments().getString(Constants.OPERATOR_CODE);
                 operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
                 mAddressString = getArguments().getString(Constants.ADDRESS);
-                if(getArguments().containsKey(Constants.OUTLET_ID)) {
+                sponsorList = (ArrayList<Sponsor>) getArguments().getSerializable(Constants.SPONSOR_LIST);
+                if (getArguments().containsKey(Constants.OUTLET_ID)) {
                     mOutletId = getArguments().getLong(Constants.OUTLET_ID);
                 }
             }
@@ -124,6 +130,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         final TextView ipayBalanceTextView = view.findViewById(R.id.ipay_balance_text_view);
         mContinueButton = view.findViewById(R.id.continue_button);
         final View balanceInfoLayout = view.findViewById(R.id.balance_info_layout);
+        sponsorView = view.findViewById(R.id.source_of_fund_view);
         mTopUpDefaultAmountLayout = (LinearLayout) view.findViewById(R.id.default_top_up_amount);
         mTakaFiftyTextView = (TextView) view.findViewById(R.id.text_view_taka_fifty);
         mTakaHundredTextView = (TextView) view.findViewById(R.id.text_view_taka_hundred);
@@ -159,6 +166,11 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 transactionDescriptionTextView.setText(R.string.paying_money_to);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
                 mTopUpDefaultAmountLayout.setVisibility(View.GONE);
+                if (sponsorList != null) {
+                    if (sponsorList.size() > 0) {
+                        sponsorView.setVisibility(View.VISIBLE);
+                    }
+                }
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
                 transactionDescriptionTextView.setText(R.string.top_up_to);
@@ -183,7 +195,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         if (!TextUtils.isEmpty(mAddressString)) {
             addressTextView.setVisibility(View.VISIBLE);
             addressTextView.setText(mAddressString);
-        }else {
+        } else {
             addressTextView.setVisibility(GONE);
         }
 
@@ -288,7 +300,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                     bundle.putInt(Constants.OPERATOR_TYPE, operatorType);
                     bundle.putString(Constants.OPERATOR_CODE, operatorCode);
                     bundle.putString(Constants.ADDRESS, mAddressString);
-                    if(mOutletId!=null)
+                    if (mOutletId != null)
                         bundle.putLong(Constants.OUTLET_ID, mOutletId);
                     final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                     bundle.putSerializable(Constants.AMOUNT, amount);
@@ -324,7 +336,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             } else {
                 final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
                 final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-                if (((transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT) ) && amount.compareTo(balance) > 0) {
+                if (((transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT)) && amount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
                 } else {
                     final BigDecimal minimumAmount = mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
