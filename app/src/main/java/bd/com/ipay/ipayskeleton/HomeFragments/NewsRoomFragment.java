@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -45,6 +46,7 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
 
     private HttpRequestGetAsyncTask mNewsRoomTask = null;
     private RecyclerView mNewsRoomRecyclerView;
+    private NestedScrollView mNewsRoomView;
     private NewsRoomAdapter mNewsRoomAdapter;
     private List<NewsList> mNewsRoomList = new ArrayList<>();
     private TextView mEmptyListTextView;
@@ -113,12 +115,12 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
         mNewsRoomList = newsRooms;
 
         if (mNewsRoomList != null && mNewsRoomList.size() > 0) {
-            mNewsRoomRecyclerView.setVisibility(View.VISIBLE);
+            mNewsRoomView.setVisibility(View.VISIBLE);
             mEmptyListTextView.setVisibility(View.GONE);
             mNewsRoomAdapter.notifyDataSetChanged();
             setContentShown(true);
         } else {
-            mNewsRoomRecyclerView.setVisibility(View.GONE);
+            mNewsRoomView.setVisibility(View.INVISIBLE);
             mEmptyListTextView.setVisibility(View.VISIBLE);
         }
 
@@ -134,6 +136,7 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
     private void initializeViews(View v) {
         mEmptyListTextView = v.findViewById(R.id.empty_list_text);
         mNewsRoomRecyclerView = v.findViewById(R.id.list_transaction_history);
+        mNewsRoomView = v.findViewById(R.id.parent_view);
     }
 
     private void setupViewsAndActions() {
@@ -154,6 +157,8 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mNewsRoomTask = null;
             setContentShown(true);
+            mNewsRoomView.setVisibility(View.INVISIBLE);
+            mEmptyListTextView.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -165,7 +170,7 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
                     loadNewsRoomList(mTransactionHistoryResponse.getNewsList());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mNewsRoomRecyclerView.setVisibility(View.GONE);
+                    mNewsRoomView.setVisibility(View.INVISIBLE);
                     mEmptyListTextView.setVisibility(View.VISIBLE);
                     if (isLoading)
                         isLoading = false;
