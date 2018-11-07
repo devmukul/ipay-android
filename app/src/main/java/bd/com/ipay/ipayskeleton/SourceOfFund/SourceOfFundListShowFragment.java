@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetBeneficiaryListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.RemoveSponsorOrBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
+import bd.com.ipay.ipayskeleton.SourceOfFund.view.BeneficiaryUpdateDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.view.SourceOfFundTypeSelectorDialog;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -378,7 +379,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             holder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    BeneficiaryUpdateDialog beneficiaryUpdateDialog = new BeneficiaryUpdateDialog(getContext(), beneficiary.getId());
                 }
             });
 

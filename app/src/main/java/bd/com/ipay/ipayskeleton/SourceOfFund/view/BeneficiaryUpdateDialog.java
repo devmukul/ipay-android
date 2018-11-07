@@ -55,6 +55,7 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
         bodyView = (LayoutInflater.from(context).inflate(R.layout.body_beneficiar_update_dialog, null, false));
         ((TextView) headerView.findViewById(R.id.title)).setText("Edit Permission");
         cancelImageView = (ImageView) headerView.findViewById(R.id.cancel);
+        ipayProgressDialog = new IpayProgressDialog(context);
         headerTextView = (TextView) bodyView.findViewById(R.id.header);
         monthlyLimitEditText = (EditText) bodyView.findViewById(R.id.amount);
         updateButton = (Button) bodyView.findViewById(R.id.update);
@@ -69,7 +70,7 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                updateBeneficiaryPermissionDialog.dismiss();
             }
         });
         updateBeneficiaryPermissionDialog = new AlertDialog.Builder(context)
@@ -77,6 +78,7 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
                 .setView(bodyView)
                 .setCancelable(false)
                 .create();
+        updateBeneficiaryPermissionDialog.show();
     }
 
     private void attemptUpdateBeneficiaryWithPinCheck() {
@@ -134,8 +136,10 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
                     } else {
                         Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     }
+                    mUpdateBeneficiaryAsyckTask = null;
                 }
             } catch (Exception e) {
+                mUpdateBeneficiaryAsyckTask = null;
                 Toast.makeText(context, context.getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
             }
         }
