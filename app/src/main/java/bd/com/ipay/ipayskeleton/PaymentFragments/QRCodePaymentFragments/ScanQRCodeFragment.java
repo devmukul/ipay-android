@@ -20,12 +20,10 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -326,11 +324,11 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         if (outletId != null) {
             intent.putExtra(Constants.OUTLET_ID, outletId.longValue());
         }
-        if (((QRCodePaymentActivity) getActivity()).sponsorList == null ||
-                ((QRCodePaymentActivity) getActivity()).sponsorList.size() == 0) {
-
-        } else {
-            intent.putExtra(Constants.SPONSOR_LIST, (Serializable) ((QRCodePaymentActivity) getActivity()).sponsorList);
+        if (getArguments() != null) {
+            Bundle bundle = getArguments();
+            if (bundle.getSerializable(Constants.SPONSOR_LIST) != null) {
+                intent.putExtra(Constants.SPONSOR_LIST,  bundle.getSerializable(Constants.SPONSOR_LIST));
+            }
         }
         startActivity(intent);
         if (getActivity() != null)

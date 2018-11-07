@@ -21,13 +21,15 @@ public class SourceOfFundActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SourceOfFundListShowFragment()).commit();
     }
 
-    public void switchToAddSourceOfFundFragment() {
+    public void switchToAddSourceOfFundFragment(Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
         }
+        AddSourceOfFundFragment addSourceOfFundFragment = new AddSourceOfFundFragment();
+        addSourceOfFundFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
                 R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit).replace
-                (R.id.fragment_container, new AddSourceOfFundFragment()).addToBackStack(null).commit();
+                (R.id.fragment_container, addSourceOfFundFragment).addToBackStack(null).commit();
     }
 
     @Override

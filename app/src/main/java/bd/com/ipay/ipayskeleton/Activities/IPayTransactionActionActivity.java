@@ -78,6 +78,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
                 break;
             case TRANSACTION_TYPE_MAKE_PAYMENT:
                 BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+
                 if (getIntent().hasExtra(Constants.SPONSOR_LIST)) {
                     ArrayList<Sponsor> sponsorList = (ArrayList<Sponsor>) getIntent().getSerializableExtra(Constants.SPONSOR_LIST);
                     bundle.putSerializable(Constants.SPONSOR_LIST, sponsorList);

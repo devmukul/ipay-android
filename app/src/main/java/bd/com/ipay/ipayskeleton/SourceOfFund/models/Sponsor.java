@@ -1,16 +1,34 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund.models;
 
 
+import android.annotation.SuppressLint;
+import android.os.Parcel;
+
 import java.io.Serializable;
 
-public class Sponsor implements Serializable, CommonData {
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
+@SuppressLint("ParcelCreator")
+public class Sponsor implements Serializable, CommonData, Notification {
     private long id;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private String type;
     private String initiatedBy;
     private long monthlyCreditLimit;
     private String relationship;
     private String status;
-    private String updatedAt;
+    private long updatedAt;
     private User user;
+
 
     public long getId() {
         return id;
@@ -52,11 +70,11 @@ public class Sponsor implements Serializable, CommonData {
         this.status = status;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -66,5 +84,40 @@ public class Sponsor implements Serializable, CommonData {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String getNotificationTitle() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return user.getName();
+    }
+
+    @Override
+    public String getImageUrl() {
+        return user.getProfilePictureUrl();
+    }
+
+    @Override
+    public long getTime() {
+        return 0;
+    }
+
+    @Override
+    public int getNotificationType() {
+        return Constants.NOTIFICATION_TYPE_SOURCE_OF_FUND_SPONSORS;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

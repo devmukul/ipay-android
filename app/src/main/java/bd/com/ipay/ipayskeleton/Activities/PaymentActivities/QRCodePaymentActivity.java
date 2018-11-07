@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments.ScanQRCodeFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class QRCodePaymentActivity extends AppCompatActivity {
 
@@ -22,6 +23,18 @@ public class QRCodePaymentActivity extends AppCompatActivity {
     }
 
     private void switchToScanQRCodeFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ScanQRCodeFragment()).commit();
+        Bundle bundle = new Bundle();
+        if (sponsorList != null) {
+            if (sponsorList.size() > 0) {
+                bundle.putSerializable(Constants.SPONSOR_LIST, sponsorList);
+                ScanQRCodeFragment scanQRCodeFragment = new ScanQRCodeFragment();
+                scanQRCodeFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, scanQRCodeFragment).commit();
+            } else {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ScanQRCodeFragment()).commit();
+            }
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ScanQRCodeFragment()).commit();
+        }
     }
 }

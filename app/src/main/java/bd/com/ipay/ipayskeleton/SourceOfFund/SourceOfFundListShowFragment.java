@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetBeneficiaryListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.RemoveSponsorOrBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
+import bd.com.ipay.ipayskeleton.SourceOfFund.view.SourceOfFundTypeSelectorDialog;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 import static android.view.View.GONE;
@@ -71,6 +72,8 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     private boolean isSponsorApiCalled;
     private boolean isBeneficiaryApiCalled;
 
+    private SourceOfFundTypeSelectorDialog sourceOfFundTypeSelectorDialog;
+
 
     @Nullable
     @Override
@@ -103,7 +106,14 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         addNewTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SourceOfFundActivity) (getActivity())).switchToAddSourceOfFundFragment();
+                sourceOfFundTypeSelectorDialog = new SourceOfFundTypeSelectorDialog(getContext(), new SourceOfFundTypeSelectorDialog.SourceOfFundTypeSelectorListener() {
+                    @Override
+                    public void onSourceOfFundTypeSelected(String type) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.TYPE, type);
+                        ((SourceOfFundActivity) (getActivity())).switchToAddSourceOfFundFragment(bundle);
+                    }
+                });
             }
         });
         sourceOfFundListRecyclerView = view.findViewById(R.id.source_of_fund_list_recycler_view);
@@ -112,6 +122,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     }
 
     private void removeRejectedEntriesForSponsors(ArrayList<Sponsor> sponsors) {
+        sponsorArrayList.clear();
         for (int i = 0; i < sponsors.size(); i++) {
             if (!sponsors.get(i).getStatus().equals("REJECTED")) {
                 sponsorArrayList.add(sponsors.get(i));
@@ -120,6 +131,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     }
 
     private void removeRejectedEntriesForBeneficiaries(ArrayList<Beneficiary> beneficiaries) {
+        beneficiaryArrayList.clear();
         for (int i = 0; i < beneficiaries.size(); i++) {
             if (!beneficiaries.get(i).getStatus().equals("REJECTED")) {
                 beneficiaryArrayList.add(beneficiaries.get(i));
@@ -219,6 +231,8 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                         ArrayList<Beneficiary> beneficiaryList = getBeneficiaryListResponse.getBeneficiary();
                         removeRejectedEntriesForBeneficiaries(beneficiaryList);
                         if (beneficiaryArrayList.size() > 0) {
+                            noSourceOfFundTextView.setVisibility(GONE);
+                            titleBeneficiaryTextView.setVisibility(View.VISIBLE);
                             beneficiaryAdapter = new SourceOfFundListAdapter("BENEFICIARY");
                             beneficiaryRecyclerView.setAdapter(beneficiaryAdapter);
                             beneficiaryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

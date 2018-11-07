@@ -717,6 +717,12 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                                 .centerCrop()
                                 .into(sponsorImageView);
                     }
+                    else{
+                        sponsorImageView.setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    sponsorImageView.setVisibility(View.GONE);
                 }
 
                 if (balance != null) {

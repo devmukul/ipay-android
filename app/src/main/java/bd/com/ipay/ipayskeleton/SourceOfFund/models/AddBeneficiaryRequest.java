@@ -14,6 +14,12 @@ public class AddBeneficiaryRequest {
         this.relation = relation;
     }
 
+    public AddBeneficiaryRequest(String mobileNumber, String pin, String relation) {
+        this.mobileNumber = mobileNumber;
+        this.pin = pin;
+        this.relation = relation;
+    }
+
     public String getMobileNumber() {
 
         return mobileNumber;

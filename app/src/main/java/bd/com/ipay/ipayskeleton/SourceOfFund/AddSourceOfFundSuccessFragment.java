@@ -32,6 +32,7 @@ public class AddSourceOfFundSuccessFragment extends Fragment {
         Button gotoWalletButton = view.findViewById(R.id.go_to_wallet_button);
 
         Bundle bundle = getArguments();
+        String type = getArguments().getString(Constants.TYPE);
 
         String name = bundle.getString(Constants.NAME);
         String profileImageUrl = bundle.getString(Constants.PROFILE_PICTURE);
@@ -45,9 +46,15 @@ public class AddSourceOfFundSuccessFragment extends Fragment {
                 .centerCrop()
                 .error(getContext().getResources().getDrawable(R.drawable.user_brand_bg))
                 .into(profileImageView);
-        String setText = helperTextView.getText().toString();
-        setText = setText.replace( "Arifur Rahman",name);
-        helperTextView.setText(setText);
+        if(type.equals(Constants.SPONSOR)) {
+            String setText = helperTextView.getText().toString();
+            setText = setText.replace("Arifur Rahman", name);
+            helperTextView.setText(setText);
+        }
+        else if(type.equals(Constants.BENEFICIARY)){
+            helperTextView.setText("You have given access to "+ name+" to use your iPay wallet " +
+                    "as his/her source of fund. He/she can now use your iPay wallet to make payment ");
+        }
         nameTextView.setText(name);
         gotoWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override

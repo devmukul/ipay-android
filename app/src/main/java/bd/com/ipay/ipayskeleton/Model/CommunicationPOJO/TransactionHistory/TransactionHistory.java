@@ -69,6 +69,7 @@ public class TransactionHistory implements Parcelable {
         actions = in.createStringArray();
         outletName = in.readString();
         outletId = in.readLong();
+        metaData = in.readParcelable(MetaData.class.getClassLoader());
     }
 
     @Override
@@ -103,6 +104,7 @@ public class TransactionHistory implements Parcelable {
         dest.writeStringArray(actions);
         dest.writeString(outletName);
         dest.writeLong(outletId);
+        dest.writeParcelable(metaData, flags);
     }
 
     @Override

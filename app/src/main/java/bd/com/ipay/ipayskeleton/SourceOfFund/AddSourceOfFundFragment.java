@@ -69,11 +69,14 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
     private HttpRequestGetAsyncTask mGetProfileInfoTask;
     private HttpRequestPostAsyncTask mAddSponsorAsyncTask;
 
+    private String type;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         isSelectedFromContact = false;
         ipayProgressDialog = new IpayProgressDialog(getContext());
+        type = getArguments().getString(Constants.TYPE);
         return inflater.inflate(R.layout.fragment_add_source_of_fund, container, false);
     }
 
@@ -129,6 +132,7 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                             bundle.putString(Constants.NAME, mName);
                             bundle.putString(Constants.RELATION, relationShip);
                             bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
+                            bundle.putString(Constants.TYPE, type);
                             ((SourceOfFundActivity) getActivity()).switchToAddSourceOfFundConfirmFragment(bundle);
                         } else {
                             ContactEngine.ContactData contactData = searchLocalContacts(ContactEngine.formatMobileNumberBD(mMobileNumber));
@@ -142,6 +146,7 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                                 bundle.putString(Constants.NAME, mName);
                                 bundle.putString(Constants.RELATION, relationShip);
                                 bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
+                                bundle.putString(Constants.TYPE, type);
                                 ((SourceOfFundActivity) getActivity()).switchToAddSourceOfFundConfirmFragment(bundle);
                             }
 
@@ -309,6 +314,7 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
                         bundle.putString(Constants.NAME, mName);
                         bundle.putString(Constants.RELATION, relationShip);
+                        bundle.putString(Constants.TYPE, type);
                         ((SourceOfFundActivity) (getActivity())).switchToAddSourceOfFundConfirmFragment(bundle);
                     } else {
                         Toast.makeText(getContext(), getUserInfoResponse.getMessage(), Toast.LENGTH_LONG).show();

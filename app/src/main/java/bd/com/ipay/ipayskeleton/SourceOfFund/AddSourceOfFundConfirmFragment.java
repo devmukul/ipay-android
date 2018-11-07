@@ -21,9 +21,11 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddSponsorRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -31,16 +33,19 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class AddSourceOfFundConfirmFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mAddSponsorAsyncTask;
+    private HttpRequestPostAsyncTask mAddSponsorOrBeneficiaryAsyncTask;
     private String name;
     private String number;
     private String relation;
     private IpayProgressDialog ipayProgressDialog;
 
+    private String type;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ipayProgressDialog = new IpayProgressDialog(getContext());
+        type = getArguments().getString(Constants.TYPE);
         return inflater.inflate(R.layout.fragment_add_source_of_fund, container, false);
     }
 
@@ -103,31 +108,52 @@ public class AddSourceOfFundConfirmFragment extends Fragment implements HttpResp
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptAddSponsor();
+                attemptAddSponsorOrBeneficiary();
             }
         });
 
     }
 
-    public void attemptAddSponsor() {
-        if (mAddSponsorAsyncTask != null) {
+    public void attemptAddSponsorOrBeneficiary() {
+        if (mAddSponsorOrBeneficiaryAsyncTask != null) {
             return;
         } else {
-            AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(number), relation);
-            mAddSponsorAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_SPONSOR
-                    , Constants.BASE_URL_MM + Constants.URL_ADD_SPONSOR,
-                    new Gson().toJson(addSponsorRequest), getContext(), this, false);
-            ipayProgressDialog.setMessage("Please wait . . . ");
-            ipayProgressDialog.show();
-            mAddSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (type.equals(Constants.SPONSOR)) {
+                AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(number), relation);
+                mAddSponsorOrBeneficiaryAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_SPONSOR
+                        , Constants.BASE_URL_MM + Constants.URL_ADD_SPONSOR,
+                        new Gson().toJson(addSponsorRequest), getContext(), this, false);
+                ipayProgressDialog.setMessage("Please wait . . . ");
+                ipayProgressDialog.show();
+                mAddSponsorOrBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+                    @Override
+                    public void ifPinCheckedAndAdded(String pin) {
+                        attemptAddBeneficiary(pin);
+                    }
+                });
+            }
+
         }
 
+    }
+
+    private void attemptAddBeneficiary(String pin) {
+        AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(
+                ContactEngine.formatMobileNumberBD(number), pin, relation);
+        mAddSponsorOrBeneficiaryAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
+                , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
+                new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
+        ipayProgressDialog.setMessage("Please wait . . .");
+        ipayProgressDialog.show();
+        mAddSponsorOrBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
-            mAddSponsorAsyncTask = null;
+            mAddSponsorOrBeneficiaryAsyncTask = null;
             ipayProgressDialog.dismiss();
             return;
         } else {
@@ -139,6 +165,7 @@ public class AddSourceOfFundConfirmFragment extends Fragment implements HttpResp
                     Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     Bundle bundle = new Bundle();
                     bundle.putString(Constants.NAME, name);
+                    bundle.putString(Constants.TYPE, type);
                     bundle.putString(Constants.PROFILE_PICTURE, getArguments().getString(Constants.PROFILE_PICTURE));
                     ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
                 } else {
@@ -147,7 +174,7 @@ public class AddSourceOfFundConfirmFragment extends Fragment implements HttpResp
             } catch (Exception e) {
                 Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
             }
-            mAddSponsorAsyncTask = null;
+            mAddSponsorOrBeneficiaryAsyncTask = null;
         }
     }
 }

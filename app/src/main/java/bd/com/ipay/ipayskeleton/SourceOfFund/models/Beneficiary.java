@@ -10,6 +10,16 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class Beneficiary   implements Notification ,Serializable,CommonData {
     private long id;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     private String initiatedBy;
     private long monthlyCreditLimit;
     private String relationship;

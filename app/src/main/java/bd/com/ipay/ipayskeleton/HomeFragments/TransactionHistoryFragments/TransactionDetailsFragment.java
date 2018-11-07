@@ -144,14 +144,20 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 
         if (transactionHistory.getMetaData() != null) {
             MetaData metaData = transactionHistory.getMetaData();
-            sponsorNumberView.setVisibility(View.VISIBLE);
-            sponsorProfilePictureView.setVisibility(View.VISIBLE);
-            sponsorNumberView.setText("Paid By " + metaData.getSponsorName());
+            if (metaData.getSponsorName() != null) {
+                sponsorNumberView.setVisibility(View.VISIBLE);
+                if (!metaData.getSponsorName().equals("")) {
+                    sponsorNumberView.setText("Paid By " + metaData.getSponsorName());
+                }
+            }
 
             if (metaData.getSponsorProfilePictures() != null) {
+                sponsorProfilePictureView.setVisibility(View.VISIBLE);
+                String profileImageUrl = metaData.getSponsorProfilePictures().get(0).getUrl();
                 Glide.with(getContext())
-                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
+                        .load(Constants.BASE_URL_FTP_SERVER + profileImageUrl)
                         .centerCrop()
+                        .error(getResources().getDrawable(R.drawable.user_brand_bg))
                         .into(sponsorProfilePictureView);
             }
         }

@@ -246,6 +246,12 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                 if (outletId != null)
                     bundle.putLong(Constants.OUTLET_ID, outletId);
 
+                if (approvedSponsorArrayList != null) {
+                    if (approvedSponsorArrayList.size() > 0) {
+                        bundle.putSerializable(Constants.SPONSOR_LIST, approvedSponsorArrayList);
+                    }
+                }
+
                 bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                 if (getActivity() instanceof IPayTransactionActionActivity) {
                     ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
