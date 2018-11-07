@@ -310,6 +310,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         }
 
         public void bindSponsorView(SourceOfFundViewHolder holder, final Sponsor sponsor) {
+            holder.editImageView.setVisibility(GONE);
             holder.profileImageView.setProfilePicture(sponsor.getUser().getProfilePictureUrl(), false);
             holder.nameTextView.setText(sponsor.getUser().getName());
             holder.numberTextView.setText(sponsor.getUser().getMobileNumber());
@@ -341,6 +342,11 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         }
 
         public void bindBeneficiaryView(SourceOfFundViewHolder holder, final Beneficiary beneficiary) {
+            if (beneficiary.getStatus().equals("APPROVED")) {
+                holder.editImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.editImageView.setVisibility(GONE);
+            }
             holder.profileImageView.setProfilePicture(beneficiary.getUser().getProfilePictureUrl(), false);
             holder.nameTextView.setText(beneficiary.getUser().getName());
             holder.numberTextView.setText(beneficiary.getUser().getMobileNumber());
@@ -369,6 +375,13 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
 
                 }
             });
+            holder.editImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
         }
 
         @Override
@@ -387,6 +400,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             private TextView nameTextView;
             private TextView numberTextView;
             private ImageView deleteImageView;
+            private ImageView editImageView;
 
             public SourceOfFundViewHolder(View itemView) {
                 super(itemView);
@@ -394,6 +408,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                 numberTextView = (TextView) itemView.findViewById(R.id.number);
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 deleteImageView = (ImageView) itemView.findViewById(R.id.delete);
+                editImageView = (ImageView) itemView.findViewById(R.id.edit);
             }
         }
     }

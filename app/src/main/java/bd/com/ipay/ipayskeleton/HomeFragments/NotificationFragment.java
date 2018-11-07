@@ -1070,7 +1070,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 ipayProgressDialog.show();
 
             } else {
-                acceptOrRejectSponsorRequest= new AcceptOrRejectSponsorRequest
+                acceptOrRejectSponsorRequest = new AcceptOrRejectSponsorRequest
                         (pin, action);
                 acceptOrRejectBeneficiaryAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY,
                         Constants.BASE_URL_MM +
