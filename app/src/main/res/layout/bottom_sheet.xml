@@ -14,31 +14,43 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
         android:layout_marginRight="@dimen/activity_horizontal_margin_card">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/up_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:src="@drawable/swap_icon"/>
-
-            <TextView
-                android:id="@+id/up_arrow_text"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textSize="12dp"
-                android:text="SWIPE UP TO SEE MORE"/>
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/up_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/swap_icon"/>
+
+                <TextView
+                    android:id="@+id/up_arrow_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textSize="12dp"
+                    android:text="SWIPE UP TO SEE MORE"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/devider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#33acacac"
+                android:layout_marginBottom="6dp"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
-
-
 
 </LinearLayout>
