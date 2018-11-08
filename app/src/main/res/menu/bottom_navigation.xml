@@ -6,9 +6,9 @@
         android:icon="@drawable/ic_wallet"
         android:title="@string/wallet" />
     <item
-        android:id="@+id/navigation_pay"
-        android:icon="@drawable/ic_pay"
-        android:title="@string/pay" />
+        android:id="@+id/navigation_ipay_here"
+        android:icon="@drawable/ipay_here_icon"
+        android:title="@string/ipay_here" />
     <item
         android:id="@+id/navigation_transaction"
         android:icon="@drawable/ic_transaction"

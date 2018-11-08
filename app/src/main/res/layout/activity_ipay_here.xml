@@ -18,9 +18,8 @@
             android:layout_height="wrap_content"
             android:minHeight="45dp">
 
-            <fragment
-                android:id="@+id/autocomplete_fragment"
-                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            <FrameLayout
+                android:id="@+id/fragment_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="45dp"
@@ -77,6 +76,8 @@
                 android:layout_gravity="center"/>
 
         </android.support.v7.widget.CardView>
+
+
 
     </FrameLayout>
 

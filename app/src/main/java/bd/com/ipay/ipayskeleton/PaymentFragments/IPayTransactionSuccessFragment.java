@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -27,6 +28,8 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+import static android.view.View.GONE;
+
 public class IPayTransactionSuccessFragment extends Fragment {
     private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
     private int transactionType;
@@ -34,6 +37,7 @@ public class IPayTransactionSuccessFragment extends Fragment {
     private BigDecimal amount;
     private String senderProfilePicture;
     private String receiverProfilePicture;
+    private String mAddressString;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class IPayTransactionSuccessFragment extends Fragment {
             senderProfilePicture = getArguments().getString(Constants.SENDER_IMAGE_URL);
             receiverProfilePicture = getArguments().getString(Constants.RECEIVER_IMAGE_URL);
             amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
+            mAddressString = getArguments().getString(Constants.ADDRESS);
         }
         numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
@@ -62,6 +67,7 @@ public class IPayTransactionSuccessFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final TextView transactionSuccessMessageTextView = view.findViewById(R.id.transaction_success_message_text_view);
         final TextView nameTextView = view.findViewById(R.id.name_text_view);
+        final TextView addressTextView = view.findViewById(R.id.address_text_view);
         final RoundedImageView receiverProfilePictureImageView = view.findViewById(R.id.receiver_profile_picture_image_view);
         final RoundedImageView senderProfilePictureImageView = view.findViewById(R.id.sender_profile_picture_image_view);
         final TextView successDescriptionTextView = view.findViewById(R.id.success_description_text_view);
@@ -71,6 +77,10 @@ public class IPayTransactionSuccessFragment extends Fragment {
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.send_money_success_message, amountValue), 18, 18 + amountValue.length());
                 successDescriptionTextView.setText(R.string.send_money_success_description);
+                break;
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+                updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.make_payment_success_message, amountValue), 18, 18 + amountValue.length());
+                successDescriptionTextView.setText(getString(R.string.make_payment_success_description, name));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.request_money_success_message, amountValue), 23, 23 + amountValue.length());
@@ -85,6 +95,14 @@ public class IPayTransactionSuccessFragment extends Fragment {
         if (name != null) {
             nameTextView.setText(name);
         }
+
+        if (!TextUtils.isEmpty(mAddressString)) {
+            addressTextView.setVisibility(View.VISIBLE);
+            addressTextView.setText(mAddressString);
+        }else {
+            addressTextView.setVisibility(GONE);
+        }
+
         if (senderProfilePicture != null) {
             Glide.with(this)
                     .load(senderProfilePicture)

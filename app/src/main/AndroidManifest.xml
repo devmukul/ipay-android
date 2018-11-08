@@ -345,13 +345,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Activities.IPayHereActivity"
-            android:label="@string/ipay_here"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-
-        <activity
             android:name=".Activities.PaymentActivities.UtilityBillPaymentActivity"
             android:label="@string/bill_pay"
             android:screenOrientation="portrait"

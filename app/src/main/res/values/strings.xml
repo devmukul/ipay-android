@@ -1246,11 +1246,13 @@
     <string name="send_money_step_two">Insert <b>amount</b> you want to send</string>
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
+    <string name="paying_money_to">YOU ARE PAYING MONEY TO</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
     <string name="add_money_bank_success_description">You have successfully requested add money from bank to your iPay wallet. It may take 3&#8211;5 business day to complete.\n See further details under \'transaction\'.</string>
     <string name="withdraw_money_success_description">You have successfully requested to withdraw money from your iPay wallet to your bank account. It will take 3&#8211;5 business days to complete the transaction/process.\n See further details under \'transaction\'.</string>
     <string name="add_money_card_success_description">You have successfully added balance to your iPay wallet.\n See further details under \'transaction\'.</string>
     <string name="send_money_success_description">We will notify receiver that you have sent money.\n See further details under \'transaction\'.</string>
+    <string name="make_payment_success_description">Successfully paid to %1$s which we will notify them. You can see the details in your Transaction in case  you need then furthure.</string>
     <string name="pay_bill_success_description">You have successfully paid your bill from you iPay wallet.\n See further details under \'transaction\'.</string>
     <string name="request_money_success_description">We will notify receiver that you requested money. We will notify you when he accepts or rejects your request.</string>
     <string name="fetching_user_info">Fetching user info…</string>
@@ -1272,11 +1274,13 @@
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">00</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
+    <string name="make_payment_confirmation_message">YOU ARE PAYING %1$s TO</string>
     <string name="add_money_confirmation_message">YOU ARE ADDING Tk. %1$s FROM</string>
     <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk. %1$s TO</string>
     <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk. %1$s FOR</string>
     <string name="top_up_confirmation_message">MOBILE TOP-UP %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
+    <string name="make_payment_success_message">SUCCESSFULLY PAID %1$s TO</string>
     <string name="add_money_card_success_message">SUCCESSFULLY ADDED Tk. %1$s FROM</string>
     <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk. %1$s FROM</string>
     <string name="withdraw_money_bank_success_message">SUCCESSFULLY REQUESTED TO WITHDRAW\n Tk. %1$s \nTO</string>
@@ -1333,6 +1337,10 @@
     <string name="top_up_step_two">Insert <b>Amount</b> you want to recharge</string>
     <string name="top_up_helper">To topup you or your beloved one\'s mobile,insert number or search from contact</string>
     <string name="top_up_helper_text">Top-Up any mobile phone from your iPay wallet. We support Top-Up to all operators </string>
+    <string name="make_payment_helper_text">Pay for your purchases and payment made easier anytime, anywhere.\nHappy Shopping! </string>
+    <string name="make_payment_step_one">Insert <b>mobile number</b> to make payment for Outlet or Service Provider.</string>
+    <string name="make_payment_step_two">Insert <b>Amount</b> you want to send.</string>
+    <string name="make_payment_step_three">Write some <b>Note</b>, Done!</string>
     <string name="top_up_to">MOBILE TOP-UP TO</string>
     <string name="total_outstanding">Total outstanding</string>
     <string name="take_photo">Take Photo</string>

@@ -40,4 +40,7 @@ public class SharedPrefConstants {
     public static String Id = "Id";
     public static String SOURCE_OF_FUND_ADDED = "SOURCE_OF_FUND_ADDED";
     public static final String INVITATION_CODE = "INVITATION_CODE";
+
+
+    public static final String KEY_TRENDING_JSON = "trending_json";
 }
