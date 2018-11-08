@@ -304,6 +304,7 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         } else {
             ipayProgressDialog.dismiss();
             try {
+                mGetProfileInfoTask = null;
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
                     GetUserInfoResponse getUserInfoResponse = new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
