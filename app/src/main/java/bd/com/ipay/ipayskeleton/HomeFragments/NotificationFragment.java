@@ -669,9 +669,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         GenericResponseWithMessageOnly responseWithMessageOnly = gson.fromJson(result.getJsonString(),
                                 GenericResponseWithMessageOnly.class);
                         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                            Intent intent = new Intent(getContext(), NotificationActivity.class);
-                            startActivity(intent);
-                            getActivity().finish();
+                            refreshNotificationLists(getContext());
                             Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
