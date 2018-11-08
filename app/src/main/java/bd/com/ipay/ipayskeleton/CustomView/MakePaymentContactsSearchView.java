@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -147,6 +148,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                         Intent intent;
                         intent = new Intent(mContext, QRCodePaymentActivity.class);
                         mContext.startActivity(intent);
+                        ((Activity)mContext).finish();
                     }
                 });
                 pinChecker.execute();
@@ -390,13 +392,8 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 final String businessOutlet = businessContact.getOutletName();
                 final Long businessOutletId = businessContact.getOutletId();
 
-                if(typeInList.equals("Outlet")){
-                    if (businessOutlet != null && !businessOutlet.isEmpty())
-                        businessNameView.setText(businessOutlet);
-                }else{
-                    if (businessName != null && !businessName.isEmpty())
+                if (businessName != null && !businessName.isEmpty())
                         businessNameView.setText(businessName);
-                }
 
                 if (businessType != null) {
                     businessTypeView.setText(businessType);
@@ -441,11 +438,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                             mAddress = businessAddress;
                             mOutlet = businessOutlet;
                             mMobileNumber = mobileNumber;
-                            if (businessContact.getTypeInList().equals("Outlet")) {
-                                mName = businessOutlet;
-                            } else {
-                                mName = businessName;
-                            }
                             customItemClickListener.onItemClick(mName, mobileNumber, mImageURL, mAddress, businessOutletId);
                         }
                         resetSearchKeyword();
