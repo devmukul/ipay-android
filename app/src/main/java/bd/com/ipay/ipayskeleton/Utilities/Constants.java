@@ -209,11 +209,11 @@ public class Constants {
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
     public static final String URL_GET_BANK_LIST = "credit-card/banks";
-    public static final Object CREDIT_CARD = "CREDIT_CARD";
+    public static final String CREDIT_CARD = "CREDIT_CARD";
     public static final String CREDIT_CARD_WITH_SPACE = "Credit Card";
     public static final String URL_GET_SAVED_CARDS = "credit-card/my-list";
     public static final String COMMAND_GET_SAVED_CARDS = "COMMAND_GET_SAVED_CARDS";
-    public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
+    public static final String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
     public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
     public static final String URL_LANKABANGLA_DPS_BILL_PAY = "lankabangla/dps/billpay";
@@ -224,7 +224,7 @@ public class Constants {
     public static final String URL_LANKABANGLA_MASTERCARD_BILL_PAY = "lankabangla/mastercard/billpay";
     public static final String URL_CREDIT_CARD_BILL_PAY = "credit-card/billpay";
 
-    public static String ROLEID = "ROLEID";
+    public static final String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
 
@@ -319,9 +319,9 @@ public class Constants {
     public static final String ADD_MONEY_BY_BANK_TITLE = "Bank";
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
-    public static String INVALID_CREDENTIAL = "invalid credential";
-    public static String URL_DESCO_BILL_PAY = "/desco/billpay";
-    public static String URL_CARNIVAL = "/carnival/bill-info/";
+    public static final String INVALID_CREDENTIAL = "invalid credential";
+    public static final String URL_DESCO_BILL_PAY = "/desco/billpay";
+    public static final String URL_CARNIVAL = "/carnival/bill-info/";
 
     // Activity REST
     public static final String URL_USER_ACTIVITY = "/activity";
@@ -941,7 +941,7 @@ public class Constants {
     public static final String ORDER_CHECKOUT_FAILED = "failed";
     public static final String ORDER_CHECKOUT_CANCELLED = "cancelled";
 
-    public static String CREDIT_BALANCE = "Credit balance";
-    public static String MINIMUM_PAY = "Minimum pay";
-    public static String OTHER = "Other";
+    public static final String CREDIT_BALANCE = "Credit balance";
+    public static final String MINIMUM_PAY = "Minimum pay";
+    public static final String OTHER = "Other";
 }
