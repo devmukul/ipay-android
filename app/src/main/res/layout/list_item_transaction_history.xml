@@ -57,6 +57,7 @@
             <TextView
                 android:id="@+id/time"
                 style="@style/TransactionHistoryLeftTextViewStyle"
+                android:fontFamily="@font/open_sans_light"
                 android:textColor="@color/colorPaymentReviewNoteText"
                 android:textSize="10sp" />
 
@@ -102,12 +103,14 @@
                 android:id="@+id/receiver"
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:layout_toLeftOf="@+id/amount"
+                android:fontFamily="@font/open_sans_light"
                 android:textColor="@color/colorPaymentReviewNoteText"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/amount"
                 style="@style/TransactionHistoryRightTextViewStyle"
+                android:fontFamily="@font/open_sans"
                 android:textColor="@color/colorPaymentReviewNoteText"
                 android:textSize="11sp" />
         </RelativeLayout>
