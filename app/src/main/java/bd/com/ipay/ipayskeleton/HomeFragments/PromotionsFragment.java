@@ -56,20 +56,7 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 		progressDialog = new CustomProgressDialog(getActivity());
 		mPromotionsViewModel = ViewModelProviders.of(this).get(PromotionsViewModel.class);
 		mPromotionsViewModel.progressDialogListener = this;
-		mPromotionsViewModel.mPromotionListMutableLiveData.observe(this, new Observer<List<Promotion>>() {
-			@Override
-			public void onChanged(@Nullable List<Promotion> promotions) {
-				promotionAdapter.setItem(promotions);
-				promotionAdapter.notifyDataSetChanged();
-				setContentShown(true);
-				promotionsRefreshLayout.setRefreshing(false);
-				if (promotions == null || promotions.size() == 0) {
-					mNoPromotionAvailableMessageTextView.setVisibility(View.VISIBLE);
-				} else {
-					mNoPromotionAvailableMessageTextView.setVisibility(View.GONE);
-				}
-			}
-		});
+		mPromotionsViewModel.mPromotionListMutableLiveData.observe(this, promotionListObserver);
 
 		mPromotionsViewModel.offerClaimLiveData.observe(this, new Observer<Boolean>() {
 			@Override
@@ -96,6 +83,21 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 		});
 	}
 
+	private Observer<List<Promotion>> promotionListObserver = new Observer<List<Promotion>>() {
+		@Override
+		public void onChanged(@Nullable List<Promotion> promotions) {
+			promotionAdapter.setItem(promotions);
+			promotionAdapter.notifyDataSetChanged();
+			setContentShown(true);
+			promotionsRefreshLayout.setRefreshing(false);
+			if (promotions == null || promotions.size() == 0) {
+				mNoPromotionAvailableMessageTextView.setVisibility(View.VISIBLE);
+			} else {
+				mNoPromotionAvailableMessageTextView.setVisibility(View.GONE);
+			}
+		}
+	};
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -106,6 +108,10 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 	public void onResume() {
 		super.onResume();
 		mPromotionsViewModel.fetchPromotionsData();
+		if (!mPromotionsViewModel.mPromotionListMutableLiveData.hasObservers()) {
+			mPromotionsViewModel.mPromotionListMutableLiveData.observe(this,
+					promotionListObserver);
+		}
 	}
 
 	@Override
@@ -181,7 +187,21 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 		});
 		recyclerView.setAdapter(promotionAdapter);
 
-		setContentShown(false);
+
+		if (mPromotionsViewModel.mPromotionListMutableLiveData.getValue() != null) {
+			List<Promotion> promotions = mPromotionsViewModel.mPromotionListMutableLiveData.getValue();
+			promotionAdapter.setItem(promotions);
+			promotionAdapter.notifyDataSetChanged();
+			setContentShown(true);
+			promotionsRefreshLayout.setRefreshing(false);
+			if (promotions == null || promotions.size() == 0) {
+				mNoPromotionAvailableMessageTextView.setVisibility(View.VISIBLE);
+			} else {
+				mNoPromotionAvailableMessageTextView.setVisibility(View.GONE);
+			}
+		} else {
+			setContentShown(false);
+		}
 		promotionsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {

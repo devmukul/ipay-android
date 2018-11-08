@@ -1342,4 +1342,6 @@
     <string name="top_up_to">MOBILE TOP-UP TO</string>
     <string name="total_outstanding">Total outstanding</string>
     <string name="take_photo">Take Photo</string>
+    <string name="last_transaction">LAST TRANSACTION</string>
+    <string name="dummy_mobile_number">+8801234567890</string>
 </resources>
