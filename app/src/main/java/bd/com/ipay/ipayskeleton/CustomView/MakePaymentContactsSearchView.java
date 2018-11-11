@@ -169,8 +169,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
         int businessThanaIndex;
         int businessDistrictIndex;
         int businessOutletIndex;
-
-
+        
         mBusinessContacts = new ArrayList<>();
 
         mBusinessContacts.clear();
@@ -204,6 +203,8 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                     String businessThana = cursor.getString(businessThanaIndex);
                     String businessDistrict = cursor.getString(businessDistrictIndex);
                     String businessOutlet = cursor.getString(businessOutletIndex);
+
+
 
                     if(!TextUtils.isEmpty(businessOutlet)) {
                         Outlets[] outlets = new Gson().fromJson(businessOutlet, Outlets[].class);
@@ -365,6 +366,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
         public class ViewHolder extends RecyclerView.ViewHolder {
 
             private TextView businessNameView;
+            private TextView outletNameView;
             private TextView businessTypeView;
             private ProfileImageView profilePictureView;
             private TextView businessAddressView;
@@ -374,6 +376,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
             public ViewHolder(final View itemView) {
                 super(itemView);
                 businessNameView = (TextView) itemView.findViewById(R.id.business_name);
+                outletNameView = (TextView) itemView.findViewById(R.id.outlet_name);
                 businessTypeView = (TextView) itemView.findViewById(R.id.business_type);
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 businessAddressView = (TextView) itemView.findViewById(R.id.business_address);
@@ -393,11 +396,20 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 final Long businessOutletId = businessContact.getOutletId();
 
                 if (businessName != null && !businessName.isEmpty())
-                        businessNameView.setText(businessName);
+                    businessNameView.setText(businessName);
+
+                if (typeInList.equals("Outlet") && businessOutlet != null && !businessOutlet.isEmpty()) {
+                    outletNameView.setText(businessOutlet);
+                    outletNameView.setVisibility(VISIBLE);
+                }else {
+                    outletNameView.setVisibility(GONE);
+                }
 
                 if (businessType != null) {
                     businessTypeView.setText(businessType);
                     businessTypeView.setVisibility(VISIBLE);
+                }else {
+                    businessTypeView.setVisibility(GONE);
                 }
 
                 if(typeInList.equals("Bill_Pay")){
@@ -448,7 +460,6 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                 });
             }
         }
-
 
 
         // Now define the view holder for Normal list item
