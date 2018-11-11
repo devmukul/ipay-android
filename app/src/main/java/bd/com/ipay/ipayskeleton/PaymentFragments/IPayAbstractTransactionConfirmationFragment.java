@@ -185,6 +185,8 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		Glide.with(getContext()).load(imageUrl)
 				.transform(new CircleTransform(getContext()))
 				.crossFade()
+				.placeholder(R.drawable.ic_profile)
+				.error(R.drawable.ic_profile)
 				.into(transactionImageView);
 	}
 

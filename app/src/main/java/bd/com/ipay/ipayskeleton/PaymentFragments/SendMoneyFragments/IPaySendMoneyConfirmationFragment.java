@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -138,7 +137,7 @@ public class IPaySendMoneyConfirmationFragment extends IPayAbstractTransactionCo
 										bundle.putString(Constants.PHOTO_URI, profilePicture);
 										bundle.putSerializable(IPaySendMoneyAmountInputFragment.TRANSACTION_AMOUNT_KEY, transactionAmount);
 										if (getActivity() instanceof IPayTransactionActionActivity) {
-											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new IPaySendMoneySuccessFragment(), bundle, 3, true);
+											((IPayTransactionActionActivity) getActivity()).switchFragment(new IPaySendMoneySuccessFragment(), bundle, 3, true);
 										}
 
 									}
