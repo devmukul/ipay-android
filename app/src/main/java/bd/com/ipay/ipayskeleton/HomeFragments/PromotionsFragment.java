@@ -54,36 +54,15 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		progressDialog = new CustomProgressDialog(getActivity());
-		mPromotionsViewModel = ViewModelProviders.of(this).get(PromotionsViewModel.class);
+		if (getActivity() != null) {
+			mPromotionsViewModel = ViewModelProviders.of(getActivity()).get(PromotionsViewModel.class);
+		} else {
+			mPromotionsViewModel = ViewModelProviders.of(this).get(PromotionsViewModel.class);
+		}
 		mPromotionsViewModel.progressDialogListener = this;
-		mPromotionsViewModel.mPromotionListMutableLiveData.observe(this, promotionListObserver);
-
-		mPromotionsViewModel.offerClaimLiveData.observe(this, new Observer<Boolean>() {
-			@Override
-			public void onChanged(@Nullable Boolean isOfferClaimed) {
-				if (isOfferClaimed != null && getActivity() != null) {
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity()).setCancelable(false);
-					alertDialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							promotionsRefreshLayout.setRefreshing(true);
-							mPromotionsViewModel.fetchPromotionsData();
-						}
-					});
-					if (isOfferClaimed) {
-						alertDialogBuilder.setTitle(R.string.intercom_congratulations);
-						alertDialogBuilder.setMessage(R.string.receive_offer_from_merchant_message);
-					} else {
-						alertDialogBuilder.setTitle(R.string.sorry);
-						alertDialogBuilder.setMessage(R.string.offer_redemption_failed);
-					}
-					alertDialogBuilder.show();
-				}
-			}
-		});
 	}
 
-	private Observer<List<Promotion>> promotionListObserver = new Observer<List<Promotion>>() {
+	private final Observer<List<Promotion>> promotionListObserver = new Observer<List<Promotion>>() {
 		@Override
 		public void onChanged(@Nullable List<Promotion> promotions) {
 			promotionAdapter.setItem(promotions);
@@ -98,6 +77,30 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 		}
 	};
 
+	private final Observer<Boolean> claimOfferObserver = new Observer<Boolean>() {
+		@Override
+		public void onChanged(@Nullable Boolean isOfferClaimed) {
+			if (isOfferClaimed != null && getActivity() != null) {
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity()).setCancelable(false);
+				alertDialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						promotionsRefreshLayout.setRefreshing(true);
+						mPromotionsViewModel.fetchPromotionsData();
+					}
+				});
+				if (isOfferClaimed) {
+					alertDialogBuilder.setTitle(R.string.intercom_congratulations);
+					alertDialogBuilder.setMessage(R.string.receive_offer_from_merchant_message);
+				} else {
+					alertDialogBuilder.setTitle(R.string.sorry);
+					alertDialogBuilder.setMessage(R.string.offer_redemption_failed);
+				}
+				alertDialogBuilder.show();
+			}
+		}
+	};
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -107,11 +110,30 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 	@Override
 	public void onResume() {
 		super.onResume();
-		mPromotionsViewModel.fetchPromotionsData();
-		if (!mPromotionsViewModel.mPromotionListMutableLiveData.hasObservers()) {
-			mPromotionsViewModel.mPromotionListMutableLiveData.observe(this,
-					promotionListObserver);
+		if (getActivity() != null) {
+			if (!mPromotionsViewModel.mPromotionListMutableLiveData.hasActiveObservers()) {
+				mPromotionsViewModel.mPromotionListMutableLiveData.removeObservers(getActivity());
+				mPromotionsViewModel.mPromotionListMutableLiveData
+						.observe(getActivity(), promotionListObserver);
+			}
+			if (!mPromotionsViewModel.offerClaimLiveData.hasActiveObservers()) {
+				mPromotionsViewModel.offerClaimLiveData.removeObservers(getActivity());
+				mPromotionsViewModel.offerClaimLiveData
+						.observe(getActivity(), claimOfferObserver);
+			}
+		} else {
+			if (!mPromotionsViewModel.mPromotionListMutableLiveData.hasActiveObservers()) {
+				mPromotionsViewModel.mPromotionListMutableLiveData.removeObservers(getActivity());
+				mPromotionsViewModel.mPromotionListMutableLiveData
+						.observe(this, promotionListObserver);
+			}
+			if (!mPromotionsViewModel.offerClaimLiveData.hasActiveObservers()) {
+				mPromotionsViewModel.offerClaimLiveData.removeObservers(getActivity());
+				mPromotionsViewModel.offerClaimLiveData
+						.observe(this, claimOfferObserver);
+			}
 		}
+		mPromotionsViewModel.fetchPromotionsData();
 	}
 
 	@Override
