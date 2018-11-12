@@ -110,28 +110,15 @@ public class PromotionsFragment extends ProgressFragment implements ProgressDial
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (getActivity() != null) {
-			if (!mPromotionsViewModel.mPromotionListMutableLiveData.hasActiveObservers()) {
-				mPromotionsViewModel.mPromotionListMutableLiveData.removeObservers(getActivity());
-				mPromotionsViewModel.mPromotionListMutableLiveData
-						.observe(getActivity(), promotionListObserver);
-			}
-			if (!mPromotionsViewModel.offerClaimLiveData.hasActiveObservers()) {
-				mPromotionsViewModel.offerClaimLiveData.removeObservers(getActivity());
-				mPromotionsViewModel.offerClaimLiveData
-						.observe(getActivity(), claimOfferObserver);
-			}
-		} else {
-			if (!mPromotionsViewModel.mPromotionListMutableLiveData.hasActiveObservers()) {
-				mPromotionsViewModel.mPromotionListMutableLiveData.removeObservers(getActivity());
-				mPromotionsViewModel.mPromotionListMutableLiveData
-						.observe(this, promotionListObserver);
-			}
-			if (!mPromotionsViewModel.offerClaimLiveData.hasActiveObservers()) {
-				mPromotionsViewModel.offerClaimLiveData.removeObservers(getActivity());
-				mPromotionsViewModel.offerClaimLiveData
-						.observe(this, claimOfferObserver);
-			}
+		if (!mPromotionsViewModel.mPromotionListMutableLiveData.hasActiveObservers()) {
+			mPromotionsViewModel.mPromotionListMutableLiveData.removeObservers(this);
+			mPromotionsViewModel.mPromotionListMutableLiveData
+					.observe(this, promotionListObserver);
+		}
+		if (!mPromotionsViewModel.offerClaimLiveData.hasActiveObservers()) {
+			mPromotionsViewModel.offerClaimLiveData.removeObservers(this);
+			mPromotionsViewModel.offerClaimLiveData
+					.observe(this, claimOfferObserver);
 		}
 		mPromotionsViewModel.fetchPromotionsData();
 	}
