@@ -8,6 +8,7 @@
     <RelativeLayout
         android:id="@+id/profile_pic_holder"
         android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_height="wrap_content">
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
@@ -105,14 +106,26 @@
                 android:layout_toLeftOf="@+id/amount"
                 android:fontFamily="@font/open_sans_light"
                 android:textColor="@color/colorPaymentReviewNoteText"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/amount"
                 style="@style/TransactionHistoryRightTextViewStyle"
                 android:fontFamily="@font/open_sans"
+                android:layout_marginLeft="8dp"
                 android:textColor="@color/colorPaymentReviewNoteText"
                 android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/sponsor_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#333333"
+                tools:text="Paid by: Arifur Rahman"
+                android:layout_below="@+id/receiver" />
         </RelativeLayout>
 
     </LinearLayout>

@@ -21,12 +21,12 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddSponsorRequest;
+import bd.com.ipay.ipayskeleton.SourceOfFund.view.BeneficiaryUpdateDialog;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
@@ -38,6 +38,9 @@ public class AddSourceOfFundConfirmFragment extends Fragment implements HttpResp
     private String number;
     private String relation;
     private IpayProgressDialog ipayProgressDialog;
+
+    private EditText numberEditText;
+    private EditText relationEditEext;
 
     private String type;
 
@@ -53,6 +56,16 @@ public class AddSourceOfFundConfirmFragment extends Fragment implements HttpResp
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         TextView nameTextView = view.findViewById(R.id.name);
         nameTextView.setVisibility(View.VISIBLE);
+
+        numberEditText = (EditText) view.findViewById(R.id.number_edit_text);
+        relationEditEext = (EditText) view.findViewById(R.id.relationship_edit_text);
+
+        relationEditEext.setFocusable(false);
+        relationEditEext.setClickable(true);
+
+        numberEditText.setFocusable(false);
+        numberEditText.setClickable(true);
+
         ImageView backButton = view.findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,12 +140,17 @@ public class AddSourceOfFundConfirmFragment extends Fragment implements HttpResp
                 ipayProgressDialog.show();
                 mAddSponsorOrBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
-                new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
-                    @Override
-                    public void ifPinCheckedAndAdded(String pin) {
-                        attemptAddBeneficiary(pin);
-                    }
-                });
+                BeneficiaryUpdateDialog beneficiaryUpdateDialog =
+                        new BeneficiaryUpdateDialog(getContext(), name, relation, ContactEngine.formatMobileNumberBD(number), new BeneficiaryUpdateDialog.BeneficiaryAddSuccessListener() {
+                            @Override
+                            public void onBeneficiaryAdded() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString(Constants.NAME, name);
+                                bundle.putString(Constants.TYPE, type);
+                                bundle.putString(Constants.PROFILE_PICTURE, getArguments().getString(Constants.PROFILE_PICTURE));
+                                ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
+                            }
+                        });
             }
 
         }

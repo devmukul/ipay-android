@@ -16,7 +16,16 @@ public class MetaData implements Parcelable {
     private String sponsorMobileNumber;
 
     @SerializedName("Sponsor profile pictures")
-    private ArrayList<ProfilePicture>sponsorProfilePictures;
+    private ArrayList<ProfilePicture> sponsorProfilePictures;
+
+    @SerializedName("Beneficiary profile pictures")
+    private ArrayList<ProfilePicture> beneficiaryProfilePictures;
+
+    @SerializedName("Beneficiary name")
+    private String beneficiaryName;
+
+    @SerializedName("Beneficiary mobile number")
+    private String beneficiaryMobileNumber;
 
     private boolean isSponsoredByOther;
 
@@ -24,20 +33,10 @@ public class MetaData implements Parcelable {
         sponsorName = in.readString();
         sponsorMobileNumber = in.readString();
         sponsorProfilePictures = in.createTypedArrayList(ProfilePicture.CREATOR);
+        beneficiaryProfilePictures = in.createTypedArrayList(ProfilePicture.CREATOR);
+        beneficiaryName = in.readString();
+        beneficiaryMobileNumber = in.readString();
         isSponsoredByOther = in.readByte() != 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(sponsorName);
-        dest.writeString(sponsorMobileNumber);
-        dest.writeTypedList(sponsorProfilePictures);
-        dest.writeByte((byte) (isSponsoredByOther ? 1 : 0));
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<MetaData> CREATOR = new Creator<MetaData>() {
@@ -51,6 +50,22 @@ public class MetaData implements Parcelable {
             return new MetaData[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(sponsorName);
+        dest.writeString(sponsorMobileNumber);
+        dest.writeTypedList(sponsorProfilePictures);
+        dest.writeTypedList(beneficiaryProfilePictures);
+        dest.writeString(beneficiaryName);
+        dest.writeString(beneficiaryMobileNumber);
+        dest.writeByte((byte) (isSponsoredByOther ? 1 : 0));
+    }
 
     public String getSponsorName() {
         return sponsorName;
@@ -76,6 +91,30 @@ public class MetaData implements Parcelable {
         this.sponsorProfilePictures = sponsorProfilePictures;
     }
 
+    public ArrayList<ProfilePicture> getBeneficiaryProfilePictures() {
+        return beneficiaryProfilePictures;
+    }
+
+    public void setBeneficiaryProfilePictures(ArrayList<ProfilePicture> beneficiaryProfilePictures) {
+        this.beneficiaryProfilePictures = beneficiaryProfilePictures;
+    }
+
+    public String getBeneficiaryName() {
+        return beneficiaryName;
+    }
+
+    public void setBeneficiaryName(String beneficiaryName) {
+        this.beneficiaryName = beneficiaryName;
+    }
+
+    public String getBeneficiaryMobileNumber() {
+        return beneficiaryMobileNumber;
+    }
+
+    public void setBeneficiaryMobileNumber(String beneficiaryMobileNumber) {
+        this.beneficiaryMobileNumber = beneficiaryMobileNumber;
+    }
+
     public boolean isSponsoredByOther() {
         return isSponsoredByOther;
     }
@@ -83,39 +122,6 @@ public class MetaData implements Parcelable {
     public void setSponsoredByOther(boolean sponsoredByOther) {
         isSponsoredByOther = sponsoredByOther;
     }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MetaData metaData = (MetaData) o;
-
-        if (isSponsoredByOther != metaData.isSponsoredByOther) return false;
-        if (sponsorName != null ? !sponsorName.equals(metaData.sponsorName) : metaData.sponsorName != null)
-            return false;
-        if (sponsorMobileNumber != null ? !sponsorMobileNumber.equals(metaData.sponsorMobileNumber) : metaData.sponsorMobileNumber != null)
-            return false;
-        return sponsorProfilePictures != null ? sponsorProfilePictures.equals(metaData.sponsorProfilePictures) : metaData.sponsorProfilePictures == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = sponsorName != null ? sponsorName.hashCode() : 0;
-        result = 31 * result + (sponsorMobileNumber != null ? sponsorMobileNumber.hashCode() : 0);
-        result = 31 * result + (sponsorProfilePictures != null ? sponsorProfilePictures.hashCode() : 0);
-        result = 31 * result + (isSponsoredByOther ? 1 : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "MetaData{" +
-                "sponsorName='" + sponsorName + '\'' +
-                ", sponsorMobileNumber='" + sponsorMobileNumber + '\'' +
-                ", sponsorProfilePictures=" + sponsorProfilePictures +
-                ", isSponsoredByOther=" + isSponsoredByOther +
-                '}';
-    }
 }
+
+

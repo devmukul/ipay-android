@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/heading"
+        android:id="@+id/instruction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/value24"
@@ -13,7 +13,7 @@
         android:layout_marginTop="@dimen/value24"
         android:fontFamily="sans-serif"
         android:lineSpacingExtra="5sp"
-        android:text="Set per transaction and monthly transaction limit for Hasan Masud."
+        android:text="Set monthly transaction limit for Hasan Masud."
         android:textColor="#666666"
         android:textSize="13sp"
         android:textStyle="normal" />
@@ -26,6 +26,7 @@
         android:layout_marginTop="@dimen/value24"
         android:background="@drawable/transparent_background"
         android:hint="Monthly amount per month  "
+        android:inputType="number"
         android:lineSpacingExtra="12sp"
         android:textColor="#212121"
         android:textSize="18sp" />

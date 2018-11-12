@@ -3,12 +3,14 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -66,6 +68,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetBeneficiaryListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
+import bd.com.ipay.ipayskeleton.SourceOfFund.view.BeneficiaryUpdateDialog;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -75,7 +78,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
+public class NotificationFragment extends ProgressFragment implements HttpResponseListener, BeneficiaryUpdateDialog.BeneficiaryAddSuccessListener {
 
     private HttpRequestPostAsyncTask mGetMoneyAndPaymentRequestTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
@@ -536,6 +539,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         ((NotificationActivity) getActivity()).switchToBusinessRoleReviewFragment(bundle);
     }
 
+    @Override
+    public void onBeneficiaryAdded() {
+        NotificationFragment.this.refreshNotificationLists(getContext());
+    }
+
     public interface OnNotificationUpdateListener {
         void onNotificationUpdate(List<Notification> notifications);
     }
@@ -924,11 +932,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         public void onClick(View v) {
                             attemptAcceptOrRejectBeneficiary(Constants.BENEFICIARY, beneficiary.getId(), "APPROVED");
                         }
+
                     });
+
                     rejectTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            attemptAcceptOrRejectBeneficiary(Constants.BENEFICIARY, beneficiary.getId(), "REJECTED");
+                            attemptAcceptOrRejectBeneficiary(Constants.BENEFICIARY,
+                                    beneficiary.getId(), "REJECTED");
                         }
                     });
                 } else if (mNotifications.get(pos) instanceof Sponsor) {
@@ -939,8 +950,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             .error(getResources().getDrawable(R.drawable.user_brand_bg))
                             .into(profileImageView);
                     timeTextView.setText(Utilities.formatDateWithTime(sponsor.getUpdatedAt()));
-
-
                     descriptionTextView.setText(sponsor.getName() + " has invited you to use his/her iPay wallet as " +
                             "your source of fund");
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
@@ -977,13 +986,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     @Override
                     @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
                     public void onClick(View v) {
-                        new PendingIntroducerReviewDialog(getActivity(), pendingIntroducer).setActionCheckerListener(
-                                new PendingIntroducerReviewDialog.ActionCheckerListener() {
-                                    @Override
-                                    public void ifFinishNeeded() {
-                                        refreshNotificationLists(getActivity());
-                                    }
-                                });
+                        new PendingIntroducerReviewDialog(getActivity(), pendingIntroducer)
+                                .setActionCheckerListener(
+                                        new PendingIntroducerReviewDialog.ActionCheckerListener() {
+                                            @Override
+                                            public void ifFinishNeeded() {
+                                                refreshNotificationLists(getActivity());
+                                            }
+                                        });
                     }
                 });
             }
@@ -995,25 +1005,34 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             View v;
 
             if (viewType == Constants.NOTIFICATION_TYPE_INTRODUCTION_REQUEST) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.list_item_introduction_requests_notification, parent,
+                        false);
                 return new IntroductionRequestViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate
+                        (R.layout.list_item_introduction_requests_notification, parent,
+                                false);
                 return new PendingIntroductionListViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_role_manager_requests_notification_new,
-                        parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate
+                        (R.layout.list_item_business_role_manager_requests_notification_new,
+                                parent, false);
                 return new BusinessRoleManagerViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_SOURCE_OF_FUND_BENEFICIARIES) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_get_beneficiaries,
-                        parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate
+                        (R.layout.list_item_get_beneficiaries,
+                                parent, false);
                 return new SourceOfFundBeneficiaryViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_SOURCE_OF_FUND_SPONSORS) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_get_beneficiaries,
-                        parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate
+                        (R.layout.list_item_get_beneficiaries,
+                                parent, false);
                 return new SourceOfFundBeneficiaryViewHolder(v);
             } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate
+                        (R.layout.list_item_money_and_make_payment_request, parent,
+                                false);
                 return new MoneyAndPaymentRequestViewHolder(v);
             }
         }
@@ -1042,12 +1061,24 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void attemptAcceptOrRejectBeneficiary(final String type, final long id, final String action) {
-        new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
-            @Override
-            public void ifPinCheckedAndAdded(String pin) {
-                attemptAddBeneficiary(type, pin, id, action);
-            }
-        });
+        if (action.equals("REJECTED")) {
+            new AlertDialog.Builder(getContext()).setMessage("Do you want to reject the request ?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            attemptAddBeneficiary(type, "", id, action);
+                        }
+                    }).show();
+
+        } else if (action.equals("APPROVED")) {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+                @Override
+                public void ifPinCheckedAndAdded(String pin) {
+                    attemptAddBeneficiary(type, pin, id, action);
+                }
+            });
+        }
+
     }
 
     private void attemptAddBeneficiary(String type, String pin, long id, String action) {

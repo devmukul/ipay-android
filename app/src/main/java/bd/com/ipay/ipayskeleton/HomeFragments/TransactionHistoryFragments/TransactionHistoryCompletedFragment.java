@@ -59,7 +59,9 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -681,7 +683,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             private TextView mNetAmountView;
             private final ImageView mOtherImageView;
             private final ProfileImageView mProfileImageView;
-            private final RoundedImageView sponsorImageView;
+            private final RoundedImageView sponsorOrBeneficiaryImageView;
+            private final TextView sponsorTextView;
             private ImageView mStatusIconView;
 
             public ViewHolder(final View itemView) {
@@ -695,7 +698,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mStatusIconView = (ImageView) itemView.findViewById(R.id.status_description_icon);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 mOtherImageView = (ImageView) itemView.findViewById(R.id.other_image);
-                sponsorImageView = (RoundedImageView) itemView.findViewById(R.id.sponsor);
+                sponsorTextView = (TextView) itemView.findViewById(R.id.sponsor_name);
+                sponsorOrBeneficiaryImageView = (RoundedImageView) itemView.findViewById(R.id.sponsor);
+
             }
 
             public void bindView(int pos) {
@@ -708,28 +713,19 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final Double balance = transactionHistory.getAccountBalance();
                 final String outletName = transactionHistory.getOutletName();
                 final MetaData metaData = transactionHistory.getMetaData();
-                if (metaData != null) {
-                    if (metaData.isSponsoredByOther()) {
-                        sponsorImageView.setVisibility(View.VISIBLE);
-                        Glide.with(getContext())
-                                .load(Constants.BASE_URL_FTP_SERVER +
-                                        metaData.getSponsorProfilePictures().get(0).getUrl())
-                                .centerCrop()
-                                .into(sponsorImageView);
-                    }
-                    else{
-                        sponsorImageView.setVisibility(View.GONE);
-                    }
-                }
-                else{
-                    sponsorImageView.setVisibility(View.GONE);
-                }
+
 
                 if (balance != null) {
                     mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
+                } else {
+                    mBalanceTextView.setText("-");
                 }
+                if (transactionHistory.getNetAmount() == 0.0) {
+                    mNetAmountView.setText(Utilities.formatTaka((transactionHistory.getAmount())));
 
-                mNetAmountView.setText(netAmountWithSign);
+                } else {
+                    mNetAmountView.setText(netAmountWithSign);
+                }
 
                 switch (statusCode) {
                     case Constants.TRANSACTION_STATUS_ACCEPTED: {
@@ -780,6 +776,41 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     mOtherImageView.setImageResource(iconId);
+                }
+                if (!ProfileInfoCacheManager.isBusinessAccount()) {
+                    if (metaData != null) {
+                        if (metaData.isSponsoredByOther()) {
+                            sponsorOrBeneficiaryImageView.setVisibility(View.VISIBLE);
+                            sponsorTextView.setVisibility(View.VISIBLE);
+                            String mobileNumber = ProfileInfoCacheManager.getMobileNumber();
+                            if (metaData.getSponsorMobileNumber().equals(ContactEngine.
+                                    formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber()))) {
+                                sponsorTextView.setText("Paid for " + metaData.getBeneficiaryName());
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER +
+                                                metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                        .error(R.drawable.user_brand_bg)
+                                        .centerCrop()
+                                        .into(sponsorOrBeneficiaryImageView);
+                            } else {
+                                sponsorTextView.setText("Paid By " + metaData.getSponsorName());
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER +
+                                                metaData.getSponsorProfilePictures().get(0).getUrl())
+                                        .centerCrop()
+                                        .error(R.drawable.user_brand_bg)
+                                        .into(sponsorOrBeneficiaryImageView);
+                            }
+
+                        } else {
+                            sponsorTextView.setVisibility(View.GONE);
+                            sponsorOrBeneficiaryImageView.setVisibility(View.GONE);
+                        }
+                    } else {
+                    }
+                } else {
+                    sponsorTextView.setVisibility(View.GONE);
+                    sponsorOrBeneficiaryImageView.setVisibility(View.GONE);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {

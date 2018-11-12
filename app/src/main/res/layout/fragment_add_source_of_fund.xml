@@ -140,6 +140,7 @@
                     android:background="@android:color/transparent"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
+                    android:editable="false"
                     android:inputType="phone"
                     android:lineSpacingExtra="12sp"
                     android:maxLength="15"

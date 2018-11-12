@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetBeneficiaryListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.RemoveSponsorOrBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
+import bd.com.ipay.ipayskeleton.SourceOfFund.view.BeneficiaryUpdateDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.view.SourceOfFundTypeSelectorDialog;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -306,7 +307,6 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             } else {
                 bindBeneficiaryView(holder, beneficiaryArrayList.get(position));
             }
-
         }
 
         public void bindSponsorView(SourceOfFundViewHolder holder, final Sponsor sponsor) {
@@ -344,6 +344,20 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             holder.profileImageView.setProfilePicture(beneficiary.getUser().getProfilePictureUrl(), false);
             holder.nameTextView.setText(beneficiary.getUser().getName());
             holder.numberTextView.setText(beneficiary.getUser().getMobileNumber());
+            if (beneficiary.getStatus().equals("APPROVED")) {
+                holder.editImageView.setVisibility(View.VISIBLE);
+                holder.editImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BeneficiaryUpdateDialog beneficiaryUpdateDialog = new
+                                BeneficiaryUpdateDialog(getContext(),
+                                beneficiary.getId(), beneficiary.getName());
+                    }
+                });
+            } else {
+                holder.editImageView.setVisibility(GONE);
+
+            }
             holder.deleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -380,13 +394,13 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             }
         }
 
-
         public class SourceOfFundViewHolder extends RecyclerView.ViewHolder {
 
             private ProfileImageView profileImageView;
             private TextView nameTextView;
             private TextView numberTextView;
             private ImageView deleteImageView;
+            private ImageView editImageView;
 
             public SourceOfFundViewHolder(View itemView) {
                 super(itemView);
@@ -394,7 +408,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                 numberTextView = (TextView) itemView.findViewById(R.id.number);
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 deleteImageView = (ImageView) itemView.findViewById(R.id.delete);
-
+                editImageView = (ImageView) itemView.findViewById(R.id.edit);
             }
         }
     }

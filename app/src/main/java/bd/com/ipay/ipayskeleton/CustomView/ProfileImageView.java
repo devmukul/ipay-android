@@ -16,6 +16,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileImageView extends FrameLayout {
     private Context context;
@@ -62,6 +63,13 @@ public class ProfileImageView extends FrameLayout {
     }
 
     public void setProfilePicture(String photoUri, boolean forceLoad) {
+
+        if (photoUri != null) {
+            if (!photoUri.contains("ipay.com")) {
+                photoUri = Constants.BASE_URL_FTP_SERVER + photoUri;
+            }
+        }
+
         try {
             final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
 

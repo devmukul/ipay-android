@@ -47,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -137,30 +138,19 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
-        netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
-        if (transactionHistory.getAccountBalance() != null)
-            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAccountBalance()));
-        mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
-        if (transactionHistory.getMetaData() != null) {
-            MetaData metaData = transactionHistory.getMetaData();
-            if (metaData.getSponsorName() != null) {
-                sponsorNumberView.setVisibility(View.VISIBLE);
-                if (!metaData.getSponsorName().equals("")) {
-                    sponsorNumberView.setText("Paid By " + metaData.getSponsorName());
-                }
-            }
-
-            if (metaData.getSponsorProfilePictures() != null) {
-                sponsorProfilePictureView.setVisibility(View.VISIBLE);
-                String profileImageUrl = metaData.getSponsorProfilePictures().get(0).getUrl();
-                Glide.with(getContext())
-                        .load(Constants.BASE_URL_FTP_SERVER + profileImageUrl)
-                        .centerCrop()
-                        .error(getResources().getDrawable(R.drawable.user_brand_bg))
-                        .into(sponsorProfilePictureView);
-            }
+        if (transactionHistory.getNetAmount() != 0.0) {
+            netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
+        } else {
+            netAmountTextView.setText("-");
         }
+
+        if (transactionHistory.getAccountBalance() != null) {
+            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAccountBalance()));
+        } else {
+            balanceTextView.setText("-");
+        }
+        mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
 
         if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
@@ -196,6 +186,38 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+
+            MetaData metaData = transactionHistory.getMetaData();
+
+            if (metaData.isSponsoredByOther()) {
+                if (!ProfileInfoCacheManager.isBusinessAccount()) {
+                    if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
+                            ProfileInfoCacheManager.getMobileNumber()))) {
+                        sponsorProfilePictureView.setVisibility(View.VISIBLE);
+                        Glide.with(getContext())
+                                .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                .centerCrop()
+                                .error(R.drawable.user_brand_bg)
+                                .into(sponsorProfilePictureView);
+                        sponsorNumberView.setVisibility(View.VISIBLE);
+                        sponsorNumberView.setText("Paid for " + metaData.getBeneficiaryName());
+                    } else {
+                        sponsorProfilePictureView.setVisibility(View.VISIBLE);
+                        Glide.with(getContext())
+                                .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
+                                .centerCrop()
+                                .error(R.drawable.user_brand_bg)
+                                .into(sponsorProfilePictureView);
+
+                        sponsorNumberView.setVisibility(View.VISIBLE);
+                        sponsorNumberView.setText("Paid By " + metaData.getSponsorName());
+                    }
+                } else {
+                    sponsorProfilePictureView.setVisibility(View.GONE);
+                    sponsorNumberView.setVisibility(View.GONE);
+                }
+            }
+
         } else {
             int iconId = transactionHistory.getAdditionalInfo().getImageWithType(getContext());
             mProfileImageView.setVisibility(View.GONE);

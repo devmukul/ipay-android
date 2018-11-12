@@ -51,12 +51,13 @@
         android:id="@+id/edit"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_toLeftOf="@+id/delete"
         android:layout_marginRight="@dimen/value8"
         android:layout_marginTop="@dimen/value8"
+        android:layout_toLeftOf="@+id/delete"
         android:padding="4dp"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_edit" />
+
     <ImageView
         android:id="@+id/delete"
         android:layout_width="24dp"

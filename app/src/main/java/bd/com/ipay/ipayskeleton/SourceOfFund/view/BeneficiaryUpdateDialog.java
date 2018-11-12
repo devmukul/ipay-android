@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -24,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessa
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryRequest;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BeneficiaryUpdateDialog implements HttpResponseListener {
@@ -39,10 +41,26 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
 
     private Button updateButton;
 
+    private String mobileNumber;
+    private String relationship;
+
     private AlertDialog updateBeneficiaryPermissionDialog;
+
+    private HttpRequestPostAsyncTask mAddBeneficiaryTask;
     private long id;
+    private String name;
 
     private HttpRequestPutAsyncTask mUpdateBeneficiaryAsyckTask;
+    private BeneficiaryAddSuccessListener beneficiaryAddSuccessListener;
+
+    private TextView instructionTextView;
+
+    public BeneficiaryUpdateDialog(Context context, long id, String name) {
+        this.context = context;
+        this.id = id;
+        this.name = name;
+        createView();
+    }
 
     public BeneficiaryUpdateDialog(Context context, long id) {
         this.context = context;
@@ -50,20 +68,47 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
         createView();
     }
 
+    public BeneficiaryUpdateDialog(Context context, String name, String relationship, String mobileNumber, BeneficiaryAddSuccessListener beneficiaryAddSuccessListener) {
+        this.context = context;
+        this.id = -1;
+        this.relationship = relationship;
+        this.mobileNumber = mobileNumber;
+        this.name = name;
+        this.beneficiaryAddSuccessListener = beneficiaryAddSuccessListener;
+        createView();
+    }
+
+    public void setBeneficiaryAddSuccessListener(BeneficiaryAddSuccessListener beneficiaryAddSuccessListener) {
+        this.beneficiaryAddSuccessListener = beneficiaryAddSuccessListener;
+    }
+
     private void createView() {
         headerView = LayoutInflater.from(context).inflate(R.layout.header_sponsor_dialog, null, false);
         bodyView = (LayoutInflater.from(context).inflate(R.layout.body_beneficiar_update_dialog, null, false));
         ((TextView) headerView.findViewById(R.id.title)).setText("Edit Permission");
         cancelImageView = (ImageView) headerView.findViewById(R.id.cancel);
+        instructionTextView = (TextView) bodyView.findViewById(R.id.instruction);
         ipayProgressDialog = new IpayProgressDialog(context);
         headerTextView = (TextView) bodyView.findViewById(R.id.header);
         monthlyLimitEditText = (EditText) bodyView.findViewById(R.id.amount);
         updateButton = (Button) bodyView.findViewById(R.id.update);
+        String instructionText = instructionTextView.getText().toString();
+        instructionText = instructionText.replace("Hasan Masud", name);
+        instructionTextView.setText(instructionText);
+        if (id == -1) {
+            updateButton.setText("Add");
+        } else {
+            updateButton.setText("Update");
+        }
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (verifyInput()) {
-                    attemptUpdateBeneficiaryWithPinCheck();
+                    if (id != -1) {
+                        attemptUpdateBeneficiaryWithPinCheck();
+                    } else {
+                        attemptAddBeneficiaryWithPinCheck();
+                    }
                 }
             }
         });
@@ -90,6 +135,15 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
         });
     }
 
+    private void attemptAddBeneficiaryWithPinCheck() {
+        new CustomPinCheckerWithInputDialog(context, new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+            @Override
+            public void ifPinCheckedAndAdded(String pin) {
+                attemptAddBeneficiary(id, pin);
+            }
+        });
+    }
+
     private boolean verifyInput() {
         Editable monthlyLimit;
         monthlyLimit = monthlyLimitEditText.getText();
@@ -101,6 +155,20 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
             } else {
                 return true;
             }
+        }
+    }
+
+    private void attemptAddBeneficiary(long id, String pin) {
+        if (mAddBeneficiaryTask != null) return;
+        else {
+            AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(mobileNumber,
+                    Long.parseLong(monthlyLimitEditText.getText().toString()), pin, relationship);
+            mAddBeneficiaryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY,
+                    Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
+                    new Gson().toJson(addBeneficiaryRequest), context, this, false);
+            mAddBeneficiaryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ipayProgressDialog.setMessage("Please wait ");
+            ipayProgressDialog.show();
         }
     }
 
@@ -125,7 +193,9 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
         if (HttpErrorHandler.isErrorFound(result, context, null)) {
             mUpdateBeneficiaryAsyckTask = null;
             ipayProgressDialog.dismiss();
+            return;
         } else {
+            ipayProgressDialog.dismiss();
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY)) {
                     GenericResponseWithMessageOnly genericResponseWithMessageOnly =
@@ -133,16 +203,32 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                         updateBeneficiaryPermissionDialog.dismiss();
+
                     } else {
                         Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     mUpdateBeneficiaryAsyckTask = null;
+                } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_BENEFICIARY)) {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                            fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                        updateBeneficiaryPermissionDialog.dismiss();
+                        beneficiaryAddSuccessListener.onBeneficiaryAdded();
+                    } else {
+                        Toast.makeText(context, genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    mAddBeneficiaryTask = null;
                 }
             } catch (Exception e) {
                 mUpdateBeneficiaryAsyckTask = null;
                 Toast.makeText(context, context.getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public interface BeneficiaryAddSuccessListener {
+        void onBeneficiaryAdded();
     }
 }
 
