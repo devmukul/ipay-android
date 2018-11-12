@@ -718,7 +718,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 if (balance != null) {
                     mBalanceTextView.setText(Utilities.formatTakaWithComma(balance));
                 } else {
-                    mBalanceTextView.setText("-");
+                    mBalanceTextView.setText("");
                 }
                 if (transactionHistory.getNetAmount() == 0.0) {
                     mNetAmountView.setText(Utilities.formatTaka((transactionHistory.getAmount())));
