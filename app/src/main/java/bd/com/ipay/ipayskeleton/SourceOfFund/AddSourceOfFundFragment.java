@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -77,6 +78,9 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         isSelectedFromContact = false;
         ipayProgressDialog = new IpayProgressDialog(getContext());
         type = getArguments().getString(Constants.TYPE);
+        mMobileNumber = "";
+        mName = "";
+        mProfileImageUrl = "";
         return inflater.inflate(R.layout.fragment_add_source_of_fund, container, false);
     }
 
@@ -117,42 +121,8 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (relationShip == null || relationShip.equals("")) {
-                    showErrorMessage("Please select a relationship");
-                } else {
-                    mMobileNumber = mNumberEditText.getText().toString();
-                    mMobileNumber = mMobileNumber.replaceAll("[^0-9.]", "");
-
-                    if (!InputValidator.isValidNumber(mMobileNumber)) {
-                        showErrorMessage("Please enter a valid mobile number");
-                    } else {
-                        if (isSelectedFromContact) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
-                            bundle.putString(Constants.NAME, mName);
-                            bundle.putString(Constants.RELATION, relationShip);
-                            bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
-                            bundle.putString(Constants.TYPE, type);
-                            ((SourceOfFundActivity) getActivity()).switchToAddSourceOfFundConfirmFragment(bundle);
-                        } else {
-                            ContactEngine.ContactData contactData = searchLocalContacts(ContactEngine.formatMobileNumberBD(mMobileNumber));
-                            if (contactData == null) {
-                                getProfileInfo();
-                            } else {
-                                mProfileImageUrl = contactData.photoUri;
-                                mName = contactData.name;
-                                Bundle bundle = new Bundle();
-                                bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
-                                bundle.putString(Constants.NAME, mName);
-                                bundle.putString(Constants.RELATION, relationShip);
-                                bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
-                                bundle.putString(Constants.TYPE, type);
-                                ((SourceOfFundActivity) getActivity()).switchToAddSourceOfFundConfirmFragment(bundle);
-                            }
-
-                        }
-                    }
-
+                if (verifyUserInput()) {
+                    attemptAddSponsor();
                 }
             }
         });
@@ -192,12 +162,49 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                 isSelectedFromContact = false;
                 if (s.toString().length() < 6) {
                     mNumberEditText.setText("+880-1");
+                    mName = "";
+                    mNameTextView.setText("");
+                    mNameTextView.setVisibility(View.GONE);
+                    profileImageView.setImageResource(R.drawable.user_brand_bg);
                 }
                 if (s.toString().length() < 15) {
                     mName = "";
                     mMobileNumber = "";
                     mProfileImageUrl = "";
-
+                    mNameTextView.setText("");
+                    mNameTextView.setVisibility(View.GONE);
+                    profileImageView.setImageResource(R.drawable.user_brand_bg);
+                }
+                if (s.toString().length() == 15) {
+                    String number = s.toString();
+                    number = number.replaceAll("[^0-9.]", "");
+                    if (InputValidator.isValidNumber(number)) {
+                        ContactEngine.ContactData contactData = searchLocalContacts(ContactEngine.formatMobileNumberBD(number));
+                        if (contactData == null) {
+                            getProfileInfo(number);
+                        } else {
+                            mProfileImageUrl = contactData.photoUri;
+                            mName = contactData.name;
+                            mMobileNumber = s.toString();
+                            mMobileNumber = mMobileNumber.replaceAll("[^0-9.]", "");
+                            mMobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumber);
+                            mNameTextView.setText(mName);
+                            mNameTextView.setVisibility(View.VISIBLE);
+                            if (mProfileImageUrl != null) {
+                                Glide.with(getContext())
+                                        .load(mProfileImageUrl)
+                                        .error(R.drawable.user_brand_bg)
+                                        .centerCrop()
+                                        .into(profileImageView);
+                            }
+                        }
+                    } else {
+                        mName = "";
+                        mMobileNumber = "";
+                        mProfileImageUrl = "";
+                        mNameTextView.setText("");
+                        profileImageView.setImageResource(R.drawable.user_brand_bg);
+                    }
                 }
 
             }
@@ -212,6 +219,22 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
 
             }
         });
+    }
+
+    private boolean verifyUserInput() {
+        if (mName == null || mName.equals("")) {
+            showErrorMessage("Please enter a valid iPay user's mobile number");
+            return false;
+        } else if (mMobileNumber == null || mMobileNumber.equals("")) {
+            showErrorMessage("Please enter a valid mobile number");
+            return false;
+        } else if (mProfileImageUrl == null || mProfileImageUrl.equals("")) {
+            return false;
+        } else if (relationShip == null || relationShip.equals("")) {
+            showErrorMessage("Please select a relationship");
+            return false;
+        }
+        return true;
     }
 
     public void attemptAddSponsor() {
@@ -235,14 +258,15 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         }
     }
 
-    private void getProfileInfo() {
+    private void getProfileInfo(String mobileNumber) {
         if (mGetProfileInfoTask != null) {
             return;
         }
+        mMobileNumber = mobileNumber;
         ipayProgressDialog.setMessage("Please wait . . .");
         ipayProgressDialog.show();
         GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(ContactEngine.
-                formatMobileNumberBD(mMobileNumber));
+                formatMobileNumberBD(mobileNumber));
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
                 getUserInfoRequestBuilder.getGeneratedUri(), getContext(), false);
@@ -288,7 +312,20 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                     mNumberEditText.setText(mMobileNumber);
                 }
                 if (mName != null) {
+                    mNameTextView.setVisibility(View.VISIBLE);
                     mNameTextView.setText(mName);
+                }
+                if (mProfileImageUrl != null) {
+                    if (!mProfileImageUrl.contains("ipay.com")) {
+                        mProfileImageUrl = Constants.BASE_URL_FTP_SERVER + mProfileImageUrl;
+                    }
+                }
+                if (mProfileImageUrl != null) {
+                    Glide.with(getContext())
+                            .load(mProfileImageUrl)
+                            .error(R.drawable.user_brand_bg)
+                            .centerCrop()
+                            .into(profileImageView);
                 }
                 isSelectedFromContact = true;
             }
@@ -310,14 +347,19 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProfileImageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
                         mName = getUserInfoResponse.getName();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
-                        bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
-                        bundle.putString(Constants.NAME, mName);
-                        bundle.putString(Constants.RELATION, relationShip);
-                        bundle.putString(Constants.TYPE, type);
-                        ((SourceOfFundActivity) (getActivity())).switchToAddSourceOfFundConfirmFragment(bundle);
+                        mNameTextView.setVisibility(View.VISIBLE);
+                        mNameTextView.setText(mName);
+                        Glide.with(getContext())
+                                .load(Constants.BASE_URL_FTP_SERVER + mProfileImageUrl)
+                                .centerCrop()
+                                .error(R.drawable.user_brand_bg)
+                                .into(profileImageView);
                     } else {
+                        mName = "";
+                        mMobileNumber = "";
+                        mProfileImageUrl = "";
+                        mNameTextView.setText("");
+                        mNameTextView.setVisibility(View.GONE);
                         Toast.makeText(getContext(), getUserInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     mGetProfileInfoTask = null;
@@ -326,7 +368,11 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                             (result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
-                        ((SourceOfFundActivity) getActivity()).switchToSourceOfFundListFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.NAME, mName);
+                        bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
+                        bundle.putString(Constants.TYPE, Constants.SPONSOR);
+                        ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
                     } else {
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     }

@@ -84,11 +84,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider"
+            android:layout_marginBottom="@dimen/value16"
             android:layout_toRightOf="@+id/accept"
             android:fontFamily="sans-serif-medium"
             android:text="REJECT"
             android:textColor="#f24002"
-            android:layout_marginBottom="@dimen/value16"
             android:textSize="14sp"
             android:textStyle="normal" />
 

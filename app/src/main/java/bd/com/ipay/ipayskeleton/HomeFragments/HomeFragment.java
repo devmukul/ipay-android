@@ -72,6 +72,8 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
+import static android.view.View.GONE;
+
 public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     public static final String BALANCE_KEY = "BALANCE";
@@ -167,9 +169,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mRequestPaymentButton.setVisibility(View.VISIBLE);
-            mInviteFriendButton.setVisibility(View.GONE);
+            mInviteFriendButton.setVisibility(GONE);
         } else {
-            mRequestPaymentButton.setVisibility(View.GONE);
+            mRequestPaymentButton.setVisibility(GONE);
             mInviteFriendButton.setVisibility(View.VISIBLE);
         }
 
@@ -437,8 +439,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     }
 
     private void promptForProfileCompletion() {
-        mTransactionHistoryView.setVisibility(View.GONE);
-        mProgressBarTransaction.setVisibility(View.GONE);
+        mTransactionHistoryView.setVisibility(GONE);
+        mProgressBarTransaction.setVisibility(GONE);
         mProfileCompletionRecyclerView.setVisibility(View.VISIBLE);
         List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
         if (requiredInfo != null && requiredInfo.size() > 0) {
@@ -450,9 +452,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             PagerSnapHelper snapHelper = new PagerSnapHelper();
             snapHelper.attachToRecyclerView(mProfileCompletionRecyclerView);
         } else {
-            mTransactionHistoryView.setVisibility(View.GONE);
+            mTransactionHistoryView.setVisibility(GONE);
             mProgressBarTransaction.setVisibility(View.VISIBLE);
-            mProfileCompletionRecyclerView.setVisibility(View.GONE);
+            mProfileCompletionRecyclerView.setVisibility(GONE);
             getTransactionHistory();
         }
     }
@@ -501,8 +503,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     private void loadTransactionHistory(final TransactionHistory transactionHistory) {
         mTransactionHistoryView.setVisibility(View.VISIBLE);
-        mProgressBarTransaction.setVisibility(View.GONE);
-        mProfileCompletionRecyclerView.setVisibility(View.GONE);
+        mProgressBarTransaction.setVisibility(GONE);
+        mProfileCompletionRecyclerView.setVisibility(GONE);
         MetaData metaData;
 
         final String description = transactionHistory.getShortDescription();
@@ -515,7 +517,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         } else {
             mNetAmountView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         }
-        mBalanceTextView.setVisibility(View.GONE);
+        mBalanceTextView.setVisibility(GONE);
 
         switch (statusCode) {
             case Constants.TRANSACTION_STATUS_ACCEPTED: {
@@ -545,7 +547,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         if (receiver != null && !receiver.equals("")) {
             mReceiverView.setVisibility(View.VISIBLE);
             mReceiverView.setText(receiver);
-        } else mReceiverView.setVisibility(View.GONE);
+        } else mReceiverView.setVisibility(GONE);
 
         if (DateUtils.isToday(transactionHistory.getTime())) {
             responseTime = "Today, " + Utilities.formatTimeOnly(transactionHistory.getTime());
@@ -561,12 +563,13 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 if (transactionHistory.getMetaData() != null) {
                     metaData = transactionHistory.getMetaData();
                     if (metaData.isSponsoredByOther()) {
-
+                        sponsorImageView.setVisibility(View.VISIBLE);
+                        sponsorOrBeneficiaryTextView.setVisibility(View.VISIBLE);
                         if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
                                 ProfileInfoCacheManager.getMobileNumber()))) {
-                            sponsorOrBeneficiaryTextView.setVisibility(View.VISIBLE);
+
                             sponsorOrBeneficiaryTextView.setText("Paid for " + metaData.getBeneficiaryName());
-                            sponsorImageView.setVisibility(View.VISIBLE);
+
                             Glide.with(getContext())
                                     .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
                                     .centerCrop()
@@ -574,15 +577,17 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                                     .into(sponsorImageView);
                             sponsorImageView.setVisibility(View.VISIBLE);
                         } else {
-                            sponsorOrBeneficiaryTextView.setVisibility(View.VISIBLE);
                             sponsorOrBeneficiaryTextView.setText("Paid by " + metaData.getSponsorName());
-                            sponsorImageView.setVisibility(View.VISIBLE);
                             Glide.with(getContext())
                                     .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
                                     .centerCrop()
                                     .error(R.drawable.user_brand_bg)
                                     .into(sponsorImageView);
                         }
+
+                    } else {
+                        sponsorOrBeneficiaryTextView.setVisibility(GONE);
+                        sponsorImageView.setVisibility(GONE);
                     }
                 }
             }
