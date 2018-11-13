@@ -80,6 +80,9 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
     private Long sponsorAccountID;
 
+    private String sponsorName;
+    private String sponsorProfilePictureUrl;
+
     private String mAddressString;
     private Long mOutletId = null;
 
@@ -112,6 +115,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 }
                 if (transactionType == ServiceIdConstants.MAKE_PAYMENT) {
                     sponsorAccountID = getArguments().getLong(Constants.SPONSOR_ACCOUNT_ID);
+                    sponsorName = getArguments().getString(Constants.SPONSOR_NAME);
+                    sponsorProfilePictureUrl = getArguments().getString(Constants.SPONSOR_PROFILE_PICTURE);
                 }
             }
         } catch (Exception e) {
@@ -390,6 +395,10 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                     bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                     bundle.putString(Constants.SENDER_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
                                     bundle.putSerializable(Constants.AMOUNT, amount);
+                                    if (sponsorAccountID != -1) {
+                                        bundle.putString(Constants.SPONSOR_PROFILE_PICTURE, sponsorProfilePictureUrl);
+                                        bundle.putString(Constants.SPONSOR_NAME, sponsorName);
+                                    }
                                     if (getActivity() instanceof IPayTransactionActionActivity) {
                                         if (apiCommand.equals(Constants.COMMAND_TOPUP_REQUEST)) {
                                             Toast.makeText(getContext(), "You have made a top up request to " +

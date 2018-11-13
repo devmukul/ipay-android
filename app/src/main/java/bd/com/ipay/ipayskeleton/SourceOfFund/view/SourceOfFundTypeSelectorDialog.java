@@ -42,7 +42,7 @@ public class SourceOfFundTypeSelectorDialog implements View.OnClickListener {
 
     private void createViews() {
         headerView = LayoutInflater.from(context).inflate(R.layout.header_sponsor_dialog, null, false);
-        ((TextView) headerView.findViewById(R.id.title)).setText("Please select an option below");
+        ((TextView) headerView.findViewById(R.id.title)).setText("Select option");
         bodyView = LayoutInflater.from(context).inflate(R.layout.main_view_source_of_fund_type_selector, null, false);
 
         sponsorLayout = (LinearLayout) bodyView.findViewById(R.id.sponsor_layout);

@@ -334,6 +334,8 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                     bundle.putString(Constants.ADDRESS, mAddressString);
                     if (selectedSponsor != null) {
                         bundle.putLong(Constants.SPONSOR_ACCOUNT_ID, selectedSponsor.getUser().getAccountId());
+                        bundle.putString(Constants.SPONSOR_NAME, selectedSponsor.getName());
+                        bundle.putString(Constants.SPONSOR_PROFILE_PICTURE, selectedSponsor.getImageUrl());
                     }
                     if (mOutletId != null)
                         bundle.putLong(Constants.OUTLET_ID, mOutletId);

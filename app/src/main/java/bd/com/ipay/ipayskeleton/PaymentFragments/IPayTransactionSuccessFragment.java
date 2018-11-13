@@ -39,9 +39,15 @@ public class IPayTransactionSuccessFragment extends Fragment {
     private String receiverProfilePicture;
     private String mAddressString;
 
+    private RoundedImageView sponsorImageView;
+
+    private String sponsorProfilePictureUrl;
+    private String sponsorName;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         if (getArguments() != null) {
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
@@ -50,6 +56,8 @@ public class IPayTransactionSuccessFragment extends Fragment {
             receiverProfilePicture = getArguments().getString(Constants.RECEIVER_IMAGE_URL);
             amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
             mAddressString = getArguments().getString(Constants.ADDRESS);
+            sponsorProfilePictureUrl = getArguments().getString(Constants.SPONSOR_PROFILE_PICTURE);
+            sponsorName = getArguments().getString(Constants.SPONSOR_NAME);
         }
         numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
@@ -65,14 +73,29 @@ public class IPayTransactionSuccessFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         final TextView transactionSuccessMessageTextView = view.findViewById(R.id.transaction_success_message_text_view);
         final TextView nameTextView = view.findViewById(R.id.name_text_view);
         final TextView addressTextView = view.findViewById(R.id.address_text_view);
+        final RoundedImageView sponsorImageView = view.findViewById(R.id.sponsor_image_view);
         final RoundedImageView receiverProfilePictureImageView = view.findViewById(R.id.receiver_profile_picture_image_view);
         final RoundedImageView senderProfilePictureImageView = view.findViewById(R.id.sender_profile_picture_image_view);
         final TextView successDescriptionTextView = view.findViewById(R.id.success_description_text_view);
         final Button goToWalletButton = view.findViewById(R.id.go_to_wallet_button);
         final String amountValue = getString(R.string.balance_holder, numberFormat.format(amount));
+
+        if (sponsorName != null) {
+            sponsorImageView.setVisibility(View.VISIBLE);
+            Glide.with(getActivity())
+                    .load(sponsorProfilePictureUrl)
+                    .centerCrop()
+                    .error(R.drawable.user_brand_bg)
+                    .into(sponsorImageView);
+        } else {
+            sponsorImageView.setVisibility(GONE);
+        }
+
         switch (transactionType) {
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.send_money_success_message, amountValue), 18, 18 + amountValue.length());
@@ -99,7 +122,7 @@ public class IPayTransactionSuccessFragment extends Fragment {
         if (!TextUtils.isEmpty(mAddressString)) {
             addressTextView.setVisibility(View.VISIBLE);
             addressTextView.setText(mAddressString);
-        }else {
+        } else {
             addressTextView.setVisibility(GONE);
         }
 

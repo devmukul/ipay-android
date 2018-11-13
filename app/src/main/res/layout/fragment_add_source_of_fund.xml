@@ -175,7 +175,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="#00c0af"
-        android:text="DONE"
+        android:text="Continue"
         android:textColor="@color/colorWhite" />
 
 </RelativeLayout>

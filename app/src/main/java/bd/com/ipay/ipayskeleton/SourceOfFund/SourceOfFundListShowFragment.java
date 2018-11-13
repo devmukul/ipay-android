@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,6 +74,8 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     private boolean isSponsorApiCalled;
     private boolean isBeneficiaryApiCalled;
 
+    private FloatingActionButton addNewButton;
+
     private SourceOfFundTypeSelectorDialog sourceOfFundTypeSelectorDialog;
 
 
@@ -86,6 +89,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         backButton = view.findViewById(R.id.back);
+        addNewButton = (FloatingActionButton)view.findViewById(R.id.add_new_button);
         isBeneficiaryApiCalled = false;
         isSponsorApiCalled = false;
         beneficiaryArrayList = new ArrayList<>();
@@ -104,7 +108,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         noSourceOfFundTextView.setVisibility(GONE);
         attemptGetSponsorList();
 
-        addNewTextView.setOnClickListener(new View.OnClickListener() {
+        addNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sourceOfFundTypeSelectorDialog = new SourceOfFundTypeSelectorDialog(getContext(), new SourceOfFundTypeSelectorDialog.SourceOfFundTypeSelectorListener() {
@@ -117,6 +121,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                 });
             }
         });
+
         sourceOfFundListRecyclerView = view.findViewById(R.id.source_of_fund_list_recycler_view);
         sourceOfFundListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -125,7 +130,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     private void removeRejectedEntriesForSponsors(ArrayList<Sponsor> sponsors) {
         sponsorArrayList.clear();
         for (int i = 0; i < sponsors.size(); i++) {
-            if (!sponsors.get(i).getStatus().equals("REJECTED")) {
+            if (!sponsors.get(i).getStatus().equals("REJECTED") && !sponsors.get(i).getStatus().equals("PENDING")) {
                 sponsorArrayList.add(sponsors.get(i));
             }
         }
@@ -134,7 +139,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     private void removeRejectedEntriesForBeneficiaries(ArrayList<Beneficiary> beneficiaries) {
         beneficiaryArrayList.clear();
         for (int i = 0; i < beneficiaries.size(); i++) {
-            if (!beneficiaries.get(i).getStatus().equals("REJECTED")) {
+            if (!beneficiaries.get(i).getStatus().equals("REJECTED") && !beneficiaries.get(i).getStatus().equals("PENDING")) {
                 beneficiaryArrayList.add(beneficiaries.get(i));
             }
         }
@@ -146,7 +151,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             return;
         } else {
             ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Fetching sponsors . . .");
+            ipayProgressDialog.setMessage("Please wait  . . .");
             getSponsorListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
                     getContext(), this, false);
             getSponsorListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -160,7 +165,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
             return;
         } else {
             ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Fetching beneficiaries . . .");
+            ipayProgressDialog.setMessage("Please wait . . .");
             getBeneficiaryListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BENEFICIARY_LIST, Constants.BASE_URL_MM + Constants.URL_GET_BENEFICIARY,
                     getContext(), this, false);
             getBeneficiaryListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

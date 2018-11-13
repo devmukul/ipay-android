@@ -78,7 +78,7 @@
                         android:layout_height="@dimen/value30"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/sponsor_number"
-                        android:background="@drawable/ic_add"
+                        android:background="@drawable/ic_addsvg"
                         android:backgroundTint="@color/colorPrimary"
                         android:paddingLeft="@dimen/activity_horizontal_margin_card"
                         android:paddingRight="@dimen/activity_horizontal_margin_card"

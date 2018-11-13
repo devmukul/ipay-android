@@ -18,10 +18,10 @@
                 android:id="@+id/back"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/value16"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 app:srcCompat="@drawable/ic_arrow_back_white" />
 
             <TextView
@@ -36,6 +36,7 @@
 
             <TextView
                 android:id="@+id/add_new"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -98,5 +99,16 @@
         android:layout_below="@+id/title_me_as_ipay_source"
         android:layout_marginLeft="@dimen/value16"
         android:layout_marginTop="@dimen/value12" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_new_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="30dp"
+        app:srcCompat="@drawable/ic_addsvg" />
 
 </RelativeLayout>
