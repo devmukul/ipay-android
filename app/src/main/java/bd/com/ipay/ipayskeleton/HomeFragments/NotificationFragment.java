@@ -920,7 +920,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     Glide.with(getContext())
                             .load(Constants.BASE_URL_FTP_SERVER + beneficiary.getImageUrl())
                             .centerCrop()
-                            .error(getResources().getDrawable(R.drawable.user_brand_bg))
+                            .error(R.drawable.user_brand_bg)
                             .into(profileImageView);
                     timeTextView.setText(Utilities.formatDateWithTime(beneficiary.getUpdatedAt()));
 
@@ -947,7 +947,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     Glide.with(getContext())
                             .load(Constants.BASE_URL_FTP_SERVER + sponsor.getImageUrl())
                             .centerCrop()
-                            .error(getResources().getDrawable(R.drawable.user_brand_bg))
+                            .error(R.drawable.user_brand_bg)
                             .into(profileImageView);
                     timeTextView.setText(Utilities.formatDateWithTime(sponsor.getUpdatedAt()));
                     descriptionTextView.setText(sponsor.getName() + " has invited you to use his/her iPay wallet as " +

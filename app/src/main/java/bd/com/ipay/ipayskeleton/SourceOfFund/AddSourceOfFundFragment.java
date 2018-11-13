@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -39,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessa
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddSponsorRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -69,6 +71,8 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
     private final int PICK_CONTACT_REQUEST = 100;
     private HttpRequestGetAsyncTask mGetProfileInfoTask;
     private HttpRequestPostAsyncTask mAddSponsorAsyncTask;
+
+    private HttpRequestPostAsyncTask mAddBeneficiaryAsyncTask;
 
     private String type;
 
@@ -122,7 +126,11 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
             @Override
             public void onClick(View v) {
                 if (verifyUserInput()) {
-                    attemptAddSponsor();
+                    if (type.equals(Constants.SPONSOR)) {
+                        attemptAddSponsor();
+                    } else {
+                        attemptAddBeneficiaryWithPinCheck();
+                    }
                 }
             }
         });
@@ -249,8 +257,38 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
             ipayProgressDialog.show();
             mAddSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-
     }
+
+    public void attemptAddBeneficiaryWithPinCheck() {
+
+        if (mAddBeneficiaryAsyncTask != null) {
+            return;
+        } else {
+            new CustomPinCheckerWithInputDialog(getContext(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+                @Override
+                public void ifPinCheckedAndAdded(String pin) {
+                    attemptAddBeneficiary(pin);
+                }
+            });
+        }
+    }
+
+    private void attemptAddBeneficiary(String pin) {
+        if (mAddBeneficiaryAsyncTask != null) {
+            return;
+        } else {
+            AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(
+                    ContactEngine.formatMobileNumberBD(mMobileNumber),
+                    Constants.DEFAULT_CREDIT_LIMIT, pin, relationShip);
+            mAddSponsorAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
+                    , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
+                    new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
+            ipayProgressDialog.setMessage("Please wait . . . ");
+            ipayProgressDialog.show();
+            mAddSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
 
     protected void showErrorMessage(String errorMessage) {
         if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
@@ -377,6 +415,20 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     mAddSponsorAsyncTask = null;
+                } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_BENEFICIARY)) {
+                    GenericResponseWithMessageOnly responseWithMessageOnly = new Gson().fromJson
+                            (result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.NAME, mName);
+                        bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
+                        bundle.putString(Constants.TYPE, Constants.BENEFICIARY);
+                        ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
+                    } else {
+                        Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    mAddBeneficiaryAsyncTask = null;
                 }
             } catch (Exception e) {
                 Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
