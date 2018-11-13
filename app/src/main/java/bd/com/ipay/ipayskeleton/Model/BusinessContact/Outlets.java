@@ -54,4 +54,13 @@ public class Outlets
         return addressString;
     }
 
+    @Override
+    public String toString() {
+        return "Outlets{" +
+                "outletAddress=" + outletAddress +
+                ", outletId=" + outletId +
+                ", outletLogoUrl='" + outletLogoUrl + '\'' +
+                ", outletName='" + outletName + '\'' +
+                '}';
+    }
 }

@@ -245,7 +245,7 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
 
         private void switchToMakePaymentActivity(int position) {
             TrendingBusinessOutletSelectorDialog.this.dismiss();
-            customItemClickListener.onItemClick(mFilteredOutlets.get(position).getOutletName(), merchantDetails.getMerchantMobileNumber(),
+            customItemClickListener.onItemClick(merchantDetails.getMerchantName(), merchantDetails.getMerchantMobileNumber(),
                     merchantDetails.getBusinessLogo(), mFilteredOutlets.get(position).getAddressString(), mFilteredOutlets.get(position).getOutletId());
         }
     }

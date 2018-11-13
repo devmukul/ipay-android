@@ -37,14 +37,30 @@
             android:textColor="@color/colorOnBoardText"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:lineSpacingExtra="8sp"/>
+            android:lineSpacingExtra="8sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/outlet_name"
+            style="@style/TextStylePrimaryMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/business_name"
+            android:textColor="@color/colorOnBoardText"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:lineSpacingExtra="8sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/business_type"
             style="@style/TextStylePrimaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/business_name"
+            android:layout_below="@+id/outlet_name"
             android:singleLine="true"
             android:textColor="@color/colorOnBoardText"
             android:textSize="12sp"
@@ -59,7 +75,9 @@
             android:layout_below="@+id/business_type"
             android:gravity="left"
             android:textColor="@color/colorPaymentReviewNoteText"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:maxLines="2"
+            android:ellipsize="end"/>
     </RelativeLayout>
 
     <View
