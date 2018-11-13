@@ -134,7 +134,7 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
     }
 
     private void initializeViews(View v) {
-        mEmptyListTextView = v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView = v.findViewById(R.id.empty);
         mNewsRoomRecyclerView = v.findViewById(R.id.list_transaction_history);
         mNewsRoomView = v.findViewById(R.id.parent_view);
     }
@@ -177,7 +177,7 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
                 }
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.promotions_get_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.newsroom_get_failed, Toast.LENGTH_LONG).show();
             }
             mNewsRoomTask = null;
             if (this.isAdded()) setContentShown(true);

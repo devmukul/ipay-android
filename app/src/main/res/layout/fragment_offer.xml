@@ -5,9 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:clickable="true">
 
     <include layout="@layout/layout_progress_container" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/value24"
+        android:text="No news available!"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/parent_view"
