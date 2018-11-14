@@ -18,6 +18,7 @@
         android:background="@drawable/bottom_navigation_background"
         app:itemIconTint="@drawable/tab_color_bottom_navigation_bar"
         app:itemTextColor="@drawable/text_color_bottom_navigation_bar"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation" />
 
 </RelativeLayout>
