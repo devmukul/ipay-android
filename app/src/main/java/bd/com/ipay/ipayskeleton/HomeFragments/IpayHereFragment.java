@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -90,6 +92,7 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
     @Override
     public void onResume() {
         super.onResume();
+        getLocationPermission();
     }
 
     @Nullable
@@ -99,20 +102,20 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         if (getActivity() != null)
             getActivity().setTitle(R.string.ipay_here);
 
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
+        SupportPlaceAutocompleteFragment autocompleteFragment = new SupportPlaceAutocompleteFragment();
+        android.support.v4.app.FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragment_content, autocompleteFragment);
+        ft.commit();
         AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(Place.TYPE_COUNTRY)
-                .setCountry("BD")
-                .build();
+        .setTypeFilter(Place.TYPE_COUNTRY)
+        .setCountry("BD")
+        .build();
         // Register a listener to receive callbacks when a place has been selected or an error ha occurred.
         autocompleteFragment.setOnPlaceSelectedListener(this);
         autocompleteFragment.setFilter(autocompleteFilter);
         searchLocationView = (CardView) v.findViewById(R.id.search_this_place);
         searchLocation = (Button) v.findViewById(R.id.seach_this_place_btn);
-
-        getLocationPermission();
 
         searchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,16 +254,6 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         }
     }
 
-    private void getLocationsettings() {
-
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            buildAlertMessageNoGps();
-        } else {
-            getLocation();
-        }
-    }
-
     private void getLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(getContext(),
@@ -269,13 +262,14 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                             android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 getLocationWithoutPermision();
             } else {
-                getLocationsettings();
+                getLocation();
             }
         } else {
-            getLocationsettings();
+            getLocation();
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void getLocation() {
         Location location;
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);

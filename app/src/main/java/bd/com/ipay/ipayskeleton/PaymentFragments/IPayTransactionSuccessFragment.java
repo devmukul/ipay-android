@@ -128,7 +128,7 @@ public class IPayTransactionSuccessFragment extends Fragment implements HttpResp
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.make_payment_success_message, amountValue), 18, 18 + amountValue.length());
-                successDescriptionTextView.setText(R.string.make_payment_success_description);
+                successDescriptionTextView.setText(getString(R.string.make_payment_success_description, name));
                 ratingView.setVisibility(View.VISIBLE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:

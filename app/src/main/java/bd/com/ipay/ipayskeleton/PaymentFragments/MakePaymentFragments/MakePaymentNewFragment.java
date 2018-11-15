@@ -510,7 +510,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                                             });
                                         } else {
                                             Bundle bundle = new Bundle();
-                                            bundle.putString(Constants.NAME, merchantDetails.getOutlets().get(0).getOutletName());
+                                            bundle.putString(Constants.NAME, merchantDetails.getMerchantName());
                                             bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + merchantDetails.getBusinessLogo());
                                             bundle.putString(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
                                             bundle.putString(Constants.ADDRESS, merchantDetails.getOutlets().get(0).getAddressString());

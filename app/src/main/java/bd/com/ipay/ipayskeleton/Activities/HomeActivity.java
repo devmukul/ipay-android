@@ -373,8 +373,12 @@ public class HomeActivity extends BaseActivity
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
-        mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
-                ProfileInfoCacheManager.getProfileImageUrl(), false);
+        if (mOptionMenuProfileImageView != null) {
+            mOptionMenuProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
+                    ProfileInfoCacheManager.getProfileImageUrl(), false);
+            } else {
+                invalidateOptionsMenu();
+        }
     }
 
     private void attemptRequestForPermission() {
