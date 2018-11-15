@@ -12,7 +12,7 @@
     <item
         android:id="@+id/navigation_transaction"
         android:icon="@drawable/ic_transaction"
-        android:title="@string/transaction" />
+        android:title="@string/transactions" />
     <item
         android:id="@+id/navigation_promotions"
         android:icon="@drawable/ic_offer"
