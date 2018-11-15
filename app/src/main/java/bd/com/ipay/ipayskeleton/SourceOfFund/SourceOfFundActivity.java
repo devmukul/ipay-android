@@ -18,7 +18,7 @@ public class SourceOfFundActivity extends AppCompatActivity {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SourceOfFundListShowFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IpaySourceOfFundListFragment()).commit();
     }
 
     public void switchToAddSourceOfFundFragment(Bundle bundle) {
@@ -61,5 +61,14 @@ public class SourceOfFundActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
                 R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit).replace
                 (R.id.fragment_container, addSourceOfFundSuccessFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToAddSponsorFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
+                R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit).replace
+                (R.id.fragment_container, new AddSponsorAsSourceOfFundFragment()).addToBackStack(null).commit();
     }
 }

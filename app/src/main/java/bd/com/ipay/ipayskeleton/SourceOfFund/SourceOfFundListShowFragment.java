@@ -89,7 +89,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         backButton = view.findViewById(R.id.back);
-        addNewButton = (FloatingActionButton)view.findViewById(R.id.add_new_button);
+        addNewButton = (FloatingActionButton) view.findViewById(R.id.add_new_button);
         isBeneficiaryApiCalled = false;
         isSponsorApiCalled = false;
         beneficiaryArrayList = new ArrayList<>();

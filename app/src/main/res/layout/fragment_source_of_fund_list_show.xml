@@ -36,7 +36,6 @@
 
             <TextView
                 android:id="@+id/add_new"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -44,7 +43,8 @@
                 android:layout_marginRight="@dimen/value16"
                 android:text="+ ADD NEW"
                 android:textColor="@color/colorWhite"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -104,11 +104,11 @@
         android:id="@+id/add_new_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:scaleType="center"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:scaleType="center"
         app:srcCompat="@drawable/ic_addsvg" />
 
 </RelativeLayout>
