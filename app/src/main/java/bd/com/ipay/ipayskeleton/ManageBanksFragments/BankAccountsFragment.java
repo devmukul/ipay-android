@@ -94,9 +94,9 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
         getActivity().setTitle(R.string.bank_list);
 
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mSwipeRefreshLayout =  v.findViewById(R.id.swipe_refresh_layout);
+        mBankListRecyclerView =  v.findViewById(R.id.list_bank);
+        mEmptyListTextView =  v.findViewById(R.id.empty_list_text);
         mProgressDialog = new ProgressDialog(getActivity());
 
         mUserBankListAdapter = new UserBankListAdapter();
@@ -254,7 +254,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         mRemoveBankDialog.show();
     }
 
-    private void showBlockedBankAccountDialog(String bankName, String bankAccountNumber, String branchName) {
+    private void showBlockedBankAccountDialog(String bankName, String bankAccountNumber, String branchName,final long bankAccountId) {
         String content = bankName + "\n" + branchName + "\n" + bankAccountNumber + "\n" + getString(R.string.blocked_bank_message);
 
         MaterialDialog.Builder mRemoveBankDialogBuilder;
@@ -263,7 +263,15 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 .title(R.string.blocked_bank_title)
                 .content(content)
                 .cancelable(true)
-                .positiveText(R.string.ok);
+                .positiveText(R.string.remove_bank)
+		        .negativeText(R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+	                @Override
+	                public void onClick(@NonNull MaterialDialog dialog,
+	                                    @NonNull DialogAction which) {
+	                	showRemoveBankAccountDialog(bankAccountId);
+	                }
+                });
 
         mRemoveBankDialog = mRemoveBankDialogBuilder.build();
         mRemoveBankDialog.show();
@@ -281,7 +289,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         View view = dialog.getCustomView();
-        final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
+        final EditText mAmountEditText =  view.findViewById(R.id.amount);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(true)});
@@ -435,14 +443,14 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mBankAccountNumber = (TextView) itemView.findViewById(R.id.bank_account_number);
-                mBankName = (TextView) itemView.findViewById(R.id.bank_name);
-                mBankVerifiedStatus = (ImageView) itemView.findViewById(R.id.bank_account_verify_status);
-                mAttachmentChequebook = (ImageView) itemView.findViewById(R.id.chequebook_attachment);
-                mBankPending = (Button) itemView.findViewById(R.id.bank_account_pending_button);
-                mBranchName = (TextView) itemView.findViewById(R.id.bank_branch_name);
+                mBankAccountNumber =  itemView.findViewById(R.id.bank_account_number);
+                mBankName =  itemView.findViewById(R.id.bank_name);
+                mBankVerifiedStatus =  itemView.findViewById(R.id.bank_account_verify_status);
+                mAttachmentChequebook =  itemView.findViewById(R.id.chequebook_attachment);
+                mBankPending =  itemView.findViewById(R.id.bank_account_pending_button);
+                mBranchName =  itemView.findViewById(R.id.bank_branch_name);
                 divider = itemView.findViewById(R.id.divider);
-                bankIcon = (ImageView) itemView.findViewById(R.id.portrait);
+                bankIcon =  itemView.findViewById(R.id.portrait);
             }
 
             public void bindView(final int pos) {
@@ -503,7 +511,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     @Override
                     public void onClick(View v) {
                         if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_BLOCKED)) {
-                            showBlockedBankAccountDialog(bankName, bankAccountNumber, branchName);
+                            showBlockedBankAccountDialog(bankName, bankAccountNumber, branchName, bankAccountID);
                         } else {
                             mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), bankName, mBankActionList);
                             mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
