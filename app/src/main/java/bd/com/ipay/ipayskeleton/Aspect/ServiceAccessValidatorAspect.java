@@ -121,7 +121,6 @@ public class ServiceAccessValidatorAspect {
             case R.id.nav_logout:
                 hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SIGN_OUT);
                 break;
-            case R.id.nav_home:
             case R.id.nav_account:
             case R.id.nav_security_settings:
             case R.id.nav_live_chat:
