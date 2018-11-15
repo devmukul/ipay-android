@@ -15,7 +15,6 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.BottomNavigationViewHelper;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DashBoardFragment extends Fragment
@@ -46,7 +45,6 @@ public class DashBoardFragment extends Fragment
 		mIPayHereFragment = new IpayHereFragment();
 
 		bottomNavigationView = view.findViewById(R.id.bottom_navigation_view);
-		BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
 		bottomNavigationView.setOnNavigationItemSelectedListener(this);
 		bottomNavigationView.setSelectedItemId(R.id.navigation_wallet);
