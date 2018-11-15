@@ -9,8 +9,9 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
+        app:cardBackgroundColor="@color/colorWhite"
         app:cardCornerRadius="5dp"
+        app:cardElevation="@dimen/value5"
         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
         android:layout_marginRight="@dimen/activity_horizontal_margin_card">
 
@@ -32,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="12dp"
+                android:fontFamily="@font/open_sans_semibold"
+                android:textSize="10sp"
                 android:text="SWIPE UP TO SEE MORE"/>
 
         </LinearLayout>
