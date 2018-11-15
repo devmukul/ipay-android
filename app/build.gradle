@@ -179,8 +179,8 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.1.0'
 
     //Intercom
-    compile 'io.intercom.android:intercom-sdk-base:5.+'
-    compile 'io.intercom.android:intercom-sdk-fcm:5.+'
+    compile 'io.intercom.android:intercom-sdk-base:5.1.5'
+    compile 'io.intercom.android:intercom-sdk-fcm:5.1.5'
 
     // Singapore
     compile 'com.hbb20:ccp:1.7.8'
