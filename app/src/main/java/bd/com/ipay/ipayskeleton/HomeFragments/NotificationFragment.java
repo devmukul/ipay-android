@@ -61,6 +61,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Pendi
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.EditPermissionSourceOfFundBottomSheetFragment;
 import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectSponsorRequest;
@@ -930,7 +931,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            attemptAcceptOrRejectBeneficiary(Constants.BENEFICIARY, beneficiary.getId(), "APPROVED");
+                            EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment =
+                                    new EditPermissionSourceOfFundBottomSheetFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
+                            editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+                            editPermissionSourceOfFundBottomSheetFragment.show(getChildFragmentManager(), "permission");
                         }
 
                     });
@@ -1067,6 +1073,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             attemptAddBeneficiary(type, "", id, action);
+
                         }
                     }).show();
 

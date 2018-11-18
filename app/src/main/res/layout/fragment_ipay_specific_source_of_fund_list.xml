@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00b5a5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_arrow_back_white" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/value16"
+                android:layout_toLeftOf="@+id/help"
+                android:layout_toRightOf="@+id/back"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                tools:text="Source of fund" />
+
+            <TextView
+                android:id="@+id/help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="46dp"
+                android:layout_marginRight="@dimen/value16"
+                android:fontFamily="@font/open_sans_semibold"
+                android:gravity="end"
+                android:text="HELP"
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/no_data_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/value32"
+            android:layout_marginRight="@dimen/value32"
+            android:lineSpacingExtra="9sp"
+            android:text="You have not added
+any iPay user as Source of Fund.
+To link a new bank tap (+) button."
+            android:textColor="#999999"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/resource_list"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value24" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_new_resource"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/value24"
+            android:layout_marginBottom="24dp"
+            app:srcCompat="@drawable/ic_addsvg" />
+    </RelativeLayout>
+
+</RelativeLayout>

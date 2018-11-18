@@ -1353,4 +1353,9 @@
     <string name="link_sponsor_description">You can connect your wallet to other iPay user\'s wallet to make payment.</string>
     <string name="link_beneficiary_description">To add and mange your benificiary iPay user. We need a proper text for this section.</string>
     <string name="link_beneficiary">BENEFICIARY iPAY USER</string>
+    <string name="permission_details">Sourav Saha can use up to a certain amount monthly for making payments using your iPay wallet. You will have to take the full liability of the transactions made by Sourav Saha using your iPay wallet. You can remove the privilege whenever you want and can change the monthly limit.</string>
+    <string name="beneficiary_helper_text">You can add other iPay users as your beneficiary . The beneficiary account holder can make payment using your account. To add a beneficiary, you need to follow the instructions below</string>
+    <string name="source_of_fund_helper_text">In low balance, you can make payment by using other user\'s iPay wallet. To add iPay User as Source of Fund you need to follow the instructions below.</string>
+    <string name="source_of_fund_step_one">Enter the mobile number of your sponsor or select the person from your contact.</string>
+    <string name="source_of_fund_step_two">Provide the relationship between you two.</string>
 </resources>
