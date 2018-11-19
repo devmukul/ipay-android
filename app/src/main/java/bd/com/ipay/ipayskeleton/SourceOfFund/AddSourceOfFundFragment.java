@@ -134,6 +134,13 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                 }
             }
         });
+        TextView titleTextView = view.findViewById(R.id.title);
+
+        if (type.equals(Constants.BENEFICIARY)) {
+            titleTextView.setText("Add a beneficiary");
+        } else {
+            titleTextView.setText("Add a sponsor");
+        }
 
         mContactImageView = view.findViewById(R.id.contact_image_view);
         profileImageView = (RoundedImageView) view.findViewById(R.id.profile_image);

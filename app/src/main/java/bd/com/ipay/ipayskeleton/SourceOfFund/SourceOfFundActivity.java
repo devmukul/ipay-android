@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.SourceOfFund;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -87,10 +88,10 @@ public class SourceOfFundActivity extends AppCompatActivity {
     }
 
     public void switchToUpdatePermissionBottomSheetFragment(Bundle bundle) {
-        EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
-                = new EditPermissionSourceOfFundBottomSheetFragment();
-        editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
-        editPermissionSourceOfFundBottomSheetFragment.show(getSupportFragmentManager(), "permission");
+        final View testView = getLayoutInflater().inflate(R.layout.view_bottom_sheet_source_of_fund_edit_permission, null, false);
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(testView);
+        bottomSheetDialog.show();
     }
 
     public void switchToAddSponsorFragment() {

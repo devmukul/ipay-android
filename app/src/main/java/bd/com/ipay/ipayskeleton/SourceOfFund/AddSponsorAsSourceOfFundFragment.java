@@ -80,6 +80,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
             mGetSponsorAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
                     getContext(), this, false);
             mGetSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ipayProgressDialog.setCancelable(false);
             ipayProgressDialog.show();
         }
 

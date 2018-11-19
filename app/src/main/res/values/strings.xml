@@ -1281,6 +1281,7 @@
     <string name="top_up_confirmation_message">MOBILE TOP-UP %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
     <string name="make_payment_success_message">SUCCESSFULLY PAID %1$s TO</string>
+
     <string name="add_money_card_success_message">SUCCESSFULLY ADDED Tk. %1$s FROM</string>
     <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk. %1$s FROM</string>
     <string name="withdraw_money_bank_success_message">SUCCESSFULLY REQUESTED TO WITHDRAW\n Tk. %1$s \nTO</string>
@@ -1345,13 +1346,13 @@
     <string name="last_transaction">LAST TRANSACTION</string>
     <string name="dummy_mobile_number">+8801234567890</string>
     <string name="link_ipay_account">Link iPay</string>
-    <string name="source_of_fund_success">You have made a request to add Arifur Rahman as your source of fund. We will inform you when he accept this request.</string>
-    <string name="helper">Hasan Masud sent you a Source of fund request. Do you want to be a source of fund?\</string>
+    <string name="source_of_fund_success">You have sent a request to Arifur Rahman to become a sponsor of your iPay wallet. We will inform you when he accepts the request."</string>
+    <string name="helper">Hasan Masud has asked you to become a sponsor of his wallet. He can use up to a certain limit monthly from your iPay wallet.</string>
     <string name="select_source_type">Select Source Type</string>
     <string name="link_bank_description">Link your bank account to add money from the bank. After link bank, iPay will send an amount to check and confirm your bank connectivity</string>
     <string name="link_sponsor">iPAY USER AS SOURCE OF FUND</string>
     <string name="link_sponsor_description">You can connect your wallet to other iPay user\'s wallet to make payment.</string>
-    <string name="link_beneficiary_description">To add and mange your benificiary iPay user. We need a proper text for this section.</string>
+    <string name="link_beneficiary_description">To add and mange your benificiary iPay user.</string>
     <string name="link_beneficiary">BENEFICIARY iPAY USER</string>
     <string name="permission_details">Sourav Saha can use up to a certain amount monthly for making payments using your iPay wallet. You will have to take the full liability of the transactions made by Sourav Saha using your iPay wallet. You can remove the privilege whenever you want and can change the monthly limit.</string>
     <string name="beneficiary_helper_text">You can add other iPay users as your beneficiary . The beneficiary account holder can make payment using your account. To add a beneficiary, you need to follow the instructions below</string>

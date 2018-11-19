@@ -19,6 +19,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/value4"
                 android:layout_marginRight="@dimen/value16"
                 app:srcCompat="@drawable/ic_arrow_back_white" />
 
@@ -27,6 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/add_new"
+                android:fontFamily="@font/open_sans_semibold"
+                android:id="@+id/title"
                 android:layout_toRightOf="@+id/back"
                 android:text="Source of Fund"
                 android:textColor="#ffffff"

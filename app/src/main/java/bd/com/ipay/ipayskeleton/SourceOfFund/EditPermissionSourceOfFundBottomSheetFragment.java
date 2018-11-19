@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -36,6 +35,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
     private EditText amountEditText;
 
     private IpayProgressDialog ipayProgressDialog;
+    public BeneficiaryUpdateListener beneficiaryUpdateListener;
 
     @Nullable
     @Override
@@ -67,6 +67,10 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
             }
         });
 
+    }
+
+    public void setBeneficiaryUpdateListener(BeneficiaryUpdateListener beneficiaryUpdateListener) {
+        this.beneficiaryUpdateListener = beneficiaryUpdateListener;
     }
 
     public boolean verifyUserInput() {
@@ -114,8 +118,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
                 GenericResponseWithMessageOnly genericResponseWithMessageOnly =
                         new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    EditPermissionSourceOfFundBottomSheetFragment.this.dismiss();
-                    HomeActivity.mNotificationFragment.refreshNotificationLists(getContext());
+                    beneficiaryUpdateListener.onBeneficiaryStatusUpdated();
                     Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
@@ -125,5 +128,9 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
             }
             updateBeneficiaryAsyncTask = null;
         }
+    }
+
+    public interface BeneficiaryUpdateListener {
+        public void onBeneficiaryStatusUpdated();
     }
 }

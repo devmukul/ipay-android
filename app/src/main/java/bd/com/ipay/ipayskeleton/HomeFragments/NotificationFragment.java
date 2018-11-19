@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -135,6 +137,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private IpayProgressDialog ipayProgressDialog;
 
+    private BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
+
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
     private NotificationBroadcastReceiver notificationBroadcastReceiver;
     private Tracker mTracker;
@@ -159,6 +163,20 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
+
+        final RelativeLayout relativeLayout = v.findViewById(R.id.test_bottom_sheet_layout);
+        bottomSheetBehavior = BottomSheetBehavior.from(relativeLayout);
+
+        relativeLayout.findViewById(R.id.test_bottom_sheet_layout).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                    }
+                }
+        );
+
         ipayProgressDialog = new IpayProgressDialog(getContext());
         mNotificationsRecyclerView.setAdapter(mNotificationListAdapter);
 
@@ -902,12 +920,15 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private TextView descriptionTextView;
             private TextView acceptTextView;
             private TextView rejectTextView;
+            private TextView titleTextView;
+
 
             public SourceOfFundBeneficiaryViewHolder(View itemView) {
                 super(itemView);
                 profileImageView = (RoundedImageView) itemView.findViewById(R.id.profile_image);
                 timeTextView = (TextView) itemView.findViewById(R.id.time);
                 descriptionTextView = (TextView) itemView.findViewById(R.id.description);
+                titleTextView = (TextView) itemView.findViewById(R.id.helper);
                 acceptTextView = (TextView) itemView.findViewById(R.id.accept);
                 rejectTextView = (TextView) itemView.findViewById(R.id.reject);
             }
@@ -917,6 +938,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 super.bindView(pos);
                 final int position = pos;
                 if (mNotifications.get(pos) instanceof Beneficiary) {
+                    titleTextView.setText("Add beneficiary?");
                     final Beneficiary beneficiary = (Beneficiary) mNotifications.get(pos);
                     Glide.with(getContext())
                             .load(Constants.BASE_URL_FTP_SERVER + beneficiary.getImageUrl())
@@ -931,12 +953,23 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment =
-                                    new EditPermissionSourceOfFundBottomSheetFragment();
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
+                            //NotificationHolderFragment.mNotificationTabLayout.setVisibility(View.GONE);
+                            EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
+                                    = new EditPermissionSourceOfFundBottomSheetFragment();
                             editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
-                            editPermissionSourceOfFundBottomSheetFragment.show(getChildFragmentManager(), "permission");
+                            getChildFragmentManager().beginTransaction().
+                                    replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            editPermissionSourceOfFundBottomSheetFragment.setBeneficiaryUpdateListener(new EditPermissionSourceOfFundBottomSheetFragment.BeneficiaryUpdateListener() {
+                                @Override
+                                public void onBeneficiaryStatusUpdated() {
+                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                    Utilities.hideKeyboard(getActivity());
+                                    refreshNotificationLists(getContext());
+                                }
+                            });
                         }
 
                     });
@@ -950,6 +983,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     });
                 } else if (mNotifications.get(pos) instanceof Sponsor) {
                     final Sponsor sponsor = (Sponsor) mNotifications.get(pos);
+                    titleTextView.setText("Add sponsor?");
                     Glide.with(getContext())
                             .load(Constants.BASE_URL_FTP_SERVER + sponsor.getImageUrl())
                             .centerCrop()
@@ -1073,7 +1107,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             attemptAddBeneficiary(type, "", id, action);
-
                         }
                     }).show();
 

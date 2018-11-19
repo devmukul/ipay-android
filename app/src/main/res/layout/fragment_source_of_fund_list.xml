@@ -17,7 +17,29 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#00b5a5" />
+                android:background="#00b5a5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/back"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:srcCompat="@drawable/ic_arrow_back_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/value16"
+                        android:layout_toRightOf="@+id/back"
+                        android:text="Source Of Fund"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
 
             <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -35,8 +57,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/value32"
-                        android:layout_marginRight="@dimen/value40"
                         android:layout_marginTop="@dimen/value24"
+                        android:layout_marginRight="@dimen/value40"
                         android:fontFamily="@font/open_sans_light"
                         android:lineSpacingExtra="6sp"
                         android:text="Source of Fund"
@@ -48,10 +70,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/heading"
-                        android:layout_marginBottom="@dimen/value20"
                         android:layout_marginLeft="@dimen/value32"
-                        android:layout_marginRight="@dimen/value32"
                         android:layout_marginTop="@dimen/value8"
+                        android:layout_marginRight="@dimen/value32"
+                        android:layout_marginBottom="@dimen/value20"
                         android:fontFamily="@font/open_sans"
                         android:lineSpacingExtra="6sp"
                         android:text="Add your convenient source of fund to update your iPay balance anytime when you are in need."
@@ -86,10 +108,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/link_bank"
-                            android:layout_marginBottom="@dimen/value24"
                             android:layout_marginLeft="@dimen/value14"
-                            android:layout_marginRight="@dimen/value32"
                             android:layout_marginTop="4dp"
+                            android:layout_marginRight="@dimen/value32"
+                            android:layout_marginBottom="@dimen/value24"
                             android:layout_toRightOf="@id/bank_icon"
                             android:lineSpacingExtra="4sp"
                             android:text="@string/link_bank_description"
@@ -102,9 +124,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@id/bank_layout"
-                        android:layout_marginBottom="@dimen/value24"
                         android:layout_marginLeft="@dimen/value32"
                         android:layout_marginRight="@dimen/value32"
+                        android:layout_marginBottom="@dimen/value24"
                         android:background="#19000000" />
 
                     <RelativeLayout
@@ -135,10 +157,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/sponsor"
-                            android:layout_marginBottom="@dimen/value24"
                             android:layout_marginLeft="@dimen/value14"
-                            android:layout_marginRight="@dimen/value32"
                             android:layout_marginTop="4dp"
+                            android:layout_marginRight="@dimen/value32"
+                            android:layout_marginBottom="@dimen/value24"
                             android:layout_toRightOf="@id/sponsor_icon"
                             android:lineSpacingExtra="4sp"
                             android:text="@string/link_sponsor_description"
@@ -151,9 +173,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@id/sponsor_layout"
-                        android:layout_marginBottom="@dimen/value24"
                         android:layout_marginLeft="@dimen/value32"
                         android:layout_marginRight="@dimen/value32"
+                        android:layout_marginBottom="@dimen/value24"
                         android:background="#19000000" />
 
                     <RelativeLayout
@@ -184,10 +206,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/beneficiary"
-                            android:layout_marginBottom="@dimen/value24"
                             android:layout_marginLeft="@dimen/value14"
-                            android:layout_marginRight="@dimen/value32"
                             android:layout_marginTop="4dp"
+                            android:layout_marginRight="@dimen/value32"
+                            android:layout_marginBottom="@dimen/value24"
                             android:layout_toRightOf="@id/beneficiary_icon"
                             android:lineSpacingExtra="4sp"
                             android:text="@string/link_beneficiary_description"

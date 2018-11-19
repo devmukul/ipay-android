@@ -31,6 +31,13 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
         iPayBeneficiaryView.setOnClickListener(this);
         iPaySponsorView.setOnClickListener(this);
         bankView.setOnClickListener(this);
+        View backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override

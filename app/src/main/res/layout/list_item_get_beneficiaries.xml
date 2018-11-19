@@ -25,10 +25,10 @@
             android:layout_toRightOf="@id/profile_image"
             android:fontFamily="@font/open_sans_semibold"
             android:lineSpacingExtra="8sp"
-            android:text="Source of fund request"
+            android:text="Add Beneficiary ?"
             android:textColor="#212121"
             android:textSize="12sp"
-            tools:text="Source of fund request " />
+            tools:text="Add Beneficiary ?" />
 
         <TextView
             android:id="@+id/description"

@@ -136,6 +136,7 @@ public class HomeActivity extends BaseActivity
     private HttpRequestPostAsyncTask mRefreshBalanceTask;
 
     public HomeActivity() {
+
     }
 
     @Override

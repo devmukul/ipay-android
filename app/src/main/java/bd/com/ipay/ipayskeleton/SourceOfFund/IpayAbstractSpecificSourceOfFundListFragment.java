@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.RemoveSponsorOrBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragment {
 
@@ -56,6 +59,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
     public HttpDeleteWithBodyAsyncTask deleteSponsorAsyncTask;
 
     private IpayProgressDialog ipayProgressDialog;
+    private BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
 
     @Nullable
     @Override
@@ -64,21 +68,39 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         titleTextView = view.findViewById(R.id.title);
         backButton = view.findViewById(R.id.back);
         helpTextView = view.findViewById(R.id.help);
-
         ipayProgressDialog = new IpayProgressDialog(getContext());
         noDataTextView = view.findViewById(R.id.no_data_text_view);
         addNewResourceButton = view.findViewById(R.id.add_new_resource);
+        final RelativeLayout relativeLayout = view.findViewById(R.id.test_bottom_sheet_layout);
+        bottomSheetBehavior = BottomSheetBehavior.from(relativeLayout);
+
+        relativeLayout.findViewById(R.id.test_bottom_sheet_layout).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                    }
+                }
+        );
 
         addNewResourceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.TYPE, type);
-                ((SourceOfFundActivity) getActivity()).switchToAddSourceOfFundFragment(bundle);
+
+                if (type.equals(Constants.BENEFICIARY)) {
+                    ((SourceOfFundActivity) getActivity()).switchToAddSourceOfFundFragment(bundle);
+                } else {
+                    ((SourceOfFundActivity) getActivity()).switchToAddSourceOfFundFragment(bundle);
+                }
+
+
             }
         });
 
@@ -197,6 +219,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             sourceOfFundViewHolder.nameTextView.setText(sponsor.getUser().getName());
             sourceOfFundViewHolder.numberTextView.setText(sponsor.getUser().getMobileNumber());
             sourceOfFundViewHolder.editImageView.setVisibility(View.GONE);
+            sourceOfFundViewHolder.monthlyLimitView.setText("You can use monthly " + Long.toString(sponsor.getMonthlyCreditLimit()) + "TK");
             sourceOfFundViewHolder.deleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -205,18 +228,24 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        //attemptRemoveSponsorOrBeneficiary(sponsor.getId(), "");
+
                                     }
                                 }).setMessage("Do you want to remove this sponsor?")
                                 .show();
                     } else {
-                        new AlertDialog.Builder(getContext())
+                        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                        alertDialogBuilder
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         attemptRemoveSponsorWithPinCheck(sponsor.getId());
                                     }
-                                }).setMessage("Do you want to remove this sponsor?")
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }).setMessage("Do you want to remove this sponsor?")
                                 .show();
                     }
 
@@ -232,13 +261,29 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             sourceOfFundViewHolder.editImageView.setVisibility(View.VISIBLE);
             sourceOfFundViewHolder.profileImageView.setProfilePicture(beneficiary.getUser().getProfilePictureUrl(), false);
             sourceOfFundViewHolder.nameTextView.setText(beneficiary.getUser().getName());
+            sourceOfFundViewHolder.monthlyLimitView.setText("He can use monthly " + Long.toString(beneficiary.getMonthlyCreditLimit()) + "TK");
             sourceOfFundViewHolder.numberTextView.setText(beneficiary.getUser().getMobileNumber());
             sourceOfFundViewHolder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
-                    ((SourceOfFundActivity) getActivity()).switchToUpdatePermissionBottomSheetFragment(bundle);
+
+                    EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
+                            = new EditPermissionSourceOfFundBottomSheetFragment();
+                    editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+                    getChildFragmentManager().beginTransaction().
+                            replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    editPermissionSourceOfFundBottomSheetFragment.setBeneficiaryUpdateListener(new EditPermissionSourceOfFundBottomSheetFragment.BeneficiaryUpdateListener() {
+                        @Override
+                        public void onBeneficiaryStatusUpdated() {
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            Utilities.hideKeyboard(getActivity());
+                            getSourceOfFundList();
+                        }
+                    });
                 }
             });
             sourceOfFundViewHolder.deleteImageView.setOnClickListener(new View.OnClickListener() {
@@ -250,7 +295,12 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                                 public void onClick(DialogInterface dialog, int which) {
                                     attemptRemoveSponsorWithPinCheck(beneficiary.getId());
                                 }
-                            }).setMessage("Do you want to remove this beneficiary?")
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).setMessage("Do you want to remove this beneficiary?")
                             .show();
                 }
             });
@@ -289,6 +339,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             private TextView numberTextView;
             private ImageView deleteImageView;
             private ImageView editImageView;
+            private TextView monthlyLimitView;
 
             public SourceOfFundViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -297,6 +348,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 deleteImageView = (ImageView) itemView.findViewById(R.id.delete);
                 editImageView = (ImageView) itemView.findViewById(R.id.edit);
+                monthlyLimitView = (TextView) itemView.findViewById(R.id.monthly_limit);
             }
         }
     }

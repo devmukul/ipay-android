@@ -12,6 +12,9 @@ public class Beneficiary   implements Notification ,Serializable,CommonData {
     private long id;
     private String type;
 
+    public Beneficiary() {
+    }
+
     public String getType() {
         return type;
     }

@@ -103,7 +103,14 @@ public class IPayTransactionSuccessFragment extends Fragment {
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.make_payment_success_message, amountValue), 18, 18 + amountValue.length());
-                successDescriptionTextView.setText(getString(R.string.make_payment_success_description, name));
+                if(sponsorName != null ){
+                    successDescriptionTextView.setText("Successfully paid to "+name+" using "+sponsorName+"'s"+
+                    " iPay wallet. "+name+ " and "+ sponsorName+" will be notified about this transaction."+
+                           " See the details of this transaction in your Transaction History.");
+                }
+                else {
+                    successDescriptionTextView.setText(getString(R.string.make_payment_success_description, name));
+                }
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.request_money_success_message, amountValue), 23, 23 + amountValue.length());
