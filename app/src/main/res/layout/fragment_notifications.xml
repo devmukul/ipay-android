@@ -8,7 +8,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         android:orientation="vertical">
 
         <include layout="@layout/layout_progress_container" />
@@ -47,7 +46,6 @@
                     android:id="@+id/test_bottom_sheet_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#66000000"
                     android:clickable="true"
                     android:focusable="true"
                     android:orientation="vertical"
@@ -59,6 +57,7 @@
                         android:id="@+id/test_fragment_container"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/colorWhite"
                         android:layout_alignParentBottom="true"
                         android:clickable="true"
                         android:focusable="true"></FrameLayout>

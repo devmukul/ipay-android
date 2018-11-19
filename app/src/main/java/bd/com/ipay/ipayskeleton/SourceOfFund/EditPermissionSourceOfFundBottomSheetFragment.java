@@ -55,7 +55,6 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
         String permissionDetailsText = permissionDetailsTextView.getText().toString();
         permissionDetailsText = permissionDetailsText.replace("Sourav Saha", name);
         permissionDetailsTextView.setText(permissionDetailsText);
-        amountEditText.setText(Long.toString(beneficiary.getMonthlyCreditLimit()));
         Button doneButton = view.findViewById(R.id.done);
         ipayProgressDialog = new IpayProgressDialog(getContext());
         doneButton.setOnClickListener(new View.OnClickListener() {
@@ -78,13 +77,17 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
         pinEditable = pinEditText.getText();
         amountEditable = amountEditText.getText();
         if (amountEditable == null) {
+            Toast.makeText(getContext(), "Please enter an amount", Toast.LENGTH_LONG).show();
             return false;
         } else if (amountEditable.toString() == null || amountEditable.toString().equals("")) {
+            Toast.makeText(getContext(), "Please enter an amount", Toast.LENGTH_LONG).show();
             return false;
         }
         if (pinEditable == null) {
+            Toast.makeText(getContext(), "Please enter your pin", Toast.LENGTH_LONG).show();
             return false;
         } else if (pinEditable.toString() == null || pinEditable.toString().equals("")) {
+            Toast.makeText(getContext(), "Please enter your pin", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

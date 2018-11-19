@@ -137,7 +137,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private IpayProgressDialog ipayProgressDialog;
 
-    private BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
+    public BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
 
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
     private NotificationBroadcastReceiver notificationBroadcastReceiver;
@@ -236,6 +236,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getPendingBeneficiaryListResponse(context);
         getPendingSponsorListResponse(context);
     }
+
+
 
     private void getPendingInvitationRequestsForRoleManager(Context context) {
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_ROLE_INVITATION_REQUEST))
@@ -955,6 +957,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         public void onClick(View v) {
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
+
                             //NotificationHolderFragment.mNotificationTabLayout.setVisibility(View.GONE);
                             EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
                                     = new EditPermissionSourceOfFundBottomSheetFragment();
