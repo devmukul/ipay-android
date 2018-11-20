@@ -2,12 +2,14 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,10 +21,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,23 +57,27 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.Coordinate;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereRequestUrlBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.IPayHereResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.NearbyBusinessResponseList;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.CustomBusinessContact;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.IPayHereRequestUrlBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.IPayHereResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.NearbyBusinessResponseList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class IpayHereFragment extends BaseFragment implements PlaceSelectionListener, OnMapReadyCallback,
-        GoogleMap.OnInfoWindowClickListener, HttpResponseListener,
-        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
+public class IpayHereFragment extends BaseFragment implements PlaceSelectionListener, HttpResponseListener {
 
     private static final int REQUEST_LOCATION = 1;
     public static final int LOCATION_SETTINGS_PERMISSION_CODE = 9876;
@@ -73,16 +85,14 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
     private List<NearbyBusinessResponseList> mNearByBusinessResponse;
     private HttpRequestGetAsyncTask mIPayHereTask = null;
 
-    private SupportMapFragment mapFragment;
-    private GoogleMap mMap;
-
     private IPayHereResponse mIPayHereResponse;
     private LocationManager locationManager;
     private String mLatitude = "23.780879";
     private String mLongitude = "90.400956";
-    private boolean isStartedMoving = false;
-    private CardView searchLocationView;
-    private Button searchLocation;
+
+    private RecyclerView mTransactionHistoryRecyclerView;
+    private BusinessContactListAdapter mTransactionHistoryAdapter;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,26 +124,11 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         // Register a listener to receive callbacks when a place has been selected or an error ha occurred.
         autocompleteFragment.setOnPlaceSelectedListener(this);
         autocompleteFragment.setFilter(autocompleteFilter);
-        searchLocationView = (CardView) v.findViewById(R.id.search_this_place);
-        searchLocation = (Button) v.findViewById(R.id.seach_this_place_btn);
 
-        searchLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LatLng initialLoc = mMap.getCameraPosition().target;
-                searchLocationView.setVisibility(View.INVISIBLE);
+        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.address_recycler_view);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
 
-                if (mMap != null && initialLoc != null) {
-                    mMap.clear();
-                    isStartedMoving = false;
-                    mLatitude = String.valueOf(initialLoc.latitude);
-                    mLongitude = String.valueOf(initialLoc.longitude);
-                    startDemo();
-                    fetchNearByBusiness(mLatitude, mLongitude);
-                }
-
-            }
-        });
         return v;
     }
 
@@ -166,7 +161,11 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                     mNearByBusinessResponse = mIPayHereResponse.getNearbyBusinessResponseList();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        readItems();
+                        System.out.println("Test  Loc "+mNearByBusinessResponse.size());
+
+                        setBusinessContactAdapter(mNearByBusinessResponse);
+
+                        //readItems();
                     } else {
                         Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -181,31 +180,10 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         }
 
     }
-
-    @Override
-    public void onCameraIdle() {
-        if (isStartedMoving)
-            searchLocationView.setVisibility(View.VISIBLE);
-        else
-            searchLocationView.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void onCameraMoveStarted(int reason) {
-        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            isStartedMoving = true;
-        }
-    }
-
     @Override
     public void onError(Status status) {
         Toast.makeText(getContext(), "Place selection failed: " + status.getStatusMessage(),
                 Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-
     }
 
     @Override
@@ -235,20 +213,13 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        startDemo();
-    }
 
     @Override
     public void onPlaceSelected(Place place) {
         LatLng attributions = place.getLatLng();
         if (attributions != null) {
-            mMap.clear();
             this.mLatitude = String.valueOf(attributions.latitude);
             this.mLongitude = String.valueOf(attributions.longitude);
-            startDemo();
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
 
         }
@@ -284,16 +255,13 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
             double longitude = location.getLongitude();
             mLatitude = String.valueOf(latitude);
             mLongitude = String.valueOf(longitude);
-            setUpMap();
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
         } else {
-            setUpMap();
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
         }
     }
 
     private void getLocationWithoutPermision() {
-        setUpMap();
         fetchNearByBusiness(this.mLatitude, this.mLongitude);
     }
 
@@ -308,38 +276,6 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void setUpMap() {
-        mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
-
-    private void readItems() {
-        for (int i = 0; i < mNearByBusinessResponse.size(); i++) {
-
-            NearbyBusinessResponseList iPayHereResponse = mNearByBusinessResponse.get(i);
-            Coordinate cc = mNearByBusinessResponse.get(i).getCoordinate();
-            Marker mMarker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(cc.getLatitude(), cc.getLongitude()))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ipay_here_marker))
-                    .title(mNearByBusinessResponse.get(i).getBusinessName()));
-
-            mMarker.setTag(iPayHereResponse);
-        }
-    }
-
-    void startDemo() {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(mLatitude), Double.valueOf(mLongitude)), 15f));
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(false);
-        } else {
-            mMap.setMyLocationEnabled(true);
-        }
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-        mMap.setOnCameraMoveStartedListener(this);
-        mMap.setOnCameraIdleListener(this);
-    }
 
     protected void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -360,68 +296,158 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         alert.show();
     }
 
-    private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
-        private View view;
-        private Marker marker;
-        boolean not_first_time_showing_info_window = false;
-        private CircleImageView businessProfileImageView;
-        private TextView businessNameTextView;
+    private void setBusinessContactAdapter(List<NearbyBusinessResponseList> businessContactList) {
+        mTransactionHistoryAdapter = new BusinessContactListAdapter(getContext(), businessContactList);
+        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+    }
 
-        public CustomInfoWindowAdapter() {
-            view = getLayoutInflater().inflate(R.layout.ipay_here_info_window_map,
-                    null);
+    private class BusinessContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+        Context c;
+        List<NearbyBusinessResponseList> userTransactionHistories;
+        List<NearbyBusinessResponseList> mFilteredOutlets;
+
+        public BusinessContactListAdapter(Context c, List<NearbyBusinessResponseList> userTransactionHistories) {
+            this.c = c;
+            this.userTransactionHistories = userTransactionHistories;
+            this.mFilteredOutlets = userTransactionHistories;
         }
 
-        @Override
-        public View getInfoContents(Marker marker) {
+        public class ViewHolder extends RecyclerView.ViewHolder {
 
-            if (this.marker != null
-                    && this.marker.isInfoWindowShown()) {
-                this.marker.hideInfoWindow();
-                this.marker.showInfoWindow();
+            private TextView businessNameView;
+            private TextView outletNameView;
+            private TextView businessTypeView;
+            private ProfileImageView profilePictureView;
+            private TextView businessAddressView;
+            private View directionView;
+
+
+
+            public ViewHolder(final View itemView) {
+                super(itemView);
+                businessNameView = itemView.findViewById(R.id.business_name);
+                outletNameView = itemView.findViewById(R.id.outlet_name);
+                businessTypeView = itemView.findViewById(R.id.business_type);
+                profilePictureView = itemView.findViewById(R.id.profile_picture);
+                businessAddressView = itemView.findViewById(R.id.business_address);
+                directionView = itemView.findViewById(R.id.direction);
             }
-            return null;
-        }
 
-        @Override
-        public View getInfoWindow(final Marker marker) {
-            this.marker = marker;
-            NearbyBusinessResponseList infoWindowData = (NearbyBusinessResponseList) marker.getTag();
-            businessProfileImageView = (CircleImageView) view.findViewById(R.id.profile_picture);
-            businessNameTextView = (TextView) view.findViewById(R.id.textview_name);
-            String title = infoWindowData.getBusinessName();
-            businessNameTextView.setText(title);
-            if (infoWindowData.getImageUrl() != null) {
-                String imageUrl = Constants.BASE_URL_FTP_SERVER + infoWindowData.getImageUrl();
-                if (not_first_time_showing_info_window) {
-                    not_first_time_showing_info_window = false;
-                    Glide.with(getActivity())
-                            .load(imageUrl)
-                            .placeholder(R.drawable.ic_business_logo_round)
-                            .error(R.drawable.ic_business_logo_round)
-                            .into(businessProfileImageView);
-                } else {
-                    not_first_time_showing_info_window = true;
-                    Glide.with(getActivity()).load(imageUrl)
-                            .listener(new RequestListener<String, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
+            public void bindView(final int pos) {
 
-                                @Override
-                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                    marker.showInfoWindow();
-                                    return false;
-                                }
-                            }).crossFade().placeholder(R.drawable.ic_business_logo_round)
-                            .error(R.drawable.ic_business_logo_round).into(businessProfileImageView);
+                final NearbyBusinessResponseList businessContact = mFilteredOutlets.get(pos);
 
+                //final String typeInList = businessContact.getTypeInList();
+                final String businessName = businessContact.getBusinessName();
+                final String mobileNumber = businessContact.getMobileNumber();
+                //final String businessType = businessContact.getBusinessType();
+                final String profilePictureUrl = businessContact.getImageUrl();
+                final String businessAddress = businessContact.getAddressString();
+                final String businessOutlet = businessContact.getOutletName();
+                final Long businessOutletId = businessContact.getOutletId();
+
+                final double lat = businessContact.getCoordinate().getLatitude();
+                final double lon = businessContact.getCoordinate().getLongitude();
+
+                if (businessName != null && !businessName.isEmpty())
+                    businessNameView.setText(businessName);
+
+                if (businessOutlet != null && !businessOutlet.isEmpty()) {
+                    outletNameView.setText(businessOutlet);
+                    outletNameView.setVisibility(View.VISIBLE);
+                }else {
+                    outletNameView.setVisibility(View.GONE);
                 }
+
+                if (businessAddress != null && !businessAddress.isEmpty()) {
+                    businessAddressView.setText(businessAddress);
+                    businessAddressView.setVisibility(View.VISIBLE);
+                }else {
+                    businessAddressView.setVisibility(View.GONE);
+                }
+
+                profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
+
+                directionView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Uri gmmIntentUri = Uri.parse("google.navigation:q="+lat+","+lon);
+                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?daddr="+lat+","+lon);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
+                        intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
+                        intent.putExtra(Constants.FROM_QR_SCAN, true);
+                        intent.putExtra(Constants.NAME, businessName);
+                        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
+                        intent.putExtra(Constants.ADDRESS, businessAddress);
+                        if (businessOutletId != null) {
+                            intent.putExtra(Constants.OUTLET_ID, businessOutletId.longValue());
+                        }
+                        startActivity(intent);
+                    }
+                });
             }
-            return view;
         }
+
+
+        // Now define the view holder for Normal list item
+        class NormalViewHolder extends ViewHolder {
+            NormalViewHolder(final View itemView) {
+                super(itemView);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Do whatever you want on clicking the normal items
+
+
+                    }
+                });
+            }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_ipay_here, parent, false));
+
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                NormalViewHolder vh = (NormalViewHolder) holder;
+                vh.bindView(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mFilteredOutlets == null)
+                return 0;
+            else
+                return mFilteredOutlets.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+
+
     }
 
 
