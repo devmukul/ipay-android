@@ -369,9 +369,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 			}
 		}
 
-		if (!SharedPrefManager.getUserCountry().equals("BD")) {
-			DialogUtils.showDialogForCountyNotSupported(getContext());
-		}
+//		if (!SharedPrefManager.getUserCountry().equals("BD")) {
+//			DialogUtils.showDialogForCountyNotSupported(getContext());
+//		}
 
 		transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,

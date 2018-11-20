@@ -168,8 +168,6 @@ dependencies {
     implementation 'io.intercom.android:intercom-sdk-base:5.1.6'
     implementation 'io.intercom.android:intercom-sdk-fcm:5.1.6'
 
-    // Singapore
-    implementation 'com.hbb20:ccp:1.7.8'
     //facebook sdk
     implementation 'com.facebook.android:facebook-android-sdk:4.38.1'
 }
