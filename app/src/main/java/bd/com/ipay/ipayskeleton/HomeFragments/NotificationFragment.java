@@ -966,7 +966,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         public void onClick(View v) {
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
-
+                            bundle.putString(Constants.TO_DO,Constants.UPDATE_STATUS);
                             EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
                                     = new EditPermissionSourceOfFundBottomSheetFragment();
                             editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);

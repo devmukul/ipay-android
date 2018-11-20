@@ -25,17 +25,21 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessa
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.UpdateMonthlyLimitRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDialogFragment implements HttpResponseListener {
     private Beneficiary beneficiary;
     private HttpRequestPutAsyncTask updateBeneficiaryAsyncTask;
+    private HttpRequestPutAsyncTask updateMonthlyLimitAsyncTask;
 
     private EditText pinEditText;
     private EditText amountEditText;
 
     private IpayProgressDialog ipayProgressDialog;
     public BeneficiaryUpdateListener beneficiaryUpdateListener;
+
+    private String action;
 
     @Nullable
     @Override
@@ -51,6 +55,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
         TextView permissionDetailsTextView = view.findViewById(R.id.permission_details);
         Bundle bundle = getArguments();
         beneficiary = (Beneficiary) bundle.getSerializable(Constants.BENEFICIARY);
+        action = bundle.getString(Constants.TO_DO);
         String name = beneficiary.getUser().getName();
         String permissionDetailsText = permissionDetailsTextView.getText().toString();
         permissionDetailsText = permissionDetailsText.replace("Sourav Saha", name);
@@ -61,11 +66,35 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
             @Override
             public void onClick(View v) {
                 if (verifyUserInput()) {
-                    attemptUpdateBeneficiaryStatus(beneficiary.getId());
+                    if (action.equals(Constants.EDIT_AMOUNT)) {
+                        attemptChangeMonthlyLimit();
+                    } else {
+                        attemptUpdateBeneficiaryStatus(beneficiary.getId());
+                    }
+
                 }
             }
         });
 
+    }
+
+    private void attemptChangeMonthlyLimit() {
+        if (updateMonthlyLimitAsyncTask != null) {
+            return;
+        } else {
+            ipayProgressDialog.setMessage("Please wait. . .");
+
+            UpdateMonthlyLimitRequest updateMonthlyLimitRequest = new UpdateMonthlyLimitRequest
+                    (Long.parseLong(amountEditText.getText().toString()), pinEditText.getText().toString());
+            String jsonString = new Gson().toJson(updateMonthlyLimitRequest);
+            String mUri = Constants.BASE_URL_MM + Constants.URI_CHANGE_MONTHLY_LIMIT +
+                    Long.toString(beneficiary.getId()) + "/" + amountEditText.getText().toString();
+            updateMonthlyLimitAsyncTask = new HttpRequestPutAsyncTask
+                    (Constants.COMMAND_CHANGE_MONTLY_LIMIT, mUri,
+                            jsonString, getContext(), this, false);
+            updateMonthlyLimitAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ipayProgressDialog.show();
+        }
     }
 
     public void setBeneficiaryUpdateListener(BeneficiaryUpdateListener beneficiaryUpdateListener) {
@@ -117,19 +146,35 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
             return;
         } else {
             ipayProgressDialog.dismiss();
-            try {
-                GenericResponseWithMessageOnly genericResponseWithMessageOnly =
-                        new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    beneficiaryUpdateListener.onBeneficiaryStatusUpdated();
-                    Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+            if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY)) {
+                try {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly =
+                            new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        beneficiaryUpdateListener.onBeneficiaryStatusUpdated();
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
+                updateBeneficiaryAsyncTask = null;
+            } else if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_MONTLY_LIMIT)) {
+                try {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly =
+                            new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        beneficiaryUpdateListener.onBeneficiaryStatusUpdated();
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
+                }
+                updateMonthlyLimitAsyncTask = null;
             }
-            updateBeneficiaryAsyncTask = null;
         }
     }
 

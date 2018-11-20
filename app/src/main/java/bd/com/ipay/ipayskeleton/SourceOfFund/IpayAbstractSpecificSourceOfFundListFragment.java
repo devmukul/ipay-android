@@ -278,7 +278,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
 
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
-
+                    bundle.putString(Constants.TO_DO,Constants.EDIT_AMOUNT);
                     EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
                             = new EditPermissionSourceOfFundBottomSheetFragment();
                     editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
