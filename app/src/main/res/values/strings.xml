@@ -1346,8 +1346,8 @@
     <string name="last_transaction">LAST TRANSACTION</string>
     <string name="dummy_mobile_number">+8801234567890</string>
     <string name="link_ipay_account">Link iPay</string>
-    <string name="source_of_fund_success">You have sent a request to Arifur Rahman to become a sponsor of your iPay wallet. We will inform you when he accepts the request."</string>
-    <string name="helper">Hasan Masud has asked you to become a sponsor of his wallet. He can use up to a certain limit monthly from your iPay wallet.</string>
+    <string name="source_of_fund_success">You have sent a request to Arifur Rahman to become a sponsor of your iPay wallet. We will inform you when he/she accepts the request."</string>
+    <string name="helper">Hasan Masud has asked you to become a sponsor of his/her wallet. He/She can use up to a certain limit monthly from your iPay wallet.</string>
     <string name="select_source_type">Select Source Type</string>
     <string name="link_bank_description">Link your bank account to add money from the bank. After link bank, iPay will send an amount to check and confirm your bank connectivity</string>
     <string name="link_sponsor">iPAY USER AS SOURCE OF FUND</string>

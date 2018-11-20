@@ -552,6 +552,15 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    public boolean onBackPressed() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void launchBusinessRoleReviewFragment(final BusinessRoleManagerInvitation businessRoleManagerInvitation) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
@@ -958,7 +967,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
 
-                            //NotificationHolderFragment.mNotificationTabLayout.setVisibility(View.GONE);
                             EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
                                     = new EditPermissionSourceOfFundBottomSheetFragment();
                             editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
@@ -993,8 +1001,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             .error(R.drawable.user_brand_bg)
                             .into(profileImageView);
                     timeTextView.setText(Utilities.formatDateWithTime(sponsor.getUpdatedAt()));
-                    descriptionTextView.setText(sponsor.getName() + " has invited you to use his/her iPay wallet as " +
-                            "your source of fund");
+                    descriptionTextView.setText(sponsor.getName() + " wants to be your sponsor. " +
+                            "You can use his/her iPay wallet while making payments");
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

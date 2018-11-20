@@ -2,8 +2,10 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
@@ -99,11 +101,26 @@ public class NotificationActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment != null) {
+                if (fragment instanceof NotificationHolderFragment) {
+                    NotificationFragment notificationFragment = (NotificationFragment)
+                            ((NotificationHolderFragment) fragment).getNotificationFragment();
+                    if (notificationFragment != null) {
+                        if (notificationFragment.onBackPressed()) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
         else {
             super.onBackPressed();
         }
+
     }
 }
 

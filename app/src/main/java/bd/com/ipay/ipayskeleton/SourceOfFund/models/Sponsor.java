@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund.models;
 
 
-import android.annotation.SuppressLint;
 import android.os.Parcel;
 
 import java.io.Serializable;
@@ -9,13 +8,14 @@ import java.io.Serializable;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-@SuppressLint("ParcelCreator")
-public class Sponsor implements Serializable, CommonData, Notification {
+
+public class Sponsor implements Serializable, CommonData, Notification  {
     private long id;
 
     public String getType() {
         return type;
     }
+
 
     public void setType(String type) {
         this.type = type;
@@ -29,6 +29,21 @@ public class Sponsor implements Serializable, CommonData, Notification {
     private long updatedAt;
     private User user;
 
+
+    public static final Creator<Sponsor> CREATOR = new Creator<Sponsor>() {
+        @Override
+        public Sponsor createFromParcel(Parcel in) {
+            return new Sponsor(in);
+        }
+
+        @Override
+        public Sponsor[] newArray(int size) {
+            return new Sponsor[size];
+        }
+    };
+
+    public Sponsor(Parcel in) {
+    }
 
     public long getId() {
         return id;

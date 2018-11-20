@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.SourceOfFund;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -68,6 +69,17 @@ public class SourceOfFundActivity extends AppCompatActivity {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
+
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                if (fragment instanceof AddBeneficiaryAsSourceOfFundFragment) {
+                    IpayAbstractSpecificSourceOfFundListFragment abstractSpecificSourceOfFundListFragment =
+                            (IpayAbstractSpecificSourceOfFundListFragment) fragment;
+                    if(abstractSpecificSourceOfFundListFragment.onBackPressed()){
+                        return;
+                    }
+                }
+            }
+
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
             } else {

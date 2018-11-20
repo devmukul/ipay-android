@@ -35,6 +35,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.R;
@@ -98,7 +99,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 operatorCode = getArguments().getString(Constants.OPERATOR_CODE);
                 operatorType = getArguments().getInt(Constants.OPERATOR_TYPE);
                 mAddressString = getArguments().getString(Constants.ADDRESS);
-                sponsorList = (ArrayList<Sponsor>) getArguments().getSerializable(Constants.SPONSOR_LIST);
+                sponsorList = HomeActivity.mSponsorList;
                 if (getArguments().containsKey(Constants.OUTLET_ID)) {
                     mOutletId = getArguments().getLong(Constants.OUTLET_ID);
                 }
@@ -140,7 +141,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         sponsorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sponsorSelectorDialog = new SponsorSelectorDialog(getContext(), sponsorList, new SponsorSelectorDialog.SponsorSelectorListener() {
+                sponsorSelectorDialog = new SponsorSelectorDialog(getContext(), HomeActivity.mSponsorList, new SponsorSelectorDialog.SponsorSelectorListener() {
                     @Override
                     public void onSponsorSelected(Sponsor sponsor) {
                         selectedSponsor = sponsor;

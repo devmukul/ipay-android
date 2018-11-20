@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -94,6 +95,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
             }
         }
         parentSponsorArrayList = sponsorArrayList;
+        HomeActivity.mSponsorList = sponsorArrayList;
         if (parentSponsorArrayList == null || parentSponsorArrayList.size() == 0) {
             noDataTextView.setVisibility(View.VISIBLE);
         }

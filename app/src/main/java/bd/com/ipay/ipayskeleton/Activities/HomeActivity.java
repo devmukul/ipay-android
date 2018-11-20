@@ -85,6 +85,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.SourceOfFundActivity;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -134,10 +136,13 @@ public class HomeActivity extends BaseActivity
     private DrawerLayout drawer;
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask;
+    private HttpRequestGetAsyncTask getSponsorListAsyncTask;
+    public static ArrayList<Sponsor> mSponsorList;
 
     public HomeActivity() {
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,6 +230,10 @@ public class HomeActivity extends BaseActivity
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
 
+        //get sponsor list
+
+        attemptGetSponsorList();
+
         // Load the list of available business types, which will be accessed from multiple activities
         getAvailableBusinessTypes();
 
@@ -251,6 +260,17 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+    }
+
+
+    private void attemptGetSponsorList() {
+        if (getSponsorListAsyncTask != null) {
+            return;
+        } else {
+            getSponsorListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
+                    this, this, true);
+            getSponsorListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 
@@ -688,6 +708,18 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    private void removeRejectedEntriesForSponsors(ArrayList<Sponsor> sponsors) {
+        mSponsorList = new ArrayList<>();
+        mSponsorList.clear();
+        for (int i = 0; i < sponsors.size(); i++) {
+            if (!sponsors.get(i).getStatus().equals("REJECTED") && !sponsors.get(i).getStatus().equals("PENDING")) {
+                mSponsorList.add(sponsors.get(i));
+            }
+        }
+
+
+    }
+
     private void refreshBalance() {
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
             return;
@@ -902,6 +934,12 @@ public class HomeActivity extends BaseActivity
                 }
                 mRefreshTokenAsyncTask = null;
                 break;
+            case Constants.COMMAND_GET_SPONSOR_LIST:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    GetSponsorListResponse getSponsorListResponse = new Gson().
+                            fromJson(result.getJsonString(), GetSponsorListResponse.class);
+                    removeRejectedEntriesForSponsors(getSponsorListResponse.getSponsor());
+                }
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:
                 try {
                     GetBusinessInformationResponse mGetBusinessInformationResponse = gson.fromJson(result.getJsonString(), GetBusinessInformationResponse.class);

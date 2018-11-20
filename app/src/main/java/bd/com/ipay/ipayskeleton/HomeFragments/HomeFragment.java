@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.InviteFriendActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
@@ -296,6 +297,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                     public void ifPinAdded() {
                         Intent intent;
                         intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                        intent.putExtra(Constants.SPONSOR_LIST, ((HomeActivity) getActivity()).mSponsorList);
                         startActivity(intent);
                     }
                 });

@@ -191,6 +191,15 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
         }
     }
 
+    public boolean onBackPressed() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public class SourceOfFundListAdapter extends RecyclerView.Adapter<SourceOfFundListAdapter.SponsorOrBeneficiaryViewHolder> {
 
 

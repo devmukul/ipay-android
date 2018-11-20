@@ -58,6 +58,12 @@ public class IPayTransactionSuccessFragment extends Fragment {
             mAddressString = getArguments().getString(Constants.ADDRESS);
             sponsorProfilePictureUrl = getArguments().getString(Constants.SPONSOR_PROFILE_PICTURE);
             sponsorName = getArguments().getString(Constants.SPONSOR_NAME);
+
+            if (sponsorProfilePictureUrl != null) {
+                if (sponsorProfilePictureUrl.contains("ipay.com")) {
+                    sponsorProfilePictureUrl = Constants.BASE_URL_FTP_SERVER + sponsorProfilePictureUrl;
+                }
+            }
         }
         numberFormat.setMinimumFractionDigits(0);
         numberFormat.setMaximumFractionDigits(2);
@@ -103,12 +109,11 @@ public class IPayTransactionSuccessFragment extends Fragment {
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.make_payment_success_message, amountValue), 18, 18 + amountValue.length());
-                if(sponsorName != null ){
-                    successDescriptionTextView.setText("Successfully paid to "+name+" using "+sponsorName+"'s"+
-                    " iPay wallet. "+name+ " and "+ sponsorName+" will be notified about this transaction."+
-                           " See the details of this transaction in your Transaction History.");
-                }
-                else {
+                if (sponsorName != null) {
+                    successDescriptionTextView.setText("Successfully paid to " + name + " using " + sponsorName + "'s" +
+                            " iPay wallet. " + name + " and " + sponsorName + " will be notified about this transaction." +
+                            " See the details of this transaction in your Transaction History.");
+                } else {
                     successDescriptionTextView.setText(getString(R.string.make_payment_success_description, name));
                 }
                 break;

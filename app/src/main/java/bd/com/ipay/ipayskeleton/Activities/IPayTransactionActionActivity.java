@@ -80,7 +80,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
                 BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
 
                 if (getIntent().hasExtra(Constants.SPONSOR_LIST)) {
-                    ArrayList<Sponsor> sponsorList = (ArrayList<Sponsor>) getIntent().getSerializableExtra(Constants.SPONSOR_LIST);
+                    ArrayList<Sponsor> sponsorList = getIntent().getParcelableArrayListExtra(Constants.SPONSOR_LIST);
                     bundle.putSerializable(Constants.SPONSOR_LIST, sponsorList);
                 }
 

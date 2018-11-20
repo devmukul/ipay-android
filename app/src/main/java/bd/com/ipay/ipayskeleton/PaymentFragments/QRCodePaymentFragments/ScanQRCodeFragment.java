@@ -324,12 +324,6 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         if (outletId != null) {
             intent.putExtra(Constants.OUTLET_ID, outletId.longValue());
         }
-        if (getArguments() != null) {
-            Bundle bundle = getArguments();
-            if (bundle.getSerializable(Constants.SPONSOR_LIST) != null) {
-                intent.putExtra(Constants.SPONSOR_LIST,  bundle.getSerializable(Constants.SPONSOR_LIST));
-            }
-        }
         startActivity(intent);
         if (getActivity() != null)
             getActivity().finish();
