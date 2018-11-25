@@ -143,6 +143,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             ipayProgressDialog.dismiss();
             updateBeneficiaryAsyncTask = null;
+            updateMonthlyLimitAsyncTask = null;
             return;
         } else {
             ipayProgressDialog.dismiss();
