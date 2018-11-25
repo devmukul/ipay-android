@@ -390,7 +390,11 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
                     GetUserInfoResponse getUserInfoResponse = new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProfileImageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                        if(getUserInfoResponse.getProfilePictures()!= null){
+                            if(getUserInfoResponse.getProfilePictures().size()!= 0){
+                                mProfileImageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                            }
+                        }
                         mName = getUserInfoResponse.getName();
                         mNameTextView.setVisibility(View.VISIBLE);
                         mNameTextView.setText(mName);
