@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class IpaySourceOfFundListFragment extends Fragment implements View.OnClickListener {
     private View bankView;
     private View iPayBeneficiaryView;
     private View iPaySponsorView;
+    private View divider;
 
     @Nullable
     @Override
@@ -28,9 +30,16 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
         bankView = view.findViewById(R.id.bank_layout);
         iPaySponsorView = view.findViewById(R.id.sponsor_layout);
         iPayBeneficiaryView = view.findViewById(R.id.beneficiary_layout);
+        divider = view.findViewById(R.id.divider2);
         iPayBeneficiaryView.setOnClickListener(this);
         iPaySponsorView.setOnClickListener(this);
         bankView.setOnClickListener(this);
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            iPaySponsorView.setVisibility(View.GONE);
+            iPayBeneficiaryView.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+        }
         View backButton = view.findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
