@@ -63,14 +63,6 @@ public class SharedPrefManager {
 		pref.edit().putInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, value).apply();
 	}
 
-//	public static void setUserCountry(String value) {
-//		pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
-//	}
-//
-//	public static String getUserCountry() {
-//		return pref.getString(SharedPrefConstants.USERCOUNTRY, "BD");
-//	}
-
 	public static String getKeyPassword(String defaultValue) {
 		return pref.getString(SharedPrefConstants.KEY_PASSWORD, defaultValue);
 	}
@@ -98,10 +90,6 @@ public class SharedPrefManager {
 	public static boolean ifContainsUserID() {
 		return (pref.contains(SharedPrefConstants.USERID));
 	}
-
-//	public static boolean isBangladesh() {
-//		return getUserCountry().equalsIgnoreCase("BD");
-//	}
 
 	public static String getInvitationCode() {
 		return pref.getString(SharedPrefConstants.INVITATION_CODE, null);
