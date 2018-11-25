@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,9 +48,6 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
     private LinearLayout mCardInfoLayout;
     private BankListAdapter bankListAdapter;
     private int clickedPosition;
-    private TextView mTermsAndConditionsTextView;
-    private CheckBox saveCardCheckBox;
-
     private CardNumberEditText mCardNumberEditText;
     private EditText mNameEditText;
     private int selectedBankIconId;
@@ -71,12 +67,10 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
         mProgressLayout = (LinearLayout) view.findViewById(R.id.progress_layout);
         bankListAdapter = new BankListAdapter();
         mBankListRecyclerView.setAdapter(bankListAdapter);
-        mTermsAndConditionsTextView = (TextView) view.findViewById(R.id.save_card_number);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         mCardNumberEditText = view.findViewById(R.id.card_number);
         mNameEditText = view.findViewById(R.id.card_holder_name);
         mCardInfoLayout = view.findViewById(R.id.card_info_layout);
-        saveCardCheckBox = view.findViewById(R.id.save_card_checkbox);
         mContinueButton = view.findViewById(R.id.continue_button);
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +86,6 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
                                 mNameEditText.getText().toString());
                         bundle.putString(IPayUtilityBillPayActionActivity.BANK_CODE, selectedBankCode);
                         bundle.putInt(IPayUtilityBillPayActionActivity.BANK_ICON, selectedBankIconId);
-                        bundle.putBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, saveCardCheckBox.isChecked());
                         ((IPayUtilityBillPayActionActivity) getActivity()).
                                 switchFragment(new CreditCardAmountInputFragment(), bundle, 2, true);
 

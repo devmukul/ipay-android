@@ -18,12 +18,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.ContactFragments.IPayContactListFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.TransactionHelperFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.TopUpEnterNumberFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IPayMakePaymentFragment extends Fragment {
