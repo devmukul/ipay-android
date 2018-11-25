@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Locale;
 
 import bd.com.ipay.android.utility.TransactionHistoryType;
+import bd.com.ipay.android.viewmodel.TransactionHistoryRepositoryViewModel;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
@@ -70,7 +71,6 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import bd.com.ipay.ipayskeleton.ViewModel.TransactionHistoryRepositoryViewModel;
 import bd.com.ipay.ipayskeleton.ViewModel.ViewModelFactory;
 
 public class TransactionHistoryPendingFragment extends ProgressFragment implements
