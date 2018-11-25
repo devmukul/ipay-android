@@ -37,141 +37,145 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v4.widget.NestedScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="@dimen/top_margin_source_of_fund"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
 
-        <RelativeLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/profile_image"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/user_brand_bg"
-                app:riv_oval="true" />
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profile_image"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="OpenSans-SemiBold"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="6sp"
-                android:textColor="#212121"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="Arifur Rahman" />
-
-            <TextView
-                android:id="@+id/help_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/name"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginBottom="@dimen/value24"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="5sp"
-                android:text="Insert number or find an iPay user from your contact and choose the relation"
-                android:textColor="#666666"
-                android:textSize="13sp" />
+            android:layout_centerInParent="true"
+            android:fitsSystemWindows="true">
 
             <RelativeLayout
-                android:id="@+id/number_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/help_text"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp">
+                android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/number_edit_text"
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/user_brand_bg"
+                    app:riv_oval="true" />
+
+                <TextView
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/transparent"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:inputType="phone"
-                    android:maxLength="15"
-                    android:text="+880-1"
+                    android:layout_below="@id/profile_image"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="OpenSans-SemiBold"
+                    android:gravity="center_horizontal"
+                    android:lineSpacingExtra="6sp"
                     android:textColor="#212121"
-                    android:textSize="26sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:text="Arifur Rahman" />
 
-                <ImageView
-                    android:id="@+id/contact_image_view"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/value5"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_contact_picker" />
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/edit_text_background"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/number_layout"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginBottom="@dimen/value16"
-                android:background="#19000000" />
-
-            <RelativeLayout
-                android:id="@+id/relationship_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edit_text_background"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp">
-
-                <EditText
-                    android:id="@+id/relationship_edit_text"
+                <TextView
+                    android:id="@+id/help_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/transparent"
-                    android:editable="false"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:inputType="phone"
-                    android:lineSpacingExtra="12sp"
-                    android:maxLength="15"
-                    android:text="Relationship"
-                    android:textColor="#212121"
-                    android:textSize="18sp" />
+                    android:layout_below="@+id/name"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="@dimen/value24"
+                    android:gravity="center_horizontal"
+                    android:lineSpacingExtra="5sp"
+                    android:text="Insert number or find an iPay user from your contact and choose the relation"
+                    android:textColor="#666666"
+                    android:textSize="13sp" />
 
-                <ImageView
-                    android:id="@+id/down_image_view"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignParentRight="true"
-                    app:srcCompat="@drawable/ic_arrow_drop_down_grey" />
+                <RelativeLayout
+                    android:id="@+id/number_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/help_text"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp">
+
+                    <EditText
+                        android:id="@+id/number_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:inputType="phone"
+                        android:maxLength="15"
+                        android:text="+880-1"
+                        android:textColor="#212121"
+                        android:textSize="26sp" />
+
+                    <ImageView
+                        android:id="@+id/contact_image_view"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/value5"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_contact_picker" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/edit_text_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/number_layout"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginBottom="@dimen/value16"
+                    android:background="#19000000" />
+
+                <RelativeLayout
+                    android:id="@+id/relationship_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edit_text_background"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp">
+
+                    <EditText
+                        android:id="@+id/relationship_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:background="@android:color/transparent"
+                        android:editable="false"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:inputType="phone"
+                        android:lineSpacingExtra="12sp"
+                        android:maxLength="15"
+                        android:text="Relationship"
+                        android:textColor="#212121"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/down_image_view"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_alignParentRight="true"
+                        app:srcCompat="@drawable/ic_arrow_drop_down_grey" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/background"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/relationship_layout"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginBottom="@dimen/value16"
+                    android:background="#19000000" />
+
             </RelativeLayout>
-
-            <View
-                android:id="@+id/background"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/relationship_layout"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginBottom="@dimen/value16"
-                android:background="#19000000" />
-
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/done"
