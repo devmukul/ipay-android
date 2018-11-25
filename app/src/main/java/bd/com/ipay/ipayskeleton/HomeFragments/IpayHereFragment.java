@@ -56,6 +56,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
@@ -318,7 +319,7 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
 
             private TextView businessNameView;
             private TextView outletNameView;
-            private TextView businessTypeView;
+            private TextView distanceView;
             private ProfileImageView profilePictureView;
             private TextView businessAddressView;
             private View directionView;
@@ -329,7 +330,7 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                 super(itemView);
                 businessNameView = itemView.findViewById(R.id.business_name);
                 outletNameView = itemView.findViewById(R.id.outlet_name);
-                businessTypeView = itemView.findViewById(R.id.business_type);
+                distanceView = itemView.findViewById(R.id.distance);
                 profilePictureView = itemView.findViewById(R.id.profile_picture);
                 businessAddressView = itemView.findViewById(R.id.business_address);
                 directionView = itemView.findViewById(R.id.direction);
@@ -368,6 +369,10 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                     businessAddressView.setVisibility(View.GONE);
                 }
 
+                float[] result = new float[1];
+                Location.distanceBetween(Double.parseDouble(mLatitude), Double.parseDouble(mLongitude), businessContact.getCoordinate().getLatitude(),businessContact.getCoordinate().getLongitude(), result);
+                distanceView.setText("Distance : "+distanceText(result[0]));
+
                 profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
 
                 directionView.setOnClickListener(new View.OnClickListener() {
@@ -398,6 +403,22 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                     }
                 });
             }
+        }
+
+        public String distanceText(float distance) {
+            String distanceString;
+
+            if (distance < 1000)
+                if (distance < 1)
+                    distanceString = String.format(Locale.US, "%dm", 1);
+                else
+                    distanceString = String.format(Locale.US, "%dm", Math.round(distance));
+            else if (distance > 10000)
+                distanceString = String.format(Locale.US, "%dkm", Math.round(distance / 1000));
+            else
+                distanceString = String.format(Locale.US, "%.2fkm", distance / 1000);
+
+            return distanceString;
         }
 
 

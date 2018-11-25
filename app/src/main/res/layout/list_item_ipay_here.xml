@@ -53,22 +53,9 @@
             android:layout_below="@+id/business_name"
             android:textColor="@color/colorOnBoardText"
             android:textSize="12sp"
-            android:textStyle="bold"
             android:lineSpacingExtra="8sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/business_type"
-            style="@style/TextStylePrimaryMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/outlet_name"
-            android:singleLine="true"
-            android:textColor="@color/colorOnBoardText"
-            android:textSize="12sp"
-            android:lineSpacingExtra="8sp"
             android:visibility="gone" />
 
         <TextView
@@ -76,18 +63,32 @@
             style="@style/TextStyleSecondaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/business_type"
+            android:layout_below="@+id/outlet_name"
             android:gravity="left"
             android:textColor="@color/colorPaymentReviewNoteText"
             android:textSize="12sp"
             android:maxLines="2"
             android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/distance"
+            style="@style/TextStylePrimaryMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/business_address"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary"
+            android:drawableLeft="@drawable/ic_map_pointer"
+            android:drawablePadding="3dp"
+            android:textSize="10sp"
+            android:lineSpacingExtra="8sp"
+            android:drawableTint="@color/colorPrimary"/>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="#d8d8d8"
+        android:background="@color/colorDivider"
         android:layout_alignTop="@id/info_holder"
         android:layout_alignBottom="@id/info_holder"
         android:layout_centerVertical="true"
