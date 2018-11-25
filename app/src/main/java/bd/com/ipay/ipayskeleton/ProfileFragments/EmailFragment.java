@@ -173,7 +173,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
     private void showAddNewEmailDialog() {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.add_an_email)
+                .title(R.string.enter_email_address)
                 .autoDismiss(false)
                 .customView(R.layout.dialog_add_new_email, true)
                 .positiveText(R.string.add)
