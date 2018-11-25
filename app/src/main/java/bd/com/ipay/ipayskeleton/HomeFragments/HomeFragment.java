@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -89,7 +90,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 	private ImageView mStatusIconView;
 
 	private View mTransactionHistoryView;
-	public ImageView refreshBalanceButton;
+	public ImageButton refreshBalanceButton;
 	private View mBottomSheet;
 	private ImageView mUpArrow;
 	private TextView mUpArrowText;
@@ -154,16 +155,16 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		LinearLayout mMakePaymentButton = view.findViewById(R.id.button_make_payment);
 		LinearLayout mTopUpButton = view.findViewById(R.id.button_topup);
 		LinearLayout mInviteFriendButton = view.findViewById(R.id.button_invite_to_ipay);
-		ImageView mShowQRCodeButton = view.findViewById(R.id.show_qr_code_button);
+		ImageButton mShowQRCodeButton = view.findViewById(R.id.show_qr_code_button);
 		LinearLayout mRequestPaymentButton = view.findViewById(R.id.button_request_paymnet);
 
-        if (ProfileInfoCacheManager.isBusinessAccount()){
-            mRequestPaymentButton.setVisibility(View.VISIBLE);
-            mInviteFriendButton.setVisibility(View.GONE);
-        }else {
-            mRequestPaymentButton.setVisibility(View.GONE);
-            mInviteFriendButton.setVisibility(View.VISIBLE);
-        }
+		if (ProfileInfoCacheManager.isBusinessAccount()) {
+			mRequestPaymentButton.setVisibility(View.VISIBLE);
+			mInviteFriendButton.setVisibility(View.GONE);
+		} else {
+			mRequestPaymentButton.setVisibility(View.GONE);
+			mInviteFriendButton.setVisibility(View.VISIBLE);
+		}
 
 
 		mTransactionDescriptionView = view.findViewById(R.id.activity_description);
@@ -337,24 +338,24 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 			}
 		});
 
-        mRequestPaymentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
-                }
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent;
-                        intent = new Intent(getActivity(), RequestPaymentActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                pinChecker.execute();
-            }
-        });
+		mRequestPaymentButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
+					DialogUtils.showServiceNotAllowedDialog(getContext());
+					return;
+				}
+				PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+					@Override
+					public void ifPinAdded() {
+						Intent intent;
+						intent = new Intent(getActivity(), RequestPaymentActivity.class);
+						startActivity(intent);
+					}
+				});
+				pinChecker.execute();
+			}
+		});
 
 		// Refresh balance each time home_activity page appears
 		if (Utilities.isConnectionAvailable(getActivity())) {

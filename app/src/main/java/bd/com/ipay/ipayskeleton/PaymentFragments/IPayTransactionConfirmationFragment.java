@@ -79,6 +79,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
     private String mAddressString;
     private Long mOutletId = null;
+
     private EditText mNoteEditText;
     private EditText mPinEditText;
 
@@ -100,11 +101,12 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 mobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
                 profilePicture = getArguments().getString(Constants.PHOTO_URI);
                 amount = (BigDecimal) getArguments().getSerializable(Constants.AMOUNT);
-	         mAddressString = getArguments().getString(Constants.ADDRESS);
+                mAddressString = getArguments().getString(Constants.ADDRESS);
                 if(getArguments().containsKey(Constants.OUTLET_ID)) {
                     mOutletId = getArguments().getLong(Constants.OUTLET_ID);
                 }}
-        } catch (Exception e) {
+            }
+         catch (Exception e) {
         	e.printStackTrace();
         }
         if (transactionType == ServiceIdConstants.TOP_UP) {
@@ -139,7 +141,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 		final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
 		final TextView nameTextView = view.findViewById(R.id.name_text_view);
 		final TextView addressTextView = view.findViewById(R.id.address_text_view);
-        final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
+		final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
 		final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
 		final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
 		final Button transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
@@ -161,12 +163,13 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
 		final String amountValue = getString(R.string.balance_holder, numberFormat.format(amount));
 		switch (transactionType) {
+
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 updateTransactionDescription(transactionDescriptionTextView,
                         getString(R.string.make_payment_confirmation_message, amountValue), 15, 15 + amountValue.length());
                 mNoteEditText.setHint(R.string.short_note_optional_hint);
                 transactionConfirmationButton.setText(R.string.make_payment);
-                break;
+                mNoteEditText.setHint(R.string.reference_number_optional);break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
 				updateTransactionDescription(transactionDescriptionTextView,
 						getString(R.string.top_up_confirmation_message, amountValue), 14, 14 + amountValue.length());
@@ -199,20 +202,24 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 			nameTextView.setText(name);
 		} else {
             nameTextView.setText(ContactEngine.formatMobileNumberBD(mobileNumber));
-        }if (!TextUtils.isEmpty(mAddressString)) {
+        }
+
+        if (!TextUtils.isEmpty(mAddressString)) {
             addressTextView.setVisibility(View.VISIBLE);
             addressTextView.setText(mAddressString);
         }else {
             addressTextView.setVisibility(GONE);
+
+
         }if (!TextUtils.isEmpty(profilePicture)) {
-			profileImageView.setVisibility(View.VISIBLE);
-			Glide.with(this)
-					.load(profilePicture)
-					.placeholder(R.drawable.ic_profile)
-					.error(R.drawable.ic_profile)
-					.transform(new CircleTransform(getContext()))
-					.into(profileImageView);
-		}else {
+            profileImageView.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(profilePicture)
+                    .placeholder(R.drawable.ic_profile)
+                    .error(R.drawable.ic_profile)
+                    .transform(new CircleTransform(getContext()))
+                    .into(profileImageView);
+        } else {
             profileImageView.setImageResource(R.drawable.ic_profile);
         }
 
@@ -286,10 +293,11 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 				url = Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD;
 				mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
 				break;
+
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 apiCommand = Constants.COMMAND_PAYMENT;
                 PaymentRequest paymentRequest = new PaymentRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
-                        amount.toString(), note, null, mOutletId, 0.0, 0.0);
+                        amount.toString(),  null, note,mOutletId, 0.0, 0.0);
                 paymentRequest.setPin(mPinEditText.getText().toString());
                 requestJson = gson.toJson(paymentRequest);
                 url = Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3;
@@ -303,25 +311,25 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 				mCustomProgressDialog.setMessage(getString(R.string.requesting_money));
 				break;
 			case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
-                apiCommand = Constants.COMMAND_TOPUP_REQUEST;
-                String number = ContactEngine.formatLocalMobileNumber(mobileNumber);
-                number = number.replaceAll("[^0-9]", "");
-                requestJson = gson.toJson(new TopupRequest(Long.parseLong(number), ContactEngine.formatMobileNumberBD(mobileNumber),
-                        operatorType, operatorCode, Long.parseLong(amount.toString().trim()), "+88", operatorType, Constants.DEFAULT_USER_CLASS, mPinEditText.getText().toString()));
-                url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST;
-                mCustomProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
-                break;
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
-            default:
-                return;
-        }
-        httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(apiCommand, url, requestJson, getContext(), this, false);
-        if(transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT)
-            httpRequestPostAsyncTask.setPinAsHeader(mPinEditText.getText().toString());
-        httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-        mCustomProgressDialog.showDialog();
-    }
+				apiCommand = Constants.COMMAND_TOPUP_REQUEST;
+				String number = ContactEngine.formatLocalMobileNumber(mobileNumber);
+				number = number.replaceAll("[^0-9]", "");
+				requestJson = gson.toJson(new TopupRequest(Long.parseLong(number), ContactEngine.formatMobileNumberBD(mobileNumber),
+						operatorType, operatorCode, Long.parseLong(amount.toString().trim()), "+88", operatorType, Constants.DEFAULT_USER_CLASS, mPinEditText.getText().toString()));
+				url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST;
+				mCustomProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
+				break;
+			case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
+			default:
+				return;
+		}
+		httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(apiCommand, url, requestJson, getContext(), this, false);
+        if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT)
+			httpRequestPostAsyncTask.setPinAsHeader(mPinEditText.getText().toString());
+		httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
+		mCustomProgressDialog.showDialog();
+	}
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -330,7 +338,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             mCustomProgressDialog.dismissDialog();
         } else {
             switch (result.getApiCommand()) {
-                case Constants.COMMAND_PAYMENT:
+                case  Constants.COMMAND_PAYMENT:
                 case Constants.COMMAND_REQUEST_MONEY:
                 case Constants.COMMAND_TOPUP_REQUEST:
                     final String apiCommand = result.getApiCommand();
@@ -413,7 +421,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
     private String getTrackerCategory() {
         switch (transactionType) {
-            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+            case  IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 return "Make Payment";
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 return "Request Money";
@@ -428,7 +436,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
     private void launchOTPVerification(long otpValidFor) {
         if (getActivity() != null) {
             switch (transactionType) {
-                case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+                case  IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_PAYMENT,
                             Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3, Constants.METHOD_POST, otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);

@@ -136,33 +136,32 @@ public class ServiceAccessValidatorAspect {
 		return result;
 	}
 
-	@Around("execution(* onNavigationItemSelected(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-	public Object serviceValidatorOnNavigationItemSelect(ProceedingJoinPoint joinPoint) throws Throwable {
-		Object result = null;
-		boolean hasNavigationAccess = true;
-		MenuItem item = (MenuItem) joinPoint.getArgs()[0];
-		switch (item.getItemId()) {
-			case R.id.nav_bank_account:
-				hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS);
-				break;
-			case R.id.nav_user_activity:
-				hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY);
-				break;
-			case R.id.nav_invite:
-				hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS);
-				break;
-			case R.id.nav_logout:
-				hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SIGN_OUT);
-				break;
-			case R.id.nav_home:
-			case R.id.nav_account:
-			case R.id.nav_security_settings:
-			case R.id.nav_live_chat:
-			case R.id.nav_help:
-			case R.id.nav_about:
-				hasNavigationAccess = true;
-				break;
-		}
+    @Around("execution(* onNavigationItemSelected(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+    public Object serviceValidatorOnNavigationItemSelect(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object result = null;
+        boolean hasNavigationAccess = true;
+        MenuItem item = (MenuItem) joinPoint.getArgs()[0];
+        switch (item.getItemId()) {
+            case R.id.nav_bank_account:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS);
+                break;
+            case R.id.nav_user_activity:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY);
+                break;
+            case R.id.nav_invite:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS);
+                break;
+            case R.id.nav_logout:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SIGN_OUT);
+                break;
+            case  R.id.nav_account:
+            case R.id.nav_security_settings:
+            case R.id.nav_live_chat:
+            case R.id.nav_help:
+            case R.id.nav_about:
+                hasNavigationAccess = true;
+                break;
+        }
 
 		if (!hasNavigationAccess) {
 			Context context = null;

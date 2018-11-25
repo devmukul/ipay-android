@@ -113,6 +113,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.HomeActivity"
+            android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -343,13 +344,6 @@
             android:name=".QRScanner.BarcodeCaptureActivity"
             android:label="Scan QR Code"
             android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".Activities.IPayHereActivity"
-            android:label="@string/ipay_here"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <activity
             android:name=".Activities.PaymentActivities.UtilityBillPaymentActivity"

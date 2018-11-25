@@ -189,7 +189,6 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
 	private void attemptBillPay(String pin) {
 		if (mAmberITBillPayTask == null) {
 			mAmberITBillPayRequest = new AmberITBillPayRequest(mCustomerID, mAmount, pin);
-
 			Gson gson = new Gson();
 			String json = gson.toJson(mAmberITBillPayRequest);
 			mAmberITBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_AMBERIT_BILL_PAY,
@@ -240,6 +239,8 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
 				mAccountIDEditText.setError(getString(R.string.enter_customer_id));
 				cancel = true;
 				return !cancel;
+			}else {
+				mCustomerID = Utilities.formatAmberItCID(mCustomerID);
 			}
 		}
 		editableAmount = mAmountEditText.getText();

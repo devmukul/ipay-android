@@ -39,6 +39,9 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import java.io.BufferedInputStream;
@@ -1178,5 +1181,16 @@ public class Utilities {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String formatAmberItCID(String customerID) {
+
+		String customerIdStr = customerID.trim().toUpperCase();
+		customerIdStr = customerIdStr.replaceAll("[^a-zA-Z0-9]", "");
+
+		if(customerIdStr.startsWith("CID") || customerIdStr.startsWith("cid") )
+			return customerIdStr;
+		else
+			return "CID"+customerIdStr;
 	}
 }
