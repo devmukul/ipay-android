@@ -3,10 +3,12 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -24,6 +26,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
@@ -60,25 +66,34 @@ import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Fragments.IPaySupportPlaceAutocompleteFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.CustomBusinessContact;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.IPayHereRequestUrlBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.IPayHereResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.NearbyBusinessResponseList;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class IpayHereFragment extends BaseFragment implements PlaceSelectionListener, HttpResponseListener {
+public class IpayHereFragment extends ProgressFragment implements PlaceSelectionListener, HttpResponseListener {
 
     private static final int REQUEST_LOCATION = 1;
     public static final int LOCATION_SETTINGS_PERMISSION_CODE = 9876;
@@ -95,6 +110,14 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
     private BusinessContactListAdapter mTransactionHistoryAdapter;
     private LinearLayoutManager mLayoutManager;
 
+    private ProgressDialog mProgressDialog;
+
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView mEmptyListTextView;
+
+    private boolean isLoading = false;
+    private boolean clearListAfterLoading;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +126,6 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
     @Override
     public void onResume() {
         super.onResume();
-        getLocationPermission();
     }
 
     @Nullable
@@ -113,34 +135,78 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         if (getActivity() != null)
             getActivity().setTitle(R.string.ipay_here);
 
-        SupportPlaceAutocompleteFragment autocompleteFragment = new SupportPlaceAutocompleteFragment();
+        IPaySupportPlaceAutocompleteFragment autocompleteFragment = new IPaySupportPlaceAutocompleteFragment();
+
+        //SupportPlaceAutocompleteFragment autocompleteFragment = new SupportPlaceAutocompleteFragment();
         android.support.v4.app.FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_content, autocompleteFragment);
         ft.commit();
+
+        autocompleteFragment.setOnSearchClearListener(new IPaySupportPlaceAutocompleteFragment.OnSearchClearListener() {
+            @Override
+            public void onClear() {
+                mProgressDialog.show();
+                refreshTransactionHistory();
+            }
+        });
+
+
         AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
-        .setTypeFilter(Place.TYPE_COUNTRY)
-        .setCountry("BD")
-        .build();
+                .setTypeFilter(Place.TYPE_COUNTRY)
+                .setCountry("BD")
+                .build();
         // Register a listener to receive callbacks when a place has been selected or an error ha occurred.
         autocompleteFragment.setOnPlaceSelectedListener(this);
         autocompleteFragment.setFilter(autocompleteFilter);
 
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setCancelable(false);
+
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.address_recycler_view);
         mLayoutManager = new LinearLayoutManager(getContext());
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity()) && mIPayHereTask == null) {
+                    refreshTransactionHistory();
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
+        setupRecyclerView();
 
         return v;
+    }
+
+    private void refreshTransactionHistory() {
+        clearListAfterLoading = true;
+        getLocation();
+        //fetchNearByBusiness(mLatitude, mLongitude);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getLocationPermission();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.destroyDrawingCache();
+            mSwipeRefreshLayout.clearAnimation();
+        }
+
     }
 
 
@@ -156,31 +222,55 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         switch (result.getApiCommand()) {
 
             case Constants.COMMAND_GET_NEREBY_BUSSINESS:
-                try {
-                    mNearByBusinessResponse = new ArrayList<>();
-                    mIPayHereResponse = gson.fromJson(result.getJsonString(), IPayHereResponse.class);
-                    mNearByBusinessResponse = mIPayHereResponse.getNearbyBusinessResponseList();
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        System.out.println("Test  Loc "+mNearByBusinessResponse.size());
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    try {
 
-                        setBusinessContactAdapter(mNearByBusinessResponse);
-
-                        //readItems();
-                    } else {
-                        Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        IPayHereResponse iPayHereResponse = gson.fromJson(result.getJsonString(), IPayHereResponse.class);
+                        loadTransactionHistory(iPayHereResponse.getNearbyBusinessResponseList());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
+                if (mProgressDialog.isShowing())
+                    mProgressDialog.dismiss();
 
+                mSwipeRefreshLayout.setRefreshing(false);
                 mIPayHereTask = null;
-                break;
+                if (this.isAdded()) setContentShown(true);
+
+
+//                try {
+//                    mNearByBusinessResponse = new ArrayList<>();
+//                    mIPayHereResponse = gson.fromJson(result.getJsonString(), IPayHereResponse.class);
+//                    mNearByBusinessResponse = mIPayHereResponse.getNearbyBusinessResponseList();
+//
+//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+//                        System.out.println("Test  Loc "+mNearByBusinessResponse.size());
+//
+//                        setBusinessContactAdapter(mNearByBusinessResponse);
+//
+//                        //readItems();
+//                    } else {
+//                        Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//                mSwipeRefreshLayout.setRefreshing(false);
+//                mIPayHereTask = null;
+//                break;
         }
 
     }
+
     @Override
     public void onError(Status status) {
         Toast.makeText(getContext(), "Place selection failed: " + status.getStatusMessage(),
@@ -219,8 +309,10 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
     public void onPlaceSelected(Place place) {
         LatLng attributions = place.getLatLng();
         if (attributions != null) {
+            mProgressDialog.show();
             this.mLatitude = String.valueOf(attributions.latitude);
             this.mLongitude = String.valueOf(attributions.longitude);
+            clearListAfterLoading = true;
             fetchNearByBusiness(this.mLatitude, this.mLongitude);
 
         }
@@ -228,14 +320,22 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
 
     private void getLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(getContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(getContext(),
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                getLocationWithoutPermision();
+            if (!Utilities.isNecessaryPermissionExists(getContext(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})) {
+                ActivityCompat.requestPermissions(
+                        getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
             } else {
-                getLocation();
+                getLocationsettings();
             }
+        } else {
+            getLocationsettings();
+        }
+    }
+
+    private void getLocationsettings() {
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            buildAlertMessageNoGps();
         } else {
             getLocation();
         }
@@ -297,34 +397,44 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         alert.show();
     }
 
-
-    private void setBusinessContactAdapter(List<NearbyBusinessResponseList> businessContactList) {
-        mTransactionHistoryAdapter = new BusinessContactListAdapter(getContext(), businessContactList);
+    private void setupRecyclerView() {
+        mTransactionHistoryAdapter = new BusinessContactListAdapter();
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
         mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
     }
 
-    private class BusinessContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-
-        Context c;
-        List<NearbyBusinessResponseList> userTransactionHistories;
-        List<NearbyBusinessResponseList> mFilteredOutlets;
-
-        public BusinessContactListAdapter(Context c, List<NearbyBusinessResponseList> userTransactionHistories) {
-            this.c = c;
-            this.userTransactionHistories = userTransactionHistories;
-            this.mFilteredOutlets = userTransactionHistories;
+    private void loadTransactionHistory(List<NearbyBusinessResponseList> transactionHistories) {
+        if (clearListAfterLoading || mNearByBusinessResponse == null || mNearByBusinessResponse.size() == 0) {
+            mNearByBusinessResponse = transactionHistories;
+            clearListAfterLoading = false;
+        } else {
+            List<NearbyBusinessResponseList> tempTransactionHistories;
+            tempTransactionHistories = transactionHistories;
+            mNearByBusinessResponse.addAll(tempTransactionHistories);
         }
+        if (mNearByBusinessResponse != null && mNearByBusinessResponse.size() > 0)
+            mEmptyListTextView.setVisibility(View.GONE);
+        else
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+
+        if (isLoading)
+            isLoading = false;
+        mTransactionHistoryAdapter.notifyDataSetChanged();
+        setContentShown(true);
+    }
+
+    private class BusinessContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private static final int FOOTER_VIEW = 1;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-
             private TextView businessNameView;
             private TextView outletNameView;
             private TextView distanceView;
             private ProfileImageView profilePictureView;
             private TextView businessAddressView;
             private View directionView;
-
-
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -336,9 +446,8 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                 directionView = itemView.findViewById(R.id.direction);
             }
 
-            public void bindView(final int pos) {
-
-                final NearbyBusinessResponseList businessContact = mFilteredOutlets.get(pos);
+            public void bindView(int pos) {
+                final NearbyBusinessResponseList businessContact = mNearByBusinessResponse.get(pos);
 
                 //final String typeInList = businessContact.getTypeInList();
                 final String businessName = businessContact.getBusinessName();
@@ -358,20 +467,20 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                 if (businessOutlet != null && !businessOutlet.isEmpty()) {
                     outletNameView.setText(businessOutlet);
                     outletNameView.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     outletNameView.setVisibility(View.GONE);
                 }
 
                 if (businessAddress != null && !businessAddress.isEmpty()) {
                     businessAddressView.setText(businessAddress);
                     businessAddressView.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     businessAddressView.setVisibility(View.GONE);
                 }
 
                 float[] result = new float[1];
-                Location.distanceBetween(Double.parseDouble(mLatitude), Double.parseDouble(mLongitude), businessContact.getCoordinate().getLatitude(),businessContact.getCoordinate().getLongitude(), result);
-                distanceView.setText("Distance : "+distanceText(result[0]));
+                Location.distanceBetween(Double.parseDouble(mLatitude), Double.parseDouble(mLongitude), lat, lon, result);
+                distanceView.setText("Distance : " + distanceText(result[0]));
 
                 profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
 
@@ -379,7 +488,8 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                     @Override
                     public void onClick(View view) {
                         //Uri gmmIntentUri = Uri.parse("google.navigation:q="+lat+","+lon);
-                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?daddr="+lat+","+lon);
+                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?daddr=" + lat + "," + lon);
+//                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr="+mLatitude+","+mLongitude+"&daddr="+lat+","+lon);
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
                         startActivity(mapIntent);
@@ -389,17 +499,20 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
-                        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
-                        intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
-                        intent.putExtra(Constants.FROM_QR_SCAN, true);
-                        intent.putExtra(Constants.NAME, businessName);
-                        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
-                        intent.putExtra(Constants.ADDRESS, businessAddress);
-                        if (businessOutletId != null) {
-                            intent.putExtra(Constants.OUTLET_ID, businessOutletId.longValue());
+
+                        if (!mSwipeRefreshLayout.isRefreshing()) {
+                            Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                            intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
+                            intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
+                            intent.putExtra(Constants.FROM_QR_SCAN, true);
+                            intent.putExtra(Constants.NAME, businessName);
+                            intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
+                            intent.putExtra(Constants.ADDRESS, businessAddress);
+                            if (businessOutletId != null) {
+                                intent.putExtra(Constants.OUTLET_ID, businessOutletId.longValue());
+                            }
+                            startActivity(intent);
                         }
-                        startActivity(intent);
                     }
                 });
             }
@@ -421,8 +534,6 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
             return distanceString;
         }
 
-
-        // Now define the view holder for Normal list item
         class NormalViewHolder extends ViewHolder {
             NormalViewHolder(final View itemView) {
                 super(itemView);
@@ -441,7 +552,6 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_ipay_here, parent, false));
-
         }
 
         @Override
@@ -456,18 +566,16 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
 
         @Override
         public int getItemCount() {
-            if (mFilteredOutlets == null)
-                return 0;
-            else
-                return mFilteredOutlets.size();
+            // Return +1 as there's an extra footer (Load more...)
+            if (mNearByBusinessResponse != null && !mNearByBusinessResponse.isEmpty())
+                return mNearByBusinessResponse.size();
+            else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
             return super.getItemViewType(position);
         }
-
-
 
     }
 

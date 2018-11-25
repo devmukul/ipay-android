@@ -29,7 +29,9 @@
         android:layout_centerVertical="true"
         android:paddingBottom="@dimen/activity_horizontal_margin_card"
         android:layout_marginTop="@dimen/value4"
-        android:layout_marginBottom="@dimen/value4">
+        android:layout_marginBottom="@dimen/value4"
+        android:layout_toLeftOf="@+id/loc_devider"
+        android:layout_marginRight="@dimen/value4">
 
         <TextView
             android:id="@+id/business_name"
@@ -86,6 +88,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/loc_devider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/colorDivider"
@@ -94,7 +97,8 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/direction"
         android:layout_marginTop="@dimen/value4"
-        android:layout_marginBottom="@dimen/value4">
+        android:layout_marginBottom="@dimen/value4"
+        android:orientation="horizontal">
 
     </LinearLayout>
 
