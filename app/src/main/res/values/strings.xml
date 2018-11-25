@@ -1355,4 +1355,5 @@
     <string name="add_money_from_credit_or_debit_card">Add Money(Credit\/Debit Card)</string>
     <string name="new_items_available">New Items Available</string>
     <string name="select_a_from_date_to_filter">You must select a \"From Date\" to perform date filtering.</string>
+    <string name="remove_bank">Remove Bank</string>
 </resources>
