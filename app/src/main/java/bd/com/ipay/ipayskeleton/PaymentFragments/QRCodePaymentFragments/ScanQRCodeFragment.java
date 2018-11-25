@@ -316,10 +316,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
 		intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT);
 		intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
 		intent.putExtra(Constants.FROM_QR_SCAN, true);
-		if (TextUtils.isEmpty(outletName))
-			intent.putExtra(Constants.NAME, brandName);
-		else
-			intent.putExtra(Constants.NAME, outletName);
+		intent.putExtra(Constants.NAME, brandName);
 		intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + imageUrl);
 		intent.putExtra(Constants.ADDRESS, address);
 		if (outletId != null) {

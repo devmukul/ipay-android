@@ -5,9 +5,9 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.internal.SnackbarContentLayout;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.SnackbarContentLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -46,7 +46,7 @@ public class IPaySnackbar extends BaseTransientBottomBar<IPaySnackbar> {
 	@Nullable
 	private BaseCallback<IPaySnackbar> mCallback;
 
-	private IPaySnackbar(ViewGroup parent, View content, ContentViewCallback contentViewCallback) {
+	private IPaySnackbar(ViewGroup parent, View content, android.support.design.snackbar.ContentViewCallback contentViewCallback) {
 		super(parent, content, contentViewCallback);
 	}
 

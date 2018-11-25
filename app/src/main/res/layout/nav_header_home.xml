@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/side_nav_bar"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/side_nav_bar"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin_double"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin_double"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/value40"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_double"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/profile_picture"
             android:layout_width="@dimen/value60"
             android:layout_height="@dimen/value60"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile5"
@@ -31,35 +34,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/drop_arrow"
             android:layout_toRightOf="@+id/profile_picture"
-            android:orientation="vertical"
-            android:layout_toLeftOf="@+id/drop_arrow">
+            android:orientation="vertical">
 
-             <TextView
+            <TextView
                 android:id="@+id/textview_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:fontFamily="@font/open_sans_semibold"
                 android:textColor="@android:color/white"
-                android:textStyle="bold" />
+                tools:text="@string/app_name" />
 
-                <bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView
-                    android:id="@+id/textview_mobile_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white" />
+            <bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView
+                android:id="@+id/textview_mobile_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                tools:text="@string/dummy_mobile_number" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/drop_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_down"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
             android:layout_centerVertical="true"
-            android:padding="@dimen/activity_horizontal_margin" />
+            android:padding="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_arrow_down"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
