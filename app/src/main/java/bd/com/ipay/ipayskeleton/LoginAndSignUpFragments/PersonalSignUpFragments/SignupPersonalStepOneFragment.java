@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.hbb20.CountryCodePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,7 +47,6 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
-    private CountryCodePicker mCountryCodePicker;
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
     private EditText mMobileNumberView;
@@ -136,7 +134,6 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mNameView = (EditText) v.findViewById(R.id.user_name);
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
-        mCountryCodePicker = (CountryCodePicker) v.findViewById(R.id.ccp);
         mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
         mMobileNumberView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -182,14 +179,6 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mProgressDialog = new ProgressDialog(getActivity());
-
-        mCountryCodePicker.registerCarrierNumberEditText(mMobileNumberView);
-        mCountryCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
-            @Override
-            public void onCountrySelected() {
-                mMobileNumberView.requestFocus();
-            }
-        });
 
         mNameView.requestFocus();
         // Enable hyperlinked
@@ -286,9 +275,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPassword = mPasswordView.getText().toString().trim();
         SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
-        SignupOrLoginActivity.mCountryCode = mCountryCodePicker.getSelectedCountryNameCode();
-        SignupOrLoginActivity.mMobileNumber = ContactEngine.formatMobileNumberInternational(mMobileNumberView.getText().toString().trim(),
-                SignupOrLoginActivity.mCountryCode);
+        SignupOrLoginActivity.mMobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumberView.getText().toString().trim());
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
@@ -306,7 +293,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             focusView = mNameView;
             cancel = true;
 
-        } else if (!InputValidator.isValidMobileNumberWithCountryCode(mMobileNumberView.getText().toString(), SignupOrLoginActivity.mCountryCode)) {
+        } else if (!InputValidator.isValidMobileNumberBD(mMobileNumberView.getText().toString())) {
             mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mMobileNumberView;
             cancel = true;
