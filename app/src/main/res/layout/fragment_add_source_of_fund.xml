@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="@dimen/value100"
+        android:layout_marginTop="@dimen/top_margin_source_of_fund"
         android:fitsSystemWindows="true">
 
         <RelativeLayout
