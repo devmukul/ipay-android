@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
-import com.hbb20.CountryCodePicker;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
@@ -60,7 +59,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
 
-    private CountryCodePicker mCountryCodePicker;
     private ProfileImageView mProfileImageView;
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
@@ -112,7 +110,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mUserNameEditText = (EditText) v.findViewById(R.id.login_mobile_number);
         mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
-        mCountryCodePicker = (CountryCodePicker) v.findViewById(R.id.ccp);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
         mRememberMeCheckbox = (CheckBox) v.findViewById(R.id.remember_me_checkbox);
 
@@ -122,8 +119,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                 SignupOrLoginActivity.isRememberMe = isChecked;
             }
         });
-
-        mCountryCodePicker.registerCarrierNumberEditText(mUserNameEditText);
 
         if (SharedPrefManager.ifContainsUserID()) {
             mButtonJoinUs.setVisibility(View.GONE);
@@ -222,14 +217,10 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();
 
-            mCountryCodePicker.setCcpClickable(false);
-
-            mCountryCodePicker.setCountryForNameCode(SharedPrefManager.getUserCountry());
-
             mUserNameEditText.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
 
-            String mobileNumber = ContactEngine.formatLocalMobileNumber(ProfileInfoCacheManager.getMobileNumber());
+            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
             mUserNameEditText.setText(mobileNumber);
             mButtonJoinUs.setVisibility(View.GONE);
 
@@ -292,10 +283,9 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mPasswordEditText.setError(null);
 
         // Store values at the time of the login attempt.
-        String countryCode = mCountryCodePicker.getSelectedCountryNameCode();
         String mobileNumber = mUserNameEditText.getText().toString().trim();
 
-        mUserNameLogin = ContactEngine.formatMobileNumberInternational(mobileNumber, countryCode);
+        mUserNameLogin = ContactEngine.formatMobileNumberBD(mobileNumber);
         if (!tryLogInWithTouchID)
             mPasswordLogin = mPasswordEditText.getText().toString().trim();
 
@@ -310,7 +300,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             cancel = true;
         }
 
-        if (!InputValidator.isValidMobileNumberWithCountryCode(mUserNameEditText.getText().toString().trim(), countryCode)) {
+        if (!InputValidator.isValidMobileNumberBD(mUserNameEditText.getText().toString().trim())) {
             mUserNameEditText.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mUserNameEditText;
             cancel = true;
@@ -328,7 +318,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             SignupOrLoginActivity.mPassword = mPasswordLogin;
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
             SignupOrLoginActivity.mPasswordBusiness = mPasswordLogin;
-            SignupOrLoginActivity.mCountryCode = mCountryCodePicker.getSelectedCountryNameCode();
 
             mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
             mProgressDialog.show();
@@ -386,7 +375,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                             ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
                             ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
-                            SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
 
                             // When user logs in, we want that by default he would log in to his default account
                             TokenManager.deactivateEmployerAccount();

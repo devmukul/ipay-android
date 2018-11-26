@@ -349,10 +349,10 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
                         getActivity().getSupportFragmentManager().popBackStack();
                         getActivity().getSupportFragmentManager().popBackStack();
 
-                        if (ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()) {
+                        if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
                             ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                         } else {
-                            if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
+                            if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                                 ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                             } else {
                                 ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();

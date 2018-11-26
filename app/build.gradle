@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.gms.google-services'
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
@@ -88,7 +88,6 @@ android {
             minifyEnabled appProperties["minify.enabled"] as boolean
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
     }
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/fonts'] } }
 }
@@ -118,74 +117,59 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force 'com.android.support:design:27.1.1'
-        force 'com.android.support:support-v4:27.1.1'
-        force 'com.android.support:appcompat-v7:27.1.1'
-    }
-}
-
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':camera')
-    compile 'android.arch.lifecycle:extensions:1.1.1'
-    compile 'android.arch.lifecycle:livedata:1.1.1'
-    compile 'android.arch.lifecycle:viewmodel:1.1.1'
-    compile 'com.android.support:design:27.1.1'
-    compile 'com.android.support:mediarouter-v7:27.1.1'
-    compile 'com.android.support:customtabs:27.1.1'
-    compile 'com.android.support:cardview-v7:27.1.1'
-    compile 'com.android.support:recyclerview-v7:27.1.1'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.journeyapps:zxing-android-embedded:3.0.1@aar'
-    compile 'com.google.zxing:core:3.2.0'
-    compile 'com.airbnb.android:lottie:2.5.0-rc2'
-    compile 'com.makeramen:roundedimageview:2.2.1'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'de.hdodenhof:circleimageview:2.2.0'
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':camera')
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'android.arch.lifecycle:livedata:1.1.1'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:mediarouter-v7:28.0.0'
+    implementation 'com.android.support:customtabs:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.journeyapps:zxing-android-embedded:3.0.1@aar'
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'com.airbnb.android:lottie:2.5.1'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
         transitive = true
     }
-    compile('org.apache.httpcomponents:httpmime:4.3.6') {
-        exclude module: 'httpclient'
-    }
-    // Bottom Sheet
-    compile 'com.flipboard:bottomsheet-core:1.5.0'
-    compile 'com.flipboard:bottomsheet-commons:1.5.0'
 
-    compile files('libs/libphonenumber-7.2.8.jar')
-    compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
-    compile 'com.google.firebase:firebase-messaging:11.8.0'
-    compile 'com.google.android.gms:play-services-places:11.8.0'
-    compile 'com.google.android.gms:play-services-vision:11.8.0'
-    compile 'com.google.android.gms:play-services-analytics:11.8.0'
-    compile 'com.google.android.gms:play-services:11.8.0'
-    compile 'com.squareup.okhttp3:okhttp:3.10.0'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.firebase:firebase-client-android:2.4.0'
-    compile 'com.github.drawers:SpinnerDatePicker:1.0.6'
+    // Bottom Sheet
+    implementation 'com.flipboard:bottomsheet-core:1.5.0'
+    implementation 'com.flipboard:bottomsheet-commons:1.5.0'
+
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.13'
+    implementation 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.google.android.gms:play-services-places:16.0.0'
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
+    implementation 'com.google.android.gms:play-services-analytics:16.0.5'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.firebase:firebase-client-android:2.4.0'
+    implementation 'com.github.drawers:SpinnerDatePicker:1.0.6'
     // Notification badge
-    compile 'com.mikepenz:actionitembadge:3.2.6@aar'
-    compile 'com.mikepenz:iconics-core:2.6.6@aar'
+    implementation 'com.mikepenz:actionitembadge:3.2.6@aar'
+    implementation 'com.mikepenz:iconics-core:2.6.6@aar'
 
     // Aspect
-    compile 'org.aspectj:aspectjrt:1.8.1'
+    implementation 'org.aspectj:aspectjrt:1.9.1'
 
     // Multiple image picker
-    compile 'com.github.esafirm.android-image-picker:imagepicker:1.3.2@aar'
-
-    // SSL pinning
-    compile 'com.squareup.okhttp:okhttp:2.1.0'
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.3.2@aar'
 
     //Intercom
-    compile 'io.intercom.android:intercom-sdk-base:5.1.5'
-    compile 'io.intercom.android:intercom-sdk-fcm:5.1.5'
+    implementation 'io.intercom.android:intercom-sdk-base:5.1.6'
+    implementation 'io.intercom.android:intercom-sdk-fcm:5.1.6'
 
-    // Singapore
-    compile 'com.hbb20:ccp:1.7.8'
     //facebook sdk
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-android-sdk:4.38.1'
 }
 
 def getBuildVariant() {
@@ -220,27 +204,25 @@ variants.all { variant ->
                          "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
         log.debug "ajc args: " + Arrays.toString(args)
 
-        MessageHandler handler = new MessageHandler(true);
-        new Main().run(args, handler);
+        MessageHandler handler = new MessageHandler(true)
+        new Main().run(args, handler)
         for (IMessage message : handler.getMessages(null, true)) {
             switch (message.getKind()) {
                 case IMessage.ABORT:
                 case IMessage.ERROR:
                 case IMessage.FAIL:
                     log.error message.message, message.thrown
-                    break;
+                    break
                 case IMessage.WARNING:
                     log.warn message.message, message.thrown
-                    break;
+                    break
                 case IMessage.INFO:
                     log.info message.message, message.thrown
-                    break;
+                    break
                 case IMessage.DEBUG:
                     log.debug message.message, message.thrown
-                    break;
+                    break
             }
         }
     }
 }
-
-apply plugin: 'com.google.gms.google-services'
