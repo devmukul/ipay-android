@@ -34,8 +34,7 @@
         android:largeHeap="true"
         android:logo="@drawable/logo_ipay"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup">
+        android:theme="@style/AppTheme">
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -165,12 +164,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.SingleInvoiceActivity"
-            android:label="@string/payment_details"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
             android:name=".Activities.PaymentActivities.RequestPaymentActivity"
             android:label="@string/create_invoice"
             android:screenOrientation="portrait"
@@ -189,12 +182,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.PaymentReviewActivity"
-            android:label="@string/make_payment"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation" />
-
-        <activity
             android:name=".Activities.InviteFriendActivity"
             android:label="@string/invite_people_to_ipay"
             android:screenOrientation="portrait"
@@ -205,12 +192,6 @@
             android:name=".Activities.ManagedBusinessAccountSettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation" />
-        <activity
-            android:name=".Activities.PaymentActivities.TopUpActivity"
-            android:label="@string/mobile_topup"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.PaymentActivity"
             android:label="@string/make_payment"
@@ -246,13 +227,6 @@
         <activity
             android:name=".Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity"
             android:label="@string/request_payment"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-
-        <activity
-            android:name=".Activities.PaymentActivities.TopUpReviewActivity"
-            android:label="@string/mobile_topup"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />

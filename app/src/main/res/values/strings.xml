@@ -274,7 +274,7 @@
     <string name="send_money">Send Money</string>
     <string name="continue_button_text">Continue</string>
     <string name="continue_send_money">Continue</string>
-    <string name="revert">Transaction Revert</string>
+    <string name="revert">Revert</string>
     <string name="continue_request_money">Continue</string>
     <string name="continue_mobile_recharge">Continue</string>
     <string name="continue_add_money">Continue</string>
@@ -1350,4 +1350,5 @@
     <string name="topup_operation_hint">Select operator and insert number or search from Contacts</string>
     <string name="top_up_my_number">Top-Up My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
+    <string name="enter_email_address">Enter Email Address</string>
 </resources>
