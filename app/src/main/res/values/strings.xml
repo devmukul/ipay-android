@@ -1274,20 +1274,20 @@
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">00</string>
-    <string name="send_money_confirmation_message">YOU ARE SENDING %1$s TO</string>
+    <string name="send_money_confirmation_message">YOU ARE SENDING Tk. %1$s TO</string>
     <string name="make_payment_confirmation_message">YOU ARE PAYING %1$s TO</string>
     <string name="add_money_confirmation_message">YOU ARE ADDING Tk. %1$s FROM</string>
     <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk. %1$s TO</string>
     <string name="pay_bill_confirmation_message">YOU ARE PAYING BILL Tk. %1$s FOR</string>
-    <string name="top_up_confirmation_message">MOBILE TOP-UP %1$s TO</string>
-    <string name="send_money_success_message">SUCCESSFULLY SENT %1$s TO</string>
+    <string name="top_up_confirmation_message">MOBILE TOP-UP Tk. %1$s TO</string>
+    <string name="send_money_success_message">SUCCESSFULLY SENT Tk. %1$s TO</string>
     <string name="make_payment_success_message">SUCCESSFULLY PAID %1$s TO</string>
     <string name="add_money_card_success_message">SUCCESSFULLY ADDED Tk. %1$s FROM</string>
     <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk. %1$s FROM</string>
     <string name="withdraw_money_bank_success_message">SUCCESSFULLY REQUESTED TO WITHDRAW\n Tk. %1$s \nTO</string>
     <string name="pay_bill_success_message">YOU HAVE PAID Tk. %1$s FOR</string>
-    <string name="request_money_confirmation_message">YOU ARE REQUESTING %1$s FROM</string>
-    <string name="request_money_success_message">SUCCESSFULLY REQUESTED %1$s FROM</string>
+    <string name="request_money_confirmation_message">YOU ARE REQUESTING Tk. %1$s FROM</string>
+    <string name="request_money_success_message">SUCCESSFULLY REQUESTED Tk. %1$s FROM</string>
     <string name="send_money_confirmation_dummy_message">You are sending Tk. 1,000,000 to</string>
     <string name="dummy_name">John Doe</string>
     <string name="short_note_optional_hint">Write a short note (Optional)</string>
@@ -1346,4 +1346,8 @@
     <string name="last_transaction">LAST TRANSACTION</string>
     <string name="dummy_mobile_number">+8801234567890</string>
     <string name="remove_bank">Remove Bank</string>
+    <string name="gp">GP</string>
+    <string name="topup_operation_hint">Select operator and insert number or search from Contacts</string>
+    <string name="top_up_my_number">Top-Up My Number</string>
+    <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
 </resources>
