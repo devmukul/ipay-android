@@ -67,35 +67,16 @@
             <android.support.design.widget.TextInputLayout
                 style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/mobile_number">
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <EditText
+                    android:id="@+id/mobile_number"
+                    style="@style/CustomEditTextLogInSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin_card"
-                    android:gravity="center_vertical">
-
-                    <com.hbb20.CountryCodePicker
-                        android:id="@+id/ccp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:defaultNameCode="bd"
-                        app:textSize="@dimen/text_size_small_medium"/>
-
-                    <EditText
-                        android:id="@+id/mobile_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/ccp"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/mobile_number"
-                        android:inputType="phone"
-                        android:textColorHint="@color/colorGray"
-                        android:textSize="@dimen/text_size_small_medium"
-                        android:maxLines="1" />
-                </RelativeLayout>
+                    android:hint="@string/mobile_number"
+                    android:inputType="phone"
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 

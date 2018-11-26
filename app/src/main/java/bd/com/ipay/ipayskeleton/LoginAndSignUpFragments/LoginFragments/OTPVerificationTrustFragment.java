@@ -252,8 +252,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                             new RegisterFCMTokenToServerAsyncTask(getContext());
                         }
 
-                        SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
-
                         // Saving the allowed services id for the user
                         if (mLoginResponseModel.getAccessControlList() != null) {
                             ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
