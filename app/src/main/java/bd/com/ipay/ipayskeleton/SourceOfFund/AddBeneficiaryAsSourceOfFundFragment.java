@@ -114,6 +114,7 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
                 if (allBeneficiaryArrayList == null || allBeneficiaryArrayList.size() == 0) {
                     noDataTextView.setVisibility(View.VISIBLE);
                     setNoDataText("You do not have any beneficiary iPay user. Tap on the + icon to add one");
+                    sourceOfFundListAdapter.notifyDataSetChanged();
                 } else {
                     noDataTextView.setVisibility(View.GONE);
                     beneficiaryArrayList = new ArrayList<>();
