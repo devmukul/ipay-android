@@ -37,7 +37,6 @@ public class AddSourceOfFundSuccessFragment extends Fragment {
         String name = bundle.getString(Constants.NAME);
         String profileImageUrl = bundle.getString(Constants.PROFILE_PICTURE);
         if (profileImageUrl.contains("ipay.com")) {
-
         } else {
             profileImageUrl = Constants.BASE_URL_FTP_SERVER + profileImageUrl;
         }
@@ -46,13 +45,12 @@ public class AddSourceOfFundSuccessFragment extends Fragment {
                 .centerCrop()
                 .error(getContext().getResources().getDrawable(R.drawable.user_brand_bg))
                 .into(profileImageView);
-        if(type.equals(Constants.SPONSOR)) {
+        if (type.equals(Constants.SPONSOR)) {
             String setText = helperTextView.getText().toString();
             setText = setText.replace("Arifur Rahman", name);
             helperTextView.setText(setText);
-        }
-        else if(type.equals(Constants.BENEFICIARY)){
-            helperTextView.setText("You have added "+name+ " as a beneficiary of your iPay wallet. The person can use your wallet for making payments up to a certain monthly limit. " +
+        } else if (type.equals(Constants.BENEFICIARY)) {
+            helperTextView.setText("You have added " + name + " as a beneficiary of your iPay wallet. The person can use your wallet for making payments up to a certain monthly limit. " +
                     "To remove the beneficiary or to change the monthly limit, " +
                     "please go to your source of fund section");
         }

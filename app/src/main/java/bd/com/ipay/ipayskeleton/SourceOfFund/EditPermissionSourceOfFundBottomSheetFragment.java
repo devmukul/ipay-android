@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryReq
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.UpdateMonthlyLimitRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDialogFragment implements HttpResponseListener {
     private Beneficiary beneficiary;
@@ -71,7 +72,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
                     } else {
                         attemptUpdateBeneficiaryStatus(beneficiary.getId());
                     }
-
+                    Utilities.hideKeyboard(getActivity());
                 }
             }
         });
@@ -88,7 +89,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDi
                     (Long.parseLong(amountEditText.getText().toString()), pinEditText.getText().toString());
             String jsonString = new Gson().toJson(updateMonthlyLimitRequest);
             String mUri = Constants.BASE_URL_MM + Constants.URI_CHANGE_MONTHLY_LIMIT +
-                    Long.toString(beneficiary.getId()) + "/" + amountEditText.getText().toString();
+                    Long.toString(beneficiary.getId()) + "/" + "monthly-credit-limit";
             updateMonthlyLimitAsyncTask = new HttpRequestPutAsyncTask
                     (Constants.COMMAND_CHANGE_MONTLY_LIMIT, mUri,
                             jsonString, getContext(), this, false);
