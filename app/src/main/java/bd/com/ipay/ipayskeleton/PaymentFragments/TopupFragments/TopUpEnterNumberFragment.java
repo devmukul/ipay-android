@@ -246,7 +246,7 @@ public class TopUpEnterNumberFragment extends Fragment {
 				showErrorMessage(getString(R.string.please_enter_valid_mobile_number));
 			} else if (!phoneNumberUtil.isValidNumberForRegion(phoneNumber, "BD")) {
 				showErrorMessage(getString(R.string.please_enter_valid_mobile_number));
-			} else if (InputValidator.isValidMobileNumberBD(phoneNumberUtil
+			} else if (!InputValidator.isValidMobileNumberBD(phoneNumberUtil
 					.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164))) {
 				showErrorMessage(getString(R.string.please_enter_valid_mobile_number));
 			} else if (mTypeSelector.getCheckedRadioButtonId() == -1) {
