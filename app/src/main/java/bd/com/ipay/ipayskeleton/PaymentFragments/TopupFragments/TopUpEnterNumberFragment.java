@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
@@ -245,8 +246,8 @@ public class TopUpEnterNumberFragment extends Fragment {
 				showErrorMessage(getString(R.string.please_enter_valid_mobile_number));
 			} else if (!phoneNumberUtil.isValidNumberForRegion(phoneNumber, "BD")) {
 				showErrorMessage(getString(R.string.please_enter_valid_mobile_number));
-			} else if (phoneNumberUtil
-					.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164).length() != 14) {
+			} else if (InputValidator.isValidMobileNumberBD(phoneNumberUtil
+					.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164))) {
 				showErrorMessage(getString(R.string.please_enter_valid_mobile_number));
 			} else if (mTypeSelector.getCheckedRadioButtonId() == -1) {
 				showErrorMessage(getString(R.string.please_select_prepaid_postpaid));
