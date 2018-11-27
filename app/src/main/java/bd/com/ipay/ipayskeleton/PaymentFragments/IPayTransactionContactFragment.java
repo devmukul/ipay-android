@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.ContactFragments.IPayContactListFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.TopUpEnterNumberFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.TopupFragments.TopUpEnterNumberFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;

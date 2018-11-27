@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
