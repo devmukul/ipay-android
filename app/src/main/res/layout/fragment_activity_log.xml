@@ -89,7 +89,7 @@
                             android:layout_weight="1"
                             android:background="@drawable/background_primary_button"
                             android:padding="@dimen/value5"
-                            android:text="@string/clear_filter"
+                            android:text="@string/remove_filter"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white" />
 
@@ -178,7 +178,7 @@
                     style="@style/ButtonPrimary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/clear_filter" />
+                    android:text="@string/remove_filter" />
 
                 <View
                     android:layout_width="wrap_content"

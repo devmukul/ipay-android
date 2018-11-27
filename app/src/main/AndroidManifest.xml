@@ -181,6 +181,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".Activities.InviteFriendActivity"
             android:label="@string/invite_people_to_ipay"
@@ -235,6 +236,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <activity
             android:name=".Activities.PaymentActivities.WithdrawMoneyReviewActivity"
             android:label="@string/withdraw_money"
