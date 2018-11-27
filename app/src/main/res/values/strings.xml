@@ -469,6 +469,7 @@
     <string name="recharge_to">Topup to</string>
     <string name="invalid_operator">Invalid Operator</string>
     <string name="opening_balance_to">Opening balance to</string>
+    <string name="opening_balance">Opening balance</string>
     <string name="offer_from_iPay">Offer from iPay</string>
     <string name="internal_balance_transfer">Internal balance Transfer</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
@@ -502,7 +503,7 @@
     <string name="filter_by_event">Filter by event</string>
     <string name="filter_verification">Verification Events</string>
     <string name="filter_security_changes">Security Changes</string>
-    <string name="clear_filter">Clear Filter</string>
+    <string name="remove_filter">Remove Filter</string>
     <string name="select_a_bank">Select Bank</string>
     <string name="remove_bank_title">Remove this account?</string>
     <string name="blocked_bank_title">Blocked!</string>
@@ -1291,6 +1292,9 @@
     <string name="request_money_success_message">SUCCESSFULLY REQUESTED %1$s FROM</string>
     <string name="send_money_confirmation_dummy_message">You are sending Tk. 1,000,000 to</string>
     <string name="dummy_name">John Doe</string>
+    <string name="dummy_transaction_description">Offer</string>
+    <string name="dummy_transaction_net_amount">+৳2.30</string>
+    <string name="dummy_transaction_time">14\/11\/2018, 8:56 PM</string>
     <string name="short_note_optional_hint">Write a short note (Optional)</string>
     <string name="short_note_hint">Write a short note</string>
     <string name="please_enter_a_pin">Please enter a pin</string>
@@ -1346,6 +1350,12 @@
     <string name="take_photo">Take Photo</string>
     <string name="last_transaction">LAST TRANSACTION</string>
     <string name="dummy_mobile_number">+8801234567890</string>
+    <string name="retry">Retry</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="add_money_from_bank">Add Money(Bank)</string>
+    <string name="add_money_from_credit_or_debit_card">Add Money(Credit\/Debit Card)</string>
+    <string name="new_items_available">New Items Available</string>
+    <string name="select_a_from_date_to_filter">You must select a \"From Date\" to perform date filtering.</string>
     <string name="remove_bank">Remove Bank</string>
     <string name="enter_email_address">Enter Email Address</string>
 </resources>
