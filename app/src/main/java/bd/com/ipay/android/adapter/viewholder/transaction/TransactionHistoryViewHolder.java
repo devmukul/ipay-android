@@ -67,7 +67,8 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
 				.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
 
 		// showing account balance
-		if (transactionHistory.getAccountBalance() != null) {
+		if (transactionHistory.getAccountBalance() != null &&
+				transactionHistory.getStatusCode() != Constants.TRANSACTION_STATUS_PROCESSING) {
 			balanceTextView.setVisibility(View.VISIBLE);
 			balanceTextView.setText(Utilities
 					.formatTakaWithComma(transactionHistory.getAccountBalance()));

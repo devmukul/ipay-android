@@ -57,8 +57,10 @@ public class IPayProgressFragment extends BaseFragment {
 
 	@NonNull
 	@Override
-	public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		final FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.fragment_ipay_progress, container, false);
+	public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+	                               @Nullable Bundle savedInstanceState) {
+		final FrameLayout rootView =
+				(FrameLayout) inflater.inflate(R.layout.fragment_ipay_progress, container, false);
 		progressTextView = rootView.findViewById(R.id.progress_text_view);
 		contentViewHolder = rootView.findViewById(R.id.content_container);
 		progressViewHolder = rootView.findViewById(R.id.progress_container);
@@ -68,7 +70,8 @@ public class IPayProgressFragment extends BaseFragment {
 	}
 
 	@Nullable
-	public View onCreateContentView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+	public View onCreateContentView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+	                                @Nullable Bundle savedInstanceState) {
 		return null;
 	}
 
