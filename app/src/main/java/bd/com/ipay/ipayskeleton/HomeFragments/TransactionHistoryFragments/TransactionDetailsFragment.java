@@ -194,20 +194,30 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
                     if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
                             ProfileInfoCacheManager.getMobileNumber()))) {
                         sponsorProfilePictureView.setVisibility(View.VISIBLE);
-                        Glide.with(getContext())
-                                .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
-                                .centerCrop()
-                                .error(R.drawable.user_brand_bg)
-                                .into(sponsorProfilePictureView);
+                        if (metaData.getBeneficiaryProfilePictures() != null) {
+                            if (metaData.getBeneficiaryProfilePictures().size() != 0) {
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                        .centerCrop()
+                                        .error(R.drawable.user_brand_bg)
+                                        .into(sponsorProfilePictureView);
+                            }
+                        }
+
                         sponsorNumberView.setVisibility(View.VISIBLE);
                         sponsorNumberView.setText("Paid for " + metaData.getBeneficiaryName());
                     } else {
                         sponsorProfilePictureView.setVisibility(View.VISIBLE);
-                        Glide.with(getContext())
-                                .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
-                                .centerCrop()
-                                .error(R.drawable.user_brand_bg)
-                                .into(sponsorProfilePictureView);
+                        if (metaData.getBeneficiaryProfilePictures() != null) {
+                            if (metaData.getBeneficiaryProfilePictures().size() != 0) {
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
+                                        .centerCrop()
+                                        .error(R.drawable.user_brand_bg)
+                                        .into(sponsorProfilePictureView);
+                            }
+                        }
+
 
                         sponsorNumberView.setVisibility(View.VISIBLE);
                         sponsorNumberView.setText("Paid By " + metaData.getSponsorName());

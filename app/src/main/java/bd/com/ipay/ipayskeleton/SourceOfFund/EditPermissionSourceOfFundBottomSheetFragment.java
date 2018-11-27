@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.UpdateMonthlyLimitRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditPermissionSourceOfFundBottomSheetFragment extends BottomSheetDialogFragment implements HttpResponseListener {
+public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment implements HttpResponseListener {
     private Beneficiary beneficiary;
     private HttpRequestPutAsyncTask updateBeneficiaryAsyncTask;
     private HttpRequestPutAsyncTask updateMonthlyLimitAsyncTask;

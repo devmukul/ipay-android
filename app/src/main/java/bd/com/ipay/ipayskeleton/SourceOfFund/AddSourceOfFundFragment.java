@@ -243,8 +243,6 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         } else if (mMobileNumber == null || mMobileNumber.equals("")) {
             showErrorMessage("Please enter a valid mobile number");
             return false;
-        } else if (mProfileImageUrl == null || mProfileImageUrl.equals("")) {
-            return false;
         } else if (relationShip == null || relationShip.equals("")) {
             showErrorMessage("Please select a relationship");
             return false;
@@ -256,7 +254,8 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         if (mAddSponsorAsyncTask != null) {
             return;
         } else {
-            AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(mMobileNumber), relationShip);
+            AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(mMobileNumber),
+                    relationShip, Constants.DEFAULT_CREDIT_LIMIT);
             mAddSponsorAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_SPONSOR
                     , Constants.BASE_URL_MM + Constants.URL_ADD_SPONSOR,
                     new Gson().toJson(addSponsorRequest), getContext(), this, false);
@@ -390,8 +389,8 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
                     GetUserInfoResponse getUserInfoResponse = new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if(getUserInfoResponse.getProfilePictures()!= null){
-                            if(getUserInfoResponse.getProfilePictures().size()!= 0){
+                        if (getUserInfoResponse.getProfilePictures() != null) {
+                            if (getUserInfoResponse.getProfilePictures().size() != 0) {
                                 mProfileImageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
                             }
                         }

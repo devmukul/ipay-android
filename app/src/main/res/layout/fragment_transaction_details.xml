@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,12 +30,12 @@
                     style="@style/ReviewImageStyle" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/sponsor_image_view"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    app:riv_oval="true"
-                    android:id="@+id/sponsor_image_view"
-                    android:layout_alignBottom="@id/profile_picture"
                     android:layout_alignRight="@id/profile_picture"
+                    android:layout_alignBottom="@id/profile_picture"
+                    app:riv_oval="true"
                     tools:src="@drawable/user_brand_bg" />
             </RelativeLayout>
 
@@ -64,26 +64,27 @@
                     <TextView
                         android:id="@+id/textview_mobile_number"
                         android:layout_width="wrap_content"
+                        tools:text="0177109111"
                         android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textview_mobile_number"
-                        android:id="@+id/sponsor_number"/>
-
                     <Button
                         android:id="@+id/add_in_contacts"
-                        android:layout_width="@dimen/value30"
-                        android:layout_height="@dimen/value30"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/sponsor_number"
+                        android:layout_width="@dimen/value20"
+                        android:layout_height="@dimen/value20"
+                        android:layout_toRightOf="@+id/textview_mobile_number"
                         android:background="@drawable/ic_addsvg"
+                        android:layout_marginLeft="10dp"
                         android:backgroundTint="@color/colorPrimary"
                         android:paddingLeft="@dimen/activity_horizontal_margin_card"
                         android:paddingRight="@dimen/activity_horizontal_margin_card"
                         android:visibility="gone" />
 
+                    <TextView
+                        android:id="@+id/sponsor_number"
+                        android:layout_width="wrap_content"
+                        tools:text="01677059861"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textview_mobile_number"
+                        android:visibility="gone" />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
@@ -236,9 +237,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:paddingBottom="@dimen/value10"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/value10"
                 android:textSize="@dimen/text_size_small_medium" />
 
         </LinearLayout>

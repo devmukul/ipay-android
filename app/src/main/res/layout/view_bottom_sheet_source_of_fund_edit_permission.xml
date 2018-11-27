@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/value5"
         android:layout_marginTop="@dimen/value5"
+        android:layout_marginBottom="60dp"
         android:layout_marginRight="@dimen/value5"
         android:background="@drawable/background_view_bottom_sheet_round_cornered"
         android:orientation="vertical">
@@ -74,9 +75,9 @@
             android:layout_marginLeft="@dimen/value32"
             android:layout_marginTop="@dimen/value32"
             android:layout_marginRight="@dimen/value32"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="200dp"
             android:background="@drawable/oval_shaped_ipay_transaction_action_button_default"
             android:text="Done"
             android:textColor="@color/colorWhite" />
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

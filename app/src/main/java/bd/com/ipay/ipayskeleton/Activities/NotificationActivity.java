@@ -12,6 +12,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentRecei
 import bd.com.ipay.ipayskeleton.ProfileFragments.BusinessRoleReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.EditPermissionSourceOfFundBottomSheetFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class NotificationActivity extends BaseActivity {
@@ -50,6 +51,23 @@ public class NotificationActivity extends BaseActivity {
 
     public void switchToNotificationFragment() {
         switchToNotificationFragment("");
+    }
+
+    public void switchToEditPermissionFragment(
+            EditPermissionSourceOfFundBottomSheetFragment
+                    editPermissionSourceOfFundBottomSheetFragment, Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+        editPermissionSourceOfFundBottomSheetFragment =
+                new EditPermissionSourceOfFundBottomSheetFragment();
+        editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                editPermissionSourceOfFundBottomSheetFragment).setCustomAnimations(R.anim.slide_up,R.anim.slide_down)
+                .addToBackStack(null).commit();
+
+
     }
 
     public void switchToNotificationFragment(String tag) {

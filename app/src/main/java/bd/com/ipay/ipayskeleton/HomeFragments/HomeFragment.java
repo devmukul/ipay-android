@@ -572,19 +572,30 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
                             sponsorOrBeneficiaryTextView.setText("Paid for " + metaData.getBeneficiaryName());
 
-                            Glide.with(getContext())
-                                    .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
-                                    .centerCrop()
-                                    .error(R.drawable.user_brand_bg)
-                                    .into(sponsorImageView);
-                            sponsorImageView.setVisibility(View.VISIBLE);
+
+                            if(metaData.getBeneficiaryProfilePictures()!= null){
+                                if(metaData.getBeneficiaryProfilePictures().size()!=0){
+                                    Glide.with(getContext())
+                                            .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                            .centerCrop()
+                                            .error(R.drawable.user_brand_bg)
+                                            .into(sponsorImageView);
+                                    sponsorImageView.setVisibility(View.VISIBLE);
+                                }
+                            }
+
                         } else {
+                            if(metaData.getBeneficiaryProfilePictures() != null){
+                                if(metaData.getBeneficiaryProfilePictures().size()!=0){
+                                    Glide.with(getContext())
+                                            .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
+                                            .centerCrop()
+                                            .error(R.drawable.user_brand_bg)
+                                            .into(sponsorImageView);
+                                }
+                            }
                             sponsorOrBeneficiaryTextView.setText("Paid by " + metaData.getSponsorName());
-                            Glide.with(getContext())
-                                    .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
-                                    .centerCrop()
-                                    .error(R.drawable.user_brand_bg)
-                                    .into(sponsorImageView);
+
                         }
 
                     } else {
