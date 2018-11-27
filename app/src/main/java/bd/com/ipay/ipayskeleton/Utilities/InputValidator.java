@@ -211,4 +211,11 @@ public class InputValidator {
             return false;
         }
     }
+
+    public static boolean isValidMobileNumberBD(String mobileNumber) {
+            String formattedNumber = ContactEngine.formatMobileNumberBD(mobileNumber);
+            if (formattedNumber.matches(MOBILE_NUMBER_REGEX))
+                return true;
+            return false;
+    }
 }

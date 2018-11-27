@@ -248,6 +248,7 @@
     <string name="progress_dialog_adding_trusted_device">Adding this device as trusted…</string>
     <string name="progress_dialog_fetching_customer_info">Fetching customer info…</string>
     <string name="progress_dialog_bill_payment_in_progress">Bill payment in progress. Please wait…</string>
+    <string name="progress_dialog_sending_fragment">Sending feedback. Please wait…</string>
     <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
@@ -274,7 +275,7 @@
     <string name="send_money">Send Money</string>
     <string name="continue_button_text">Continue</string>
     <string name="continue_send_money">Continue</string>
-    <string name="revert">Transaction Revert</string>
+    <string name="revert">Revert</string>
     <string name="continue_request_money">Continue</string>
     <string name="continue_mobile_recharge">Continue</string>
     <string name="continue_add_money">Continue</string>
@@ -1356,4 +1357,6 @@
     <string name="instant_bill_pay">Instant bill pay</string>
     <string name="last_transaction">LAST TRANSACTION</string>
     <string name="dummy_mobile_number">+8801234567890</string>
+    <string name="remove_bank">Remove Bank</string>
+    <string name="enter_email_address">Enter Email Address</string>
 </resources>

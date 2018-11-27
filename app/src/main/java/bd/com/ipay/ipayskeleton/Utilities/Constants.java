@@ -565,6 +565,8 @@ public class Constants {
     //Promotions
     public static final String URL_PROMOTIONS = "promotions/";
 
+    //Promotions
+    public static final String URL_FEEDBACK = "feedbacks";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -753,6 +755,8 @@ public class Constants {
 
     public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
     public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
+
+    public static final String COMMAND_SUBMIT_RATING = "COMMAND_SUBMIT_RATING";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 

@@ -335,7 +335,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                     } else {
                         if (!ProfileInfoCacheManager.isIdentificationDocumentUploaded()) {
                             ((ProfileVerificationHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
-                        } else if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
+                        } else if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                             ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                         } else {
                             ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
