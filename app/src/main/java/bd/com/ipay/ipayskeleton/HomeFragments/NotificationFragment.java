@@ -77,6 +77,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -964,23 +965,30 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
-                            bundle.putString(Constants.TO_DO,Constants.UPDATE_STATUS);
-                            EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
-                                    = new EditPermissionSourceOfFundBottomSheetFragment();
-                            editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
-                            getChildFragmentManager().beginTransaction().
-                                    replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
-                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            editPermissionSourceOfFundBottomSheetFragment.setBeneficiaryUpdateListener(new EditPermissionSourceOfFundBottomSheetFragment.BeneficiaryUpdateListener() {
+
+                            new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
                                 @Override
-                                public void onBeneficiaryStatusUpdated() {
-                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                                    Utilities.hideKeyboard(getActivity());
-                                    refreshNotificationLists(getContext());
+                                public void ifPinAdded() {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
+                                    bundle.putString(Constants.TO_DO,Constants.UPDATE_STATUS);
+                                    EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
+                                            = new EditPermissionSourceOfFundBottomSheetFragment();
+                                    editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+                                    getChildFragmentManager().beginTransaction().
+                                            replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
+                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                    editPermissionSourceOfFundBottomSheetFragment.setBeneficiaryUpdateListener(new EditPermissionSourceOfFundBottomSheetFragment.BeneficiaryUpdateListener() {
+                                        @Override
+                                        public void onBeneficiaryStatusUpdated() {
+                                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                            Utilities.hideKeyboard(getActivity());
+                                            refreshNotificationLists(getContext());
+                                        }
+                                    });
                                 }
-                            });
+                            }).execute();
+
                         }
 
                     });

@@ -69,14 +69,14 @@ import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 import static android.view.View.GONE;
 
 public class IPayTransactionConfirmationFragment extends Fragment implements HttpResponseListener {
-	private MandatoryBusinessRules mandatoryBusinessRules;
-	private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private MandatoryBusinessRules mandatoryBusinessRules;
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 
-	private int transactionType;
-	private String name;
-	private BigDecimal amount;
-	private String mobileNumber;
-	private String profilePicture;
+    private int transactionType;
+    private String name;
+    private BigDecimal amount;
+    private String mobileNumber;
+    private String profilePicture;
 
     private Long sponsorAccountID;
 
@@ -86,17 +86,17 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
     private String mAddressString;
     private Long mOutletId = null;
 
-	private EditText mNoteEditText;
-	private EditText mPinEditText;
+    private EditText mNoteEditText;
+    private EditText mPinEditText;
 
-	private String operatorCode;
-	private int operatorType;
-	private CustomProgressDialog mCustomProgressDialog;
+    private String operatorCode;
+    private int operatorType;
+    private CustomProgressDialog mCustomProgressDialog;
 
     private String mPin;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
-	protected Tracker mTracker;
+    protected Tracker mTracker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,48 +132,48 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
         numberFormat.setMinimumIntegerDigits(1);
         mandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(transactionType));
 
-		if (getActivity() != null) {
-			mTracker = Utilities.getTracker(getActivity());
-			mCustomProgressDialog = new CustomProgressDialog(getActivity());
-		}
-	}
+        if (getActivity() != null) {
+            mTracker = Utilities.getTracker(getActivity());
+            mCustomProgressDialog = new CustomProgressDialog(getActivity());
+        }
+    }
 
-	@Nullable
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_ipay_transaction_confirmation, container, false);
-	}
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_ipay_transaction_confirmation, container, false);
+    }
 
-	@Override
-	public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+    @Override
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-		mNoteEditText = view.findViewById(R.id.note_edit_text);
-		mPinEditText = view.findViewById(R.id.pin_edit_text);
+        mNoteEditText = view.findViewById(R.id.note_edit_text);
+        mPinEditText = view.findViewById(R.id.pin_edit_text);
 
-		final Toolbar toolbar = view.findViewById(R.id.toolbar);
-		final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
-		final TextView nameTextView = view.findViewById(R.id.name_text_view);
-		final TextView addressTextView = view.findViewById(R.id.address_text_view);
-		final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
-		final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
-		final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
-		final Button transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
+        final Toolbar toolbar = view.findViewById(R.id.toolbar);
+        final TextView transactionDescriptionTextView = view.findViewById(R.id.transaction_description_text_view);
+        final TextView nameTextView = view.findViewById(R.id.name_text_view);
+        final TextView addressTextView = view.findViewById(R.id.address_text_view);
+        final View pinLayoutHolder = view.findViewById(R.id.pin_layout_holder);
+        final View noteLayoutHolder = view.findViewById(R.id.note_layout_holder);
+        final RoundedImageView profileImageView = view.findViewById(R.id.profile_image_view);
+        final Button transactionConfirmationButton = view.findViewById(R.id.transaction_confirmation_button);
 
-		if (transactionType == ServiceIdConstants.TOP_UP) {
-			noteLayoutHolder.setVisibility(View.GONE);
-		}
-		if (getActivity() instanceof AppCompatActivity) {
-			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-			ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-			if (actionBar != null) {
-				actionBar.setDisplayHomeAsUpEnabled(true);
-			}
-			getActivity().setTitle(R.string.empty_string);
-		}
+        if (transactionType == ServiceIdConstants.TOP_UP) {
+            noteLayoutHolder.setVisibility(View.GONE);
+        }
+        if (getActivity() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+            getActivity().setTitle(R.string.empty_string);
+        }
 
-		if (mandatoryBusinessRules != null)
-			pinLayoutHolder.setVisibility(mandatoryBusinessRules.IS_PIN_REQUIRED() ? View.VISIBLE : View.GONE);
+        if (mandatoryBusinessRules != null)
+            pinLayoutHolder.setVisibility(mandatoryBusinessRules.IS_PIN_REQUIRED() ? View.VISIBLE : View.GONE);
 
         final String amountValue = getString(R.string.balance_holder, numberFormat.format(amount));
         switch (transactionType) {
@@ -231,70 +231,70 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             addressTextView.setVisibility(GONE);
         }
 
-		if (!TextUtils.isEmpty(profilePicture)) {
-			profileImageView.setVisibility(View.VISIBLE);
-			Glide.with(this)
-					.load(profilePicture)
-					.placeholder(R.drawable.ic_profile)
-					.error(R.drawable.ic_profile)
-					.transform(new CircleTransform(getContext()))
-					.into(profileImageView);
-		} else {
-			profileImageView.setImageResource(R.drawable.ic_profile);
-		}
+        if (!TextUtils.isEmpty(profilePicture)) {
+            profileImageView.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(profilePicture)
+                    .placeholder(R.drawable.ic_profile)
+                    .error(R.drawable.ic_profile)
+                    .transform(new CircleTransform(getContext()))
+                    .into(profileImageView);
+        } else {
+            profileImageView.setImageResource(R.drawable.ic_profile);
+        }
 
-		transactionConfirmationButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (pinLayoutHolder.getVisibility() == View.VISIBLE) {
-					Editable pin = mPinEditText.getText();
-					if (TextUtils.isEmpty(pin)) {
-						IPaySnackbar.error(transactionConfirmationButton, R.string.please_enter_a_pin, IPaySnackbar.LENGTH_LONG).show();
-						return;
-					} else if (pin.length() != 4) {
-						IPaySnackbar.error(transactionConfirmationButton, R.string.minimum_pin_length_message, IPaySnackbar.LENGTH_LONG).show();
-						showErrorMessage(getString(R.string.minimum_pin_length_message));
-						return;
-					}
-				}
-				if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY) {
-					Editable noteEditTextText = mNoteEditText.getText();
-					if (TextUtils.isEmpty(noteEditTextText)) {
-						showErrorMessage(getString(R.string.please_write_note));
-						return;
-					}
-				}
-				Utilities.hideKeyboard(getContext(), view);
-				confirmTransaction();
-			}
-		});
-	}
+        transactionConfirmationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (pinLayoutHolder.getVisibility() == View.VISIBLE) {
+                    Editable pin = mPinEditText.getText();
+                    if (TextUtils.isEmpty(pin)) {
+                        IPaySnackbar.error(transactionConfirmationButton, R.string.please_enter_a_pin, IPaySnackbar.LENGTH_LONG).show();
+                        return;
+                    } else if (pin.length() != 4) {
+                        IPaySnackbar.error(transactionConfirmationButton, R.string.minimum_pin_length_message, IPaySnackbar.LENGTH_LONG).show();
+                        showErrorMessage(getString(R.string.minimum_pin_length_message));
+                        return;
+                    }
+                }
+                if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY) {
+                    Editable noteEditTextText = mNoteEditText.getText();
+                    if (TextUtils.isEmpty(noteEditTextText)) {
+                        showErrorMessage(getString(R.string.please_write_note));
+                        return;
+                    }
+                }
+                Utilities.hideKeyboard(getContext(), view);
+                confirmTransaction();
+            }
+        });
+    }
 
-	private void updateTransactionDescription(TextView textView, String string, int startPoint, int endPoint) {
-		final Spannable spannableAmount;
-		spannableAmount = new SpannableString(string);
-		spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), startPoint, endPoint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), startPoint, endPoint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		textView.setText(spannableAmount, TextView.BufferType.SPANNABLE);
-	}
+    private void updateTransactionDescription(TextView textView, String string, int startPoint, int endPoint) {
+        final Spannable spannableAmount;
+        spannableAmount = new SpannableString(string);
+        spannableAmount.setSpan(new StyleSpan(Typeface.BOLD), startPoint, endPoint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), startPoint, endPoint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(spannableAmount, TextView.BufferType.SPANNABLE);
+    }
 
-	private void showErrorMessage(String errorMessage) {
-		if (getActivity() != null && getView() != null) {
-			Snackbar snackbar = Snackbar.make(getView(), errorMessage, Snackbar.LENGTH_LONG);
-			View snackbarView = snackbar.getView();
-			snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
-			ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
-			layoutParams.height = getResources().getDimensionPixelSize(R.dimen.value50);
-			snackbarView.setLayoutParams(layoutParams);
-			TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-			textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));
-			snackbar.show();
-		}
-	}
+    private void showErrorMessage(String errorMessage) {
+        if (getActivity() != null && getView() != null) {
+            Snackbar snackbar = Snackbar.make(getView(), errorMessage, Snackbar.LENGTH_LONG);
+            View snackbarView = snackbar.getView();
+            snackbarView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorRed));
+            ViewGroup.LayoutParams layoutParams = snackbarView.getLayoutParams();
+            layoutParams.height = getResources().getDimensionPixelSize(R.dimen.value50);
+            snackbarView.setLayoutParams(layoutParams);
+            TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(ActivityCompat.getColor(getActivity(), android.R.color.white));
+            snackbar.show();
+        }
+    }
 
-	private final Gson gson = new GsonBuilder().create();
-	private String requestJson = "{}";
-	private HttpRequestPostAsyncTask httpRequestPostAsyncTask;
+    private final Gson gson = new GsonBuilder().create();
+    private String requestJson = "{}";
+    private HttpRequestPostAsyncTask httpRequestPostAsyncTask;
 
     private void confirmTransaction() {
         if (!Utilities.isConnectionAvailable(getContext())) {
@@ -434,42 +434,42 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                     Toast.makeText(getContext(), iPayTransactionResponse.getMessage(), Toast.LENGTH_LONG).show();
                                 }
 
-								if (iPayTransactionResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-									if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-										mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
-										mCustomProgressDialog.dismissDialog();
-									}
-								} else {
-									if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-										mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-									}
-								}
-								//Google Analytic event
-								Utilities.sendFailedEventTracker(mTracker, getTrackerCategory(), ProfileInfoCacheManager.getAccountId(),
-										iPayTransactionResponse.getMessage(), amount.longValue());
-								break;
-							}
-					}
-					break;
-			}
-		}
-	}
+                                if (iPayTransactionResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                                        mCustomProgressDialog.dismissDialog();
+                                    }
+                                } else {
+                                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                    }
+                                }
+                                //Google Analytic event
+                                Utilities.sendFailedEventTracker(mTracker, getTrackerCategory(), ProfileInfoCacheManager.getAccountId(),
+                                        iPayTransactionResponse.getMessage(), amount.longValue());
+                                break;
+                            }
+                    }
+                    break;
+            }
+        }
+    }
 
-	private String getTrackerCategory() {
-		switch (transactionType) {
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
-				return "Send Money";
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-				return "Make Payment";
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
-				return "Request Money";
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
-				return "Top Up";
-			case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
-			default:
-				return "";
-		}
-	}
+    private String getTrackerCategory() {
+        switch (transactionType) {
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
+                return "Send Money";
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
+                return "Make Payment";
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
+                return "Request Money";
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                return "Top Up";
+            case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
+            default:
+                return "";
+        }
+    }
 
     private void launchOTPVerification(long otpValidFor) {
         if (getActivity() != null) {
@@ -496,13 +496,13 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                     break;
 
-				case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_TOPUP_REQUEST,
-							Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST, otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
-					break;
-			}
-		}
-	}
+                case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_TOPUP_REQUEST,
+                            Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST, otpValidFor);
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+                    break;
+            }
+        }
+    }
 }

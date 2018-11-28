@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.RemoveSponsorOrBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragment {
@@ -77,6 +78,13 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
         addNewResourceButton = view.findViewById(R.id.add_new_resource);
         final RelativeLayout relativeLayout = view.findViewById(R.id.test_bottom_sheet_layout);
         bottomSheetBehavior = BottomSheetBehavior.from(relativeLayout);
+
+        new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
+            @Override
+            public void ifPinAdded() {
+
+            }
+        }).execute();
 
         relativeLayout.findViewById(R.id.test_bottom_sheet_layout).setOnClickListener(
                 new View.OnClickListener() {
