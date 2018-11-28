@@ -589,4 +589,12 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH)
+            getActivity().finish();
+    }
 }

@@ -14,6 +14,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.MyCard;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival.CarnivalIdInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardBankSelectionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardListShowFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaCardNumberInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps.LankaBanglaDpsNumberInputFragment;
@@ -61,9 +62,8 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
                 switchFragment(new CarnivalIdInputFragment(), bundle, 0, false);
                 break;
             case CREDIT_CARD:
-                switchFragment(new CreditCardListShowFragment(), bundle, 0, false);
+                switchFragment(new CreditCardBankSelectionFragment(), bundle, 0, false);
                 break;
-
             case BILL_PAY_LANKABANGLA_DPS:
                 switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle, 0, false);
                 break;
