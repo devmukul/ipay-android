@@ -433,7 +433,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 
-	protectedvoid addShortCutOption(int id, String title, int value) {
+	protected void addShortCutOption(int id, String title, int value) {
         shortcutSelectionRadioGroup.setVisibility(View.VISIBLE);
 
 		if (shortCutOptionList == null) {

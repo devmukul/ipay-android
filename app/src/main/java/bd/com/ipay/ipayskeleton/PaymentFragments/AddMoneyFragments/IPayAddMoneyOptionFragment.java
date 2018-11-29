@@ -193,7 +193,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 			addBankOptionFragment = new IPayChooseBankOptionFragment();
 			Bundle bundle = new Bundle();
 			switch (transactionType) {
-				case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY:
+				case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
 					addMoneyBankOptionMessageTextView.setVisibility(View.GONE);
 					bottomSheetTitleTextView.setText(R.string.adding_money_from_bank);
 					break;
@@ -223,6 +223,10 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 	public boolean onBackPressed() {
 		if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
 			bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+			if (getFragmentManager() != null)
+				getFragmentManager().beginTransaction()
+						.remove(addBankOptionFragment)
+						.commit();
 			return true;
 		} else {
 			return false;
