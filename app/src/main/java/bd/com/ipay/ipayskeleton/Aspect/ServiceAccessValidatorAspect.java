@@ -102,39 +102,39 @@ public class ServiceAccessValidatorAspect {
 		RadioGroup radioGroup = (RadioGroup) joinPoint.getArgs()[0];
 		final int checkedId = radioGroup.getCheckedRadioButtonId();
 
-		Logger.logW("Aspect", checkedId + "");
-		switch (radioGroup.getId()) {
-			case R.id.notification_type_radio_group:
-				switch (checkedId) {
-					case R.id.radio_button_general:
-						if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
-							result = joinPoint.proceed();
-						} else {
-							DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
-						}
-						break;
-					case R.id.radio_button_deep_linked:
-						if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
-							result = joinPoint.proceed();
-						} else {
-							DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
-						}
-						break;
-				}
-				break;
-			case R.id.contact_type_radio_group:
-				if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
-					result = joinPoint.proceed();
-				} else {
-					DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
-				}
-				break;
-			default:
-				result = joinPoint.proceed();
-				break;
-		}
-		return result;
-	}
+        Logger.logW("Aspect", checkedId + "");
+        switch (radioGroup.getId()) {
+            case R.id.transaction_history_type_radio_group:
+                switch (checkedId) {
+                    case R.id.pending_transaction_history_radio_button:
+                        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
+                            result = joinPoint.proceed();
+                        } else {
+                            DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
+                        }
+                        break;
+                    case R.id.completed_transaction_history_radio_button:
+                        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
+                            result = joinPoint.proceed();
+                        } else {
+                            DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
+                        }
+                        break;
+                }
+                break;
+            case R.id.contact_type_radio_group:
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+                    result = joinPoint.proceed();
+                } else {
+                    DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
+                }
+                break;
+            default:
+                result = joinPoint.proceed();
+                break;
+        }
+        return result;
+    }
 
     @Around("execution(* onNavigationItemSelected(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
     public Object serviceValidatorOnNavigationItemSelect(ProceedingJoinPoint joinPoint) throws Throwable {

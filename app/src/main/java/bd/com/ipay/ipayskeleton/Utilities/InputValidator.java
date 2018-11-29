@@ -18,7 +18,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
  * Validates user inputs (e.g. email, password, date of birth)
  */
 public class InputValidator {
-    public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
+    public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[3-9][\\d]{8})$";
     private static final String INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
     private static final String VALID_PASSPORT_ID_PATTERN = "[A-Z]{2}[0-9]{7}";
     private static final String ALPHA_NUMERIC_PATTERN = "^[a-zA-Z0-9]*$";
@@ -210,5 +210,12 @@ public class InputValidator {
             Logger.logD("NumberParseException was thrown: ", e.toString());
             return false;
         }
+    }
+
+    public static boolean isValidMobileNumberBD(String mobileNumber) {
+            String formattedNumber = ContactEngine.formatMobileNumberBD(mobileNumber);
+            if (formattedNumber.matches(MOBILE_NUMBER_REGEX))
+                return true;
+            return false;
     }
 }

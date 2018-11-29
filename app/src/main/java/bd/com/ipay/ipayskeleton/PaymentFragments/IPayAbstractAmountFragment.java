@@ -81,14 +81,13 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.US);
 
-	private TextView originalBalanceTitleTextView;
+    private TextView originalBalanceTitleTextView;
 	private TextView debitableBalanceTitleTextView;
 	private TextView finalBalanceTitleTextView;
 	private TextView finalBalanceTextView;
 	private TextView debitableBalanceTextView;
 	private TextView originalBalanceTextView;
-	private ImageButton balanceBreakDownloadImageButton;
-	protected MandatoryBusinessRules businessRules;
+	private ImageButton balanceBreakDownloadImageButton;protected MandatoryBusinessRules businessRules;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,10 +96,8 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		numberFormat.setMaximumFractionDigits(2);
 		numberFormat.setMinimumIntegerDigits(2);
 
-		balanceBreakDownFormat.setMinimumFractionDigits(2);
-		balanceBreakDownFormat.setMaximumFractionDigits(2);
-
-		businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
+        balanceBreakDownFormat.setMinimumFractionDigits(2);
+		balanceBreakDownFormat.setMaximumFractionDigits(2);businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
 
 		if (getContext() != null)
 			LocalBroadcastManager.getInstance(getContext()).registerReceiver(mBusinessRuleUpdateBroadcastReceiver, new IntentFilter(Constants.BUSINESS_RULE_UPDATE_BROADCAST));
@@ -138,7 +135,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	public final void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		final Toolbar toolbar = view.findViewById(R.id.toolbar);
+        final Toolbar toolbar = view.findViewById(R.id.toolbar);
 
 
 		continueButton = view.findViewById(R.id.continue_button);
@@ -237,12 +234,14 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 			}
 		});
 
-		setBalanceType(BalanceType.MAIN_BALANCE);
-		setAmount(0, "");
-		setupViewProperties();
-	}
+        setBalanceType(BalanceType.MAIN_BALANCE);
 
-	private void setupBalanceBreakDownDialog() {
+
+        setAmount(0, "");
+        setupViewProperties();
+    }
+
+    private void setupBalanceBreakDownDialog() {
 		if (getContext() != null) {
 			final LayoutInflater inflater = LayoutInflater.from(getContext());
 			final View dialogTitleView = inflater.inflate(R.layout.layout_dialog_custom_title, null, false);
@@ -277,9 +276,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 				}
 			});
 		}
-	}
-
-	protected abstract void setupViewProperties();
+	}protected abstract void setupViewProperties();
 
 	private void shouldRemoveCheck(double result) {
 		int checkedId = shortcutSelectionRadioGroup.getCheckedRadioButtonId();
@@ -300,10 +297,10 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		amountTextView.setOnClickListener(isEnabled ? amountFieldClickAction : null);
 	}
 
-	protected void setInputType(int inputType) {
-		if (inputType == InputType.TYPE_CLASS_NUMBER || inputType == (InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER))
-			amountDummyEditText.setInputType(inputType);
-	}
+    protected void setInputType(int inputType) {
+        if (inputType == InputType.TYPE_CLASS_NUMBER || inputType == (InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER))
+            amountDummyEditText.setInputType(inputType);
+    }
 
 	private void setAmount(double result, String addSuffix) {
 		SuperscriptSpan superscriptSpan = new SuperscriptSpan();
@@ -314,12 +311,12 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		amountTextView.setText(spannable, TextView.BufferType.SPANNABLE);
 	}
 
-	protected void setBalanceInfoLayoutVisibility(int visibility) {
-		balanceInfoLayout.setVisibility(visibility);
-	}
+    protected void setBalanceInfoLayoutVisibility(int visibility) {
+        balanceInfoLayout.setVisibility(visibility);
+    }
 
-	protected void setName(CharSequence name) {
-		nameTextView.setText(name, TextView.BufferType.SPANNABLE);
+    protected void setName(CharSequence name) {
+        nameTextView.setText(name, TextView.BufferType.SPANNABLE);
 	}
 
 	protected void setUserName(CharSequence userName) {
@@ -327,15 +324,13 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		userNameTextView.setText(userName, TextView.BufferType.SPANNABLE);
 	}
 
-	protected void setBalanceInfoTitle(CharSequence name) {
+    protected void setBalanceInfoTitle(CharSequence name) {
 		balanceInfoTitleTextView.setText(name, TextView.BufferType.SPANNABLE);
 	}
 
 	protected void setBalanceInfo(BigDecimal balance) {
 		ipayBalanceTextView.setText(getString(R.string.balance_holder, balanceBreakDownFormat.format(balance)));
-	}
-
-	public void setBalanceType(@NonNull BalanceType balanceType) {
+	}public void setBalanceType(@NonNull BalanceType balanceType) {
 		switch (balanceType) {
 			case MAIN_BALANCE:
 				if (!TextUtils.isEmpty(SharedPrefManager.getUserBalance())) {
@@ -438,8 +433,8 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	}
 
 
-	protected void addShortCutOption(int id, String title, int value) {
-		shortcutSelectionRadioGroup.setVisibility(View.VISIBLE);
+	protectedvoid addShortCutOption(int id, String title, int value) {
+        shortcutSelectionRadioGroup.setVisibility(View.VISIBLE);
 
 		if (shortCutOptionList == null) {
 			shortCutOptionList = new ArrayList<>();
@@ -449,7 +444,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 			return;
 		}
 
-		final Spannable spannable = new SpannableString(String.format(Locale.US, "%s\nTK. %s", title, numberFormat.format(value)));
+		final Spannable spannable = new SpannableString(String.format(Locale.US, "%s\nTK. %s", title, numberFormat.format(value)).trim());
 		spannable.setSpan(new StyleSpan(Typeface.BOLD), title.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ShortCutOption shortCutOption = new ShortCutOption(id, spannable, value);
 
@@ -468,32 +463,35 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		shortcutSelectionRadioGroup.addView(radioButton);
 	}
 
-	protected void setTransactionDescription(String transactionDescription) {
-		transactionDescriptionTextView.setText(transactionDescription);
-	}
+    protected void setTransactionDescription(String transactionDescription) {
+        transactionDescriptionTextView.setText(transactionDescription);
+    }
 
-	protected void setTransactionImageResource(int imageResource) {
-		if (getContext() != null) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
-			} else {
-				Glide.with(getContext()).load(imageResource)
-						.asBitmap()
-						.transform(new CircleTransform(getContext()))
-						.crossFade()
+    protected void setTransactionImageResource(int imageResource) {
+        if (getContext() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
+            } else {
+                Glide.with(getContext()).load(imageResource)
+                        .asBitmap()
+                        .transform(new CircleTransform(getContext()))
+                        .crossFade()
+                        .error(R.drawable.ic_profile)
+						.placeholder(R.drawable.ic_profile)
 						.into(transactionImageView);
-			}
-		}
-	}
+            }
+        }
+    }
 
-	protected void setTransactionImage(String imageUrl) {
-		Glide.with(getContext()).load(imageUrl)
-				.transform(new CircleTransform(getContext()))
-				.crossFade()
-				.placeholder(R.drawable.ic_profile)
+    protected void setTransactionImage(String imageUrl) {
+        Glide.with(getContext()).load(imageUrl)
+                .transform(new CircleTransform(getContext()))
+                .crossFade().placeholder(R.drawable.ic_profile)
 				.error(R.drawable.ic_profile)
+                .error(R.drawable.ic_profile)
+				.placeholder(R.drawable.ic_profile)
 				.into(transactionImageView);
-	}
+    }
 
 	protected void showErrorMessage(String errorMessage) {
 		if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
@@ -514,9 +512,9 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		}
 	}
 
-	protected void setAmount(String amount) {
-		amountDummyEditText.setText(amount);
-	}
+    protected void setAmount(String amount) {
+        amountDummyEditText.setText(amount);
+    }
 
 	protected abstract InputFilter getInputFilter();
 
@@ -556,6 +554,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 			return id;
 		}
 
+		@NonNull
 		@Override
 		public String toString() {
 			return "ShortCutOption{" + "id=" + id + ", title=" + title + ", amountValue=" + amountValue + '}';

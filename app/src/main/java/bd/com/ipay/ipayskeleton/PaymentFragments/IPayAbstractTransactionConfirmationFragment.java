@@ -173,8 +173,8 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 						.asBitmap()
 						.transform(new CircleTransform(getContext()))
 						.crossFade()
-						.placeholder(R.drawable.ic_profile)
 						.error(R.drawable.ic_profile)
+						.placeholder(R.drawable.ic_profile)
 						.into(transactionImageView);
 			}
 		}
@@ -185,8 +185,8 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		Glide.with(getContext()).load(imageUrl)
 				.transform(new CircleTransform(getContext()))
 				.crossFade()
-				.placeholder(R.drawable.ic_profile)
 				.error(R.drawable.ic_profile)
+				.placeholder(R.drawable.ic_profile)
 				.into(transactionImageView);
 	}
 

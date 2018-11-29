@@ -1,66 +1,62 @@
-<com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bottom_sheet"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/transaction_history_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBackground"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/colorBackground">
 
-        <RelativeLayout
-            android:id="@+id/transaction_history_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin_card"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/background_contact_selector_background"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/transaction_history_type_radio_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="12dp"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/background_contact_selector_background"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:background="@android:color/transparent"
+                android:orientation="horizontal">
 
-                <RadioGroup
-                    android:id="@+id/notification_type_radio_group"
+                <RadioButton
+                    android:id="@+id/pending_transaction_history_radio_button"
+                    style="@style/ContactsSelectorStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:background="@drawable/background_left_round_checkbox"
+                    android:text="@string/pending"
+                    android:textColor="@color/radio_button_text_color" />
 
-                    <RadioButton
-                        android:id="@+id/radio_button_general"
-                        style="@style/ContactsSelectorStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_left_round_checkbox"
-                        android:text="@string/pending"
-                        android:textColor="@color/radio_button_text_color" />
+                <RadioButton
+                    android:id="@+id/completed_transaction_history_radio_button"
+                    style="@style/ContactsSelectorStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_right_round_checkbox"
+                    android:text="@string/completed"
+                    android:textColor="@color/radio_button_text_color" />
 
-                    <RadioButton
-                        android:id="@+id/radio_button_deep_linked"
-                        style="@style/ContactsSelectorStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_right_round_checkbox"
-                        android:text="@string/completed"
-                        android:textColor="@color/radio_button_text_color" />
+            </RadioGroup>
 
-                </RadioGroup>
-
-            </LinearLayout>
-        </RelativeLayout>
-
-
-        <FrameLayout
-            android:id="@+id/fragment_container_notification"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/transaction_history_header" />
-
+        </LinearLayout>
     </RelativeLayout>
-</com.flipboard.bottomsheet.BottomSheetLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container_transaction_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

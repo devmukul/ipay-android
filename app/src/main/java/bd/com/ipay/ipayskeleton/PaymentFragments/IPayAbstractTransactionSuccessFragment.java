@@ -113,8 +113,8 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 						.asBitmap()
 						.transform(new CircleTransform(getContext()))
 						.crossFade()
-						.placeholder(R.drawable.ic_profile)
 						.error(R.drawable.ic_profile)
+						.placeholder(R.drawable.ic_profile)
 						.into(senderProfilePictureImageView);
 			}
 		}
@@ -126,8 +126,8 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		Glide.with(getContext()).load(imageUrl)
 				.transform(new CircleTransform(getContext()))
 				.crossFade()
-				.placeholder(R.drawable.ic_profile)
 				.error(R.drawable.ic_profile)
+				.placeholder(R.drawable.ic_profile)
 				.into(senderProfilePictureImageView);
 	}
 
@@ -140,8 +140,8 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 						.asBitmap()
 						.transform(new CircleTransform(getContext()))
 						.crossFade()
-						.placeholder(R.drawable.ic_profile)
 						.error(R.drawable.ic_profile)
+						.placeholder(R.drawable.ic_profile)
 						.into(receiverProfilePictureImageView);
 			}
 		}
@@ -151,8 +151,8 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		Glide.with(getContext()).load(imageUrl)
 				.transform(new CircleTransform(getContext()))
 				.crossFade()
-				.placeholder(R.drawable.ic_profile)
 				.error(R.drawable.ic_profile)
+				.placeholder(R.drawable.ic_profile)
 				.into(receiverProfilePictureImageView);
 	}
 

@@ -93,7 +93,7 @@ public class IPaySendMoneyConfirmationFragment extends IPayAbstractTransactionCo
 			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
 		}
 		if (sendMoneyRequestTask == null) {
-			sendMoneyRequest = new SendMoneyRequest(ProfileInfoCacheManager.getMobileNumber(), mobileNumber, transactionAmount.toString(), getPin(), getNote());
+			sendMoneyRequest = new SendMoneyRequest(mobileNumber, transactionAmount.toString(), getPin(), getNote());
 			String json = gson.toJson(sendMoneyRequest);
 			uri = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY;
 			sendMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,

@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionConfirmationFrag
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionContactFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.IPayMakePaymentFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.IPayRequestMoneyAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPaySendMoneyAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -109,6 +110,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
 					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
 					if (transactionType == TRANSACTION_TYPE_SEND_MONEY) {
 						switchFragment(new IPaySendMoneyAmountInputFragment(), bundle, 1, false);
+					} else if (transactionType == TRANSACTION_TYPE_REQUEST_MONEY) {
+						switchFragment(new IPayRequestMoneyAmountInputFragment(), bundle, 1, false);
 					} else {
 						switchToAmountInputFragment(bundle);
 					}

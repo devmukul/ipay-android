@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.IPayRequestMoneyAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.IPaySendMoneyAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -402,6 +403,8 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 		if (getActivity() instanceof IPayTransactionActionActivity) {
 			if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY) {
 				((IPayTransactionActionActivity) getActivity()).switchFragment(new IPaySendMoneyAmountInputFragment(), bundle, 1, true);
+			} else if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY) {
+				((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayRequestMoneyAmountInputFragment(), bundle, 1, true);
 			} else {
 				((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
 			}
