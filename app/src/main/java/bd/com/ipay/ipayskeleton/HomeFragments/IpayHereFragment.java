@@ -100,11 +100,9 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
 
     private List<NearbyBusinessResponseList> mNearByBusinessResponse;
     private HttpRequestGetAsyncTask mIPayHereTask = null;
-
-    private IPayHereResponse mIPayHereResponse;
     private LocationManager locationManager;
-    private String mLatitude = "23.780879";
-    private String mLongitude = "90.400956";
+    private String mLatitude = "23.786325";
+    private String mLongitude = "90.416801";
 
     private RecyclerView mTransactionHistoryRecyclerView;
     private BusinessContactListAdapter mTransactionHistoryAdapter;
@@ -223,50 +221,26 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
 
             case Constants.COMMAND_GET_NEREBY_BUSSINESS:
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     try {
-
                         IPayHereResponse iPayHereResponse = gson.fromJson(result.getJsonString(), IPayHereResponse.class);
-                        loadTransactionHistory(iPayHereResponse.getNearbyBusinessResponseList());
+                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                            loadTransactionHistory(iPayHereResponse.getNearbyBusinessResponseList());
+                        } else {
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), iPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Could not fetch data..", Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
+
                 if (mProgressDialog.isShowing())
                     mProgressDialog.dismiss();
 
                 mSwipeRefreshLayout.setRefreshing(false);
                 mIPayHereTask = null;
                 if (this.isAdded()) setContentShown(true);
-
-
-//                try {
-//                    mNearByBusinessResponse = new ArrayList<>();
-//                    mIPayHereResponse = gson.fromJson(result.getJsonString(), IPayHereResponse.class);
-//                    mNearByBusinessResponse = mIPayHereResponse.getNearbyBusinessResponseList();
-//
-//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-//                        System.out.println("Test  Loc "+mNearByBusinessResponse.size());
-//
-//                        setBusinessContactAdapter(mNearByBusinessResponse);
-//
-//                        //readItems();
-//                    } else {
-//                        Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getContext(), mIPayHereResponse.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//                mSwipeRefreshLayout.setRefreshing(false);
-//                mIPayHereTask = null;
-//                break;
         }
 
     }
