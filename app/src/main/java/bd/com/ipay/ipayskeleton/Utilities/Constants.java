@@ -195,16 +195,17 @@ public class Constants {
     public static final String LANKA_BANGLA_BILL_PAY = "LANKA BANGLA BILL PAY";
     public static final String LANKA_BANGLA_DPS_BILL_PAY = "LANKA BANGLA DPS BILL PAY";
     public static final String AMBERIT = "AMBERIT";
-    public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
-    public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
-    public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
-    public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
-    public static final String FROM_CONTACT = "FROM_CONTACT";
-    public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
-    public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
-    public static final String VISA = "VISA";
-    public static final String MASTERCARD = "MASTERCARD";
-    public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+	public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
+	public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
+	public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
+	public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
+	public static final String FROM_CONTACT = "FROM_CONTACT";
+	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
+    public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
+	public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
+	public static final String VISA = "VISA";
+	public static final String MASTERCARD = "MASTERCARD";
+	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
     public static final String URL_GET_BANK_LIST = "credit-card/banks";
@@ -564,6 +565,8 @@ public class Constants {
     //Promotions
     public static final String URL_PROMOTIONS = "promotions/";
 
+    //Promotions
+    public static final String URL_FEEDBACK = "feedbacks";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -752,6 +755,8 @@ public class Constants {
 
     public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
     public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
+
+    public static final String COMMAND_SUBMIT_RATING = "COMMAND_SUBMIT_RATING";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 

@@ -63,14 +63,6 @@ public class SharedPrefManager {
 		pref.edit().putInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, value).apply();
 	}
 
-	public static void setUserCountry(String value) {
-		pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
-	}
-
-	public static String getUserCountry() {
-		return pref.getString(SharedPrefConstants.USERCOUNTRY, "BD");
-	}
-
 	public static String getKeyPassword(String defaultValue) {
 		return pref.getString(SharedPrefConstants.KEY_PASSWORD, defaultValue);
 	}
@@ -97,10 +89,6 @@ public class SharedPrefManager {
 
 	public static boolean ifContainsUserID() {
 		return (pref.contains(SharedPrefConstants.USERID));
-	}
-
-	public static boolean isBangladesh() {
-		return getUserCountry().equalsIgnoreCase("BD");
 	}
 
 	public static String getInvitationCode() {
@@ -150,4 +138,20 @@ public class SharedPrefManager {
     public static boolean ifFirstTopUp() {
         return pref.getBoolean(Constants.IS_FIRST_TOP_UP, true);
     }
+
+	public static void setIfFirstMakePayment(boolean isFirstMakePayment) {
+		pref.edit().putBoolean(Constants.IS_FIRST_MAKE_PAYMENT, isFirstMakePayment).apply();
+	}
+
+	public static boolean ifFirstMakePayment() {
+		return pref.getBoolean(Constants.IS_FIRST_MAKE_PAYMENT, true);
+	}
+
+	public static String getTrendingBusiness(String defaultValue) {
+		return pref.getString(SharedPrefConstants.KEY_TRENDING_JSON, defaultValue);
+	}
+
+	public static void setTrendingBusiness(String value) {
+		pref.edit().putString(SharedPrefConstants.KEY_TRENDING_JSON, value).apply();
+	}
 }

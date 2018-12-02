@@ -33,9 +33,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDial
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetailsRequestBuilder;
@@ -44,8 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.OrderDetails
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PayOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -80,7 +77,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (PaymentActivity.mMandatoryBusinessRules == null) {
-            PaymentActivity.mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.MAKE_PAYMENT);
+            PaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.MAKE_PAYMENT);
         }
 
         if (getActivity() != null) {
@@ -104,8 +101,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
         mBusinessLogoImageView = view.findViewById(R.id.business_profile_image_view);
         mConfirmButton = view.findViewById(R.id.make_payment_button);
         mCancelButton = view.findViewById(R.id.cancel_button);
-
-        attemptGetBusinessRules(Constants.SERVICE_ID_MAKE_PAYMENT);
         SharedPrefManager.setFirstLaunch(false);
         fetchOrderDetails();
         setButtonActions();
@@ -168,12 +163,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     Utilities.hideKeyboard(getContext(), getView());
-                    if (PaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() &&
-                            !ProfileInfoCacheManager.isAccountVerified()) {
-                        DialogUtils.showDialogVerificationRequired(getContext());
-                    } else {
-                        attemptPaymentWithPinCheck();
-                    }
+                    attemptPaymentWithPinCheck();
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -211,17 +201,12 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
     }
 
     private void attemptPaymentWithPinCheck() {
-        if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
-                @Override
-                public void ifPinCheckedAndAdded(String pin) {
-                    attemptPayment(pin);
-                }
-            });
-        } else {
-            attemptPayment(null);
-        }
-
+        new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+            @Override
+            public void ifPinCheckedAndAdded(String pin) {
+                attemptPayment(pin);
+            }
+        });
     }
 
     private void attemptPayment(String pin) {
@@ -274,46 +259,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
 
         } else {
             switch (result.getApiCommand()) {
-                case Constants.COMMAND_GET_BUSINESS_RULE:
-                    if (mCustomProgressDialog != null)
-                        mCustomProgressDialog.dismiss();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        try {
-                            BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
-
-                            if (businessRuleArray != null) {
-                                for (BusinessRule rule : businessRuleArray) {
-                                    switch (rule.getRuleID()) {
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
-                                            PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                            break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
-                                            PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                            break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED:
-                                            PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-                                            break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED:
-                                            PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-                                            break;
-                                        case BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED:
-                                            PaymentActivity.mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
-                                            break;
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            if (getActivity() != null)
-                                DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-                        }
-                    } else {
-                        if (getActivity() != null)
-                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-                    }
-
-                    mGetBusinessRuleTask = null;
-                    break;
                 case Constants.COMMAND_GET_ORDER_DETAILS:
                     if (mCustomProgressDialog != null)
                         mCustomProgressDialog.dismiss();

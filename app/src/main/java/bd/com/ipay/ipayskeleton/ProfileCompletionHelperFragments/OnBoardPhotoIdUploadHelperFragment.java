@@ -45,10 +45,10 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()) {
+                if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
                     ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                 } else {
-                    if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
+                    if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                     } else if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();

@@ -20,7 +20,6 @@ public class SharedPrefConstants {
     public static final String USERID = "USERID";
     public static final String NAME = "NAME";
     public static final String GENDER = "GENDER";
-    public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
 
@@ -40,4 +39,7 @@ public class SharedPrefConstants {
     public static String Id = "Id";
     public static String SOURCE_OF_FUND_ADDED = "SOURCE_OF_FUND_ADDED";
     public static final String INVITATION_CODE = "INVITATION_CODE";
+
+
+    public static final String KEY_TRENDING_JSON = "trending_json";
 }

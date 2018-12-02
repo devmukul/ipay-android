@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:apps="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground">
@@ -9,37 +9,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/value40"
         android:orientation="vertical"
-        android:weightSum="100"
-        android:layout_marginBottom="@dimen/value40">
+        android:weightSum="100">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="30"
-            android:orientation="vertical"
-            android:background="@drawable/background_all_layout">
+            android:background="@drawable/background_all_layout"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/layout_button"
+                android:background="@android:color/transparent"
                 android:orientation="vertical"
                 android:weightSum="2">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="2"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/activity_horizontal_margin_double"
                     android:paddingLeft="@dimen/activity_horizontal_margin_double"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:gravity="center_vertical">
+                    android:paddingEnd="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_centerInParent="true"
                         android:orientation="vertical">
 
@@ -47,51 +51,48 @@
                             android:id="@+id/balance_label"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
+                            android:fontFamily="@font/open_sans"
                             android:text="@string/ipay_balance"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_small"
-                            android:fontFamily="sans-serif"/>
+                            android:textSize="@dimen/text_size_small" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/balance"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/balance_label"
-                                android:fontFamily="sans-serif-light"
+                                android:fontFamily="@font/open_sans_light"
                                 android:paddingBottom="@dimen/activity_horizontal_margin_card"
                                 android:text="@string/loading"
                                 android:textColor="@android:color/white"
-                                android:textSize="@dimen/text_size_extra_extra_large"/>
+                                android:textSize="@dimen/text_size_extra_extra_large" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/refresh_balance_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:background="@android:color/transparent"
-                                android:backgroundTint="@android:color/white"
-                                android:clickable="true"
+                                android:background="?android:selectableItemBackground"
+                                android:contentDescription="@string/empty_string"
                                 android:padding="@dimen/activity_horizontal_margin_card"
                                 android:src="@drawable/reload_icon" />
                         </LinearLayout>
 
                     </LinearLayout>
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/show_qr_code_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:background="@android:color/transparent"
-                        android:clickable="true"
+                        android:background="?android:selectableItemBackground"
+                        android:contentDescription="@string/qr_code"
                         android:src="@drawable/db_qr_icon" />
 
                 </RelativeLayout>
@@ -107,25 +108,27 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/value1"
-                    android:background="#40CABD"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                    android:background="#40CABD" />
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:id="@+id/button_add_money"
-                        style="@style/HomeBalanceButtonBackground">
+                        style="@style/HomeBalanceButtonBackground"
+                        android:background="?android:selectableItemBackground">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:contentDescription="@string/add_money"
                             android:src="@drawable/ic_add" />
 
                         <TextView
@@ -133,6 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="marquee"
+                            android:fontFamily="@font/open_sans_semibold"
                             android:singleLine="true"
                             android:text="@string/add_money" />
 
@@ -140,12 +144,14 @@
 
                     <LinearLayout
                         android:id="@+id/button_withdraw_money"
-                        style="@style/HomeBalanceButtonBackground">
+                        style="@style/HomeBalanceButtonBackground"
+                        android:background="?android:selectableItemBackground">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:contentDescription="@string/withdraw_money"
                             android:src="@drawable/ic_withdraw" />
 
                         <TextView
@@ -153,6 +159,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="marquee"
+                            android:fontFamily="@font/open_sans_semibold"
                             android:singleLine="true"
                             android:text="@string/withdraw_money" />
 
@@ -171,16 +178,20 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="70"
-            android:layout_margin="@dimen/activity_horizontal_margin_card"
             android:orientation="vertical">
 
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@color/colorWhite"
-                apps:cardElevation="3dp"
-                apps:cardCornerRadius="5dp">
+                android:layout_marginStart="@dimen/activity_horizontal_margin_card"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin_card"
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:id="@+id/transaction_view"
@@ -193,21 +204,24 @@
                         android:id="@+id/title_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/open_sans_semibold"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingTop="@dimen/value8"
+                        android:paddingEnd="@dimen/value0"
+                        android:paddingRight="@dimen/value0"
                         android:paddingBottom="@dimen/value8"
+                        android:text="@string/last_transaction"
                         android:textColor="#666666"
                         android:textSize="10sp"
-                        android:text="LAST TRANSACTION"/>
+                        tools:ignore="SmallSp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/value1"
-                        android:background="#EEEEEE">
-                    </LinearLayout>
+                        android:background="#EEEEEE" />
 
-                    <include
-                        layout="@layout/list_item_transaction_history"/>
+                    <include layout="@layout/list_item_transaction_history" />
 
                 </LinearLayout>
 
@@ -215,27 +229,26 @@
                     android:id="@+id/profile_completion"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:elevation="@dimen/value2"
                     android:visibility="gone">
 
                 </android.support.v7.widget.RecyclerView>
 
                 <ProgressBar
                     android:id="@+id/progress_bar_transaction"
+                    style="?android:attr/progressBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="?android:attr/progressBarStyleSmall"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center" />
             </android.support.v7.widget.CardView>
 
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorWhite"
-                apps:cardElevation="3dp"
-                apps:cardCornerRadius="5dp"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+                android:layout_margin="@dimen/activity_horizontal_margin_card"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -245,17 +258,20 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:baselineAligned="false">
 
                         <LinearLayout
                             android:id="@+id/continue_button"
                             style="@style/HomeImageLinearLayoutStyleHorizontal"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            tools:ignore="NestedWeights">
 
                             <TextView
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
                                 android:drawableTop="@drawable/background_icon_send_money"
                                 android:ellipsize="marquee"
+                                android:fontFamily="@font/open_sans_semibold"
                                 android:singleLine="true"
                                 android:text="@string/send_money" />
 
@@ -264,8 +280,8 @@
                         <LinearLayout
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
-                            android:background="#edeeef"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:background="#edeeef">
 
                         </LinearLayout>
 
@@ -278,6 +294,7 @@
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
                                 android:drawableTop="@drawable/background_icon_pay_by_qc_home"
                                 android:ellipsize="marquee"
+                                android:fontFamily="@font/open_sans_semibold"
                                 android:singleLine="true"
                                 android:text="@string/pay_by_QR_code" />
 
@@ -286,8 +303,8 @@
                         <LinearLayout
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
-                            android:background="#edeeef"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+                            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                            android:background="#edeeef">
 
                         </LinearLayout>
 
@@ -300,6 +317,7 @@
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
                                 android:drawableTop="@drawable/background_icon_topup_home"
                                 android:ellipsize="marquee"
+                                android:fontFamily="@font/open_sans_semibold"
                                 android:singleLine="true"
                                 android:text="@string/mobile_topup" />
 
@@ -310,26 +328,29 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#edeeef"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin_card">
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                        android:background="#edeeef">
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:baselineAligned="false">
 
                         <LinearLayout
                             android:id="@+id/button_request_money"
                             style="@style/HomeImageLinearLayoutStyleHorizontal"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            tools:ignore="NestedWeights">
 
                             <TextView
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
                                 android:drawableTop="@drawable/background_icon_request_money"
                                 android:ellipsize="marquee"
+                                android:fontFamily="@font/open_sans_semibold"
                                 android:singleLine="true"
                                 android:text="@string/request_money" />
 
@@ -338,8 +359,8 @@
                         <LinearLayout
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
-                            android:background="#edeeef"
-                            android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+                            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                            android:background="#edeeef">
 
                         </LinearLayout>
 
@@ -352,32 +373,48 @@
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
                                 android:drawableTop="@drawable/background_icon_make_payment"
                                 android:ellipsize="marquee"
+                                android:fontFamily="@font/open_sans_semibold"
                                 android:singleLine="true"
                                 android:text="@string/make_payment" />
 
                         </LinearLayout>
 
 
-
                         <LinearLayout
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
-                            android:background="#edeeef"
-                            android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+                            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                            android:background="#edeeef">
 
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/button_ipay_here"
+                            android:id="@+id/button_request_paymnet"
+                            style="@style/HomeImageLinearLayoutStyleHorizontal"
+                            android:layout_weight="1"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:drawableTop="@drawable/request_payment"
+                                android:ellipsize="marquee"
+                                android:singleLine="true"
+                                android:text="@string/request_payment" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/button_invite_to_ipay"
                             style="@style/HomeImageLinearLayoutStyleHorizontal"
                             android:layout_weight="1">
 
                             <TextView
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                                android:drawableTop="@drawable/background_icon_ipay_here"
+                                android:drawableTop="@drawable/invite_icon"
                                 android:ellipsize="marquee"
+                                android:fontFamily="@font/open_sans_semibold"
                                 android:singleLine="true"
-                                android:text="@string/ipay_here" />
+                                android:text="@string/invite_people_to_ipay" />
 
                         </LinearLayout>
 
@@ -395,21 +432,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="true"
-        apps:behavior_peekHeight="40dp"
-        apps:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:behavior_peekHeight="40dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        tools:ignore="MissingPrefix">
 
         <include
             android:id="@+id/test_sheet"
-            layout="@layout/bottom_sheet"/>
+            layout="@layout/bottom_sheet" />
 
-        <fragment
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:name="bd.com.ipay.ipayskeleton.HomeFragments.OfferFragment"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-6dp"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+            android:layout_marginTop="-6dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            app:cardBackgroundColor="@color/colorWhite"
+            app:cardCornerRadius="@dimen/value0"
+            app:cardElevation="@dimen/value5">
+
+            <fragment
+                android:id="@+id/offerFragment"
+                android:name="bd.com.ipay.ipayskeleton.HomeFragments.OfferFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 
