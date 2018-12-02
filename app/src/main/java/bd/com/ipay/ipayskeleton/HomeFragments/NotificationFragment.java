@@ -40,7 +40,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
@@ -82,7 +81,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class NotificationFragment extends ProgressFragment implements HttpResponseListener, BeneficiaryUpdateDialog.BeneficiaryAddSuccessListener {
+public class NotificationFragment extends ProgressFragment implements bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener, BeneficiaryUpdateDialog.BeneficiaryAddSuccessListener {
 
     private HttpRequestPostAsyncTask mGetMoneyAndPaymentRequestTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
@@ -237,7 +236,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getPendingBeneficiaryListResponse(context);
         getPendingSponsorListResponse(context);
     }
-
 
 
     private void getPendingInvitationRequestsForRoleManager(Context context) {
@@ -590,6 +588,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mGetPendingIntroducerListTask = null;
                 mGetPendingRoleManagerRequestTask = null;
                 acceptOrRejectBeneficiaryAsyncTask = null;
+                mGetSponsorAsyncTask = null;
+                mGetBeneficiaryAsyncTask = null;
                 if (ipayProgressDialog != null) {
                     ipayProgressDialog.dismiss();
                 }
@@ -959,8 +959,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             .into(profileImageView);
                     timeTextView.setText(Utilities.formatDateWithTime(beneficiary.getUpdatedAt()));
 
-                    String description = descriptionTextView.getText().toString();
-                    description = description.replace("Hasan Masud", beneficiary.getName());
+                    String description = "";
+                    description = beneficiary.getName() + " has asked you to become a sponsor of his/her iPay wallet. " +
+                            "He/She can use up to a certain limit monthly from your iPay wallet" ;
                     descriptionTextView.setText(description);
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -971,16 +972,16 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                 public void ifPinAdded() {
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
-                                    bundle.putString(Constants.TO_DO,Constants.UPDATE_STATUS);
+                                    bundle.putString(Constants.TO_DO, Constants.UPDATE_STATUS);
                                     EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
                                             = new EditPermissionSourceOfFundBottomSheetFragment();
                                     editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
                                     getChildFragmentManager().beginTransaction().
                                             replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
                                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                                    editPermissionSourceOfFundBottomSheetFragment.setBeneficiaryUpdateListener(new EditPermissionSourceOfFundBottomSheetFragment.BeneficiaryUpdateListener() {
+                                    editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
                                         @Override
-                                        public void onBeneficiaryStatusUpdated() {
+                                        public void onSuccess() {
                                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                                             Utilities.hideKeyboard(getActivity());
                                             refreshNotificationLists(getContext());
@@ -1014,7 +1015,20 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            attemptAcceptOrRejectBeneficiary(Constants.SPONSOR, sponsor.getId(), "APPROVED");
+                            new AlertDialog.Builder(getContext())
+                                    .setMessage("Do you want to accept the request?")
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            attemptAddBeneficiaryOrSponsor(Constants.SPONSOR, null, sponsor.getId(), "APPROVED");
+                                        }
+                                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).show();
+
                         }
                     });
                     rejectTextView.setOnClickListener(new View.OnClickListener() {
@@ -1125,7 +1139,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            attemptAddBeneficiary(type, "", id, action);
+                            attemptAddBeneficiaryOrSponsor(type, "", id, action);
                         }
                     }).show();
 
@@ -1133,14 +1147,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
-                    attemptAddBeneficiary(type, pin, id, action);
+                    attemptAddBeneficiaryOrSponsor(type, pin, id, action);
                 }
             });
         }
 
     }
 
-    private void attemptAddBeneficiary(String type, String pin, long id, String action) {
+    private void attemptAddBeneficiaryOrSponsor(String type, String pin, long id, String action) {
         if (acceptOrRejectBeneficiaryAsyncTask != null) {
             return;
         } else {
@@ -1151,7 +1165,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         (Constants.DEFAULT_CREDIT_LIMIT, pin, action);
                 acceptOrRejectBeneficiaryAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY,
                         Constants.BASE_URL_MM +
-                                Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + id,
+                                Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + "beneficiary/" + id,
                         new Gson().toJson(acceptOrRejectBeneficiaryRequest), getContext(), this, false);
                 acceptOrRejectBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 ipayProgressDialog.setMessage("Please wait . . .");
@@ -1159,10 +1173,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             } else {
                 acceptOrRejectSponsorRequest = new AcceptOrRejectSponsorRequest
-                        (pin, action);
+                        (action);
                 acceptOrRejectBeneficiaryAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY,
                         Constants.BASE_URL_MM +
-                                Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + id,
+                                Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + "sponsor/" + id,
                         new Gson().toJson(acceptOrRejectSponsorRequest), getContext(), this, false);
                 acceptOrRejectBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 ipayProgressDialog.setMessage("Please wait . . .");

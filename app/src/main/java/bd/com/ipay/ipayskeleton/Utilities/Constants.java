@@ -236,6 +236,9 @@ public class Constants {
     public static final String COMMAND_CHANGE_MONTLY_LIMIT = "COMMAND_CHANGE_MONTLY_LIMIT";
     public static final String URI_CHANGE_MONTHLY_LIMIT = "ipay-source/";
     public static final String UPDATE_STATUS = "UPDATE_STATUS";
+    public static final String ADD_SOURCE_OF_FUND = "ADD_SOURCE_OF_FUND";
+    public static final String ADD_SOURCE_OF_FUND_BENEFICIARY = "ADD_SOURCE_OF_FUND_BENEFICIARY";
+    public static final String ADD_SOURCE_OF_FUND_SPONSOR = "ADD_SOURCE_OF_FUND_SPONSOR";
     public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
     public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";

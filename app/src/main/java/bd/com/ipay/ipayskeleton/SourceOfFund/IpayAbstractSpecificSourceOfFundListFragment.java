@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpDeleteWithBodyAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -163,7 +162,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             deleteSponsorAsyncTask = new HttpDeleteWithBodyAsyncTask(Constants.COMMAND_REMOVE_SPONSOR_OR_BENEFICIARY,
                     Constants.BASE_URL_MM + Constants.URL_DELETE_SPONSOR + id, new Gson().toJson
                     (removeSponsorOrBeneficiaryRequest),
-                    getContext(), new HttpResponseListener() {
+                    getContext(), new bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener() {
                 @Override
                 public void httpResponseReceiver(GenericHttpResponse result) {
                     if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
@@ -255,7 +254,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        attemptRemoveSponsorWithPinCheck(sponsor.getId());
+                                        attemptRemoveSponsorOrBeneficiary(sponsor.getId(), null);
                                     }
                                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
@@ -286,16 +285,16 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
 
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
-                    bundle.putString(Constants.TO_DO,Constants.EDIT_AMOUNT);
+                    bundle.putString(Constants.TO_DO, Constants.EDIT_AMOUNT);
                     EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
                             = new EditPermissionSourceOfFundBottomSheetFragment();
                     editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
                     getChildFragmentManager().beginTransaction().
                             replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    editPermissionSourceOfFundBottomSheetFragment.setBeneficiaryUpdateListener(new EditPermissionSourceOfFundBottomSheetFragment.BeneficiaryUpdateListener() {
+                    editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
                         @Override
-                        public void onBeneficiaryStatusUpdated() {
+                        public void onSuccess() {
                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                             Utilities.hideKeyboard(getActivity());
                             getSourceOfFundList();
@@ -310,7 +309,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    attemptRemoveSponsorWithPinCheck(beneficiary.getId());
+                                    attemptRemoveSponsorOrBeneficiary(beneficiary.getId(), null);
                                 }
                             }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override

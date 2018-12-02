@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Selection;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +32,6 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogA
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -41,14 +41,15 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddSponsorRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
-public class AddSourceOfFundFragment extends Fragment implements HttpResponseListener {
+public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener {
 
     private String mName;
     private String mMobileNumber;
@@ -73,6 +74,7 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
     private HttpRequestPostAsyncTask mAddSponsorAsyncTask;
 
     private HttpRequestPostAsyncTask mAddBeneficiaryAsyncTask;
+    public BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
 
     private String type;
 
@@ -96,6 +98,18 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         profileImageView = view.findViewById(R.id.profile_picture);
         relationShipEditText = view.findViewById(R.id.relationship_edit_text);
         ImageView backButton = view.findViewById(R.id.back);
+        final RelativeLayout relativeLayout = view.findViewById(R.id.test_bottom_sheet_layout);
+        bottomSheetBehavior = BottomSheetBehavior.from(relativeLayout);
+
+        relativeLayout.findViewById(R.id.test_bottom_sheet_layout).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                    }
+                }
+        );
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,18 +265,31 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
     }
 
     public void attemptAddSponsor() {
-        if (mAddSponsorAsyncTask != null) {
-            return;
-        } else {
-            AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(mMobileNumber),
-                    relationShip, Constants.DEFAULT_CREDIT_LIMIT);
-            mAddSponsorAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_SPONSOR
-                    , Constants.BASE_URL_MM + Constants.URL_ADD_SPONSOR,
-                    new Gson().toJson(addSponsorRequest), getContext(), this, false);
-            ipayProgressDialog.setMessage("Please wait . . . ");
-            ipayProgressDialog.show();
-            mAddSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+        bundle.putString(Constants.NAME, mName);
+        bundle.putString(Constants.TO_DO, Constants.ADD_SOURCE_OF_FUND_SPONSOR);
+        bundle.putString(Constants.RELATION, relationShip);
+        EditPermissionSourceOfFundBottomSheetFragment
+                editPermissionSourceOfFundBottomSheetFragment =
+                new EditPermissionSourceOfFundBottomSheetFragment();
+        editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+        getChildFragmentManager().beginTransaction().
+                replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
+            @Override
+            public void onSuccess() {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                Utilities.hideKeyboard(getActivity());
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.NAME, mName);
+                bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
+                bundle.putString(Constants.TYPE, Constants.SPONSOR);
+                ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
+            }
+        });
     }
 
     public void attemptAddBeneficiaryWithPinCheck() {
@@ -270,12 +297,35 @@ public class AddSourceOfFundFragment extends Fragment implements HttpResponseLis
         if (mAddBeneficiaryAsyncTask != null) {
             return;
         } else {
-            new CustomPinCheckerWithInputDialog(getContext(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+            new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
                 @Override
-                public void ifPinCheckedAndAdded(String pin) {
-                    attemptAddBeneficiary(pin);
+                public void ifPinAdded() {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+                    bundle.putString(Constants.NAME, mName);
+                    bundle.putString(Constants.TO_DO, Constants.ADD_SOURCE_OF_FUND_BENEFICIARY);
+                    bundle.putString(Constants.RELATION, relationShip);
+                    EditPermissionSourceOfFundBottomSheetFragment
+                            editPermissionSourceOfFundBottomSheetFragment =
+                            new EditPermissionSourceOfFundBottomSheetFragment();
+                    editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+                    getChildFragmentManager().beginTransaction().
+                            replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
+                        @Override
+                        public void onSuccess() {
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            Utilities.hideKeyboard(getActivity());
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Constants.NAME, mName);
+                            bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
+                            bundle.putString(Constants.TYPE, Constants.BENEFICIARY);
+                            ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
+                        }
+                    });
                 }
-            });
+            }).execute();
         }
     }
 

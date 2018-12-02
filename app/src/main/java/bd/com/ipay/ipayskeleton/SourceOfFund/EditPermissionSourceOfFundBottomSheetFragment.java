@@ -17,28 +17,39 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryRequest;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddSponsorRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.UpdateMonthlyLimitRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment implements HttpResponseListener {
+public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment implements bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener {
     private Beneficiary beneficiary;
     private HttpRequestPutAsyncTask updateBeneficiaryAsyncTask;
     private HttpRequestPutAsyncTask updateMonthlyLimitAsyncTask;
 
+    private HttpRequestPostAsyncTask mAddBeneficiaryAsyncTask;
+    private HttpRequestPostAsyncTask mAddSponsorAsyncTask;
+
+
     private EditText pinEditText;
     private EditText amountEditText;
 
+    private String name;
+    private String mobileNumber;
+    private String relation;
+
     private IpayProgressDialog ipayProgressDialog;
-    public BeneficiaryUpdateListener beneficiaryUpdateListener;
+    public HttpResponseListener httpResponseListener;
 
     private String action;
 
@@ -55,9 +66,28 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         pinEditText = view.findViewById(R.id.pin);
         TextView permissionDetailsTextView = view.findViewById(R.id.permission_details);
         Bundle bundle = getArguments();
-        beneficiary = (Beneficiary) bundle.getSerializable(Constants.BENEFICIARY);
         action = bundle.getString(Constants.TO_DO);
-        String name = beneficiary.getUser().getName();
+        if (action.equals(Constants.ADD_SOURCE_OF_FUND_BENEFICIARY)) {
+            name = bundle.getString(Constants.NAME);
+            mobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
+            relation = bundle.getString(Constants.RELATION);
+        } else if (action.equals(Constants.ADD_SOURCE_OF_FUND_SPONSOR)) {
+            pinEditText.setVisibility(View.GONE);
+            name = bundle.getString(Constants.NAME);
+            mobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
+            permissionDetailsTextView.setText("Please enter a monthly amount you want to use from your sponsor's iPay account");
+            relation = bundle.getString(Constants.RELATION);
+        } else {
+            beneficiary = (Beneficiary) bundle.getSerializable(Constants.BENEFICIARY);
+            name = beneficiary.getUser().getName();
+            long monthlyLimit = beneficiary.getMonthlyCreditLimit();
+            String permissionDetailsText = permissionDetailsTextView.getText().toString();
+            permissionDetailsText = permissionDetailsText.replaceFirst("can","wants to");
+            permissionDetailsText = permissionDetailsText.replace("a certain amount", Long.toString(monthlyLimit)+"TK");
+            amountEditText.setText(Long.toString(monthlyLimit));
+            permissionDetailsTextView.setText(permissionDetailsText);
+        }
+
         String permissionDetailsText = permissionDetailsTextView.getText().toString();
         permissionDetailsText = permissionDetailsText.replace("Sourav Saha", name);
         permissionDetailsTextView.setText(permissionDetailsText);
@@ -69,6 +99,11 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
                 if (verifyUserInput()) {
                     if (action.equals(Constants.EDIT_AMOUNT)) {
                         attemptChangeMonthlyLimit();
+                    } else if (action.equals(Constants.ADD_SOURCE_OF_FUND_BENEFICIARY)) {
+                        attemptAddBeneficiary();
+                    } else if (action.equals(Constants.ADD_SOURCE_OF_FUND_SPONSOR)) {
+                        attemptAddSponsor();
+
                     } else {
                         attemptUpdateBeneficiaryStatus(beneficiary.getId());
                     }
@@ -77,6 +112,22 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
             }
         });
 
+    }
+
+    private void attemptAddSponsor() {
+        if (mAddSponsorAsyncTask != null) {
+            return;
+        } else {
+            ipayProgressDialog.setMessage("Please wait. . .");
+            ipayProgressDialog.show();
+            AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(mobileNumber), relation,
+                    Long.parseLong(amountEditText.getText().toString()));
+            String jsonString = new Gson().toJson(addSponsorRequest);
+            String uri = Constants.BASE_URL_MM + Constants.URL_ADD_SPONSOR;
+            mAddSponsorAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_SPONSOR, uri,
+                    jsonString, getContext(), this, false);
+            mAddSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private void attemptChangeMonthlyLimit() {
@@ -98,8 +149,24 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         }
     }
 
-    public void setBeneficiaryUpdateListener(BeneficiaryUpdateListener beneficiaryUpdateListener) {
-        this.beneficiaryUpdateListener = beneficiaryUpdateListener;
+    private void attemptAddBeneficiary() {
+        if (mAddBeneficiaryAsyncTask != null) {
+            return;
+        } else {
+            AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(
+                    ContactEngine.formatMobileNumberBD(mobileNumber),
+                    Long.parseLong(amountEditText.getText().toString()), pinEditText.getText().toString(), relation);
+            mAddBeneficiaryAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
+                    , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
+                    new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
+            ipayProgressDialog.setMessage("Please wait . . . ");
+            ipayProgressDialog.show();
+            mAddBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    public void setHttpResponseListener(HttpResponseListener httpResponseListener) {
+        this.httpResponseListener = httpResponseListener;
     }
 
     public boolean verifyUserInput() {
@@ -113,10 +180,12 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
             Toast.makeText(getContext(), "Please enter an amount", Toast.LENGTH_LONG).show();
             return false;
         }
-        if (pinEditable == null) {
+
+        if (pinEditText.getVisibility() == View.VISIBLE && pinEditable == null) {
             Toast.makeText(getContext(), "Please enter your pin", Toast.LENGTH_LONG).show();
             return false;
-        } else if (pinEditable.toString() == null || pinEditable.toString().equals("")) {
+        } else if (pinEditText.getVisibility() == View.VISIBLE &&
+                (pinEditable.toString() == null || pinEditable.toString().equals(""))) {
             Toast.makeText(getContext(), "Please enter your pin", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -131,7 +200,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
                     (Long.parseLong(amountEditText.getText().toString()), pinEditText.getText().toString(), "APPROVED");
             updateBeneficiaryAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY,
                     Constants.BASE_URL_MM +
-                            Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + id,
+                            Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + "beneficiary/" + id,
                     new Gson().toJson(acceptOrRejectBeneficiaryRequest), getContext(), this, false);
             updateBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             ipayProgressDialog.setMessage("Please wait . . .");
@@ -145,6 +214,8 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
             ipayProgressDialog.dismiss();
             updateBeneficiaryAsyncTask = null;
             updateMonthlyLimitAsyncTask = null;
+            mAddBeneficiaryAsyncTask = null;
+            mAddSponsorAsyncTask = null;
             return;
         } else {
             ipayProgressDialog.dismiss();
@@ -153,7 +224,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
                     GenericResponseWithMessageOnly genericResponseWithMessageOnly =
                             new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        beneficiaryUpdateListener.onBeneficiaryStatusUpdated();
+                        httpResponseListener.onSuccess();
                         Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
@@ -162,12 +233,42 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
                     Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
                 }
                 updateBeneficiaryAsyncTask = null;
+            } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_BENEFICIARY)) {
+                try {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly =
+                            new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        httpResponseListener.onSuccess();
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
+                }
+
+                mAddBeneficiaryAsyncTask = null;
+
+            } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_SPONSOR)) {
+                try {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly =
+                            new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        httpResponseListener.onSuccess();
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
+                }
+                mAddSponsorAsyncTask = null;
             } else if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_MONTLY_LIMIT)) {
                 try {
                     GenericResponseWithMessageOnly genericResponseWithMessageOnly =
                             new Gson().fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        beneficiaryUpdateListener.onBeneficiaryStatusUpdated();
+                        httpResponseListener.onSuccess();
                         Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), genericResponseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
@@ -180,7 +281,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         }
     }
 
-    public interface BeneficiaryUpdateListener {
-        public void onBeneficiaryStatusUpdated();
+    public interface HttpResponseListener {
+        public void onSuccess();
     }
 }
