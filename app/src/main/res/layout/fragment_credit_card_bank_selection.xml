@@ -12,17 +12,19 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:theme="@style/ToolbarTheme"
-        app:titleTextColor="@color/colorWhite"></android.support.v7.widget.Toolbar>
+        app:titleTextColor="@color/colorWhite">
+
+    </android.support.v7.widget.Toolbar>
 
     <TextView
         android:id="@+id/save_card_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:layout_marginBottom="@dimen/value10"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="@dimen/value16"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="@dimen/value10"
         android:text="@string/card_bill_alert_message" />
 
     <LinearLayout
@@ -68,63 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/value16" />
-
-            <LinearLayout
-                android:id="@+id/card_info_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <bd.com.ipay.ipayskeleton.Widget.View.CardNumberEditText
-                    android:id="@+id/card_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/value16"
-                    android:fontFamily="@font/open_sans_light"
-                    android:gravity="center"
-                    android:hint="Card Number"
-                    android:inputType="number"
-                    android:paddingRight="@dimen/value20" />
-
-                <EditText
-                    android:id="@+id/card_holder_name"
-                    style="@android:style/Widget.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/value16"
-                    android:fontFamily="@font/open_sans_light"
-                    android:gravity="center"
-                    android:hint="Card Holder Name" />
-
-                <CheckBox
-                    android:id="@+id/save_card_checkbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/value16"
-                    android:layout_marginRight="@dimen/value16"
-                    android:text="Save my card info for future use" />
-            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-
-    <LinearLayout
-        android:id="@+id/bottom_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/continue_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/value10"
-            android:background="@color/colorPrimaryLight"
-            android:text="@string/continue_send_money"
-            android:textColor="@color/colorWhite" />
-    </LinearLayout>
 
 </RelativeLayout>

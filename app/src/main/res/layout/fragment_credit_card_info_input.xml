@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ToolbarTheme"
+        app:titleTextColor="@color/colorWhite">
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="@dimen/activity_horizontal_margin_double">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progress_layout"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/transaction_description_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/value32"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/value32"
+                android:fontFamily="@font/open_sans"
+                android:gravity="center"
+                android:textColor="#666666"
+                android:textSize="@dimen/text_size_name"
+                android:text="@string/paying_bill_message" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/transaction_image_view"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/value8"
+                android:background="@drawable/circular_background"
+                android:contentDescription="@string/card"
+                android:scaleType="fitCenter"
+                app:riv_border_color="#d9d9d9"
+                app:riv_border_width="0.5dip"
+                app:riv_oval="true"
+                tools:src="@tools:sample/avatars" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#333333"
+                android:lineSpacingExtra="6sp"
+                android:gravity="center_horizontal"
+                android:text="To settle your bill payment request, it will take 3-5 business day."
+                android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+
+            <LinearLayout
+                android:id="@+id/card_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                tools:visibility="visible"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_double">
+
+                <bd.com.ipay.ipayskeleton.Widget.View.CardNumberEditText
+                    android:id="@+id/card_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
+                    android:hint="Card Number"
+                    android:inputType="number"
+                    android:paddingRight="@dimen/value20" />
+
+                <EditText
+                    android:id="@+id/card_holder_name"
+                    style="@android:style/Widget.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
+                    android:hint="Card Holder Name"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/continue_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value10"
+            android:background="@color/colorPrimaryLight"
+            android:text="@string/continue_send_money"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
+</RelativeLayout>

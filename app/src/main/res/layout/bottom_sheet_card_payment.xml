@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="@dimen/value15"
+        app:cardElevation="@dimen/value5"
+        android:layout_marginBottom="-15dp">
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin_double">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="#212121"
+                android:text="Card Information" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#333333"
+                android:lineSpacingExtra="6sp"
+                android:text="To settle your bill payment request, it will take 3-5 business day."
+                android:layout_marginTop="@dimen/value8"/>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/CustomTextInputLayout"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double">
+
+                <EditText
+                    android:id="@+id/card_number"
+                    style="@style/CustomEditTextLogInSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/card_number"
+                    android:inputType="textCapWords"
+                    android:maxLines="1"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp">
+
+                    <requestFocus />
+                </EditText>
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/DividerOnly" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/CustomTextInputLayout"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double">
+
+                <EditText
+                    android:id="@+id/card_holder_name"
+                    style="@style/CustomEditTextLogInSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/card_holder_name"
+                    android:inputType="textCapWords"
+                    android:maxLines="1"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/DividerOnly" />
+
+            <Button
+                android:id="@+id/personal_sign_in_button"
+                style="@style/ButtonPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
+                android:text="@string/continue_sign_up" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</android.support.v4.widget.NestedScrollView>
+
+
+
