@@ -1356,7 +1356,7 @@
     <string name="save_card_info">Save My Card Info</string>
     <string name="credit_card">Credit Card</string>
     <string name="enter_a_name">Enter Card Holder Name</string>
-    <string name="card_bill_alert_message">*To settle your bill payment request. It will take 3-5 business days</string>
+    <string name="card_bill_alert_message">*To settle your bill payment request. It will take 3–5 business days</string>
     <string name="new_bill_pay">New Bill Pay</string>
     <string name="instant_bill_pay">Instant bill pay</string>
     <string name="last_transaction">LAST TRANSACTION</string>

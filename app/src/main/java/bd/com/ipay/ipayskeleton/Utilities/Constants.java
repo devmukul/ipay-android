@@ -209,7 +209,7 @@ public class Constants {
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
     public static final String URL_GET_BANK_LIST = "credit-card/banks";
-    public static final Object CREDIT_CARD = "CREDIT_CARD";
+    public static final String CREDIT_CARD = "CREDIT_CARD";
     public static final String CREDIT_CARD_WITH_SPACE = "Credit Card";
     public static final String URL_GET_SAVED_CARDS = "credit-card/my-list";
     public static final String COMMAND_GET_SAVED_CARDS = "COMMAND_GET_SAVED_CARDS";
