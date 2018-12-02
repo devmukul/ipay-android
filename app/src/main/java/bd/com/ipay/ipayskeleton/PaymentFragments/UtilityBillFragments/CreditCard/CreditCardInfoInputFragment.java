@@ -82,7 +82,7 @@ public class CreditCardInfoInputFragment extends Fragment{
                 if (verifyInput()) {
                     Bundle bundle = new Bundle();
                     bundle.putString(IPayUtilityBillPayActionActivity.CARD_NUMBER_KEY,
-                            mCardNumberEditText.getText().toString());
+                            CardNumberValidator.sanitizeEntry(mCardNumberEditText.getText().toString(), true));
                     bundle.putString(IPayUtilityBillPayActionActivity.CARD_USER_NAME_KEY,
                             mNameEditText.getText().toString());
                     bundle.putString(IPayUtilityBillPayActionActivity.BANK_CODE, selectedBankCode);
