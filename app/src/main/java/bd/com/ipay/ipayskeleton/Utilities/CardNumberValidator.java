@@ -41,7 +41,7 @@ public class CardNumberValidator {
 				"^6(?:011|5[0-9]{2})[0-9]{12}$",
 				"^6(?:011|5[0-9]{2})(.*)$",
 				new int[][]{{4, 4, 4, 4}},
-				new int[]{13, 16, 19},
+				new int[]{16},
 				true);
 		private final String name;
 		private final int cardIconId;
