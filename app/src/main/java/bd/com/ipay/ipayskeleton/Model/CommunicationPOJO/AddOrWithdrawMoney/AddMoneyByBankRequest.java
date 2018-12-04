@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney;
 
-public class AddMoneyByBankRequestRequest {
+public class AddMoneyByBankRequest {
 
     private final long bankAccountId;
     private final double amount;
@@ -8,7 +8,7 @@ public class AddMoneyByBankRequestRequest {
     private final String pin;
     private String otp;
 
-    public AddMoneyByBankRequestRequest(long bankAccountId, double amount, String description, String pin) {
+    public AddMoneyByBankRequest(long bankAccountId, double amount, String description, String pin) {
         this.bankAccountId = bankAccountId;
         this.amount = amount;
         this.description = description;

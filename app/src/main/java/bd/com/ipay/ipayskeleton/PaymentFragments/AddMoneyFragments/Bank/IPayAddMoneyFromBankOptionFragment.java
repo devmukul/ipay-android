@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank;
 
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractBankTransactionOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
