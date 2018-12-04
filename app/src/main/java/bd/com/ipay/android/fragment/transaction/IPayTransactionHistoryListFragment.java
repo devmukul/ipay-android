@@ -54,7 +54,7 @@ public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
 			if (isAdded()) {
 				if (linearLayoutManager != null) {
 					if (linearLayoutManager.findFirstVisibleItemPosition() > 0) {
-						toListTopButton.setVisibility(View.VISIBLE);
+						toListTopButton.performClick();
 					}
 				}
 			}

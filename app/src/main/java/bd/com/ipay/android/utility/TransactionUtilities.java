@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import bd.com.ipay.android.model.TransactionServiceFilterOption;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class TransactionUtilities {
@@ -70,8 +71,13 @@ public class TransactionUtilities {
 						context.getString(R.string.request_money)));
 		COMPLETED_TRANSACTION_FILTER_LIST
 				.add(new TransactionServiceFilterOption(
-						ServiceIdConstants.REQUEST_PAYMENT,
-						context.getString(R.string.request_payment)));
+						ServiceIdConstants.MAKE_PAYMENT,
+						context.getString(R.string.make_payment)));
+		if (ProfileInfoCacheManager.isBusinessAccount())
+			COMPLETED_TRANSACTION_FILTER_LIST
+					.add(new TransactionServiceFilterOption(
+							ServiceIdConstants.REQUEST_PAYMENT,
+							context.getString(R.string.request_payment)));
 		COMPLETED_TRANSACTION_FILTER_LIST
 				.add(new TransactionServiceFilterOption(
 						ServiceIdConstants.OFFER,

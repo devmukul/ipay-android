@@ -31,7 +31,8 @@ public class TransactionHistoryAdapter
 		@Override
 		public boolean areContentsTheSame(@NonNull TransactionHistory transactionHistoryOne,
 		                                  @NonNull TransactionHistory transactionHistoryTwo) {
-			return transactionHistoryOne.equals(transactionHistoryTwo);
+			return transactionHistoryOne.getTransactionID()
+					.equals(transactionHistoryTwo.getTransactionID());
 		}
 	};
 
