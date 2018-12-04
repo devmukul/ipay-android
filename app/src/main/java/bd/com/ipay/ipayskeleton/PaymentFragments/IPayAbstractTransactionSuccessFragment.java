@@ -120,7 +120,6 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	protected void setSenderImage(String imageUrl) {
 		arrowImageView.setVisibility(View.VISIBLE);
 		senderProfilePictureImageView.setVisibility(View.VISIBLE);
@@ -148,7 +147,6 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	protected void setReceiverImage(String imageUrl) {
 		Glide.with(getContext()).load(imageUrl)
 				.transform(new CircleTransform(getContext()))

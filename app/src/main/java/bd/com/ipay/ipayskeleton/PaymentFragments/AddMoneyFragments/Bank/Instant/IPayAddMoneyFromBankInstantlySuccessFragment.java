@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank.Instant;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessF
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class IPayAddMoneyFromBankSuccessFragment extends IPayAbstractTransactionSuccessFragment {
+public class IPayAddMoneyFromBankInstantlySuccessFragment extends IPayAbstractTransactionSuccessFragment {
 
 	protected Number transactionAmount;
 	protected BankAccountList bankAccountList;
@@ -25,9 +25,10 @@ public class IPayAddMoneyFromBankSuccessFragment extends IPayAbstractTransaction
 
 	@Override
 	protected void setupViewProperties() {
-		setTransactionSuccessMessage(getStyledTransactionDescription(R.string.add_money_bank_success_message, transactionAmount));
-		setSuccessDescription(getString(R.string.add_money_bank_success_description));
+		setTransactionSuccessMessage(getStyledTransactionDescription(R.string.add_money_instant_money_success_message, transactionAmount));
+		setSuccessDescription(getString(R.string.add_instant_money_success_description));
 		setName(bankAccountList.getBankName());
+		setUserName(bankAccountList.getAccountNumber());
 		setReceiverImage(bankAccountList.getBankIcon(getContext()));
 	}
 }
