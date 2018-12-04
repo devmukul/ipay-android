@@ -1,63 +1,41 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -65,35 +43,24 @@ import java.util.List;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Fragments.IPaySupportPlaceAutocompleteFragment;
-import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
-import bd.com.ipay.ipayskeleton.Model.BusinessContact.CustomBusinessContact;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.IPayHereRequestUrlBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.IPayHereResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.IPayHere.V2.NearbyBusinessResponseList;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import de.hdodenhof.circleimageview.CircleImageView;
 
-public class IpayHereFragment extends ProgressFragment implements PlaceSelectionListener, HttpResponseListener {
+public class IpayHereFragment extends ProgressFragment implements PlaceSelectionListener, HttpResponseListener,GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+    private static final String TAG = IpayHereFragment.class.getSimpleName();
 
     private static final int REQUEST_LOCATION = 1;
     public static final int LOCATION_SETTINGS_PERMISSION_CODE = 9876;
@@ -101,8 +68,8 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
     private List<NearbyBusinessResponseList> mNearByBusinessResponse;
     private HttpRequestGetAsyncTask mIPayHereTask = null;
     private LocationManager locationManager;
-    private String mLatitude = "23.786325";
-    private String mLongitude = "90.416801";
+    private String mLatitude = "23.706325";
+    private String mLongitude = "90.316801";
 
     private RecyclerView mTransactionHistoryRecyclerView;
     private BusinessContactListAdapter mTransactionHistoryAdapter;
@@ -116,14 +83,139 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
+    private GoogleApiClient googleApiClient;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private LocationRequest locationRequest;
+    private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
+    // lists for permissions
+    private ArrayList<String> permissionsToRequest;
+    private ArrayList<String> permissionsRejected = new ArrayList<>();
+    private ArrayList<String> permissions = new ArrayList<>();
+    // integer for permissions results request
+    private static final int ALL_PERMISSIONS_RESULT = 1011;
+
+    private Location location;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        permissionsToRequest = permissionsToRequest(permissions);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (permissionsToRequest.size() > 0) {
+                requestPermissions(permissionsToRequest.
+                        toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
+            }
+        }
+
+        googleApiClient = new GoogleApiClient.Builder(getContext()).
+                addApi(LocationServices.API).
+                addConnectionCallbacks(this).
+                addOnConnectionFailedListener(this).build();
+    }
+
+    private ArrayList<String> permissionsToRequest(ArrayList<String> wantedPermissions) {
+        ArrayList<String> result = new ArrayList<>();
+
+        for (String perm : wantedPermissions) {
+            if (!hasPermission(perm)) {
+                result.add(perm);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean hasPermission(String permission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return getActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        return true;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case ALL_PERMISSIONS_RESULT:
+                for (String perm : permissionsToRequest) {
+                    if (!hasPermission(perm)) {
+                        permissionsRejected.add(perm);
+                    }
+                }
+
+                if (permissionsRejected.size() > 0) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
+                            new AlertDialog.Builder(getActivity()).
+                                    setMessage("These permissions are mandatory to get your location. You need to allow them.").
+                                    setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                requestPermissions(permissionsRejected.
+                                                        toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
+                                            }
+                                        }
+                                    }).setNegativeButton("Cancel", null).create().show();
+
+                            return;
+                        }
+                    }
+
+                } else {
+                    if (googleApiClient != null) {
+                        googleApiClient.connect();
+                    }
+                }
+
+                break;
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                &&  ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        // Permissions ok, we get last location
+        location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (location != null) {
+            mLatitude = String.valueOf(location.getLatitude());
+            mLongitude = String.valueOf(location.getLongitude());
+        }
+
+        startLocationUpdates();
+        fetchNearByBusiness(mLatitude, mLongitude);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    private void startLocationUpdates() {
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                &&  ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "You need to enable permissions to display location !", Toast.LENGTH_SHORT).show();
+        }
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
     @Nullable
@@ -134,8 +226,6 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
             getActivity().setTitle(R.string.ipay_here);
 
         IPaySupportPlaceAutocompleteFragment autocompleteFragment = new IPaySupportPlaceAutocompleteFragment();
-
-        //SupportPlaceAutocompleteFragment autocompleteFragment = new SupportPlaceAutocompleteFragment();
         android.support.v4.app.FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_content, autocompleteFragment);
@@ -162,11 +252,11 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
         mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.setCancelable(false);
 
-        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.address_recycler_view);
+        mTransactionHistoryRecyclerView = v.findViewById(R.id.address_recycler_view);
         mLayoutManager = new LinearLayoutManager(getContext());
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mSwipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
+        mEmptyListTextView = v.findViewById(R.id.empty_list_text);
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -180,31 +270,19 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
         });
 
         setupRecyclerView();
-
         return v;
     }
 
     private void refreshTransactionHistory() {
         clearListAfterLoading = true;
-        getLocation();
-        //fetchNearByBusiness(mLatitude, mLongitude);
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLocationPermission();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.destroyDrawingCache();
-            mSwipeRefreshLayout.clearAnimation();
-        }
-
     }
 
 
@@ -252,34 +330,6 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case REQUEST_LOCATION:
-                for (int i = 0; i < permissions.length; i++) {
-                    String permission = permissions[i];
-                    if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission) || Manifest.permission.ACCESS_COARSE_LOCATION.equals(permission)) {
-                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                            getLocationWithoutPermision();
-                        } else {
-                            getLocationPermission();
-                        }
-                    }
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LOCATION_SETTINGS_PERMISSION_CODE) {
-            getLocationPermission();
-        }
-    }
-
-
-    @Override
     public void onPlaceSelected(Place place) {
         LatLng attributions = place.getLatLng();
         if (attributions != null) {
@@ -292,54 +342,6 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
         }
     }
 
-    private void getLocationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Utilities.isNecessaryPermissionExists(getContext(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})) {
-                ActivityCompat.requestPermissions(
-                        getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
-            } else {
-                getLocationsettings();
-            }
-        } else {
-            getLocationsettings();
-        }
-    }
-
-    private void getLocationsettings() {
-
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            buildAlertMessageNoGps();
-        } else {
-            getLocation();
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getLocation() {
-        Location location;
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        } else {
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        }
-
-        if (location != null) {
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            mLatitude = String.valueOf(latitude);
-            mLongitude = String.valueOf(longitude);
-            fetchNearByBusiness(this.mLatitude, this.mLongitude);
-        } else {
-            fetchNearByBusiness(this.mLatitude, this.mLongitude);
-        }
-    }
-
-    private void getLocationWithoutPermision() {
-        fetchNearByBusiness(this.mLatitude, this.mLongitude);
-    }
-
     private void fetchNearByBusiness(String lattitude, String longitude) {
         if (mIPayHereTask != null)
             return;
@@ -349,26 +351,6 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
                 url, getContext(), false);
         mIPayHereTask.mHttpResponseListener = this;
         mIPayHereTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-
-    protected void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Location Service Disabled")
-                .setMessage("iPay needs to access your location to show iPay enabled outlets near you.")
-                .setCancelable(false)
-                .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SETTINGS_PERMISSION_CODE);
-                    }
-                })
-                .setNegativeButton("Continue Anyway", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        getLocationWithoutPermision();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
     }
 
     private void setupRecyclerView() {
@@ -396,6 +378,25 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
             isLoading = false;
         mTransactionHistoryAdapter.notifyDataSetChanged();
         setContentShown(true);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
     }
 
     private class BusinessContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -461,9 +462,7 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
                 directionView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Uri gmmIntentUri = Uri.parse("google.navigation:q="+lat+","+lon);
                         Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?daddr=" + lat + "," + lon);
-//                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr="+mLatitude+","+mLongitude+"&daddr="+lat+","+lon);
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
                         startActivity(mapIntent);
@@ -511,15 +510,6 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
         class NormalViewHolder extends ViewHolder {
             NormalViewHolder(final View itemView) {
                 super(itemView);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Do whatever you want on clicking the normal items
-
-
-                    }
-                });
             }
         }
 
@@ -553,5 +543,25 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.destroyDrawingCache();
+            mSwipeRefreshLayout.clearAnimation();
+        }
+
+        // stop location updates
+        if (googleApiClient != null  &&  googleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+            googleApiClient.disconnect();
+        }
+    }
 }
