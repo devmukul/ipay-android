@@ -24,7 +24,8 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Adapters.OnItemClickListener;
 import bd.com.ipay.ipayskeleton.Adapters.UserBankListAdapter;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.IPayAddMoneyFromBankAmountInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank.IPayAddMoneyFromBankAmountInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Bank.Instant.IPayAddMoneyFromBankInstantlyAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.IPayWithdrawMoneyFromBankAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -65,6 +66,7 @@ public class IPayChooseBankOptionFragment extends ProgressFragment {
 				}
 			}
 		});
+
 		iPayChooseBankOptionViewModel.getUserBankAccountStatus().observe(this, new Observer<IPayChooseBankOptionViewModel.BankAccountStatus>() {
 			@Override
 			public void onChanged(@Nullable IPayChooseBankOptionViewModel.BankAccountStatus bankAccountStatus) {
@@ -121,6 +123,9 @@ public class IPayChooseBankOptionFragment extends ProgressFragment {
 							switch (transactionType) {
 								case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
 									((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromBankAmountInputFragment(), bundle, 1, true);
+									break;
+								case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY:
+									((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromBankInstantlyAmountInputFragment(), bundle, 1, true);
 									break;
 								case IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY:
 									((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayWithdrawMoneyFromBankAmountInputFragment(), bundle, 1, true);
