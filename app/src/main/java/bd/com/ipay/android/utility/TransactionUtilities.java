@@ -55,6 +55,10 @@ public class TransactionUtilities {
 						context.getString(R.string.add_money_from_bank)));
 		COMPLETED_TRANSACTION_FILTER_LIST
 				.add(new TransactionServiceFilterOption(
+						ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY,
+						context.getString(R.string.add_money_from_bank_instantly)));
+		COMPLETED_TRANSACTION_FILTER_LIST
+				.add(new TransactionServiceFilterOption(
 						ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD,
 						context.getString(R.string.add_money_from_credit_or_debit_card)));
 		COMPLETED_TRANSACTION_FILTER_LIST
