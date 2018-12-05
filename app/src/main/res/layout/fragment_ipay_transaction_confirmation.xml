@@ -165,7 +165,6 @@
                         android:layout_marginTop="8dip"
                         android:background="#19000000" />
                 </LinearLayout>
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -158,6 +158,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
         mBusinessContacts.add(new CustomBusinessContact(Constants.BLION, "Bill_Pay", mContext.getString(R.string.banglalion), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.BRILLIANT, "Bill_Pay", mContext.getString(R.string.brilliant), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.CARNIVAL, "Bill_Pay", mContext.getString(R.string.carnival), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.CREDIT_CARD, "Bill_Pay", mContext.getString(R.string.credit_card), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.LANKABANGLA, "Bill_Pay", mContext.getString(R.string.lanka_bangla_card), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.LANKABANGLA, "Bill_Pay", mContext.getString(R.string.lanka_bangla_dps), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.LINK3, "Bill_Pay", mContext.getString(R.string.link_three), "Bill Pay", ""));

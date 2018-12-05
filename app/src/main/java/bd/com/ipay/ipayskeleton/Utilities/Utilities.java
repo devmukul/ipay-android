@@ -39,9 +39,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import java.io.BufferedInputStream;
@@ -837,10 +834,8 @@ public class Utilities {
 	}
 
 	public static boolean isValidTokenWindowTime() {
-		if (currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME)
-			return true;
-		return false;
-	}
+        return currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME;
+    }
 
 	public static long currentTime() {
 		return System.currentTimeMillis();

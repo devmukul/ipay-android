@@ -21,6 +21,27 @@ public class CardNumberValidator {
 				"^4(.*)$",
 				new int[][]{{4, 4, 4, 1}, {4, 4, 4, 4}, {4, 4, 4, 4, 3}},
 				new int[]{13, 16, 19},
+				true),
+		AMEX("amex",
+				R.drawable.ic_amex_square,
+				"^3[47][0-9]{13}$",
+				"^3[47](.*)$",
+				new int[][]{{4, 6, 5}},
+				new int[]{15},
+				true),
+		DINERS_CLUB("dinersclub",
+				R.drawable.ic_diners_club_square,
+				"^3(?:0[0-5]|[68][0-9])?[0-9]{11}$",
+				"^3(?:0[0-5]|[68][0-9])(.*)$",
+				new int[][]{{4, 6, 4}},
+				new int[]{14},
+				true),
+		DISCOVER("discover",
+				R.drawable.ic_discover_square,
+				"^6(?:011|5[0-9]{2})[0-9]{12}$",
+				"^6(?:011|5[0-9]{2})(.*)$",
+				new int[][]{{4, 4, 4, 4}},
+				new int[]{16},
 				true);
 		private final String name;
 		private final int cardIconId;
@@ -155,6 +176,24 @@ public class CardNumberValidator {
 					}
 				}
 				return len && (!c.isLuhn() || validateLuhnNumber(num));
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if the card's number is valid by identifying the card's type and checking its conditions
+	 *
+	 * @param num String containing the card's code to be verified
+	 * @return boolean containing the result of the verification
+	 */
+	public static boolean validateCardNumber(String num, Cards... filteredCardList) {
+		if (validateCardNumber(num)) {
+			Cards cards = getCardType(num);
+			for (Cards filteredCard : filteredCardList) {
+				if (filteredCard.equals(cards)) {
+					return true;
+				}
 			}
 		}
 		return false;
