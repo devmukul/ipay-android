@@ -42,7 +42,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 		setCardIconImageResource(R.drawable.ic_debit_credit_card_icon);
 		setMessage(getString(R.string.lanka_bangla_card_number_input_message));
 		setCardNumberHint(getString(R.string.lanka_bangla_card_number));
-
+		setAllowedCards(CardNumberValidator.Cards.VISA, CardNumberValidator.Cards.MASTERCARD);
 		mProgressDialog = new CustomProgressDialog(getActivity());
 	}
 
@@ -51,7 +51,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 		if (TextUtils.isEmpty(getCardNumber())) {
 			showErrorMessage(getString(R.string.empty_card_number_message));
 			return false;
-		} else if (!CardNumberValidator.validateCardNumber(getCardNumber())) {
+		} else if (!CardNumberValidator.validateCardNumber(getCardNumber(), getAllowedCards())) {
 			showErrorMessage(getString(R.string.invalid_card_number_message));
 			return false;
 		} else {

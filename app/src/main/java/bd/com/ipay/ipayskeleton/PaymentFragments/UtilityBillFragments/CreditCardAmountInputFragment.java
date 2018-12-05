@@ -1,4 +1,5 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card;
+package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
+
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,49 +16,41 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
-
-    static final String TOTAL_OUTSTANDING_AMOUNT_KEY = "TOTAL_OUTSTANDING";
-    static final String MINIMUM_PAY_AMOUNT_KEY = "MINIMUM_PAY";
+public class CreditCardAmountInputFragment extends IPayAbstractAmountFragment {
     static final String CARD_NUMBER_KEY = "CARD_NUMBER";
     static final String CARD_USER_NAME_KEY = "CARD_USER_NAME";
 
-    private int totalOutstandingAmount;
-    private int minimumPayAmount;
     private String cardNumber;
     private String cardUserName;
+    private boolean saveCardInfo;
+    private int bankIconId;
+    private String selectedBankCode;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            totalOutstandingAmount = getArguments().getInt(TOTAL_OUTSTANDING_AMOUNT_KEY, 0);
-            minimumPayAmount = getArguments().getInt(MINIMUM_PAY_AMOUNT_KEY, 0);
             cardNumber = getArguments().getString(CARD_NUMBER_KEY, "");
             cardUserName = getArguments().getString(CARD_USER_NAME_KEY, "");
+            saveCardInfo = getArguments().getBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, false);
+            bankIconId = getArguments().getInt(IPayUtilityBillPayActionActivity.BANK_ICON, 0);
+            selectedBankCode = getArguments().getString(IPayUtilityBillPayActionActivity.BANK_CODE, "");
         }
     }
 
     @Override
     protected void setupViewProperties() {
-        if (totalOutstandingAmount > 0)
-            addShortCutOption(1, getString(R.string.total_outstanding).toUpperCase(), totalOutstandingAmount);
-        if (minimumPayAmount > 0)
-            addShortCutOption(2, getString(R.string.minimum_pay).toUpperCase(), minimumPayAmount);
-
         setBalanceInfoLayoutVisibility(View.VISIBLE);
         setTransactionDescription(getString(R.string.paying_bill_message));
         setInputType(InputType.TYPE_CLASS_NUMBER);
-        setTransactionImageResource(R.drawable.ic_lankabd2);
+        setTransactionImageResource(bankIconId);
         setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
-        setUserName(cardUserName);
     }
 
     @Override
@@ -133,18 +126,14 @@ public class LankaBanglaAmountInputFragment extends IPayAbstractAmountFragment {
 
         Bundle bundle = new Bundle();
         bundle.putString(CARD_NUMBER_KEY, cardNumber);
-        bundle.putSerializable(LankaBanglaBillConfirmationFragment.BILL_AMOUNT_KEY, getAmount());
-        bundle.putSerializable(LankaBanglaAmountInputFragment.CARD_USER_NAME_KEY, cardUserName);
-
-        if (getAmount().intValue() == minimumPayAmount)
-            bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.MINIMUM_PAY);
-        else if (getAmount().intValue() == totalOutstandingAmount)
-            bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.CREDIT_BALANCE);
-        else
-            bundle.putString(LankaBanglaBillConfirmationFragment.AMOUNT_TYPE_KEY, Constants.OTHER);
+        bundle.putSerializable(IPayUtilityBillPayActionActivity.BILL_AMOUNT_KEY, getAmount());
+        bundle.putSerializable(CARD_USER_NAME_KEY, cardUserName);
+        bundle.putSerializable(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, saveCardInfo);
+        bundle.putSerializable(IPayUtilityBillPayActionActivity.BANK_ICON, bankIconId);
+        bundle.putSerializable(IPayUtilityBillPayActionActivity.BANK_CODE, selectedBankCode);
 
         if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-            ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaBillConfirmationFragment(), bundle, 3, true);
+            ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new CreditCardBillPaymentConfirmationFragment(), bundle, 3, true);
         }
     }
 
