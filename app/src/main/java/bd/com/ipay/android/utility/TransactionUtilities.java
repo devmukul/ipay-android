@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import bd.com.ipay.android.model.TransactionServiceFilterOption;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class TransactionUtilities {
@@ -54,6 +55,10 @@ public class TransactionUtilities {
 						context.getString(R.string.add_money_from_bank)));
 		COMPLETED_TRANSACTION_FILTER_LIST
 				.add(new TransactionServiceFilterOption(
+						ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY,
+						context.getString(R.string.add_money_from_bank_instantly)));
+		COMPLETED_TRANSACTION_FILTER_LIST
+				.add(new TransactionServiceFilterOption(
 						ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD,
 						context.getString(R.string.add_money_from_credit_or_debit_card)));
 		COMPLETED_TRANSACTION_FILTER_LIST
@@ -70,8 +75,13 @@ public class TransactionUtilities {
 						context.getString(R.string.request_money)));
 		COMPLETED_TRANSACTION_FILTER_LIST
 				.add(new TransactionServiceFilterOption(
-						ServiceIdConstants.REQUEST_PAYMENT,
-						context.getString(R.string.request_payment)));
+						ServiceIdConstants.MAKE_PAYMENT,
+						context.getString(R.string.make_payment)));
+		if (ProfileInfoCacheManager.isBusinessAccount())
+			COMPLETED_TRANSACTION_FILTER_LIST
+					.add(new TransactionServiceFilterOption(
+							ServiceIdConstants.REQUEST_PAYMENT,
+							context.getString(R.string.request_payment)));
 		COMPLETED_TRANSACTION_FILTER_LIST
 				.add(new TransactionServiceFilterOption(
 						ServiceIdConstants.OFFER,
