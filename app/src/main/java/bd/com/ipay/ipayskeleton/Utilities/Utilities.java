@@ -834,10 +834,8 @@ public class Utilities {
 	}
 
 	public static boolean isValidTokenWindowTime() {
-		if (currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME)
-			return true;
-		return false;
-	}
+        return currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME;
+    }
 
 	public static long currentTime() {
 		return System.currentTimeMillis();

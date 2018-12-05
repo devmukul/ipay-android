@@ -109,7 +109,6 @@ public class CreditCardInfoInputFragment extends Fragment{
             resourceId = resources.getIdentifier("ic_bank" + "111", "drawable",
                     getContext().getPackageName());
         return resourceId;
-        //return resources.getDrawable(resourceId);
     }
 
     protected void showErrorMessage(String errorMessage) {

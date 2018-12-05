@@ -62,7 +62,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mBankListRecyclerView = view.findViewById(R.id.user_bank_list_recycler_view);
-        mProgressLayout = (LinearLayout) view.findViewById(R.id.progress_layout);
+        mProgressLayout = view.findViewById(R.id.progress_layout);
         bankListAdapter = new BankListAdapter();
         mBankListRecyclerView.setAdapter(bankListAdapter);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -83,29 +83,7 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
             resourceId = resources.getIdentifier("ic_bank" + "111", "drawable",
                     getContext().getPackageName());
         return resourceId;
-        //return resources.getDrawable(resourceId);
     }
-
-//    protected void showErrorMessage(String errorMessage) {
-//        if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
-//            IPaySnackbar.error(mContinueButton, errorMessage, IPaySnackbar.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//    public String getCardNumber() {
-//        if (mCardNumberEditText.getText() != null)
-//            return mCardNumberEditText.getText().toString();
-//        else
-//            return "";
-//    }
-//
-//    public String getCardHolderName() {
-//        if (mNameEditText.getText() != null) {
-//            return mNameEditText.getText().toString();
-//        } else {
-//            return "";
-//        }
-//    }
 
     public void attemptGetBankList() {
         if (mGetBankListAsyncTask != null) {
@@ -116,24 +94,6 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
             mGetBankListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
-//    protected boolean verifyInput() {
-//        if (TextUtils.isEmpty(getCardNumber())) {
-//            showErrorMessage(getString(R.string.empty_card_number_message));
-//            return false;
-//        } else if (!CardNumberValidator.validateCardNumber(getCardNumber())) {
-//            showErrorMessage(getString(R.string.invalid_card_number_message));
-//            return false;
-//        } else {
-//            if (TextUtils.isEmpty(getCardHolderName())) {
-//                showErrorMessage(getString(R.string.enter_a_name));
-//                return false;
-//            } else {
-//                return true;
-//            }
-//
-//        }
-//    }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -214,8 +174,8 @@ public class CreditCardBankSelectionFragment extends Fragment implements HttpRes
 
             public BankViewHolder(View itemView) {
                 super(itemView);
-                bankIconImageView = (ImageView) itemView.findViewById(R.id.bank_icon);
-                bankNameTextView = (TextView) itemView.findViewById(R.id.bank_name);
+                bankIconImageView = itemView.findViewById(R.id.bank_icon);
+                bankNameTextView = itemView.findViewById(R.id.bank_name);
                 parentView = itemView;
             }
         }
