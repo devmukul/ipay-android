@@ -44,7 +44,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class IPayContactListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-		SearchView.OnQueryTextListener, HttpResponseListener {
+		SearchView.OnQueryTextListener {
 
 	private static final int CONTACTS_QUERY_LOADER = 0;
 
@@ -55,7 +55,6 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 	private TextView mSearchedNumberTextView;
 	private TextView mActionNameTextView;
 	private String mQuery = "";
-	private String mPhoneNumber;
 
 
 	private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
@@ -108,7 +107,6 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 		mContinueButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mPhoneNumber = mQuery;
 				getProfileInfo(mQuery);
 			}
 		});
@@ -126,11 +124,43 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 		if (mGetProfileInfoTask != null) {
 			return;
 		}
+		final String formattedNumber = ContactEngine.formatMobileNumberBD(mobileNumber);
 		GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(ContactEngine.formatMobileNumberBD(mobileNumber));
 
 		String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
 		mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-				mUri, getContext(), this, false);
+				mUri, getContext(), new HttpResponseListener() {
+			@Override
+			public void httpResponseReceiver(GenericHttpResponse result) {
+				if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+					mProgressDialog.dismiss();
+					mGetProfileInfoTask = null;
+				} else {
+					try {
+						if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+							mGetProfileInfoTask = null;
+							mProgressDialog.dismiss();
+							if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+								GetUserInfoResponse getUserInfoResponse = new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
+								final String name = getUserInfoResponse.getName();
+								final String profilePicture;
+								if (getUserInfoResponse.getProfilePictures() != null && !getUserInfoResponse.getProfilePictures().isEmpty()) {
+									profilePicture = Constants.BASE_URL_FTP_SERVER + getUserInfoResponse.getProfilePictures().get(0).getUrl();
+								} else {
+									profilePicture = "";
+								}
+								showAmountInput(name, profilePicture, formattedNumber);
+							} else {
+								Toast.makeText(getContext(), getString(R.string.user_has_no_ipay_account), Toast.LENGTH_LONG).show();
+							}
+						}
+					} catch (Exception e) {
+						mProgressDialog.dismiss();
+						mGetProfileInfoTask = null;
+					}
+				}
+			}
+		}, false);
 		mProgressDialog.setMessage(getString(R.string.fetching_user_info));
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.show();
@@ -407,37 +437,6 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 				((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayRequestMoneyAmountInputFragment(), bundle, 1, true);
 			} else {
 				((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
-			}
-		}
-	}
-
-	@Override
-	public void httpResponseReceiver(GenericHttpResponse result) {
-		if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
-			mProgressDialog.dismiss();
-			mGetProfileInfoTask = null;
-		} else {
-			try {
-				if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
-					mGetProfileInfoTask = null;
-					mProgressDialog.dismiss();
-					if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-						GetUserInfoResponse getUserInfoResponse = new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
-						final String name = getUserInfoResponse.getName();
-						final String profilePicture;
-						if (getUserInfoResponse.getProfilePictures() != null && !getUserInfoResponse.getProfilePictures().isEmpty()) {
-							profilePicture = Constants.BASE_URL_FTP_SERVER + getUserInfoResponse.getProfilePictures().get(0).getUrl();
-						} else {
-							profilePicture = "";
-						}
-						showAmountInput(name, profilePicture, mPhoneNumber);
-					} else {
-						Toast.makeText(getContext(), getString(R.string.user_has_no_ipay_account), Toast.LENGTH_LONG).show();
-					}
-				}
-			} catch (Exception e) {
-				mProgressDialog.dismiss();
-				mGetProfileInfoTask = null;
 			}
 		}
 	}
