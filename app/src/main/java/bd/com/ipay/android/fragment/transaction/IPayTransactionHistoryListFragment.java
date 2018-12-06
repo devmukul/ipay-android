@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import bd.com.ipay.android.adapter.TransactionHistoryAdapter;
@@ -29,14 +30,21 @@ import bd.com.ipay.android.viewmodel.RepositoryArguments;
 import bd.com.ipay.android.viewmodel.TransactionHistoryRepositoryArguments;
 import bd.com.ipay.android.viewmodel.TransactionHistoryRepositoryViewModel;
 import bd.com.ipay.android.viewmodel.TransactionHistoryViewModel;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.ViewModel.ViewModelFactory;
 
 public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
+
+	private static final int REQUEST_MONEY_REVIEW_REQUEST = 101;
+	private static final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
 
 	private TransactionHistoryViewModel transactionHistoryViewModel;
 	private TransactionHistoryRepositoryViewModel transactionHistoryRepositoryViewModel;
@@ -44,9 +52,11 @@ public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
 
 	private TransactionHistoryAdapter transactionHistoryAdapter;
 
-	private SwipeRefreshLayout swipeRefreshLayout;
-
 	private final Handler handler = new Handler();
+
+	private LinearLayoutManager linearLayoutManager;
+	private Button toListTopButton;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private final Runnable isTopListItemVisibleCheckRunnable = new Runnable() {
 		@Override
@@ -152,14 +162,20 @@ public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
 	private final OnItemClickListener onItemClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(int position, View view) {
-			Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-			intent.putExtra(Constants.TRANSACTION_DETAILS,
-					transactionHistoryRepositoryViewModel.getItem(position));
-			startActivity(intent);
+			final TransactionHistory transactionHistory =
+					transactionHistoryRepositoryViewModel.getItem(position);
+			if (transactionHistory != null) {
+				final int serviceId = transactionHistory.getServiceId();
+				if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
+					launchRequestMoneyReviewPage(transactionHistory);
+				} else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT) {
+					launchRequestPaymentReviewPage(transactionHistory);
+				} else {
+					launchTransactionHistoryPage(transactionHistory);
+				}
+			}
 		}
 	};
-	private LinearLayoutManager linearLayoutManager;
-	private Button toListTopButton;
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -217,6 +233,53 @@ public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
 					null, null, null, null));
 			hideContentView();
 		}
+	}
+
+	private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {
+		Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+		intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+		intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
+				ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
+
+		intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
+		intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
+		intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+		intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+		intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+		intent.putExtra(Constants.IS_IN_CONTACTS,
+				new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
+
+		if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
+			intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+		}
+		startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
+	}
+
+	private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
+		Intent intent = new Intent(getActivity(), SentReceivedRequestPaymentReviewActivity.class);
+		intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+		intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
+				ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
+
+		intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
+		intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
+		intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+		intent.putExtra(Constants.STATUS, Constants.HTTP_RESPONSE_STATUS_PROCESSING);
+		intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+		intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+		intent.putExtra(Constants.IS_IN_CONTACTS,
+				new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
+
+		if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
+			intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+		}
+		startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
+	}
+
+	private void launchTransactionHistoryPage(TransactionHistory transactionHistory) {
+		Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+		intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+		startActivity(intent);
 	}
 
 	private final Observer<PagedList<TransactionHistory>> transactionHistoryListObserver =
