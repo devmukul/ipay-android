@@ -68,6 +68,8 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 				}
 			});
 
+	private boolean forceRefreshData;
+
 	public TransactionHistoryViewModel(@NonNull Application application) {
 		super(application);
 	}
@@ -103,6 +105,14 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 
 	public void clearFilter() {
 		searchInitiateLiveData.setValue(new Pair<>(SearchType.ALL, null));
+	}
+
+	public void setForceRefreshData(boolean forceRefreshData) {
+		this.forceRefreshData = forceRefreshData;
+	}
+
+	public boolean isForceRefreshData() {
+		return forceRefreshData;
 	}
 
 	public enum SearchType {
