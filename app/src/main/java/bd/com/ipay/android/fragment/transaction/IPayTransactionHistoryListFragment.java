@@ -1,5 +1,6 @@
 package bd.com.ipay.android.fragment.transaction;
 
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -226,6 +228,11 @@ public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
 				!transactionHistoryRepositoryViewModel.getPagedData().getValue().isEmpty()) {
 			transactionHistoryAdapter.submitList(transactionHistoryRepositoryViewModel
 					.getPagedData().getValue());
+			if (transactionHistoryViewModel.isForceRefreshData()) {
+				transactionHistoryRepositoryViewModel.refreshData();
+				swipeRefreshLayout.setRefreshing(true);
+				transactionHistoryViewModel.setForceRefreshData(false);
+			}
 			showContentView();
 		} else {
 			transactionHistoryRepositoryViewModel.fetchData(new TransactionHistoryRepositoryArguments(
@@ -336,4 +343,26 @@ public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
 			}
 		}
 	};
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (resultCode) {
+			case Activity.RESULT_OK:
+				transactionHistoryRepositoryViewModel.refreshData();
+				swipeRefreshLayout.setRefreshing(true);
+				if (transactionHistoryType == TransactionHistoryType.PENDING) {
+					if (getContext() != null) {
+						Intent broadcastIntent = new Intent();
+						Intent intent = new Intent();
+						intent.setAction(IPayTransactionHistoryFragment.TRANSACTION_HISTORY_UPDATE_ACTION);
+						intent.putExtra(IPayTransactionHistoryFragment.TRANSACTION_HISTORY_TYPE_KEY,
+								TransactionHistoryType.COMPLETED);
+						LocalBroadcastManager.getInstance(getContext())
+								.sendBroadcast(broadcastIntent);
+					}
+				}
+				break;
+		}
+	}
 }
