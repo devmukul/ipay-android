@@ -139,23 +139,23 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
         else
             mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.image_view_profile);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mDescriptionTagView = (TextView) v.findViewById(R.id.description);
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mNetAmountTitleView = (TextView) v.findViewById(R.id.net_amount_title);
-        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
+        mProfileImageView = v.findViewById(R.id.image_view_profile);
+        mNameView = v.findViewById(R.id.textview_name);
+        mMobileNumberView = v.findViewById(R.id.textview_mobile_number);
+        mDescriptionTagView = v.findViewById(R.id.description);
+        mDescriptionView = v.findViewById(R.id.textview_description);
+        mAmountView = v.findViewById(R.id.textview_amount);
+        mNetAmountTitleView = v.findViewById(R.id.net_amount_title);
+        mAddInContactsCheckBox = v.findViewById(R.id.add_in_contacts);
 
-        mAcceptButton = (Button) v.findViewById(R.id.button_accept);
-        mRejectButton = (Button) v.findViewById(R.id.button_reject);
-        mCancelButton = (Button) v.findViewById(R.id.button_cancel);
+        mAcceptButton = v.findViewById(R.id.button_accept);
+        mRejectButton = v.findViewById(R.id.button_reject);
+        mCancelButton = v.findViewById(R.id.button_cancel);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
-            getActivity().setTitle(R.string.send_money);
+            getActivity().setTitle(R.string.request_money);
             mNetAmountTitleView.setText(getString(R.string.recipient_net_amount));
         } else
             getActivity().setTitle(R.string.request_money);
