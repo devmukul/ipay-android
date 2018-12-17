@@ -63,8 +63,6 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
 
 		transactionDescriptionTextView.setText(transactionHistory.getShortDescription());
 		transactionTimeTextView.setText(Utilities.formatDayMonthYear(transactionHistory.getTime()));
-		netAmountTextView.setText(Utilities
-				.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
 
 		// showing account balance
 		if (transactionHistory.getAccountBalance() != null &&
@@ -72,8 +70,12 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
 			balanceTextView.setVisibility(View.VISIBLE);
 			balanceTextView.setText(Utilities
 					.formatTakaWithComma(transactionHistory.getAccountBalance()));
+			netAmountTextView.setText(Utilities
+					.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
 		} else {
 			balanceTextView.setVisibility(View.GONE);
+			netAmountTextView.setText(Utilities
+					.formatTakaFromString(String.valueOf(transactionHistory.getNetAmount())));
 		}
 
 		// showing receiver name

@@ -2,9 +2,14 @@ package bd.com.ipay.android.fragment.transaction;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -28,7 +33,7 @@ public class IPayTransactionHistoryFragment extends BaseFragment {
 
 	public static final String TRANSACTION_HISTORY_TYPE_KEY = "TRANSACTION_HISTORY_TYPE";
 	public static final String HAS_TRANSACTION_SEARCH_KEY = "HAS_TRANSACTION_SEARCH";
-
+	public static final String TRANSACTION_HISTORY_UPDATE_ACTION = "TRANSACTION_HISTORY_UPDATE_ACTION";
 	private TransactionHistoryType transactionHistoryType;
 
 	private TransactionHistoryViewModel transactionHistoryViewModel;
@@ -64,6 +69,11 @@ public class IPayTransactionHistoryFragment extends BaseFragment {
 					ViewModelProviders.of(getActivity()).get(
 							getTransactionHistoryViewModelKey(transactionHistoryType)
 							, TransactionHistoryViewModel.class);
+
+			LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+					transactionHistoryRefreshActionBroadcastReceiver,
+					new IntentFilter(TRANSACTION_HISTORY_UPDATE_ACTION)
+			);
 		} else {
 			transactionHistoryViewModel =
 					ViewModelProviders.of(this).get(
@@ -74,6 +84,15 @@ public class IPayTransactionHistoryFragment extends BaseFragment {
 		if (getActivity() != null) {
 			mTracker = Utilities.getTracker(getActivity());
 		}
+	}
+
+	@Override
+	public void onDestroy() {
+		if (getActivity() != null) {
+			LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
+					transactionHistoryRefreshActionBroadcastReceiver);
+		}
+		super.onDestroy();
 	}
 
 	@Override
@@ -301,5 +320,15 @@ public class IPayTransactionHistoryFragment extends BaseFragment {
 
 		}
 	}
+
+	private final BroadcastReceiver transactionHistoryRefreshActionBroadcastReceiver =
+			new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					if (TRANSACTION_HISTORY_UPDATE_ACTION.equals(intent.getAction())) {
+						transactionHistoryViewModel.setForceRefreshData(true);
+					}
+				}
+			};
 }
 
