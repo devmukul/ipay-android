@@ -97,7 +97,7 @@
                             android:orientation="vertical"
                             android:padding="4dp">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/blion_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -107,7 +107,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/banglalion"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -130,7 +130,7 @@
                             android:orientation="vertical"
                             android:padding="4dp">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/brilliant_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -139,7 +139,7 @@
                                 android:padding="2dp"
                                 android:src="@drawable/brilliant_logo"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -203,7 +203,7 @@
                             android:orientation="vertical"
                             android:padding="4dp">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/lankaBangla_image_card"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -213,7 +213,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/lbf_credit_card"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -235,7 +235,7 @@
                             android:orientation="vertical"
                             android:padding="4dp">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/lankaBangla_image_dps"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -245,7 +245,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/lbf_credit_card_dps"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -267,7 +267,7 @@
                             android:orientation="vertical"
                             android:padding="4dp">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/linkThree_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -276,7 +276,7 @@
                                 android:padding="2dp"
                                 android:src="@drawable/link_three_logo"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -299,16 +299,16 @@
                             android:orientation="vertical"
                             android:padding="4dp">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/credit_card_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/semiround_white_default"
                                 android:padding="2dp"
-                                android:src="@drawable/ic_debit_credit_card_icon"
+                                app:srcCompat="@drawable/ic_debit_credit_card_icon"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -340,7 +340,7 @@
                             android:padding="4dp"
                             android:visibility="gone">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/desco_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -350,7 +350,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/desco"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -374,7 +374,7 @@
                             android:padding="4dp"
                             android:visibility="gone">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/dpdc_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -384,7 +384,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/dpdc"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -408,7 +408,7 @@
                             android:padding="4dp"
                             android:visibility="gone">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <ImageView
                                 android:id="@+id/west_zone_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
@@ -418,7 +418,7 @@
                                 android:scaleType="centerInside"
                                 android:src="@drawable/wzone"
                                 app:layout_constraintDimensionRatio="1:1"
-                                app:riv_corner_radius="@dimen/value2" />
+                                android:elevation="@dimen/value2" />
 
                             <TextView
                                 android:layout_width="match_parent"
