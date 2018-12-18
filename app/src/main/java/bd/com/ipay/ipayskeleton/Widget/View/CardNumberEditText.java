@@ -2,9 +2,10 @@ package bd.com.ipay.ipayskeleton.Widget.View;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -136,7 +137,13 @@ public class CardNumberEditText extends AppCompatEditText {
 	private void showCardDrawable(int drawableId) {
 		if (drawableId != currentCardIcon) {
 			if (!cardIconMap.containsKey(drawableId)) {
-				final Drawable drawable = ResourcesCompat.getDrawable(getResources(), drawableId, getContext().getTheme());
+				final Drawable drawable;
+				if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+					drawable = VectorDrawableCompat.create(getResources(), drawableId,
+							getContext().getTheme());
+				} else {
+					drawable = getResources().getDrawable(drawableId, getContext().getTheme());
+				}
 				if (drawable != null) {
 					drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 					final int size = getResources().getDimensionPixelSize(R.dimen.value24);
