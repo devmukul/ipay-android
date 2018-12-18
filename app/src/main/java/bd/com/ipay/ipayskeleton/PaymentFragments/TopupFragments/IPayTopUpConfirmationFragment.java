@@ -104,7 +104,7 @@ public class IPayTopUpConfirmationFragment extends IPayAbstractTransactionConfir
 					uri, json, getActivity(), this, false);
 			sendMoneyRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
-			customProgressDialog.setLoadingMessage(getString(R.string.sending_money));
+			customProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_processing));
 			customProgressDialog.showDialog();
 		}
 	}
@@ -169,7 +169,7 @@ public class IPayTopUpConfirmationFragment extends IPayAbstractTransactionConfir
 							case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
 								customProgressDialog.dismissDialog();
 								Toast.makeText(getActivity(), iPayTransactionResponse.getMessage(), Toast.LENGTH_SHORT).show();
-								launchOTPVerification(iPayTransactionResponse.getOtpValidFor(), gson.toJson(topupRequest), Constants.COMMAND_REQUEST_MONEY, uri);
+								launchOTPVerification(iPayTransactionResponse.getOtpValidFor(), gson.toJson(topupRequest), Constants.COMMAND_TOPUP_REQUEST, uri);
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
 								final String errorMessage;
