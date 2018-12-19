@@ -21,7 +21,7 @@ public class DashBoardFragment extends Fragment
 		implements BottomNavigationView.OnNavigationItemSelectedListener {
 
 	private HomeFragment mHomeFragment;
-	private IpayHereFragmentF mIPayHereFragment;
+	private IpayHereFragment mIPayHereFragment;
 	private PromotionsFragment mPromotionsFragment;
 	private TransactionHistoryHolderFragment mTransactionHistoryFragment;
 
@@ -42,7 +42,7 @@ public class DashBoardFragment extends Fragment
 		mHomeFragment = new HomeFragment();
 		mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
 		mPromotionsFragment = new PromotionsFragment();
-		mIPayHereFragment = new IpayHereFragmentF();
+		mIPayHereFragment = new IpayHereFragment();
 
 		bottomNavigationView = view.findViewById(R.id.bottom_navigation_view);
 
