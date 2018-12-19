@@ -111,8 +111,8 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         // Register a listener to receive callbacks when a place has been selected or an error ha occurred.
         autocompleteFragment.setOnPlaceSelectedListener(this);
         autocompleteFragment.setFilter(autocompleteFilter);
-        searchLocationView = (CardView) v.findViewById(R.id.search_this_place);
-        searchLocation = (Button) v.findViewById(R.id.seach_this_place_btn);
+        searchLocationView = v.findViewById(R.id.search_this_place);
+        searchLocation = v.findViewById(R.id.seach_this_place_btn);
 
         searchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -385,8 +385,8 @@ public class IpayHereFragment extends BaseFragment implements PlaceSelectionList
         public View getInfoWindow(final Marker marker) {
             this.marker = marker;
             NearbyBusinessResponseList infoWindowData = (NearbyBusinessResponseList) marker.getTag();
-            businessProfileImageView = (CircleImageView) view.findViewById(R.id.profile_picture);
-            businessNameTextView = (TextView) view.findViewById(R.id.textview_name);
+            businessProfileImageView = view.findViewById(R.id.profile_picture);
+            businessNameTextView = view.findViewById(R.id.textview_name);
             String title = infoWindowData.getBusinessName();
             businessNameTextView.setText(title);
             if (infoWindowData.getImageUrl() != null) {

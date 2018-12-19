@@ -84,10 +84,10 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_otp_verification_trusted_device, container, false);
-        mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
-        mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
-        mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
+        mActivateButton = v.findViewById(R.id.buttonVerifyOTP);
+        mResendOTPButton = v.findViewById(R.id.buttonResend);
+        mOTPEditText = v.findViewById(R.id.otp_edittext);
+        mTimerTextView = v.findViewById(R.id.txt_timer);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         mDeviceName = DeviceInfoFactory.getDeviceName();

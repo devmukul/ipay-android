@@ -31,10 +31,10 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
     }
 
     private void initializeViews(View view) {
-        mUploadImageView = (ImageView) view.findViewById(R.id.document_id_helper_image);
-        mUploadButton = (Button) view.findViewById(R.id.button_upload_photo_id);
-        mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        mBackButtonTop = (ImageView) view.findViewById(R.id.back);
+        mUploadImageView = view.findViewById(R.id.document_id_helper_image);
+        mUploadButton = view.findViewById(R.id.button_upload_photo_id);
+        mSkipButton = view.findViewById(R.id.button_skip);
+        mBackButtonTop = view.findViewById(R.id.back);
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }

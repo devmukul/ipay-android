@@ -85,10 +85,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_otp_verification, container, false);
-        mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
-        mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
-        mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+        mActivateButton = v.findViewById(R.id.buttonVerifyOTP);
+        mResendOTPButton = v.findViewById(R.id.buttonResend);
+        mTimerTextView = v.findViewById(R.id.txt_timer);
+        mOTPEditText = v.findViewById(R.id.otp_edittext);
 
         Utilities.showKeyboard(getActivity(), mOTPEditText);
 

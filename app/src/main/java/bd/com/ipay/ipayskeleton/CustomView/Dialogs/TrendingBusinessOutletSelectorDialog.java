@@ -49,16 +49,16 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
 
     private void initializeViews() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_dialog_merchant_branches, null, false);
-        merchantAddressListRecyclerView = (RecyclerView) view.findViewById(R.id.address_recycler_view);
-        merchantNameTextView = (TextView) view.findViewById(R.id.merchant_name);
-        noResultTextView = (TextView) view.findViewById(R.id.textView_noresult);
-        mMerchantLogoView = (ProfileImageView) view.findViewById(R.id.merchant_logo);
+        merchantAddressListRecyclerView = view.findViewById(R.id.address_recycler_view);
+        merchantNameTextView = view.findViewById(R.id.merchant_name);
+        noResultTextView = view.findViewById(R.id.textView_noresult);
+        mMerchantLogoView = view.findViewById(R.id.merchant_logo);
         supportViewsWithData();
         mMerchantBranchAdapter = new MerchantOutletAdapter(merchantDetails.getOutlets());
         merchantAddressListRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         merchantAddressListRecyclerView.setAdapter(mMerchantBranchAdapter);
 
-        mSearchView = (SearchView) view.findViewById(R.id.search_outlet);
+        mSearchView = view.findViewById(R.id.search_outlet);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.clearFocus();
@@ -155,7 +155,7 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
 
             public EmptyViewHolder(View itemView) {
                 super(itemView);
-                mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
+                mEmptyDescription = itemView.findViewById(R.id.empty_description);
             }
         }
 
@@ -170,9 +170,9 @@ public class TrendingBusinessOutletSelectorDialog extends AlertDialog implements
                 super(itemView);
 
                 this.itemView = itemView;
-                outletIcon = (ProfileImageView) itemView.findViewById(R.id.outlet_radio_button);
-                mNameTextView = (TextView) itemView.findViewById(R.id.outlet_name);
-                mAddressTextView = (TextView) itemView.findViewById(R.id.outlet_address);
+                outletIcon = itemView.findViewById(R.id.outlet_radio_button);
+                mNameTextView = itemView.findViewById(R.id.outlet_name);
+                mAddressTextView = itemView.findViewById(R.id.outlet_address);
                 outletIcon.setBusinessLogoPlaceHolder();
             }
 

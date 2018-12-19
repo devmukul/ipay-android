@@ -119,8 +119,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mLankaBanglaDpsView = view.findViewById(R.id.lankaBanglaViewDps);
         mBrilliantRechargeView = view.findViewById(R.id.brilliant_recharge_view);
         mCreditCardBillPayView = view.findViewById(R.id.credit_card_bill);
-        trendingBusinessListRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.trending_business_list_refresh_layout);
-        mMobileNumberEditText = (MakePaymentContactsSearchView) view.findViewById(R.id.searchView);
+        trendingBusinessListRefreshLayout = view.findViewById(R.id.trending_business_list_refresh_layout);
+        mMobileNumberEditText = view.findViewById(R.id.searchView);
 
         mTrendingListRecyclerView = view.findViewById(R.id.trending_business_recycler_view_parent);
         mTrendingListRecyclerView.setHasFixedSize(true);
@@ -443,8 +443,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             public RecyclerView trendingBusinessCAtegory;
             public MyViewHolder(View view) {
                 super(view);
-                titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
-                trendingBusinessCAtegory = (RecyclerView)view.findViewById(R.id.trending_business_recycler_view_category);
+                titleView = view.findViewById(R.id.trending_business_category_title);
+                trendingBusinessCAtegory = view.findViewById(R.id.trending_business_recycler_view_category);
             }
         }
     }
@@ -466,8 +466,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-                mImageView = (ImageView) itemView.findViewById(R.id.imageView);
-                mTextView = (TextView) itemView.findViewById(R.id.nameView);
+                mImageView = itemView.findViewById(R.id.imageView);
+                mTextView = itemView.findViewById(R.id.nameView);
             }
 
             public void bindView(final int pos) {
