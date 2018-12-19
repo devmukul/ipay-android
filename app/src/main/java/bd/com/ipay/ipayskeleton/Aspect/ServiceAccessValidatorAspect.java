@@ -26,61 +26,94 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 @Aspect
 public class ServiceAccessValidatorAspect {
 
-    @Around("execution(* on*Click(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-    public Object serviceValidatorOnClick(ProceedingJoinPoint joinPoint) throws Throwable {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-        Object result = null;
-        ValidateAccess myAnnotation = method.getAnnotation(ValidateAccess.class);
+	@Around("execution(* on*Click(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+	public Object serviceValidatorOnClick(ProceedingJoinPoint joinPoint) throws Throwable {
+		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+		Method method = signature.getMethod();
 
-        int[] serviceIds = myAnnotation.value();
+		ValidateAccess myAnnotation = method.getAnnotation(ValidateAccess.class);
 
-        Logger.logW("ServiceIds", Arrays.toString(serviceIds));
+		int[] serviceIds = myAnnotation.value();
+		int[] orServiceIds = myAnnotation.or();
+		if (serviceIds[0] == -1 && orServiceIds[0] != -1) {
+			return validateOrAccess(joinPoint, orServiceIds);
+		} else {
+			return validateAndAccess(joinPoint, serviceIds);
+		}
+	}
 
-        if (!ACLManager.hasServicesAccessibility(serviceIds)) {
-            if (joinPoint.getArgs()[0] instanceof View) {
-                View view = (View) joinPoint.getArgs()[0];
-                DialogUtils.showServiceNotAllowedDialog(view.getContext());
-            } else if (joinPoint.getArgs()[0] instanceof Dialog) {
-                Dialog dialog = (Dialog) joinPoint.getArgs()[0];
-                DialogUtils.showServiceNotAllowedDialog(dialog.getContext());
-            }
-        } else {
-            result = joinPoint.proceed();
-        }
-        return result;
-    }
+	/**
+	 * Checks if the user have the access of all the given service Ids.
+	 */
+	private Object validateAndAccess(ProceedingJoinPoint joinPoint, int[] serviceIds) throws Throwable {
+		Object result = null;
 
-    @Around("execution(* addContact(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-    public Object serviceValidatorOnAddContact(ProceedingJoinPoint joinPoint) throws Throwable {
+		Logger.logW("ServiceIds", Arrays.toString(serviceIds));
+		if (!ACLManager.hasServicesAccessibility(serviceIds)) {
+			if (joinPoint.getArgs()[0] instanceof View) {
+				View view = (View) joinPoint.getArgs()[0];
+				DialogUtils.showServiceNotAllowedDialog(view.getContext());
+			} else if (joinPoint.getArgs()[0] instanceof Dialog) {
+				Dialog dialog = (Dialog) joinPoint.getArgs()[0];
+				DialogUtils.showServiceNotAllowedDialog(dialog.getContext());
+			}
+		} else {
+			result = joinPoint.proceed();
+		}
+		return result;
+	}
 
-        Object result = null;
+	/**
+	 * Checks if the user have the access of any one the given service Ids.
+	 */
+	private Object validateOrAccess(ProceedingJoinPoint joinPoint, int[] serviceIds) throws Throwable {
+		Object result = null;
 
-        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_CONTACTS)) {
-            result = joinPoint.proceed();
-        }
-        return result;
-    }
+		Logger.logW("ServiceIds", Arrays.toString(serviceIds));
+		if (!ACLManager.hasAnyOfServicesAccessibility(serviceIds)) {
+			if (joinPoint.getArgs()[0] instanceof View) {
+				View view = (View) joinPoint.getArgs()[0];
+				DialogUtils.showServiceNotAllowedDialog(view.getContext());
+			} else if (joinPoint.getArgs()[0] instanceof Dialog) {
+				Dialog dialog = (Dialog) joinPoint.getArgs()[0];
+				DialogUtils.showServiceNotAllowedDialog(dialog.getContext());
+			}
+		} else {
+			result = joinPoint.proceed();
+		}
+		return result;
+	}
 
-    @Around("execution(* onCheckedChanged(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-    public Object serviceValidatorOnRadioGroupCheckedChanged(ProceedingJoinPoint joinPoint) throws Throwable {
+	@Around("execution(* addContact(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+	public Object serviceValidatorOnAddContact(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        Object result = null;
-        RadioGroup radioGroup = (RadioGroup) joinPoint.getArgs()[0];
-        final int checkedId = radioGroup.getCheckedRadioButtonId();
+		Object result = null;
+
+		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_CONTACTS)) {
+			result = joinPoint.proceed();
+		}
+		return result;
+	}
+
+	@Around("execution(* onCheckedChanged(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+	public Object serviceValidatorOnRadioGroupCheckedChanged(ProceedingJoinPoint joinPoint) throws Throwable {
+
+		Object result = null;
+		RadioGroup radioGroup = (RadioGroup) joinPoint.getArgs()[0];
+		final int checkedId = radioGroup.getCheckedRadioButtonId();
 
         Logger.logW("Aspect", checkedId + "");
         switch (radioGroup.getId()) {
-            case R.id.notification_type_radio_group:
+            case R.id.transaction_history_type_radio_group:
                 switch (checkedId) {
-                    case R.id.radio_button_general:
+                    case R.id.pending_transaction_history_radio_button:
                         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
                             result = joinPoint.proceed();
                         } else {
                             DialogUtils.showServiceNotAllowedDialog(radioGroup.getContext());
                         }
                         break;
-                    case R.id.radio_button_deep_linked:
+                    case R.id.completed_transaction_history_radio_button:
                         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
                             result = joinPoint.proceed();
                         } else {
@@ -121,8 +154,7 @@ public class ServiceAccessValidatorAspect {
             case R.id.nav_logout:
                 hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SIGN_OUT);
                 break;
-            case R.id.nav_home:
-            case R.id.nav_account:
+            case  R.id.nav_account:
             case R.id.nav_security_settings:
             case R.id.nav_live_chat:
             case R.id.nav_help:
@@ -131,96 +163,96 @@ public class ServiceAccessValidatorAspect {
                 break;
         }
 
-        if (!hasNavigationAccess) {
-            Context context = null;
-            if (joinPoint.getTarget() instanceof Context) {
-                context = (Context) joinPoint.getTarget();
-            } else if (joinPoint.getTarget() instanceof Fragment) {
-                context = ((Fragment) joinPoint.getTarget()).getContext();
-            } else if (joinPoint.getTarget() instanceof android.app.Fragment) {
-                context = ((android.app.Fragment) joinPoint.getTarget()).getActivity();
-            }
-            if (context != null) {
-                DialogUtils.showServiceNotAllowedDialog(context);
-            }
-        } else {
-            result = joinPoint.proceed();
-        }
-        return result;
-    }
+		if (!hasNavigationAccess) {
+			Context context = null;
+			if (joinPoint.getTarget() instanceof Context) {
+				context = (Context) joinPoint.getTarget();
+			} else if (joinPoint.getTarget() instanceof Fragment) {
+				context = ((Fragment) joinPoint.getTarget()).getContext();
+			} else if (joinPoint.getTarget() instanceof android.app.Fragment) {
+				context = ((android.app.Fragment) joinPoint.getTarget()).getActivity();
+			}
+			if (context != null) {
+				DialogUtils.showServiceNotAllowedDialog(context);
+			}
+		} else {
+			result = joinPoint.proceed();
+		}
+		return result;
+	}
 
-    @Around("execution(* switchToFragment(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-    public Object serviceValidatorOnSwitchFragment(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object result = null;
-        boolean canSwitchFragment = true;
-        final String serviceName = (String) joinPoint.getArgs()[0];
-        switch (serviceName) {
-            case Constants.VERIFY_BANK:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
-                break;
-            case Constants.ADD_BANK:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
-                break;
-            case ProfileCompletionPropertyConstants.VERIFY_BANK_OR_CARD:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
-                break;
-            case ProfileCompletionPropertyConstants.PARENT:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PARENT);
-                break;
-            case ProfileCompletionPropertyConstants.BASIC_PROFILE:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE);
-                break;
-            case ProfileCompletionPropertyConstants.BUSINESS_INFO:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO);
-                break;
-            case ProfileCompletionPropertyConstants.INTRODUCER:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS);
-                break;
-            case ProfileCompletionPropertyConstants.PERSONAL_ADDRESS:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS);
-                break;
-            case ProfileCompletionPropertyConstants.BUSINESS_ADDRESS:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS);
-                break;
-            case ProfileCompletionPropertyConstants.VERIFIED_EMAIL:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS);
-                break;
-            case ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS);
-                break;
-            case ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS);
-                break;
-            case ProfileCompletionPropertyConstants.PHOTOID:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS);
-                break;
-            case ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION);
-                break;
-            case Constants.PROFILE_PICTURE:
-                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE);
-                break;
-            case ProfileCompletionPropertyConstants.PROFILE_INFO:
-                canSwitchFragment = true;
-                break;
+	@Around("execution(* switchToFragment(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+	public Object serviceValidatorOnSwitchFragment(ProceedingJoinPoint joinPoint) throws Throwable {
+		Object result = null;
+		boolean canSwitchFragment = true;
+		final String serviceName = (String) joinPoint.getArgs()[0];
+		switch (serviceName) {
+			case Constants.VERIFY_BANK:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
+				break;
+			case Constants.ADD_BANK:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
+				break;
+			case ProfileCompletionPropertyConstants.VERIFY_BANK_OR_CARD:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
+				break;
+			case ProfileCompletionPropertyConstants.PARENT:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PARENT);
+				break;
+			case ProfileCompletionPropertyConstants.BASIC_PROFILE:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE);
+				break;
+			case ProfileCompletionPropertyConstants.BUSINESS_INFO:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO);
+				break;
+			case ProfileCompletionPropertyConstants.INTRODUCER:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS);
+				break;
+			case ProfileCompletionPropertyConstants.PERSONAL_ADDRESS:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS);
+				break;
+			case ProfileCompletionPropertyConstants.BUSINESS_ADDRESS:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS);
+				break;
+			case ProfileCompletionPropertyConstants.VERIFIED_EMAIL:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS);
+				break;
+			case ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS);
+				break;
+			case ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS);
+				break;
+			case ProfileCompletionPropertyConstants.PHOTOID:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS);
+				break;
+			case ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION);
+				break;
+			case Constants.PROFILE_PICTURE:
+				canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE);
+				break;
+			case ProfileCompletionPropertyConstants.PROFILE_INFO:
+				canSwitchFragment = true;
+				break;
 
-        }
+		}
 
-        if (!canSwitchFragment) {
-            Context context = null;
-            if (joinPoint.getTarget() instanceof Context) {
-                context = (Context) joinPoint.getTarget();
-            } else if (joinPoint.getTarget() instanceof Fragment) {
-                context = ((Fragment) joinPoint.getTarget()).getContext();
-            } else if (joinPoint.getTarget() instanceof android.app.Fragment) {
-                context = ((android.app.Fragment) joinPoint.getTarget()).getActivity();
-            }
-            if (context != null) {
-                DialogUtils.showServiceNotAllowedDialog(context);
-            }
-        } else {
-            result = joinPoint.proceed();
-        }
-        return result;
-    }
+		if (!canSwitchFragment) {
+			Context context = null;
+			if (joinPoint.getTarget() instanceof Context) {
+				context = (Context) joinPoint.getTarget();
+			} else if (joinPoint.getTarget() instanceof Fragment) {
+				context = ((Fragment) joinPoint.getTarget()).getContext();
+			} else if (joinPoint.getTarget() instanceof android.app.Fragment) {
+				context = ((android.app.Fragment) joinPoint.getTarget()).getActivity();
+			}
+			if (context != null) {
+				DialogUtils.showServiceNotAllowedDialog(context);
+			}
+		} else {
+			result = joinPoint.proceed();
+		}
+		return result;
+	}
 }

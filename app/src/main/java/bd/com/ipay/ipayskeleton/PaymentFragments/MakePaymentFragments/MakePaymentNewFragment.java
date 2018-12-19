@@ -76,6 +76,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private View mLankaBanglaView;
     private View mLankaBanglaDpsView;
     private View mAmberITBillPayView;
+    private View mCreditCardBillPayView;
     private HashMap<String, String> mProviderAvailabilityMap;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -117,6 +118,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mLankaBanglaView = view.findViewById(R.id.lankaBanglaViewCard);
         mLankaBanglaDpsView = view.findViewById(R.id.lankaBanglaViewDps);
         mBrilliantRechargeView = view.findViewById(R.id.brilliant_recharge_view);
+        mCreditCardBillPayView = view.findViewById(R.id.credit_card_bill);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.trending_business_list_refresh_layout);
         mMobileNumberEditText = (MakePaymentContactsSearchView) view.findViewById(R.id.searchView);
 
@@ -207,6 +209,13 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             }
         });
 
+        mCreditCardBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                payBill(Constants.CREDIT_CARD, null);
+            }
+        });
+
         trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -294,6 +303,11 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         intent.putExtra(Constants.SERVICE, Constants.BANGLALION);
                         startActivity(intent);
+                        break;
+                    case Constants.CREDIT_CARD:
+                        intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.CREDIT_CARD);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                         break;
                     case Constants.LANKABANGLA:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
@@ -574,5 +588,13 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         }
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH)
+            getActivity().finish();
     }
 }

@@ -50,7 +50,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mEmailBusiness;
     public static String mBirthdayBusinessHolder;
     public static String mMobileNumberPersonal;
-    public static String mCountryCode;
     public static long mTypeofBusiness;
     public static long otpDuration;
 
