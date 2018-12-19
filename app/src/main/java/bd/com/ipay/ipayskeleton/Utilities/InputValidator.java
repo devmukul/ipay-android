@@ -55,16 +55,13 @@ public class InputValidator {
     }
 
     public static boolean isValidName(String name) {
-        if (name.matches(".*[0-9]+.*")) return false;
-        return true;
+        return !name.matches(".*[0-9]+.*");
     }
 
     public static boolean isValidNameWithRequiredLength(String name) {
         name = name.replaceAll("\\s+", "");
 
-        if (name.matches(".*[0-9]+.*") || name.length() < Constants.MIN_VALID_NAME_LENGTH)
-            return false;
-        return true;
+        return !name.matches(".*[0-9]+.*") && name.length() >= Constants.MIN_VALID_NAME_LENGTH;
     }
 
     @Nullable
@@ -188,17 +185,13 @@ public class InputValidator {
         if (number == null)
             return false;
 
-        if (!number.matches(".*[0-9].*"))
-            return false;
-        else return true;
+        return number.matches(".*[0-9].*");
     }
 
     public static boolean isValidMobileNumberWithCountryCode(String mobileNumber, String countryCode) {
         if (countryCode.equals("BD")) {
             String formattedNumber = ContactEngine.formatMobileNumberInternational(mobileNumber, countryCode);
-            if (formattedNumber.matches(MOBILE_NUMBER_REGEX))
-                return true;
-            return false;
+            return formattedNumber.matches(MOBILE_NUMBER_REGEX);
         }
 
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -214,8 +207,6 @@ public class InputValidator {
 
     public static boolean isValidMobileNumberBD(String mobileNumber) {
             String formattedNumber = ContactEngine.formatMobileNumberBD(mobileNumber);
-            if (formattedNumber.matches(MOBILE_NUMBER_REGEX))
-                return true;
-            return false;
+        return formattedNumber.matches(MOBILE_NUMBER_REGEX);
     }
 }

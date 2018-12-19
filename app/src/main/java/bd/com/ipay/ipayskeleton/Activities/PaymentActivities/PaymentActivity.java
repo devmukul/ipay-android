@@ -42,7 +42,7 @@ public class PaymentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-        mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
+        mFabMakingPayment = findViewById(R.id.fab_payment_making);
         mProgressDialog = new ProgressDialog(this);
 
         if (getIntent().getStringExtra("ORDER_ID") != null)
