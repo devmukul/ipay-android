@@ -2,8 +2,10 @@ package bd.com.ipay.ipayskeleton.Widget.View;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -26,7 +28,8 @@ public class CardNumberEditText extends AppCompatEditText {
 	private int currentCardIcon = -1;
 	private final LengthLimitFilter inputFilter = new LengthLimitFilter(maximumCreditCardLength);
 	private Map<Integer, Drawable> cardIconMap = new TreeMap<>();
-
+	@NonNull
+	private CardNumberValidator.Cards[] allowedCards = CardNumberValidator.Cards.values();
 	private final TextWatcher textWatcher = new TextWatcher() {
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -36,6 +39,7 @@ public class CardNumberEditText extends AppCompatEditText {
 		@Override
 		public void onTextChanged(CharSequence text, int start, int before, int count) {
 			if (text != null) {
+
 				final String currentText = text.toString();
 				setCardDrawable(currentText);
 				if (mPreviousText != null && text.length() > mPreviousText.length()) {
@@ -65,6 +69,11 @@ public class CardNumberEditText extends AppCompatEditText {
 	public CardNumberEditText(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		initView();
+	}
+
+	public void setAllowedCards(CardNumberValidator.Cards... allowedCards) {
+		if (allowedCards != null && allowedCards.length != 0)
+			this.allowedCards = allowedCards;
 	}
 
 	private void initView() {
@@ -103,7 +112,7 @@ public class CardNumberEditText extends AppCompatEditText {
 
 	private void setCardDrawable(String text) {
 		CardNumberValidator.Cards cards = CardNumberValidator.getLikelyType(text);
-		if (cards != null) {
+		if (isInAllowedCard(cards) && cards != null) {
 			showCardDrawable(cards.getCardIconId());
 			setMaximumCreditCardLength(cards.getCardLength()[cards.getCardLength().length - 1]);
 		} else {
@@ -111,14 +120,34 @@ public class CardNumberEditText extends AppCompatEditText {
 		}
 	}
 
+	@NonNull
+	public CardNumberValidator.Cards[] getAllowedCards() {
+		return allowedCards;
+	}
+
+	private boolean isInAllowedCard(CardNumberValidator.Cards cards) {
+		for (CardNumberValidator.Cards allowedCard : allowedCards) {
+			if (allowedCard.equals(cards)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private void showCardDrawable(int drawableId) {
 		if (drawableId != currentCardIcon) {
 			if (!cardIconMap.containsKey(drawableId)) {
-				final Drawable drawable = ResourcesCompat.getDrawable(getResources(), drawableId, getContext().getTheme());
+				final Drawable drawable;
+				if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+					drawable = VectorDrawableCompat.create(getResources(), drawableId,
+							getContext().getTheme());
+				} else {
+					drawable = getResources().getDrawable(drawableId, getContext().getTheme());
+				}
 				if (drawable != null) {
 					drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 					final int size = getResources().getDimensionPixelSize(R.dimen.value24);
-					drawable.setBounds(0, 0, (int) (size * 1.6f), size);
+					drawable.setBounds(0, 0, size, size);
 					cardIconMap.put(drawableId, drawable);
 				} else {
 					return;

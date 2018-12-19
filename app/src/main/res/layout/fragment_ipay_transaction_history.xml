@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+
+            <TextView
+                android:id="@+id/filter_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_toStartOf="@+id/filter_action_button_holder"
+                android:layout_toLeftOf="@+id/filter_action_button_holder"
+                android:text="@string/pending_transaction_list" />
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/transaction_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/value10"
+                android:layout_marginLeft="@dimen/value10"
+                android:layout_marginEnd="@dimen/value10"
+                android:layout_marginRight="@dimen/value10"
+                android:layout_toStartOf="@+id/filter_action_button_holder"
+                android:layout_toLeftOf="@+id/filter_action_button_holder"
+                android:background="@color/colorWhite"
+                app:defaultQueryHint="@string/search_transaction"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="@string/search_transaction"
+                app:submitBackground="@android:color/transparent" />
+
+            <FrameLayout
+                android:id="@+id/filter_action_button_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <Button
+                    android:id="@+id/remove_filter_button"
+                    style="@style/ButtonStyleSmallRect"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/remove_filter"
+                    android:textAllCaps="false"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/filter_option_popup_menu_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/empty_string"
+                    app:srcCompat="@drawable/ic_more_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/clear_all_filter_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/empty_string"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_close_black_24dp" />
+
+            </FrameLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGrayDevider">
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/fragment_container_transaction_history_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+</LinearLayout>

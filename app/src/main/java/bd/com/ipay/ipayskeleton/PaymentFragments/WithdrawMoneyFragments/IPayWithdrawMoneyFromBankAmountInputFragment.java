@@ -6,6 +6,7 @@ import android.text.InputType;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.CreditBalanceResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionAmountInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -24,6 +25,7 @@ public class IPayWithdrawMoneyFromBankAmountInputFragment extends IPayAbstractBa
 		setName(bankAccountList.getBankName());
 		setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
 		setTransactionImageResource(bankAccountList.getBankIcon(getContext()));
+		setBalanceType(BalanceType.SETTLED_BALANCE);
 	}
 
 	@Override
@@ -53,12 +55,15 @@ public class IPayWithdrawMoneyFromBankAmountInputFragment extends IPayAbstractBa
 				errorMessage = getString(R.string.please_enter_amount);
 			} else {
 				final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
+				final CreditBalanceResponse creditBalanceResponse = SharedPrefManager.getCreditBalance();
 				final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-				if (amount.compareTo(balance) > 0) {
+				final BigDecimal unsettledBalance = creditBalanceResponse.getCreditLimit().subtract(creditBalanceResponse.getAvailableCredit());
+				final BigDecimal settledBalance = balance.subtract(unsettledBalance);
+				if (amount.compareTo(settledBalance) > 0) {
 					errorMessage = getString(R.string.insufficient_balance);
 				} else {
 					final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
-					final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+					final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT().min(settledBalance);
 					errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
 				}
 			}
