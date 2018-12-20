@@ -78,8 +78,8 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
 
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
-    private static final String mDefaultLatitude = "23.706325";
-    private static final String mDefaultLongitude = "90.316801";
+    private static final String mDefaultLatitude = "23.781381";
+    private static final String mDefaultLongitude = "90.4121439";
     private String mUserLocationLatitude = null;
     private String mUserLocationLongitude = null;
 
