@@ -163,6 +163,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                 intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);
+                intent.putExtra(Constants.PERSONAL_ACCOUNT, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
@@ -292,6 +293,15 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         });
     }
 
+    public boolean onBackPressed() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void attemptAddBeneficiaryWithPinCheck() {
 
         if (mAddBeneficiaryAsyncTask != null) {
@@ -371,7 +381,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
     private ContactEngine.ContactData searchLocalContacts(String mobileNumber) {
         DataHelper dataHelper = DataHelper.getInstance(getActivity());
         int nameIndex, originalNameIndex, phoneNumberIndex, profilePictureUrlQualityMediumIndex;
-        Cursor cursor = dataHelper.searchContacts(mobileNumber, true, false, false,
+        Cursor cursor = dataHelper.searchPersonalContacts(mobileNumber, true, true, false,
                 true, false, false, null);
         try {
             if (cursor != null) {
@@ -384,8 +394,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                     name = cursor.getString(nameIndex);
                 }
                 String profilePictureUrl = cursor.getString(profilePictureUrlQualityMediumIndex);
-
+                int accountType = cursor.getInt(cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE));
                 return new ContactEngine.ContactData(0, name, "", profilePictureUrl);
+
             } else {
                 return null;
             }
@@ -439,19 +450,32 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
                     GetUserInfoResponse getUserInfoResponse = new Gson().fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getUserInfoResponse.getProfilePictures() != null) {
-                            if (getUserInfoResponse.getProfilePictures().size() != 0) {
-                                mProfileImageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                        if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
+                            mName = "";
+                            mMobileNumber = "";
+                            mProfileImageUrl = "";
+                            mNameTextView.setText("");
+                            mNameTextView.setVisibility(View.GONE);
+                            if(type.equals(Constants.SPONSOR)) {
+                                Toast.makeText(getContext(), "Business user can't be added as sponsor", Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(getContext(),"Business user can't be added as beneficiary",Toast.LENGTH_LONG).show();
                             }
+                        } else {
+                            if (getUserInfoResponse.getProfilePictures() != null) {
+                                if (getUserInfoResponse.getProfilePictures().size() != 0) {
+                                    mProfileImageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                                }
+                            }
+                            mName = getUserInfoResponse.getName();
+                            mNameTextView.setVisibility(View.VISIBLE);
+                            mNameTextView.setText(mName);
+                            Glide.with(getContext())
+                                    .load(Constants.BASE_URL_FTP_SERVER + mProfileImageUrl)
+                                    .centerCrop()
+                                    .error(R.drawable.user_brand_bg)
+                                    .into(profileImageView);
                         }
-                        mName = getUserInfoResponse.getName();
-                        mNameTextView.setVisibility(View.VISIBLE);
-                        mNameTextView.setText(mName);
-                        Glide.with(getContext())
-                                .load(Constants.BASE_URL_FTP_SERVER + mProfileImageUrl)
-                                .centerCrop()
-                                .error(R.drawable.user_brand_bg)
-                                .into(profileImageView);
                     } else {
                         mName = "";
                         mMobileNumber = "";

@@ -1360,4 +1360,7 @@
     <string name="source_of_fund_helper_text">In low balance, you can make payment by using other user\'s iPay wallet. To add iPay User as Source of Fund you need to follow the instructions below.</string>
     <string name="source_of_fund_step_one">Enter the mobile number of your sponsor or select the person from your contact.</string>
     <string name="source_of_fund_step_two">Provide the relationship between you two.</string>
+    <string name="card_description">Add money from card is the fastest way to add balance to your iPay wallet</string>
+    <string name="beneficiary_helper_line_3">Provide a monthly amount you want to let your beneficiary to use and also enter your pin.</string>
+    <string name="sponsor_helper_line_3">Provide a monthly amount you want to use from your sponsor\'s iPay wallet</string>
 </resources>

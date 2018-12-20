@@ -69,12 +69,17 @@ public class SourceOfFundActivity extends AppCompatActivity {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-
             for (Fragment fragment : getSupportFragmentManager().getFragments()) {
                 if (fragment instanceof AddBeneficiaryAsSourceOfFundFragment) {
                     IpayAbstractSpecificSourceOfFundListFragment abstractSpecificSourceOfFundListFragment =
                             (IpayAbstractSpecificSourceOfFundListFragment) fragment;
                     if(abstractSpecificSourceOfFundListFragment.onBackPressed()){
+                        return;
+                    }
+                }
+                else if(fragment instanceof AddSourceOfFundFragment){
+                    AddSourceOfFundFragment addSourceOfFundFragment = (AddSourceOfFundFragment)fragment;
+                    if(addSourceOfFundFragment.onBackPressed()){
                         return;
                     }
                 }

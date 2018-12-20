@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import bd.com.ipay.ipayskeleton.Activities.AddCardActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -17,7 +18,9 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
     private View bankView;
     private View iPayBeneficiaryView;
     private View iPaySponsorView;
+    private View cardView;
     private View divider;
+    private View divider2;
 
     @Nullable
     @Override
@@ -31,13 +34,18 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
         iPaySponsorView = view.findViewById(R.id.sponsor_layout);
         iPayBeneficiaryView = view.findViewById(R.id.beneficiary_layout);
         divider = view.findViewById(R.id.divider2);
+        divider2 = view.findViewById(R.id.divider3);
+        cardView = view.findViewById(R.id.card_layout);
         iPayBeneficiaryView.setOnClickListener(this);
         iPaySponsorView.setOnClickListener(this);
         bankView.setOnClickListener(this);
+        cardView.setOnClickListener(this);
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             iPaySponsorView.setVisibility(View.GONE);
             iPayBeneficiaryView.setVisibility(View.GONE);
+            cardView.setVisibility(View.GONE);
+            divider2.setVisibility(View.GONE);
             divider.setVisibility(View.GONE);
         }
         View backButton = view.findViewById(R.id.back);
@@ -63,6 +71,9 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
             case R.id.beneficiary_layout:
                 ((SourceOfFundActivity) getActivity()).switchToAddBeneficiaryFragment();
                 break;
+            case R.id.card_layout:
+                Intent intent1 = new Intent(getActivity(), AddCardActivity.class);
+                startActivity(intent1);
         }
     }
 }

@@ -269,6 +269,8 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             });
         }
 
+
+
         public void bindBeneficiaryView(SponsorOrBeneficiaryViewHolder holder, final Beneficiary beneficiary) {
             SourceOfFundViewHolder sourceOfFundViewHolder = null;
             if (recyclerViewLayoutId == R.layout.list_source_of_fund) {

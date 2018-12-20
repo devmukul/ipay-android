@@ -24,12 +24,15 @@ public class SourceOfFundHelperFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         TextView descriptionTextView = view.findViewById(R.id.description);
+        TextView helper = view.findViewById(R.id.description_line_3);
         Bundle bundle = getArguments();
         String type = bundle.getString(Constants.TYPE);
         if (type.equals(Constants.BENEFICIARY)) {
             descriptionTextView.setText(getString(R.string.beneficiary_helper_text));
+            helper.setText(getString(R.string.beneficiary_helper_line_3));
         } else {
             descriptionTextView.setText(getString(R.string.source_of_fund_helper_text));
+            helper.setText(getString(R.string.sponsor_helper_line_3));
         }
     }
 }
