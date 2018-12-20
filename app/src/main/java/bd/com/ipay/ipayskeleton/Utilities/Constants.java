@@ -555,6 +555,7 @@ public class Constants {
 
     // IPayHere
     public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
+    public static final String URL_BUSINESS_NEARBY_V2 = "location/business-nearby/v2";
 
     // Utilities Bill
     public static final String URL_GET_PROVIDER = "providers/all";

@@ -62,8 +62,8 @@ public class CreditCardListShowFragment extends Fragment implements HttpResponse
         ((IPayUtilityBillPayActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         progressTextView = progressView.findViewById(R.id.progress_text_view);
         progressTextView.setText(getString(R.string.fetching_cards));
-        noCardTextView = (TextView) view.findViewById(R.id.no_card_text_view);
-        savedCardTextView = (TextView) view.findViewById(R.id.saved_card);
+        noCardTextView = view.findViewById(R.id.no_card_text_view);
+        savedCardTextView = view.findViewById(R.id.saved_card);
         newBillButton = view.findViewById(R.id.new_bill_button);
         newBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +159,7 @@ public class CreditCardListShowFragment extends Fragment implements HttpResponse
                     bundle.putString(IPayUtilityBillPayActionActivity.CARD_NUMBER_KEY,
                             cardList.get(position).getCardNumber());
                     bundle.putString(IPayUtilityBillPayActionActivity.CARD_USER_NAME_KEY,
-                            cardList.get(position).getCardHolderName().toString());
+                            cardList.get(position).getCardHolderName());
                     bundle.putString(IPayUtilityBillPayActionActivity.BANK_CODE, cardList.get(position).getBankCode());
                     bundle.putBoolean(IPayUtilityBillPayActionActivity.SAVE_CARD_INFO, false);
                     bundle.putInt(IPayUtilityBillPayActionActivity.BANK_ICON, getBankIcon(cardList.get(position).getBankCode()));
@@ -187,9 +187,9 @@ public class CreditCardListShowFragment extends Fragment implements HttpResponse
 
             public CardListViewHolder(View itemView) {
                 super(itemView);
-                cardHolderNameTextView = (TextView) itemView.findViewById(R.id.card_holder_name);
-                cardNumberTextView = (TextView) itemView.findViewById(R.id.card_number);
-                bankIconView = (RoundedImageView) itemView.findViewById(R.id.bank_icon);
+                cardHolderNameTextView = itemView.findViewById(R.id.card_holder_name);
+                cardNumberTextView = itemView.findViewById(R.id.card_number);
+                bankIconView = itemView.findViewById(R.id.bank_icon);
                 parentView = itemView;
             }
         }
