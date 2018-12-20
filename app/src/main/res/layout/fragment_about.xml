@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:background="@color/colorBackground"
-    android:fillViewport="true">
+    android:background="@color/colorBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -65,9 +64,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_contact3x"
-                    android:paddingBottom="@dimen/value4"
                     android:paddingLeft="@dimen/activity_horizontal_margin_card"
                     android:paddingTop="@dimen/value4"
+                    android:paddingBottom="@dimen/value4"
                     android:text="@string/contact_us" />
 
                 <View style="@style/Divider" />
@@ -77,9 +76,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_terms3x"
-                    android:paddingBottom="@dimen/value4"
                     android:paddingLeft="@dimen/activity_horizontal_margin_card"
                     android:paddingTop="@dimen/value4"
+                    android:paddingBottom="@dimen/value4"
                     android:text="@string/terms_of_service" />
 
                 <View style="@style/Divider" />
@@ -89,9 +88,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_faq3x"
-                    android:paddingBottom="@dimen/value4"
                     android:paddingLeft="@dimen/activity_horizontal_margin_card"
                     android:paddingTop="@dimen/value4"
+                    android:paddingBottom="@dimen/value4"
                     android:text="@string/privacy_policy" />
 
             </LinearLayout>
@@ -101,8 +100,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_below="@id/content_container"
+            android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/value20"
             android:orientation="vertical">
 
