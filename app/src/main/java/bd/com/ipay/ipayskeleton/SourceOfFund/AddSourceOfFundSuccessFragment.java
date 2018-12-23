@@ -50,7 +50,7 @@ public class AddSourceOfFundSuccessFragment extends Fragment {
             setText = setText.replace("Arifur Rahman", name);
             helperTextView.setText(setText);
         } else if (type.equals(Constants.BENEFICIARY)) {
-            helperTextView.setText("You have added " + name + " as a beneficiary of your iPay wallet. The person can use your wallet for making payments up to a certain monthly limit. " +
+            helperTextView.setText("You have added " + name + " as a beneficiary of your iPay wallet. The person can use your wallet for making payments up to the certain monthly limit you provided. " +
                     "To remove the beneficiary or to change the monthly limit, " +
                     "please go to your source of fund section");
         }

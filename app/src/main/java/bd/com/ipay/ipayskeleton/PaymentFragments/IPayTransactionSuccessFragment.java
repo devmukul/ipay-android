@@ -60,7 +60,7 @@ public class IPayTransactionSuccessFragment extends Fragment {
             sponsorName = getArguments().getString(Constants.SPONSOR_NAME);
 
             if (sponsorProfilePictureUrl != null) {
-                if (sponsorProfilePictureUrl.contains("ipay.com")) {
+                if (!sponsorProfilePictureUrl.contains("ipay.com")) {
                     sponsorProfilePictureUrl = Constants.BASE_URL_FTP_SERVER + sponsorProfilePictureUrl;
                 }
             }
