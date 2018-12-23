@@ -573,10 +573,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                             sponsorOrBeneficiaryTextView.setText("Paid for " + metaData.getBeneficiaryName());
 
 
-                            if(metaData.getBeneficiaryProfilePictures()!= null){
-                                if(metaData.getBeneficiaryProfilePictures().size()!=0){
+                            if(metaData.getSponsorProfilePictures()!= null){
+                                if(metaData.getSponsorProfilePictures().size()!=0){
                                     Glide.with(getContext())
-                                            .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                            .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
                                             .centerCrop()
                                             .error(R.drawable.user_brand_bg)
                                             .into(sponsorImageView);

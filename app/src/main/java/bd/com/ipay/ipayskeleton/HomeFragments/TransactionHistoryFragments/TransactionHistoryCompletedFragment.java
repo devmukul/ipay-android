@@ -787,11 +787,11 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                                     formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber()))) {
                                 sponsorTextView.setText("Paid for " + metaData.getBeneficiaryName());
 
-                                if (metaData.getBeneficiaryProfilePictures() != null) {
-                                    if (metaData.getBeneficiaryProfilePictures().size() != 0) {
+                                if (metaData.getSponsorProfilePictures() != null) {
+                                    if (metaData.getSponsorProfilePictures().size() != 0) {
                                         Glide.with(getContext())
                                                 .load(Constants.BASE_URL_FTP_SERVER +
-                                                        metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                                        metaData.getSponsorProfilePictures().get(0).getUrl())
                                                 .error(R.drawable.user_brand_bg)
                                                 .centerCrop()
                                                 .into(sponsorOrBeneficiaryImageView);

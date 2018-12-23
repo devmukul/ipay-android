@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/value32"
-                android:layout_marginRight="@dimen/value32"
                 android:layout_marginTop="@dimen/value28"
+                android:layout_marginRight="@dimen/value32"
                 android:fontFamily="@font/open_sans_light"
                 android:gravity="center"
                 android:textColor="#212121"
@@ -103,9 +103,10 @@
                         android:id="@+id/sponsor_image_view"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_alignBottom="@+id/sender_profile_picture_image_view"
                         android:layout_alignRight="@+id/sender_profile_picture_image_view"
+                        android:layout_alignBottom="@+id/sender_profile_picture_image_view"
                         android:visibility="gone"
+                        app:riv_oval="true"
                         tools:src="@drawable/user_brand_bg" />
                 </RelativeLayout>
 
@@ -114,10 +115,10 @@
                     android:layout_width="24dip"
                     android:layout_height="24dip"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/value12"
-                    android:layout_marginLeft="@dimen/value12"
-                    android:layout_marginRight="@dimen/value12"
                     android:layout_marginStart="@dimen/value12"
+                    android:layout_marginLeft="@dimen/value12"
+                    android:layout_marginEnd="@dimen/value12"
+                    android:layout_marginRight="@dimen/value12"
                     android:contentDescription="@string/empty_string"
                     android:scaleType="center"
                     android:src="@drawable/success_arrow" />
