@@ -21,8 +21,6 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActi
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
@@ -61,8 +59,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
     private String mNewPassword;
     private String mOTP;
 
-    private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
-
     public OTPVerificationChangePasswordDialog(Activity context, String password, String newPassword) {
         super(context);
 
@@ -80,15 +76,13 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
 
         view = mOTPInputDialog.getCustomView();
 
-        mOTPEditText = (EditText) view.findViewById(R.id.otp_edittext);
-        mActivateButton = (Button) view.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) view.findViewById(R.id.buttonResend);
-        mCancelButton = (Button) view.findViewById(R.id.buttonCancel);
+        mOTPEditText = view.findViewById(R.id.otp_edittext);
+        mActivateButton = view.findViewById(R.id.buttonVerifyOTP);
+        mResendOTPButton = view.findViewById(R.id.buttonResend);
+        mCancelButton = view.findViewById(R.id.buttonCancel);
 
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setCancelable(true);
-
-        setSMSBroadcastReceiver();
         setButtonActions();
 
         setCountDownTimer();
@@ -118,20 +112,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
                 mOTPInputDialog.dismiss();
-            }
-        });
-    }
-
-    private void setSMSBroadcastReceiver() {//enable broadcast receiver to get the text message to get the OTP
-        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
-
-        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
-            @Override
-            public void onTextMessageReceive(String otp) {
-                mOTPEditText.setText(otp);
-                mActivateButton.performClick();
             }
         });
     }
@@ -246,8 +227,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                     if (context != null) {
                         Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();
                         Utilities.hideKeyboard(context, view);
-
-                        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(context);
                         mOTPInputDialog.hide();
                         showChangePasswordSuccessDialog();
                     }

@@ -24,8 +24,6 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestPersonalSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponsePersonalSignup;
@@ -36,7 +34,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -64,8 +61,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private String mDeviceName;
 
     private ProgressDialog mProgressDialog;
-
-    private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
     private Tracker mTracker;
 
     @Override
@@ -85,10 +80,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_otp_verification, container, false);
-        mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
-        mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
-        mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+        mActivateButton = v.findViewById(R.id.buttonVerifyOTP);
+        mResendOTPButton = v.findViewById(R.id.buttonResend);
+        mTimerTextView = v.findViewById(R.id.txt_timer);
+        mOTPEditText = v.findViewById(R.id.otp_edittext);
 
         Utilities.showKeyboard(getActivity(), mOTPEditText);
 
@@ -97,16 +92,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
-
-        //enable broadcast receiver to get the text message to get the OTP
-        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
-        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
-            @Override
-            public void onTextMessageReceive(String otp) {
-                mOTPEditText.setText(otp);
-                mActivateButton.performClick();
-            }
-        });
 
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +134,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
     @Override
     public void onDestroy() {
-        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
         super.onDestroy();
     }
 

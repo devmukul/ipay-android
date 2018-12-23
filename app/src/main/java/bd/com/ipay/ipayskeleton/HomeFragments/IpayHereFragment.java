@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -11,10 +12,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -60,6 +63,8 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
+import static bd.com.ipay.ipayskeleton.Utilities.Utilities.LOCATION_SETTINGS_PERMISSION_CODE;
+
 public class IpayHereFragment extends ProgressFragment implements PlaceSelectionListener,
         HttpResponseListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -93,6 +98,10 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        mUserLocationLatitude = null;
+        mUserLocationLongitude = null;
+
         googleApiClient = new GoogleApiClient
                 .Builder(getContext(), this, this)
                 .addApi(LocationServices.API).build();
@@ -169,33 +178,42 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
                         }
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        try {
-                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                        }
+                        buildAlertMessageNoGps();
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        fetchNearByBusiness(mDefaultLatitude, mDefaultLongitude);
                         break;
                 }
             }
         });
     }
 
+    protected void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Location Service Disabled")
+                .setMessage("iPay needs to access your location to show iPay enabled outlets near you.")
+                .setCancelable(false)
+                .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SETTINGS_PERMISSION_CODE);
+                    }
+                })
+                .setNegativeButton("Continue Anyway", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        fetchNearByBusiness(mDefaultLatitude, mDefaultLongitude);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
-        switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        googleApiClient.connect();
-                        break;
-                    default:
-                        fetchNearByBusiness(mDefaultLatitude, mDefaultLongitude);
-                        break;
-                }
-                break;
+        if (requestCode == LOCATION_SETTINGS_PERMISSION_CODE) {
+            if(!googleApiClient.isConnected())
+                googleApiClient.connect();
+            else
+                startLocationUpdates();
         }
     }
 
@@ -209,7 +227,10 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                             fetchNearByBusiness(mDefaultLatitude, mDefaultLongitude);
                         } else {
-                            googleApiClient.connect();
+                            if(!googleApiClient.isConnected())
+                                googleApiClient.connect();
+                            else
+                                startLocationUpdates();
                         }
                     }
                 }
@@ -235,7 +256,10 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
             public void onClear() {
                 mProgressDialog.show();
                 clearListAfterLoading = true;
-                startLocationUpdates();
+                if(!googleApiClient.isConnected())
+                    googleApiClient.connect();
+                else
+                    startLocationUpdates();
             }
         });
 
