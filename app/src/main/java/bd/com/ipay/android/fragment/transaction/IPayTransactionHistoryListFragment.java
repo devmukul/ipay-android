@@ -168,9 +168,9 @@ public class IPayTransactionHistoryListFragment extends IPayProgressFragment {
 					transactionHistoryRepositoryViewModel.getItem(position);
 			if (transactionHistory != null) {
 				final int serviceId = transactionHistory.getServiceId();
-				if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
+				if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY && transactionHistoryType ==TransactionHistoryType.PENDING) {
 					launchRequestMoneyReviewPage(transactionHistory);
-				} else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT) {
+				} else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT && transactionHistoryType ==TransactionHistoryType.PENDING) {
 					launchRequestPaymentReviewPage(transactionHistory);
 				} else {
 					launchTransactionHistoryPage(transactionHistory);
