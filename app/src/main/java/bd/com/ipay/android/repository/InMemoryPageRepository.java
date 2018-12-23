@@ -21,7 +21,7 @@ public abstract class InMemoryPageRepository<Key, Model> {
 	                       final NetworkDataSourceFactory<Key, Model> dataSourceFactory,
 	                       Executor networkExecutor) {
 		PagedList.Config pagedListConfig = new PagedList.Config.Builder()
-				.setInitialLoadSizeHint(pageSize * 2)
+				.setInitialLoadSizeHint(pageSize)
 				.setPageSize(pageSize)
 				.setEnablePlaceholders(true)
 				.build();
