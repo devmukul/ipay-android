@@ -32,8 +32,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupOrLoginActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_PERMISSION = 1001;
-
     public static String mBirthday;
     public static String mPassword;
     public static String mName;
@@ -81,7 +79,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 switchToLoginFragment();
             } else if (getIntent().hasExtra(Constants.TARGET_FRAGMENT)) {
-                attemptRequestForPermission();
                 String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
                 if (targetFragment.equals(Constants.SIGN_IN)) {
                     switchToLoginFragment();
@@ -194,23 +191,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         this.finish();
     }
 
-    private void attemptRequestForPermission() {
-        String[] requiredPermissions = {Manifest.permission.READ_SMS};
-
-        List<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : requiredPermissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
-            }
-        }
-
-        if (!permissionsToRequest.isEmpty()) {
-            Utilities.hideKeyboard(this);
-            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
-                    REQUEST_CODE_PERMISSION);
-        }
-    }
-
     @Override
     public void onBackPressed() {
         Utilities.hideKeyboard(this);
@@ -229,29 +209,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 this.finish();
             } else
                 this.finish();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSION:
-                for (int i = 0; i < permissions.length; i++) {
-                    Logger.logW(permissions[i], grantResults[i] + "");
-
-                    if (permissions[i].equals(Manifest.permission.READ_SMS)) {
-                        if (getIntent().hasExtra(Constants.TARGET_FRAGMENT)) {
-                            String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
-                            if (targetFragment.equals(Constants.SIGN_IN)) {
-                                Utilities.showKeyboard(this);
-                            }
-                        }
-                    }
-                }
-
-                break;
         }
     }
 }

@@ -23,8 +23,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -61,8 +59,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 	public HttpResponseListener mParentHttpResponseListener;
 
 	private HashMap<String, String> mProgressDialogStringMap;
-
-	private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
 	private Long otpValidFor = null;
 	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
@@ -111,8 +107,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 		mCancelButton = view.findViewById(R.id.buttonCancel);
 
 		mCustomProgressDialog = new CustomProgressDialog(context);
-
-		setSMSBroadcastReceiver();
 		setCountDownTimer();
 		setButtonActions();
 
@@ -146,9 +140,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 		mCancelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
 				mOTPInputDialog.dismiss();
-
 			}
 		});
 		mResendOTPButton.setOnClickListener(new View.OnClickListener() {
@@ -162,18 +154,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 		});
 	}
 
-	private void setSMSBroadcastReceiver() {//enable broadcast receiver to get the text message to get the OTP
-		mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
-
-		mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
-			@Override
-			public void onTextMessageReceive(String otp) {
-				mOTPEditText.setText(otp);
-				mActivateButton.performClick();
-			}
-		});
-	}
-
 	private void setCountDownTimer() {
 		mResendOTPButton.setEnabled(false);
 		final long otpValidTime = otpValidFor != null ? otpValidFor : SecuritySettingsActivity.otpDuration;
@@ -182,7 +162,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 			public void onTick(long millisUntilFinished) {
 				mResendOTPButton.setText(String.format(Locale.US, "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
 			}
-
 			public void onFinish() {
 				mResendOTPButton.setEnabled(true);
 			}
