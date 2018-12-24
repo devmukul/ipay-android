@@ -572,21 +572,30 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
                             sponsorOrBeneficiaryTextView.setText("Paid for " + metaData.getBeneficiaryName());
 
-
-                            if(metaData.getSponsorProfilePictures()!= null){
-                                if(metaData.getSponsorProfilePictures().size()!=0){
+                            if (metaData.getBeneficiaryProfilePictures() != null) {
+                                if (metaData.getBeneficiaryProfilePictures().size() != 0) {
                                     Glide.with(getContext())
                                             .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
                                             .centerCrop()
                                             .error(R.drawable.user_brand_bg)
                                             .into(sponsorImageView);
                                     sponsorImageView.setVisibility(View.VISIBLE);
+                                } else {
+                                    Glide.with(getContext())
+                                            .load(R.drawable.user_brand_bg)
+                                            .centerCrop()
+                                            .into(sponsorImageView);
                                 }
+                            } else {
+                                Glide.with(getContext())
+                                        .load(R.drawable.user_brand_bg)
+                                        .centerCrop()
+                                        .into(sponsorImageView);
                             }
 
                         } else {
-                            if(metaData.getBeneficiaryProfilePictures() != null){
-                                if(metaData.getBeneficiaryProfilePictures().size()!=0){
+                            if (metaData.getSponsorProfilePictures() != null) {
+                                if (metaData.getSponsorProfilePictures().size() != 0) {
                                     Glide.with(getContext())
                                             .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
                                             .centerCrop()

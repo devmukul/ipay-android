@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragment {
 
     protected TextView titleTextView;
+    private TextView statusTextView;
     public TextView helpTextView;
     public ImageView backButton;
 
@@ -236,6 +237,16 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             sourceOfFundViewHolder.numberTextView.setText(sponsor.getUser().getMobileNumber());
             sourceOfFundViewHolder.editImageView.setVisibility(View.GONE);
             sourceOfFundViewHolder.monthlyLimitView.setText("You can use monthly " + Long.toString(sponsor.getMonthlyCreditLimit()) + "TK");
+
+            if (sponsor.getStatus().equals("PENDING")) {
+                sourceOfFundViewHolder.statusTextView.setVisibility(View.VISIBLE);
+                sourceOfFundViewHolder.statusTextView.setText("(Pending)");
+                sourceOfFundViewHolder.editImageView.setVisibility(View.GONE);
+            } else {
+                sourceOfFundViewHolder.statusTextView.setVisibility(View.GONE);
+                sourceOfFundViewHolder.editImageView.setVisibility(View.VISIBLE);
+            }
+
             sourceOfFundViewHolder.deleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -244,7 +255,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
+                                        attemptRemoveSponsorOrBeneficiary(sponsor.getId(), null);
                                     }
                                 }).setMessage("Do you want to remove this sponsor?")
                                 .show();
@@ -270,7 +281,6 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
         }
 
 
-
         public void bindBeneficiaryView(SponsorOrBeneficiaryViewHolder holder, final Beneficiary beneficiary) {
             SourceOfFundViewHolder sourceOfFundViewHolder = null;
             if (recyclerViewLayoutId == R.layout.list_source_of_fund) {
@@ -281,6 +291,14 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             sourceOfFundViewHolder.nameTextView.setText(beneficiary.getUser().getName());
             sourceOfFundViewHolder.monthlyLimitView.setText("He can use monthly " + Long.toString(beneficiary.getMonthlyCreditLimit()) + "TK");
             sourceOfFundViewHolder.numberTextView.setText(beneficiary.getUser().getMobileNumber());
+            if (beneficiary.getStatus().equals("PENDING")) {
+                sourceOfFundViewHolder.statusTextView.setVisibility(View.VISIBLE);
+                sourceOfFundViewHolder.statusTextView.setText("(Pending)");
+                sourceOfFundViewHolder.editImageView.setVisibility(View.GONE);
+            } else {
+                sourceOfFundViewHolder.statusTextView.setVisibility(View.GONE);
+                sourceOfFundViewHolder.editImageView.setVisibility(View.VISIBLE);
+            }
             sourceOfFundViewHolder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -358,6 +376,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             private ImageView deleteImageView;
             private ImageView editImageView;
             private TextView monthlyLimitView;
+            private TextView statusTextView;
 
             public SourceOfFundViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -367,6 +386,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                 deleteImageView = (ImageView) itemView.findViewById(R.id.delete);
                 editImageView = (ImageView) itemView.findViewById(R.id.edit);
                 monthlyLimitView = (TextView) itemView.findViewById(R.id.monthly_limit);
+                statusTextView = (TextView) itemView.findViewById(R.id.status);
             }
         }
     }

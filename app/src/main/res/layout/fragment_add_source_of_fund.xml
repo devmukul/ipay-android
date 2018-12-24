@@ -180,6 +180,60 @@
                         android:layout_marginRight="24dp"
                         android:layout_marginBottom="@dimen/value16"
                         android:background="#19000000" />
+
+                    <EditText
+                        android:id="@+id/amount_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/background"
+                        android:layout_marginBottom="8dp"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="sans-serif-light"
+                        android:hint="Amount (Optional)"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="15"
+                        android:textColor="#212121"
+                        android:textColorHint="#212121"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:id="@+id/background2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/amount_edit_text"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_marginBottom="@dimen/value16"
+                        android:background="#19000000" />
+
+                    <EditText
+                        android:id="@+id/pin_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/background2"
+                        android:layout_marginBottom="8dp"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:hint="Pin"
+                        android:inputType="numberPassword"
+                        android:lineSpacingExtra="12sp"
+                        android:maxLength="15"
+                        android:textColor="#212121"
+                        android:textColorHint="#212121"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:id="@+id/background3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/pin_edit_text"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_marginBottom="@dimen/value16"
+                        android:background="#19000000" />
+
                 </RelativeLayout>
             </android.support.v4.widget.NestedScrollView>
         </RelativeLayout>

@@ -202,6 +202,18 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
                                         .error(R.drawable.user_brand_bg)
                                         .into(sponsorProfilePictureView);
                             }
+                            else{
+                                Glide.with(getContext())
+                                        .load(R.drawable.user_brand_bg)
+                                        .centerCrop()
+                                        .into(sponsorProfilePictureView);
+                            }
+                        }
+                        else{
+                            Glide.with(getContext())
+                                    .load(R.drawable.user_brand_bg)
+                                    .centerCrop()
+                                    .into(sponsorProfilePictureView);
                         }
 
                         sponsorNumberView.setVisibility(View.VISIBLE);
@@ -217,7 +229,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
                                         .into(sponsorProfilePictureView);
                             }
                         }
-
 
                         sponsorNumberView.setVisibility(View.VISIBLE);
                         sponsorNumberView.setText("Paid By " + metaData.getSponsorName());

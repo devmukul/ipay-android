@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/value8"
@@ -32,6 +32,21 @@
             android:textColor="#212121"
             android:textSize="12sp"
             tools:text="Arifur Rahman" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/value10"
+            android:layout_toRightOf="@+id/name"
+            android:fontFamily="@font/open_sans_semibold"
+            android:gravity="center_vertical"
+            android:lineSpacingExtra="8sp"
+            android:lineSpacingMultiplier="3"
+            android:textColor="#212121"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="(pending)" />
 
         <TextView
             android:id="@+id/number"

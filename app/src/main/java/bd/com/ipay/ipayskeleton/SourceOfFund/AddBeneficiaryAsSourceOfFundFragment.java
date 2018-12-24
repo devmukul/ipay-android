@@ -87,7 +87,7 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
     private void removeRejectedEntriesForBeneficiaries(ArrayList<Beneficiary> beneficiaries) {
         beneficiaryArrayList.clear();
         for (int i = 0; i < beneficiaries.size(); i++) {
-            if (!beneficiaries.get(i).getStatus().equals("REJECTED") && !beneficiaries.get(i).getStatus().equals("PENDING")) {
+            if (!beneficiaries.get(i).getStatus().equals("REJECTED")) {
                 beneficiaryArrayList.add(beneficiaries.get(i));
             }
         }

@@ -368,7 +368,24 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         String errorMessage;
 
         if (selectedSponsor != null) {
-            errorMessage = null;
+            if (TextUtils.isEmpty(mAmountTextView.getText())) {
+                errorMessage = getString(R.string.please_enter_amount);
+            } else if (!InputValidator.isValidDigit(mAmountTextView.getText().toString().trim())) {
+                errorMessage = getString(R.string.please_enter_amount);
+            }
+            else {
+                final BigDecimal minimumAmount = mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                final BigDecimal maximumAmount;
+                final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
+                final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+                if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY
+                        || transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY) {
+                    maximumAmount = mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+                } else {
+                    maximumAmount = mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
+                }
+                errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
+            }
         } else {
             if (SharedPrefManager.ifContainsUserBalance()) {
                 if (TextUtils.isEmpty(mAmountTextView.getText())) {

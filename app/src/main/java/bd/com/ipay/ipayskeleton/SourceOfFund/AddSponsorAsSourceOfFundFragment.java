@@ -90,7 +90,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
     private void removeRejectedEntriesForSponsors(ArrayList<Sponsor> sponsors) {
         sponsorArrayList.clear();
         for (int i = 0; i < sponsors.size(); i++) {
-            if (!sponsors.get(i).getStatus().equals("REJECTED") && !sponsors.get(i).getStatus().equals("PENDING")) {
+            if (!sponsors.get(i).getStatus().equals("REJECTED")) {
                 sponsorArrayList.add(sponsors.get(i));
             }
         }

@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddSponsorRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -75,6 +76,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
 
     private HttpRequestPostAsyncTask mAddBeneficiaryAsyncTask;
     public BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
+    private EditText pinEditText;
+    private EditText amountEditText;
+    private View divider;
 
     private String type;
 
@@ -94,8 +98,11 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mNumberEditText = view.findViewById(R.id.number_edit_text);
         mNameTextView = view.findViewById(R.id.name);
+        pinEditText = view.findViewById(R.id.pin_edit_text);
+        amountEditText = view.findViewById(R.id.amount_edit_text);
         doneButton = view.findViewById(R.id.done);
         profileImageView = view.findViewById(R.id.profile_picture);
+        divider = view.findViewById(R.id.background3);
         relationShipEditText = view.findViewById(R.id.relationship_edit_text);
         ImageView backButton = view.findViewById(R.id.back);
         final RelativeLayout relativeLayout = view.findViewById(R.id.test_bottom_sheet_layout);
@@ -135,15 +142,31 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                 relationShip = mRelation;
             }
         });
+        new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
+            @Override
+            public void ifPinAdded() {
+
+            }
+        });
+
+        if (type.equals(Constants.SPONSOR)) {
+            pinEditText.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+        } else {
+            pinEditText.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
+        }
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (verifyUserInput()) {
                     if (type.equals(Constants.SPONSOR)) {
-                        attemptAddSponsor();
+                        addSponsor();
                     } else {
-                        attemptAddBeneficiaryWithPinCheck();
+                        if (validateInputForBeneficiary()) {
+                            addBeneficiary();
+                        }
                     }
                 }
             }
@@ -251,6 +274,37 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         });
     }
 
+    private boolean validateInputForSponsor() {
+        if (amountEditText.getText() == null) {
+            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+        } else if (amountEditText.getText().toString() == null) {
+            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+        } else if (amountEditText.getText().toString().equals("")) {
+            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean validateInputForBeneficiary() {
+        if (pinEditText.getText() == null) {
+            IPaySnackbar.error(doneButton, "Please enter your pin", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+        } else if (pinEditText.getText().toString() == null) {
+            IPaySnackbar.error(doneButton, "Please enter your pin", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+        } else if (pinEditText.getText().toString().equals("")) {
+            IPaySnackbar.error(doneButton, "Please enter your pin", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
     private boolean verifyUserInput() {
         if (mName == null || mName.equals("")) {
             showErrorMessage("Please enter a valid iPay user's mobile number");
@@ -263,6 +317,31 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             return false;
         }
         return true;
+    }
+
+    private void addSponsor() {
+        if (mAddSponsorAsyncTask != null) {
+            return;
+        } else {
+            long amount = 5000;
+            ipayProgressDialog.setMessage("Please wait. . .");
+            ipayProgressDialog.show();
+            if(amountEditText.getText() != null){
+                if(amountEditText.getText().toString() != null){
+                    if(!amountEditText.getText().toString().equals("")){
+                        amount = Long.parseLong(amountEditText.getText().toString());
+                    }
+                }
+            }
+            AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(mMobileNumber), relationShip,
+                    amount);
+            String jsonString = new Gson().toJson(addSponsorRequest);
+            String uri = Constants.BASE_URL_MM + Constants.URL_ADD_SPONSOR;
+            mAddSponsorAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_SPONSOR, uri,
+                    jsonString, getContext(), this, false);
+            mAddSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
     }
 
     public void attemptAddSponsor() {
@@ -299,6 +378,30 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void addBeneficiary() {
+        if (mAddBeneficiaryAsyncTask != null) {
+            return;
+        } else {
+            long amount = 5000;
+            if(amountEditText.getText() != null){
+                if(amountEditText.getText().toString() != null){
+                    if(!amountEditText.getText().toString().equals("")){
+                        amount = Long.parseLong(amountEditText.getText().toString());
+                    }
+                }
+            }
+            AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(
+                    ContactEngine.formatMobileNumberBD(mMobileNumber),
+                    amount, pinEditText.getText().toString(), relationShip);
+            mAddBeneficiaryAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
+                    , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
+                    new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
+            ipayProgressDialog.setMessage("Please wait . . . ");
+            ipayProgressDialog.show();
+            mAddBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -456,10 +559,10 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                             mProfileImageUrl = "";
                             mNameTextView.setText("");
                             mNameTextView.setVisibility(View.GONE);
-                            if(type.equals(Constants.SPONSOR)) {
+                            if (type.equals(Constants.SPONSOR)) {
                                 Toast.makeText(getContext(), "Business user can't be added as sponsor", Toast.LENGTH_LONG).show();
-                            }else{
-                                Toast.makeText(getContext(),"Business user can't be added as beneficiary",Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getContext(), "Business user can't be added as beneficiary", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             if (getUserInfoResponse.getProfilePictures() != null) {
@@ -514,6 +617,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                     }
                     mAddBeneficiaryAsyncTask = null;
                 }
+
             } catch (Exception e) {
                 Toast.makeText(getContext(), getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
             }
