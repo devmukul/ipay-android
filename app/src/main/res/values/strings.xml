@@ -358,8 +358,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
-    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
-    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
+    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/terms-condition/">Terms &amp; Conditions</a></string>
+    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/privacy-policy/">Privacy Policy</a></string>
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Please try again later.</string>
