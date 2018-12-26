@@ -155,6 +155,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         } else {
             pinEditText.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
+            amountEditText.setHint("Amount");
         }
 
         doneButton.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +163,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             public void onClick(View v) {
                 if (verifyUserInput()) {
                     if (type.equals(Constants.SPONSOR)) {
-                        addSponsor();
+                        if (validateInputForSponsor()) {
+                            addSponsor();
+                        }
                     } else {
                         if (validateInputForBeneficiary()) {
                             addBeneficiary();
@@ -290,7 +293,19 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
     }
 
     private boolean validateInputForBeneficiary() {
-        if (pinEditText.getText() == null) {
+
+        if (amountEditText.getText() == null) {
+            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+
+        } else if (amountEditText.getText().toString() == null) {
+            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+
+        } else if (amountEditText.getText().toString().equals("")) {
+            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
+            return false;
+        } else if (pinEditText.getText() == null) {
             IPaySnackbar.error(doneButton, "Please enter your pin", IPaySnackbar.LENGTH_LONG).show();
             return false;
         } else if (pinEditText.getText().toString() == null) {
@@ -302,7 +317,6 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         } else {
             return true;
         }
-
     }
 
     private boolean verifyUserInput() {
@@ -326,9 +340,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             long amount = 5000;
             ipayProgressDialog.setMessage("Please wait. . .");
             ipayProgressDialog.show();
-            if(amountEditText.getText() != null){
-                if(amountEditText.getText().toString() != null){
-                    if(!amountEditText.getText().toString().equals("")){
+            if (amountEditText.getText() != null) {
+                if (amountEditText.getText().toString() != null) {
+                    if (!amountEditText.getText().toString().equals("")) {
                         amount = Long.parseLong(amountEditText.getText().toString());
                     }
                 }
@@ -386,9 +400,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             return;
         } else {
             long amount = 5000;
-            if(amountEditText.getText() != null){
-                if(amountEditText.getText().toString() != null){
-                    if(!amountEditText.getText().toString().equals("")){
+            if (amountEditText.getText() != null) {
+                if (amountEditText.getText().toString() != null) {
+                    if (!amountEditText.getText().toString().equals("")) {
                         amount = Long.parseLong(amountEditText.getText().toString());
                     }
                 }

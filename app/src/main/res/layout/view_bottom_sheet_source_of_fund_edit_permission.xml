@@ -20,7 +20,7 @@
             android:layout_marginLeft="@dimen/value32"
             android:layout_marginTop="@dimen/value32"
             android:fontFamily="@font/open_sans_light"
-            android:text="Permision details"
+            android:text="Permission details"
             android:textColor="#212121"
             android:textSize="24sp" />
 

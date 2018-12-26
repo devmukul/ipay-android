@@ -783,30 +783,31 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                             sponsorOrBeneficiaryImageView.setVisibility(View.VISIBLE);
                             sponsorTextView.setVisibility(View.VISIBLE);
                             String mobileNumber = ProfileInfoCacheManager.getMobileNumber();
-                            if (metaData.getSponsorMobileNumber().equals(ContactEngine.
-                                    formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber()))) {
+                            if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
+                                    ProfileInfoCacheManager.getMobileNumber()))) {
+
                                 sponsorTextView.setText("Paid for " + metaData.getBeneficiaryName());
 
                                 if (metaData.getBeneficiaryProfilePictures() != null) {
                                     if (metaData.getBeneficiaryProfilePictures().size() != 0) {
                                         Glide.with(getContext())
-                                                .load(Constants.BASE_URL_FTP_SERVER +
-                                                        metaData.getSponsorProfilePictures().get(0).getUrl())
+                                                .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                                .centerCrop()
                                                 .error(R.drawable.user_brand_bg)
+                                                .into(sponsorOrBeneficiaryImageView);
+                                        sponsorOrBeneficiaryImageView.setVisibility(View.VISIBLE);
+                                    } else {
+                                        Glide.with(getContext())
+                                                .load(R.drawable.user_brand_bg)
                                                 .centerCrop()
                                                 .into(sponsorOrBeneficiaryImageView);
                                     }
-                                    Glide.with(getContext())
-                                            .load(R.drawable.user_brand_bg)
-                                            .centerCrop()
-                                            .into(sponsorOrBeneficiaryImageView);
                                 } else {
                                     Glide.with(getContext())
                                             .load(R.drawable.user_brand_bg)
                                             .centerCrop()
                                             .into(sponsorOrBeneficiaryImageView);
                                 }
-
 
                             } else {
 

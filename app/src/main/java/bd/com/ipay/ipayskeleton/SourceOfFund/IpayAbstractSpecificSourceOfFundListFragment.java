@@ -241,10 +241,9 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             if (sponsor.getStatus().equals("PENDING")) {
                 sourceOfFundViewHolder.statusTextView.setVisibility(View.VISIBLE);
                 sourceOfFundViewHolder.statusTextView.setText("(Pending)");
-                sourceOfFundViewHolder.editImageView.setVisibility(View.GONE);
+
             } else {
                 sourceOfFundViewHolder.statusTextView.setVisibility(View.GONE);
-                sourceOfFundViewHolder.editImageView.setVisibility(View.VISIBLE);
             }
 
             sourceOfFundViewHolder.deleteImageView.setOnClickListener(new View.OnClickListener() {
