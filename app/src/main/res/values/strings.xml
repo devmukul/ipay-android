@@ -1392,4 +1392,8 @@
     <string name="top_up_my_number">Top-Up My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
     <string name="enter_email_address">Enter Email Address</string>
+    <string name="railway_ticket">Railway Ticket</string>
+
+
+
 </resources>

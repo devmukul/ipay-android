@@ -165,6 +165,7 @@ public class Constants {
     public static final String COMMAND_BRILLIANT_RECHARGE = "COMMAND_BRILLIANT_RECHARGE";
     public static final String BRILLIANT = "BRILLIANT";
     public static final String WESTZONE = "WESTZONE";
+    public static final String RAILWAY_TICKET = "RAILWAY_TICKET";
     public static final String URL_WEST_ZONE = "wzone/bill-info/";
     public static final String COMMAND_WEST_ZONE_BILL_PAY = "COMMAND_WEST_ZONE_BILL_PAY";
     public static final String COMMAND_GET_WEST_ZONE_CUSTOMER = "COMMAND_GET_WEST_ZONE_CUSTOMER";

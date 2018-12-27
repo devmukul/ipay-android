@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.MyCard;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RailwayTickets.JourneyInfoSelectFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival.CarnivalIdInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardBankSelectionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardListShowFragment;
@@ -32,6 +33,7 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
     public static final String BILL_PAY_PARTY_NAME_KEY = "BILL_PAY_PARTY_NAME";
     public static final String BILL_PAY_LANKABANGLA_DPS = "LANKABANGLA_DPS";
     public static final String CREDIT_CARD = "CREDIT_CARD";
+    public static final String RAILWAY_TICKET = "RAILWAY_TICKET";
 
     public static final String CARD_NUMBER_KEY = "CARD_NUMBER";
     public static final String CARD_USER_NAME_KEY = "CARD_USER_NAME";
@@ -63,6 +65,9 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
                 break;
             case CREDIT_CARD:
                 switchFragment(new CreditCardBankSelectionFragment(), bundle, 0, false);
+                break;
+            case RAILWAY_TICKET:
+                switchFragment(new JourneyInfoSelectFragment(), bundle, 0, false);
                 break;
             case BILL_PAY_LANKABANGLA_DPS:
                 switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle, 0, false);
