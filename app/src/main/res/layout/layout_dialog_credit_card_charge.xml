@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="12dip"
         android:orientation="vertical"
         android:padding="24dip">
 
@@ -19,7 +18,7 @@
             android:textSize="12sp"
             android:textColor="@color/colorBlack"
             android:lineSpacingExtra="8sp"
-            android:text="Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card." />
+            android:text="@string/add_money_credit_card_charge_msg"/>
 
     </LinearLayout>
 
