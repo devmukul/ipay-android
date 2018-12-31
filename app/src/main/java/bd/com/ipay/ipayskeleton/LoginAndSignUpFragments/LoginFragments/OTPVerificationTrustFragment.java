@@ -25,8 +25,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
@@ -78,8 +76,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
     private ProgressDialog mProgressDialog;
 
-    private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -95,17 +91,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
         mProgressDialog.setCancelable(false);
-
-        //enable broadcast receiver to get the text message to get the OTP
-        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
-
-        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
-            @Override
-            public void onTextMessageReceive(String otp) {
-                mOTPEditText.setText(otp);
-                mActivateButton.performClick();
-            }
-        });
 
         mActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +148,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
     @Override
     public void onDestroy() {
-        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
         super.onDestroy();
     }
 
