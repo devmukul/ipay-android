@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SourceOfFundActivity extends AppCompatActivity {
     public BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
@@ -66,6 +67,7 @@ public class SourceOfFundActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Utilities.hideKeyboard(this);
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {

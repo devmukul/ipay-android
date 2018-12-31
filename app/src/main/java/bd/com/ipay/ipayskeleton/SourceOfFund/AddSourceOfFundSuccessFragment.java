@@ -16,6 +16,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddSourceOfFundSuccessFragment extends Fragment {
     @Nullable
@@ -58,6 +59,7 @@ public class AddSourceOfFundSuccessFragment extends Fragment {
         gotoWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utilities.hideKeyboard(getActivity());
                 getActivity().finish();
             }
         });

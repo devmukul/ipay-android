@@ -144,9 +144,13 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 sponsorSelectorDialog = new SponsorSelectorDialog(getContext(), HomeActivity.mSponsorList, new SponsorSelectorDialog.SponsorSelectorListener() {
                     @Override
                     public void onSponsorSelected(Sponsor sponsor) {
-                        selectedSponsor = sponsor;
-                        sponsorNameTextView.setText("Pay by: " + sponsor.getUser().getName());
-                        cancelSponsorImageView.setVisibility(View.VISIBLE);
+                        if (sponsor.getUser().getAccountStatus() == Constants.BLOCKED) {
+                            IPaySnackbar.error(mContinueButton, "The sponsor is blocked", IPaySnackbar.LENGTH_LONG).show();
+                        } else {
+                            selectedSponsor = sponsor;
+                            sponsorNameTextView.setText("Pay by: " + sponsor.getUser().getName());
+                            cancelSponsorImageView.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }
@@ -372,8 +376,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 errorMessage = getString(R.string.please_enter_amount);
             } else if (!InputValidator.isValidDigit(mAmountTextView.getText().toString().trim())) {
                 errorMessage = getString(R.string.please_enter_amount);
-            }
-            else {
+            } else {
                 final BigDecimal minimumAmount = mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
                 final BigDecimal maximumAmount;
                 final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));

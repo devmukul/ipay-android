@@ -9,6 +9,15 @@ public class User implements Serializable {
     private String mobileNumber;
     private String profilePictureUrl;
     private long accountId;
+    private long accountStatus;
+
+    public long getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(long accountStatus) {
+        this.accountStatus = accountStatus;
+    }
 
     public long getAccountId() {
         return accountId;

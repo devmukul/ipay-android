@@ -29,7 +29,6 @@ public class Sponsor implements Serializable, CommonData, Notification  {
     private long updatedAt;
     private User user;
 
-
     public static final Creator<Sponsor> CREATOR = new Creator<Sponsor>() {
         @Override
         public Sponsor createFromParcel(Parcel in) {

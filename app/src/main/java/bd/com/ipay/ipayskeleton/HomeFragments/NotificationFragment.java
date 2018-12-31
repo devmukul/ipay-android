@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
@@ -975,10 +976,26 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
                                     bundle.putString(Constants.TO_DO, Constants.UPDATE_STATUS);
                                     EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
                                             = new EditPermissionSourceOfFundBottomSheetFragment();
+
                                     editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
                                     getChildFragmentManager().beginTransaction().
                                             replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
                                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                                    bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                                        @Override
+                                        public void onStateChanged(@NonNull View view, int i) {
+                                            if( i == BottomSheetBehavior.STATE_COLLAPSED){
+                                                Utilities.hideKeyboard(getActivity());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onSlide(@NonNull View view, float v) {
+
+                                        }
+                                    });
+
                                     editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
                                         @Override
                                         public void onSuccess() {

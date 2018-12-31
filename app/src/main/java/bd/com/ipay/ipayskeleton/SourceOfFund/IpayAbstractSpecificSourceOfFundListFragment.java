@@ -311,6 +311,21 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                     getChildFragmentManager().beginTransaction().
                             replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                    bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                        @Override
+                        public void onStateChanged(@NonNull View view, int i) {
+                            if( i == BottomSheetBehavior.STATE_COLLAPSED){
+                                Utilities.hideKeyboard(getActivity());
+                            }
+                        }
+
+                        @Override
+                        public void onSlide(@NonNull View view, float v) {
+
+                        }
+                    });
+
                     editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
                         @Override
                         public void onSuccess() {

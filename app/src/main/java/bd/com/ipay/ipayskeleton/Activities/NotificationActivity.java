@@ -14,6 +14,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.EditPermissionSourceOfFundBottomSheetFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationActivity extends BaseActivity {
 
@@ -119,7 +120,7 @@ public class NotificationActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-
+        Utilities.hideKeyboard(this);
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment != null) {
                 if (fragment instanceof NotificationHolderFragment) {

@@ -372,6 +372,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         getChildFragmentManager().beginTransaction().
                 replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
         editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
             @Override
             public void onSuccess() {
@@ -606,6 +607,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                     GenericResponseWithMessageOnly responseWithMessageOnly = new Gson().fromJson
                             (result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Utilities.hideKeyboard(getActivity());
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.NAME, mName);
@@ -620,6 +622,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                     GenericResponseWithMessageOnly responseWithMessageOnly = new Gson().fromJson
                             (result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Utilities.hideKeyboard(getActivity());
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.NAME, mName);
