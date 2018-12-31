@@ -1311,7 +1311,7 @@
     <string name="instant_add_money">INSTANT MONEY</string>
     <string name="debit_credit_card">DEBIT/CREDIT CARD</string>
     <string name="money_from_bank">BANK</string>
-    <string name="add_money_card_option_message">Adding money from Debit card is completely free! For credit cards, it\'s free up to 5,000 BDT per month. After 5,000 BDT, 2.5% service charge will be applicable</string>
+    <string name="add_money_card_option_message">Adding money from Debit or Credit card is Instant! Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
     <string name="add_money_instant_option_message">Add money instantly to your iPay wallet. It will be adjusted from your associated bank account.</string>
     <string name="add_money_bank_option_message">Adding money from banks is the most reliable way to update your balance. It takes 3&#8211;5 business days to add balance into your iPay wallet.</string>
     <string name="choose_a_convenient_way">Choose a \nconvenient way</string>
@@ -1392,4 +1392,5 @@
     <string name="top_up_my_number">Top-Up My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
     <string name="enter_email_address">Enter Email Address</string>
+    <string name="add_money_credit_card_charge_msg">Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
 </resources>
