@@ -96,6 +96,7 @@
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account.</string>
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
+    <string name="empty_ipay_here">No business found near this location.</string>
     <string name="empty_list">Nothing to show right now.</string>
     <string name="empty_list_offer">No promotional offer available right now.</string>
     <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
@@ -357,8 +358,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
-    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
-    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
+    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/terms-condition/">Terms &amp; Conditions</a></string>
+    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/privacy-policy/">Privacy Policy</a></string>
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Please try again later.</string>
@@ -1310,7 +1311,7 @@
     <string name="instant_add_money">INSTANT MONEY</string>
     <string name="debit_credit_card">DEBIT/CREDIT CARD</string>
     <string name="money_from_bank">BANK</string>
-    <string name="add_money_card_option_message">Adding money from Debit card is completely free! For credit cards, it\'s free up to 5,000 BDT per month. After 5,000 BDT, 2.5% service charge will be applicable</string>
+    <string name="add_money_card_option_message">Adding money from Debit or Credit card is Instant! Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
     <string name="add_money_instant_option_message">Add money instantly to your iPay wallet. It will be adjusted from your associated bank account.</string>
     <string name="add_money_bank_option_message">Adding money from banks is the most reliable way to update your balance. It takes 3&#8211;5 business days to add balance into your iPay wallet.</string>
     <string name="choose_a_convenient_way">Choose a \nconvenient way</string>
@@ -1391,4 +1392,5 @@
     <string name="top_up_my_number">Top-Up My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
     <string name="enter_email_address">Enter Email Address</string>
+    <string name="add_money_credit_card_charge_msg">Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
 </resources>
