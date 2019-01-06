@@ -253,6 +253,11 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
     }
 
     private void getPendingBeneficiaryListResponse(Context context) {
+
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+            return;
+        }
+
         if (mGetBeneficiaryAsyncTask != null) {
             return;
         } else {
@@ -264,6 +269,10 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
     }
 
     private void getPendingSponsorListResponse(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+            return;
+        }
+
         if (mGetSponsorAsyncTask != null) {
             return;
         } else {
