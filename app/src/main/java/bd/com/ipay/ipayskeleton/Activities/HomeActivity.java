@@ -149,6 +149,7 @@ public class HomeActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+        mSponsorList = new ArrayList<>();
         if (getIntent() != null) {
             if (getIntent().getData() != null && getIntent().getData().toString().contains("www.ipay.com.bd")) {
                 try {
@@ -232,8 +233,9 @@ public class HomeActivity extends BaseActivity
 
         //get sponsor list
 
-        attemptGetSponsorList();
-
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+            attemptGetSponsorList();
+        }
         // Load the list of available business types, which will be accessed from multiple activities
         getAvailableBusinessTypes();
 

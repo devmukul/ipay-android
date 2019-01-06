@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import bd.com.ipay.ipayskeleton.Activities.AddCardActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class IpaySourceOfFundListFragment extends Fragment implements View.OnClickListener {
     private View bankView;
@@ -62,14 +65,26 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
 
         switch (v.getId()) {
             case R.id.bank_layout:
-                Intent intent = new Intent(getActivity(), ManageBanksActivity.class);
-                startActivity(intent);
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
+                    Intent intent = new Intent(getActivity(), ManageBanksActivity.class);
+                    startActivity(intent);
+                } else {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                }
                 break;
             case R.id.sponsor_layout:
-                ((SourceOfFundActivity) getActivity()).switchToAddSponsorFragment();
+                if(ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+                    ((SourceOfFundActivity) getActivity()).switchToAddSponsorFragment();
+                }else{
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                }
                 break;
             case R.id.beneficiary_layout:
-                ((SourceOfFundActivity) getActivity()).switchToAddBeneficiaryFragment();
+                if(ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+                    ((SourceOfFundActivity) getActivity()).switchToAddBeneficiaryFragment();
+                }else{
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                }
                 break;
             case R.id.card_layout:
                 Intent intent1 = new Intent(getActivity(), AddCardActivity.class);
