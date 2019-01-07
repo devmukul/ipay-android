@@ -127,6 +127,7 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
     }
 
     private void startLocationUpdates() {
+        clearListAfterLoading = true;
         if(!ifPermossionGranted()){
             requestPermissions( new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
         } else {
