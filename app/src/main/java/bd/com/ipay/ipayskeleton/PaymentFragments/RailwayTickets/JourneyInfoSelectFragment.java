@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.Serializable;
 import java.security.SecurityPermission;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,6 +44,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetStationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTrainListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.TrainList;
@@ -53,6 +55,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetThanaRespons
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.Bank;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardInfoInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
@@ -89,7 +92,7 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     private EditText mAdultSelection;
 
 
-    private List<TrainList> mTrainList;
+    public static List<TrainList> mTrainList;
     private List<String> mStationFromList;
     private List<String> mStationToList;
     private List<String> mClassList;
@@ -136,6 +139,15 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("TrainList", mTrainResponse);
+                System.out.print("Test Tax >> "+mTrainList.size());
+                TrainSelectionFragment.mTrainList = mTrainList;
+
+                ((IPayUtilityBillPayActionActivity) getActivity()).
+                        switchFragment(new TrainSelectionFragment(), null, 2, true);
+
+
 //                if (verifyInput()) {
 //                    Bundle bundle = new Bundle();
 //                    bundle.putString(IPayUtilityBillPayActionActivity.CARD_NUMBER_KEY,
@@ -212,7 +224,7 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         if (mGetStationFromListAsyncTask != null) {
             return;
         }
-        mSattionFromEditTextProgressBar.hideProgressBar();
+        mSattionFromEditTextProgressBar.showProgressBar();
 
         mGetStationFromListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
                 "http://10.10.10.11:8866/api/utility/cns/originating-station", getContext(), this, true);

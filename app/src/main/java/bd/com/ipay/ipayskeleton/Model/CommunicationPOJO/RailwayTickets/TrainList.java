@@ -11,16 +11,27 @@ public class TrainList implements Serializable
 
     @SerializedName("trainNumber")
     @Expose
-    private Long trainNumber;
+    Long trainNumber;
     @SerializedName("trainName")
     @Expose
-    private String trainName;
+    String trainName;
     @SerializedName("departureTime")
     @Expose
-    private String departureTime;
+    String departureTime;
     @SerializedName("classList")
     @Expose
-    private List<String> classList = null;
+    List<String> classList = null;
+
+
+    public TrainList() {
+    }
+
+    public TrainList(Long trainNumber, String trainName, String departureTime, List<String> classList) {
+        this.trainNumber = trainNumber;
+        this.trainName = trainName;
+        this.departureTime = departureTime;
+        this.classList = classList;
+    }
 
     public Long getTrainNumber() {
         return trainNumber;
@@ -54,4 +65,13 @@ public class TrainList implements Serializable
         this.classList = classList;
     }
 
+    @Override
+    public String toString() {
+        return "TrainList{" +
+                "trainNumber=" + trainNumber +
+                ", trainName='" + trainName + '\'' +
+                ", departureTime='" + departureTime + '\'' +
+                ", classList=" + classList +
+                '}';
+    }
 }

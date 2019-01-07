@@ -70,6 +70,7 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
                 switchFragment(new JourneyInfoSelectFragment(), bundle, 0, false);
                 break;
             case BILL_PAY_LANKABANGLA_DPS:
+
                 switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle, 0, false);
                 break;
             default:

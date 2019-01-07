@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="16dip"
+        android:paddingLeft="16dip"
+        android:paddingTop="16dip"
+        android:paddingEnd="16dip"
+        android:paddingRight="16dip"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#888888"
+            tools:text="11/12/2018 | 7:00"
+            android:drawableLeft="@drawable/clock_circular_outline"
+            android:drawablePadding="@dimen/value5"/>
+
+        <RelativeLayout
+            android:id="@+id/tarin_view_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/bill_title_right_drawable_image_view">
+
+            <TextView
+                android:id="@+id/train_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/colorBlack"
+                android:lineSpacingExtra="8sp"
+                tools:text="MAHANAGAR_PROVATI - 788"
+                android:layout_toLeftOf="@+id/ticket_class"/>
+
+            <TextView
+                android:id="@+id/ticket_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#333333"
+                android:lineSpacingExtra="8sp"
+                android:gravity="end"
+                tools:text="SNIGDHA"
+                android:layout_alignParentRight="true"
+                android:drawablePadding="@dimen/value5"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/adult_child"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#333333"
+            tools:text="for 3 Adult &amp; 2 Child" />
+
+        <TextView
+            android:id="@+id/per_ticket_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#01b3a2"
+            tools:text="Per ticket price: 300.00" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dip">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#80acacac" />
+
+
+        <LinearLayout
+            android:id="@+id/fare_view_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/fare_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_light"
+                android:gravity="start|center_vertical"
+                android:text="Fare"
+                android:textColor="#333333" />
+
+            <TextView
+                android:id="@+id/fare_enter_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dip"
+                android:layout_marginLeft="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_semibold"
+                android:gravity="end|center_vertical"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                tools:text="@string/dummy_amount" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vat_view_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/vat_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_light"
+                android:gravity="start|center_vertical"
+                android:text="VAT"
+                android:textColor="#333333" />
+
+            <TextView
+                android:id="@+id/vat_enter_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dip"
+                android:layout_marginLeft="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_semibold"
+                android:gravity="end|center_vertical"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                tools:text="@string/dummy_amount" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bank_charge_view_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/bank_charge_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_light"
+                android:gravity="start|center_vertical"
+                android:text="Bank Charge"
+                android:textColor="#333333" />
+
+            <TextView
+                android:id="@+id/bank_charge_enter_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dip"
+                android:layout_marginLeft="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_semibold"
+                android:gravity="end|center_vertical"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                tools:text="@string/dummy_amount" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#80acacac"
+            android:layout_marginTop="@dimen/value5"/>
+
+        <LinearLayout
+            android:id="@+id/net_amount_view_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/net_amount_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_light"
+                android:gravity="start|center_vertical"
+                android:text="Net Amount"
+                android:textColor="#333333" />
+
+            <TextView
+                android:id="@+id/net_amount_enter_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dip"
+                android:layout_marginLeft="4dip"
+                android:layout_weight="1"
+                android:fontFamily="@font/open_sans_semibold"
+                android:gravity="end|center_vertical"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                tools:text="@string/dummy_amount" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buy_ticket_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#19acacac"
+        android:fontFamily="@font/open_sans"
+        android:text="BUY THIS TICKET"
+        android:textColor="#00c0af"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/value8"/>
+</LinearLayout>
