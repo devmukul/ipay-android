@@ -4,19 +4,26 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.view.View;
 
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
+import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractAmountFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widget.View.BillDetailsDialog;
+import bd.com.ipay.ipayskeleton.Widget.View.CardChargeDialog;
 
 public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountFragment {
 	@Override
@@ -59,9 +66,7 @@ public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountF
 	@Override
 	protected void performContinueAction() {
 		if (getActivity() instanceof IPayTransactionActionActivity) {
-			final Bundle bundle = new Bundle();
-			bundle.putSerializable(IPayAbstractBankTransactionConfirmationFragment.TRANSACTION_AMOUNT_KEY, getAmount());
-			((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromCardTransactionConfirmationFragment(), bundle, 2, true);
+			showCahrgeInfo();
 		}
 	}
 
@@ -80,7 +85,7 @@ public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountF
 		if (getAmount() == null) {
 			errorMessage = getString(R.string.please_enter_amount);
 		} else {
-			final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
+			final BigDecimal amount =  BigDecimal.valueOf(getAmount().doubleValue());
 			final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
 			final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT();
 			errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);
@@ -95,5 +100,29 @@ public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountF
 	@Override
 	protected int getServiceId() {
 		return ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
+	}
+
+	private void showCahrgeInfo() {
+		if (getActivity() == null)
+			return;
+
+		final CardChargeDialog cardChargeDialog = new CardChargeDialog(getContext());
+		cardChargeDialog.setTitle("Please Confirm");
+		cardChargeDialog.setCloseButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				cardChargeDialog.cancel();
+			}
+		});
+		cardChargeDialog.setPayBillButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				cardChargeDialog.cancel();
+				final Bundle bundle = new Bundle();
+				bundle.putSerializable(IPayAbstractBankTransactionConfirmationFragment.TRANSACTION_AMOUNT_KEY, getAmount());
+				((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromCardTransactionConfirmationFragment(), bundle, 2, true);
+			}
+		});
+		cardChargeDialog.show();
 	}
 }

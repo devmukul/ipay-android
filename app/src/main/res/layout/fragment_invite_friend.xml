@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="@string/invite_peple_text"
+            android:text="@string/invite_people_text"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/invite_people_text_color"
