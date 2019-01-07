@@ -275,6 +275,7 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
     }
 
     private void refreshTransactionHistory() {
+        clearListAfterLoading = true;
         if (TextUtils.isEmpty(mUserLocationLatitude) || TextUtils.isEmpty(mUserLocationLongitude)){
             fetchNearByBusiness(mDefaultLatitude, mDefaultLongitude);
         }else{
