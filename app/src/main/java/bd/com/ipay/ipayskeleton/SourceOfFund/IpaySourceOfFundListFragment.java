@@ -22,8 +22,9 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
     private View iPayBeneficiaryView;
     private View iPaySponsorView;
     private View cardView;
-    private View divider;
     private View divider2;
+    private View divider3;
+    private View divider;
 
     @Nullable
     @Override
@@ -36,20 +37,24 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
         bankView = view.findViewById(R.id.bank_layout);
         iPaySponsorView = view.findViewById(R.id.sponsor_layout);
         iPayBeneficiaryView = view.findViewById(R.id.beneficiary_layout);
-        divider = view.findViewById(R.id.divider2);
-        divider2 = view.findViewById(R.id.divider3);
+        divider = view.findViewById(R.id.divider);
+        divider2 = view.findViewById(R.id.divider2);
+        divider3 = view.findViewById(R.id.divider3);
         cardView = view.findViewById(R.id.card_layout);
         iPayBeneficiaryView.setOnClickListener(this);
         iPaySponsorView.setOnClickListener(this);
         bankView.setOnClickListener(this);
         cardView.setOnClickListener(this);
 
+
+        adjustViewAccordingToAcl();
+
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             iPaySponsorView.setVisibility(View.GONE);
             iPayBeneficiaryView.setVisibility(View.GONE);
             cardView.setVisibility(View.GONE);
+            divider3.setVisibility(View.GONE);
             divider2.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
         }
         View backButton = view.findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +63,27 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    private void adjustViewAccordingToAcl() {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+            divider2.setVisibility(View.GONE);
+            iPayBeneficiaryView.setVisibility(View.GONE);
+            iPaySponsorView.setVisibility(View.GONE);
+            divider3.setVisibility(View.GONE);
+        } else {
+            divider2.setVisibility(View.VISIBLE);
+            iPayBeneficiaryView.setVisibility(View.VISIBLE);
+            iPaySponsorView.setVisibility(View.VISIBLE);
+            divider3.setVisibility(View.VISIBLE);
+        }
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
+            divider.setVisibility(View.GONE);
+            bankView.setVisibility(View.GONE);
+        } else {
+            divider.setVisibility(View.VISIBLE);
+            bankView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -73,16 +99,16 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
                 }
                 break;
             case R.id.sponsor_layout:
-                if(ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
                     ((SourceOfFundActivity) getActivity()).switchToAddSponsorFragment();
-                }else{
+                } else {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                 }
                 break;
             case R.id.beneficiary_layout:
-                if(ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
                     ((SourceOfFundActivity) getActivity()).switchToAddBeneficiaryFragment();
-                }else{
+                } else {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                 }
                 break;
