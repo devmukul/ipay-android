@@ -86,7 +86,8 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
             documentTypeNameTextView.setText(mSelectedIdentificationDocument.getDocumentTypeTitle());
             documentIdTextView.setText(mSelectedIdentificationDocument.getDocumentIdNumber());
             documentTypePreviewTextView.setText(String.format(Locale.US, "%s Preview", mSelectedIdentificationDocument.getDocumentTypeTitle()));
-            if (mSelectedIdentificationDocument.getDocumentVerificationStatus().equals(IdentificationDocumentConstants.DOCUMENT_VERIFICATION_STATUS_VERIFIED)) {
+            if (mSelectedIdentificationDocument.getDocumentVerificationStatus().equals(IdentificationDocumentConstants.DOCUMENT_VERIFICATION_STATUS_VERIFIED) ||
+                    !mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID)) {
                 documentInformationEditImageButton.setVisibility(View.GONE);
             } else {
                 documentInformationEditImageButton.setVisibility(View.VISIBLE);
