@@ -59,8 +59,8 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
         String fireBaseToken = FirebaseInstanceId.getInstance().getToken();
         Logger.logW("Firebase Token", "Refresh token called");
 
-        if (mRefreshTokenAsyncTask != null) {
-            mRefreshTokenAsyncTask = null;
+        if (mRefreshTokenAsyncTask == null) {
+            return;
         }
 
         String myDeviceID = DeviceInfoFactory.getDeviceId(this);
