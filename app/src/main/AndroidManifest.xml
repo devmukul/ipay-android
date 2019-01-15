@@ -317,12 +317,6 @@
             </intent-filter>
         </service>
 
-        <service android:name=".Service.FCM.TokenRefreshListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAfsNoEC1Hdv0SMHBD1ElcFU3L_dLzeOpI" />
