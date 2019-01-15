@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshT
 import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -138,8 +139,10 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
             mRefreshTokenAsyncTask = null;
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 pref.edit().putString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, null).apply();
+                SharedPrefManager.setSentFireBaseToken(true);
             } else {
                 pref.edit().putString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, firebaseToken).apply();
+                SharedPrefManager.setSentFireBaseToken(false);
             }
         }
     }
