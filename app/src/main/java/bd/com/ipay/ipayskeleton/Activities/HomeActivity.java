@@ -755,6 +755,7 @@ public class HomeActivity extends BaseActivity
 			mGetBusinessInformationAsyncTask = null;
 			mLocationUpdateRequestAsyncTask = null;
 			mGetNotificationAsyncTask = null;
+			mRefreshTokenAsyncTask = null;
 			return;
 		}
 		mProgressDialog.dismiss();
