@@ -29,10 +29,13 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.Serializable;
 import java.security.SecurityPermission;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
@@ -79,15 +82,14 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
     private SpinnerEditTextWithProgressBar mSattionFromEditTextProgressBar;
     private SpinnerEditTextWithProgressBar mSattionToEditTextProgressBar;
-    private SpinnerEditTextWithProgressBar mClassEditTextProgressBar;
+    private SpinnerEditTextWithProgressBar mGenderEditTextProgressBar;
     private SpinnerEditTextWithProgressBar mAdultEditTextProgressBar;
     private SpinnerEditTextWithProgressBar mChildEditTextProgressBar;
 
     private EditText mSattionFromSelection;
     private EditText mSattionToSelection;
-    private EditText mClassSelection;
+    private EditText mGenderSelection;
     private EditText mDateSelection;
-
     private EditText mChildSelection;
     private EditText mAdultSelection;
 
@@ -95,14 +97,13 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     public static List<TrainList> mTrainList;
     private List<String> mStationFromList;
     private List<String> mStationToList;
-    private List<String> mClassList;
+    private List<String> mGenderList;
 
     private List<String> mAdultList;
-    private List<String> mChildList;
 
     private SelectorDialog stationFromSelectorDialog;
     private SelectorDialog stationToSelectorDialog;
-    private SelectorDialog classSelectorDialog;
+    private SelectorDialog genderSelectorDialog;
 
     private SelectorDialog childSelectorDialog;
     private SelectorDialog adultSelectorDialog;
@@ -111,12 +112,9 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
     private String mSelectedSattionFrom = null;
     private String mSelectedSattionTo = null;
-    private String mSelectedClass = null;
-
-    private String mSelectedDate = null;
-
+    private String mSelectedGender = null;
+    private int mSelectedDate;
     private String mSelectedAdult = null;
-
     private String mSelectedChild = null;
 
     @Override
@@ -139,27 +137,23 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("TrainList", mTrainResponse);
-                System.out.print("Test Tax >> "+mTrainList.size());
-                TrainSelectionFragment.mTrainList = mTrainList;
 
                 ((IPayUtilityBillPayActionActivity) getActivity()).
                         switchFragment(new TrainSelectionFragment(), null, 2, true);
 
 
-//                if (verifyInput()) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString(IPayUtilityBillPayActionActivity.CARD_NUMBER_KEY,
-//                            CardNumberValidator.sanitizeEntry(mCardNumberEditText.getText().toString(), true));
-//                    bundle.putString(IPayUtilityBillPayActionActivity.CARD_USER_NAME_KEY,
-//                            mNameEditText.getText().toString());
-//                    bundle.putString(IPayUtilityBillPayActionActivity.BANK_CODE, selectedBankCode);
-//                    bundle.putInt(IPayUtilityBillPayActionActivity.BANK_ICON, selectedBankIconId);
-//                    ((IPayUtilityBillPayActionActivity) getActivity()).
-//                            switchFragment(new CreditCardAmountInputFragment(), bundle, 3, true);
-//
-//                }
+                if (verifyUserInputs()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
+                    bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+                    bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
+                    bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
+                    bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
+                    bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
+                    ((IPayUtilityBillPayActionActivity) getActivity()).
+                            switchFragment(new TrainSelectionFragment(), bundle, 2, true);
+
+                }
             }
         });
         ((IPayUtilityBillPayActionActivity) getActivity()).setSupportActionBar(toolbar);
@@ -169,14 +163,14 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
         mSattionFromEditTextProgressBar = view.findViewById(R.id.station_from);
         mSattionToEditTextProgressBar = view.findViewById(R.id.station_to);
-        mClassEditTextProgressBar = view.findViewById(R.id.ticket_class);
+        mGenderEditTextProgressBar = view.findViewById(R.id.gender);
 
         mAdultEditTextProgressBar = view.findViewById(R.id.adult_seat);
         mChildEditTextProgressBar = view.findViewById(R.id.child_seat);
 
         mSattionFromSelection = mSattionFromEditTextProgressBar.getEditText();
         mSattionToSelection = mSattionToEditTextProgressBar.getEditText();
-        mClassSelection = mClassEditTextProgressBar.getEditText();
+        mGenderSelection = mGenderEditTextProgressBar.getEditText();
 
         mAdultSelection = mAdultEditTextProgressBar.getEditText();
         mChildSelection = mChildEditTextProgressBar.getEditText();
@@ -187,19 +181,28 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             @Override
             public void onClick(View view) {
 
-                final Calendar c = Calendar.getInstance();
-                final int year = c.get(Calendar.YEAR);
-                final int month = c.get(Calendar.MONTH);
-                final int day = c.get(Calendar.DAY_OF_MONTH);
+                final Calendar calendar = Calendar.getInstance();
+                final int year = calendar.get(Calendar.YEAR);
+                final int month = calendar.get(Calendar.MONTH);
+                final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        mSelectedDate = day+"/"+month+"/"+year;
-                        mDateSelection.setText(mSelectedDate);
+                        mSelectedDate = i2;
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(0);
+                        cal.set(i, i1, i2, 0, 0, 0);
+                        Date chosenDate = cal.getTime();
+                        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
+                        String formattedDate = df.format(chosenDate);
+                        mDateSelection.setText(formattedDate);
                     }
                 },year,month,day);
 
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+                calendar.add(Calendar.DATE, 8);
+                datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
                 datePickerDialog.show();
 
 //                DialogFragment newFragment = new MyDatePickerFragment();
@@ -242,16 +245,16 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         mGetStationToListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void getTrainList(String originatingStation, String destinationStation) {
-        if (mGetTrainListAsyncTask != null) {
-            return;
-        }
-        mClassEditTextProgressBar.showProgressBar();
-
-        mGetTrainListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
-                "http://10.10.10.11:8866/api/utility/cns/train?originatingStation="+originatingStation+"&destinationStation="+destinationStation, getContext(), this, true);
-        mGetTrainListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+//    private void getTrainList(String originatingStation, String destinationStation) {
+//        if (mGetTrainListAsyncTask != null) {
+//            return;
+//        }
+//        mClassEditTextProgressBar.showProgressBar();
+//
+//        mGetTrainListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
+//                "http://10.10.10.11:8866/api/utility/cns/train?originatingStation="+originatingStation+"&destinationStation="+destinationStation, getContext(), this, true);
+//        mGetTrainListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//    }
 
     private void setStationFromAdapter(List<String> stationList) {
         stationFromSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_district), mStationFromList);
@@ -285,13 +288,7 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             public void onResourceSelected(String name) {
                 mSattionToSelection.setError(null);
                 mSattionToSelection.setText(name);
-                mClassSelection.setError(null);
                 mSelectedSattionTo = name;
-
-                mClassList = null;
-                mSelectedClass = null;
-                mClassSelection.setText(getContext().getString(R.string.loading));
-                getTrainList(mSelectedSattionFrom, mSelectedSattionTo);
             }
         });
 
@@ -303,24 +300,24 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         });
     }
 
-    private void setClassAdapter(List<String> classList) {
-        classSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_thana), classList);
-        classSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
-            @Override
-            public void onResourceSelected(String name) {
-                mClassSelection.setError(null);
-                mClassSelection.setText(name);
-                mSelectedClass = name;
-            }
-        });
-
-        mClassSelection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                classSelectorDialog.show();
-            }
-        });
-    }
+//    private void setClassAdapter(List<String> classList) {
+//        classSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_thana), classList);
+//        classSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
+//            @Override
+//            public void onResourceSelected(String name) {
+//                mClassSelection.setError(null);
+//                mClassSelection.setText(name);
+//                mSelectedClass = name;
+//            }
+//        });
+//
+//        mClassSelection.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                classSelectorDialog.show();
+//            }
+//        });
+//    }
 
     private void setAdultAdapter(List<String> classList) {
         adultSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_thana), classList);
@@ -423,9 +420,6 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
                     mSattionToSelection.setText("");
                     setThanaAdapter(mStationToList);
                     mSattionToSelection.setText(mSelectedSattionTo);
-                    if (TextUtils.isEmpty(mSelectedSattionTo)) {
-                        getTrainList(mSelectedSattionFrom, mSelectedSattionTo);
-                    }
 
                 } else {
                     if (getContext() != null)
@@ -438,34 +432,35 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             }
 
             mGetStationToListAsyncTask = null;
-        }else if (result.getApiCommand().equals(Constants.COMMAND_GET_CONTACTS)) {
-            try {
-                mTrainResponse = gson.fromJson(result.getJsonString(), GetTrainListResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mTrainList = mTrainResponse.getTrainList();
-                    Set<String> list3 = new LinkedHashSet<String>();
-                    for(TrainList trainList : mTrainList){
-                       list3.addAll(trainList.getClassList()) ;
-                    }
-
-                    mClassList = new ArrayList<>(list3);
-                    mClassEditTextProgressBar.hideProgressBar();
-                    mClassSelection.setText("");
-                    setClassAdapter(mClassList);
-                    mClassSelection.setText(mSelectedClass);
-
-                } else {
-                    if (getContext() != null)
-                        Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getContext() != null)
-                    Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
-            }
-
-            mGetTrainListAsyncTask = null;
         }
+//        else if (result.getApiCommand().equals(Constants.COMMAND_GET_CONTACTS)) {
+//            try {
+//                mTrainResponse = gson.fromJson(result.getJsonString(), GetTrainListResponse.class);
+//                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+//                    mTrainList = mTrainResponse.getTrainList();
+//                    Set<String> list3 = new LinkedHashSet<String>();
+//                    for(TrainList trainList : mTrainList){
+//                       list3.addAll(trainList.getClassList()) ;
+//                    }
+//
+//                    mClassList = new ArrayList<>(list3);
+//                    mClassEditTextProgressBar.hideProgressBar();
+//                    mClassSelection.setText("");
+//                    setClassAdapter(mClassList);
+//                    mClassSelection.setText(mSelectedClass);
+//
+//                } else {
+//                    if (getContext() != null)
+//                        Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                if (getContext() != null)
+//                    Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+//            }
+//
+//            mGetTrainListAsyncTask = null;
+//        }
 
     }
 
@@ -498,23 +493,65 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 //        }
 //    }
 
-//    protected boolean verifyInput() {
-//        if (TextUtils.isEmpty(getCardNumber())) {
-//            showErrorMessage(getString(R.string.empty_card_number_message));
-//            return false;
-//        } else if (!CardNumberValidator.validateCardNumber(getCardNumber())) {
-//            showErrorMessage(getString(R.string.invalid_card_number_message));
-//            return false;
-//        } else {
-//            if (TextUtils.isEmpty(getCardHolderName())) {
-//                showErrorMessage(getString(R.string.enter_a_name));
-//                return false;
-//            } else {
-//                return true;
-//            }
-//
-//        }
-//    }
+    public boolean verifyUserInputs() {
+        boolean cancel = false;
+        View focusedView = null;
+        mSattionFromSelection.setError(null);
+        mSattionToSelection.setError(null);
+        mDateSelection.setError(null);
+        mAdultSelection.setError(null);
+        mChildSelection.setError(null);
+        mGenderSelection.setError(null);
+
+        if (mDateSelection.getText().toString().trim().length() == 0) {
+            mDateSelection.setError(getContext().getString(R.string.invalid_address_line_1));
+            focusedView = mDateSelection;
+            cancel = true;
+        } else if (mSattionFromSelection.getText().toString().trim().length() == 0) {
+            mSattionFromSelection.setError(getContext().getString(R.string.invalid_district));
+            focusedView = mSattionFromSelection;
+            cancel = true;
+        } else if (mSattionToSelection.getText().toString().trim().length() == 0) {
+            mSattionToSelection.setError(getContext().getString(R.string.invalid_district));
+            focusedView = mSattionToSelection;
+            cancel = true;
+        } else if (mAdultSelection.getText().toString().trim().length() == 0) {
+            mAdultSelection.setError(getContext().getString(R.string.invalid_thana));
+            focusedView = mAdultSelection;
+            cancel = true;
+        } else if (Integer.valueOf(mAdultSelection.getText().toString())== 1) {
+            if (mGenderSelection.getText().toString().trim().length() == 0) {
+                mGenderSelection.setError(getContext().getString(R.string.invalid_address_line_1));
+                focusedView = mGenderSelection;
+                cancel = true;
+            }
+        }
+
+        if (cancel) {
+            focusedView.requestFocus();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    protected boolean verifyInput() {
+        if (TextUtils.isEmpty(getCardNumber())) {
+            showErrorMessage(getString(R.string.empty_card_number_message));
+            return false;
+        } else if (!CardNumberValidator.validateCardNumber(getCardNumber())) {
+            showErrorMessage(getString(R.string.invalid_card_number_message));
+            return false;
+        } else {
+            if (TextUtils.isEmpty(getCardHolderName())) {
+                showErrorMessage(getString(R.string.enter_a_name));
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+    }
 
     @SuppressLint("ValidFragment")
     private class MyDatePickerFragment extends DialogFragment {

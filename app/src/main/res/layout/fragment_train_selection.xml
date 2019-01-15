@@ -22,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_margin="@dimen/value16"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/progress_text_view"
@@ -31,7 +30,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_light"
             android:lineSpacingExtra="3sp"
-            android:text="@string/fetching_bank_list"
+            android:text="Fetching \ntrain list..."
             android:textColor="#545454"
             android:textSize="24sp" />
 

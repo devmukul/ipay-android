@@ -65,7 +65,7 @@
             </RelativeLayout>
 
             <Button
-                android:id="@+id/bank_account_pending_button"
+                android:id="@+id/find_ticket_button"
                 android:text="Find Ticket"
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"

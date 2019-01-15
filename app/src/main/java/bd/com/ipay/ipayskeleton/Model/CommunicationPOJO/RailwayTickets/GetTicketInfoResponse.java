@@ -8,63 +8,55 @@ import com.google.gson.annotations.SerializedName;
 public class GetTicketInfoResponse implements Serializable
 {
 
-    @SerializedName("className")
-    @Expose
-    private String className;
-    @SerializedName("fare")
-    @Expose
-    private Double fare;
-    @SerializedName("journeyDate")
-    @Expose
-    private String journeyDate;
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("ticketId")
+    @Expose
+    private String ticketId;
     @SerializedName("messageId")
     @Expose
     private String messageId;
+    @SerializedName("journeyDate")
+    @Expose
+    private String journeyDate;
+    @SerializedName("trainNumber")
+    @Expose
+    private int trainNumber;
     @SerializedName("stationFrom")
     @Expose
     private String stationFrom;
     @SerializedName("stationTo")
     @Expose
     private String stationTo;
-    @SerializedName("ticketId")
+    @SerializedName("className")
     @Expose
-    private String ticketId;
-    @SerializedName("totalFare")
+    private String className;
+    @SerializedName("fare")
     @Expose
-    private Double totalFare;
-    @SerializedName("trainNumber")
-    @Expose
-    private Long trainNumber;
+    private double fare;
     @SerializedName("vat")
     @Expose
-    private Double vat;
-    private final static long serialVersionUID = 5679884630731318303L;
+    private double vat;
+    @SerializedName("totalFare")
+    @Expose
+    private double totalFare;
 
-    public String getClassName() {
-        return className;
+    public GetTicketInfoResponse() {
     }
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public Double getFare() {
-        return fare;
-    }
-
-    public void setFare(Double fare) {
-        this.fare = fare;
-    }
-
-    public String getJourneyDate() {
-        return journeyDate;
-    }
-
-    public void setJourneyDate(String journeyDate) {
+    public GetTicketInfoResponse(String message, String ticketId, String messageId, String journeyDate, int trainNumber, String stationFrom, String stationTo, String className, double fare, double vat, double totalFare) {
+        this.message = message;
+        this.ticketId = ticketId;
+        this.messageId = messageId;
         this.journeyDate = journeyDate;
+        this.trainNumber = trainNumber;
+        this.stationFrom = stationFrom;
+        this.stationTo = stationTo;
+        this.className = className;
+        this.fare = fare;
+        this.vat = vat;
+        this.totalFare = totalFare;
     }
 
     public String getMessage() {
@@ -75,12 +67,36 @@ public class GetTicketInfoResponse implements Serializable
         this.message = message;
     }
 
+    public String getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(String ticketId) {
+        this.ticketId = ticketId;
+    }
+
     public String getMessageId() {
         return messageId;
     }
 
     public void setMessageId(String messageId) {
         this.messageId = messageId;
+    }
+
+    public String getJourneyDate() {
+        return journeyDate;
+    }
+
+    public void setJourneyDate(String journeyDate) {
+        this.journeyDate = journeyDate;
+    }
+
+    public int getTrainNumber() {
+        return trainNumber;
+    }
+
+    public void setTrainNumber(int trainNumber) {
+        this.trainNumber = trainNumber;
     }
 
     public String getStationFrom() {
@@ -99,36 +115,52 @@ public class GetTicketInfoResponse implements Serializable
         this.stationTo = stationTo;
     }
 
-    public String getTicketId() {
-        return ticketId;
+    public String getClassName() {
+        return className;
     }
 
-    public void setTicketId(String ticketId) {
-        this.ticketId = ticketId;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
-    public Double getTotalFare() {
-        return totalFare;
+    public double getFare() {
+        return fare;
     }
 
-    public void setTotalFare(Double totalFare) {
-        this.totalFare = totalFare;
+    public void setFare(double fare) {
+        this.fare = fare;
     }
 
-    public Long getTrainNumber() {
-        return trainNumber;
-    }
-
-    public void setTrainNumber(Long trainNumber) {
-        this.trainNumber = trainNumber;
-    }
-
-    public Double getVat() {
+    public double getVat() {
         return vat;
     }
 
-    public void setVat(Double vat) {
+    public void setVat(double vat) {
         this.vat = vat;
     }
 
+    public double getTotalFare() {
+        return totalFare;
+    }
+
+    public void setTotalFare(double totalFare) {
+        this.totalFare = totalFare;
+    }
+
+    @Override
+    public String toString() {
+        return "GetTicketInfoResponse{" +
+                "message='" + message + '\'' +
+                ", ticketId='" + ticketId + '\'' +
+                ", messageId='" + messageId + '\'' +
+                ", journeyDate='" + journeyDate + '\'' +
+                ", trainNumber=" + trainNumber +
+                ", stationFrom='" + stationFrom + '\'' +
+                ", stationTo='" + stationTo + '\'' +
+                ", className='" + className + '\'' +
+                ", fare=" + fare +
+                ", vat=" + vat +
+                ", totalFare=" + totalFare +
+                '}';
+    }
 }

@@ -10,7 +10,7 @@ public class GetTicketInfoRequest implements Serializable
 
     @SerializedName("age")
     @Expose
-    private Long age;
+    private int age;
     @SerializedName("className")
     @Expose
     private String className;
@@ -19,13 +19,13 @@ public class GetTicketInfoRequest implements Serializable
     private String gender;
     @SerializedName("journeyDate")
     @Expose
-    private Long journeyDate;
+    private int journeyDate;
     @SerializedName("numberOfAdults")
     @Expose
-    private Long numberOfAdults;
+    private int numberOfAdults;
     @SerializedName("numberOfChildren")
     @Expose
-    private Long numberOfChildren;
+    private int numberOfChildren;
     @SerializedName("stationFrom")
     @Expose
     private String stationFrom;
@@ -34,9 +34,9 @@ public class GetTicketInfoRequest implements Serializable
     private String stationTo;
     @SerializedName("trainNumber")
     @Expose
-    private Long trainNumber;
+    private int trainNumber;
 
-    public GetTicketInfoRequest(Long age, String className, String gender, Long journeyDate, Long numberOfAdults, Long numberOfChildren, String stationFrom, String stationTo, Long trainNumber) {
+    public GetTicketInfoRequest(int age, String className, String gender, int journeyDate, int numberOfAdults, int numberOfChildren, String stationFrom, String stationTo, int trainNumber) {
         this.age = age;
         this.className = className;
         this.gender = gender;
@@ -48,11 +48,11 @@ public class GetTicketInfoRequest implements Serializable
         this.trainNumber = trainNumber;
     }
 
-    public Long getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Long age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -72,27 +72,27 @@ public class GetTicketInfoRequest implements Serializable
         this.gender = gender;
     }
 
-    public Long getJourneyDate() {
+    public int getJourneyDate() {
         return journeyDate;
     }
 
-    public void setJourneyDate(Long journeyDate) {
+    public void setJourneyDate(int journeyDate) {
         this.journeyDate = journeyDate;
     }
 
-    public Long getNumberOfAdults() {
+    public int getNumberOfAdults() {
         return numberOfAdults;
     }
 
-    public void setNumberOfAdults(Long numberOfAdults) {
+    public void setNumberOfAdults(int numberOfAdults) {
         this.numberOfAdults = numberOfAdults;
     }
 
-    public Long getNumberOfChildren() {
+    public int getNumberOfChildren() {
         return numberOfChildren;
     }
 
-    public void setNumberOfChildren(Long numberOfChildren) {
+    public void setNumberOfChildren(int numberOfChildren) {
         this.numberOfChildren = numberOfChildren;
     }
 
@@ -112,11 +112,11 @@ public class GetTicketInfoRequest implements Serializable
         this.stationTo = stationTo;
     }
 
-    public Long getTrainNumber() {
+    public int getTrainNumber() {
         return trainNumber;
     }
 
-    public void setTrainNumber(Long trainNumber) {
+    public void setTrainNumber(int trainNumber) {
         this.trainNumber = trainNumber;
     }
 

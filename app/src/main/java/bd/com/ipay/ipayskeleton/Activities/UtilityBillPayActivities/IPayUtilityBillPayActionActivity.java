@@ -45,6 +45,19 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
 
     public ArrayList<MyCard> myCards;
 
+    public static final String KEY_TICKET_CLASS_NAME = "KEY_TICKET_CLASS_NAME";
+    public static final String KEY_TICKET_FARE_AMOUNT = "KEY_TICKET_FARE_AMOUNT";
+    public static final String KEY_TICKET_VAT_AMOUNT = "KEY_TICKET_VAT_AMOUNT";
+    public static final String KEY_TICKET_TOTAL_AMOUNT = "KEY_TICKET_TOTAL_AMOUNT";
+    public static final String KEY_TICKET_ADULTS = "KEY_TICKET_ADULTS";
+    public static final String KEY_TICKET_CHILD = "KEY_TICKET_CHILD";
+    public static final String KEY_TICKET_DATE = "KEY_TICKET_DATE";
+    public static final String KEY_TICKET_MESSAGE_ID = "KEY_TICKET_MESSAGE_ID";
+    public static final String KEY_TICKET_STATION_TO = "KEY_TICKET_STATION_TO";
+    public static final String KEY_TICKET_STATION_FROM = "KEY_TICKET_STATION_FROM";
+    public static final String KEY_TICKET_TICKET_ID = "KEY_TICKET_TICKET_ID";
+    public static final String KEY_TICKET_TRAIN_NO = "KEY_TICKET_TRAIN_NO";
+    public static final String KEY_TICKET_GENDER = "KEY_TICKET_GENDER";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

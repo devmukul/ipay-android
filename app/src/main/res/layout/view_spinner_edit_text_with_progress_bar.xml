@@ -18,6 +18,9 @@
             android:drawableRight="@drawable/dropdown"/>
     </android.support.design.widget.TextInputLayout>
 
+    <View style="@style/Divider"
+        android:layout_below="@+id/textInputLayout"/>
+
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleSmall"

@@ -52,14 +52,14 @@ public class TicketDetailsDialog {
                 alertDialog.cancel();
             }
         });
-        dateTextView = customView.findViewById(R.id.account_title_enter_text_view);
-        tarinNameTextView = customView.findViewById(R.id.account_number_enter_text_view);
-        classNameTextView = customView.findViewById(R.id.branch_id_enter_text_view);
-        fareAmountTextView = customView.findViewById(R.id.installment_amount_enter_text_view);
-        vatAmountTextView = customView.findViewById(R.id.account_maturity_date_enter_text_view);
+        dateTextView = customView.findViewById(R.id.date);
+        tarinNameTextView = customView.findViewById(R.id.train_name);
+        classNameTextView = customView.findViewById(R.id.ticket_class);
+        fareAmountTextView = customView.findViewById(R.id.fare_enter_text_view);
+        vatAmountTextView = customView.findViewById(R.id.vat_enter_text_view);
         buyTicketButton = customView.findViewById(R.id.buy_ticket_button);
-        bankChargeAmountTextView = customView.findViewById(R.id.bill_title_text_view);
-        netAmountTextView = customView.findViewById(R.id.bill_sub_title_text_view);
+        bankChargeAmountTextView = customView.findViewById(R.id.bank_charge_enter_text_view);
+        netAmountTextView = customView.findViewById(R.id.net_amount_enter_text_view);
         alertDialog = new AlertDialog.Builder(context)
                 .setCustomTitle(customTitleView)
                 .setView(customView)
@@ -75,19 +75,19 @@ public class TicketDetailsDialog {
         dateTextView.setText(date);
     }
 
-    public void setTrainName(String trainName) {
+    public void setTrainName(CharSequence trainName) {
         tarinNameTextView.setText(trainName);
     }
 
-    public void setClassName(String className) {
+    public void setClassName(CharSequence className) {
         classNameTextView.setText(className);
     }
 
-    public void setFareAmount(Double fareAmount) {
+    public void setFareAmount(double fareAmount) {
         fareAmountTextView.setText(String.format("Tk. %s", numberFormat.format(BigDecimal.valueOf(fareAmount))));
     }
 
-    public void setVatAmount(Double vatAmount) {
+    public void setVatAmount(double vatAmount) {
         vatAmountTextView.setText(String.format("Tk. %s", numberFormat.format(BigDecimal.valueOf(vatAmount))));
     }
 
@@ -95,7 +95,7 @@ public class TicketDetailsDialog {
         bankChargeAmountTextView.setText(String.format("Tk. %s", numberFormat.format(BigDecimal.valueOf(bankChargeAmount))));
     }
 
-    public void setNetAmount(Double netAmount) {
+    public void setNetAmount(double netAmount) {
         netAmountTextView.setText(String.format("Tk. %s", numberFormat.format(BigDecimal.valueOf(netAmount))));
     }
 
