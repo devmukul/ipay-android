@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
@@ -433,6 +434,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             }
         }
         QRCodePaymentActivity.sponsorList = approvedSponsorArrayList;
+        HomeActivity.mSponsorList = approvedSponsorArrayList;
     }
 
 
