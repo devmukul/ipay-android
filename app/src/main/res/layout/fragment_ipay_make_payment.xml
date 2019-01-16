@@ -306,7 +306,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/semiround_white_default"
                                 android:padding="2dp"
-                                app:srcCompat="@drawable/ic_debit_credit_card_icon"
+                                android:src="@drawable/credit_card"
                                 app:layout_constraintDimensionRatio="1:1"
                                 android:elevation="@dimen/value2" />
 
