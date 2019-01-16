@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.CustomView.DocumentPreviewImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPage;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 
@@ -87,7 +88,7 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
             documentIdTextView.setText(mSelectedIdentificationDocument.getDocumentIdNumber());
             documentTypePreviewTextView.setText(String.format(Locale.US, "%s Preview", mSelectedIdentificationDocument.getDocumentTypeTitle()));
             if (mSelectedIdentificationDocument.getDocumentVerificationStatus().equals(IdentificationDocumentConstants.DOCUMENT_VERIFICATION_STATUS_VERIFIED) ||
-                    !mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID)) {
+                    ( !mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID) && !ProfileInfoCacheManager.isBusinessAccount())) {
                 documentInformationEditImageButton.setVisibility(View.GONE);
             } else {
                 documentInformationEditImageButton.setVisibility(View.VISIBLE);
