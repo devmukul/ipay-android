@@ -82,12 +82,12 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mSelectedSattionFrom = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, "");
-            mSelectedSattionTo = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, "");
-            mSelectedGender = getArguments().getSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY);
-            mSelectedDate = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, "");
-            mSelectedAdult = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, "");
-            mSelectedChild = getArguments().getSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY);
+            mSelectedSattionFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
+            mSelectedSattionTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
+            mSelectedGender = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, "");
+            mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, 0);
+            mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
+            mSelectedChild = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD,0);
         }
     }
 
@@ -107,20 +107,12 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         ((IPayUtilityBillPayActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivity().setTitle("Buy Railway Ticket");
         mProgressDialog = new CustomProgressDialog(getActivity());
-
         mTrainListRecyclerView = view.findViewById(R.id.user_bank_list_recycler_view);
         mProgressLayout = view.findViewById(R.id.progress_layout);
         trainListAdapter = new BankListAdapter();
         mTrainListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mTrainListRecyclerView.setAdapter(trainListAdapter);
-
-
-        getTrainList("DHAKA", "SYLHET");
-
-//        mTrainList = new Gson().fromJson(result.getJsonString(), GetAvailableCreditCardBanks.class).getBankList();
-//        mTrainListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        mTrainListRecyclerView.setAdapter(trainListAdapter);
-//        trainListAdapter.notifyDataSetChanged();
+        getTrainList(mSelectedSattionFrom, mSelectedSattionTo);
     }
 
     public int getBankIcon(Bank bank) {
