@@ -9,6 +9,15 @@ public class FCMNotificationResponse {
     private String icon;
     private long time;
     private String deepLink;
+    private String transactionDetailsString;
+
+    public String getTransactionDetailsString() {
+        return transactionDetailsString;
+    }
+
+    public void setTransactionDetailsString(String transactionDetailsString) {
+        this.transactionDetailsString = transactionDetailsString;
+    }
 
     public int getServiceId() {
         return serviceId;

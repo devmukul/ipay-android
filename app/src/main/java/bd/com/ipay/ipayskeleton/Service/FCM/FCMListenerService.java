@@ -20,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateCustomNotificationAsyn
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
@@ -118,6 +119,9 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(data);
         mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
+        String transactionDetailsString = mFcmNotificationResponse.getTransactionDetailsString();
+        TransactionHistory transactionHistory = new Gson().
+                fromJson(transactionDetailsString, TransactionHistory.class);
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {
