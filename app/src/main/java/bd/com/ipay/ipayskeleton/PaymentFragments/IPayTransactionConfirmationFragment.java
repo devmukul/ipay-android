@@ -341,8 +341,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 apiCommand = Constants.COMMAND_TOPUP_REQUEST;
                 String number = ContactEngine.formatLocalMobileNumber(mobileNumber);
                 number = number.replaceAll("[^0-9]", "");
-                requestJson = gson.toJson(new TopupRequest(Long.parseLong(number), ContactEngine.formatMobileNumberBD(mobileNumber),
-                        operatorType, operatorCode, Long.parseLong(amount.toString().trim()), "+88", operatorType, Constants.DEFAULT_USER_CLASS, mPinEditText.getText().toString()));
+                requestJson = gson.toJson(new TopupRequest(number,
+                        operatorType, operatorCode, Long.parseLong(amount.toString().trim()), mPinEditText.getText().toString()));
                 url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST;
                 mCustomProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
                 break;
@@ -505,17 +505,4 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             }
         }
     }
-	private void launchOTPVerification(long otpValidFor) {
-		if (getActivity() != null) {
-			switch (transactionType) {
-				case  IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_PAYMENT,
-							Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3, Constants.METHOD_POST, otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
-					mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
-					break;
-
-			}
-		}
-	}
 }

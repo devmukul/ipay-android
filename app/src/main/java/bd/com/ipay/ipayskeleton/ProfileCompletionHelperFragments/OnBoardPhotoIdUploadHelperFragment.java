@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 
 public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
 
