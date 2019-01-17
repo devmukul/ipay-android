@@ -234,8 +234,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         HttpResponseParser mHttpResponseParser = new HttpResponseParser();
         mHttpResponseParser.setAPI_COMMAND(API_COMMAND);
         mHttpResponseParser.setHttpResponse(response);
-        mHttpResponseParser.setContext(mContext);
-
         mGenericHttpResponse = mHttpResponseParser.parseHttpResponse();
 
         // Set the context, after response is parsed.

@@ -10,6 +10,7 @@ public class SharedPrefConstants {
     public static final String REMEMBER_ME = "remember_me";
 
     public static final String USER_BALANCE = "USER_BALANCE";
+    public static final String CREDIT_BALANCE = "CREDIT_BALANCE";
     public static final String IS_PIN_ADDED = "is-pin-added";
 
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
@@ -20,7 +21,6 @@ public class SharedPrefConstants {
     public static final String USERID = "USERID";
     public static final String NAME = "NAME";
     public static final String GENDER = "GENDER";
-    public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
 

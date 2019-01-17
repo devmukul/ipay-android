@@ -18,7 +18,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
  * Validates user inputs (e.g. email, password, date of birth)
  */
 public class InputValidator {
-    public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
+    public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[3-9][\\d]{8})$";
     private static final String INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
     private static final String VALID_PASSPORT_ID_PATTERN = "[A-Z]{2}[0-9]{7}";
     private static final String ALPHA_NUMERIC_PATTERN = "^[a-zA-Z0-9]*$";
@@ -55,16 +55,13 @@ public class InputValidator {
     }
 
     public static boolean isValidName(String name) {
-        if (name.matches(".*[0-9]+.*")) return false;
-        return true;
+        return !name.matches(".*[0-9]+.*");
     }
 
     public static boolean isValidNameWithRequiredLength(String name) {
         name = name.replaceAll("\\s+", "");
 
-        if (name.matches(".*[0-9]+.*") || name.length() < Constants.MIN_VALID_NAME_LENGTH)
-            return false;
-        return true;
+        return !name.matches(".*[0-9]+.*") && name.length() >= Constants.MIN_VALID_NAME_LENGTH;
     }
 
     @Nullable
@@ -188,17 +185,13 @@ public class InputValidator {
         if (number == null)
             return false;
 
-        if (!number.matches(".*[0-9].*"))
-            return false;
-        else return true;
+        return number.matches(".*[0-9].*");
     }
 
     public static boolean isValidMobileNumberWithCountryCode(String mobileNumber, String countryCode) {
         if (countryCode.equals("BD")) {
             String formattedNumber = ContactEngine.formatMobileNumberInternational(mobileNumber, countryCode);
-            if (formattedNumber.matches(MOBILE_NUMBER_REGEX))
-                return true;
-            return false;
+            return formattedNumber.matches(MOBILE_NUMBER_REGEX);
         }
 
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -210,5 +203,10 @@ public class InputValidator {
             Logger.logD("NumberParseException was thrown: ", e.toString());
             return false;
         }
+    }
+
+    public static boolean isValidMobileNumberBD(String mobileNumber) {
+            String formattedNumber = ContactEngine.formatMobileNumberBD(mobileNumber);
+        return formattedNumber.matches(MOBILE_NUMBER_REGEX);
     }
 }

@@ -155,6 +155,7 @@
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         android:inputType="text"
+                        android:maxLength="50"
                         android:textColor="#212121"
                         android:textSize="18sp"
                         tools:hint="@string/short_note_optional_hint" />
@@ -165,7 +166,6 @@
                         android:layout_marginTop="8dip"
                         android:background="#19000000" />
                 </LinearLayout>
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

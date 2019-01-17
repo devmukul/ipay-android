@@ -23,8 +23,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -74,10 +72,8 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 
     private HashMap<String, String> mProgressDialogStringMap;
 
-    private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
-
-    private Long otpValidFor = null;
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
+	private Long otpValidFor = null;
+	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 
     public OTPVerificationForTwoFactorAuthenticationServicesDialog(@NonNull Activity context, String json, String desiredRequest, String mUri, String method) {
         this(context, json, desiredRequest, mUri, method, null);
@@ -122,11 +118,9 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         mResendOTPButton = view.findViewById(R.id.buttonResend);
         mCancelButton = view.findViewById(R.id.buttonCancel);
 
-        mCustomProgressDialog = new CustomProgressDialog(context);
-
-        setSMSBroadcastReceiver();
-        setCountDownTimer();
-        setButtonActions();
+		mCustomProgressDialog = new CustomProgressDialog(context);
+		setCountDownTimer();
+		setButtonActions();
 
     }
 
@@ -144,62 +138,47 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         return mOTPInputDialog.isShowing();
     }
 
-    private void setButtonActions() {
-        mActivateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Hiding the keyboard after verifying OTP
-                Utilities.hideKeyboard(context, v);
-                if (Utilities.isConnectionAvailable(context)) verifyInput();
-                else if (context != null)
-                    Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-            }
-        });
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
-                mOTPInputDialog.dismiss();
+	private void setButtonActions() {
+		mActivateButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// Hiding the keyboard after verifying OTP
+				Utilities.hideKeyboard(context, v);
+				if (Utilities.isConnectionAvailable(context)) verifyInput();
+				else if (context != null)
+					Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+			}
+		});
+		mCancelButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mOTPInputDialog.dismiss();
+			}
+		});
+		mResendOTPButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (Utilities.isConnectionAvailable(context))
+					attemptDesiredRequestWithOTP(null);
+				else
+					Toaster.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG);
+			}
+		});
+	}
 
-            }
-        });
-        mResendOTPButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(context))
-                    attemptDesiredRequestWithOTP(null);
-                else
-                    Toaster.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG);
-            }
-        });
-    }
+	private void setCountDownTimer() {
+		mResendOTPButton.setEnabled(false);
+		final long otpValidTime = otpValidFor != null ? otpValidFor : SecuritySettingsActivity.otpDuration;
+		new CustomCountDownTimer(otpValidTime, 500) {
 
-    private void setSMSBroadcastReceiver() {//enable broadcast receiver to get the text message to get the OTP
-        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
-
-        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
-            @Override
-            public void onTextMessageReceive(String otp) {
-                mOTPEditText.setText(otp);
-                mActivateButton.performClick();
-            }
-        });
-    }
-
-    private void setCountDownTimer() {
-        mResendOTPButton.setEnabled(false);
-        final long otpValidTime = otpValidFor != null ? otpValidFor : SecuritySettingsActivity.otpDuration;
-        new CustomCountDownTimer(otpValidTime, 500) {
-
-            public void onTick(long millisUntilFinished) {
-                mResendOTPButton.setText(String.format(Locale.US, "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
-            }
-
-            public void onFinish() {
-                mResendOTPButton.setEnabled(true);
-            }
-        }.start();
-    }
+			public void onTick(long millisUntilFinished) {
+				mResendOTPButton.setText(String.format(Locale.US, "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
+			}
+			public void onFinish() {
+				mResendOTPButton.setEnabled(true);
+			}
+		}.start();
+	}
 
     private void verifyInput() {
         boolean cancel = false;

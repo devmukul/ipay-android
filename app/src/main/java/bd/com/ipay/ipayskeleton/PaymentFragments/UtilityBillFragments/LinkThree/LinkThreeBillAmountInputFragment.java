@@ -92,7 +92,7 @@ public class LinkThreeBillAmountInputFragment extends IPayAbstractAmountFragment
 			if (getAmount() == null) {
 				errorMessage = getString(R.string.please_enter_amount);
 			} else {
-				final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
+				final BigDecimal amount =  BigDecimal.valueOf(getAmount().doubleValue());
 				final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
 				if (amount.compareTo(balance) > 0) {

@@ -90,6 +90,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private View mLankaBanglaView;
     private View mLankaBanglaDpsView;
     private View mAmberITBillPayView;
+    private View mCreditCardBillPayView;
     private HashMap<String, String> mProviderAvailabilityMap;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -133,8 +134,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mLankaBanglaView = view.findViewById(R.id.lankaBanglaViewCard);
         mLankaBanglaDpsView = view.findViewById(R.id.lankaBanglaViewDps);
         mBrilliantRechargeView = view.findViewById(R.id.brilliant_recharge_view);
-        trendingBusinessListRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.trending_business_list_refresh_layout);
-        mMobileNumberEditText = (MakePaymentContactsSearchView) view.findViewById(R.id.searchView);
+        mCreditCardBillPayView = view.findViewById(R.id.credit_card_bill);
+        trendingBusinessListRefreshLayout = view.findViewById(R.id.trending_business_list_refresh_layout);
+        mMobileNumberEditText = view.findViewById(R.id.searchView);
 
         mTrendingListRecyclerView = view.findViewById(R.id.trending_business_recycler_view_parent);
         mTrendingListRecyclerView.setHasFixedSize(true);
@@ -221,6 +223,13 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             @Override
             public void onClick(View view) {
                 payBill(Constants.DPDC, null);
+            }
+        });
+
+        mCreditCardBillPayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                payBill(Constants.CREDIT_CARD, null);
             }
         });
 
@@ -317,6 +326,11 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         intent.putExtra(Constants.SERVICE, Constants.BANGLALION);
                         startActivity(intent);
+                        break;
+                    case Constants.CREDIT_CARD:
+                        intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
+                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.CREDIT_CARD);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                         break;
                     case Constants.LANKABANGLA:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
@@ -474,8 +488,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
             public MyViewHolder(View view) {
                 super(view);
-                titleView = (TextView) view.findViewById(R.id.trending_business_category_title);
-                trendingBusinessCAtegory = (RecyclerView) view.findViewById(R.id.trending_business_recycler_view_category);
+                titleView = view.findViewById(R.id.trending_business_category_title);
+                trendingBusinessCAtegory = view.findViewById(R.id.trending_business_recycler_view_category);
             }
         }
     }
@@ -507,8 +521,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-                mImageView = (ImageView) itemView.findViewById(R.id.imageView);
-                mTextView = (TextView) itemView.findViewById(R.id.nameView);
+                mImageView = itemView.findViewById(R.id.imageView);
+                mTextView = itemView.findViewById(R.id.nameView);
             }
 
             public void bindView(final int pos) {
@@ -646,5 +660,13 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         }
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH)
+            getActivity().finish();
     }
 }

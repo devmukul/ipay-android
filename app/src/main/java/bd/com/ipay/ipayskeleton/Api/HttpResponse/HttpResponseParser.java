@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.Api.HttpResponse;
 
-import android.content.Context;
-
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -15,7 +13,6 @@ public class HttpResponseParser {
     private GenericHttpResponse mGenericHttpResponse = null;
     private Response mHttpResponse;
     private String API_COMMAND = "";
-    private Context mContext;
 
     public HttpResponseParser() {
 
@@ -72,9 +69,5 @@ public class HttpResponseParser {
 
     public void setHttpResponse(Response mHttpResponse) {
         this.mHttpResponse = mHttpResponse;
-    }
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
     }
 }

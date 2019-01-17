@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
@@ -41,7 +42,7 @@ public class PaymentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-        mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
+        mFabMakingPayment = findViewById(R.id.fab_payment_making);
         mProgressDialog = new ProgressDialog(this);
 
         if (getIntent().getStringExtra("ORDER_ID") != null)

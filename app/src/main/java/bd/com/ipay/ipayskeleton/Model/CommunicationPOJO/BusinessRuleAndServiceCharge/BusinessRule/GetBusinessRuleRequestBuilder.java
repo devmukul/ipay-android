@@ -16,7 +16,7 @@ public class GetBusinessRuleRequestBuilder {
 
 	private void generateUri(int serviceId) {
 		final Uri uri;
-		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT || serviceId == ServiceIdConstants.MAKE_PAYMENT) {
+		if (serviceId == ServiceIdConstants.UTILITY_BILL_PAYMENT || serviceId == ServiceIdConstants.MAKE_PAYMENT || serviceId == ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY) {
 			uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE_V2 + "/" + serviceId);
 		} else {
 			uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE + "/" + serviceId);

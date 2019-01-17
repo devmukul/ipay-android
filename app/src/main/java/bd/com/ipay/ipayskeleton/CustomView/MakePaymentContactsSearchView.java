@@ -97,12 +97,12 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
 
         mPayByQCView = view.findViewById(R.id.qr_scan);
-        mCustomAutoCompleteView = (SearchView) view.findViewById(R.id.search_business);
+        mCustomAutoCompleteView = view.findViewById(R.id.search_business);
         mCustomAutoCompleteView.setIconified(false);
         mCustomAutoCompleteView.setOnQueryTextListener(this);
         mCustomAutoCompleteView.clearFocus();
 
-        mTransactionHistoryRecyclerView = (RecyclerView) view.findViewById(R.id.address_recycler_view);
+        mTransactionHistoryRecyclerView = view.findViewById(R.id.address_recycler_view);
         mLayoutManager = new LinearLayoutManager(mContext);
 
         mCustomAutoCompleteView.setOnQueryTextFocusChangeListener(new OnFocusChangeListener() {
@@ -158,6 +158,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
         mBusinessContacts.add(new CustomBusinessContact(Constants.BLION, "Bill_Pay", mContext.getString(R.string.banglalion), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.BRILLIANT, "Bill_Pay", mContext.getString(R.string.brilliant), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.CARNIVAL, "Bill_Pay", mContext.getString(R.string.carnival), "Bill Pay", ""));
+        mBusinessContacts.add(new CustomBusinessContact(Constants.CREDIT_CARD, "Bill_Pay", mContext.getString(R.string.credit_card), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.LANKABANGLA, "Bill_Pay", mContext.getString(R.string.lanka_bangla_card), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.LANKABANGLA, "Bill_Pay", mContext.getString(R.string.lanka_bangla_dps), "Bill Pay", ""));
         mBusinessContacts.add(new CustomBusinessContact(Constants.LINK3, "Bill_Pay", mContext.getString(R.string.link_three), "Bill Pay", ""));
@@ -355,11 +356,11 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-                businessNameView = (TextView) itemView.findViewById(R.id.business_name);
-                outletNameView = (TextView) itemView.findViewById(R.id.outlet_name);
-                businessTypeView = (TextView) itemView.findViewById(R.id.business_type);
-                profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                businessAddressView = (TextView) itemView.findViewById(R.id.business_address);
+                businessNameView = itemView.findViewById(R.id.business_name);
+                outletNameView = itemView.findViewById(R.id.outlet_name);
+                businessTypeView = itemView.findViewById(R.id.business_type);
+                profilePictureView = itemView.findViewById(R.id.profile_picture);
+                businessAddressView = itemView.findViewById(R.id.business_address);
             }
 
             public void bindView(final int pos) {

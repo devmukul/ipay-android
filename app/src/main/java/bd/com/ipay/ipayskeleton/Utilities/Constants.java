@@ -195,12 +195,12 @@ public class Constants {
     public static final String LANKA_BANGLA_BILL_PAY = "LANKA BANGLA BILL PAY";
     public static final String LANKA_BANGLA_DPS_BILL_PAY = "LANKA BANGLA DPS BILL PAY";
     public static final String AMBERIT = "AMBERIT";
-    public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
-    public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
-    public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
-    public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
-    public static final String FROM_CONTACT = "FROM_CONTACT";
-    public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
+	public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
+	public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
+	public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
+	public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
+	public static final String FROM_CONTACT = "FROM_CONTACT";
+	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
     public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
     public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
     public static final String VISA = "VISA";
@@ -241,6 +241,11 @@ public class Constants {
     public static final String ADD_SOURCE_OF_FUND_SPONSOR = "ADD_SOURCE_OF_FUND_SPONSOR";
     public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
     public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
+    public static final String URL_GET_BANK_LIST = "credit-card/banks";
+    public static final String CREDIT_CARD = "CREDIT_CARD";
+    public static final String CREDIT_CARD_WITH_SPACE = "Credit Card";
+    public static final String URL_GET_SAVED_CARDS = "credit-card/my-list";
+    public static final String COMMAND_GET_SAVED_CARDS = "COMMAND_GET_SAVED_CARDS";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
     public static final String URL_LANKABANGLA_DPS_BILL_PAY = "lankabangla/dps/billpay";
     public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
@@ -248,7 +253,7 @@ public class Constants {
     public static final String COMMAND_LANKABANGLA_BILL_PAY = "COMMAND_LANKABANGLA_BILL_PAY";
     public static final String URL_LANKABANGLA_VISA_BILL_PAY = "lankabangla/visa/billpay";
     public static final String URL_LANKABANGLA_MASTERCARD_BILL_PAY = "lankabangla/mastercard/billpay";
-
+    public static final String URL_CREDIT_CARD_BILL_PAY = "credit-card/billpay";
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -364,6 +369,8 @@ public class Constants {
 
     // Bank Transaction REST
     public static final String URL_ADD_MONEY_FROM_BANK = "banktransaction/cashin/v2";
+    public static final String URL_ADD_MONEY_FROM_BANK_INSTANTLY = "credit";
+    public static final String URL_ADD_MONEY_FROM_BANK_INSTANTLY_BALANCE = "credit/balance";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
 
     // Bank Verify Rest
@@ -583,6 +590,7 @@ public class Constants {
 
     // IPayHere
     public static final String URL_BUSINESS_NEARBY = "location/business-nearby";
+    public static final String URL_BUSINESS_NEARBY_V2 = "location/business-nearby/v2";
 
     // Utilities Bill
     public static final String URL_GET_PROVIDER = "providers/all";
@@ -595,6 +603,8 @@ public class Constants {
     //Promotions
     public static final String URL_PROMOTIONS = "promotions/";
 
+    //Promotions
+    public static final String URL_FEEDBACK = "feedbacks";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -623,6 +633,7 @@ public class Constants {
     public static final long MIN_REQUIRED_REFRESH_TOKEN_TIME = 24 * 60 * 60 * 1000;   // Refresh token should be called at least after 24 hours
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
+    public static final String COMMAND_CREDIT_CARD_BILL_PAY = "COMMAND_CREDIT_CARD_BILL_PAY";
     public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
     public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
@@ -687,6 +698,8 @@ public class Constants {
     public static final String COMMAND_GET_RECOMMENDATION_REQUESTS = "COMMAND_GET_RECOMMENDATION_REQUESTS";
     public static final String COMMAND_ADD_MONEY = "COMMAND_ADD_MONEY";
     public static final String COMMAND_ADD_MONEY_FROM_BANK = "COMMAND_ADD_MONEY_FROM_BANK";
+    public static final String COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY = "COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY";
+    public static final String COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY_BALANCE = "COMMAND_ADD_MONEY_FROM_BANK_INSTANTLY_BALANCE";
     public static final String COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD = "COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD";
     public static final String COMMAND_INTRODUCE_ACTION = "COMMAND_INTRODUCE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
@@ -782,6 +795,8 @@ public class Constants {
 
     public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
     public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
+
+    public static final String COMMAND_SUBMIT_RATING = "COMMAND_SUBMIT_RATING";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 

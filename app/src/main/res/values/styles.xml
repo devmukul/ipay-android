@@ -5,8 +5,12 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:windowTranslucentStatus">true</item>
+
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@color/colorWhite</item>
     </style>
 
     <style name="AppTheme.ActionBarNoElevation" parent="AppTheme">
@@ -877,16 +881,14 @@
 
     <!-- Transaction History -->
     <style name="TransactionHistoryFilterCheckboxStyle">
-
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:drawableRight">@drawable/round_checkbox_for_filter</item>
-        <item name="android:button">@null</item>
+        <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingBottom">@dimen/activity_vertical_margin</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/background_filter_radio_button</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
     <!-- Transaction History --><style name="BusinessRolePrivilegeCheckboxStyle">
@@ -907,7 +909,7 @@
     <style name="TransactionHistoryLeftTextViewStyle">
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:gravity">left</item>
+        <item name="android:gravity">start</item>
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -917,7 +919,7 @@
     </style>
 
     <style name="TransactionHistoryRightTextViewStyle">
-        <item name="android:gravity">right</item>
+        <item name="android:gravity">end</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
@@ -1065,7 +1067,8 @@
     </style>
 
     <style name="ButtonPrimary.IPayTransactionAction" parent="ButtonPrimary">
-        <item name="android:background">@drawable/background_button_oval_ipay_transaction_action</item>
+        <item name="android:background">@drawable/background_button_oval_ipay_transaction_action
+        </item>
     </style>
 
     <style name="ButtonPrimary.IPayTransactionAction.Normal" parent="ButtonPrimary">
@@ -1212,7 +1215,6 @@
     </style>
 
     <style name="DocumentPreviewDetailsContainer">
-
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentLeft">true</item>
@@ -1221,5 +1223,13 @@
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin_card</item>
         <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="ImageRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ratingbar_selector</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:maxHeight">40dp</item>
+        <item name="android:numStars">5</item>
+        <item name="android:stepSize">1.0</item>
     </style>
 </resources>

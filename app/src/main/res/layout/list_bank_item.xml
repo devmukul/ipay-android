@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value12"
+        android:layout_marginBottom="@dimen/value12">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/bank_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <TextView
+            android:id="@+id/bank_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#212121"
+            android:lineSpacingExtra="8sp"
+            tools:text="Standard Charterd Bank"
+            android:layout_toRightOf="@+id/bank_icon"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/value8"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#33acacac"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="58dp"></LinearLayout>
+
+</RelativeLayout>

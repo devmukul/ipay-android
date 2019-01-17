@@ -35,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
@@ -290,9 +289,9 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    private void sendFireBaseTokenToServer() {
-        String fireBaseToken = FirebaseInstanceId.getInstance().getToken();
-        Logger.logW("Firebase Token", "Refresh token called");
+	private void sendFireBaseTokenToServer() {
+		String fireBaseToken = ProfileInfoCacheManager.getPushNotificationToken(null);
+		Logger.logW("Firebase Token", "Refresh token called");
 
         if (mRefreshTokenAsyncTask != null) {
             mRefreshTokenAsyncTask = null;
@@ -792,18 +791,19 @@ public class HomeActivity extends BaseActivity
         mGetAccessControlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Override
-    public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
-            mLogoutTask = null;
-            mGetProfileInfoTask = null;
-            mGetBusinessInformationAsyncTask = null;
-            mLocationUpdateRequestAsyncTask = null;
-            mGetNotificationAsyncTask = null;
-            return;
-        }
-        mProgressDialog.dismiss();
-        Gson gson = new Gson();
+	@Override
+	public void httpResponseReceiver(GenericHttpResponse result) {
+		if (HttpErrorHandler.isErrorFound(result, this, mProgressDialog)) {
+			mLogoutTask = null;
+			mGetProfileInfoTask = null;
+			mGetBusinessInformationAsyncTask = null;
+			mLocationUpdateRequestAsyncTask = null;
+			mGetNotificationAsyncTask = null;
+			mRefreshTokenAsyncTask = null;
+			return;
+		}
+		mProgressDialog.dismiss();
+		Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_LOG_OUT:
