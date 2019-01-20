@@ -17,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateCustomNotificationAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateRichNotification;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
@@ -101,19 +102,27 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
                 || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION
                 || serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
             if (data != null) {
-                //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
-                try {
-                    createNotification(this, data.values().toArray()[5].toString(),
-                            data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
-                } catch (Exception e) {
 
+                if (mFcmNotificationResponse.getTransactionHistory() != null) {
+                    CreateRichNotification createRichNotification = new CreateRichNotification
+                            (mFcmNotificationResponse.getTransactionHistory(), this);
+                    createRichNotification.setupNotification();
+                } else {
+                    try {
+                        createNotification(this, data.values().toArray()[5].toString(),
+                                data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
+                    } catch (Exception e) {
+
+                    }
                 }
+                //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
             }
         } else {
             FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
         }
 
     }
+
 
     private void setNotificationResponseFromData(Map data) {
         Gson gson = new Gson();
@@ -122,6 +131,7 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
         String transactionDetailsString = mFcmNotificationResponse.getTransactionDetailsString();
         TransactionHistory transactionHistory = new Gson().
                 fromJson(transactionDetailsString, TransactionHistory.class);
+        mFcmNotificationResponse.setTransactionHistory(transactionHistory);
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {

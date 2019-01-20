@@ -695,7 +695,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
             public void bindView(int pos) {
                 final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
-
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
                 String responseTime = Utilities.formatDayMonthYear(transactionHistory.getTime());

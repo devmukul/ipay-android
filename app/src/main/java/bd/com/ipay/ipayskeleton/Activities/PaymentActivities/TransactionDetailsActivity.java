@@ -38,6 +38,7 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
 
         mProgressDialog = new ProgressDialog(this);
 
+
         setContentView(R.layout.activity_transaction_details);
         status = getIntent().getIntExtra(Constants.STATUS, 0);
 

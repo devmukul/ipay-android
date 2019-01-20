@@ -2,6 +2,8 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+
 public class FCMNotificationResponse {
     private int serviceId;
     private boolean isReceiver;
@@ -10,6 +12,15 @@ public class FCMNotificationResponse {
     private long time;
     private String deepLink;
     private String transactionDetailsString;
+    private TransactionHistory transactionHistory;
+
+    public TransactionHistory getTransactionHistory() {
+        return transactionHistory;
+    }
+
+    public void setTransactionHistory(TransactionHistory transactionHistory) {
+        this.transactionHistory = transactionHistory;
+    }
 
     public String getTransactionDetailsString() {
         return transactionDetailsString;
