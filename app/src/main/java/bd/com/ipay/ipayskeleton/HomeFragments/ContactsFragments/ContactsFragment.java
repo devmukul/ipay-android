@@ -103,7 +103,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean mShowInvitedOnly;
     private boolean mShowNonInvitedNonMembersOnly;
     private boolean mShowAllMembersToInvite;
-    private boolean mPersonalMemebersOnly;
 
     private int nameIndex;
     private int originalNameIndex;
@@ -154,7 +153,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
             mShowNonInvitedNonMembersOnly = getArguments().getBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, false);
             mShowAllMembersToInvite = getArguments().getBoolean(Constants.SHOW_ALL_MEMBERS, false);
-            mPersonalMemebersOnly = getArguments().getBoolean(Constants.PERSONAL_ACCOUNT, false);
         }
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
@@ -574,22 +572,34 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         selectedBottomSheetView = mSheetViewIpayMember;
 
-        Button askForConfirmationButton = mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
+        Button askForIntroduction = mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
         Button mMakePaymentButton = mSheetViewIpayMember.findViewById(R.id.button_make_payment);
+        Button introduceToIpayButton = mSheetViewIpayMember.findViewById(R.id.button_introduce);
 
         if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
-            askForConfirmationButton.setVisibility(View.GONE);
+            askForIntroduction.setVisibility(View.GONE);
             mMakePaymentButton.setVisibility(View.VISIBLE);
         } else {
             mMakePaymentButton.setVisibility(View.GONE);
             if (!isVerified) {
-                if (askForConfirmationButton != null)
-                    askForConfirmationButton.setVisibility(View.GONE);
+
+                if (introduceToIpayButton != null) {
+                    introduceToIpayButton.setVisibility(View.VISIBLE);
+                }
+
+                if (askForIntroduction != null)
+                    askForIntroduction.setVisibility(View.GONE);
 
             } else {
-                if (askForConfirmationButton != null)
-                    askForConfirmationButton.setVisibility(View.VISIBLE);
+
+                if (introduceToIpayButton != null) {
+                    introduceToIpayButton.setVisibility(View.GONE);
+                }
+
+                if (askForIntroduction != null)
+                    askForIntroduction.setVisibility(View.VISIBLE);
             }
+
         }
 
         mBottomSheetLayout.showWithSheetView(mSheetViewIpayMember);
