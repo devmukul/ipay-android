@@ -112,6 +112,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int verificationStatusIndex;
     private int accountTypeIndex;
     private int isMemberIndex;
+    private boolean mPersonalMemebersOnly;
 
     private ContactLoadFinishListener contactLoadFinishListener;
 
@@ -153,6 +154,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
             mShowNonInvitedNonMembersOnly = getArguments().getBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, false);
             mShowAllMembersToInvite = getArguments().getBoolean(Constants.SHOW_ALL_MEMBERS, false);
+            mPersonalMemebersOnly = getArguments().getBoolean(Constants.PERSONAL_ACCOUNT, false);
         }
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
