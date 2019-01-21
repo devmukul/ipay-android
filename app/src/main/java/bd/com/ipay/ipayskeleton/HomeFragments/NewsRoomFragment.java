@@ -88,10 +88,8 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (getView() != null) {
-            if (isVisibleToUser) {
-                refreshNewsRoomList();
-            }
+        if ( getView() != null && isVisibleToUser ){
+            refreshNewsRoomList();
         }
     }
 
@@ -240,7 +238,6 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
                     mMoreView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                        if (!TextUtils.isEmpty(detailsURL)) {
                             try {
                                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
                                 intent.putExtra("url", detailsURL);
@@ -248,7 +245,6 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
                             } catch (Exception e) {
                                 Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
                             }
-                        }
                         }
                     });
                 }else {
