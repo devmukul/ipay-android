@@ -67,16 +67,6 @@
             android:textColor="#333333"
             tools:text="for 3 Adult &amp; 2 Child" />
 
-        <TextView
-            android:id="@+id/per_ticket_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:fontFamily="sans-serif"
-            android:textStyle="normal"
-            android:textColor="#01b3a2"
-            tools:text="Per ticket price: 300.00" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -162,30 +152,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/bank_charge_text_view"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dip"
-                android:layout_marginRight="4dip"
-                android:layout_weight="1"
-                android:fontFamily="@font/open_sans_light"
-                android:gravity="start|center_vertical"
-                android:text="Bank Charge"
-                android:textColor="#333333" />
-
-            <TextView
-                android:id="@+id/bank_charge_enter_text_view"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dip"
-                android:layout_marginLeft="4dip"
-                android:layout_weight="1"
-                android:fontFamily="@font/open_sans_semibold"
-                android:gravity="end|center_vertical"
-                android:textColor="#333333"
-                android:textSize="12sp"
-                tools:text="@string/dummy_amount" />
         </LinearLayout>
 
         <View

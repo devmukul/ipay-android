@@ -28,10 +28,9 @@ public class TicketDetailsDialog {
     private TextView dateTextView;
     private TextView tarinNameTextView;
     private TextView classNameTextView;
+    private TextView adultChildTextView;
     private TextView fareAmountTextView;
     private TextView vatAmountTextView;
-
-    private TextView bankChargeAmountTextView;
     private TextView netAmountTextView;
     private final Button buyTicketButton;
     private final ImageButton closeButton;
@@ -55,10 +54,10 @@ public class TicketDetailsDialog {
         dateTextView = customView.findViewById(R.id.date);
         tarinNameTextView = customView.findViewById(R.id.train_name);
         classNameTextView = customView.findViewById(R.id.ticket_class);
+        adultChildTextView = customView.findViewById(R.id.adult_child);
         fareAmountTextView = customView.findViewById(R.id.fare_enter_text_view);
         vatAmountTextView = customView.findViewById(R.id.vat_enter_text_view);
         buyTicketButton = customView.findViewById(R.id.buy_ticket_button);
-        bankChargeAmountTextView = customView.findViewById(R.id.bank_charge_enter_text_view);
         netAmountTextView = customView.findViewById(R.id.net_amount_enter_text_view);
         alertDialog = new AlertDialog.Builder(context)
                 .setCustomTitle(customTitleView)
@@ -79,6 +78,10 @@ public class TicketDetailsDialog {
         tarinNameTextView.setText(trainName);
     }
 
+    public void setAdultChild(CharSequence trainName) {
+        adultChildTextView.setText(trainName);
+    }
+
     public void setClassName(CharSequence className) {
         classNameTextView.setText(className);
     }
@@ -89,10 +92,6 @@ public class TicketDetailsDialog {
 
     public void setVatAmount(double vatAmount) {
         vatAmountTextView.setText(String.format("Tk. %s", numberFormat.format(BigDecimal.valueOf(vatAmount))));
-    }
-
-    public void setBankChargeAmount(Double bankChargeAmount) {
-        bankChargeAmountTextView.setText(String.format("Tk. %s", numberFormat.format(BigDecimal.valueOf(bankChargeAmount))));
     }
 
     public void setNetAmount(double netAmount) {

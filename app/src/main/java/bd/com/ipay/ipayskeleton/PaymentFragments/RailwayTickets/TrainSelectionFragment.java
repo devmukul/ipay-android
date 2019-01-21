@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetStationResponse;
@@ -77,6 +78,10 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
     private int mSelectedAdult;
     private int mSelectedChild;
 
+    private String mSelectedTrain = null;
+    private String mSelectedClass = null;
+    private int mSelectedTrainNo;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +90,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
             mSelectedSattionFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
             mSelectedSattionTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
             mSelectedGender = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, "");
-            mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, 0);
+            mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, 0);
             mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
             mSelectedChild = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD,0);
         }
@@ -100,7 +105,6 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((IPayUtilityBillPayActionActivity) getActivity()).setSupportActionBar(toolbar);
@@ -127,15 +131,15 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         return resourceId;
     }
 
-    protected void performContinueAction() {
+    protected void performContinueAction(String ticketClass, int trainNumber ) {
         if (!Utilities.isConnectionAvailable(getContext())) {
             Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
         } else if (mGetTrainInfoAsyncTask != null) {
             return;
         }
 
-        String jsonBody = new Gson().toJson( new GetTicketInfoRequest(0, "AC_S", "male", 16,
-                3, 1 , "DHAKA","SYLHET", 709));
+        String jsonBody = new Gson().toJson( new GetTicketInfoRequest(0, ticketClass, "M", mSelectedDate,
+                mSelectedAdult, mSelectedChild , mSelectedSattionFrom, mSelectedSattionTo, trainNumber));
 
         mGetTrainInfoAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO,
                 "http://10.10.10.11:8866/api/utility/cns/ticket-query/", jsonBody, getContext(), this, false);
@@ -171,11 +175,15 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
                         }
                         break;
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getContext() != null)
                     Toaster.makeText(getContext(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
             }
+
+            if(mProgressDialog.isShowing())
+                mProgressDialog.dismiss();
 
             mGetTrainInfoAsyncTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_CONTACTS)) {
@@ -235,13 +243,14 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         if (getActivity() == null)
             return;
 
-        String trainName = String.valueOf(ticketInfoResponse.getTrainNumber());
-        String className = ticketInfoResponse.getClassName();
+        String trainNo = String.valueOf(ticketInfoResponse.getTrainNumber());
+        //String className = ticketInfoResponse.getClassName();
 
         final TicketDetailsDialog billDetailsDialog = new TicketDetailsDialog(getContext());
         billDetailsDialog.setTitle("Ticket Info");
-        billDetailsDialog.setTrainName(trainName);
-        billDetailsDialog.setClassName(className);
+        billDetailsDialog.setTrainName(mSelectedTrain+" - "+trainNo);
+        billDetailsDialog.setClassName(mSelectedClass);
+        billDetailsDialog.setAdultChild("for "+mSelectedAdult+" Adults & "+mSelectedChild+" Child");
         billDetailsDialog.setDate(ticketInfoResponse.getJourneyDate());
         billDetailsDialog.setFareAmount(ticketInfoResponse.getFare());
         billDetailsDialog.setVatAmount(ticketInfoResponse.getVat());
@@ -325,6 +334,8 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 
         @Override
         public void onBindViewHolder(@NonNull final BankViewHolder holder, final int position) {
+            setClassAdapter(holder,position,mTrainList.get(position).getClassList());
+
             holder.trainTimeTextView.setText(mTrainList.get(position).getDepartureTime());
             holder.trainNameTextView.setText(mTrainList.get(position).getTrainName());
             holder.ticketClassTextView.setText(mTrainList.get(position).getClassList().get(0));
@@ -332,9 +343,14 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
             holder.findTicket.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    performContinueAction();
+
+                    mSelectedTrain = mTrainList.get(position).getTrainName();
+                    mSelectedClass = holder.ticketClassTextView.getText().toString();
+                    mSelectedTrainNo = mTrainList.get(position).getTrainNumber();
+                    performContinueAction(mSelectedClass , mSelectedTrainNo);
                 }
             });
+
 //            holder.parentView.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
@@ -349,6 +365,24 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 //            });
 
         }
+
+        private void setClassAdapter(final BankViewHolder holder, final int position, List<String> classList) {
+            final SelectorDialog classSelectorDialog = new SelectorDialog (getContext(), getContext().getString(R.string.select_a_thana), classList);
+            classSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
+                @Override
+                public void onResourceSelected(String name) {
+                    holder.ticketClassTextView.setText(name);
+                }
+            });
+
+            holder.ticketClassTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    classSelectorDialog.show();
+                }
+            });
+        }
+
 
         @Override
         public int getItemCount() {

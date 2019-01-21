@@ -44,9 +44,9 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			accountNumber = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, "");
-			accountUserName = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, "");
-			billAmount = (Number) getArguments().getSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY);
+//			accountNumber = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, "");
+//			accountUserName = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, "");
+//			billAmount = (Number) getArguments().getSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY);
 		}
 	}
 
@@ -145,8 +145,8 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 									public void run() {
 										customProgressDialog.dismissDialog();
 										Bundle bundle = new Bundle();
-										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, accountNumber);
-										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, accountUserName);
+//										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, accountNumber);
+//										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, accountUserName);
 										bundle.putSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY, billAmount);
 										if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
 											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillSuccessFragment(), bundle, 3, true);

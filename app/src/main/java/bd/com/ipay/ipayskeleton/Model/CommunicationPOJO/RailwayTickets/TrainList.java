@@ -11,7 +11,7 @@ public class TrainList implements Serializable
 
     @SerializedName("trainNumber")
     @Expose
-    Long trainNumber;
+    int trainNumber;
     @SerializedName("trainName")
     @Expose
     String trainName;
@@ -26,18 +26,18 @@ public class TrainList implements Serializable
     public TrainList() {
     }
 
-    public TrainList(Long trainNumber, String trainName, String departureTime, List<String> classList) {
+    public TrainList(int trainNumber, String trainName, String departureTime, List<String> classList) {
         this.trainNumber = trainNumber;
         this.trainName = trainName;
         this.departureTime = departureTime;
         this.classList = classList;
     }
 
-    public Long getTrainNumber() {
+    public int getTrainNumber() {
         return trainNumber;
     }
 
-    public void setTrainNumber(Long trainNumber) {
+    public void setTrainNumber(int trainNumber) {
         this.trainNumber = trainNumber;
     }
 

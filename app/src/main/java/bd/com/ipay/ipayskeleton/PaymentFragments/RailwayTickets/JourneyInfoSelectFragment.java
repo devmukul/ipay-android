@@ -535,23 +535,23 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         }
     }
 
-    protected boolean verifyInput() {
-        if (TextUtils.isEmpty(getCardNumber())) {
-            showErrorMessage(getString(R.string.empty_card_number_message));
-            return false;
-        } else if (!CardNumberValidator.validateCardNumber(getCardNumber())) {
-            showErrorMessage(getString(R.string.invalid_card_number_message));
-            return false;
-        } else {
-            if (TextUtils.isEmpty(getCardHolderName())) {
-                showErrorMessage(getString(R.string.enter_a_name));
-                return false;
-            } else {
-                return true;
-            }
-
-        }
-    }
+//    protected boolean verifyInput() {
+//        if (TextUtils.isEmpty(getCardNumber())) {
+//            showErrorMessage(getString(R.string.empty_card_number_message));
+//            return false;
+//        } else if (!CardNumberValidator.validateCardNumber(getCardNumber())) {
+//            showErrorMessage(getString(R.string.invalid_card_number_message));
+//            return false;
+//        } else {
+//            if (TextUtils.isEmpty(getCardHolderName())) {
+//                showErrorMessage(getString(R.string.enter_a_name));
+//                return false;
+//            } else {
+//                return true;
+//            }
+//
+//        }
+//    }
 
     @SuppressLint("ValidFragment")
     private class MyDatePickerFragment extends DialogFragment {
