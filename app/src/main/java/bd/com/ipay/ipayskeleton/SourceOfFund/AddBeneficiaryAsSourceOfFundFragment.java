@@ -94,7 +94,10 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
         parentBeneficiaryArrayList = beneficiaryArrayList;
         if (parentBeneficiaryArrayList == null || parentBeneficiaryArrayList.size() == 0) {
             setNoDataText("You do not have any beneficiary iPay user. Tap on the + icon to add one");
+            setAddNewResourceButtonVisibility(View.VISIBLE);
             noDataTextView.setVisibility(View.VISIBLE);
+        } else {
+            setAddNewResourceButtonVisibility(View.GONE);
         }
         sourceOfFundListAdapter.notifyDataSetChanged();
     }
@@ -116,6 +119,7 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
                     setNoDataText("You do not have any beneficiary iPay user. Tap on the + icon to add one");
                     parentBeneficiaryArrayList = allBeneficiaryArrayList;
                     sourceOfFundListAdapter.notifyDataSetChanged();
+                    setAddNewResourceButtonVisibility(View.VISIBLE);
                 } else {
                     noDataTextView.setVisibility(View.GONE);
                     beneficiaryArrayList = new ArrayList<>();

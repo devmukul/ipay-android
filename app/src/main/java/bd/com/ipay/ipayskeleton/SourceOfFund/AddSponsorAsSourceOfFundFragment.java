@@ -98,6 +98,9 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
         HomeActivity.mSponsorList = sponsorArrayList;
         if (parentSponsorArrayList == null || parentSponsorArrayList.size() == 0) {
             noDataTextView.setVisibility(View.VISIBLE);
+            setAddNewResourceButtonVisibility(View.VISIBLE);
+        } else {
+            setAddNewResourceButtonVisibility(View.GONE);
         }
         sourceOfFundListAdapter.notifyDataSetChanged();
 
@@ -122,6 +125,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
                             "To add one , tap the (+) button.");
                     parentSponsorArrayList = allSponsorArrayList;
                     sourceOfFundListAdapter.notifyDataSetChanged();
+                    setAddNewResourceButtonVisibility(View.VISIBLE);
                 } else {
                     noDataTextView.setVisibility(View.GONE);
                     sponsorArrayList = new ArrayList<>();

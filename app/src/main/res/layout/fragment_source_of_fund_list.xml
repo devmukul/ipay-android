@@ -81,6 +81,7 @@
                     android:id="@+id/bank_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value24"
                     android:layout_below="@+id/description">
 
                     <ImageView
@@ -108,7 +109,6 @@
                         android:layout_marginLeft="@dimen/value14"
                         android:layout_marginTop="4dp"
                         android:layout_marginRight="@dimen/value32"
-                        android:layout_marginBottom="@dimen/value24"
                         android:layout_toRightOf="@id/bank_icon"
                         android:lineSpacingExtra="4sp"
                         android:text="@string/link_bank_description"
@@ -130,6 +130,7 @@
                     android:id="@+id/sponsor_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value24"
                     android:layout_below="@+id/divider">
 
                     <ImageView
@@ -157,7 +158,6 @@
                         android:layout_marginLeft="@dimen/value14"
                         android:layout_marginTop="4dp"
                         android:layout_marginRight="@dimen/value32"
-                        android:layout_marginBottom="@dimen/value24"
                         android:layout_toRightOf="@id/sponsor_icon"
                         android:lineSpacingExtra="4sp"
                         android:text="@string/link_sponsor_description"
@@ -179,6 +179,7 @@
                     android:id="@+id/beneficiary_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value24"
                     android:layout_below="@+id/divider2">
 
                     <ImageView
@@ -206,7 +207,6 @@
                         android:layout_marginLeft="@dimen/value14"
                         android:layout_marginTop="4dp"
                         android:layout_marginRight="@dimen/value32"
-                        android:layout_marginBottom="@dimen/value24"
                         android:layout_toRightOf="@id/beneficiary_icon"
                         android:lineSpacingExtra="4sp"
                         android:text="@string/link_beneficiary_description"
@@ -228,6 +228,7 @@
                     android:id="@+id/card_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value16"
                     android:layout_below="@+id/divider3">
 
                     <ImageView
@@ -255,7 +256,6 @@
                         android:layout_marginLeft="@dimen/value14"
                         android:layout_marginTop="4dp"
                         android:layout_marginRight="@dimen/value32"
-                        android:layout_marginBottom="@dimen/value24"
                         android:layout_toRightOf="@id/card_icon"
                         android:lineSpacingExtra="4sp"
                         android:text="@string/card_description"

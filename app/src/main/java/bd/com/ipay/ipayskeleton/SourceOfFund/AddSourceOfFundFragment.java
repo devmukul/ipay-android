@@ -78,6 +78,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
     public BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
     private EditText pinEditText;
     private EditText amountEditText;
+    private TextView helperTextView;
     private View divider;
 
     private String type;
@@ -102,6 +103,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         amountEditText = view.findViewById(R.id.amount_edit_text);
         doneButton = view.findViewById(R.id.done);
         profileImageView = view.findViewById(R.id.profile_picture);
+        helperTextView = view.findViewById(R.id.help);
         divider = view.findViewById(R.id.background3);
         relationShipEditText = view.findViewById(R.id.relationship_edit_text);
         ImageView backButton = view.findViewById(R.id.back);
@@ -121,6 +123,14 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+            }
+        });
+        helperTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.TYPE, type);
+                ((SourceOfFundActivity) getActivity()).switchToHelpLayout(bundle);
             }
         });
 

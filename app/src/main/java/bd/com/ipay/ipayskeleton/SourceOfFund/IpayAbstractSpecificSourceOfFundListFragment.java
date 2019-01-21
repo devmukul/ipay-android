@@ -132,6 +132,10 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
 
     }
 
+    public void setAddNewResourceButtonVisibility(int visibility) {
+        addNewResourceButton.setVisibility(visibility);
+    }
+
     public abstract void setType();
 
     public abstract void setRecyclerViewLayoutId();
@@ -315,7 +319,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                     bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                         @Override
                         public void onStateChanged(@NonNull View view, int i) {
-                            if( i == BottomSheetBehavior.STATE_COLLAPSED){
+                            if (i == BottomSheetBehavior.STATE_COLLAPSED) {
                                 Utilities.hideKeyboard(getActivity());
                             }
                         }
