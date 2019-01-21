@@ -65,7 +65,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import static android.view.View.GONE;
 
 public class IPayTransactionSuccessFragment extends Fragment implements HttpResponseListener {
-    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
     private int transactionType;
     private String name;
     private String mobileNumber;

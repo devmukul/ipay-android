@@ -499,17 +499,17 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
             String distanceString;
             if (distance < 1000) {
                 if (distance < 1) {
-                    distanceString = String.format(Locale.US, "%dm", 1);
+                    distanceString = String.format(Locale.getDefault(), "%dm", 1);
                 }
                 else {
-                    distanceString = String.format(Locale.US, "%dm", Math.round(distance));
+                    distanceString = String.format(Locale.getDefault(), "%dm", Math.round(distance));
                 }
             }
             else if (distance > 10000) {
-                distanceString = String.format(Locale.US, "%dkm", Math.round(distance / 1000));
+                distanceString = String.format(Locale.getDefault(), "%dkm", Math.round(distance / 1000));
             }
             else {
-                distanceString = String.format(Locale.US, "%.2fkm", distance / 1000);
+                distanceString = String.format(Locale.getDefault(), "%.2fkm", distance / 1000);
             }
 
             return distanceString;

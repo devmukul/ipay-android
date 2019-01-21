@@ -38,7 +38,7 @@ public abstract class IPayAbstractTransactionSuccessFragment extends Fragment {
 	private RoundedImageView senderProfilePictureImageView;
 	private RoundedImageView receiverProfilePictureImageView;
 	private ImageView arrowImageView;
-	protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+	protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {

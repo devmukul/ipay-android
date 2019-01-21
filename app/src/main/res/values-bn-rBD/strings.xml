@@ -1,161 +1,158 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">iPay</string>
-    <string name="copyright">Copyright</string>
-    <string name="iPay_system">iPay Systems Ltd.</string>
-    <string name="all_rights_reserved">All Rights Reserved. </string>
-    <string name="bangladesh">Bangladesh</string>
-    <string name="web">Web</string>
-    <string name="android">android</string>
-    <string name="ios">ios</string>
-    <string name="browser">browser</string>
-    <string name="mobile_android" translatable="false">mobile-android-</string>
-    <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
-    <string name="invalid_otp_with_characters">OTP must contain only digits</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="prompt_password">Password</string>
-    <string name="prompt_password_new">Enter your password</string>
-    <string name="prompt_doing_business_as">Doing Business As</string>
-    <string name="prompt_company_name">Company Name (Optional)</string>
-    <string name="prompt_business_addr_line2">Address Line 2 (Optional)</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="type_of_business">Type of Business</string>
-    <string name="password_hint">Password must contain minimum 8 characters and be alphanumeric. </string>
-    <string name="name">Name</string>
-    <string name="enter_new_pin">PIN (4 digit)</string>
-    <string name="confirm_your_pin">Confirm PIN</string>
-    <string name="new_pass">New password</string>
-    <string name="confirm_new_pass">Confirm new password</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="email">Email</string>
-    <string name="email_address">Email Address</string>
-    <string name="primary_email_address">Primary Email Address</string>
-    <string name="other_email_address">Other Email Addresses</string>
-    <string name="full_name">Full Name</string>
-    <string name="address">Address</string>
-    <string name="address_line_1">Address Line 1</string>
-    <string name="invalid_address_line_1">Please enter Address Line 1</string>
-    <string name="select_from_date_first">Please select the from date first</string>
-    <string name="select_a_valid_date">Please select a valid date</string>
-    <string name="browsers_and_apps"><![CDATA[Browsers & Apps]]></string>
-    <string name="same_as_present_address">Same as Present Address</string>
+    <string name="app_name">আইপে</string>
+    <string name="copyright">কপিরাইট</string>
+    <string name="iPay_system">আইপে সিস্টেমস লিমিটেড</string>
+    <string name="all_rights_reserved">সর্বস্বত্ব সংরক্ষিত।</string>
+    <string name="bangladesh">বাংলাদেশ</string>
+    <string name="web">ওয়েব</string>
+    <string name="android">এন্ড্রয়েড</string>
+    <string name="ios">আইওএস</string>
+    <string name="browser">ব্রাউজার</string>
+    <string name="no_iPay_account">ব্যবহারকারীর একটি আইপে অ্যাকাউন্ট নেই</string>
+    <string name="invalid_otp_with_characters">OTP তে শুধুমাত্র ডিজিট থাকতে হবে</string>
+    <string name="navigation_drawer_open">ন্যাভিগেশন ড্রয়ার খুলুন</string>
+    <string name="navigation_drawer_close">ন্যাভিগেশন ড্রয়ার বন্ধ করুন</string>
+    <string name="prompt_password">পাসওয়ার্ড</string>
+    <string name="prompt_password_new">আপনার পাসওয়ার্ড লিখুন</string>
+    <string name="prompt_doing_business_as">যে হিসাবে ব্যবসা করছেন</string>
+    <string name="prompt_company_name">কোম্পানির নাম (ঐচ্ছিক)</string>
+    <string name="prompt_business_addr_line2">ঠিকানা লাইন ২ (ঐচ্ছিক)</string>
+    <string name="action_sign_in_short">প্রবেশ কর</string>
+    <string name="type_of_business">ব্যবসার ধরন</string>
+    <string name="name">নাম</string>
+    <string name="enter_new_pin">পিন (৪ ডিজিট)</string>
+    <string name="confirm_your_pin">পিন নিশ্চিত করুন</string>
+    <string name="new_pass">নতুন পাসওয়ার্ড</string>
+    <string name="confirm_new_pass">নতুন পাসওয়ার্ড নিশ্চিত করুন</string>
+    <string name="confirm_password">পাসওয়ার্ড নিশ্চিত করুন</string>
+    <string name="email">ইমেইল</string>
+    <string name="email_address">ইমেল ঠিকানা</string>
+    <string name="primary_email_address">প্রাথমিক ইমেইল ঠিকানা</string>
+    <string name="other_email_address">অন্যান্য ইমেইল ঠিকানা</string>
+    <string name="full_name">পুরো নাম</string>
+    <string name="address">ঠিকানা</string>
+    <string name="address_line_1">ঠিকানা লাইন ১</string>
+    <string name="invalid_address_line_1">ঠিকানা লাইন ১ লিখুন</string>
+    <string name="select_from_date_first">প্রথম তারিখ থেকে নির্বাচন করুন</string>
+    <string name="select_a_valid_date">একটি বৈধ তারিখ নির্বাচন করুন</string>
+    <string name="browsers_and_apps">ব্রাউজার এবং অ্যাপ্লিকেশন</string>
+    <string name="same_as_present_address">বর্তমান ঠিকানার ন্যায়</string>
     <string name="introduced_on">Introduced on: </string>
 
-    <string name="invalid_business_name">Enter a business name</string>
-    <string name="invalid_business_type">Enter a business type</string>
-    <string name="not_set">Not Set</string>
-    <string name="thana">Thana</string>
-    <string name="invalid_thana">Please select a Thana</string>
-    <string name="district">District</string>
-    <string name="invalid_district">Please select a District</string>
-    <string name="postcode">Postcode</string>
-    <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
-    <string name="invalid_passport_ID_insufficient_length">Passport ID should be 9 characters long </string>
-    <string name="invalid_passport_ID">Invalid Passport ID</string>
-    <string name="invalid_driving_license_ID">Invalid Driving License ID</string>
-    <string name="invalid_tin">Invalid Tin</string>
-    <string name="invalid_birth_certificate">Invalid Birth Certificate ID</string>
-    <string name="invalid_nid_min_length">NID should be at least 10 digits long</string>
-    <string name="invalid_nid_max_length">NID should be max 17 digits long</string>
-    <string name="invalid_business_tin_wrong_length">Business TIN should be 12 digits long</string>
-    <string name="invalid_vat_reg_cert_ID_wrong_length">Vat Registration Certificate ID should be 11 digits long</string>
-    <string name="occupation">Occupation</string>
-    <string name="organization_name">Organization Name</string>
-    <string name="mobile_number">Mobile Number</string>
-    <string name="name_mobile_number">Name or Mobile Number</string>
-    <string name="phone_number">Phone Number</string>
-    <string name="contact_us">Contact Us</string>
-    <string name="terms_of_service">Terms of Service</string>
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="contacts_info">iPay will be pleased to discuss any concern or scope of improvement in our Payment Application. Please feel free to contact us.</string>
-    <string name="contact_already_exists">Contact already exists</string>
-    <string name="business_mobile_number">Business Mobile Number</string>
-    <string name="confirm_password_not_matched">Password did not match</string>
-    <string name="change_password_success">Password change successful</string>
-    <string name="change_password_success_message">Your password is changed successfully. Now you will be logged out from all devices. Please login again to continue.</string>
-    <string name="confirm_pin_not_matched">PIN did not match</string>
-    <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account.</string>
-    <string name="empty_transaction_history">No transaction to show right now.</string>
-    <string name="empty_ipay_here">No business found near this location.</string>
-    <string name="empty_list">Nothing to show right now.</string>
-    <string name="empty_list_offer">No promotional offer available right now.</string>
-    <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
-    <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network.\n\nIf you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network.\nYou will be asked to enter the codes contained in those messages.</string>
-    <string name="remove_trusted_device_message">Removing device from your trusted device list</string>
-    <string name="remove_trusted_person_message">Removing from your trusted network</string>
-    <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
-    <string name="error_invalid_pin">PIN must be 4 digit</string>
-    <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
-    <string name="error_invalid_otp_with_required_length">OTP must be 6 digit</string>
-    <string name="error_invalid_first_name">Please enter name</string>
-    <string name="error_invalid_name">Please enter name</string>
-    <string name="business_name_required">Business name is required</string>
-    <string name="error_invalid_name_with_required_length">Please enter a valid name of minimum 5 characters</string>
-    <string name="error_invalid_birthday">Please enter birthday</string>
-    <string name="error_invalid_promo_code">Invalid promo code</string>
-    <string name="error_loading_data">Error loading data. Please try again.</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="join_us">Join Us</string>
-    <string name="enter_the_amount_we_sent">Enter the amount we sent to your bank account here.</string>
-    <string name="bank_verification_help">Steps to verify a bank account: \n\nStep 1. iPay will send a small amount of money to your bank account, this may take 3–5 business days. \nStep 2. You have to contact your bank to know the exact amount. \nStep 3. Tap the name of your bank and select Verify. \nStep 4. Enter the exact amount and tap OK. \n\n*Entering an incorrect amount 5 times will permanently block the bank account.</string>
-    <string name="are_you_sure">Are you sure?</string>
-    <string name="are_you_sure_to_invite">Do you want to invite this person to iPay? By inviting to iPay you acknowledge that you know this person personally.</string>
-    <string name="accept">Accept</string>
-    <string name="accepting_business_role_manager_request">Accepting Business Role Manager Request</string>
-    <string name="rejecting_business_role_manager_request">Rejecting Business Role Manager Request</string>
-    <string name="this_person">this person</string>
-    <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
-    <string name="blocked_bank_message">Sorry, you have taken too many attempts to verify this bank account. Please contact with our customer support for any further queries.</string>
-    <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
-    <string name="create_invoice">Create Invoice</string>
-    <string name="request_payment">Request Payment</string>
-    <string name="no_contacts">No Contacts Available</string>
-    <string name="no_outlets">No Outlet Found</string>
-    <string name="no_verified_contacts">No verified contacts available in your account</string>
-    <string name="contacts">Contacts</string>
-    <string name="country">Country</string>
-    <string name="set_pin">Set PIN</string>
-    <string name="change_password">Change Password</string>
-    <string name="gender">Gender</string>
-    <string name="reject">Reject</string>
-    <string name="remove">Remove</string>
-    <string name="make_primary">Make Primary</string>
-    <string name="mark_as_spam">Spam</string>
-    <string name="to_date">To Date</string>
-    <string name="from_date">From Date</string>
-    <string name="service_not_available">Service Currently Not Available</string>
-    <string name="contact_support_message">This service is unavailable right now for you. Please contact support for more info.</string>
-    <string name="service_unavailable_support_message">This service is unavailable right now for you. Please try again later.</string>
-    <string name="country_not_support_message">iPay is not officially supported in your country, some features may not work properly.</string>
-    <string name="instant_money_not_entitled">Your\'re not entitled for instant money.</string>
-    <string name="verification_required_message">You need to get verified to access this feature. Please complete the verification process and try again.</string>
-    <string name="please_wait_loading">Please wait. Loading…</string>
-    <string name="please_wait">Please wait…</string>
-    <string name="please_wait_no_ellipsis">Please wait</string>
-    <string name="loading">Loading…</string>
-    <string name="load_more">Load more…</string>
-    <string name="student_id">Student ID</string>
-    <string name="no_more_results">No more results to show</string>
-    <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
-    <string name="confirm_query">Are you sure?</string>
-    <string name="introduction_request_review_dialog_content">You are ensuring the authenticity and credibility of \'this person\' when you introduce him/her.
-        Do you want to introduce \'this person\'?</string>
-    <string name="introduction_request_reject_dialog_content">You want to reject the request?</string>
-    <string name="introduction_request_spam_dialog_content">This is a spam request</string>
-    <string name="profile_info_save_failed">Failed to save profile information.</string>
-    <string name="profile_picture_set_failed">Failed to set profile picture.</string>
-    <string name="parent_info_save_failed">Failed to save parent information.</string>
-    <string name="profile_info_get_failed">Failed to fetch profile information.</string>
-    <string name="all_contacts">All</string>
-    <string name="save">Save</string>
-    <string name="update">Update</string>
-    <string name="update_ipay">Please update iPay</string>
-    <string name="update_your_application">Please update your application from Google Play Store.</string>
-    <string name="add_to_contacts">Add to Contacts</string>
-    <string name="ipay_contacts">iPay</string>
-    <string name="security_questions">Security Questions</string>
-    <string name="update_security_questions">Update Security Question</string>
-    <string name="activity_log">Activity Log</string>
+    <string name="invalid_business_name">একটি ব্যবসা নাম লিখুন</string>
+    <string name="invalid_business_type">একটি ব্যবসা টাইপ লিখুন</string>
+    <string name="not_set">সেট না</string>
+    <string name="thana">থানা</string>
+    <string name="invalid_thana">একটি থানা নির্বাচন করুন</string>
+    <string name="district">জেলা</string>
+    <string name="invalid_district">একটি জেলা নির্বাচন করুন</string>
+    <string name="postcode">পোষ্ট কোড</string>
+    <string name="invalid_postcode">দয়া করে একটি বৈধ ৪-ডিজিট পোস্টকোড লিখুন</string>
+    <string name="invalid_passport_ID_insufficient_length">পাসপোর্ট আইডি ৯ অক্ষর দীর্ঘ হওয়া উচিত</string>
+    <string name="invalid_passport_ID">অবৈধ পাসপোর্ট আইডি</string>
+    <string name="invalid_driving_license_ID">অবৈধ ড্রাইভিং লাইসেন্স আইডি</string>
+    <string name="invalid_tin">অবৈধ টিন</string>
+    <string name="invalid_birth_certificate">অবৈধ জন্মসনদ আইডি</string>
+    <string name="invalid_nid_min_length">NID কমপক্ষে ১০ ডিজিট লম্বা হওয়া উচিত</string>
+    <string name="invalid_nid_max_length">এনআইডি সর্বাধিক ১৭ ডিজিট লম্বা হওয়া উচিত</string>
+    <string name="invalid_business_tin_wrong_length">ব্যবসায় টিআইএন ১২ ডিজিট লম্বা হওয়া উচিত</string>
+    <string name="invalid_vat_reg_cert_ID_wrong_length">ভ্যাট রেজিস্ট্রেশন সার্টিফিকেট আইডি ১১ ডিজিট লম্বা হওয়া উচিত</string>
+    <string name="occupation">পেশা</string>
+    <string name="organization_name">প্রতিষ্ঠানের নাম</string>
+    <string name="mobile_number">মোবাইল নম্বর</string>
+    <string name="name_mobile_number">নাম বা মোবাইল নম্বর</string>
+    <string name="phone_number">ফোন নম্বর</string>
+    <string name="contact_us">যোগাযোগ করুন</string>
+    <string name="terms_of_service">সেবা পাবার শর্ত</string>
+    <string name="privacy_policy">গোপনীয়তা নীতি</string>
+    <string name="contacts_info">আইপে আমাদের পেমেন্ট অ্যাপ্লিকেশন উন্নতির কোন উদ্বেগ বা সুযোগ আলোচনা করতে পেরে আনন্দিত হবে। আমাদের সাথে স্বাচ্ছন্দ্যে যোগাযোগ করুন।</string>
+    <string name="contact_already_exists">যোগাযোগ ইতিমধ্যে বিদ্যমান</string>
+    <string name="business_mobile_number">ব্যবসা মোবাইল নম্বর</string>
+    <string name="confirm_password_not_matched">পাসওয়ার্ড মেলেনি</string>
+    <string name="change_password_success">পাসওয়ার্ড পরিবর্তন সফল হয়েছে</string>
+    <string name="change_password_success_message">আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে। এখন আপনার সব ডিভাইস থেকে লগ আউট করা হবে। ব্যবহার থেকে অবিরত করতে আবার লগইন করুন।</string>
+    <string name="confirm_pin_not_matched">পিন মেলে নি</string>
+    <string name="empty_bank_account_list">আপনার আইপে সঙ্গে লিঙ্ক কোন ব্যাংক অ্যাকাউন্ট নেই। আপনার আইপে অ্যাকাউন্টে টাকা যোগ করার জন্য একটি ব্যাংক একাউন্ট লিঙ্ক করুন।</string>
+    <string name="empty_transaction_history">কোন লেনদেন এখন দেখানোর জন্য নেই।</string>
+    <string name="empty_ipay_here">কোন ব্যবসা এই অবস্থান কাছাকাছি পাওয়া যায় নি।</string>
+    <string name="empty_list">এখন দেখানোর জন্য কিছুই নেই।</string>
+    <string name="empty_list_offer">এখন কোন প্রচারমূলক অফার উপলব্ধ নেই।</string>
+    <string name="not_empty_list_for_password_recovery">আপনি যদি আপনার পাসওয়ার্ড ভুলে যান এবং এটি পুনরুদ্ধার করার চেষ্টা করেন, আমরা আপনার বিশ্বস্ত নেটওয়ার্কের ব্যক্তিদের কাছে পাঠ্য বার্তা পাঠাব, আপনাকে সেই বার্তাগুলির মধ্যে থাকা কোডগুলি প্রবেশ করতে বলা হবে।</string>
+    <string name="empty_list_for_password_recovery">আপনার বিশ্বস্ত নেটওয়ার্কে একটি ব্যক্তি যুক্ত করতে + বোতাম চাপুন। \n\n যদি আপনি আপনার পাসওয়ার্ড ভুলে যান এবং এটি পুনরুদ্ধার করার চেষ্টা করেন, আমরা আপনার বিশ্বস্ত নেটওয়ার্কের ব্যক্তিদের কাছে পাঠ্য বার্তা পাঠানো হবে। \n আপনাকে তাদেরকে বার্তায় পাঠানো কোডত্বই প্রবেশ করতে বলা হবে।</string>
+    <string name="remove_trusted_device_message">আপনার বিশ্বস্ত ডিভাইস তালিকা থেকে ডিভাইস মুছে ফেলা হচ্ছে</string>
+    <string name="remove_trusted_person_message">আপনার বিশ্বস্ত নেটওয়ার্ক থেকে অপসারণ করা হচ্ছে</string>
+    <string name="error_invalid_mobile_number">একটি বৈধ মোবাইল নম্বর লিখুন দয়া করে</string>
+    <string name="error_invalid_pin">পিন ৪ ডিজিট হতে হবে</string>
+    <string name="error_invalid_otp">আপনার মোবাইল পাঠানো OTP প্রবেশ করুন</string>
+    <string name="error_invalid_otp_with_required_length">OTP অবশ্যই ৬ ডিজিট হতে হবে</string>
+    <string name="error_invalid_first_name">নাম লিখুন দয়া করে</string>
+    <string name="error_invalid_name">নাম লিখুন দয়া করে</string>
+    <string name="business_name_required">ব্যবসা নাম প্রয়োজন</string>
+    <string name="error_invalid_name_with_required_length">সর্বনিম্ন ৫ অক্ষরের বৈধ নাম লিখুন</string>
+    <string name="error_invalid_birthday">জন্মদিন প্রবেশ করুন</string>
+    <string name="error_invalid_promo_code">অবৈধ প্রোমো কোড</string>
+    <string name="error_loading_data">তথ্য লোড করার সময় ত্রুটি হয়েছে। অনুগ্রহপূর্বক আবার চেষ্টা করুন।</string>
+    <string name="forgot_password">পাসওয়ার্ড ভুলে গেছেন?</string>
+    <string name="join_us">আমাদের সাথে যোগদান করুন</string>
+    <string name="enter_the_amount_we_sent">আমরা এখানে আপনার ব্যাংক অ্যাকাউন্টে প্রেরিত পরিমাণটি প্রবেশ করান।</string>
+    <string name="bank_verification_help">একটি ব্যাংক অ্যাকাউন্ট যাচাই করার পদক্ষেপ: \n \n পদক্ষেপ 1. আইপে আপনার ব্যাঙ্ক অ্যাকাউন্টে অল্প পরিমাণ অর্থ পাঠাবে, এতে 3–5 ব্যবসায়িক দিন সময় লাগতে পারে। \n পদক্ষেপ 2. সঠিক পরিমাণ জানতে আপনার ব্যাঙ্কে যোগাযোগ করতে হবে। \n পদক্ষেপ 3. আপনার ব্যাংকের নামটি আলতো চাপুন এবং যাচাই করুন যাচাই করুন। \n পদক্ষেপ 4. সঠিক পরিমাণটি লিখুন এবং ঠিক আছে আলতো চাপুন। \n\n * ভুল পরিমাণ 5 বার প্রবেশ করানো স্থায়ীভাবে ব্যাংক অ্যাকাউন্টটি অবরোধ করবে।</string>
+    <string name="are_you_sure">আপনি কি নিশ্চিত?</string>
+    <string name="are_you_sure_to_invite">আপনি কি এই ব্যক্তিকে আইপেতে আমন্ত্রণ জানাতে চান? আইপেতে আমন্ত্রণ জানিয়ে আপনি স্বীকার করেন যে আপনি ব্যক্তিগতভাবে এই ব্যক্তিকে জানেন।</string>
+    <string name="accept">গ্রহণ করা</string>
+    <string name="accepting_business_role_manager_request">ব্যবসায় ম্যানেজার ভূমিকার অনুরোধ গ্রহণ করুন</string>
+    <string name="rejecting_business_role_manager_request">ব্যবসায় ম্যানেজার ভূমিকার অনুরোধ প্রত্যাখ্যান করুন</string>
+    <string name="this_person">এই লোকটি</string>
+    <string name="are_you_sure_to_remove_bank_account">আপনি কি আপনার ব্যাঙ্ক তালিকা থেকে এই অ্যাকাউন্টটি সরাতে চান?</string>
+    <string name="blocked_bank_message">দুঃখিত, আপনি এই ব্যাঙ্ক অ্যাকাউন্টটি যাচাই করার জন্য অনেকগুলি প্রচেষ্টা করেছেন। কোন অতিরিক্ত প্রশ্নের জন্য আমাদের গ্রাহক সমর্থন সঙ্গে যোগাযোগ করুন।</string>
+    <string name="cancel_money_request_confirm">আপনি কি অর্থের জন্য আপনার অনুরোধ বাতিল করতে চান?</string>
+    <string name="create_invoice">চালান তৈরি করুন</string>
+    <string name="request_payment">পেমেন্ট অনুরোধ করুন</string>
+    <string name="no_contacts">কোন পরিচিতি উপলব্ধ নেই</string>
+    <string name="no_outlets">কোন আউটলেট খুঁজে পাওয়া যায় নি</string>
+    <string name="no_verified_contacts">আপনার অ্যাকাউন্টে কোন যাচাইকৃত পরিচিতি উপলব্ধ নেই</string>
+    <string name="contacts">যোগাযোগ</string>
+    <string name="country">দেশ</string>
+    <string name="set_pin">পিন সেট করুন</string>
+    <string name="change_password">পাসওয়ার্ড পরিবর্তন করুন</string>
+    <string name="gender">লিঙ্গ</string>
+    <string name="reject">প্রত্যাখ্যান করুন</string>
+    <string name="remove">অপসারণ করুন</string>
+    <string name="make_primary">প্রাথমিকরন করুন</string>
+    <string name="mark_as_spam">স্প্যাম</string>
+    <string name="to_date">তারিখ পর্যন্ত</string>
+    <string name="from_date">তারিখ হইতে</string>
+    <string name="service_not_available">সেবা বর্তমানে উপলব্ধ নয়</string>
+    <string name="contact_support_message">এই সেবাটি এখন আপনার জন্য অনুপলব্ধ। আরও তথ্যের জন্য সমর্থন যোগাযোগ করুন।</string>
+    <string name="service_unavailable_support_message">এই সেবাটি এখন আপনার জন্য অনুপলব্ধ। অনুগ্রহ করে একটু পরে আবার চেষ্টা করুন।</string>
+    <string name="country_not_support_message">আইপে আপনার দেশে আনুষ্ঠানিকভাবে সমর্থিত নয়, কিছু বৈশিষ্ট্য সঠিকভাবে কাজ করতে পারে না।</string>
+    <string name="instant_money_not_entitled">আপনার তাত্ক্ষণিক অর্থ জন্য অভিহিত করা হয় না।</string>
+    <string name="verification_required_message">আপনি এই বৈশিষ্ট্য অ্যাক্সেস করতে যাচাই করতে হবে। যাচাই প্রক্রিয়া সম্পূর্ণ করুন এবং আবার চেষ্টা করুন।</string>
+    <string name="please_wait_loading">অনুগ্রহপূর্বক অপেক্ষা করুন। লোড হচ্ছে…</string>
+    <string name="please_wait">অনুগ্রহপূর্বক অপেক্ষা করুন…</string>
+    <string name="please_wait_no_ellipsis">অনুগ্রহপূর্বক অপেক্ষা করুন</string>
+    <string name="loading">লোড হচ্ছে…</string>
+    <string name="load_more">আরও লোড করুন…</string>
+    <string name="student_id">শিক্ষার্থী আইডি</string>
+    <string name="no_more_results">দেখানোর জন্য আর কোন ফলাফল নেই</string>
+    <string name="profile_info_fetch_failed">প্রোফাইল তথ্য আনতে ব্যর্থ।</string>
+    <string name="confirm_query">আপনি কি নিশ্চিত?</string>
+    <string name="introduction_request_review_dialog_content">আপনি যখন তার পরিচয় দেন তখন আপনি \'এই ব্যক্তিটির\' সত্যতা এবং বিশ্বাসযোগ্যতা নিশ্চিত করছেন। আপনি কি এই ব্যক্তিকে পরিচয় দিতে চান?</string>
+    <string name="introduction_request_reject_dialog_content">আপনি অনুরোধ প্রত্যাখ্যান করতে চান?</string>
+    <string name="introduction_request_spam_dialog_content">এটি একটি স্প্যাম অনুরোধ</string>
+    <string name="profile_info_save_failed">প্রোফাইল তথ্য সংরক্ষণ করতে ব্যর্থ।</string>
+    <string name="profile_picture_set_failed">প্রোফাইল ছবি সেট করতে ব্যর্থ।</string>
+    <string name="parent_info_save_failed">পিতামাতার তথ্য সংরক্ষণ করতে ব্যর্থ হয়েছে।</string>
+    <string name="profile_info_get_failed">প্রোফাইল তথ্য আনতে ব্যর্থ।</string>
+    <string name="all_contacts">সব</string>
+    <string name="save">সংরক্ষণ করুন</string>
+    <string name="update">হালনাগাদ করুন</string>
+    <string name="update_ipay">অনুগ্রহপুর্বক আইপে অ্যাপটি হালনাগাদ করুন</string>
+    <string name="update_your_application">গুগল প্লে স্টোর থেকে আপনার অ্যাপটি আপডেট করুন।</string>
+    <string name="add_to_contacts">পরিচিতি যোগ করুন</string>
+    <string name="ipay_contacts">আইপে</string>
+    <string name="security_questions">নিরাপত্তা প্রশ্ন</string>
+    <string name="update_security_questions">নিরাপত্তা প্রশ্ন হালনাগাদ করুন</string>
+    <string name="activity_log">কার্য বিবরণ</string>
     <string name="payments">Payments</string>
     <string name="please_enter_an_account_name">Please provide your Account Name and try again</string>
     <string name="please_select_a_bank">Please select a bank</string>
@@ -302,7 +299,6 @@
     <string name="security_answer_set_failed">Failed to set security answers</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
     <string name="promotions_get_failed">Could not fetch promotions</string>
-    <string name="newsroom_get_failed" translatable="false">Could not fetch news</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="saving_pin">Saving PIN…</string>
     <string name="adding_promo">Adding Promo Code…</string>
@@ -667,68 +663,6 @@
     <string name="banglalink">Banglalink</string>
     <string name="teletalk">Teletalk</string>
 
-    <!--All Screen Name for Google Analytic .... Can be optimized later-->
-    <string name="screen_name_home" translatable="false">Wallet Page</string>
-    <string name="screen_name_withdraw_money_review" translatable="false">Withdraw Money Confirmation Page</string>
-    <string name="screen_name_withdraw_money" translatable="false">Withdraw Money Page</string>
-    <string name="screen_name_scan_qr_code" translatable="false">QR Scan Page</string>
-    <string name="screen_name_invite_to_ipay" translatable="false">Invite Page</string>
-    <string name="screen_name_login" translatable="false">Signin Page</string>
-    <string name="screen_name_create_ticket" translatable="false">Create Support Ticket Page</string>
-    <string name="screen_name_ticket_list" translatable="false">Support Ticket Page</string>
-    <string name="screen_name_otp_for_login" translatable="false">Signin OTP Page</string>
-    <string name="screen_name_personal_otp_verification" translatable="false">Signup OTP Page</string>
-    <string name="screen_name_personal_signup_step_1" translatable="false">Personal Signup Page</string>
-    <string name="screen_name_bank_account" translatable="false">Bank List Page</string>
-    <string name="screen_name_ipay_contacts" translatable="false">Contact Us Page</string>
-    <string name="screen_name_activity_log" translatable="false">Activity Page</string>
-    <string name="screen_name_notifications" translatable="false">Notification Page</string>
-    <string name="screen_name_user_email" translatable="false">Email Page</string>
-    <string name="screen_name_user_address" translatable="false">Address Page</string>
-    <string name="screen_name_user_basic_info" translatable="false">Personal Basic Info Page</string>
-    <string name="screen_name_add_bank" translatable="false">Add New Bank Page</string>
-    <string name="screen_name_set_pin" translatable="false">Change PIN Page</string>
-    <string name="screen_name_security_question" translatable="false">Security Question Page</string>
-    <string name="screen_name_fingerprint_authentication" translatable="false">Touch ID Page</string>
-    <string name="screen_name_change_password" translatable="false">Change Password Page</string>
-    <string name="screen_name_trusted_devices" translatable="false">Trusted Device Page</string>
-    <string name="screen_name_introducer" translatable="false">Introducers Page</string>
-    <string name="screen_name_profile_completion" translatable="false">Personal Profile Completion Page</string>
-    <string name="screen_name_business_signup_step_1" translatable="false">Business Signup Login Details Page</string>
-    <string name="screen_name_business_signup_step_2" translatable="false">Business Signup Info Page</string>
-    <string name="screen_name_business_signup_step_3" translatable="false">Business Signup A/H Info Page</string>
-    <string name="screen_name_user_account" translatable="false">Profile Page</string>
-    <string name="screen_name_address_edit" translatable="false">Address Edit Page</string>
-    <string name="screen_name_ipay_about" translatable="false">About Us Page</string>
-    <string name="screen_name_money_request_sent" translatable="false">Request Money Page</string>
-    <string name="screen_name_request_money_sent_review" translatable="false">Request Money Accept/Reject Page</string>
-    <string name="screen_name_basic_info_edit" translatable="false">Basic Info Update Page</string>
-    <string name="screen_name_parent_info_edit" translatable="false">Parent Info Update Page</string>
-    <string name="screen_name_introduces" translatable="false">Introduced Page</string>
-    <string name="screen_name_recommendation_review" translatable="false">Recommendation Preview Page</string>
-    <string name="screen_name_add_trusted_person" translatable="false">Trusted Person Update Page</string>
-    <string name="screen_name_password_recovery" translatable="false">Password Recovery Page</string>
-    <string name="screen_name_trusted_network" translatable="false">Trusted Network Page</string>
-    <string name="screen_name_update_security_question" translatable="false">Update Security Question Page</string>
-    <string name="screen_name_select_account_type" translatable="false">Join Page</string>
-    <string name="screen_name_payment_request_received" translatable="false">Payment Request Page</string>
-    <string name="screen_name_business_information" translatable="false">Business Basic Info Page</string>
-
-    <string name="screen_name_business_information_edit" translatable="false">Update Business Basic Info Page</string>
-    <string name="screen_name_ticket_details" translatable="false">Ticket Details Page</string>
-    <string name="screen_name_security_settings" translatable="false">Security Page</string>
-    <string name="screen_name_business_contact" translatable="false">Business Contact Page</string>
-    <string name="screen_name_transaction_details" translatable="false">Transaction Details Page</string>
-    <string name="screen_name_transaction_history_completed" translatable="false">Completed Transaction History Page</string>
-    <string name="screen_name_transaction_history_pending" translatable="false">Pending Transaction History Page</string>
-
-    <string name="screen_name_business_otp_verifications" translatable="false">Signup OTP Page</string>
-    <string name="screen_name_remove_trusted_device" translatable="false">Trusted Device Removal Page</string>
-    <string name="screen_name_consent_agreement_for_bank" translatable="false">Consent Agreement Page</string>
-
-    <string name="screen_name_request_payment_review" translatable="false">Make Payment Confirmation Page</string>
-    <string name="screen_name_request_payment" translatable="false">Make Payment List Page</string>
-
     <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
     <string name="please_enter_a_document_name">Please Enter a Document Name</string>
@@ -821,10 +755,10 @@
     <string name="network_unreachable">Network is unreachable</string>
     <string name="OK">OK</string>
     <string name="invalid_image_type">Invalid image type. Only JPG or PNG are allowed</string>
-    <string name="introduce_user">Introduce to iPay</string>
+    <string name="introduce_user">Introduce member</string>
     <string name="are_you_sure_to_introduce">Are you sure you want to introduce the person ?</string>
     <string name="invite_people_to_ipay">Invite Friends</string>
-    <string name="invite_people_text">Invite a friend to iPay network. Your invitation code is</string>
+    <string name="invite_people_text">Invite a friend to iPay network. You invitation code is</string>
 
     <string name="facebook_app_id">269331673611619</string>
     <string name="fb_login_protocol_scheme">fb269331673611619</string>
@@ -902,7 +836,6 @@
     <string name="card_number">Card number</string>
     <string name="lanka_bangla_card">LankaBangla Card</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
-    <string name="empty_string" translatable="false" />
     <string name="zero_amount">00</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING Tk. %1$s TO</string>
     <string name="make_payment_confirmation_message">YOU ARE PAYING %1$s TO</string>
@@ -1007,9 +940,7 @@
     <string name="top_up_my_number">Top-Up My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
     <string name="enter_email_address">Enter Email Address</string>
-    <string name="add_money_credit_card_charge_msg">Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
-    <string name="language">Language</string>
-
-    <string name="language_english" translatable="false">English</string>
-    <string name="language_bengali" translatable="false">বাংলা</string>
+    <string name="add_money_credit_card_charge_msg">ডেবিট বা ক্রেডিট কার্ড থেকে অর্থ যোগ করার মধ্যে ভিসা/মাস্টারকার্ডের জন্য 2.5% পরিষেবা চার্জ এবং 3.5% সার্ভিস চার্জ আ্যামেক্স কার্ডের আওতাভুক্ত।</string>
+    <string name="password_hint">পাসওয়ার্ডটি সর্বনিম্ন 8 টি অক্ষর থাকতে হবে এবং আলফানিউমেরিক হতে হবে।</string>
+    <string name="language">ভাষা</string>
 </resources>

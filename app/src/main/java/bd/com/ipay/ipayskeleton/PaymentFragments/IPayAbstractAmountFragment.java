@@ -78,8 +78,8 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	private Button continueButton;
 	private List<ShortCutOption> shortCutOptionList;
 	private ShortcutSelectionRadioGroup shortcutSelectionRadioGroup;
-	private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.US);
+	private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 
     private TextView originalBalanceTitleTextView;
 	private TextView debitableBalanceTitleTextView;
@@ -444,7 +444,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 			return;
 		}
 
-		final Spannable spannable = new SpannableString(String.format(Locale.US, "%s\nTK. %s", title, numberFormat.format(value)).trim());
+		final Spannable spannable = new SpannableString(String.format(Locale.getDefault(), "%s\nTK. %s", title, numberFormat.format(value)).trim());
 		spannable.setSpan(new StyleSpan(Typeface.BOLD), title.length(), spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ShortCutOption shortCutOption = new ShortCutOption(id, spannable, value);
 

@@ -448,7 +448,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 Calendar calendar = Calendar.getInstance();
                 if (!mFromDateButton.getText().toString().equals("")) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     final Date fromDate;
                     try {
                         fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
@@ -473,7 +473,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             @Override
             public void onClick(View v) {
 
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 final Date fromDate;
                 try {
                     fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
@@ -569,7 +569,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     toDate.setTime(fromDate.getTime());
                     toDate.add(Calendar.DATE, 1);
 
-                    String fromDateStr = String.format(Locale.US, Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
+                    String fromDateStr = String.format(Locale.getDefault(), Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mFromDateButton.setText(fromDateStr);
                     mToDateButton.setText(fromDateStr);
@@ -592,7 +592,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     // Simplest way to do this is to just show all transactions until 12:00 am in the next day.
                     toDate.add(Calendar.DATE, 1);
 
-                    String toDateStr = String.format(Locale.US, Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
+                    String toDateStr = String.format(Locale.getDefault(), Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mToDateButton.setText(toDateStr);
                 }

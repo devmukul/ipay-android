@@ -52,7 +52,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 	private TextView nameTextView;
 	private TextView userNameTextView;
 	private Button transactionConfirmationButton;
-	protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+	protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 	protected OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 	protected CustomProgressDialog customProgressDialog;
 

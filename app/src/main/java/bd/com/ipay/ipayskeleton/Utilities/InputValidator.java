@@ -92,45 +92,6 @@ public class InputValidator {
         return errorMessage;
     }
 
-    public static String isValidDocumentID(Context context, String documentID, String documentType, int pos) {
-        String document_types[];
-        document_types = context.getResources().getStringArray(R.array.personal_document_id);
-        String errorMessage = null;
-        if (documentID.length() == 0) {
-            errorMessage = context.getString(R.string.enter) + " " + document_types[pos] + " " + context.getString(R.string.number);
-        } else {
-            switch (documentType) {
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID:
-                    int length = documentID.length();
-                    if (length < Constants.MINIMUM_REQUIRED_NID_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_nid_min_length);
-                    else if (length > Constants.MAXIMUM_REQUIRED_NID_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_nid_max_length);
-                    break;
-
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_PASSPORT:
-                    if (documentID.matches(IdentificationDocumentConstants.INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
-                    else if (!documentID.matches(IdentificationDocumentConstants.VALID_PASSPORT_ID_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_passport_ID);
-                    break;
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_DRIVING_LICENSE:
-                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_driving_license_ID);
-                    break;
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_BIRTH_CERTIFICATE:
-                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_birth_certificate);
-                    break;
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_TIN:
-                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_tin);
-                    break;
-            }
-        }
-        return errorMessage;
-    }
-
     public static String isValidDocumentID(Context context, String documentID, String documentType) {
         String errorMessage = null;
         switch (documentType) {

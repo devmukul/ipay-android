@@ -71,7 +71,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements HttpRespo
 
     private final Gson gson = new GsonBuilder().create();
     private CustomProgressDialog mCustomProgressDialog;
-    private NumberFormat mNumberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private NumberFormat mNumberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

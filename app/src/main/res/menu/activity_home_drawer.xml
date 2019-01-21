@@ -33,10 +33,17 @@
             android:id="@+id/nav_live_chat"
             android:icon="@drawable/ic_chat"
             android:title="@string/live_chat" />
+
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help"
             android:title="@string/help" />
+
+        <item
+            android:id="@+id/nav_language"
+            android:icon="@drawable/ic_settings_white"
+            android:title="@string/language" />
+
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_drawer_about"

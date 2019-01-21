@@ -98,7 +98,7 @@ public class TopUpEnterNumberFragment extends Fragment {
 			public void onClick(View view) {
 				String mobileNumber = formatLocalContact(ProfileInfoCacheManager.getMobileNumber())
 						.replaceFirst("(\\+8801)", "");
-				mNumberEditText.setText(String.format(Locale.US, "+880-1%s", mobileNumber));
+				mNumberEditText.setText(String.format(Locale.getDefault(), "+880-1%s", mobileNumber));
 				Selection.setSelection(mNumberEditText.getText(), mNumberEditText.getText().length());
 			}
 		});
@@ -312,7 +312,7 @@ public class TopUpEnterNumberFragment extends Fragment {
 			if (data != null) {
 				final String mobileNumber = formatLocalContact(data.getStringExtra(Constants.MOBILE_NUMBER))
 						.replaceFirst("(\\+8801)", "");
-				mNumberEditText.setText(String.format(Locale.US, "+880-1%s", mobileNumber));
+				mNumberEditText.setText(String.format(Locale.getDefault(), "+880-1%s", mobileNumber));
 				Selection.setSelection(mNumberEditText.getText(), mNumberEditText.getText().length());
 			}
 		}

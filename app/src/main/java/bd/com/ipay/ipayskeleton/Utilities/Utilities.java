@@ -88,11 +88,11 @@ import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy, h:mm a", Locale.US);
-	private static final SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
-	private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.US);
-	private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.US);
-	private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy, h:mm a", Locale.getDefault());
+	private static final SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+	private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.getDefault());
+	private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+	private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
 	private static final String TAG = Utilities.class.getSimpleName();
 
@@ -491,21 +491,21 @@ public class Utilities {
 	}
 
 	public static String takaWithComma(BigDecimal amount) {
-		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 		numberFormat.setMinimumFractionDigits(2);
 		numberFormat.setMaximumFractionDigits(2);
 		return numberFormat.format(amount);
 	}
 
 	public static String formatTaka(BigDecimal amount) {
-		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 		numberFormat.setMinimumFractionDigits(2);
 		numberFormat.setMaximumFractionDigits(2);
 		return String.format("\u09F3%s", numberFormat.format(amount));
 	}
 
 	public static String formatTaka(double amount) {
-		return String.format(Locale.US, "\u09F3%.2f", amount);
+		return String.format(Locale.getDefault(), "\u09F3%.2f", amount);
 	}
 
 	public static String formatTakaFromString(String amount) {
@@ -517,7 +517,7 @@ public class Utilities {
 			amount = stringBuilder.toString();
 		}
 		double amountDouble = Double.parseDouble(amount);
-		return String.format(Locale.US, "%s\u09F3%.2f", sign, amountDouble);
+		return String.format(Locale.getDefault(), "%s\u09F3%.2f", sign, amountDouble);
 	}
 
 	public static void hideKeyboard(Activity activity) {
@@ -862,13 +862,13 @@ public class Utilities {
 			sendEventTracker(tracker,
 					category,
 					"Success",
-					String.format(Locale.US, "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+					String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
 					value);
 		} else {
 			sendEventTracker(tracker,
 					category,
 					"Success",
-					String.format(Locale.US, "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+					String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
 					value);
 		}
 	}
@@ -882,13 +882,13 @@ public class Utilities {
 			sendEventTracker(tracker,
 					category,
 					"Blocked",
-					String.format(Locale.US, "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+					String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
 					value);
 		} else {
 			sendEventTracker(tracker,
 					category,
 					"Blocked",
-					String.format(Locale.US, "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+					String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
 					value);
 		}
 
@@ -903,13 +903,13 @@ public class Utilities {
 			sendEventTracker(tracker,
 					category,
 					"Failed",
-					String.format(Locale.US, "At %s, SERVER_MESSAGE:%s", formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+					String.format(Locale.getDefault(), "At %s, SERVER_MESSAGE:%s", formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
 					value);
 		} else {
 			sendEventTracker(tracker,
 					category,
 					"Failed",
-					String.format(Locale.US, "ACCOUNT_ID:%d at %s, SERVER_MESSAGE:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+					String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, SERVER_MESSAGE:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
 					value);
 		}
 	}
@@ -917,11 +917,11 @@ public class Utilities {
 	public static void sendExceptionTracker(Tracker tracker, int accountId, String exceptionMessage) {
 		if (accountId == Constants.INVALID_ACCOUNT_ID) {
 			tracker.send(new HitBuilders.ExceptionBuilder().
-					setDescription(String.format(Locale.US, "EXCEPTION_MESSAGE:%s at %s, DEVICE_NAME:%s", exceptionMessage, formatDateWithoutTime(System.currentTimeMillis()), DeviceInfoFactory.getDeviceName()))
+					setDescription(String.format(Locale.getDefault(), "EXCEPTION_MESSAGE:%s at %s, DEVICE_NAME:%s", exceptionMessage, formatDateWithoutTime(System.currentTimeMillis()), DeviceInfoFactory.getDeviceName()))
 					.setFatal(true).build());
 		} else {
 			tracker.send(new HitBuilders.ExceptionBuilder().
-					setDescription(String.format(Locale.US, "ACCOUNT_ID:%d at %s, EXCEPTION_MESSAGE:%s, DEVICE_NAME:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), exceptionMessage, DeviceInfoFactory.getDeviceName()))
+					setDescription(String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, EXCEPTION_MESSAGE:%s, DEVICE_NAME:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), exceptionMessage, DeviceInfoFactory.getDeviceName()))
 					.setFatal(true).build());
 		}
 	}
@@ -1167,7 +1167,7 @@ public class Utilities {
 		}
 	}
 
-	private static final SimpleDateFormat promotionDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+	private static final SimpleDateFormat promotionDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
 	public static Date parsePromotionDate(String date) {
 		try {
