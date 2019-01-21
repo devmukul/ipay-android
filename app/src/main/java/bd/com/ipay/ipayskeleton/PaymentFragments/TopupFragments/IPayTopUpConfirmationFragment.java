@@ -33,7 +33,7 @@ public class IPayTopUpConfirmationFragment extends IPayAbstractTransactionConfir
 	private String profilePicture;
 	private Number transactionAmount;
 	private final Gson gson = new Gson();
-	private HttpRequestPostAsyncTask sendMoneyRequestTask = null;
+	private HttpRequestPostAsyncTask topupRequestTask = null;
 	private TopupRequest topupRequest;
 	private String uri;
 
@@ -96,13 +96,15 @@ public class IPayTopUpConfirmationFragment extends IPayAbstractTransactionConfir
 		if (!Utilities.isConnectionAvailable(getContext())) {
 			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
 		}
-		if (sendMoneyRequestTask == null) {
-			topupRequest = new TopupRequest(mobileNumber, operatorType, operatorCode, transactionAmount.doubleValue(), getPin());
+		if (topupRequestTask == null) {
+			topupRequest = new TopupRequest(mobileNumber, operatorType, operatorCode, transactionAmount.intValue());
+			topupRequest.setPin(getPin());
 			String json = gson.toJson(topupRequest);
-			uri = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST;
-			sendMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
+			uri = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST_V3;
+			topupRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
 					uri, json, getActivity(), this, false);
-			sendMoneyRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			topupRequestTask.setPinAsHeader(getPin());
+			topupRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
 			customProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_processing));
 			customProgressDialog.showDialog();
@@ -116,7 +118,7 @@ public class IPayTopUpConfirmationFragment extends IPayAbstractTransactionConfir
 
 		if (HttpErrorHandler.isErrorFound(result, getContext(), customProgressDialog)) {
 			customProgressDialog.dismissDialog();
-			sendMoneyRequestTask = null;
+			topupRequestTask = null;
 		} else {
 			try {
 				switch (result.getApiCommand()) {
@@ -212,7 +214,7 @@ public class IPayTopUpConfirmationFragment extends IPayAbstractTransactionConfir
 				customProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
 				sendFailedEventTracking(e.getMessage(), transactionAmount);
 			}
-			sendMoneyRequestTask = null;
+			topupRequestTask = null;
 		}
 	}
 }

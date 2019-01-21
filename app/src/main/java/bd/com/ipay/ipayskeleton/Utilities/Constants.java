@@ -393,7 +393,7 @@ public class Constants {
 
 
     // Mobile Topup Request REST
-    public static final String URL_TOPUP_REQUEST = "topup/dotopup/v2";
+    public static final String URL_TOPUP_REQUEST_V3 = "topup/v3";
 
     // Money Request REST
     public static final String URL_REQUEST_MONEY = "requestmoney";
@@ -443,8 +443,6 @@ public class Constants {
     public static final String URL_GET_ORDER_DETAILS = "orderId/info";
     public static final String URL_PAY_BY_DEEP_LINK = "orderId/pay";
     public static final String URL_PAYMENT_REVERT = "payment-revert";
-
-    public static final String URL_PAYMENT = "payment/v2";
     public static final String URL_PAYMENT_V3 = "payment/v3";
 
     public static final String X_IPAY_OTP = "X-iPay-OTP";
@@ -463,7 +461,6 @@ public class Constants {
     public static final String URL_RESOURCE = "resource";
 
     // Transaction REST
-    public static final String URL_SEND_MONEY = "transaction/send/v2";
     public static final String URL_SEND_MONEY_V3 = "send/v3";
 
     // Trusted Network REST
