@@ -1095,7 +1095,7 @@
     <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
-    <string name="onboard_upload_photo_id_text">Please take a clear picture of your NID, Passport or Driving License and upload.</string>
+    <string name="onboard_upload_photo_id_text">Please take a clear picture of your NID and upload.</string>
     <string name="onboard_upload_prifile_info_text">Update your Work and Address information for faster verification.</string>
     <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
     <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
