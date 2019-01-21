@@ -152,6 +152,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
             @Override
             public void onClick(View v) {
                 if (verifyUserInputs()) {
+                    Utilities.hideKeyboard(getActivity());
                     performIdentificationDocumentUpload();
                 }
             }

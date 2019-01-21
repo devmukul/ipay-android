@@ -24,7 +24,6 @@ import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasic
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardContactsFragment;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfilePictureUploadHelperFragment;
@@ -146,11 +145,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
         OnBoardPhotoIdUploadHelperFragment onBoardIcdentificationFragment = new OnBoardPhotoIdUploadHelperFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, onBoardIcdentificationFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToIdentificationDocumentListFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardIdentificationDocumentListFragment()).addToBackStack(null).commit();
     }
 
     public void switchToUploadIdentificationDocumentFragment(Bundle bundle) {
