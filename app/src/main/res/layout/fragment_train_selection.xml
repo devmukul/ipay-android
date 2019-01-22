@@ -16,11 +16,32 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <TextView
+        android:id="@+id/journey_info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="#333333"
+        android:lineSpacingExtra="7sp"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        tools:text="DHAKA to CHITTAGONG, for 3 Adult &amp; 2 Child" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/date_view"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/journey_info_text"
+        android:background="#f6f6f8">
+
+    </android.support.v7.widget.RecyclerView>
+
+
     <LinearLayout
         android:id="@+id/progress_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/date_view"
         android:layout_margin="@dimen/value16"
         android:orientation="vertical">
 
@@ -40,6 +61,7 @@
             android:layout_height="16dip"
             android:indeterminateOnly="true" />
     </LinearLayout>
+
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll_view"

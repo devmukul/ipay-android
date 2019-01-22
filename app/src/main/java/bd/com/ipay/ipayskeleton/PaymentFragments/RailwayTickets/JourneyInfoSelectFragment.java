@@ -201,12 +201,9 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
                 },year,month,day);
 
                 datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
-                calendar.add(Calendar.DATE, 8);
+                calendar.add(Calendar.DATE, 9);
                 datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
                 datePickerDialog.show();
-
-//                DialogFragment newFragment = new MyDatePickerFragment();
-//                newFragment.show(getActivity().getSupportFragmentManager(), "date picker");
             }
         });
 

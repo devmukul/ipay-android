@@ -23,6 +23,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
@@ -82,6 +85,9 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
     private String mSelectedClass = null;
     private int mSelectedTrainNo;
 
+    RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +119,13 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         mProgressDialog = new CustomProgressDialog(getActivity());
         mTrainListRecyclerView = view.findViewById(R.id.user_bank_list_recycler_view);
         mProgressLayout = view.findViewById(R.id.progress_layout);
+
+        recyclerView = view.findViewById(R.id.date_view);
+        linearLayoutManager = new LinearLayoutManager(getContext() , LinearLayoutManager.HORIZONTAL, false);
+        MyRecyclerAdapter adapter = new MyRecyclerAdapter(getDates());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+
         trainListAdapter = new BankListAdapter();
         mTrainListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mTrainListRecyclerView.setAdapter(trainListAdapter);
@@ -408,5 +421,102 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
                 parentView = itemView;
             }
         }
+    }
+
+    public class MyRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private static final int TYPE_HEADER = 0;
+        private static final int TYPE_ITEM = 1;
+        List<Date> listItems;
+
+        public MyRecyclerAdapter(List<Date> listItems)
+        {
+            this.listItems = listItems;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if(viewType == TYPE_HEADER)
+            {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_view_header, parent, false);
+                return  new VHHeader(v);
+            }
+            else if(viewType == TYPE_ITEM)
+            {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_view_list_item, parent, false);
+                return new VHItem(v);
+            }
+            throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
+        }
+
+        private Date getItem(int position)
+        {
+            return listItems.get(position);
+        }
+
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if(holder instanceof VHItem)
+            {
+                Date currentItem = getItem(position-1);
+                VHItem VHitem = (VHItem)holder;
+                VHitem.yearName.setText(currentItem.getMonth()+", "+currentItem.getYear());
+                VHitem.dateName.setText(currentItem.getDate());
+            }
+        }
+
+        //    need to override this method
+        @Override
+        public int getItemViewType(int position) {
+            if(isPositionHeader(position))
+                return TYPE_HEADER;
+            return TYPE_ITEM;
+        }
+
+        private boolean isPositionHeader(int position)
+        {
+            return position == 0;
+        }
+
+        //increasing getItemcount to 1. This will be the row of header.
+        @Override
+        public int getItemCount() {
+            return listItems.size()+1;
+        }
+
+        class VHHeader extends RecyclerView.ViewHolder{
+            public VHHeader(View itemView) {
+                super(itemView);
+            }
+        }
+
+        class VHItem extends RecyclerView.ViewHolder{
+            TextView yearName;
+            TextView dateName;
+            public VHItem(View itemView) {
+                super(itemView);
+                this.yearName = itemView.findViewById(R.id.year_text);
+                this.dateName = itemView.findViewById(R.id.day_text);
+            }
+        }
+    }
+
+    public static List<Date> getDates() {
+
+        final Calendar cal = Calendar.getInstance();
+        List<Date> datesInRange = new ArrayList<>();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(cal.getTime());
+        cal.add(Calendar.DATE, 9);
+        Calendar endCalendar = new GregorianCalendar();
+        endCalendar.setTime(cal.getTime());
+
+        while (calendar.before(endCalendar)) {
+            Date result = calendar.getTime();
+            datesInRange.add(result);
+            calendar.add(Calendar.DATE, 1);
+        }
+        return datesInRange;
     }
 }
