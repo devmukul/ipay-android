@@ -213,6 +213,8 @@ public class Constants {
     public static final String CREDIT_CARD_WITH_SPACE = "Credit Card";
     public static final String URL_GET_SAVED_CARDS = "credit-card/my-list";
     public static final String COMMAND_GET_SAVED_CARDS = "COMMAND_GET_SAVED_CARDS";
+    public static final String ACTION = "ACTION";
+    public static final String ACTION_FROM_NOTIFICATION = "ACTION_FROM_NOTIFICATION";
     public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
     public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";

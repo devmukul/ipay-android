@@ -44,6 +44,8 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
 
     private String firebaseToken;
 
+    private String requestAction;
+
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
@@ -102,10 +104,23 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
                 || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION
                 || serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
             if (data != null) {
-
+                requestAction = (String) data.get("click_action");
+                String title = (String )data.get("title");
+                CreateRichNotification createRichNotification;
                 if (mFcmNotificationResponse.getTransactionHistory() != null) {
-                    CreateRichNotification createRichNotification = new CreateRichNotification
-                            (mFcmNotificationResponse.getTransactionHistory(), this);
+                    if (requestAction != null) {
+                        if (requestAction.equals("request_money") || requestAction.equals("request_payment")) {
+                            createRichNotification = new CreateRichNotification
+                                    (mFcmNotificationResponse.getTransactionHistory(),
+                                            this, requestAction,title);
+                        }else{
+                            createRichNotification = new CreateRichNotification
+                                    (mFcmNotificationResponse.getTransactionHistory(), this, "transaction",title);
+                        }
+                    }else{
+                        createRichNotification = new CreateRichNotification
+                                (mFcmNotificationResponse.getTransactionHistory(), this, "transaction",title);
+                    }
                     createRichNotification.setupNotification();
                 } else {
                     try {

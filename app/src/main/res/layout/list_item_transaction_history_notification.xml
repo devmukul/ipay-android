@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorWhite"
+        android:layout_marginBottom="@dimen/value16"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="@dimen/value16"
+            android:layout_marginRight="@dimen/value16"
+            android:src="@drawable/ic_ipay_verifiedmember" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/colorGray"
+            android:text="@string/app_name" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_layout"
+        android:layout_marginLeft="@dimen/value16"
+        android:layout_marginRight="@dimen/value16"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/colorGray"
+        android:textSize="14sp"
+        tools:text="iPay received money " />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
         android:background="?android:selectableItemBackground">
 
         <ImageView
@@ -16,9 +54,9 @@
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:background="@drawable/circle"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/circle"
             tools:src="@drawable/ic_profile" />
 
         <ImageView
@@ -110,8 +148,8 @@
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/info_layout">
+        android:layout_below="@+id/info_layout"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:id="@+id/accept"

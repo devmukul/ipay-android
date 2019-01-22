@@ -316,6 +316,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <receiver android:name=".Api.NotificationApi.CreateRichNotification$NotificationButtonClickHandler" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

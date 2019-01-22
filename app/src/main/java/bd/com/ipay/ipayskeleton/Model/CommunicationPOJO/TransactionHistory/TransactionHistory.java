@@ -30,6 +30,7 @@ public class TransactionHistory implements Parcelable {
     private final String outletName;
     private final long outletId;
 
+
     protected TransactionHistory(Parcel in) {
         insertTime = in.readLong();
         accountId = in.readString();
