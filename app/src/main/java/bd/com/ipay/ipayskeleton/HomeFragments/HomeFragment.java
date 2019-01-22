@@ -413,8 +413,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		if (menu.findItem(R.id.action_search_contacts) != null)
-			menu.findItem(R.id.action_search_contacts).setVisible(false);
 		if (menu.findItem(R.id.action_filter_by_service) != null)
 			menu.findItem(R.id.action_filter_by_service).setVisible(false);
 		if (menu.findItem(R.id.action_filter_by_date) != null)

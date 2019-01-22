@@ -658,10 +658,21 @@
     <string name="select_a_pdf_message">Select a PDF</string>
     <string name="profile_picture_temp_file">profile_picture.jpg</string>
 
+    <string name="option_add_money_from_bank">Bank</string>
+    <string name="option_add_money_from_credit_or_debit_card">Credit/Debit Card</string>
+    <string name="view">View</string>
+    <string name="edit">Edit</string>
+    <string name="view_uploaded_document_message">View uploaded document</string>
+
+    <string name="grameenphone">Grameenphone</string>
     <string name="robi">Robi</string>
     <string name="airtel">Airtel</string>
     <string name="banglalink">Banglalink</string>
     <string name="teletalk">Teletalk</string>
+
+    <string name="pre_paid">Pre-paid</string>
+    <string name="post_paid">Post-paid</string>
+
 
     <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>

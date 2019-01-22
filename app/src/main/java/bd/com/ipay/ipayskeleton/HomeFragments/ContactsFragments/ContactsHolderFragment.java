@@ -160,9 +160,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(true);
-
         if (menu.findItem(R.id.action_filter_by_service) != null)
             menu.findItem(R.id.action_filter_by_service).setVisible(false);
         if (menu.findItem(R.id.action_filter_by_date) != null)
