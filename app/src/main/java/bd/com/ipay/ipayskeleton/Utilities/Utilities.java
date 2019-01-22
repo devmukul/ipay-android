@@ -88,11 +88,20 @@ import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy, h:mm a", Locale.getDefault());
-	private static final SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-	private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.getDefault());
-	private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
-	private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+	private static SimpleDateFormat dateFormat;
+	private static SimpleDateFormat timeFormat;
+	private static SimpleDateFormat DATE_FORMAT_WITH_TIME;
+	private static SimpleDateFormat DATE_FORMAT_WITHOUT_TIME;
+	private static SimpleDateFormat DATE_FORMAT_FROM_STRING;
+
+	public static void updateLocale() {
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy, h:mm a", Locale.getDefault());
+		timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+		DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.getDefault());
+		DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+		DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+	}
 
 	private static final String TAG = Utilities.class.getSimpleName();
 
@@ -834,8 +843,8 @@ public class Utilities {
 	}
 
 	public static boolean isValidTokenWindowTime() {
-        return currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME;
-    }
+		return currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME;
+	}
 
 	public static long currentTime() {
 		return System.currentTimeMillis();
@@ -1183,9 +1192,9 @@ public class Utilities {
 		String customerIdStr = customerID.trim().toUpperCase();
 		customerIdStr = customerIdStr.replaceAll("[^a-zA-Z0-9]", "");
 
-		if(customerIdStr.startsWith("CID") || customerIdStr.startsWith("cid") )
+		if (customerIdStr.startsWith("CID") || customerIdStr.startsWith("cid"))
 			return customerIdStr;
 		else
-			return "CID"+customerIdStr;
+			return "CID" + customerIdStr;
 	}
 }

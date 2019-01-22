@@ -185,11 +185,11 @@
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile…</string>
     <string name="progress_dialog_processing">Processing TopUp…</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information…</string>
-    <string name="progress_dialog_cancelling">Cancelling request…</string>
+    <string name="progress_dialog_canceling">Canceling request…</string>
     <string name="progress_dialog_fetching_bank_list">Fetching bank list…</string>
     <string name="progress_dialog_sending_invite">Sending invitation…</string>
-    <string name="progress_dialog_fetching_business_types">Loading business types..</string>
-    <string name="progress_dialog_fetching_details">Fetching Details</string>
+    <string name="progress_dialog_fetching_business_types">Loading business types…</string>
+    <string name="progress_dialog_fetching_details">Fetching Details…</string>
     <string name="progress_dialog_sending_payment_request">Sending Payment Request…</string>
     <string name="progress_dialog_rejecting">Rejecting request…</string>
     <string name="progress_dialog_accepted">Accepting request…</string>
@@ -677,6 +677,8 @@
     <string name="pre_paid">Pre-paid</string>
     <string name="post_paid">Post-paid</string>
 
+    <string name="today_date">Today %1$s</string>
+
     <!--All Screen Name for Google Analytic .... Can be optimized later-->
     <string name="screen_name_home" translatable="false">Wallet Page</string>
     <string name="screen_name_withdraw_money_review" translatable="false">Withdraw Money Confirmation Page</string>
@@ -1000,7 +1002,7 @@
     <string name="card_holder_name">Card Holder Name</string>
     <string name="credit_card">Credit Card</string>
     <string name="enter_a_name">Enter Card Holder Name</string>
-    <string name="card_bill_alert_message">*To settle your bill payment request. It will take 3–5 business days</string>
+    <string name="card_bill_alert_message">*To settle your bill payment request, It will take 3–5 business days</string>
     <string name="instant_bill_pay">Instant bill pay</string>
     <string name="last_transaction">LAST TRANSACTION</string>
     <string name="dummy_mobile_number">+8801234567890</string>
@@ -1014,7 +1016,7 @@
     <string name="remove_bank">Remove Bank</string>
     <string name="gp">GP</string>
     <string name="topup_operation_hint">Select operator and insert number or search from Contacts</string>
-    <string name="top_up_my_number">Top-Up My Number</string>
+    <string name="top_up_my_number">TopUp My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
     <string name="enter_email_address">Enter Email Address</string>
     <string name="add_money_credit_card_charge_msg">Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>

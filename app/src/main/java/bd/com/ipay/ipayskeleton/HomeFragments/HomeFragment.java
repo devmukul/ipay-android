@@ -525,7 +525,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		} else mReceiverView.setVisibility(View.GONE);
 
 		if (DateUtils.isToday(transactionHistory.getTime())) {
-			responseTime = "Today, " + Utilities.formatTimeOnly(transactionHistory.getTime());
+			responseTime = getString(R.string.today_date,
+					Utilities.formatTimeOnly(transactionHistory.getTime()));
 		}
 		mTimeView.setText(responseTime);
 

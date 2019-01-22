@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IPayActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class IPayActivity extends AppCompatActivity {
 		final Locale locale;
 		switch (appLanguage) {
 			case Constants.APP_LANGUAGE_ENGLISH:
-				locale = Locale.getDefault();
+				locale = Locale.US;
 				break;
 			default:
 			case Constants.APP_LANGUAGE_BENGALI:
@@ -49,5 +50,6 @@ public class IPayActivity extends AppCompatActivity {
 			getBaseContext().createConfigurationContext(appConfig);
 			createConfigurationContext(appConfig);
 		}
+		Utilities.updateLocale();
 	}
 }

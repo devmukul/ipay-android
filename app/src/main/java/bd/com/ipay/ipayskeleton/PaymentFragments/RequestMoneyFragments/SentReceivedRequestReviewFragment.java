@@ -301,7 +301,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_canceling));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
         // No PIN needed for now to place a request from me

@@ -93,8 +93,10 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
 
 		// showing time
 		if (DateUtils.isToday(transactionHistory.getTime())) {
-			transactionTimeTextView.setText(String.format("Today, %s",
-					Utilities.formatTimeOnly(transactionHistory.getTime())));
+
+			transactionTimeTextView.setText(itemView.getContext()
+					.getString(R.string.today_date,
+							Utilities.formatTimeOnly(transactionHistory.getTime())));
 		} else {
 			transactionTimeTextView.setText(Utilities
 					.formatDayMonthYear(transactionHistory.getTime()));
