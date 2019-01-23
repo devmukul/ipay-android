@@ -358,8 +358,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
-    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
-    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
+    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/terms-condition/">Terms &amp; Conditions</a></string>
+    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/privacy-policy/">Privacy Policy</a></string>
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Please try again later.</string>
@@ -421,6 +421,7 @@
     <string name="security_answer_set_failed">Failed to set security answers</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
     <string name="promotions_get_failed">Could not fetch promotions</string>
+    <string name="newsroom_get_failed">Could not fetch news</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="events_get_failed">Could not fetch my events</string>
     <string name="recharging_balance">Processing mobile recharge…</string>
@@ -1094,7 +1095,7 @@
     <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
-    <string name="onboard_upload_photo_id_text">Please take a clear picture of your NID, Passport or Driving License and upload.</string>
+    <string name="onboard_upload_photo_id_text">Please take a clear picture of your NID and upload.</string>
     <string name="onboard_upload_prifile_info_text">Update your Work and Address information for faster verification.</string>
     <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
     <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
@@ -1178,13 +1179,13 @@
     <string name="network_unreachable">Network is unreachable</string>
     <string name="OK">OK</string>
     <string name="invalid_image_type">Invalid image type. Only JPG or PNG are allowed</string>
-    <string name="introduce_user">Introduce member</string>
+    <string name="introduce_user">Introduce to iPay</string>
     <string name="are_you_sure_to_introduce">Are you sure you want to introduce the person ?</string>
     <string name="accepted_in">Accepted in number location</string>
     <string name="merchants">Merchants</string>
     <string name="invite_people_to_ipay">Invite Friends</string>
     <string name="invite_a_friend">Invite a Friend</string>
-    <string name="invite_peple_text">Invite a friend and get instant 50 taka ipay balance (after verification)</string>
+    <string name="invite_people_text">Invite a friend to iPay network. Your invitation code is</string>
     <string name="offers">Offers</string>
     <string name="requests">Requests</string>
 
@@ -1315,7 +1316,7 @@
     <string name="instant_add_money">INSTANT MONEY</string>
     <string name="debit_credit_card">DEBIT/CREDIT CARD</string>
     <string name="money_from_bank">BANK</string>
-    <string name="add_money_card_option_message">Adding money from Debit card is completely free! For credit cards, it\'s free up to 5,000 BDT per month. After 5,000 BDT, 2.5% service charge will be applicable</string>
+    <string name="add_money_card_option_message">Adding money from Debit or Credit card is Instant! Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
     <string name="add_money_instant_option_message">Add money instantly to your iPay wallet. It will be adjusted from your associated bank account.</string>
     <string name="add_money_bank_option_message">Adding money from banks is the most reliable way to update your balance. It takes 3&#8211;5 business days to add balance into your iPay wallet.</string>
     <string name="choose_a_convenient_way">Choose a \nconvenient way</string>
@@ -1396,6 +1397,7 @@
     <string name="top_up_my_number">Top-Up My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
     <string name="enter_email_address">Enter Email Address</string>
+    <string name="add_money_credit_card_charge_msg">Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
     <string name="railway_ticket">Railway</string>
     <string name="select_a_station">Select Station</string>
     <string name="select_no_of_adult">Select No. of Adult</string>

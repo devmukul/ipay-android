@@ -50,7 +50,7 @@ public class IPayAddMoneyFromBankAmountInputFragment extends IPayAbstractBankTra
 		if (getAmount() == null) {
 			errorMessage = getString(R.string.please_enter_amount);
 		} else {
-			final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
+			final BigDecimal amount =  BigDecimal.valueOf(getAmount().doubleValue());
 			final BigDecimal minimumAmount = businessRules.getMIN_AMOUNT_PER_PAYMENT();
 			final BigDecimal maximumAmount = businessRules.getMAX_AMOUNT_PER_PAYMENT();
 			errorMessage = InputValidator.isValidAmount(getActivity(), amount, minimumAmount, maximumAmount);

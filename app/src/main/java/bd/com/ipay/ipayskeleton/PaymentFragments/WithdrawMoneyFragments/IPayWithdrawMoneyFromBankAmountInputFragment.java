@@ -54,7 +54,7 @@ public class IPayWithdrawMoneyFromBankAmountInputFragment extends IPayAbstractBa
 			if (getAmount() == null) {
 				errorMessage = getString(R.string.please_enter_amount);
 			} else {
-				final BigDecimal amount = new BigDecimal(getAmount().doubleValue());
+				final BigDecimal amount =  BigDecimal.valueOf(getAmount().doubleValue());
 				final CreditBalanceResponse creditBalanceResponse = SharedPrefManager.getCreditBalance();
 				final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 				final BigDecimal unsettledBalance = creditBalanceResponse.getCreditLimit().subtract(creditBalanceResponse.getAvailableCredit());

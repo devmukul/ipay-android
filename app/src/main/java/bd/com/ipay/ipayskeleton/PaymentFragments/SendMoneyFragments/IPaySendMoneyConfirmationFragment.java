@@ -93,11 +93,13 @@ public class IPaySendMoneyConfirmationFragment extends IPayAbstractTransactionCo
 			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
 		}
 		if (sendMoneyRequestTask == null) {
-			sendMoneyRequest = new SendMoneyRequest(mobileNumber, transactionAmount.toString(), getPin(), getNote());
+			sendMoneyRequest = new SendMoneyRequest(mobileNumber, transactionAmount.toString(), getNote());
+			sendMoneyRequest.setPin(getPin());
 			String json = gson.toJson(sendMoneyRequest);
-			uri = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY;
+			uri = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY_V3;
 			sendMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
 					uri, json, getActivity(), this, false);
+			sendMoneyRequestTask.setPinAsHeader(getPin());
 			sendMoneyRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
 			customProgressDialog.setLoadingMessage(getString(R.string.sending_money));

@@ -295,6 +295,7 @@ public class Constants {
     public static final String BASE_URL_OFFER = BuildConfig.BASE_URL_IPAY + "/offer_v2/api/v1/";
     public static final String BASE_URL_UTILITY = BuildConfig.BASE_URL_IPAY + "/api/utility/";
     public static final String BASE_URL_CNS = BuildConfig.BASE_URL_IPAY + "/api/utility/cns/";
+    public static final String BASE_URL_CMS = BuildConfig.BASE_URL_IPAY + "/api/cms/";
     public static final String INTERCOM_API_KEY = BuildConfig.API_KEY_INTERCOM;
     public static final String INTERCOM_ANDROID_SDK_KEY = BuildConfig.SDK_KEY_INTERCOM;
 
@@ -396,7 +397,7 @@ public class Constants {
 
 
     // Mobile Topup Request REST
-    public static final String URL_TOPUP_REQUEST = "topup/dotopup/v2";
+    public static final String URL_TOPUP_REQUEST_V3 = "topup/v3";
 
     // Money Request REST
     public static final String URL_REQUEST_MONEY = "requestmoney";
@@ -446,8 +447,6 @@ public class Constants {
     public static final String URL_GET_ORDER_DETAILS = "orderId/info";
     public static final String URL_PAY_BY_DEEP_LINK = "orderId/pay";
     public static final String URL_PAYMENT_REVERT = "payment-revert";
-
-    public static final String URL_PAYMENT = "payment/v2";
     public static final String URL_PAYMENT_V3 = "payment/v3";
 
     public static final String X_IPAY_OTP = "X-iPay-OTP";
@@ -466,7 +465,6 @@ public class Constants {
     public static final String URL_RESOURCE = "resource";
 
     // Transaction REST
-    public static final String URL_SEND_MONEY = "transaction/send/v2";
     public static final String URL_SEND_MONEY_V3 = "send/v3";
 
     // Trusted Network REST
@@ -570,6 +568,9 @@ public class Constants {
 
     //Promotions
     public static final String URL_PROMOTIONS = "promotions/";
+
+    //NewsRoom
+    public static final String URL_NEWSROOM = "news";
 
     //Promotions
     public static final String URL_FEEDBACK = "feedbacks";
@@ -770,6 +771,7 @@ public class Constants {
 
     public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
     public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
+    public static final String COMMAND_GET_NEWS = "COMMAND_GET_NEWS";
 
     public static final String COMMAND_SUBMIT_RATING = "COMMAND_SUBMIT_RATING";
 
