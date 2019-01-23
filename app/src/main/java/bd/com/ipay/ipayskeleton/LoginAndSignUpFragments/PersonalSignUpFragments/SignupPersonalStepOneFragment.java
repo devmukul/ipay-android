@@ -131,10 +131,10 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         View v = inflater.inflate(R.layout.fragment_signup_personal_step_one, container, false);
 
         mDeepLinkAction = getActivity().getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
-        mNameView = (EditText) v.findViewById(R.id.user_name);
-        mPasswordView = (EditText) v.findViewById(R.id.password);
-        mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
-        mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
+        mNameView = v.findViewById(R.id.user_name);
+        mPasswordView = v.findViewById(R.id.password);
+        mConfirmPasswordView = v.findViewById(R.id.confirm_password);
+        mMobileNumberView = v.findViewById(R.id.mobile_number);
         mMobileNumberView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -166,17 +166,17 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
                 }
             }
         });
-        mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
-        mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
-        mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
-        mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
-        mPromoCodeEditText = (EditText) v.findViewById(R.id.promoCodeEditText);
-        mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
-        mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
-        mLoginButton = (Button) v.findViewById(R.id.button_log_in);
-        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
-        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
-        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
+        mNextButton = v.findViewById(R.id.personal_sign_in_button);
+        mMaleCheckBox = v.findViewById(R.id.checkBoxMale);
+        mFemaleCheckBox = v.findViewById(R.id.checkBoxFemale);
+        mBirthdayEditText = v.findViewById(R.id.birthdayEditText);
+        mPromoCodeEditText = v.findViewById(R.id.promoCodeEditText);
+        mGenderEditText = v.findViewById(R.id.genderEditText);
+        mCrossButton = v.findViewById(R.id.button_cross);
+        mLoginButton = v.findViewById(R.id.button_log_in);
+        mTermsConditions = v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicy = v.findViewById(R.id.textViewPrivacyPolicy);
+        mAgreementCheckBox = v.findViewById(R.id.checkBoxTermsConditions);
 
         mProgressDialog = new ProgressDialog(getActivity());
 

@@ -161,7 +161,7 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
             }
         });
 
-        mBackButtonTop = (ImageView) view.findViewById(R.id.back);
+        mBackButtonTop = view.findViewById(R.id.back);
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }

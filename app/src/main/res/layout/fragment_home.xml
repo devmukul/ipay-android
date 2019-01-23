@@ -442,6 +442,7 @@
             layout="@layout/bottom_sheet" />
 
         <android.support.v7.widget.CardView
+            android:name="bd.com.ipay.ipayskeleton.HomeFragments.NewsRoomFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
@@ -453,7 +454,7 @@
 
             <fragment
                 android:id="@+id/offerFragment"
-                android:name="bd.com.ipay.ipayskeleton.HomeFragments.OfferFragment"
+                android:name="bd.com.ipay.ipayskeleton.HomeFragments.NewsRoomFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </android.support.v7.widget.CardView>
