@@ -1,18 +1,12 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RailwayTickets;
 
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,49 +17,29 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.io.Serializable;
-import java.security.SecurityPermission;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialogWithSearch;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar;
-import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetStationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTrainListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.TrainList;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetDistrictResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetThanaResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.Bank;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardInfoInputFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
-import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
-import bd.com.ipay.ipayskeleton.Widget.View.CardNumberEditText;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public class JourneyInfoSelectFragment extends Fragment implements HttpResponseListener {
@@ -75,10 +49,6 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
     private HttpRequestGetAsyncTask mGetStationToListAsyncTask = null;
     private GetStationResponse mGetStationToResponse;
-
-    private HttpRequestGetAsyncTask mGetTrainListAsyncTask = null;
-    private GetTrainListResponse mTrainResponse;
-
 
     private SpinnerEditTextWithProgressBar mSattionFromEditTextProgressBar;
     private SpinnerEditTextWithProgressBar mSattionToEditTextProgressBar;
@@ -93,16 +63,15 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     private EditText mChildSelection;
     private EditText mAdultSelection;
 
-
-    public static List<TrainList> mTrainList;
     private List<String> mStationFromList;
     private List<String> mStationToList;
     private List<String> mGenderList;
 
     private List<String> mAdultList;
+    private List<String> mChildList;
 
-    private SelectorDialog stationFromSelectorDialog;
-    private SelectorDialog stationToSelectorDialog;
+    private SelectorDialogWithSearch stationFromSelectorDialog;
+    private SelectorDialogWithSearch stationToSelectorDialog;
     private SelectorDialog genderSelectorDialog;
 
     private SelectorDialog childSelectorDialog;
@@ -114,8 +83,8 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     private String mSelectedSattionTo = null;
     private String mSelectedGender = null;
     private int mSelectedDate;
-    private String mSelectedAdult = null;
-    private String mSelectedChild = null;
+    private int mSelectedAdult = 0;
+    private int mSelectedChild = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,22 +107,18 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             @Override
             public void onClick(View v) {
 
+            if (verifyUserInputs()) {
+                Bundle bundle = new Bundle();
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
+                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, mSelectedAdult);
+                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, mSelectedChild);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
                 ((IPayUtilityBillPayActionActivity) getActivity()).
-                        switchFragment(new TrainSelectionFragment(), null, 2, true);
+                        switchFragment(new TrainSelectionFragment(), bundle, 2, true);
 
-
-                if (verifyUserInputs()) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
-                    bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
-                    bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
-                    bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
-                    bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
-                    bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
-                    ((IPayUtilityBillPayActionActivity) getActivity()).
-                            switchFragment(new TrainSelectionFragment(), bundle, 2, true);
-
-                }
+            }
             }
         });
         ((IPayUtilityBillPayActionActivity) getActivity()).setSupportActionBar(toolbar);
@@ -213,11 +178,13 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         mAdultList.add("3");
         mAdultList.add("4");
         setAdultAdapter(mAdultList);
-        setChildAdapter(mAdultList);
+
+        mGenderList = new ArrayList<>();
+        mGenderList.add("Male");
+        mGenderList.add("Female");
+        setGenderAdapter(mGenderList);
 
         getStationFromList();
-
-//        setTransactionImageResource(selectedBankIconId);
     }
 
     private void getStationFromList() {
@@ -226,8 +193,8 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         }
         mSattionFromEditTextProgressBar.showProgressBar();
 
-        mGetStationFromListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
-                "http://10.10.10.11:8866/api/utility/cns/originating-station", getContext(), this, true);
+        mGetStationFromListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_STATION_FROM,
+                Constants.BASE_URL_CNS + Constants.URL_ORIGINATING_STATION, getContext(), this, true);
         mGetStationFromListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -237,25 +204,14 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         }
         mSattionToEditTextProgressBar.showProgressBar();
 
-        mGetStationToListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                "http://10.10.10.11:8866/api/utility/cns/originating-station?originatingStation="+originatingStation, getContext(), this, true);
+        mGetStationToListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_STATION_TO,
+                Constants.BASE_URL_CNS + Constants.URL_ORIGINATING_STATION_TO + originatingStation, getContext(), this, true);
         mGetStationToListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-//    private void getTrainList(String originatingStation, String destinationStation) {
-//        if (mGetTrainListAsyncTask != null) {
-//            return;
-//        }
-//        mClassEditTextProgressBar.showProgressBar();
-//
-//        mGetTrainListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
-//                "http://10.10.10.11:8866/api/utility/cns/train?originatingStation="+originatingStation+"&destinationStation="+destinationStation, getContext(), this, true);
-//        mGetTrainListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//    }
-
     private void setStationFromAdapter(List<String> stationList) {
-        stationFromSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_district), mStationFromList);
-        stationFromSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
+        stationFromSelectorDialog = new SelectorDialogWithSearch(getContext(), getContext().getString(R.string.select_a_station), mStationFromList);
+        stationFromSelectorDialog.setOnResourceSelectedListener(new SelectorDialogWithSearch.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(String name) {
                 mSattionFromSelection.setError(null);
@@ -278,9 +234,9 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         });
     }
 
-    private void setThanaAdapter(List<String> thanaList) {
-        stationToSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_thana), thanaList);
-        stationToSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
+    private void setStationToAdapter(List<String> thanaList) {
+        stationToSelectorDialog = new SelectorDialogWithSearch(getContext(), getContext().getString(R.string.select_a_station), thanaList);
+        stationToSelectorDialog.setOnResourceSelectedListener(new SelectorDialogWithSearch.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(String name) {
                 mSattionToSelection.setError(null);
@@ -297,34 +253,31 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         });
     }
 
-//    private void setClassAdapter(List<String> classList) {
-//        classSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_thana), classList);
-//        classSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
-//            @Override
-//            public void onResourceSelected(String name) {
-//                mClassSelection.setError(null);
-//                mClassSelection.setText(name);
-//                mSelectedClass = name;
-//            }
-//        });
-//
-//        mClassSelection.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                classSelectorDialog.show();
-//            }
-//        });
-//    }
-
     private void setAdultAdapter(List<String> classList) {
-        adultSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_thana), classList);
+        adultSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_no_of_adult), classList);
         adultSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(String name) {
                 mAdultSelection.setError(null);
                 mAdultSelection.setText(name);
-                mSelectedAdult = name;
+                mSelectedAdult = Integer.valueOf(name);
+                mChildSelection.setError(null);
+
+                if (Integer.valueOf(mSelectedAdult) < 4 && Integer.valueOf(mSelectedAdult) >0 ) {
+                    mChildList = new ArrayList<>();
+                    for (int i = 0; i <= 4 - Integer.valueOf(mSelectedAdult); i++) {
+                        mChildList.add(String.valueOf(i));
+                    }
+                    setChildAdapter(mChildList);
+
+                    if(Integer.valueOf(mSelectedAdult) == 1){
+                        mGenderEditTextProgressBar.setVisibility(View.VISIBLE);
+                    }else{
+                        mGenderEditTextProgressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
             }
+
         });
 
         mAdultSelection.setOnClickListener(new View.OnClickListener() {
@@ -336,13 +289,19 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     }
 
     private void setChildAdapter(List<String> classList) {
-        childSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_thana), classList);
+        childSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_no_of_child), classList);
         childSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(String name) {
                 mChildSelection.setError(null);
                 mChildSelection.setText(name);
-                mSelectedChild = name;
+                mSelectedChild = Integer.valueOf(name);
+
+                if((Integer.valueOf(mSelectedAdult) + Integer.valueOf(mSelectedChild) )== 1){
+                    mGenderEditTextProgressBar.setVisibility(View.VISIBLE);
+                }else{
+                    mGenderEditTextProgressBar.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -354,17 +313,31 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         });
     }
 
-//    public int getBankIcon(Bank bank) {
-//        Resources resources = getContext().getResources();
-//        int resourceId;
-//        if (bank.getBankCode() != null)
-//            resourceId = resources.getIdentifier("ic_bank" + bank.getBankCode(), "drawable",
-//                    getContext().getPackageName());
-//        else
-//            resourceId = resources.getIdentifier("ic_bank" + "111", "drawable",
-//                    getContext().getPackageName());
-//        return resourceId;
-//    }
+    private void setGenderAdapter(List<String> classList) {
+        genderSelectorDialog = new SelectorDialog(getContext(), getContext().getString(R.string.select_a_gender), classList);
+        genderSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(String name) {
+                mGenderSelection.setError(null);
+                mGenderSelection.setText(name);
+                if(name.equalsIgnoreCase("male"))
+                {
+                    mSelectedGender = "M";
+                }else if(name.equalsIgnoreCase("female")){
+                    mSelectedGender = "F";
+                }else {
+                    mSelectedGender = null;
+                }
+            }
+        });
+
+        mGenderSelection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                genderSelectorDialog.show();
+            }
+        });
+    }
 
     protected void showErrorMessage(String errorMessage) {
         if (!TextUtils.isEmpty(errorMessage) && getActivity() != null) {
@@ -378,13 +351,12 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetStationFromListAsyncTask = null;
             mGetStationToListAsyncTask = null;
-            mGetTrainListAsyncTask = null;
             return;
         }
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_STATION_FROM)) {
             try {
                 mGetStationFromResponse = gson.fromJson(result.getJsonString(), GetStationResponse.class);
 
@@ -399,97 +371,39 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
                 } else {
                     if (getContext() != null)
-                        Toaster.makeText(getContext(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
+                        Toaster.makeText(getContext(), R.string.failed_loading_station_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getContext() != null)
-                    Toaster.makeText(getContext(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getContext(), R.string.failed_loading_station_list, Toast.LENGTH_LONG);
             }
 
             mGetStationFromListAsyncTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_THANA_LIST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_STATION_TO)) {
             try {
                 mGetStationToResponse = gson.fromJson(result.getJsonString(), GetStationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mStationToList = mGetStationToResponse.getStationList();
                     mSattionToEditTextProgressBar.hideProgressBar();
                     mSattionToSelection.setText("");
-                    setThanaAdapter(mStationToList);
+                    setStationToAdapter(mStationToList);
                     mSattionToSelection.setText(mSelectedSattionTo);
 
                 } else {
                     if (getContext() != null)
-                        Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+                        Toaster.makeText(getContext(), R.string.failed_loading_station_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getContext() != null)
-                    Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getContext(), R.string.failed_loading_station_list, Toast.LENGTH_LONG);
             }
 
             mGetStationToListAsyncTask = null;
         }
-//        else if (result.getApiCommand().equals(Constants.COMMAND_GET_CONTACTS)) {
-//            try {
-//                mTrainResponse = gson.fromJson(result.getJsonString(), GetTrainListResponse.class);
-//                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-//                    mTrainList = mTrainResponse.getTrainList();
-//                    Set<String> list3 = new LinkedHashSet<String>();
-//                    for(TrainList trainList : mTrainList){
-//                       list3.addAll(trainList.getClassList()) ;
-//                    }
-//
-//                    mClassList = new ArrayList<>(list3);
-//                    mClassEditTextProgressBar.hideProgressBar();
-//                    mClassSelection.setText("");
-//                    setClassAdapter(mClassList);
-//                    mClassSelection.setText(mSelectedClass);
-//
-//                } else {
-//                    if (getContext() != null)
-//                        Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                if (getContext() != null)
-//                    Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
-//            }
-//
-//            mGetTrainListAsyncTask = null;
-//        }
 
     }
-
-//    public void setTransactionImageResource(int imageResource) {
-//        if (getContext() != null) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                transactionImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), imageResource, getContext().getTheme()));
-//            } else {
-//                Glide.with(getContext()).load(imageResource)
-//                        .asBitmap()
-//                        .transform(new CircleTransform(getContext()))
-//                        .crossFade()
-//                        .into(transactionImageView);
-//            }
-//        }
-//    }
-//
-//    public String getCardNumber() {
-//        if (mCardNumberEditText.getText() != null)
-//            return mCardNumberEditText.getText().toString();
-//        else
-//            return "";
-//    }
-//
-//    public String getCardHolderName() {
-//        if (mNameEditText.getText() != null) {
-//            return mNameEditText.getText().toString();
-//        } else {
-//            return "";
-//        }
-//    }
-
     public boolean verifyUserInputs() {
         boolean cancel = false;
         View focusedView = null;
@@ -501,24 +415,24 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         mGenderSelection.setError(null);
 
         if (mDateSelection.getText().toString().trim().length() == 0) {
-            mDateSelection.setError(getContext().getString(R.string.invalid_address_line_1));
+            mDateSelection.setError(getContext().getString(R.string.invalid_journey_date));
             focusedView = mDateSelection;
             cancel = true;
         } else if (mSattionFromSelection.getText().toString().trim().length() == 0) {
-            mSattionFromSelection.setError(getContext().getString(R.string.invalid_district));
+            mSattionFromSelection.setError(getContext().getString(R.string.invalid_start_station));
             focusedView = mSattionFromSelection;
             cancel = true;
         } else if (mSattionToSelection.getText().toString().trim().length() == 0) {
-            mSattionToSelection.setError(getContext().getString(R.string.invalid_district));
+            mSattionToSelection.setError(getContext().getString(R.string.invalid_start_station));
             focusedView = mSattionToSelection;
             cancel = true;
         } else if (mAdultSelection.getText().toString().trim().length() == 0) {
-            mAdultSelection.setError(getContext().getString(R.string.invalid_thana));
+            mAdultSelection.setError(getContext().getString(R.string.invalid_no_of_ticket));
             focusedView = mAdultSelection;
             cancel = true;
         } else if (Integer.valueOf(mAdultSelection.getText().toString())== 1) {
             if (mGenderSelection.getText().toString().trim().length() == 0) {
-                mGenderSelection.setError(getContext().getString(R.string.invalid_address_line_1));
+                mGenderSelection.setError(getContext().getString(R.string.invalid_gender));
                 focusedView = mGenderSelection;
                 cancel = true;
             }
@@ -530,44 +444,5 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         } else {
             return true;
         }
-    }
-
-//    protected boolean verifyInput() {
-//        if (TextUtils.isEmpty(getCardNumber())) {
-//            showErrorMessage(getString(R.string.empty_card_number_message));
-//            return false;
-//        } else if (!CardNumberValidator.validateCardNumber(getCardNumber())) {
-//            showErrorMessage(getString(R.string.invalid_card_number_message));
-//            return false;
-//        } else {
-//            if (TextUtils.isEmpty(getCardHolderName())) {
-//                showErrorMessage(getString(R.string.enter_a_name));
-//                return false;
-//            } else {
-//                return true;
-//            }
-//
-//        }
-//    }
-
-    @SuppressLint("ValidFragment")
-    private class MyDatePickerFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
-        }
-
-        private DatePickerDialog.OnDateSetListener dateSetListener =
-                new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
-
-                    }
-                };
     }
 }

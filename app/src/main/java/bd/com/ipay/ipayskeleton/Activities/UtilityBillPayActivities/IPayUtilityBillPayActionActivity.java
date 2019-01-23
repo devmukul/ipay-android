@@ -59,6 +59,8 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
     public static final String KEY_TICKET_TRAIN_NO = "KEY_TICKET_TRAIN_NO";
     public static final String KEY_TICKET_GENDER = "KEY_TICKET_GENDER";
 
+    public static final String KEY_TICKET_TRAIN_NAME = "KEY_TICKET_TRAIN_NAME";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

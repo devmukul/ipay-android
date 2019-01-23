@@ -1253,6 +1253,7 @@
     <string name="enter_name_or_number"><i>Enter name or phone number</i></string>
     <string name="send_money_to">YOU ARE SENDING MONEY TO</string>
     <string name="paying_money_to">YOU ARE PAYING MONEY TO</string>
+    <string name="paying_money_for">YOU ARE PAYING MONEY FOR</string>
     <string name="your_ipay_balance">Your available iPay balance is</string>
     <string name="your_ipay_credit_balance">Your available Credit balance is</string>
     <string name="add_money_bank_success_description">You have successfully requested add money from bank to your iPay wallet. It may take 3&#8211;5 business day to complete.\n See further details under \'Transactions\'.</string>
@@ -1285,6 +1286,7 @@
     <string name="zero_amount">00</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING Tk. %1$s TO</string>
     <string name="make_payment_confirmation_message">YOU ARE PAYING %1$s TO</string>
+    <string name="make_payment_confirmation_message_tk">YOU ARE PAYING Tk. %1$s TO</string>
     <string name="add_money_confirmation_message">YOU ARE ADDING Tk. %1$s FROM</string>
     <string name="add_instant_money_confirmation_message">YOU ARE ADDING INSTANT MONEY Tk. %1$s FROM</string>
     <string name="withdraw_money_confirmation_message">YOU ARE WITHDRAWING Tk. %1$s TO</string>
@@ -1292,6 +1294,7 @@
     <string name="top_up_confirmation_message">MOBILE TOP-UP Tk. %1$s TO</string>
     <string name="send_money_success_message">SUCCESSFULLY SENT Tk. %1$s TO</string>
     <string name="make_payment_success_message">SUCCESSFULLY PAID %1$s TO</string>
+    <string name="make_payment_success_message_tk">SUCCESSFULLY PAID Tk. %1$s TO</string>
     <string name="add_money_card_success_message">SUCCESSFULLY ADDED Tk. %1$s FROM</string>
     <string name="add_money_instant_money_success_message">SUCCESSFULLY ADDED INSTANT MONEY Tk. %1$s FROM</string>
     <string name="add_money_bank_success_message">SUCCESSFULLY REQUESTED TO ADD Tk. %1$s FROM</string>
@@ -1393,8 +1396,19 @@
     <string name="top_up_my_number">Top-Up My Number</string>
     <string name="please_select_prepaid_postpaid">Please select Prepaid/Postpaid</string>
     <string name="enter_email_address">Enter Email Address</string>
-    <string name="railway_ticket">Railway Ticket</string>
+    <string name="railway_ticket">Railway</string>
+    <string name="select_a_station">Select Station</string>
+    <string name="select_no_of_adult">Select No. of Adult</string>
+    <string name="select_no_of_child">Select No. of Child</string>
+    <string name="select_a_gender">Select a Gender</string>
 
-
+    <string name="invalid_journey_date">Please select journey date.</string>
+    <string name="invalid_start_station">Please select a station.</string>
+    <string name="invalid_no_of_ticket">Please select no. of tickes.</string>
+    <string name="invalid_gender">Please select gender.</string>
+    <string name="failed_loading_station_list">Failed to load station list</string>
+    <string name="railway_ticket_title">Buy Railway Ticket</string>
+    <string name="ticket_info">Ticket Info</string>
+    <string name="railway_ticket_name">Railway Ticket</string>
 
 </resources>

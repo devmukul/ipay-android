@@ -13,6 +13,7 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.PurchaseTicketRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GenericBillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaDpsBillPayRequest;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionConfirmationFragment;
@@ -29,34 +30,60 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 
 	private final Gson gson = new Gson();
 
-	private HttpRequestPostAsyncTask lankaBanglaDpsPayTask = null;
+	private HttpRequestPostAsyncTask railwayTicketTask = null;
 
-	private String accountNumber;
-	private String accountUserName;
-
-	private Number billAmount;
 
 	private String uri;
 
-	private LankaBanglaDpsBillPayRequest lankaBanglaDpsBillPayRequest;
+	private PurchaseTicketRequest purchaseTicketRequest;
+
+    private String mSelectedSattionFrom = null;
+    private String mSelectedSattionTo = null;
+    private String mSelectedGender = null;
+    private int mSelectedDate;
+    private int mSelectedAdult;
+    private int mSelectedChild;
+
+    private String mSelectedTrain = null;
+    private String mSelectedClass = null;
+    private String mSelectedTicketId = null;
+    private String mSelectedMessage = null;
+    private int mSelectedTrainNo;
+    private double mFareAmount;
+    private double mVatAmount;
+    private double mTotalAmount;
+
+
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-//			accountNumber = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, "");
-//			accountUserName = getArguments().getString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, "");
-//			billAmount = (Number) getArguments().getSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY);
+
+            mSelectedClass = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_CLASS_NAME, "");
+            mSelectedGender = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, "");
+            mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, 0);
+            mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
+            mSelectedChild = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, 0);
+            mSelectedSattionFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
+            mSelectedSattionTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
+            mSelectedTrain = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, "");
+            mSelectedTicketId = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, "");
+            mSelectedMessage = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, "");
+            mSelectedTrainNo = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, 0);
+            mFareAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, 0);
+            mVatAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_VAT_AMOUNT, 0);
+            mTotalAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, 0);
 		}
 	}
 
 	@Override
 	protected void setupViewProperties() {
-		setTransactionImageResource(R.drawable.ic_lankabd2);
-		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
-		setName(accountNumber);
-		setUserName(accountUserName);
-		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
+		setTransactionImageResource(R.drawable.bd_railway);
+		setTransactionDescription(getStyledTransactionDescription(R.string.make_payment_confirmation_message_tk, mTotalAmount));
+        setName(getString(R.string.railway_ticket_name));
+        setUserName(Utilities.formatJourneyInfoText(mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
+		setTransactionConfirmationButtonTitle(getString(R.string.pay));
 	}
 
 	@Override
@@ -71,7 +98,7 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 
 	@Override
 	protected String getTrackerCategory() {
-		return Constants.LANKA_BANGLA_DPS_BILL_PAY;
+		return Constants.COMMAND_RAILWAY_TICKET_PURCHASE;
 	}
 
 	@Override
@@ -96,13 +123,26 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 		if (!Utilities.isConnectionAvailable(getContext())) {
 			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
 		}
-		if (lankaBanglaDpsPayTask == null) {
-			lankaBanglaDpsBillPayRequest = new LankaBanglaDpsBillPayRequest(accountNumber, getPin());
-			String json = gson.toJson(lankaBanglaDpsBillPayRequest);
-			uri = Constants.BASE_URL_UTILITY + Constants.URL_LANKABANGLA_DPS_BILL_PAY;
-			lankaBanglaDpsPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY,
+		if (railwayTicketTask == null) {
+			purchaseTicketRequest = new PurchaseTicketRequest();
+			purchaseTicketRequest.setClassName(mSelectedClass);
+			purchaseTicketRequest.setFare(mFareAmount);
+			purchaseTicketRequest.setGender(mSelectedGender);
+			purchaseTicketRequest.setJourneyDate(mSelectedDate);
+			purchaseTicketRequest.setNumberOfAdults(mSelectedAdult);
+			purchaseTicketRequest.setNumberOfChildren(mSelectedChild);
+			purchaseTicketRequest.setStationFrom(mSelectedSattionFrom);
+			purchaseTicketRequest.setStationTo(mSelectedSattionTo);
+			purchaseTicketRequest.setTicketId(mSelectedTicketId);
+			purchaseTicketRequest.setTotalFare(mTotalAmount);
+			purchaseTicketRequest.setTrainNumber(mSelectedTrainNo);
+			purchaseTicketRequest.setVat(mVatAmount);
+			purchaseTicketRequest.setPin(getPin());
+			String json = gson.toJson(purchaseTicketRequest);
+			uri = Constants.BASE_URL_CNS + Constants.URL_PURCHASE_TICKET;
+			railwayTicketTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RAILWAY_TICKET_PURCHASE,
 					uri, json, getActivity(), this, false);
-			lankaBanglaDpsPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			railwayTicketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
 			customProgressDialog.setLoadingMessage(getString(R.string.payment_processing));
 			customProgressDialog.showDialog();
@@ -115,11 +155,11 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 			return;
 
 		if (HttpErrorHandler.isErrorFound(result, getContext(), customProgressDialog)) {
-			lankaBanglaDpsPayTask = null;
+			railwayTicketTask = null;
 		} else {
 			try {
 				switch (result.getApiCommand()) {
-					case Constants.COMMAND_LANKABANGLA_BILL_PAY:
+					case Constants.COMMAND_RAILWAY_TICKET_PURCHASE:
 						final GenericBillPayResponse mGenericBillPayResponse = gson.fromJson(result.getJsonString(), GenericBillPayResponse.class);
 						switch (result.getStatus()) {
 							case Constants.HTTP_RESPONSE_STATUS_PROCESSING:
@@ -139,17 +179,28 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 									customProgressDialog.setTitle(R.string.success);
 									customProgressDialog.showSuccessAnimationAndMessage(mGenericBillPayResponse.getMessage());
 								}
-								sendSuccessEventTracking(billAmount);
+								sendSuccessEventTracking(mTotalAmount);
 								new Handler().postDelayed(new Runnable() {
 									@Override
 									public void run() {
 										customProgressDialog.dismissDialog();
-										Bundle bundle = new Bundle();
-//										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_NUMBER_KEY, accountNumber);
-//										bundle.putString(LankaBanglaDpsAmountInputFragment.ACCOUNT_USER_NAME_KEY, accountUserName);
-										bundle.putSerializable(LankaBanglaDpsAmountInputFragment.INSTALLMENT_AMOUNT_KEY, billAmount);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, mSelectedTrain);
+                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_CLASS_NAME, mSelectedClass);
+                                        bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, mFareAmount);
+                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
+                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
+                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
+                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
+                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
+                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, mSelectedTicketId);
+                                        bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, mTotalAmount);
+                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, mSelectedMessage);
+                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, mSelectedTrainNo);
+                                        bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_VAT_AMOUNT, mVatAmount);
 										if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillSuccessFragment(), bundle, 3, true);
+											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new TicketSuccessFragment(), bundle, 3, true);
 										}
 
 									}
@@ -161,7 +212,7 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 								if (getActivity() != null) {
 									customProgressDialog.setTitle(R.string.failed);
 									customProgressDialog.showFailureAnimationAndMessage(mGenericBillPayResponse.getMessage());
-									sendBlockedEventTracking(billAmount);
+									sendBlockedEventTracking(mTotalAmount);
 								}
 								new Handler().postDelayed(new Runnable() {
 									@Override
@@ -174,7 +225,7 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 							case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
 								customProgressDialog.dismissDialog();
 								Toast.makeText(getActivity(), mGenericBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
-								launchOTPVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(lankaBanglaDpsBillPayRequest), Constants.COMMAND_LANKABANGLA_BILL_PAY, uri);
+								launchOTPVerification(mGenericBillPayResponse.getOtpValidFor(), gson.toJson(purchaseTicketRequest), Constants.COMMAND_RAILWAY_TICKET_PURCHASE, uri);
 								break;
 							case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
 								final String errorMessage;
@@ -205,7 +256,7 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 										}
 									}
 									//Google Analytic event
-									sendFailedEventTracking(mGenericBillPayResponse.getMessage(), billAmount);
+									sendFailedEventTracking(mGenericBillPayResponse.getMessage(), mTotalAmount);
 									break;
 								}
 								break;
@@ -215,9 +266,9 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 			} catch (Exception e) {
 				e.printStackTrace();
 				customProgressDialog.showFailureAnimationAndMessage(getString(R.string.payment_failed));
-				sendFailedEventTracking(e.getMessage(), billAmount);
+				sendFailedEventTracking(e.getMessage(), mTotalAmount);
 			}
-			lankaBanglaDpsPayTask = null;
+			railwayTicketTask = null;
 		}
 	}
 }

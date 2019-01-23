@@ -1188,4 +1188,33 @@ public class Utilities {
 		else
 			return "CID"+customerIdStr;
 	}
+
+	public static String formatJourneyInfoText(String infoText, int adults, int child) {
+
+		if(adults>1){
+			if(child>1){
+				return  infoText+" for "+adults +" Adults & "+child+" Children";
+			}else if(child == 0){
+				return  infoText+" for "+adults +" Adults";
+			}else{
+				return  infoText+" for "+adults +" Adults & "+child+" Child";
+			}
+		}else if(adults ==1 ){
+			if(child>1){
+				return  infoText+" for "+adults +" Adult & "+child+" Children";
+			}else if(child == 0){
+				return  infoText+" for "+adults +" Adult";
+			}else{
+				return  infoText+" for "+adults +" Adult & "+child+" Child";
+			}
+		}else {
+			if(child>1){
+				return  infoText+" for "+adults +" Adult & "+child+" Children";
+			}else if(child == 0){
+				return  infoText+" for "+adults +" Adult";
+			}else{
+				return  infoText+" for "+adults +" Adult & "+child+" Child";
+			}
+		}
+	}
 }

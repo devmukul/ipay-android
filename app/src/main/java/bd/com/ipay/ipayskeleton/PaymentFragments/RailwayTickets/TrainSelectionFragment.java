@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RailwayTickets;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,13 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,24 +34,14 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetStationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTicketInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTicketInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTrainListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.TrainList;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetAvailableCreditCardBanks;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerInfoResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.Bank;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardInfoInputFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaAmountInputFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps.LankaBanglaDpsAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import bd.com.ipay.ipayskeleton.Widget.View.BillDetailsDialog;
 import bd.com.ipay.ipayskeleton.Widget.View.TicketDetailsDialog;
 
 public class TrainSelectionFragment extends Fragment implements HttpResponseListener {
@@ -64,10 +52,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
     private GetTrainListResponse mTrainResponse;
 
     private LinearLayout mProgressLayout;
-    private BankListAdapter trainListAdapter;
-    //private int clickedPosition;
-    private int selectedTrainIconId;
-    private String selectedTrainCode;
+    private TrainListAdapter trainListAdapter;
     private CustomProgressDialog mProgressDialog;
 
     private HttpRequestPostAsyncTask mGetTrainInfoAsyncTask = null;
@@ -77,7 +62,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
     private String mSelectedSattionFrom = null;
     private String mSelectedSattionTo = null;
     private String mSelectedGender = null;
-    private int mSelectedDate;
+    private static int mSelectedDate;
     private int mSelectedAdult;
     private int mSelectedChild;
 
@@ -87,6 +72,9 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
+    TextView journeyInfo;
+    TextView monthText;
+    private static int selectedPos = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,33 +103,36 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((IPayUtilityBillPayActionActivity) getActivity()).setSupportActionBar(toolbar);
         ((IPayUtilityBillPayActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getActivity().setTitle("Buy Railway Ticket");
+        getActivity().setTitle(R.string.railway_ticket_title);
         mProgressDialog = new CustomProgressDialog(getActivity());
         mTrainListRecyclerView = view.findViewById(R.id.user_bank_list_recycler_view);
         mProgressLayout = view.findViewById(R.id.progress_layout);
+        journeyInfo = view.findViewById(R.id.journey_info_text);
+        monthText = view.findViewById(R.id.month_text);
 
+        List<Date> dates = getDates();
         recyclerView = view.findViewById(R.id.date_view);
         linearLayoutManager = new LinearLayoutManager(getContext() , LinearLayoutManager.HORIZONTAL, false);
-        MyRecyclerAdapter adapter = new MyRecyclerAdapter(getDates());
+        linearLayoutManager.scrollToPosition(selectedPos);
+        MyRecyclerAdapter adapter = new MyRecyclerAdapter(dates);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        trainListAdapter = new BankListAdapter();
+        journeyInfo.setText(Utilities.formatJourneyInfoText(mSelectedSattionFrom+" to "+mSelectedSattionTo, mSelectedAdult, mSelectedChild));
+
+        trainListAdapter = new TrainListAdapter();
         mTrainListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mTrainListRecyclerView.setAdapter(trainListAdapter);
         getTrainList(mSelectedSattionFrom, mSelectedSattionTo);
     }
 
-    public int getBankIcon(Bank bank) {
-        Resources resources = getContext().getResources();
-        int resourceId;
-        if (bank.getBankCode() != null)
-            resourceId = resources.getIdentifier("ic_bank" + bank.getBankCode(), "drawable",
-                    getContext().getPackageName());
-        else
-            resourceId = resources.getIdentifier("ic_bank" + "111", "drawable",
-                    getContext().getPackageName());
-        return resourceId;
+    private void getTrainList(String originatingStation, String destinationStation) {
+        if (mGetTrainListAsyncTask != null) {
+            return;
+        }
+        mGetTrainListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRAIN_LIST,
+                Constants.BASE_URL_CNS + Constants.URL_TRAIN_LIST +"originatingStation="+originatingStation+"&destinationStation="+destinationStation, getContext(), this, true);
+        mGetTrainListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     protected void performContinueAction(String ticketClass, int trainNumber ) {
@@ -150,12 +141,10 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         } else if (mGetTrainInfoAsyncTask != null) {
             return;
         }
-
-        String jsonBody = new Gson().toJson( new GetTicketInfoRequest(0, ticketClass, "M", mSelectedDate,
+        String jsonBody = new Gson().toJson( new GetTicketInfoRequest(0, ticketClass, mSelectedGender, mSelectedDate,
                 mSelectedAdult, mSelectedChild , mSelectedSattionFrom, mSelectedSattionTo, trainNumber));
-
-        mGetTrainInfoAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO,
-                "http://10.10.10.11:8866/api/utility/cns/ticket-query/", jsonBody, getContext(), this, false);
+        mGetTrainInfoAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TICKET_INFO,
+                Constants.BASE_URL_CNS + Constants.URL_TICKET_QUERY, jsonBody, getContext(), this, false);
         mGetTrainInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
         mProgressDialog.setMessage(getString(R.string.fetching_user_info));
@@ -167,12 +156,14 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetTrainInfoAsyncTask = null;
             mGetTrainListAsyncTask = null;
+            mProgressLayout.setVisibility(View.GONE);
+            mProgressDialog.dismissDialog();
             return;
         }
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_TICKET_INFO)) {
             try {
                 mGetTrainInfoAsyncTask = null;
                 GetTicketInfoResponse lankaBanglaCustomerInfoResponse = new Gson().fromJson(result.getJsonString(), GetTicketInfoResponse.class);
@@ -199,7 +190,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
                 mProgressDialog.dismiss();
 
             mGetTrainInfoAsyncTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_CONTACTS)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRAIN_LIST)) {
             try {
                 mTrainResponse = gson.fromJson(result.getJsonString(), GetTrainListResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -221,35 +212,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 
             mGetTrainListAsyncTask = null;
         }
-
-
-
-//        if (getActivity() == null)
-//            return;
-//
-//        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
-//            mGetTrainInfoAsyncTask = null;
-//            if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-//                GetTicketInfoResponse lankaBanglaCustomerInfoResponse = new Gson().fromJson(result.getJsonString(), GetTicketInfoResponse.class);
-//                if (!TextUtils.isEmpty(lankaBanglaCustomerInfoResponse.getMessage())) {
-//                    Toaster.makeText(getActivity(), lankaBanglaCustomerInfoResponse.getMessage(), Toast.LENGTH_SHORT);
-//                } else {
-//                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-//                }
-//            }
-//        } else {
-//            try {
-//                switch (result.getApiCommand()) {
-//                    case Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO:
-//
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-//            }
-//        }
         mProgressDialog.dismissDialog();
-
     }
 
     private void showTicketInfo(final GetTicketInfoResponse ticketInfoResponse) {
@@ -260,10 +223,10 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         //String className = ticketInfoResponse.getClassName();
 
         final TicketDetailsDialog billDetailsDialog = new TicketDetailsDialog(getContext());
-        billDetailsDialog.setTitle("Ticket Info");
+        billDetailsDialog.setTitle(getString(R.string.ticket_info));
         billDetailsDialog.setTrainName(mSelectedTrain+" - "+trainNo);
         billDetailsDialog.setClassName(mSelectedClass);
-        billDetailsDialog.setAdultChild("for "+mSelectedAdult+" Adults & "+mSelectedChild+" Child");
+        billDetailsDialog.setAdultChild(Utilities.formatJourneyInfoText("", mSelectedAdult, mSelectedChild));
         billDetailsDialog.setDate(ticketInfoResponse.getJourneyDate());
         billDetailsDialog.setFareAmount(ticketInfoResponse.getFare());
         billDetailsDialog.setVatAmount(ticketInfoResponse.getVat());
@@ -279,64 +242,29 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 billDetailsDialog.cancel();
-//                Bundle bundle = new Bundle();
-//                bundle.putInt(LankaBanglaAmountInputFragment.TOTAL_OUTSTANDING_AMOUNT_KEY, Integer.parseInt(ticketInfoResponse.getCreditBalance()));
-//                bundle.putInt(LankaBanglaAmountInputFragment.MINIMUM_PAY_AMOUNT_KEY, Integer.parseInt(ticketInfoResponse.getMinimumPay()));
-//                bundle.putString(LankaBanglaAmountInputFragment.CARD_NUMBER_KEY, ticketInfoResponse.getCardNumber());
-//                bundle.putString(LankaBanglaAmountInputFragment.CARD_USER_NAME_KEY, ticketInfoResponse.getName());
-//                Utilities.hideKeyboard(getActivity());
-//                final LankaBanglaAmountInputFragment lankaBanglaAmountInputFragment = new LankaBanglaAmountInputFragment();
-//
-//                if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-//                    ((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(lankaBanglaAmountInputFragment, bundle, 2, true);
-//                }
+                Bundle bundle = new Bundle();
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, mSelectedTrain);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_CLASS_NAME, mSelectedClass);
+                bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, ticketInfoResponse.getFare());
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
+                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
+                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
+                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, ticketInfoResponse.getTicketId());
+                bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, ticketInfoResponse.getTotalFare());
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, ticketInfoResponse.getMessageId());
+                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, ticketInfoResponse.getTrainNumber());
+                bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_VAT_AMOUNT, ticketInfoResponse.getVat());
+                ((IPayUtilityBillPayActionActivity) getActivity()).
+                        switchFragment(new TicketAmountInputFragment(), bundle, 3, true);
             }
         });
         billDetailsDialog.show();
     }
 
-        private void getTrainList(String originatingStation, String destinationStation) {
-            if (mGetTrainListAsyncTask != null) {
-                return;
-            }
-
-            mGetTrainListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
-                    "http://10.10.10.11:8866/api/utility/cns/train?originatingStation="+originatingStation+"&destinationStation="+destinationStation, getContext(), this, true);
-            mGetTrainListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
-//    public void attemptGetBankList() {
-//        if (mGetBankListAsyncTask != null) {
-//            return;
-//        } else {
-//            mGetBankListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-//                    Constants.BASE_URL_SM + Constants.URL_GET_BANK_LIST, getContext(), this, false);
-//            mGetBankListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//        }
-//    }
-
-//    @Override
-//    public void httpResponseReceiver(GenericHttpResponse result) {
-//        try {
-//            mGetBankListAsyncTask = null;
-//            if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
-//                return;
-//            } else {
-//                if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
-//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-//                    } else {
-//                        Toaster.makeText(getContext(), "Bank List Fetch Failed", Toast.LENGTH_LONG);
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            Toaster.makeText(getContext(), "Bank List Fetch Failed", Toast.LENGTH_LONG);
-//            mGetBankListAsyncTask = null;
-//        }
-//    }
-
-    public class BankListAdapter extends RecyclerView.Adapter<BankListAdapter.BankViewHolder> {
+    public class TrainListAdapter extends RecyclerView.Adapter<TrainListAdapter.BankViewHolder> {
 
         @NonNull
         @Override
@@ -363,19 +291,6 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
                     performContinueAction(mSelectedClass , mSelectedTrainNo);
                 }
             });
-
-//            holder.parentView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    selectedTrainIconId = getBankIcon(mmTrainList.get(position));
-//                    selectedTrainCode = mmTrainList.get(position).getBankCode();
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString(IPayUtilityBillPayActionActivity.BANK_CODE, selectedTrainCode);
-//                    bundle.putInt(IPayUtilityBillPayActionActivity.BANK_ICON, selectedTrainIconId);
-//                    ((IPayUtilityBillPayActionActivity) getActivity()).
-//                            switchFragment(new CreditCardInfoInputFragment(), bundle, 2, true);
-//                }
-//            });
 
         }
 
@@ -424,9 +339,6 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
     }
 
     public class MyRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private static final int TYPE_HEADER = 0;
-        private static final int TYPE_ITEM = 1;
         List<Date> listItems;
 
         public MyRecyclerAdapter(List<Date> listItems)
@@ -436,17 +348,8 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if(viewType == TYPE_HEADER)
-            {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_view_header, parent, false);
-                return  new VHHeader(v);
-            }
-            else if(viewType == TYPE_ITEM)
-            {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_view_list_item, parent, false);
-                return new VHItem(v);
-            }
-            throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_view_list_item, parent, false);
+            return new VHItem(v);
         }
 
         private Date getItem(int position)
@@ -454,50 +357,52 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
             return listItems.get(position);
         }
 
-
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if(holder instanceof VHItem)
-            {
-                Date currentItem = getItem(position-1);
-                VHItem VHitem = (VHItem)holder;
-                VHitem.yearName.setText(currentItem.getMonth()+", "+currentItem.getYear());
-                VHitem.dateName.setText(currentItem.getDate());
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            Date currentItem = getItem(position);
+            final VHItem VHitem = (VHItem)holder;
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentItem);
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
+            SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEE");
+            VHitem.dateText.setText(""+calendar.get(Calendar.DAY_OF_MONTH));
+            VHitem.dayText.setText(""+dayFormat.format(currentItem));
+            if(mSelectedDate == calendar.get(Calendar.DAY_OF_MONTH)){
+                selectedPos = position;
+                monthText.setText(monthFormat.format(currentItem)+", "+yearFormat.format(currentItem));
+                VHitem.dateText.setBackgroundResource(R.drawable.date_selector_background);
+                recyclerView.smoothScrollToPosition(8);
+
+            }else {
+                VHitem.dateText.setBackgroundResource(R.color.colorTransparent);
             }
+
+            VHitem.root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectedPos = position;
+                    mSelectedDate = calendar.get(Calendar.DAY_OF_MONTH);
+                    notifyDataSetChanged();
+                }
+            });
         }
 
-        //    need to override this method
-        @Override
-        public int getItemViewType(int position) {
-            if(isPositionHeader(position))
-                return TYPE_HEADER;
-            return TYPE_ITEM;
-        }
-
-        private boolean isPositionHeader(int position)
-        {
-            return position == 0;
-        }
-
-        //increasing getItemcount to 1. This will be the row of header.
         @Override
         public int getItemCount() {
-            return listItems.size()+1;
-        }
-
-        class VHHeader extends RecyclerView.ViewHolder{
-            public VHHeader(View itemView) {
-                super(itemView);
-            }
+            return listItems.size();
         }
 
         class VHItem extends RecyclerView.ViewHolder{
-            TextView yearName;
-            TextView dateName;
+
+            View root;
+            TextView dateText;
+            TextView dayText;
             public VHItem(View itemView) {
                 super(itemView);
-                this.yearName = itemView.findViewById(R.id.year_text);
-                this.dateName = itemView.findViewById(R.id.day_text);
+                dateText = itemView.findViewById(R.id.date_text);
+                dayText = itemView.findViewById(R.id.day_text);
+                root = itemView.findViewById(R.id.root);
             }
         }
     }
@@ -508,14 +413,19 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         List<Date> datesInRange = new ArrayList<>();
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(cal.getTime());
-        cal.add(Calendar.DATE, 9);
+        cal.add(Calendar.DATE, 10);
         Calendar endCalendar = new GregorianCalendar();
         endCalendar.setTime(cal.getTime());
+        int i = 0;
 
         while (calendar.before(endCalendar)) {
             Date result = calendar.getTime();
+            if(calendar.get(Calendar.DAY_OF_MONTH) == mSelectedDate){
+                selectedPos = i;
+            }
             datesInRange.add(result);
             calendar.add(Calendar.DATE, 1);
+            i++;
         }
         return datesInRange;
     }

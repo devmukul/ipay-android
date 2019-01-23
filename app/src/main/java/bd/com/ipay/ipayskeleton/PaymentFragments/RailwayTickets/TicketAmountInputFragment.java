@@ -22,36 +22,53 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 
-	static final String ACCOUNT_NUMBER_KEY = "ACCOUNT_NUMBER";
-	static final String ACCOUNT_USER_NAME_KEY = "ACCOUNT_USER_NAME";
-	public static final String INSTALLMENT_AMOUNT_KEY = "INSTALLMENT_AMOUNT";
+	private String mSelectedSattionFrom = null;
+	private String mSelectedSattionTo = null;
+	private String mSelectedGender = null;
+	private int mSelectedDate;
+	private int mSelectedAdult;
+	private int mSelectedChild;
 
-
-	private String installmentAmount;
-	private String accountNumber;
-	private String accountUserName;
-
+	private String mSelectedTrain = null;
+	private String mSelectedClass = null;
+	private String mSelectedTicketId = null;
+	private String mSelectedMessage = null;
+	private int mSelectedTrainNo;
+	private double mFareAmount;
+	private double mVatAmount;
+	private double mTotalAmount;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		if (getArguments() != null) {
-			installmentAmount = getArguments().getString(INSTALLMENT_AMOUNT_KEY, "");
-			accountNumber = getArguments().getString(ACCOUNT_NUMBER_KEY, "");
-			accountUserName = getArguments().getString(ACCOUNT_USER_NAME_KEY, "");
+			mSelectedClass = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_CLASS_NAME, "");
+			mSelectedGender = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, "");
+			mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, 0);
+			mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
+			mSelectedChild = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, 0);
+			mSelectedSattionFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
+			mSelectedSattionTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
+			mSelectedTrain = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, "");
+			mSelectedTicketId = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, "");
+			mSelectedMessage = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, "");
+			mSelectedTrainNo = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, 0);
+			mFareAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, 0);
+			mVatAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_VAT_AMOUNT, 0);
+			mTotalAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, 0);
 		}
 	}
 
 	@Override
 	protected void setupViewProperties() {
 		setBalanceInfoLayoutVisibility(View.VISIBLE);
-		setTransactionDescription(getString(R.string.paying_bill_message));
+		setTransactionDescription(getString(R.string.paying_money_for));
 		setInputType(InputType.TYPE_CLASS_NUMBER);
-		setTransactionImageResource(R.drawable.ic_lankabd2);
-		setName(accountNumber);
-		setUserName(accountUserName);
-		setAmount(installmentAmount);
+		setTransactionImageResource(R.drawable.bd_railway);
+		setName(getString(R.string.railway_ticket_name));
+		setUserName(Utilities.formatJourneyInfoText(mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
+		setAmount(String.valueOf( mTotalAmount ));
 		setAmountFieldEnabled(false);
 	}
 
@@ -124,12 +141,23 @@ public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 	@Override
 	protected void performContinueAction() {
 		Bundle bundle = new Bundle();
-		bundle.putString(ACCOUNT_NUMBER_KEY, accountNumber);
-		bundle.putString(ACCOUNT_USER_NAME_KEY, accountUserName);
-		bundle.putSerializable(INSTALLMENT_AMOUNT_KEY, getAmount());
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, mSelectedTrain);
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_CLASS_NAME, mSelectedClass);
+		bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, mFareAmount);
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
+		bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
+		bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
+		bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, mSelectedTicketId);
+		bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, mTotalAmount);
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, mSelectedMessage);
+		bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, mSelectedTrainNo);
+		bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_VAT_AMOUNT, mVatAmount);
 
 		if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new LankaBanglaDpsBillConfirmationFragment(), bundle, 2, true);
+			((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new TicketConfirmationFragment(), bundle, 2, true);
 		}
 	}
 

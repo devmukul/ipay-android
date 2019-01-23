@@ -294,6 +294,7 @@ public class Constants {
     public static final String BASE_URL_DATA_COLLECTOR = BuildConfig.BASE_URL_IPAY + "/data-collector/v1/";
     public static final String BASE_URL_OFFER = BuildConfig.BASE_URL_IPAY + "/offer_v2/api/v1/";
     public static final String BASE_URL_UTILITY = BuildConfig.BASE_URL_IPAY + "/api/utility/";
+    public static final String BASE_URL_CNS = BuildConfig.BASE_URL_IPAY + "/api/utility/cns/";
     public static final String INTERCOM_API_KEY = BuildConfig.API_KEY_INTERCOM;
     public static final String INTERCOM_ANDROID_SDK_KEY = BuildConfig.SDK_KEY_INTERCOM;
 
@@ -321,8 +322,9 @@ public class Constants {
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String INVALID_CREDENTIAL = "invalid credential";
-    public static String URL_DESCO_BILL_PAY = "/desco/billpay";
-    public static String URL_CARNIVAL = "/carnival/bill-info/";
+    public static final String URL_DESCO_BILL_PAY = "/desco/billpay";
+    public static final String URL_CARNIVAL = "/carnival/bill-info/";
+
 
     // Activity REST
     public static final String URL_USER_ACTIVITY = "/activity";
@@ -572,6 +574,13 @@ public class Constants {
     //Promotions
     public static final String URL_FEEDBACK = "feedbacks";
 
+    //Railway
+    public static final String URL_ORIGINATING_STATION = "originating-station";
+    public static final String URL_ORIGINATING_STATION_TO = "originating-station?originatingStation=";
+    public static final String URL_TICKET_QUERY = "ticket-query/";
+    public static final String URL_TRAIN_LIST = "train?";
+    public static final String URL_PURCHASE_TICKET = "purchase-ticket";
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -763,6 +772,17 @@ public class Constants {
     public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
 
     public static final String COMMAND_SUBMIT_RATING = "COMMAND_SUBMIT_RATING";
+
+    // Railway Ticket
+
+    public static final String COMMAND_RAILWAY_TICKET_PURCHASE = "COMMAND_RAILWAY_TICKET_PURCHASE";
+    public static final String COMMAND_GET_STATION_TO = "COMMAND_GET_STATION_TO";
+    public static final String COMMAND_GET_STATION_FROM = "COMMAND_GET_STATION_FROM";
+    public static final String COMMAND_GET_TRAIN_LIST = "COMMAND_GET_TRAIN_LIST";
+    public static final String COMMAND_GET_TICKET_INFO = "COMMAND_GET_TICKET_INFO";
+//    public static final String COMMAND_GET_DISTRICT_LIST = "COMMAND_GET_DISTRICT_LIST";
+//    public static final String COMMAND_GET_BANK_BRANCH_LIST = "COMMAND_GET_BANK_BRANCH_LIST";
+//    public static final String COMMAND_GET_RELATIONSHIP_LIST = "COMMAND_GET_RELATIONSHIP_LIST";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 
