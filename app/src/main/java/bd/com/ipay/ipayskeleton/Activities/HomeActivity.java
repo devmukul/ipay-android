@@ -557,7 +557,7 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_help) {
 
             switchToHelpActivity();
-U
+
         } else if (id == R.id.nav_about) {
 
             switchToAboutActivity();
@@ -752,7 +752,6 @@ U
                             ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                             ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
                         }
-                        Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
                         } else {
