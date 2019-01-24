@@ -63,13 +63,13 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
         getActivity().setTitle(getString(R.string.profile_completeness));
 
-        mProfileCompletionRecyclerView = (RecyclerView) v.findViewById(R.id.list_profile_completion);
+        mProfileCompletionRecyclerView = v.findViewById(R.id.list_profile_completion);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
 
-        mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
-        mProfileCompletionInformationView = (TextView) v.findViewById(R.id.textview_profile_completion_title);
-        mProfileCompletionStatusProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar_profile_completion_status);
+        mProfileCompletionStatusView = v.findViewById(R.id.textview_profile_completion_status);
+        mProfileCompletionInformationView = v.findViewById(R.id.textview_profile_completion_title);
+        mProfileCompletionStatusProgressBar = v.findViewById(R.id.progress_bar_profile_completion_status);
         getProfileCompletionStatus();
 
         return v;
@@ -90,8 +90,8 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 + "% complete");
         mProfileCompletionStatusProgressBar.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
         if (!mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage().isEmpty()) {
-            mProfileCompletionInformationView.setText("For verification purpose you need to complete the following information - your "
-                    + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
+            mProfileCompletionInformationView.setText("You need to complete the following information to get verified: "
+                    + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + ".");
         } else mProfileCompletionInformationView.setVisibility(View.GONE);
 
         if (this.isAdded()) setContentShown(true);
@@ -158,10 +158,10 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 super(itemView);
 
                 this.itemView = itemView;
-                profileCompletionIcon = (ImageView) itemView.findViewById(R.id.profile_completion_icon);
-                titleView = (TextView) itemView.findViewById(R.id.textview_title);
-                currentStatusView = (TextView) itemView.findViewById(R.id.textview_current_status);
-                verificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
+                profileCompletionIcon = itemView.findViewById(R.id.profile_completion_icon);
+                titleView = itemView.findViewById(R.id.textview_title);
+                currentStatusView = itemView.findViewById(R.id.textview_current_status);
+                verificationStatus = itemView.findViewById(R.id.verification_status);
             }
 
             public abstract void bindViewProfileCompletion(int position);
@@ -255,7 +255,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             public HeaderViewHolder(final View itemView) {
                 super(itemView);
 
-                headerView = (TextView) itemView.findViewById(R.id.textview_header);
+                headerView = itemView.findViewById(R.id.textview_header);
             }
 
             public void bindViewHeader(String title) {

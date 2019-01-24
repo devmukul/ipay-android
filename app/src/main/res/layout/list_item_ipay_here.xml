@@ -9,8 +9,7 @@
     android:orientation="horizontal"
     android:paddingLeft="@dimen/activity_horizontal_margin_card"
     android:paddingRight="@dimen/activity_horizontal_margin_card"
-    android:paddingTop="@dimen/activity_horizontal_margin_card"
-    android:paddingBottom="@dimen/activity_horizontal_margin_card">
+    android:layout_marginTop="@dimen/value5">
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"

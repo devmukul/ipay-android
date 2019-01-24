@@ -843,7 +843,7 @@
     <string name="manage_invitations">Manage invitations</string>
     <string name="manage_address">Manage address</string>
     <string name="see_profile_completion">See profile completeness</string>
-    <string name="profile_completion_detail_text">For verification purpose you need to complete the following information - your Profile Picture, Photo Identification, Basic Information and Source of Fund</string>
+    <string name="profile_completion_detail_text">You need to complete the following information to get verified: Profile Picture, Photo Identification, Basic Information and Source of Fund</string>
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
@@ -1215,7 +1215,7 @@
     <string name="bill_number">Bill Number</string>
     <string name="WestZone">WestZone</string>
     <string name="bill_pay">Bill Pay</string>
-    <string name="upload_identification_document">Upload Identification Document</string>
+    <string name="upload_identification_document">Upload NID</string>
     <string name="due_date">Due Date</string>
     <string name="ipc">Ipc</string>
     <string name="desco_bill_pay_message">Please enter the bill number of desco</string>
