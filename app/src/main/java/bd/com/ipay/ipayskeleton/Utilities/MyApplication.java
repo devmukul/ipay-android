@@ -29,7 +29,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-import io.intercom.android.sdk.Intercom;
 import okhttp3.OkHttpClient;
 
 public class MyApplication extends MultiDexApplication implements HttpResponseListener {
@@ -62,10 +61,8 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 		ProfileInfoCacheManager.initialize(getApplicationContext());
 		ACLManager.initialize(this);
 		TokenManager.initialize(this);
-		Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
 		BusinessRuleCacheManager.initialize(this);
 		setDefaultBusinessRules();
-		Utilities.resetIntercomInformation();
 		sAnalytics = GoogleAnalytics.getInstance(this);
 	}
 
@@ -173,7 +170,6 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 	public void forceLogoutForInactivity() {
 		if (Utilities.isConnectionAvailable(getApplicationContext())) attemptLogout();
 		else launchLoginPage(getString(R.string.please_log_in_again));
-		Utilities.resetIntercomInformation();
 	}
 
 	// Launch login page for token timeout/un-authorized/logout called for user inactivity
