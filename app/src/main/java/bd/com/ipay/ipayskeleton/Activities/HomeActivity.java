@@ -506,19 +506,6 @@ public class HomeActivity extends BaseActivity
         addPromoDialogBuilder.show();
     }
 
-    @ValidateAccess
-    public void attemptLiveChat() {
-        if (isProfileInfoAvailable()) {
-            if (Utilities.isConnectionAvailable(this)) {
-                Utilities.initIntercomLogin();
-            } else {
-                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
-        }
-    }
-
     @Override
     @ValidateAccess
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -566,10 +553,6 @@ public class HomeActivity extends BaseActivity
             }
 
             showPromoCodeDialog();
-
-        } else if (id == R.id.nav_live_chat) {
-
-            attemptLiveChat();
 
         } else if (id == R.id.nav_help) {
 
@@ -769,7 +752,6 @@ public class HomeActivity extends BaseActivity
                             ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                             ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
                         }
-                        Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
                         } else {
