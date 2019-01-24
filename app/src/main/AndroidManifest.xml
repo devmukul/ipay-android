@@ -125,6 +125,7 @@
         <activity
             android:name=".Activities.SignupOrLoginActivity"
             android:label="@string/sign_up_with_ipay"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"

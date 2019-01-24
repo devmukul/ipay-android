@@ -350,6 +350,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
     public void navigateToDesiredActivityViaWallet() {
         Intent intent = new Intent(getActivity(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        getActivity().finish();
         intent.putExtra(Constants.TRANSACTION_DETAILS, ((SignupOrLoginActivity) getActivity()).transactionHistory);
         intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, ((SignupOrLoginActivity) getActivity()).isAccepted);
         intent.putExtra(Constants.DESIRED_ACTIVITY, ((SignupOrLoginActivity) getActivity()).desiredActivity);

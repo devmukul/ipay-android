@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import java.math.BigDecimal;
+import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
@@ -22,8 +21,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -63,9 +60,11 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
         if (getIntent().hasExtra(Constants.TRANSACTION_DETAILS)) {
-            transactionHistory = getIntent().getParcelableExtra(Constants.TRANSACTION_DETAILS);
+            transactionHistory = new Gson().fromJson(getIntent().getStringExtra(Constants.TRANSACTION_DETAILS),
+                    TransactionHistory.class);
             isAccepted = getIntent().getBooleanExtra(Constants.ACTION_FROM_NOTIFICATION, false);
             desiredActivity = getIntent().getStringExtra(Constants.DESIRED_ACTIVITY);
+            switchToLoginFragment();
         } else {
 
             mDeepLinkAction = getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
@@ -89,7 +88,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                         switchToAccountSelectionFragment();
                     }
                 } else {
-
                     Utilities.hideKeyboard(this);
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
@@ -98,29 +96,15 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
     }
 
-    private void launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted, boolean isLoggedIn) {
-        Intent intent;
-        if (isLoggedIn) {
-            intent = new Intent(this, SentReceivedRequestReviewActivity.class);
-
-        } else {
-            intent = new Intent(this, SignupOrLoginActivity.class);
-        }
-        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
-        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
-                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
-
-        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
-        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, isAccepted);
-        intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
-        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
-        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
-        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
-        intent.putExtra(Constants.IS_IN_CONTACTS,
-                new ContactSearchHelper(this).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
-
-        if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
-            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.hasExtra(Constants.TRANSACTION_DETAILS)) {
+            String transactionHistoryString = (String) intent.getExtras().get(Constants.TRANSACTION_DETAILS);
+            transactionHistory = new Gson().fromJson(transactionHistoryString, TransactionHistory.class);
+            isAccepted = intent.getBooleanExtra(Constants.ACTION_FROM_NOTIFICATION, false);
+            desiredActivity = intent.getStringExtra(Constants.DESIRED_ACTIVITY);
+            switchToLoginFragment();
         }
     }
 

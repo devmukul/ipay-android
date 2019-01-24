@@ -261,7 +261,7 @@ public class CreateRichNotification {
                 Intent intent = new Intent(context, SignupOrLoginActivity.class);
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.putExtra(Constants.DESIRED_ACTIVITY, Constants.TRANSACTION);
-                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                intent.putExtra(Constants.TRANSACTION_DETAILS, new Gson().toJson(transactionHistory));
                 pendingIntent = PendingIntent.getActivity(context, 0,
                         intent, PendingIntent.FLAG_ONE_SHOT);
             } else {
@@ -343,6 +343,8 @@ public class CreateRichNotification {
         } else {
             intent = new Intent(context, SignupOrLoginActivity.class);
             intent.putExtra(Constants.DESIRED_ACTIVITY, Constants.REVIEW_PAGE);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
         }
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
