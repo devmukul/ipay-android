@@ -59,8 +59,8 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
     private GetTicketInfoResponse mTicketInfoResponse;
     private GetTicketInfoRequest mTicketInfoRequest;
 
-    private String mSelectedSattionFrom = null;
-    private String mSelectedSattionTo = null;
+    private String mSelectedStationFrom = null;
+    private String mSelectedStationTo = null;
     private String mSelectedGender = null;
     private static int mSelectedDate;
     private int mSelectedAdult;
@@ -81,8 +81,8 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mSelectedSattionFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
-            mSelectedSattionTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
+            mSelectedStationFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
+            mSelectedStationTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
             mSelectedGender = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, "");
             mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, 0);
             mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
@@ -118,12 +118,12 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        journeyInfo.setText(Utilities.formatJourneyInfoText(mSelectedSattionFrom+" to "+mSelectedSattionTo, mSelectedAdult, mSelectedChild));
+        journeyInfo.setText(Utilities.formatJourneyInfoText(mSelectedStationFrom+" to "+mSelectedStationTo, mSelectedAdult, mSelectedChild));
 
         trainListAdapter = new TrainListAdapter();
         mTrainListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mTrainListRecyclerView.setAdapter(trainListAdapter);
-        getTrainList(mSelectedSattionFrom, mSelectedSattionTo);
+        getTrainList(mSelectedStationFrom, mSelectedStationTo);
     }
 
     private void getTrainList(String originatingStation, String destinationStation) {
@@ -142,7 +142,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
             return;
         }
         String jsonBody = new Gson().toJson( new GetTicketInfoRequest(0, ticketClass, mSelectedGender, mSelectedDate,
-                mSelectedAdult, mSelectedChild , mSelectedSattionFrom, mSelectedSattionTo, trainNumber));
+                mSelectedAdult, mSelectedChild , mSelectedStationFrom, mSelectedStationTo, trainNumber));
         mGetTrainInfoAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TICKET_INFO,
                 Constants.BASE_URL_CNS + Constants.URL_TICKET_QUERY, jsonBody, getContext(), this, false);
         mGetTrainInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -166,14 +166,14 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TICKET_INFO)) {
             try {
                 mGetTrainInfoAsyncTask = null;
-                GetTicketInfoResponse lankaBanglaCustomerInfoResponse = new Gson().fromJson(result.getJsonString(), GetTicketInfoResponse.class);
+                GetTicketInfoResponse getTicketInfoResponse = new Gson().fromJson(result.getJsonString(), GetTicketInfoResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
-                        showTicketInfo(lankaBanglaCustomerInfoResponse);
+                        showTicketInfo(getTicketInfoResponse);
                         break;
                     default:
-                        if (!TextUtils.isEmpty(lankaBanglaCustomerInfoResponse.getMessage())) {
-                            Toaster.makeText(getActivity(), lankaBanglaCustomerInfoResponse.getMessage(), Toast.LENGTH_SHORT);
+                        if (!TextUtils.isEmpty(getTicketInfoResponse.getMessage())) {
+                            Toaster.makeText(getActivity(), getTicketInfoResponse.getMessage(), Toast.LENGTH_SHORT);
                         } else {
                             Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                         }
@@ -183,7 +183,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getContext() != null)
-                    Toaster.makeText(getContext(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getContext(), R.string.failed_loading_ticket_info, Toast.LENGTH_LONG);
             }
 
             if(mProgressDialog.isShowing())
@@ -202,12 +202,12 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 
                 } else {
                     if (getContext() != null)
-                        Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+                        Toaster.makeText(getContext(), R.string.failed_loading_train_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getContext() != null)
-                    Toaster.makeText(getContext(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getContext(), R.string.failed_loading_train_list, Toast.LENGTH_LONG);
             }
 
             mGetTrainListAsyncTask = null;
@@ -250,8 +250,8 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
                 bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
                 bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
                 bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
-                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
-                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
                 bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, ticketInfoResponse.getTicketId());
                 bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, ticketInfoResponse.getTotalFare());
                 bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, ticketInfoResponse.getMessageId());
@@ -413,7 +413,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         List<Date> datesInRange = new ArrayList<>();
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(cal.getTime());
-        cal.add(Calendar.DATE, 10);
+        cal.add(Calendar.DATE, Constants.MAX_TICKET_PURCHASE_DAY+1);
         Calendar endCalendar = new GregorianCalendar();
         endCalendar.setTime(cal.getTime());
         int i = 0;

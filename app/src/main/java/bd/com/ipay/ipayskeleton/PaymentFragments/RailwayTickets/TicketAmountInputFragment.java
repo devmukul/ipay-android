@@ -22,8 +22,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 
-	private String mSelectedSattionFrom = null;
-	private String mSelectedSattionTo = null;
+	private String mSelectedStationFrom = null;
+	private String mSelectedStationTo = null;
 	private String mSelectedGender = null;
 	private int mSelectedDate;
 	private int mSelectedAdult;
@@ -48,8 +48,8 @@ public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 			mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, 0);
 			mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
 			mSelectedChild = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, 0);
-			mSelectedSattionFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
-			mSelectedSattionTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
+			mSelectedStationFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
+			mSelectedStationTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
 			mSelectedTrain = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, "");
 			mSelectedTicketId = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, "");
 			mSelectedMessage = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, "");
@@ -148,8 +148,8 @@ public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 		bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
 		bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
 		bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
-		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
-		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
+		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
 		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, mSelectedTicketId);
 		bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, mTotalAmount);
 		bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, mSelectedMessage);

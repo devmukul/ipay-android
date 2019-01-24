@@ -7,29 +7,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.BusinessContact.Outlets;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class SelectorDialogWithSearch extends AlertDialog implements SearchView.OnQueryTextListener{
 
     private final List<String> resources;
     private final Context context;
-    private List<String> stringIds;
     private List<String> names;
-    private int selectedItemId;
 
     private OnResourceSelectedListener onResourceSelectedListener;
     private ArrayAdapter<String> arrayAdapter;
@@ -38,7 +31,7 @@ public class SelectorDialogWithSearch extends AlertDialog implements SearchView.
     private View view, viewTitle;
     private TextView textViewTitle;
     private RecyclerView popUpList;
-    private MerchantOutletAdapter mMerchantBranchAdapter;
+    private RecyclerAdapter mMerchantBranchAdapter;
 
     private SearchView mSearchView;
 
@@ -68,7 +61,7 @@ public class SelectorDialogWithSearch extends AlertDialog implements SearchView.
         popUpList = view.findViewById(R.id.custom_list);
 
         popUpList = view.findViewById(R.id.custom_list);
-        mMerchantBranchAdapter = new MerchantOutletAdapter(context, names);
+        mMerchantBranchAdapter = new RecyclerAdapter(context, names);
         popUpList.setLayoutManager(new LinearLayoutManager(context));
         popUpList.setAdapter(mMerchantBranchAdapter);
 
@@ -81,44 +74,7 @@ public class SelectorDialogWithSearch extends AlertDialog implements SearchView.
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-
-
-
-//        CustomAdapter adapter = new CustomAdapter(context, names);
-//        popUpList.setAdapter(adapter);
-//        popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                String name = names.get(i);
-//                if (onResourceSelectedListener != null)
-//                    onResourceSelectedListener.onResourceSelected(name);
-//                dismiss();
-//            }
-//        });
     }
-
-//    private void setItemsWithStringID(List<String> resources) {
-//        stringIds = new ArrayList<>();
-//        names = new ArrayList<>();
-//
-//        for (String resource : resources) {
-//            names.add(resource);
-//        }
-//        popUpList = view.findViewById(R.id.custom_list);
-//        CustomAdapter adapter = new CustomAdapter(context, names);
-//        popUpList.setAdapter(adapter);
-//        popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                String name = names.get(i);
-//                String stringID = stringIds.get(i);
-//
-//                if (onResourceSelectedListenerWithStringID != null)
-//                    onResourceSelectedListenerWithStringID.onResourceSelectedWithStringID(name, selectedItemId);
-//                dismiss();
-//            }
-//        });
-//    }
 
     public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
         this.onResourceSelectedListener = onResourceSelectedListener;
@@ -139,44 +95,27 @@ public class SelectorDialogWithSearch extends AlertDialog implements SearchView.
         void onResourceSelected(String name);
     }
 
-    public class MerchantOutletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
+    public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
-        private List<String> mOutlets;
-        private List<String> mFilteredOutlets;
+        private List<String> mLists;
+        private List<String> mFilteredLists;
 
-        private static final int EMPTY_VIEW = 10;
-        private static final int OUTLET_VIEW = 100;
-
-
-        public MerchantOutletAdapter(Context context, List<String> mOutlets) {
-            this.mOutlets = mOutlets;
-            this.mFilteredOutlets = mOutlets;
+        public RecyclerAdapter(Context context, List<String> mLists) {
+            this.mLists = mLists;
+            this.mFilteredLists = mLists;
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-
-            if (viewType == EMPTY_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
-                return new MerchantOutletAdapter.EmptyViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_selector_with_search, parent, false);
-                return new MerchantOutletAdapter.ViewHolder(v);
-            }
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_selector_with_search, parent, false);
+            return new ViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             try {
-
-                if (holder instanceof ViewHolder) {
-                    ViewHolder vh = (ViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof EmptyViewHolder) {
-                    EmptyViewHolder vh = (EmptyViewHolder) holder;
-                    vh.mEmptyDescription.setText(context.getString(R.string.no_outlets));
-                }
+                ViewHolder vh = (ViewHolder) holder;
+                vh.bindView(position);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -184,27 +123,10 @@ public class SelectorDialogWithSearch extends AlertDialog implements SearchView.
 
         @Override
         public int getItemCount() {
-            if (mFilteredOutlets == null)
+            if (mFilteredLists == null)
                 return 0;
             else
-                return mFilteredOutlets.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (getItemCount() == 0)
-                return EMPTY_VIEW;
-            else
-                return OUTLET_VIEW;
-        }
-
-        public class EmptyViewHolder extends RecyclerView.ViewHolder {
-            public final TextView mEmptyDescription;
-
-            public EmptyViewHolder(View itemView) {
-                super(itemView);
-                mEmptyDescription = itemView.findViewById(R.id.empty_description);
-            }
+                return mFilteredLists.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -212,21 +134,19 @@ public class SelectorDialogWithSearch extends AlertDialog implements SearchView.
             private TextView mNameTextView;
 
             public ViewHolder(View itemView) {
-
                 super(itemView);
-
                 this.itemView = itemView;
                 mNameTextView = itemView.findViewById(R.id.textViewSelectorName);
             }
 
             public void bindView(final int position) {
-                mNameTextView.setText(mFilteredOutlets.get(position));
+                mNameTextView.setText(mFilteredLists.get(position));
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                     if (onResourceSelectedListener != null)
-                        onResourceSelectedListener.onResourceSelected(mFilteredOutlets.get(position));
-                    dismiss();
+                        onResourceSelectedListener.onResourceSelected(mFilteredLists.get(position));
+                        dismiss();
                     }
                 });
             }
@@ -240,45 +160,28 @@ public class SelectorDialogWithSearch extends AlertDialog implements SearchView.
                 protected FilterResults performFiltering(CharSequence charSequence) {
 
                     String charString = charSequence.toString();
-
                     if (charString.isEmpty()) {
-                        mFilteredOutlets = mOutlets;
+                        mFilteredLists = mLists;
                     } else {
                         List<String> filteredList = new ArrayList<>();
-
-                        for (String outletsList : mOutlets) {
-
+                        for (String outletsList : mLists) {
                             if (outletsList.toLowerCase().contains(charString.toLowerCase())) {
                                 filteredList.add(outletsList);
                             }
                         }
-
-                        mFilteredOutlets = filteredList;
+                        mFilteredLists = filteredList;
                     }
-
                     FilterResults filterResults = new FilterResults();
-                    filterResults.values = mFilteredOutlets;
+                    filterResults.values = mFilteredLists;
                     return filterResults;
                 }
 
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                    mFilteredOutlets = (List<String>) filterResults.values;
-//
-//                    if (mFilteredOutlets.size() == 0) {
-//                        noResultTextView.setVisibility(View.VISIBLE);
-//                    }else{
-//                        noResultTextView.setVisibility(View.GONE);
-//                    }
+                    mFilteredLists = (List<String>) filterResults.values;
                     notifyDataSetChanged();
                 }
             };
         }
-
-//        private void switchToMakePaymentActivity(int position) {
-//            TrendingBusinessOutletSelectorDialog.this.dismiss();
-//            customItemClickListener.onItemClick(merchantDetails.getMerchantName(), merchantDetails.getMerchantMobileNumber(),
-//                    merchantDetails.getBusinessLogo(), mFilteredOutlets.get(position).getAddressString(), mFilteredOutlets.get(position).getOutletId());
-//        }
     }
 }

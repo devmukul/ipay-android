@@ -50,14 +50,14 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     private HttpRequestGetAsyncTask mGetStationToListAsyncTask = null;
     private GetStationResponse mGetStationToResponse;
 
-    private SpinnerEditTextWithProgressBar mSattionFromEditTextProgressBar;
-    private SpinnerEditTextWithProgressBar mSattionToEditTextProgressBar;
+    private SpinnerEditTextWithProgressBar mStationFromEditTextProgressBar;
+    private SpinnerEditTextWithProgressBar mStationToEditTextProgressBar;
     private SpinnerEditTextWithProgressBar mGenderEditTextProgressBar;
     private SpinnerEditTextWithProgressBar mAdultEditTextProgressBar;
     private SpinnerEditTextWithProgressBar mChildEditTextProgressBar;
 
-    private EditText mSattionFromSelection;
-    private EditText mSattionToSelection;
+    private EditText mStationFromSelection;
+    private EditText mStationToSelection;
     private EditText mGenderSelection;
     private EditText mDateSelection;
     private EditText mChildSelection;
@@ -79,8 +79,8 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
     private Button mContinueButton;
 
-    private String mSelectedSattionFrom = null;
-    private String mSelectedSattionTo = null;
+    private String mSelectedStationFrom = null;
+    private String mSelectedStationTo = null;
     private String mSelectedGender = null;
     private int mSelectedDate;
     private int mSelectedAdult = 0;
@@ -109,8 +109,8 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
             if (verifyUserInputs()) {
                 Bundle bundle = new Bundle();
-                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedSattionFrom);
-                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedSattionTo);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
+                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
                 bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
                 bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, mSelectedAdult);
                 bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, mSelectedChild);
@@ -123,18 +123,18 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         });
         ((IPayUtilityBillPayActionActivity) getActivity()).setSupportActionBar(toolbar);
         ((IPayUtilityBillPayActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getActivity().setTitle("Buy Railway Tickets");
+        getActivity().setTitle(R.string.railway_ticket_title);
 
 
-        mSattionFromEditTextProgressBar = view.findViewById(R.id.station_from);
-        mSattionToEditTextProgressBar = view.findViewById(R.id.station_to);
+        mStationFromEditTextProgressBar = view.findViewById(R.id.station_from);
+        mStationToEditTextProgressBar = view.findViewById(R.id.station_to);
         mGenderEditTextProgressBar = view.findViewById(R.id.gender);
 
         mAdultEditTextProgressBar = view.findViewById(R.id.adult_seat);
         mChildEditTextProgressBar = view.findViewById(R.id.child_seat);
 
-        mSattionFromSelection = mSattionFromEditTextProgressBar.getEditText();
-        mSattionToSelection = mSattionToEditTextProgressBar.getEditText();
+        mStationFromSelection = mStationFromEditTextProgressBar.getEditText();
+        mStationToSelection = mStationToEditTextProgressBar.getEditText();
         mGenderSelection = mGenderEditTextProgressBar.getEditText();
 
         mAdultSelection = mAdultEditTextProgressBar.getEditText();
@@ -147,43 +147,35 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             public void onClick(View view) {
 
                 final Calendar calendar = Calendar.getInstance();
-                final int year = calendar.get(Calendar.YEAR);
-                final int month = calendar.get(Calendar.MONTH);
-                final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                final int mYear = calendar.get(Calendar.YEAR);
+                final int mMonth = calendar.get(Calendar.MONTH);
+                final int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        mSelectedDate = i2;
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        mSelectedDate = date;
                         Calendar cal = Calendar.getInstance();
                         cal.setTimeInMillis(0);
-                        cal.set(i, i1, i2, 0, 0, 0);
+                        cal.set(year, month, date, 0, 0, 0);
                         Date chosenDate = cal.getTime();
                         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
                         String formattedDate = df.format(chosenDate);
                         mDateSelection.setText(formattedDate);
                     }
-                },year,month,day);
+                },mYear,mMonth,mDay);
 
                 datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
-                calendar.add(Calendar.DATE, 9);
+                calendar.add(Calendar.DATE, Constants.MAX_TICKET_PURCHASE_DAY);
                 datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
                 datePickerDialog.show();
             }
         });
 
-        mAdultList = new ArrayList<>();
-        mAdultList.add("1");
-        mAdultList.add("2");
-        mAdultList.add("3");
-        mAdultList.add("4");
+        getAdultLIst();
         setAdultAdapter(mAdultList);
-
-        mGenderList = new ArrayList<>();
-        mGenderList.add("Male");
-        mGenderList.add("Female");
+        getGenderLIst();
         setGenderAdapter(mGenderList);
-
         getStationFromList();
     }
 
@@ -191,7 +183,7 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         if (mGetStationFromListAsyncTask != null) {
             return;
         }
-        mSattionFromEditTextProgressBar.showProgressBar();
+        mStationFromEditTextProgressBar.showProgressBar();
 
         mGetStationFromListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_STATION_FROM,
                 Constants.BASE_URL_CNS + Constants.URL_ORIGINATING_STATION, getContext(), this, true);
@@ -202,7 +194,7 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         if (mGetStationToListAsyncTask != null) {
             return;
         }
-        mSattionToEditTextProgressBar.showProgressBar();
+        mStationToEditTextProgressBar.showProgressBar();
 
         mGetStationToListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_STATION_TO,
                 Constants.BASE_URL_CNS + Constants.URL_ORIGINATING_STATION_TO + originatingStation, getContext(), this, true);
@@ -214,19 +206,19 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         stationFromSelectorDialog.setOnResourceSelectedListener(new SelectorDialogWithSearch.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(String name) {
-                mSattionFromSelection.setError(null);
-                mSattionFromSelection.setText(name);
-                mSattionToSelection.setError(null);
-                mSelectedSattionFrom = name;
+                mStationFromSelection.setError(null);
+                mStationFromSelection.setText(name);
+                mStationToSelection.setError(null);
+                mSelectedStationFrom = name;
 
                 mStationToList = null;
-                mSelectedSattionTo = null;
-                mSattionToSelection.setText(getContext().getString(R.string.loading));
-                getStationToList(mSelectedSattionFrom);
+                mSelectedStationTo = null;
+                mStationToSelection.setText(getContext().getString(R.string.loading));
+                getStationToList(mSelectedStationFrom);
             }
         });
 
-        mSattionFromSelection.setOnClickListener(new View.OnClickListener() {
+        mStationFromSelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stationFromSelectorDialog.show();
@@ -239,13 +231,13 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         stationToSelectorDialog.setOnResourceSelectedListener(new SelectorDialogWithSearch.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(String name) {
-                mSattionToSelection.setError(null);
-                mSattionToSelection.setText(name);
-                mSelectedSattionTo = name;
+                mStationToSelection.setError(null);
+                mStationToSelection.setText(name);
+                mSelectedStationTo = name;
             }
         });
 
-        mSattionToSelection.setOnClickListener(new View.OnClickListener() {
+        mStationToSelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stationToSelectorDialog.show();
@@ -263,9 +255,9 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
                 mSelectedAdult = Integer.valueOf(name);
                 mChildSelection.setError(null);
 
-                if (Integer.valueOf(mSelectedAdult) < 4 && Integer.valueOf(mSelectedAdult) >0 ) {
+                if (Integer.valueOf(mSelectedAdult) < Constants.MAX_TICKET && Integer.valueOf(mSelectedAdult) >0 ) {
                     mChildList = new ArrayList<>();
-                    for (int i = 0; i <= 4 - Integer.valueOf(mSelectedAdult); i++) {
+                    for (int i = 0; i <= Constants.MAX_TICKET - Integer.valueOf(mSelectedAdult); i++) {
                         mChildList.add(String.valueOf(i));
                     }
                     setChildAdapter(mChildList);
@@ -362,11 +354,11 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mStationFromList = mGetStationFromResponse.getStationList();
-                    mSattionFromEditTextProgressBar.hideProgressBar();
+                    mStationFromEditTextProgressBar.hideProgressBar();
                     setStationFromAdapter(mStationFromList);
-                    mSattionFromSelection.setText(mSelectedSattionFrom);
-                    if (TextUtils.isEmpty(mSelectedSattionFrom)) {
-                        getStationToList(mSelectedSattionFrom);
+                    mStationFromSelection.setText(mSelectedStationFrom);
+                    if (TextUtils.isEmpty(mSelectedStationFrom)) {
+                        getStationToList(mSelectedStationFrom);
                     }
 
                 } else {
@@ -385,10 +377,10 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
                 mGetStationToResponse = gson.fromJson(result.getJsonString(), GetStationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mStationToList = mGetStationToResponse.getStationList();
-                    mSattionToEditTextProgressBar.hideProgressBar();
-                    mSattionToSelection.setText("");
+                    mStationToEditTextProgressBar.hideProgressBar();
+                    mStationToSelection.setText("");
                     setStationToAdapter(mStationToList);
-                    mSattionToSelection.setText(mSelectedSattionTo);
+                    mStationToSelection.setText(mSelectedStationTo);
 
                 } else {
                     if (getContext() != null)
@@ -407,8 +399,8 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     public boolean verifyUserInputs() {
         boolean cancel = false;
         View focusedView = null;
-        mSattionFromSelection.setError(null);
-        mSattionToSelection.setError(null);
+        mStationFromSelection.setError(null);
+        mStationToSelection.setError(null);
         mDateSelection.setError(null);
         mAdultSelection.setError(null);
         mChildSelection.setError(null);
@@ -418,13 +410,13 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             mDateSelection.setError(getContext().getString(R.string.invalid_journey_date));
             focusedView = mDateSelection;
             cancel = true;
-        } else if (mSattionFromSelection.getText().toString().trim().length() == 0) {
-            mSattionFromSelection.setError(getContext().getString(R.string.invalid_start_station));
-            focusedView = mSattionFromSelection;
+        } else if (mStationFromSelection.getText().toString().trim().length() == 0) {
+            mStationFromSelection.setError(getContext().getString(R.string.invalid_start_station));
+            focusedView = mStationFromSelection;
             cancel = true;
-        } else if (mSattionToSelection.getText().toString().trim().length() == 0) {
-            mSattionToSelection.setError(getContext().getString(R.string.invalid_start_station));
-            focusedView = mSattionToSelection;
+        } else if (mStationToSelection.getText().toString().trim().length() == 0) {
+            mStationToSelection.setError(getContext().getString(R.string.invalid_start_station));
+            focusedView = mStationToSelection;
             cancel = true;
         } else if (mAdultSelection.getText().toString().trim().length() == 0) {
             mAdultSelection.setError(getContext().getString(R.string.invalid_no_of_ticket));
@@ -444,5 +436,18 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         } else {
             return true;
         }
+    }
+
+    public void getAdultLIst(){
+        mAdultList = new ArrayList<>();
+        for(int i=1; i<=Constants.MAX_TICKET; i++){
+            mAdultList.add(String.valueOf(i));
+        }
+    }
+
+    public void getGenderLIst(){
+        mGenderList = new ArrayList<>();
+        mGenderList.add("Male");
+        mGenderList.add("Female");
     }
 }

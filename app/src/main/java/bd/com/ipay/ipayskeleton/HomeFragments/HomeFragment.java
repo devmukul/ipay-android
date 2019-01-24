@@ -258,10 +258,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
-//					DialogUtils.showServiceNotAllowedDialog(getContext());
-//					return;
-//				}
+				if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+					DialogUtils.showServiceNotAllowedDialog(getContext());
+					return;
+				}
 				PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
 					@Override
 					public void ifPinAdded() {

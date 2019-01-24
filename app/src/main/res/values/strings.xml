@@ -1412,5 +1412,7 @@
     <string name="railway_ticket_title">Buy Railway Ticket</string>
     <string name="ticket_info">Ticket Info</string>
     <string name="railway_ticket_name">Railway Ticket</string>
+    <string name="failed_loading_ticket_info">Failed to get ticket info</string>
+    <string name="failed_loading_train_list">Failed to get train list</string>
 
 </resources>

@@ -976,4 +976,6 @@ public class Constants {
     public static String CREDIT_BALANCE = "Credit balance";
     public static String MINIMUM_PAY = "Minimum pay";
     public static String OTHER = "Other";
+    public static final int MAX_TICKET = 4;
+    public static final int MAX_TICKET_PURCHASE_DAY = 9;
 }
