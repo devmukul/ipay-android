@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ToolbarTheme"
+        app:titleTextColor="@color/colorWhite">
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progress_layout"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/activity_horizontal_margin">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/journey_date"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:maxLines="1"
+                    android:hint="Date"
+                    android:drawableRight="@drawable/calendar_form_icon"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
+            <bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar
+                android:id="@+id/station_from"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Station From"
+                android:inputType="text" />
+
+            <bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar
+                android:id="@+id/station_to"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Station To"
+                android:inputType="text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar
+                    android:id="@+id/adult_seat"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="Adult"
+                    android:inputType="text" />
+
+                <bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar
+                    android:id="@+id/child_seat"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="Child"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+            <bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar
+                android:id="@+id/gender"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Gender"
+                android:inputType="text"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/helper_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                android:textStyle="normal"
+                android:textColor="#5e000000"
+                android:lineSpacingExtra="6sp"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:text="You can purchase max 4 tickets at once and heighst 8 tickets per week." />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/continue_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value10"
+            android:background="@color/colorPrimaryLight"
+            android:text="@string/continue_send_money"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
+</RelativeLayout>
