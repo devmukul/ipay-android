@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +50,8 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivi
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -81,11 +84,14 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -154,6 +160,21 @@ public class HomeActivity extends BaseActivity
                 return;
             }
 
+        }
+
+        if (getIntent().hasExtra(Constants.TRANSACTION_DETAILS)) {
+            String desiredActivity = getIntent().getStringExtra(Constants.DESIRED_ACTIVITY);
+            if (desiredActivity.equals(Constants.TRANSACTION)) {
+                Intent intent = new Intent(this, TransactionDetailsActivity.class);
+                intent.putExtra(Constants.TRANSACTION_DETAILS, getIntent().
+                        getParcelableExtra(Constants.TRANSACTION_DETAILS));
+                startActivity(intent);
+            } else {
+                TransactionHistory transactionHistory = getIntent().getParcelableExtra(Constants.TRANSACTION_DETAILS);
+                Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory,
+                        getIntent().getBooleanExtra(Constants.ACTION_FROM_NOTIFICATION, false));
+                startActivity(intent);
+            }
         }
         refreshBalance();
         mProgressDialog = new ProgressDialog(HomeActivity.this);
@@ -247,6 +268,27 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+    }
+
+    private Intent launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted) {
+        Intent intent = new Intent(this, SentReceivedRequestReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
+                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
+
+        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
+        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, isAccepted);
+        intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
+        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+        intent.putExtra(Constants.IS_IN_CONTACTS,
+                new ContactSearchHelper(this).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
+
+        if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+        }
+        return intent;
     }
 
 
@@ -506,19 +548,6 @@ public class HomeActivity extends BaseActivity
         addPromoDialogBuilder.show();
     }
 
-    @ValidateAccess
-    public void attemptLiveChat() {
-        if (isProfileInfoAvailable()) {
-            if (Utilities.isConnectionAvailable(this)) {
-                Utilities.initIntercomLogin();
-            } else {
-                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
-        }
-    }
-
     @Override
     @ValidateAccess
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -566,10 +595,6 @@ public class HomeActivity extends BaseActivity
             }
 
             showPromoCodeDialog();
-
-        } else if (id == R.id.nav_live_chat) {
-
-            attemptLiveChat();
 
         } else if (id == R.id.nav_help) {
 
@@ -769,7 +794,6 @@ public class HomeActivity extends BaseActivity
                             ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                             ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
                         }
-                        Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
                         } else {

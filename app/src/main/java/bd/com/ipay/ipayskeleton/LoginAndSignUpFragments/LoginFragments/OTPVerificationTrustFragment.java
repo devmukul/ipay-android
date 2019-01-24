@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -202,6 +204,14 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         }
     }
 
+    public void navigateToDesiredActivityViaWallet() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        intent.putExtra(Constants.TRANSACTION_DETAILS, ((SignupOrLoginActivity) getActivity()).transactionHistory);
+        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, ((SignupOrLoginActivity) getActivity()).isAccepted);
+        intent.putExtra(Constants.DESIRED_ACTIVITY, ((SignupOrLoginActivity) getActivity()).desiredActivity);
+        startActivity(intent);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
@@ -359,19 +369,33 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                                     || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded()))  {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
-                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                                if (((SignupOrLoginActivity) getActivity()).transactionHistory != null) {
+                                    navigateToDesiredActivityViaWallet();
+                                } else {
+                                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                                }
                             }
                         } else getAddedCards();
                     } else {
-                        if (getActivity() != null)
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        if (getActivity() != null) {
+                            if (((SignupOrLoginActivity) getActivity()).transactionHistory != null) {
+                                navigateToDesiredActivityViaWallet();
+                            } else {
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
+                        }
                         hideProgressDialog();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    if (getActivity() != null) {
+                        if (((SignupOrLoginActivity) getActivity()).transactionHistory != null) {
+                            navigateToDesiredActivityViaWallet();
+                        } else {
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        }
+                    }
                     hideProgressDialog();
                 }
                 mGetProfileCompletionStatusTask = null;
@@ -390,7 +414,11 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            if (((SignupOrLoginActivity) getActivity()).transactionHistory != null) {
+                                navigateToDesiredActivityViaWallet();
+                            } else {
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
                         }
                     } else {
                         Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);

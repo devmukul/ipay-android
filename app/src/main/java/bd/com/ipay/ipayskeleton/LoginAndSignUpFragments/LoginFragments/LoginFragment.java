@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -347,6 +348,14 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         }
     }
 
+    public void navigateToDesiredActivityViaWallet() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        intent.putExtra(Constants.TRANSACTION_DETAILS, ((SignupOrLoginActivity) getActivity()).transactionHistory);
+        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, ((SignupOrLoginActivity) getActivity()).isAccepted);
+        intent.putExtra(Constants.DESIRED_ACTIVITY, ((SignupOrLoginActivity) getActivity()).desiredActivity);
+        startActivity(intent);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -524,7 +533,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                                     || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
-                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                                if (((SignupOrLoginActivity) getActivity()).transactionHistory != null) {
+                                    navigateToDesiredActivityViaWallet();
+                                } else {
+                                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                                }
                             }
                         } else getAddedCards();
                     } else {
@@ -577,7 +590,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            if (((SignupOrLoginActivity) getActivity()).transactionHistory != null) {
+                                navigateToDesiredActivityViaWallet();
+                            } else {
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
                         }
                     } else {
                         Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);

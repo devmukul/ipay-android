@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -41,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessa
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
@@ -54,6 +56,7 @@ public class CreateRichNotification {
     private String title;
     private CustomProgressDialog mProgressDialog;
 
+    private static boolean isLoggedIn;
     private static HttpRequestPostAsyncTask mRejectRequestTask = null;
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
 
@@ -107,6 +110,9 @@ public class CreateRichNotification {
     }
 
     public void setupNotification() {
+
+        isLoggedIn = ProfileInfoCacheManager.getLoggedInStatus(false);
+
         PendingIntent pendingIntent = getNotificationPendingIntent();
         RemoteViews transactionNotificationView = new RemoteViews
                 (context.getPackageName(), R.layout.list_item_transaction_history_notification);
@@ -248,23 +254,33 @@ public class CreateRichNotification {
         }
     }
 
-
     private PendingIntent getNotificationPendingIntent() {
         PendingIntent pendingIntent;
-        if (type == "transaction") {
-            Intent intent = new Intent(context, TransactionDetailsActivity.class);
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-            pendingIntent = PendingIntent.getActivity(context, 0,
-                    intent, PendingIntent.FLAG_ONE_SHOT);
-        } else if (type == "request_money") {
-            Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory, false);
-            pendingIntent = PendingIntent.getActivity(context, 0,
-                    intent, PendingIntent.FLAG_ONE_SHOT);
+        if (!isLoggedIn) {
+            if (type.equals("transaction")) {
+                Intent intent = new Intent(context, SignupOrLoginActivity.class);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.putExtra(Constants.DESIRED_ACTIVITY, Constants.TRANSACTION);
+                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                pendingIntent = PendingIntent.getActivity(context, 0,
+                        intent, PendingIntent.FLAG_ONE_SHOT);
+            } else {
+                Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory, false, isLoggedIn);
+                pendingIntent = PendingIntent.getActivity(context, 0,
+                        intent, PendingIntent.FLAG_ONE_SHOT);
+            }
         } else {
-            Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory, false);
-            pendingIntent = PendingIntent.getActivity(context, 0,
-                    intent, PendingIntent.FLAG_ONE_SHOT);
+            if (type.equals("transaction")) {
+                Intent intent = new Intent(context, TransactionDetailsActivity.class);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                pendingIntent = PendingIntent.getActivity(context, 0,
+                        intent, PendingIntent.FLAG_ONE_SHOT);
+            } else {
+                Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory, false, isLoggedIn);
+                pendingIntent = PendingIntent.getActivity(context, 0,
+                        intent, PendingIntent.FLAG_ONE_SHOT);
+            }
         }
         return pendingIntent;
     }
@@ -277,7 +293,7 @@ public class CreateRichNotification {
                 rejectMoneyRequest();
             } else {
                 Intent reviewPageIntent = launchRequestMoneyReviewPageIntent
-                        (transactionHistory, true);
+                        (transactionHistory, true, isLoggedIn);
                 reviewPageIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(reviewPageIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -319,8 +335,16 @@ public class CreateRichNotification {
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private static Intent launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted) {
-        Intent intent = new Intent(context, SentReceivedRequestReviewActivity.class);
+    private static Intent launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted, boolean isLoggedIn) {
+        Intent intent;
+        if (isLoggedIn) {
+            intent = new Intent(context, SentReceivedRequestReviewActivity.class);
+
+        } else {
+            intent = new Intent(context, SignupOrLoginActivity.class);
+            intent.putExtra(Constants.DESIRED_ACTIVITY, Constants.REVIEW_PAGE);
+            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+        }
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));

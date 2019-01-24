@@ -82,9 +82,6 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-import io.intercom.android.sdk.Intercom;
-import io.intercom.android.sdk.UserAttributes;
-import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
@@ -750,52 +747,6 @@ public class Utilities {
 
 		return customAttributes;
 	}
-
-	public static void initIntercomLogin() {
-		Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
-		UserAttributes userAttributes = Utilities.getUserAttributesForIntercom();
-		registration.withUserAttributes(userAttributes);
-
-		Intercom.client().registerIdentifiedUser(registration);
-		Intercom.client().displayConversationsList();
-	}
-
-	public static void resetIntercomInformation() {
-		Intercom.client().reset();
-		Intercom.client().hideMessenger();
-	}
-
-	private static UserAttributes getUserAttributesForIntercom() {
-		Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
-		Map<String, Object> avatar = new HashMap<>();
-		if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
-			avatar.put(IntercomConstants.ATTR_TYPE, "avatar");
-			avatar.put(IntercomConstants.ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
-		}
-
-		UserAttributes userAttributes = new UserAttributes.Builder()
-				.withName(ProfileInfoCacheManager.getUserName())
-				.withPhone(ProfileInfoCacheManager.getMobileNumber())
-				.withEmail(ProfileInfoCacheManager.getPrimaryEmail())
-				.withPhone(DeviceInfoFactory.getDeviceName())
-				.withCustomAttributes(customAttributes)
-				.withCustomAttribute(IntercomConstants.ATTR_AVATAR, avatar)
-				.build();
-		return userAttributes;
-	}
-
-//    public static void performQRCodeScan(Fragment fragment, int requestCode) {
-//        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
-//        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
-//            initiateQRCodeScan(fragment);
-//        } else {
-//            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
-//        }
-//    }
-//
-//    public static void initiateQRCodeScan(Fragment fragment) {
-//        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
-//    }
 
 	public static String getFormattedCountryName(String countryName) {
 		if (countryName.toLowerCase().equals("bd")) {

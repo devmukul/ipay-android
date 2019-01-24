@@ -12,11 +12,11 @@ public class Constants {
     public static final String ApplicationPackage = "bd.com.ipay.android";
     public static final String ApplicationTitle = "iPay";
 
-	public static final String OPERATOR_CODE_GP = "GP";
-	public static final String OPERATOR_CODE_ROBI = "Robi";
-	public static final String OPERATOR_CODE_AIRTEL = "Airtel";
-	public static final String OPERATOR_CODE_BANGLALINK = "Banglalink";
-	public static final String OPERATOR_CODE_TELETALK = "Teletalk";
+    public static final String OPERATOR_CODE_GP = "GP";
+    public static final String OPERATOR_CODE_ROBI = "Robi";
+    public static final String OPERATOR_CODE_AIRTEL = "Airtel";
+    public static final String OPERATOR_CODE_BANGLALINK = "Banglalink";
+    public static final String OPERATOR_CODE_TELETALK = "Teletalk";
 
     public static final String ERROR = "ERROR";
     public static final String USER_AGENT = "User-Agent";
@@ -195,17 +195,17 @@ public class Constants {
     public static final String LANKA_BANGLA_BILL_PAY = "LANKA BANGLA BILL PAY";
     public static final String LANKA_BANGLA_DPS_BILL_PAY = "LANKA BANGLA DPS BILL PAY";
     public static final String AMBERIT = "AMBERIT";
-	public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
-	public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
-	public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
-	public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
-	public static final String FROM_CONTACT = "FROM_CONTACT";
-	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
+    public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
+    public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
+    public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
+    public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
+    public static final String FROM_CONTACT = "FROM_CONTACT";
+    public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
     public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
-	public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
-	public static final String VISA = "VISA";
-	public static final String MASTERCARD = "MASTERCARD";
-	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+    public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
+    public static final String VISA = "VISA";
+    public static final String MASTERCARD = "MASTERCARD";
+    public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
     public static final String URL_GET_BANK_LIST = "credit-card/banks";
@@ -215,6 +215,9 @@ public class Constants {
     public static final String COMMAND_GET_SAVED_CARDS = "COMMAND_GET_SAVED_CARDS";
     public static final String ACTION = "ACTION";
     public static final String ACTION_FROM_NOTIFICATION = "ACTION_FROM_NOTIFICATION";
+    public static final String DESIRED_ACTIVITY = "DESIRED_ACTIVITY";
+    public static final String REVIEW_PAGE = "REVIEW_PAGE";
+    public static final String TRANSACTION = "TRANSACTION";
     public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
     public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
