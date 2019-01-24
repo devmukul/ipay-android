@@ -22,7 +22,6 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
-import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -100,41 +99,38 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
         serviceId = FCMNotificationParser.parseServiceID(mFcmNotificationResponse);
 
         // Check if message contains a notification payload.
-        if (!(AppInstanceUtilities.isUserActive(this))
-                || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION
-                || serviceId == Constants.SERVICE_ID_DEEP_LINK_NOTIFICATION) {
-            if (data != null) {
-                requestAction = (String) data.get("click_action");
-                String title = (String )data.get("title");
-                CreateRichNotification createRichNotification;
-                if (mFcmNotificationResponse.getTransactionHistory() != null) {
-                    if (requestAction != null) {
-                        if (requestAction.equals("request_money") || requestAction.equals("request_payment")) {
-                            createRichNotification = new CreateRichNotification
-                                    (mFcmNotificationResponse.getTransactionHistory(),
-                                            this, requestAction,title);
-                        }else{
-                            createRichNotification = new CreateRichNotification
-                                    (mFcmNotificationResponse.getTransactionHistory(), this, "transaction",title);
-                        }
-                    }else{
-                        createRichNotification = new CreateRichNotification
-                                (mFcmNotificationResponse.getTransactionHistory(), this, "transaction",title);
-                    }
-                    createRichNotification.setupNotification();
-                } else {
-                    try {
-                        createNotification(this, data.values().toArray()[5].toString(),
-                                data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
-                    } catch (Exception e) {
 
+        if (data != null) {
+            requestAction = (String) data.get("click_action");
+            String title = (String) data.get("title");
+            CreateRichNotification createRichNotification;
+            if (mFcmNotificationResponse.getTransactionHistory() != null) {
+                if (requestAction != null) {
+                    if (requestAction.equals("request_money") || requestAction.equals("request_payment")) {
+                        createRichNotification = new CreateRichNotification
+                                (mFcmNotificationResponse.getTransactionHistory(),
+                                        this, requestAction, title);
+                    } else {
+                        createRichNotification = new CreateRichNotification
+                                (mFcmNotificationResponse.getTransactionHistory(), this, "transaction", title);
                     }
+                } else {
+                    createRichNotification = new CreateRichNotification
+                            (mFcmNotificationResponse.getTransactionHistory(), this, "transaction", title);
                 }
-                //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
+                createRichNotification.setupNotification();
+            } else {
+                try {
+                    createNotification(this, data.values().toArray()[5].toString(),
+                            data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
+                } catch (Exception e) {
+
+                }
             }
-        } else {
-            FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
+            //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
         }
+        FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
+
 
     }
 
