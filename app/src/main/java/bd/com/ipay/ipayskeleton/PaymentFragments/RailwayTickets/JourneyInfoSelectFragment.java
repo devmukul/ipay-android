@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -62,6 +64,7 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     private EditText mDateSelection;
     private EditText mChildSelection;
     private EditText mAdultSelection;
+    private TextView mHelperText;
 
     private List<String> mStationFromList;
     private List<String> mStationToList;
@@ -103,6 +106,9 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         mContinueButton = view.findViewById(R.id.continue_button);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         mContinueButton = view.findViewById(R.id.continue_button);
+        mHelperText = view.findViewById(R.id.helper_text);
+        String text = "You can purchase max <font color='#00c0af'>4 tickets</font> at once and heighst <font color='#00c0af'>8 tickets</font> per week.";
+        mHelperText.setText(Html.fromHtml(text));
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

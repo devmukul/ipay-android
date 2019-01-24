@@ -183,8 +183,8 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
                                         bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, mFareAmount);
                                         bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
                                         bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
-                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, Integer.valueOf(mSelectedAdult));
-                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, Integer.valueOf(mSelectedChild));
+                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, mSelectedAdult);
+                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, mSelectedChild);
                                         bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
                                         bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
                                         bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, mSelectedTicketId);
