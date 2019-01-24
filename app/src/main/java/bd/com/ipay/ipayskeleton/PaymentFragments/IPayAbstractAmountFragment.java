@@ -309,7 +309,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	private void setAmount(double result, String addSuffix) {
 		SuperscriptSpan superscriptSpan = new SuperscriptSpan();
 		AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(getResources().getDimensionPixelSize(R.dimen.super_script_size));
-		final Spannable spannable = new SpannableString(String.format("%s%sTk", numberFormat.format(result), addSuffix));
+		final Spannable spannable = new SpannableString(getString(R.string.amount_holder, numberFormat.format(result), addSuffix));
 		spannable.setSpan(superscriptSpan, spannable.length() - 2, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		spannable.setSpan(absoluteSizeSpan, spannable.length() - 2, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		amountTextView.setText(spannable, TextView.BufferType.SPANNABLE);
