@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RailwayTickets;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps.LankaBanglaDpsAmountInputFragment;
@@ -21,11 +22,11 @@ public class TicketSuccessFragment extends IPayAbstractTransactionSuccessFragmen
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
-			mSelectedChild = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, 0);
-			mSelectedTrain = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, "");
-			mSelectedTrainNo = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, 0);
-			mTotalAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, 0);
+			mSelectedAdult = getArguments().getInt(RailwayTicketActionActivity.KEY_TICKET_ADULTS, 0);
+			mSelectedChild = getArguments().getInt(RailwayTicketActionActivity.KEY_TICKET_CHILD, 0);
+			mSelectedTrain = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_TRAIN_NAME, "");
+			mSelectedTrainNo = getArguments().getInt(RailwayTicketActionActivity.KEY_TICKET_TRAIN_NO, 0);
+			mTotalAmount = getArguments().getDouble(RailwayTicketActionActivity.KEY_TICKET_TOTAL_AMOUNT, 0);
 		}
 	}
 
