@@ -587,9 +587,8 @@ public class HomeActivity extends BaseActivity
 										return;
 									}
 								}
-								final Intent intent = new Intent(HomeActivity.this, LauncherActivity.class);
-								intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-								startActivity(intent);
+
+								recreate();
 							}
 						}
 					})

@@ -416,7 +416,7 @@
     <string name="filter_add_money_from_bank">Money Added(Bank)</string>
     <string name="filter_add_money_from_credit_or_debit_card">Money Added(Credit/Debit Card)</string>
     <string name="filter_withdraw_money">Money Withdrawn</string>
-    <string name="filter_top_up">Top Up</string>
+    <string name="filter_top_up">TopUp</string>
     <string name="filter_payment">Payment</string>
     <string name="filter_request_payment">Request Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
@@ -788,11 +788,11 @@
     <string name="alpha_numeric" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
     <string name="please_select_max_file_size_message">Please select a file with max size 3 MB</string>
     <string name="settings_not_changed">No change in settings.</string>
-    <string name="ssl_error_title">SSL Certificate Error</string>
-    <string name="ssl_untrustred_message">The certificate authority is not trusted.</string>
-    <string name="ssl_expired_message">The certificate has expired.</string>
-    <string name="ssl_id_mismatch_message">The certificate Hostname mismatch.</string>
-    <string name="ssl_not_yet_valid_message">The certificate is not yet valid.</string>
+    <string name="ssl_error_title" translatable="false">SSL Certificate Error</string>
+    <string name="ssl_untrustred_message" translatable="false">The certificate authority is not trusted.</string>
+    <string name="ssl_expired_message" translatable="false">The certificate has expired.</string>
+    <string name="ssl_id_mismatch_message" translatable="false">The certificate Hostname mismatch.</string>
+    <string name="ssl_not_yet_valid_message" translatable="false">The certificate is not yet valid.</string>
     <string name="do_you_want_to_continue">Do you want to continue anyway?</string>
     <string name="continue_message">Continue</string>
     <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
@@ -1003,7 +1003,7 @@
     <string name="card_bill_alert_message">*To settle your bill payment request, It will take 3–5 business days</string>
     <string name="instant_bill_pay">Instant bill pay</string>
     <string name="last_transaction">LAST TRANSACTION</string>
-    <string name="dummy_mobile_number">+8801234567890</string>
+    <string name="dummy_mobile_number" translatable="false">+8801234567890</string>
     <string name="retry">Retry</string>
     <string name="unknown_error">Unknown Error</string>
     <string name="add_money_from_bank">Add Money(Bank)</string>
@@ -1025,4 +1025,5 @@
     <string name="no_news_available">No news available!</string>
     <string name="hey_what_s_going_on_here_and_there">Hey, what’s going-on here and there</string>
     <string name="you_can_see_here_what_is_going_on_your_ipay_wallet_and_what_is_ipay_doing_around_the_community">You can see here what is going on your iPay wallet and what is iPay doing around the community.</string>
+    <string name="my_qr_code_to_share">My QR Code to Share</string>
 </resources>

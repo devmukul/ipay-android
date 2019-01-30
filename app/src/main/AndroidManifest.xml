@@ -110,6 +110,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.HomeActivity"
+            android:configChanges="locale"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
