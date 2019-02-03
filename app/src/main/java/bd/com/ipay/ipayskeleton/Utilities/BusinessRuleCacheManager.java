@@ -283,6 +283,8 @@ public class BusinessRuleCacheManager {
 				return Constants.TOP_UP;
 			case ServiceIdConstants.UTILITY_BILL_PAYMENT:
 				return Constants.UTILITY_BILL_PAYMENT;
+			case ServiceIdConstants.RAILWAY_TICKET:
+				return Constants.RAILWAY_TICKET;
 			default:
 				return "";
 		}

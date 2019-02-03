@@ -28,7 +28,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -36,6 +37,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialogWithSearch;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetStationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTrainListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.TrainList;
@@ -115,20 +117,20 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
 
             if (verifyUserInputs()) {
                 Bundle bundle = new Bundle();
-                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
-                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
-                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
-                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, mSelectedAdult);
-                bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, mSelectedChild);
-                bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
-                ((IPayUtilityBillPayActionActivity) getActivity()).
+                bundle.putString(RailwayTicketActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
+                bundle.putString(RailwayTicketActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
+                bundle.putInt(RailwayTicketActionActivity.KEY_TICKET_DATE, mSelectedDate);
+                bundle.putInt(RailwayTicketActionActivity.KEY_TICKET_ADULTS, mSelectedAdult);
+                bundle.putInt(RailwayTicketActionActivity.KEY_TICKET_CHILD, mSelectedChild);
+                bundle.putString(RailwayTicketActionActivity.KEY_TICKET_GENDER, mSelectedGender);
+                ((RailwayTicketActionActivity) getActivity()).
                         switchFragment(new TrainSelectionFragment(), bundle, 2, true);
 
             }
             }
         });
-        ((IPayUtilityBillPayActionActivity) getActivity()).setSupportActionBar(toolbar);
-        ((IPayUtilityBillPayActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((RailwayTicketActionActivity) getActivity()).setSupportActionBar(toolbar);
+        ((RailwayTicketActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivity().setTitle(R.string.railway_ticket_title);
 
 
