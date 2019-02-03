@@ -42,7 +42,6 @@ public class LauncherActivity extends AppCompatActivity {
         switch (activityAction) {
             case Intent.ACTION_VIEW:
 
-
                 Uri uri = getIntent().getData();
                 if (uri != null)
                     Logger.logD(TAG, uri.toString());

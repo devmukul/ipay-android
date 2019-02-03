@@ -17,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateCustomNotificationAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateOtherTypeRichNotification;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateRichNotification;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
@@ -104,7 +105,7 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
             requestAction = (String) data.get("click_action");
             String title = (String) data.get("title");
             CreateRichNotification createRichNotification;
-            if (mFcmNotificationResponse.getTransactionHistory() != null) {
+            if (requestAction.equals("request_money") || requestAction.equals("transaction")) {
                 if (requestAction != null) {
                     if (requestAction.equals("request_money") || requestAction.equals("request_payment")) {
                         createRichNotification = new CreateRichNotification
@@ -119,6 +120,14 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
                             (mFcmNotificationResponse.getTransactionHistory(), this, "transaction", title);
                 }
                 createRichNotification.setupNotification();
+            } else if (requestAction.equals("others")) {
+                String body = (String) data.get("body");
+                String image = (String) data.get("image");
+                String deepLink = (String) data.get("deepLink");
+                CreateOtherTypeRichNotification createOtherTypeRichNotification =
+                        new CreateOtherTypeRichNotification(this, body, title, image, deepLink);
+                createOtherTypeRichNotification.setUpRichNotification();
+
             } else {
                 try {
                     createNotification(this, data.values().toArray()[5].toString(),

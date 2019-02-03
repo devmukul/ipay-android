@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
@@ -379,7 +380,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     switch (result.getStatus()) {
                         case Constants.HTTP_RESPONSE_STATUS_OK:
                             ProfileInfoCacheManager.setLoggedInStatus(true);
-                            String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
+                            String pushRegistrationID = FirebaseInstanceId.getInstance().getToken();
                             if (pushRegistrationID != null) {
                                 new RegisterFCMTokenToServerAsyncTask(getContext());
                             }
