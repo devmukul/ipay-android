@@ -584,10 +584,6 @@ public class HomeActivity extends BaseActivity
 
             switchToSecuritySettingsActivity();
 
-        } else if (id == R.id.nav_invite) {
-
-            switchToInviteActivity();
-
         } else if (id == R.id.nav_promo) {
 
             if (drawer.isDrawerOpen(GravityCompat.START)) {

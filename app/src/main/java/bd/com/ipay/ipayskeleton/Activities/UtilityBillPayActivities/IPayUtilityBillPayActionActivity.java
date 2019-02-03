@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.MyCard;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RailwayTickets.JourneyInfoSelectFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Carnival.CarnivalIdInputFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardBankSelectionFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.CreditCard.CreditCardListShowFragment;
@@ -32,6 +33,7 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
     public static final String BILL_PAY_PARTY_NAME_KEY = "BILL_PAY_PARTY_NAME";
     public static final String BILL_PAY_LANKABANGLA_DPS = "LANKABANGLA_DPS";
     public static final String CREDIT_CARD = "CREDIT_CARD";
+    public static final String RAILWAY_TICKET = "RAILWAY_TICKET";
 
     public static final String CARD_NUMBER_KEY = "CARD_NUMBER";
     public static final String CARD_USER_NAME_KEY = "CARD_USER_NAME";
@@ -43,6 +45,21 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
 
     public ArrayList<MyCard> myCards;
 
+    public static final String KEY_TICKET_CLASS_NAME = "KEY_TICKET_CLASS_NAME";
+    public static final String KEY_TICKET_FARE_AMOUNT = "KEY_TICKET_FARE_AMOUNT";
+    public static final String KEY_TICKET_VAT_AMOUNT = "KEY_TICKET_VAT_AMOUNT";
+    public static final String KEY_TICKET_TOTAL_AMOUNT = "KEY_TICKET_TOTAL_AMOUNT";
+    public static final String KEY_TICKET_ADULTS = "KEY_TICKET_ADULTS";
+    public static final String KEY_TICKET_CHILD = "KEY_TICKET_CHILD";
+    public static final String KEY_TICKET_DATE = "KEY_TICKET_DATE";
+    public static final String KEY_TICKET_MESSAGE_ID = "KEY_TICKET_MESSAGE_ID";
+    public static final String KEY_TICKET_STATION_TO = "KEY_TICKET_STATION_TO";
+    public static final String KEY_TICKET_STATION_FROM = "KEY_TICKET_STATION_FROM";
+    public static final String KEY_TICKET_TICKET_ID = "KEY_TICKET_TICKET_ID";
+    public static final String KEY_TICKET_TRAIN_NO = "KEY_TICKET_TRAIN_NO";
+    public static final String KEY_TICKET_GENDER = "KEY_TICKET_GENDER";
+
+    public static final String KEY_TICKET_TRAIN_NAME = "KEY_TICKET_TRAIN_NAME";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +81,11 @@ public final class IPayUtilityBillPayActionActivity extends BaseActivity {
             case CREDIT_CARD:
                 switchFragment(new CreditCardBankSelectionFragment(), bundle, 0, false);
                 break;
+            case RAILWAY_TICKET:
+                switchFragment(new JourneyInfoSelectFragment(), bundle, 0, false);
+                break;
             case BILL_PAY_LANKABANGLA_DPS:
+
                 switchFragment(new LankaBanglaDpsNumberInputFragment(), bundle, 0, false);
                 break;
             default:

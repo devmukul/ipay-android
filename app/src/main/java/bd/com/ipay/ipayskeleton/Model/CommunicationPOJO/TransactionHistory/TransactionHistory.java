@@ -29,6 +29,7 @@ public class TransactionHistory implements Parcelable {
     private final String[] actions;
     private final String outletName;
     private final long outletId;
+    private final TransactionMetaData metaData;
 
 
     protected TransactionHistory(Parcel in) {
@@ -60,6 +61,7 @@ public class TransactionHistory implements Parcelable {
         actions = in.createStringArray();
         outletName = in.readString();
         outletId = in.readLong();
+        metaData = in.readParcelable(TransactionMetaData.class.getClassLoader());
     }
 
     @Override
@@ -94,6 +96,7 @@ public class TransactionHistory implements Parcelable {
         dest.writeStringArray(actions);
         dest.writeString(outletName);
         dest.writeLong(outletId);
+        dest.writeParcelable(metaData, flags);
     }
 
     @Override
@@ -214,6 +217,10 @@ public class TransactionHistory implements Parcelable {
         return otherParty;
     }
 
+    public TransactionMetaData getMetaData() {
+        return metaData;
+    }
+
     public String[] getActions() {
         return actions;
     }
@@ -252,6 +259,7 @@ public class TransactionHistory implements Parcelable {
                 ", availableBalance=" + availableBalance +
                 ", otherParty=" + otherParty +
                 ", actions=" + Arrays.toString(actions) +
+                ", metaData=" + metaData +
                 '}';
     }
 }

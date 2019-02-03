@@ -13,6 +13,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPin
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.SendNewPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.PurchaseTicketRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
@@ -163,6 +164,14 @@ public class TwoFactorAuthServicesAsynctaskMap {
 					billPayRequest.setOtp(otp);
 				json = gson.toJson(billPayRequest);
 				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BANGLALION_BILL_PAY, uri, json, context, false);
+				return mHttpPostAsyncTask;
+
+			case Constants.COMMAND_RAILWAY_TICKET_PURCHASE:
+				PurchaseTicketRequest billPayRequest1 = gson.fromJson(json, PurchaseTicketRequest.class);
+				if (otp != null)
+					billPayRequest1.setOtp(otp);
+				json = gson.toJson(billPayRequest1);
+				mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RAILWAY_TICKET_PURCHASE, uri, json, context, false);
 				return mHttpPostAsyncTask;
 
 			case Constants.COMMAND_DPDC_BILL_PAY:
