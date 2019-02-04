@@ -112,7 +112,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_email, container, false);
-        mFabAddNewEmail = (FloatingActionButton) v.findViewById(R.id.fab_add_email);
+        mFabAddNewEmail = v.findViewById(R.id.fab_add_email);
 
         mFabAddNewEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,13 +124,13 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         getActivity().setTitle(R.string.email);
 
-        mPrimaryEmailView = (TextView) v.findViewById(R.id.textview_email);
-        mPrimaryEmailViewHeader = (TextView) v.findViewById(R.id.primary_email_header);
-        mOtherEmailViewHeader = (TextView) v.findViewById(R.id.other_email_header);
-        mPrimaryVerificationStatus = (ImageView) v.findViewById(R.id.email_verification_status);
-        mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mPrimaryEmailView = v.findViewById(R.id.textview_email);
+        mPrimaryEmailViewHeader = v.findViewById(R.id.primary_email_header);
+        mOtherEmailViewHeader = v.findViewById(R.id.other_email_header);
+        mPrimaryVerificationStatus = v.findViewById(R.id.email_verification_status);
+        mEmailListRecyclerView = v.findViewById(R.id.list_email);
+        mSwipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
+        mEmptyListTextView = v.findViewById(R.id.empty_list_text);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -182,7 +182,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         View view = dialog.getCustomView();
 
-        final EditText emailView = (EditText) view.findViewById(R.id.edit_text_email);
+        final EditText emailView = view.findViewById(R.id.edit_text_email);
 
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -475,8 +475,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             public EmailViewHolder(final View itemView) {
                 super(itemView);
 
-                mEmailView = (TextView) itemView.findViewById(R.id.textview_email);
-                mVerificationStatus = (ImageView) itemView.findViewById(R.id.email_verification_status);
+                mEmailView = itemView.findViewById(R.id.textview_email);
+                mVerificationStatus = itemView.findViewById(R.id.email_verification_status);
             }
 
             public void bindView(int pos) {

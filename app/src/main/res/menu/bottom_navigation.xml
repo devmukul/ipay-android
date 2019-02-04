@@ -15,7 +15,7 @@
         android:title="@string/transactions" />
     <item
         android:id="@+id/navigation_promotions"
-        android:icon="@drawable/ic_offer"
-        android:title="@string/promotions" />
+        android:icon="@drawable/ic_contact"
+        android:title="@string/contacts" />
 
 </menu>

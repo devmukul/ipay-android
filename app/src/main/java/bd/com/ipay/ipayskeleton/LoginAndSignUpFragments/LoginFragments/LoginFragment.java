@@ -104,14 +104,14 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         mDeviceName = DeviceInfoFactory.getDeviceName();
 
-        mButtonLogin = (Button) v.findViewById(R.id.login_button);
-        mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
-        mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mUserNameEditText = (EditText) v.findViewById(R.id.login_mobile_number);
-        mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
-        mInfoView = (ImageView) v.findViewById(R.id.login_info);
-        mRememberMeCheckbox = (CheckBox) v.findViewById(R.id.remember_me_checkbox);
+        mButtonLogin = v.findViewById(R.id.login_button);
+        mButtonForgetPassword = v.findViewById(R.id.forget_password_button);
+        mButtonJoinUs = v.findViewById(R.id.join_us_button);
+        mProfileImageView = v.findViewById(R.id.profile_picture);
+        mUserNameEditText = v.findViewById(R.id.login_mobile_number);
+        mPasswordEditText = v.findViewById(R.id.login_password);
+        mInfoView = v.findViewById(R.id.login_info);
+        mRememberMeCheckbox = v.findViewById(R.id.remember_me_checkbox);
 
         mRememberMeCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

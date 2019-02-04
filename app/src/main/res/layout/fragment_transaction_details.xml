@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#e5e5e5">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -11,214 +11,252 @@
         android:paddingBottom="@dimen/activity_vertical_margin">
 
         <LinearLayout
-            android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/value4"
-            android:orientation="horizontal"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:gravity="center_vertical">
-
-            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                android:id="@+id/profile_picture"
-                style="@style/ReviewImageStyle" />
-
-            <ImageView
-                android:id="@+id/other_image"
-                style="@style/ReviewBankImageStyle" />
+            android:orientation="vertical"
+            android:background="@color/colorWhite">
 
             <LinearLayout
+                android:id="@+id/profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_marginBottom="@dimen/value4"
+                android:orientation="horizontal"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/textview_name"
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/profile_picture"
+                    style="@style/ReviewImageStyle" />
+
+                <ImageView
+                    android:id="@+id/other_image"
+                    style="@style/ReviewBankImageStyle" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/text_size_small_medium" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textview_mobile_number"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textview_name"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true" />
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/text_size_small_medium" />
 
-                    <Button
-                        android:id="@+id/add_in_contacts"
-                        android:layout_width="@dimen/value30"
-                        android:layout_height="@dimen/value30"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/textview_mobile_number"
-                        android:background="@drawable/ic_add"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                        android:paddingRight="@dimen/activity_horizontal_margin_card"
-                        android:visibility="gone" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/textview_mobile_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true" />
+
+                        <Button
+                            android:id="@+id/add_in_contacts"
+                            android:layout_width="@dimen/value30"
+                            android:layout_height="@dimen/value30"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/textview_mobile_number"
+                            android:background="@drawable/ic_add"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                            android:paddingRight="@dimen/activity_horizontal_margin_card"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <View style="@style/Divider" />
-
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:layout_weight=".8"
-                android:text="@string/transaction_id" />
-
-            <TextView
-                android:id="@+id/transaction_id"
-                style="@style/TextViewInfoReview" />
-
-        </LinearLayout>
-
-        <View style="@style/Divider" />
-
-        <LinearLayout
-            style="@style/LinearLayoutHolder"
-            android:visibility="gone">
-
-            <TextView
-                style="@style/TextViewInfoLabelReview"
-                android:text="@string/your_number" />
-
-            <TextView
-                android:id="@+id/your_number"
-                style="@style/TextViewInfoReview" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:layout_weight=".8"
-                android:text="@string/time" />
-
-            <TextView
-                android:id="@+id/time"
-                style="@style/TextViewInfoReview" />
-        </LinearLayout>
-
-        <View style="@style/Divider" />
-
-        <include layout="@layout/view_transaction_details_education_payment" />
-
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:text="@string/amount_in_tk" />
-
-            <TextView
-                android:id="@+id/amount"
-                style="@style/TextViewInfoReview" />
-        </LinearLayout>
-
-        <View style="@style/Divider" />
-
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:text="@string/service_charge" />
-
-            <TextView
-                android:id="@+id/fee"
-                style="@style/TextViewInfoReview" />
-        </LinearLayout>
-
-        <View style="@style/Divider" />
-
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:text="@string/net_amount" />
-
-            <TextView
-                android:id="@+id/netAmount"
-                style="@style/TextViewInfoBoldReview" />
-        </LinearLayout>
-
-        <View style="@style/Divider" />
-
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:text="@string/balance" />
-
-            <TextView
-                android:id="@+id/balance"
-                style="@style/TextViewInfoColorPrimaryBoldReview" />
-        </LinearLayout>
-
-        <View style="@style/Divider" />
-
-        <LinearLayout
-            android:id="@+id/purpose_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            <View style="@style/Divider" />
 
             <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
-                    android:id="@+id/textView2"
                     style="@style/TextViewInfoLabelReviewSmall"
-                    android:text="@string/purpose" />
+                    android:layout_weight=".8"
+                    android:text="@string/transaction_id" />
 
                 <TextView
-                    android:id="@+id/purpose"
+                    android:id="@+id/transaction_id"
+                    style="@style/TextViewInfoReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                style="@style/LinearLayoutHolder"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/your_number" />
+
+                <TextView
+                    android:id="@+id/your_number"
+                    style="@style/TextViewInfoReview" />
+            </LinearLayout>
+
+
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:layout_weight=".8"
+                    android:text="@string/time" />
+
+                <TextView
+                    android:id="@+id/time"
                     style="@style/TextViewInfoReview" />
             </LinearLayout>
 
             <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:layout_weight=".8"
+                    android:text="@string/description" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:paddingBottom="@dimen/value10"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:textSize="@dimen/text_size_small_medium" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:text="@string/status" />
-
-            <TextView
-                android:id="@+id/status"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+        <LinearLayout
+            android:id="@+id/metadata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/value8"
+            android:background="@color/colorWhite"
+            android:paddingTop="@dimen/value5"
+            android:paddingBottom="@dimen/value5">
         </LinearLayout>
-
-        <View style="@style/Divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/value8"
+            android:paddingTop="@dimen/value5"
+            android:paddingBottom="@dimen/value5">
 
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:layout_weight=".8"
-                android:text="@string/description" />
+            <LinearLayout style="@style/LinearLayoutHolder">
 
-            <TextView
-                android:id="@+id/description"
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:text="@string/amount_in_tk" />
+
+                <TextView
+                    android:id="@+id/amount"
+                    style="@style/TextViewInfoReview" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:text="@string/service_charge" />
+
+                <TextView
+                    android:id="@+id/fee"
+                    style="@style/TextViewInfoReview" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:text="@string/net_amount" />
+
+                <TextView
+                    android:id="@+id/netAmount"
+                    style="@style/TextViewInfoBoldReview" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:text="@string/balance" />
+
+                <TextView
+                    android:id="@+id/balance"
+                    style="@style/TextViewInfoColorPrimaryBoldReview" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/value8"
+            android:paddingTop="@dimen/value5"
+            android:paddingBottom="@dimen/value5">
+
+            <LinearLayout
+                android:id="@+id/purpose_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:paddingBottom="@dimen/value10"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/text_size_small_medium" />
+                android:orientation="vertical">
+
+                <LinearLayout style="@style/LinearLayoutHolder">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/TextViewInfoLabelReviewSmall"
+                        android:text="@string/purpose" />
+
+                    <TextView
+                        android:id="@+id/purpose"
+                        style="@style/TextViewInfoReview" />
+                </LinearLayout>
+
+                <View style="@style/Divider" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:text="@string/status" />
+
+                <TextView
+                    android:id="@+id/status"
+                    style="@style/TextViewInfoColorPrimaryReviewSmall" />
+            </LinearLayout>
 
         </LinearLayout>
 

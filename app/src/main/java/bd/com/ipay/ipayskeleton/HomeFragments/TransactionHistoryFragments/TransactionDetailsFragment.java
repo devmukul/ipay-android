@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Visibility;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -85,6 +87,8 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
     private String status;
     private String outletName;
 
+    private LinearLayout metaView;
+
 
     @Nullable
     @Override
@@ -104,24 +108,25 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         statusCode = transactionHistory.getStatusCode();
         status = transactionHistory.getStatus();
 
-        descriptionTextView = (TextView) v.findViewById(R.id.description);
-        timeTextView = (TextView) v.findViewById(R.id.time);
-        amountTextView = (TextView) v.findViewById(R.id.amount);
-        feeTextView = (TextView) v.findViewById(R.id.fee);
-        transactionIDTextView = (TextView) v.findViewById(R.id.transaction_id);
-        netAmountTextView = (TextView) v.findViewById(R.id.netAmount);
-        balanceTextView = (TextView) v.findViewById(R.id.balance);
-        purposeTextView = (TextView) v.findViewById(R.id.purpose);
-        statusTextView = (TextView) v.findViewById(R.id.status);
-        mobileNumberTextView = (TextView) v.findViewById(R.id.your_number);
+        descriptionTextView = v.findViewById(R.id.description);
+        timeTextView = v.findViewById(R.id.time);
+        amountTextView = v.findViewById(R.id.amount);
+        feeTextView = v.findViewById(R.id.fee);
+        transactionIDTextView = v.findViewById(R.id.transaction_id);
+        netAmountTextView = v.findViewById(R.id.netAmount);
+        balanceTextView = v.findViewById(R.id.balance);
+        purposeTextView = v.findViewById(R.id.purpose);
+        statusTextView = v.findViewById(R.id.status);
+        mobileNumberTextView = v.findViewById(R.id.your_number);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        otherImageView = (ImageView) v.findViewById(R.id.other_image);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mAddInContactsButton = (Button) v.findViewById(R.id.add_in_contacts);
-        mRevertTransactionButton = (Button) v.findViewById(R.id.button_revert);
+        mProfileImageView = v.findViewById(R.id.profile_picture);
+        otherImageView = v.findViewById(R.id.other_image);
+        mNameView = v.findViewById(R.id.textview_name);
+        mMobileNumberView = v.findViewById(R.id.textview_mobile_number);
+        mAddInContactsButton = v.findViewById(R.id.add_in_contacts);
+        mRevertTransactionButton = v.findViewById(R.id.button_revert);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
+        metaView = v.findViewById(R.id.metadata);
 
         if (transactionHistory.getDescription() != null)
             descriptionTextView.setText(transactionHistory.getDescription());
@@ -139,6 +144,25 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber())) {
                 mAddInContactsButton.setVisibility(View.VISIBLE);
             }
+        }
+
+
+        if(transactionHistory.getMetaData() != null && transactionHistory.getMetaData().getVisibility() !=null){
+                metaView.removeAllViews();
+                for (Visibility visibility : transactionHistory.getMetaData().getVisibility()){
+
+                    View layout2 = LayoutInflater.from(getContext()).inflate(R.layout.item_transaction_history,  null, false);
+
+                    TextView labelView = layout2.findViewById(R.id.label);
+                    TextView valueView = layout2.findViewById(R.id.value);
+
+                    labelView.setText(visibility.getLabel());
+                    valueView.setText(visibility.getValue());
+                    metaView.addView(layout2);
+
+                }
+        }else {
+            metaView.setVisibility(View.GONE);
         }
 
         mAddInContactsButton.setOnClickListener(new View.OnClickListener() {
@@ -237,11 +261,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             }
         }
 
-        if (cancel) {
-            return false;
-        } else {
-            return true;
-        }
+        return !cancel;
     }
 
     private void attemptGetBusinessRule(int serviceID) {

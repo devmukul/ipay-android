@@ -148,15 +148,11 @@ public class ServiceAccessValidatorAspect {
             case R.id.nav_user_activity:
                 hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY);
                 break;
-            case R.id.nav_invite:
-                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS);
-                break;
             case R.id.nav_logout:
                 hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SIGN_OUT);
                 break;
-            case  R.id.nav_account:
+            case R.id.nav_account:
             case R.id.nav_security_settings:
-            case R.id.nav_live_chat:
             case R.id.nav_help:
             case R.id.nav_about:
                 hasNavigationAccess = true;

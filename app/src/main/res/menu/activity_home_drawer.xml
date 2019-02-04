@@ -8,10 +8,6 @@
             android:icon="@drawable/ic_drawer_profile"
             android:title="@string/account" />
         <item
-            android:id="@+id/nav_contacts"
-            android:icon="@drawable/ic_contact"
-            android:title="@string/contacts" />
-        <item
             android:id="@+id/nav_bank_account"
             android:icon="@drawable/ic_bank"
             android:title="@string/link_bank" />
@@ -24,19 +20,10 @@
             android:icon="@drawable/ic_activity_log"
             android:title="@string/activity_log" />
         <item
-            android:id="@+id/nav_invite"
-            android:icon="@drawable/ic_invite_contact"
-            android:title="@string/invite_people_to_ipay"
-            android:visible="true" />
-        <item
             android:id="@+id/nav_promo"
             android:icon="@drawable/ic_promo_code"
             android:title="@string/promo_code"
             android:visible="true" />
-        <item
-            android:id="@+id/nav_live_chat"
-            android:icon="@drawable/ic_chat"
-            android:title="@string/live_chat" />
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help"
