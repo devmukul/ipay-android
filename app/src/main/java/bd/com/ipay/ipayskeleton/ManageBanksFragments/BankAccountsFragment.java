@@ -460,7 +460,12 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 final String branchName = mListUserBankClasses.get(pos).getBranchName();
                 final String verificationStatus = mListUserBankClasses.get(pos).getVerificationStatus();
                 final String bankAccountNumber = mListUserBankClasses.get(pos).getAccountNumber();
-                Drawable icon = getResources().getDrawable(mListUserBankClasses.get(pos).getBankIcon(getContext()));
+                try {
+                    Drawable icon = getResources().getDrawable(mListUserBankClasses.get(pos).getBankIcon(getContext()));
+                    bankIcon.setImageDrawable(icon);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
                 if (pos == mListUserBankClasses.size() - 1)
                     divider.setVisibility(View.GONE);
@@ -468,7 +473,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 mBankAccountNumber.setText(bankAccountNumber);
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);
-                bankIcon.setImageDrawable(icon);
 
                 switch (verificationStatus) {
                     case Constants.BANK_ACCOUNT_STATUS_VERIFIED:
