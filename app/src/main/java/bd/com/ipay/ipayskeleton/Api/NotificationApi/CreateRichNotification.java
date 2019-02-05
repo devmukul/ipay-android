@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -71,8 +72,10 @@ public class CreateRichNotification {
     private void setBitmap(String url, final RemoteViews remoteView, final int viewId) {
         final int size = context.getResources().getDimensionPixelSize(R.dimen.value48);
         final Bitmap profilePictureBitmap;
-        Bitmap newBitmap;
+        Bitmap newBitmap = null;
         RoundedBitmapDrawable roundedBitmapDrawable;
+        Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_profile);
+
         try {
             profilePictureBitmap = Glide.with(context)
                     .load(Constants.BASE_URL_FTP_SERVER + url)
@@ -81,9 +84,13 @@ public class CreateRichNotification {
             newBitmap = getCircleBitmap(profilePictureBitmap);
 
         } catch (Exception e) {
-            return;
+            e.printStackTrace();
         }
-        remoteView.setImageViewBitmap(viewId, newBitmap);
+        if (newBitmap != null) {
+            remoteView.setImageViewBitmap(viewId, newBitmap);
+        } else {
+            remoteView.setImageViewBitmap(viewId, defaultBitmap);
+        }
     }
 
     private Bitmap getCircleBitmap(Bitmap bitmap) {
@@ -116,8 +123,11 @@ public class CreateRichNotification {
         PendingIntent pendingIntent = getNotificationPendingIntent();
         RemoteViews transactionNotificationView = new RemoteViews
                 (context.getPackageName(), R.layout.list_item_transaction_history_notification);
+        RemoteViews transactionNotificationViewCollapsed = new RemoteViews
+                (context.getPackageName(), R.layout.list_item_ta_notification_collapsed_view);
+        transactionNotificationViewCollapsed.setTextViewText(R.id.title, title);
 
-        if (transactionHistory.getActions() == null || transactionHistory.getActions().length == 0) {
+        if (transactionHistory.getActions() == null) {
             transactionNotificationView.setViewVisibility(R.id.button_layout, View.GONE);
         } else {
             transactionNotificationView.setViewVisibility(R.id.button_layout, View.VISIBLE);
@@ -142,10 +152,10 @@ public class CreateRichNotification {
         setBitmap(transactionHistory.getOtherParty().getUserProfilePic(),
                 transactionNotificationView, R.id.profile_picture);
         fillUpViewsWithNecessaryData(transactionNotificationView);
-        initiateNotificationAction(pendingIntent, transactionNotificationView);
+        initiateNotificationAction(pendingIntent, transactionNotificationView,transactionNotificationViewCollapsed);
     }
 
-    public void initiateNotificationAction(PendingIntent pendingIntent, RemoteViews transactionNotificationView) {
+    public void initiateNotificationAction(PendingIntent pendingIntent, RemoteViews transactionNotificationView,RemoteViews collapsedView) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String CHANNEL_ID = context.getPackageName();
             CharSequence name = "ipay";
@@ -159,10 +169,12 @@ public class CreateRichNotification {
             notificationManager.createNotificationChannel(channel);
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_ipay_verifiedmember)
+                    .setContentText(title)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
-                    .setCustomContentView(transactionNotificationView)
-                    .setCustomContentView(transactionNotificationView);
+                    .setContentTitle(title)
+                    .setCustomContentView(collapsedView)
+                    .setCustomBigContentView(transactionNotificationView);
             notificationManager.notify(transactionHistory.getTransactionID().hashCode(), mBuilder.build());
         } else {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -170,7 +182,9 @@ public class CreateRichNotification {
                     .setSmallIcon(R.drawable.ic_ipay_verifiedmember)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
-                    .setCustomContentView(transactionNotificationView)
+                    .setContentTitle(title)
+                    .setContentText(title)
+                    .setCustomContentView(collapsedView)
                     .setCustomBigContentView(transactionNotificationView);
             notificationManager.notify(transactionHistory.getTransactionID().hashCode(), mBuilder.build());
         }

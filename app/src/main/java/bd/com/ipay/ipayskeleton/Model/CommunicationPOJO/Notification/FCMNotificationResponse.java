@@ -12,6 +12,7 @@ public class FCMNotificationResponse {
     private long time;
     private String deepLink;
     private String transactionDetailsString;
+    private String  transactionActivity;
     private TransactionHistory transactionHistory;
 
     public TransactionHistory getTransactionHistory() {
@@ -20,6 +21,14 @@ public class FCMNotificationResponse {
 
     public void setTransactionHistory(TransactionHistory transactionHistory) {
         this.transactionHistory = transactionHistory;
+    }
+
+    public String getTransactionActivity() {
+        return transactionActivity;
+    }
+
+    public void setTransactionActivity(String  transactionActivity) {
+        this.transactionActivity = transactionActivity;
     }
 
     public String getTransactionDetailsString() {

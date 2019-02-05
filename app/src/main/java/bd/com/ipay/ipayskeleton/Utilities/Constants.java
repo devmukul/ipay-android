@@ -986,4 +986,7 @@ public class Constants {
     public static String OTHER = "Other";
     public static final int MAX_TICKET = 4;
     public static final int MAX_TICKET_PURCHASE_DAY = 9;
+    public static final String transaction = "transaction";
+    public static final  String other = "other";
+    public static  final String  request_money ="request_money";
 }

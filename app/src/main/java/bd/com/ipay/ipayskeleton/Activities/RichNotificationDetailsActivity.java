@@ -22,7 +22,7 @@ public class RichNotificationDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.view_rich_notification_body);
         TextView readMoreButton = findViewById(R.id.read_more);
         String title = getIntent().getStringExtra(Constants.TITLE);
-        String body = getIntent().getStringExtra(Constants.BODY);
+        String description = getIntent().getStringExtra(Constants.DESCRIPTION);
         setTitle("iPay");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final String forwardingUrl = getIntent().getStringExtra(Constants.DEEP_LINK);
@@ -32,10 +32,10 @@ public class RichNotificationDetailsActivity extends AppCompatActivity {
         TextView descriptionTextView = findViewById(R.id.notification_description);
         Glide.with(this)
                 .load(imageUrl)
-                .error(R.drawable.ic_manage_people)
+                .error(R.drawable.icon_pdf)
                 .into(notificationImageView);
         titleTextView.setText(title);
-        descriptionTextView.setText(body);
+        descriptionTextView.setText(description);
         readMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -105,29 +105,25 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
             requestAction = (String) data.get("click_action");
             String title = (String) data.get("title");
             CreateRichNotification createRichNotification;
-            if (requestAction.equals("request_money") || requestAction.equals("transaction")) {
-                if (requestAction != null) {
-                    if (requestAction.equals("request_money") || requestAction.equals("request_payment")) {
-                        createRichNotification = new CreateRichNotification
-                                (mFcmNotificationResponse.getTransactionHistory(),
-                                        this, requestAction, title);
-                    } else {
-                        createRichNotification = new CreateRichNotification
-                                (mFcmNotificationResponse.getTransactionHistory(), this, "transaction", title);
-                    }
-                } else {
-                    createRichNotification = new CreateRichNotification
-                            (mFcmNotificationResponse.getTransactionHistory(), this, "transaction", title);
-                }
-                createRichNotification.setupNotification();
-            } else if (requestAction.equals("others")) {
-                String body = (String) data.get("body");
-                String image = (String) data.get("image");
-                String deepLink = (String) data.get("deepLink");
-                CreateOtherTypeRichNotification createOtherTypeRichNotification =
-                        new CreateOtherTypeRichNotification(this, body, title, image, deepLink);
-                createOtherTypeRichNotification.setUpRichNotification();
 
+            if (requestAction != null) {
+                switch (requestAction) {
+                    case Constants.transaction:
+                        createRichNotification = new CreateRichNotification
+                                (mFcmNotificationResponse.getTransactionHistory(), this,
+                                        Constants.transaction, title);
+                        createRichNotification.setupNotification();
+                        break;
+                    case Constants.other:
+                        String description = (String) data.get("description");
+                        String image = (String) data.get("imageUrl");
+                        String deepLink = (String) data.get("deepLink");
+                        CreateOtherTypeRichNotification createOtherTypeRichNotification =
+                                new CreateOtherTypeRichNotification(this, description, title, image, deepLink);
+                        createOtherTypeRichNotification.setUpRichNotification();
+                        break;
+
+                }
             } else {
                 try {
                     createNotification(this, data.values().toArray()[5].toString(),
@@ -136,7 +132,6 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
 
                 }
             }
-            //Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
         }
         FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
 
@@ -148,7 +143,7 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(data);
         mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
-        String transactionDetailsString = mFcmNotificationResponse.getTransactionDetailsString();
+        String transactionDetailsString = mFcmNotificationResponse.getTransactionActivity();
         TransactionHistory transactionHistory = new Gson().
                 fromJson(transactionDetailsString, TransactionHistory.class);
         mFcmNotificationResponse.setTransactionHistory(transactionHistory);
