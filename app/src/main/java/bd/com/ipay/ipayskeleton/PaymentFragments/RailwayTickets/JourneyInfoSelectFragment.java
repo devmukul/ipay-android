@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -37,10 +36,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialogWithSearch;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SpinnerEditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetStationResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTrainListResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.TrainList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;

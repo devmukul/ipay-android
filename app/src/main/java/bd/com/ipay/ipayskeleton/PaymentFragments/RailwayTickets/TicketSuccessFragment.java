@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractTransactionSuccessFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Dps.LankaBanglaDpsAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 

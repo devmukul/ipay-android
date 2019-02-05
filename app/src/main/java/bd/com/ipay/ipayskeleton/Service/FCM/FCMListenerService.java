@@ -114,6 +114,12 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
                                         Constants.transaction, title);
                         createRichNotification.setupNotification();
                         break;
+                    case Constants.request_money:
+                        createRichNotification = new CreateRichNotification
+                                (mFcmNotificationResponse.getTransactionHistory(), this,
+                                        Constants.transaction, title);
+                        createRichNotification.setupNotification();
+                        break;
                     case Constants.other:
                         String description = (String) data.get("description");
                         String image = (String) data.get("imageUrl");
