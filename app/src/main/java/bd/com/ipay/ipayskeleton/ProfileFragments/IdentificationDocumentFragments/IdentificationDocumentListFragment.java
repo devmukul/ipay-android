@@ -7,6 +7,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -177,7 +178,20 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         DocumentListAdapter(Context context, List<IdentificationDocument> identificationDocumentList) {
             this.mContext = context;
-            this.mIdentificationDocumentList = new ArrayList<>(identificationDocumentList);
+
+
+            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                this.mIdentificationDocumentList = new ArrayList<>(identificationDocumentList);
+            } else {
+                this.mIdentificationDocumentList = new ArrayList();
+                for (IdentificationDocument identificationDocument: identificationDocumentList){
+                    if(identificationDocument.getDocumentVerificationStatus()!=null ||
+                            identificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID)){
+                        this.mIdentificationDocumentList.add(identificationDocument);
+                    }
+                }
+            }
+
             mLayoutInflater = LayoutInflater.from(this.mContext);
         }
 
@@ -225,7 +239,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         }
 
         public void addItems(List<IdentificationDocument> identificationDocumentList) {
-            this.mIdentificationDocumentList.addAll(identificationDocumentList);
+            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                this.mIdentificationDocumentList.addAll(identificationDocumentList);
+            } else {
+                for (IdentificationDocument identificationDocument: identificationDocumentList){
+                    if(identificationDocument.getDocumentVerificationStatus()!=null ||
+                            identificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID)){
+                        this.mIdentificationDocumentList.add(identificationDocument);
+                    }
+                }
+            }
         }
 
         public void addItem(IdentificationDocument identificationDocument) {

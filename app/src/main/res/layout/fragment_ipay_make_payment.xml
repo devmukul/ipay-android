@@ -332,6 +332,38 @@
                         android:weightSum="4">
 
                         <android.support.constraint.ConstraintLayout
+                            android:id="@+id/railway_ticket"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <ImageView
+                                android:id="@+id/railway_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:padding="2dp"
+                                android:src="@drawable/bd_railway"
+                                app:layout_constraintDimensionRatio="1:1"
+                                android:elevation="@dimen/value2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/railway_ticket"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                app:layout_constraintTop_toBottomOf="@+id/railway_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
                             android:id="@+id/desco"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"

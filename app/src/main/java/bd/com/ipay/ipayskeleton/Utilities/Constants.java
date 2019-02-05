@@ -165,6 +165,7 @@ public class Constants {
     public static final String COMMAND_BRILLIANT_RECHARGE = "COMMAND_BRILLIANT_RECHARGE";
     public static final String BRILLIANT = "BRILLIANT";
     public static final String WESTZONE = "WESTZONE";
+    public static final String RAILWAY_TICKET = "RAILWAY_TICKET";
     public static final String URL_WEST_ZONE = "wzone/bill-info/";
     public static final String COMMAND_WEST_ZONE_BILL_PAY = "COMMAND_WEST_ZONE_BILL_PAY";
     public static final String COMMAND_GET_WEST_ZONE_CUSTOMER = "COMMAND_GET_WEST_ZONE_CUSTOMER";
@@ -323,6 +324,8 @@ public class Constants {
     public static final String BASE_URL_DATA_COLLECTOR = BuildConfig.BASE_URL_IPAY + "/data-collector/v1/";
     public static final String BASE_URL_OFFER = BuildConfig.BASE_URL_IPAY + "/offer_v2/api/v1/";
     public static final String BASE_URL_UTILITY = BuildConfig.BASE_URL_IPAY + "/api/utility/";
+    public static final String BASE_URL_CNS = BuildConfig.BASE_URL_IPAY + "/api/utility/cns/";
+    public static final String BASE_URL_CMS = BuildConfig.BASE_URL_IPAY + "/api/cms/";
     public static final String INTERCOM_API_KEY = BuildConfig.API_KEY_INTERCOM;
     public static final String INTERCOM_ANDROID_SDK_KEY = BuildConfig.SDK_KEY_INTERCOM;
 
@@ -350,8 +353,9 @@ public class Constants {
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String INVALID_CREDENTIAL = "invalid credential";
-    public static String URL_DESCO_BILL_PAY = "/desco/billpay";
-    public static String URL_CARNIVAL = "/carnival/bill-info/";
+    public static final String URL_DESCO_BILL_PAY = "/desco/billpay";
+    public static final String URL_CARNIVAL = "/carnival/bill-info/";
+
 
     // Activity REST
     public static final String URL_USER_ACTIVITY = "/activity";
@@ -428,7 +432,7 @@ public class Constants {
 
 
     // Mobile Topup Request REST
-    public static final String URL_TOPUP_REQUEST = "topup/dotopup/v2";
+    public static final String URL_TOPUP_REQUEST_V3 = "topup/v3";
 
     // Money Request REST
     public static final String URL_REQUEST_MONEY = "requestmoney";
@@ -478,8 +482,6 @@ public class Constants {
     public static final String URL_GET_ORDER_DETAILS = "orderId/info";
     public static final String URL_PAY_BY_DEEP_LINK = "orderId/pay";
     public static final String URL_PAYMENT_REVERT = "payment-revert";
-
-    public static final String URL_PAYMENT = "payment/v2";
     public static final String URL_PAYMENT_V3 = "payment/v3";
 
     public static final String X_IPAY_OTP = "X-iPay-OTP";
@@ -498,7 +500,6 @@ public class Constants {
     public static final String URL_RESOURCE = "resource";
 
     // Transaction REST
-    public static final String URL_SEND_MONEY = "transaction/send/v2";
     public static final String URL_SEND_MONEY_V3 = "send/v3";
 
     // Trusted Network REST
@@ -603,8 +604,18 @@ public class Constants {
     //Promotions
     public static final String URL_PROMOTIONS = "promotions/";
 
+    //NewsRoom
+    public static final String URL_NEWSROOM = "news";
+
     //Promotions
     public static final String URL_FEEDBACK = "feedbacks";
+
+    //Railway
+    public static final String URL_ORIGINATING_STATION = "originating-station";
+    public static final String URL_ORIGINATING_STATION_TO = "originating-station?originatingStation=";
+    public static final String URL_TICKET_QUERY = "ticket-query/";
+    public static final String URL_TRAIN_LIST = "train?";
+    public static final String URL_PURCHASE_TICKET = "purchase-ticket";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
@@ -795,8 +806,20 @@ public class Constants {
 
     public static final String COMMAND_GET_NEREBY_BUSSINESS = "COMMAND_GET_NEREBY_BUSSINESS";
     public static final String COMMAND_GET_PROMOTIONS = "COMMAND_GET_PROMOTIONS";
+    public static final String COMMAND_GET_NEWS = "COMMAND_GET_NEWS";
 
     public static final String COMMAND_SUBMIT_RATING = "COMMAND_SUBMIT_RATING";
+
+    // Railway Ticket
+
+    public static final String COMMAND_RAILWAY_TICKET_PURCHASE = "COMMAND_RAILWAY_TICKET_PURCHASE";
+    public static final String COMMAND_GET_STATION_TO = "COMMAND_GET_STATION_TO";
+    public static final String COMMAND_GET_STATION_FROM = "COMMAND_GET_STATION_FROM";
+    public static final String COMMAND_GET_TRAIN_LIST = "COMMAND_GET_TRAIN_LIST";
+    public static final String COMMAND_GET_TICKET_INFO = "COMMAND_GET_TICKET_INFO";
+//    public static final String COMMAND_GET_DISTRICT_LIST = "COMMAND_GET_DISTRICT_LIST";
+//    public static final String COMMAND_GET_BANK_BRANCH_LIST = "COMMAND_GET_BANK_BRANCH_LIST";
+//    public static final String COMMAND_GET_RELATIONSHIP_LIST = "COMMAND_GET_RELATIONSHIP_LIST";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 
@@ -990,4 +1013,6 @@ public class Constants {
     public static String OTHER = "Other";
     public static long ACTIVE = 1;
     public static long BLOCKED = 2;
+    public static final int MAX_TICKET = 4;
+    public static final int MAX_TICKET_PURCHASE_DAY = 9;
 }

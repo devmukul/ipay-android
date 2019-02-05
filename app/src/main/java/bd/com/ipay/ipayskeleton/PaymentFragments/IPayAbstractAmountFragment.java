@@ -87,7 +87,8 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 	private TextView finalBalanceTextView;
 	private TextView debitableBalanceTextView;
 	private TextView originalBalanceTextView;
-	private ImageButton balanceBreakDownloadImageButton;protected MandatoryBusinessRules businessRules;
+	private ImageButton balanceBreakDownloadImageButton;
+	protected MandatoryBusinessRules businessRules;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +98,8 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		numberFormat.setMinimumIntegerDigits(2);
 
         balanceBreakDownFormat.setMinimumFractionDigits(2);
-		balanceBreakDownFormat.setMaximumFractionDigits(2);businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
+		balanceBreakDownFormat.setMaximumFractionDigits(2);
+		businessRules = BusinessRuleCacheManager.getBusinessRules(BusinessRuleCacheManager.getTag(getServiceId()));
 
 		if (getContext() != null)
 			LocalBroadcastManager.getInstance(getContext()).registerReceiver(mBusinessRuleUpdateBroadcastReceiver, new IntentFilter(Constants.BUSINESS_RULE_UPDATE_BROADCAST));

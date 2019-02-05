@@ -10,8 +10,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 
 public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
 
@@ -30,13 +34,22 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
     }
 
     private void initializeViews(View view) {
-        mUploadImageView = (ImageView) view.findViewById(R.id.document_id_helper_image);
-        mUploadButton = (Button) view.findViewById(R.id.button_upload_photo_id);
-        mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        mBackButtonTop = (ImageView) view.findViewById(R.id.back);
+        mUploadImageView = view.findViewById(R.id.document_id_helper_image);
+        mUploadButton = view.findViewById(R.id.button_upload_photo_id);
+        mSkipButton = view.findViewById(R.id.button_skip);
+        mBackButtonTop = view.findViewById(R.id.back);
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void performUploadDocumentClickAction() {
+        IdentificationDocument identificationDocument = new IdentificationDocument();
+        identificationDocument.setDocumentTypeTitle(getResources().getString(R.string.national_id));
+        identificationDocument.setDocumentType(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.SELECTED_IDENTIFICATION_DOCUMENT, identificationDocument);
+        ((ProfileVerificationHelperActivity) getActivity()).switchToUploadIdentificationDocumentFragment(bundle);
     }
 
     public void setButtonActions() {
@@ -61,14 +74,14 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileVerificationHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                performUploadDocumentClickAction();
             }
         });
 
         mUploadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileVerificationHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                performUploadDocumentClickAction();
             }
         });
 

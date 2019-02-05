@@ -29,6 +29,7 @@ public class ServiceIdConstants {
 	public static final int REQUEST_PAYMENT = 6005;
 	public static final int PAYMENT_REVERT = 966002;
 	public static final int UTILITY_BILL_PAYMENT = 6010;
+	public static final int RAILWAY_TICKET = 6011;
 
 	// Transaction Details
 	public static final int ALL_TRANSACTION = 1008;

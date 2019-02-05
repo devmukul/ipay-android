@@ -114,10 +114,37 @@
                     tools:src="@tools:sample/avatars" />
 
                 <LinearLayout
+                    android:id="@+id/note_layout_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin_double"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/note_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/open_sans"
+                        android:gravity="center"
+                        android:inputType="text"
+                        android:maxLength="50"
+                        android:textColor="#212121"
+                        android:textSize="18sp"
+                        tools:hint="@string/short_note_optional_hint" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="8dip"
+                        android:background="#19000000" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/pin_layout_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dip"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:orientation="vertical">
 
                     <EditText
@@ -140,32 +167,6 @@
                         android:background="#19000000" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/note_layout_holder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/value16"
-                    android:orientation="vertical">
-
-                    <EditText
-                        android:id="@+id/note_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:fontFamily="@font/open_sans"
-                        android:gravity="center"
-                        android:inputType="text"
-                        android:maxLength="50"
-                        android:textColor="#212121"
-                        android:textSize="18sp"
-                        tools:hint="@string/short_note_optional_hint" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_marginTop="8dip"
-                        android:background="#19000000" />
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

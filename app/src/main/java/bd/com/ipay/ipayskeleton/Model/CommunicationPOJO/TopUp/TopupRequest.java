@@ -5,17 +5,16 @@ public class TopupRequest {
 	private final String receiverMobileNumber;
 	private final int mobileNumberType;
 	private final String operatorCode;
-	private final double amount;
-	private final String pin;
+	private final int amount;
+	private String pin;
 	private String otp;
 
 	public TopupRequest(String receiverMobileNumber,
-	                    int mobileNumberType, String operatorCode, double amount, String pin) {
+	                    int mobileNumberType, String operatorCode, int amount) {
 		this.receiverMobileNumber = receiverMobileNumber;
 		this.mobileNumberType = mobileNumberType;
 		this.operatorCode = operatorCode;
 		this.amount = amount;
-		this.pin = pin;
 	}
 
 	public String getOtp() {
@@ -26,4 +25,11 @@ public class TopupRequest {
 		this.otp = otp;
 	}
 
+	public String getPin() {
+		return pin;
+	}
+
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
 }

@@ -740,12 +740,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         });
     }
 
-    private void transitionBottomSheetBackgroundColor(float slideOffset) {
-        int colorFrom = getResources().getColor(R.color.colorTransparent);
-        int colorTo = getResources().getColor(R.color.colorPrimary);
-        mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
-                colorFrom, colorTo));
-    }
+	private void transitionBottomSheetBackgroundColor(float slideOffset) {
+		int colorFrom = getResources().getColor(R.color.colorTransparent);
+		int colorTo = getResources().getColor(R.color.colorWhite);
+		mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
+				colorFrom, colorTo));
+	}
 
     private void animateBottomSheetArrows(float slideOffset) {
         mUpArrow.setRotation(slideOffset * -180);

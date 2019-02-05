@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Visibility;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
@@ -91,6 +93,8 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
     private TextView sponsorNumberView;
     private RoundedImageView sponsorProfilePictureView;
 
+    private LinearLayout metaView;
+
 
     @Nullable
     @Override
@@ -124,13 +128,14 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         statusTextView = (TextView) v.findViewById(R.id.status);
         mobileNumberTextView = (TextView) v.findViewById(R.id.your_number);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        otherImageView = (ImageView) v.findViewById(R.id.other_image);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mAddInContactsButton = (Button) v.findViewById(R.id.add_in_contacts);
-        mRevertTransactionButton = (Button) v.findViewById(R.id.button_revert);
+        mProfileImageView = v.findViewById(R.id.profile_picture);
+        otherImageView = v.findViewById(R.id.other_image);
+        mNameView = v.findViewById(R.id.textview_name);
+        mMobileNumberView = v.findViewById(R.id.textview_mobile_number);
+        mAddInContactsButton = v.findViewById(R.id.add_in_contacts);
+        mRevertTransactionButton = v.findViewById(R.id.button_revert);
         mCustomProgressDialog = new CustomProgressDialog(getContext());
+        metaView = v.findViewById(R.id.metadata);
 
         if (transactionHistory.getDescription() != null)
             descriptionTextView.setText(transactionHistory.getDescription());
@@ -157,6 +162,25 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber())) {
                 mAddInContactsButton.setVisibility(View.VISIBLE);
             }
+        }
+
+
+        if(transactionHistory.getMetaData() != null && transactionHistory.getMetaData().getVisibility() !=null){
+                metaView.removeAllViews();
+                for (Visibility visibility : transactionHistory.getMetaData().getVisibility()){
+
+                    View layout2 = LayoutInflater.from(getContext()).inflate(R.layout.item_transaction_history,  null, false);
+
+                    TextView labelView = layout2.findViewById(R.id.label);
+                    TextView valueView = layout2.findViewById(R.id.value);
+
+                    labelView.setText(visibility.getLabel());
+                    valueView.setText(visibility.getValue());
+                    metaView.addView(layout2);
+
+                }
+        }else {
+            metaView.setVisibility(View.GONE);
         }
 
         mAddInContactsButton.setOnClickListener(new View.OnClickListener() {
@@ -308,11 +332,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             }
         }
 
-        if (cancel) {
-            return false;
-        } else {
-            return true;
-        }
+        return !cancel;
     }
 
     private void attemptGetBusinessRule(int serviceID) {
