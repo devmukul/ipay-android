@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -31,15 +30,15 @@ public class TransactionHistory implements Parcelable {
     private final String outletName;
     private final long outletId;
     private final TransactionMetaData metaData;
-    private MetaData metaData;
+    //private MetaData metaData;
 
-    public MetaData getMetaData() {
+    /*public MetaData getMetaData() {
         return metaData;
     }
 
     public void setMetaData(MetaData metaData) {
         this.metaData = metaData;
-    }
+    }*/
 
     protected TransactionHistory(Parcel in) {
         insertTime = in.readLong();
@@ -71,7 +70,7 @@ public class TransactionHistory implements Parcelable {
         outletName = in.readString();
         outletId = in.readLong();
         metaData = in.readParcelable(TransactionMetaData.class.getClassLoader());
-        metaData = in.readParcelable(MetaData.class.getClassLoader());
+        //metaData = in.readParcelable(MetaData.class.getClassLoader());
     }
 
     @Override

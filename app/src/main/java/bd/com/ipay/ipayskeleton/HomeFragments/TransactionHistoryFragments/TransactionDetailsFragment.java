@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -42,14 +41,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Visibility;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -211,7 +208,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             mProfileImageView.setVisibility(View.VISIBLE);
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
-            MetaData metaData = transactionHistory.getMetaData();
+            /*MetaData metaData = transactionHistory.getMetaData();
 
             if (metaData.isSponsoredByOther()) {
                 if (!ProfileInfoCacheManager.isBusinessAccount()) {
@@ -261,7 +258,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
                     sponsorProfilePictureView.setVisibility(View.GONE);
                     sponsorNumberView.setVisibility(View.GONE);
                 }
-            }
+            }*/
 
         } else {
             int iconId = transactionHistory.getAdditionalInfo().getImageWithType(getContext());

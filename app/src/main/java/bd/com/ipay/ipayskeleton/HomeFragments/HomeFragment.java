@@ -28,7 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -60,13 +59,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionMetaData;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -500,7 +498,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mTransactionHistoryView.setVisibility(View.VISIBLE);
         mProgressBarTransaction.setVisibility(GONE);
         mProfileCompletionRecyclerView.setVisibility(GONE);
-        MetaData metaData;
+        TransactionMetaData metaData;
 
         final String description = transactionHistory.getShortDescription();
         final String receiver = transactionHistory.getReceiver();
@@ -554,7 +552,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mOtherImageView.setVisibility(View.INVISIBLE);
             mProfileImageView.setVisibility(View.VISIBLE);
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-            if (!ProfileInfoCacheManager.isBusinessAccount()) {
+            /*if (!ProfileInfoCacheManager.isBusinessAccount()) {
                 if (transactionHistory.getMetaData() != null) {
                     metaData = transactionHistory.getMetaData();
                     if (metaData.isSponsoredByOther()) {
@@ -605,7 +603,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                         sponsorImageView.setVisibility(GONE);
                     }
                 }
-            }
+            }*/
         } else {
             int iconId = transactionHistory.getAdditionalInfo().getImageWithType(getContext());
             mProfileImageView.setVisibility(View.INVISIBLE);

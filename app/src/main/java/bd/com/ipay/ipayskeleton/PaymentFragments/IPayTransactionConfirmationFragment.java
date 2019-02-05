@@ -316,9 +316,9 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 apiCommand = Constants.COMMAND_SEND_MONEY;
-                requestJson = gson.toJson(new SendMoneyRequest(ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber()), ContactEngine.formatMobileNumberBD(mobileNumber),
-                        amount.toString(), mPin, note));
-                url = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY;
+                requestJson = gson.toJson(new SendMoneyRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
+                        amount.toString(), mPin));
+                url = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY_V3;
                 mCustomProgressDialog.setMessage(getString(R.string.sending_money));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
@@ -342,8 +342,8 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 String number = ContactEngine.formatLocalMobileNumber(mobileNumber);
                 number = number.replaceAll("[^0-9]", "");
                 requestJson = gson.toJson(new TopupRequest(number,
-                        operatorType, operatorCode, Long.parseLong(amount.toString().trim()), mPinEditText.getText().toString()));
-                url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST;
+                        operatorType, operatorCode, Integer.parseInt(amount.toString().trim())));
+                url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST_V3;
                 mCustomProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
@@ -476,7 +476,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             switch (transactionType) {
                 case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_SEND_MONEY,
-                            Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, Constants.METHOD_POST, otpValidFor);
+                            Constants.BASE_URL_SM + Constants.URL_SEND_MONEY_V3, Constants.METHOD_POST, otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                     break;
@@ -498,7 +498,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
                 case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), requestJson, Constants.COMMAND_TOPUP_REQUEST,
-                            Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST, otpValidFor);
+                            Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST_V3, Constants.METHOD_POST, otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.setOtpValidFor(otpValidFor);
                     mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                     break;

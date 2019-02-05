@@ -31,7 +31,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
@@ -58,10 +57,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.MetaData;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -664,7 +660,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     mTransactionHistoryAdapter.notifyDataSetChanged();
                     getTransactionHistory();
                 }
-
             }
 
         });
@@ -712,7 +707,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
                 final String outletName = transactionHistory.getOutletName();
-                final MetaData metaData = transactionHistory.getMetaData();
+                //final MetaData metaData = transactionHistory.getMetaData();
 
 
                 if (balance != null) {
@@ -777,7 +772,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     mOtherImageView.setVisibility(View.VISIBLE);
                     mOtherImageView.setImageResource(iconId);
                 }
-                if (!ProfileInfoCacheManager.isBusinessAccount()) {
+                /*if (!ProfileInfoCacheManager.isBusinessAccount()) {
                     if (metaData != null) {
                         if (metaData.isSponsoredByOther()) {
                             sponsorOrBeneficiaryImageView.setVisibility(View.VISIBLE);
@@ -835,7 +830,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 } else {
                     sponsorTextView.setVisibility(View.GONE);
                     sponsorOrBeneficiaryImageView.setVisibility(View.GONE);
-                }
+                }*/
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
