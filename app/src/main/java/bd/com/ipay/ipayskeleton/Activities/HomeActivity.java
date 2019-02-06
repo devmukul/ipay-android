@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
@@ -82,6 +83,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notificatio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FcmLogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
@@ -664,6 +666,7 @@ public class HomeActivity extends BaseActivity
         if (mLogoutTask != null) {
             return;
         }
+
         TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         try {
             LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
@@ -920,6 +923,15 @@ public class HomeActivity extends BaseActivity
                 mLocationUpdateRequestAsyncTask = null;
                 break;
         }
+    }
+
+    private void attemptFirebaseLogout() {
+        String url = Constants.BASE_URL_MM + Constants.URL_FIREBASE_LOGOUT;
+        FcmLogoutRequest fcmLogoutRequest = new FcmLogoutRequest(FirebaseInstanceId.getInstance().getToken());
+        HttpRequestPostAsyncTask firebaseLogoutTask = new HttpRequestPostAsyncTask(Constants.
+                COMMAND_FIREBASE_LOGOUT, url,
+                new Gson().toJson(fcmLogoutRequest), this, this, true);
+        firebaseLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
