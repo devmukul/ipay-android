@@ -117,6 +117,8 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
 
+    private HttpRequestPostAsyncTask firebaseLogoutTask;
+
     private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
 
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask;
@@ -605,7 +607,7 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_logout) {
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
-                attemptLogout();
+                attemptFirebaseLogout();
             } else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
             }
@@ -636,7 +638,7 @@ public class HomeActivity extends BaseActivity
                             } else {
                                 if (Utilities.isConnectionAvailable(HomeActivity.this)) {
                                     exitFromApplication = true;
-                                    attemptLogout();
+                                    attemptFirebaseLogout();
                                 } else {
                                     ProfileInfoCacheManager.setLoggedInStatus(false);
                                     ((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
@@ -666,7 +668,7 @@ public class HomeActivity extends BaseActivity
         if (mLogoutTask != null) {
             return;
         }
-
+        attemptFirebaseLogout();
         TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         try {
             LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
@@ -770,6 +772,7 @@ public class HomeActivity extends BaseActivity
             mLocationUpdateRequestAsyncTask = null;
             mGetNotificationAsyncTask = null;
             mRefreshTokenAsyncTask = null;
+            firebaseLogoutTask = null;
             return;
         }
         mProgressDialog.dismiss();
@@ -819,6 +822,14 @@ public class HomeActivity extends BaseActivity
                 mLogoutTask = null;
 
                 break;
+
+            case Constants.COMMAND_FIREBASE_LOGOUT:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    attemptLogout();
+                }
+                firebaseLogoutTask = null;
+                break;
+
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
@@ -926,9 +937,12 @@ public class HomeActivity extends BaseActivity
     }
 
     private void attemptFirebaseLogout() {
-        String url = Constants.BASE_URL_MM + Constants.URL_FIREBASE_LOGOUT;
+        if (firebaseLogoutTask != null) {
+            return;
+        }
+        String url = Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_FIREBASE_LOGOUT;
         FcmLogoutRequest fcmLogoutRequest = new FcmLogoutRequest(FirebaseInstanceId.getInstance().getToken());
-        HttpRequestPostAsyncTask firebaseLogoutTask = new HttpRequestPostAsyncTask(Constants.
+        firebaseLogoutTask = new HttpRequestPostAsyncTask(Constants.
                 COMMAND_FIREBASE_LOGOUT, url,
                 new Gson().toJson(fcmLogoutRequest), this, this, true);
         firebaseLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
