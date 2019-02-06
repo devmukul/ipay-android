@@ -216,9 +216,7 @@ public class TopUpEnterNumberFragment extends Fragment {
                     String text = item.getText().toString();
                     if(InputValidator.isValidMobileNumberBD(text)) {
                         String mobileNumber = ContactEngine.formatMobileNumberBD(text);
-                        mNumberEditText.setText(PhoneNumberUtils.formatNumber(mobileNumber,"BD"));
-
-
+                        mNumberEditText.setText(mobileNumber);
                     }else{
                         Snackbar snackbar = Snackbar.make(v, getString(R.string.error_invalid_mobile_number), Snackbar.LENGTH_LONG);
                         snackbar.show();
