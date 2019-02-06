@@ -384,14 +384,14 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                     @Override
                     public void onClick(View view) {
                         Uri uri = Uri.parse(mDeepLinkedNotifications.get(pos).getDeepLink());
+                        List<Long> timeList = new ArrayList<>();
+                        timeList.clear();
+                        timeList.add(mDeepLinkedNotifications.get(pos).getTime());
+                        updateNotificationState(timeList, "VISITED");
                         try {
                             DeepLinkedNotification deepLinkedNotification = mDeepLinkedNotifications.get(pos);
                             if (deepLinkedNotification.getImageUrl() == null || TextUtils.isEmpty
                                     (deepLinkedNotification.getImageUrl())) {
-                                List<Long> timeList = new ArrayList<>();
-                                timeList.clear();
-                                timeList.add(mDeepLinkedNotifications.get(pos).getTime());
-                                updateNotificationState(timeList, "VISITED");
                                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
                                 intent.putExtra("url", mDeepLinkedNotifications.get(pos).getDeepLink());
                                 intent.putExtra("sourceActivity", "Notification");
@@ -403,11 +403,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                                     }
                                 }, 500);
                             } else {
-                                List<Long> timeList = new ArrayList<>();
-                                timeList.clear();
-                                timeList.add(mDeepLinkedNotifications.get(pos).getTime());
                                 Intent intent = new Intent(getContext(), RichNotificationDetailsActivity.class);
-                                updateNotificationState(timeList, "VISITED");
                                 intent.putExtra(Constants.TITLE, deepLinkedNotification.getTitle());
                                 intent.putExtra(Constants.DESCRIPTION, deepLinkedNotification.getDescription());
                                 intent.putExtra(Constants.DEEP_LINK, deepLinkedNotification.getDeepLink());
