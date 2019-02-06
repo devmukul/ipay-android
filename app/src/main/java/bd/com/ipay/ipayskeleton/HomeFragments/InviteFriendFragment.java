@@ -116,7 +116,7 @@ public class InviteFriendFragment extends BaseFragment implements HttpResponseLi
 
 
     private void shareQrCode(String code) {
-        String share_qr_code_message = "Signup with this invitation code " + code + " and get 50 taka after you get verified  - https://app.ipay.com.bd/signup/personal?code=" + code;
+        String share_qr_code_message = "Signup with this invitation code " + code + " - https://app.ipay.com.bd/signup/personal?code=" + code;
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
