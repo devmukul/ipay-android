@@ -29,6 +29,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -221,7 +222,19 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mRailwayTicketPurchaseView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                payBill(Constants.RAILWAY_TICKET, null);
+
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RAILWAY_TICKET)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), RailwayTicketActionActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                    }
+                });
+                pinChecker.execute();
             }
         });
 
@@ -316,11 +329,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     case Constants.CREDIT_CARD:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
                         intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.CREDIT_CARD);
-                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
-                        break;
-                    case Constants.RAILWAY_TICKET:
-                        intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
-                        intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.RAILWAY_TICKET);
                         startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
                         break;
                     case Constants.LANKABANGLA:

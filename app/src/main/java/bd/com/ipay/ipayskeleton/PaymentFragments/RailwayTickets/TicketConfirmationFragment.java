@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -53,20 +54,20 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mSelectedClass = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_CLASS_NAME, "");
-            mSelectedGender = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, "");
-            mSelectedDate = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, 0);
-            mSelectedAdult = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, 0);
-            mSelectedChild = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, 0);
-            mSelectedStationFrom = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, "");
-            mSelectedStationTo = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, "");
-            mSelectedTrain = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, "");
-            mSelectedTicketId = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, "");
-            mSelectedMessage = getArguments().getString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, "");
-            mSelectedTrainNo = getArguments().getInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, 0);
-            mFareAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, 0);
-            mVatAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_VAT_AMOUNT, 0);
-            mTotalAmount = getArguments().getDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, 0);
+			mSelectedClass = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_CLASS_NAME, "");
+            mSelectedGender = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_GENDER, "");
+            mSelectedDate = getArguments().getInt(RailwayTicketActionActivity.KEY_TICKET_DATE, 0);
+            mSelectedAdult = getArguments().getInt(RailwayTicketActionActivity.KEY_TICKET_ADULTS, 0);
+            mSelectedChild = getArguments().getInt(RailwayTicketActionActivity.KEY_TICKET_CHILD, 0);
+            mSelectedStationFrom = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_STATION_FROM, "");
+            mSelectedStationTo = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_STATION_TO, "");
+            mSelectedTrain = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_TRAIN_NAME, "");
+            mSelectedTicketId = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_TICKET_ID, "");
+            mSelectedMessage = getArguments().getString(RailwayTicketActionActivity.KEY_TICKET_MESSAGE_ID, "");
+            mSelectedTrainNo = getArguments().getInt(RailwayTicketActionActivity.KEY_TICKET_TRAIN_NO, 0);
+            mFareAmount = getArguments().getDouble(RailwayTicketActionActivity.KEY_TICKET_FARE_AMOUNT, 0);
+            mVatAmount = getArguments().getDouble(RailwayTicketActionActivity.KEY_TICKET_VAT_AMOUNT, 0);
+            mTotalAmount = getArguments().getDouble(RailwayTicketActionActivity.KEY_TICKET_TOTAL_AMOUNT, 0);
 		}
 	}
 
@@ -178,22 +179,22 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 									public void run() {
 										customProgressDialog.dismissDialog();
                                         Bundle bundle = new Bundle();
-                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NAME, mSelectedTrain);
-                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_CLASS_NAME, mSelectedClass);
-                                        bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_FARE_AMOUNT, mFareAmount);
-                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_GENDER, mSelectedGender);
-                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_DATE, mSelectedDate);
-                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_ADULTS, mSelectedAdult);
-                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_CHILD, mSelectedChild);
-                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
-                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
-                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_TICKET_ID, mSelectedTicketId);
-                                        bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_TOTAL_AMOUNT, mTotalAmount);
-                                        bundle.putString(IPayUtilityBillPayActionActivity.KEY_TICKET_MESSAGE_ID, mSelectedMessage);
-                                        bundle.putInt(IPayUtilityBillPayActionActivity.KEY_TICKET_TRAIN_NO, mSelectedTrainNo);
-                                        bundle.putDouble(IPayUtilityBillPayActionActivity.KEY_TICKET_VAT_AMOUNT, mVatAmount);
-										if (getActivity() instanceof IPayUtilityBillPayActionActivity) {
-											((IPayUtilityBillPayActionActivity) getActivity()).switchFragment(new TicketSuccessFragment(), bundle, 3, true);
+                                        bundle.putString(RailwayTicketActionActivity.KEY_TICKET_TRAIN_NAME, mSelectedTrain);
+                                        bundle.putString(RailwayTicketActionActivity.KEY_TICKET_CLASS_NAME, mSelectedClass);
+                                        bundle.putDouble(RailwayTicketActionActivity.KEY_TICKET_FARE_AMOUNT, mFareAmount);
+                                        bundle.putString(RailwayTicketActionActivity.KEY_TICKET_GENDER, mSelectedGender);
+                                        bundle.putInt(RailwayTicketActionActivity.KEY_TICKET_DATE, mSelectedDate);
+                                        bundle.putInt(RailwayTicketActionActivity.KEY_TICKET_ADULTS, mSelectedAdult);
+                                        bundle.putInt(RailwayTicketActionActivity.KEY_TICKET_CHILD, mSelectedChild);
+                                        bundle.putString(RailwayTicketActionActivity.KEY_TICKET_STATION_FROM, mSelectedStationFrom);
+                                        bundle.putString(RailwayTicketActionActivity.KEY_TICKET_STATION_TO, mSelectedStationTo);
+                                        bundle.putString(RailwayTicketActionActivity.KEY_TICKET_TICKET_ID, mSelectedTicketId);
+                                        bundle.putDouble(RailwayTicketActionActivity.KEY_TICKET_TOTAL_AMOUNT, mTotalAmount);
+                                        bundle.putString(RailwayTicketActionActivity.KEY_TICKET_MESSAGE_ID, mSelectedMessage);
+                                        bundle.putInt(RailwayTicketActionActivity.KEY_TICKET_TRAIN_NO, mSelectedTrainNo);
+                                        bundle.putDouble(RailwayTicketActionActivity.KEY_TICKET_VAT_AMOUNT, mVatAmount);
+										if (getActivity() instanceof RailwayTicketActionActivity) {
+											((RailwayTicketActionActivity) getActivity()).switchFragment(new TicketSuccessFragment(), bundle, 3, true);
 										}
 
 									}
