@@ -31,7 +31,7 @@ public class RichNotificationDetailsActivity extends AppCompatActivity {
         TextView titleTextView = findViewById(R.id.notification_title);
         TextView descriptionTextView = findViewById(R.id.notification_description);
         Glide.with(this)
-                .load(imageUrl)
+                .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
                 .error(R.drawable.icon_pdf)
                 .into(notificationImageView);
         titleTextView.setText(title);

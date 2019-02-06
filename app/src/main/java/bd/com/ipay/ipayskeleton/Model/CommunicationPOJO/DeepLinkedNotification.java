@@ -10,6 +10,8 @@ public class DeepLinkedNotification {
     private String message;
     private int serviceId;
     private long time;
+    private String imageUrl;
+    private String description;
     private String title;
 
     public DeepLinkedNotification(String accountId, String deepLink, String icon, String status, String message, int serviceId, int time, String title) {
@@ -25,6 +27,22 @@ public class DeepLinkedNotification {
 
     public String getBody() {
         return body;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getAccountId() {

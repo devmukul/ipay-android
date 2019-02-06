@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.RichNotificationDetailsActivity;
 import bd.com.ipay.ipayskeleton.Activities.WebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
@@ -45,7 +47,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationRespon
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UpdateNotificationStateRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationDeeplinkedFragment extends ProgressFragment implements HttpResponseListener {
@@ -222,12 +223,11 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         GetDeepLinkedNotificationResponse getDeepLinkedNotificationResponse = new Gson().
                                 fromJson(result.getJsonString(), GetDeepLinkedNotificationResponse.class);
                         List<DeepLinkedNotification> deepLinkedNotifications = getDeepLinkedNotificationResponse.getNotificationList();
-                        if(deepLinkedNotifications != null && deepLinkedNotifications.size()>0) {
+                        if (deepLinkedNotifications != null && deepLinkedNotifications.size() > 0) {
                             checkNotificationStatusAndUpdate(deepLinkedNotifications);
                             loadNotifications(deepLinkedNotifications, getDeepLinkedNotificationResponse.isHasNext());
-                        }
-                        else{
-                            if(mDeepLinkedNotifications == null || mDeepLinkedNotifications.size() == 0){
+                        } else {
+                            if (mDeepLinkedNotifications == null || mDeepLinkedNotifications.size() == 0) {
                                 mEmptyListTextView.setVisibility(View.VISIBLE);
                             }
                         }
@@ -384,22 +384,36 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                     @Override
                     public void onClick(View view) {
                         Uri uri = Uri.parse(mDeepLinkedNotifications.get(pos).getDeepLink());
-                        DeepLinkAction deepLinkAction;
                         try {
-                            List<Long> timeList = new ArrayList<>();
-                            timeList.clear();
-                            timeList.add(mDeepLinkedNotifications.get(pos).getTime());
-                            updateNotificationState(timeList, "VISITED");
-                            Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                            intent.putExtra("url", mDeepLinkedNotifications.get(pos).getDeepLink());
-                            intent.putExtra("sourceActivity", "Notification");
-                            startActivity(intent);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    notificationHolderLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                                }
-                            }, 500);
+                            DeepLinkedNotification deepLinkedNotification = mDeepLinkedNotifications.get(pos);
+                            if (deepLinkedNotification.getImageUrl() == null || TextUtils.isEmpty
+                                    (deepLinkedNotification.getImageUrl())) {
+                                List<Long> timeList = new ArrayList<>();
+                                timeList.clear();
+                                timeList.add(mDeepLinkedNotifications.get(pos).getTime());
+                                updateNotificationState(timeList, "VISITED");
+                                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                                intent.putExtra("url", mDeepLinkedNotifications.get(pos).getDeepLink());
+                                intent.putExtra("sourceActivity", "Notification");
+                                startActivity(intent);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        notificationHolderLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                                    }
+                                }, 500);
+                            } else {
+                                List<Long> timeList = new ArrayList<>();
+                                timeList.clear();
+                                timeList.add(mDeepLinkedNotifications.get(pos).getTime());
+                                Intent intent = new Intent(getContext(), RichNotificationDetailsActivity.class);
+                                updateNotificationState(timeList, "VISITED");
+                                intent.putExtra(Constants.TITLE, deepLinkedNotification.getTitle());
+                                intent.putExtra(Constants.DESCRIPTION, deepLinkedNotification.getDescription());
+                                intent.putExtra(Constants.DEEP_LINK, deepLinkedNotification.getDeepLink());
+                                intent.putExtra(Constants.IMAGE_URL, deepLinkedNotification.getImageUrl());
+                                startActivity(intent);
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
