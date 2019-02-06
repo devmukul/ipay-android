@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -285,6 +286,56 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
                             sponsorProfilePictureView.setVisibility(View.GONE);
                         }
                     }
+                }
+            }
+
+            TransactionMetaData metaData = transactionHistory.getMetaData();
+
+            if (metaData.isSponsoredByOther()) {
+                if (!ProfileInfoCacheManager.isBusinessAccount()) {
+                    if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
+                            ProfileInfoCacheManager.getMobileNumber()))) {
+                        sponsorProfilePictureView.setVisibility(View.VISIBLE);
+                        if (metaData.getBeneficiaryProfilePictures() != null) {
+                            if (metaData.getBeneficiaryProfilePictures().size() != 0) {
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                        .centerCrop()
+                                        .error(R.drawable.user_brand_bg)
+                                        .into(sponsorProfilePictureView);
+                            } else {
+                                Glide.with(getContext())
+                                        .load(R.drawable.user_brand_bg)
+                                        .centerCrop()
+                                        .into(sponsorProfilePictureView);
+                            }
+                        } else {
+                            Glide.with(getContext())
+                                    .load(R.drawable.user_brand_bg)
+                                    .centerCrop()
+                                    .into(sponsorProfilePictureView);
+                        }
+
+                        sponsorNumberView.setVisibility(View.VISIBLE);
+                        sponsorNumberView.setText("Paid for " + metaData.getBeneficiaryName());
+                    } else {
+                        sponsorProfilePictureView.setVisibility(View.VISIBLE);
+                        if (metaData.getBeneficiaryProfilePictures() != null) {
+                            if (metaData.getBeneficiaryProfilePictures().size() != 0) {
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
+                                        .centerCrop()
+                                        .error(R.drawable.user_brand_bg)
+                                        .into(sponsorProfilePictureView);
+                            }
+                        }
+
+                        sponsorNumberView.setVisibility(View.VISIBLE);
+                        sponsorNumberView.setText("Paid By " + metaData.getSponsorName());
+                    }
+                } else {
+                    sponsorProfilePictureView.setVisibility(View.GONE);
+                    sponsorNumberView.setVisibility(View.GONE);
                 }
             }
 

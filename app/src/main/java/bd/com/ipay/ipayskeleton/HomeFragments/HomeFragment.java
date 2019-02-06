@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -60,9 +61,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionMetaData;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Visibility;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.ProfilePicture;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -199,32 +198,32 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         initializeBottomSheet();
 
-        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(or = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD, ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY})
-            public void onClick(View v) {
-                PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
-                        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY);
-                        startActivity(intent);
-                    }
-                });
-                addMoneyPinChecker.execute();
-            }
-        });
-        if (SharedPrefManager.getUserBalance().equals("0.0")) {
-            balanceView.setText(R.string.loading);
-        } else {
-            try {
-                balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(new BigDecimal(SharedPrefManager.getUserBalance()))));
-            } catch (Exception e) {
-                mTracker.send(new HitBuilders.ExceptionBuilder()
-                        .setDescription("Parsing Error- " + SharedPrefManager.getUserBalance())
-                        .build());
-            }
-        }
+		mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			@ValidateAccess(or = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD, ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY})
+			public void onClick(View v) {
+				PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+					@Override
+					public void ifPinAdded() {
+						Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+						intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY);
+						startActivity(intent);
+					}
+				});
+				addMoneyPinChecker.execute();
+			}
+		});
+		if (SharedPrefManager.getUserBalance().equals("0.0")) {
+			balanceView.setText(R.string.loading);
+		} else {
+			try {
+				balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(new BigDecimal(SharedPrefManager.getUserBalance()))));
+			} catch (Exception e) {
+				mTracker.send(new HitBuilders.ExceptionBuilder()
+						.setDescription("Parsing Error- " + SharedPrefManager.getUserBalance())
+						.build());
+			}
+		}
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -379,9 +378,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             }
         }
 
-        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+		transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+				new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBalanceUpdateBroadcastReceiver,
                 new IntentFilter(Constants.BALANCE_UPDATE_BROADCAST));
@@ -556,78 +555,54 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mProfileImageView.setVisibility(View.VISIBLE);
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
             if (!ProfileInfoCacheManager.isBusinessAccount()) {
-                metaData = transactionHistory.getMetaData();
-                if (metaData != null) {
-                    List<Visibility> metaDataVisibilities = metaData.getVisibility();
-                    List<ProfilePicture> profilePictures;
-                    boolean isSponsoredByOthers = false;
-                    String sponsorName = "";
-                    String beneficiaryName = "";
-                    String sponsorMobileNumber = "";
-                    String beneficiaryMobileNumber = "";
-                    if (metaDataVisibilities != null) {
-                        for (int i = 0; i < metaDataVisibilities.size(); i++) {
-                            String label = metaDataVisibilities.get(i).getLabel();
-                            if (label.equals("isSponsoredByOthers")) {
-                                isSponsoredByOthers = Boolean.parseBoolean(metaDataVisibilities.get(i).getValue());
-                            } else if (label.equals("Sponsor name")) {
-                                sponsorName = metaDataVisibilities.get(i).getValue();
-                            } else if (label.equals("Sponsor Mobile Number")) {
-                                sponsorMobileNumber = metaDataVisibilities.get(i).getValue();
-                            } else if (label.equals("Beneficiary Mobile Number")) {
-                                beneficiaryMobileNumber = metaDataVisibilities.get(i).getValue();
-                            } else if (label.equals("Beneficiary Name")) {
-                                beneficiaryName = metaDataVisibilities.get(i).getValue();
-                            }
-                        }
-                        if (isSponsoredByOthers) {
-                            sponsorImageView.setVisibility(View.VISIBLE);
-                            sponsorOrBeneficiaryTextView.setVisibility(View.VISIBLE);
-                            String mobileNumber = ProfileInfoCacheManager.getMobileNumber();
-                            if (sponsorMobileNumber.equals(ContactEngine.formatMobileNumberBD(
-                                    ProfileInfoCacheManager.getMobileNumber()))) {
-                                sponsorOrBeneficiaryTextView.setText("Paid for " + beneficiaryName);
+                if (transactionHistory.getMetaData() != null) {
+                    metaData = transactionHistory.getMetaData();
+                    if (metaData.isSponsoredByOther()) {
+                        sponsorImageView.setVisibility(View.VISIBLE);
+                        sponsorOrBeneficiaryTextView.setVisibility(View.VISIBLE);
+                        if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
+                                ProfileInfoCacheManager.getMobileNumber()))) {
 
-                            /*if (metaData.getBeneficiaryProfilePictures() != null) {
+                            sponsorOrBeneficiaryTextView.setText("Paid for " + metaData.getBeneficiaryName());
+
+                            if (metaData.getBeneficiaryProfilePictures() != null) {
                                 if (metaData.getBeneficiaryProfilePictures().size() != 0) {
                                     Glide.with(getContext())
                                             .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
                                             .centerCrop()
                                             .error(R.drawable.user_brand_bg)
-                                            .into(sponsorOrBeneficiaryImageView);
-                                    sponsorOrBeneficiaryImageView.setVisibility(View.VISIBLE);
+                                            .into(sponsorImageView);
+                                    sponsorImageView.setVisibility(View.VISIBLE);
                                 } else {
                                     Glide.with(getContext())
                                             .load(R.drawable.user_brand_bg)
                                             .centerCrop()
-                                            .into(sponsorOrBeneficiaryImageView);
+                                            .into(sponsorImageView);
                                 }
                             } else {
                                 Glide.with(getContext())
                                         .load(R.drawable.user_brand_bg)
                                         .centerCrop()
-                                        .into(sponsorOrBeneficiaryImageView);
+                                        .into(sponsorImageView);
                             }
 
                         } else {
                             if (metaData.getSponsorProfilePictures() != null) {
                                 if (metaData.getSponsorProfilePictures().size() != 0) {
                                     Glide.with(getContext())
-                                            .load(Constants.BASE_URL_FTP_SERVER +
-                                                    metaData.getSponsorProfilePictures().get(0).getUrl())
+                                            .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
                                             .centerCrop()
                                             .error(R.drawable.user_brand_bg)
-                                            .into(sponsorOrBeneficiaryImageView);
+                                            .into(sponsorImageView);
                                 }
-                            }*/
-                                sponsorOrBeneficiaryTextView.setText("Paid By " + sponsorName);
-
                             }
+                            sponsorOrBeneficiaryTextView.setText("Paid by " + metaData.getSponsorName());
 
-                        } else {
-                            sponsorOrBeneficiaryTextView.setVisibility(View.GONE);
-                            sponsorImageView.setVisibility(View.GONE);
                         }
+
+                    } else {
+                        sponsorOrBeneficiaryTextView.setVisibility(GONE);
+                        sponsorImageView.setVisibility(GONE);
                     }
                 }
             }
@@ -765,12 +740,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         });
     }
 
-    private void transitionBottomSheetBackgroundColor(float slideOffset) {
-        int colorFrom = getResources().getColor(R.color.colorTransparent);
-        int colorTo = getResources().getColor(R.color.colorWhite);
-        mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
-                colorFrom, colorTo));
-    }
+	private void transitionBottomSheetBackgroundColor(float slideOffset) {
+		int colorFrom = getResources().getColor(R.color.colorTransparent);
+		int colorTo = getResources().getColor(R.color.colorWhite);
+		mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
+				colorFrom, colorTo));
+	}
 
     private void animateBottomSheetArrows(float slideOffset) {
         mUpArrow.setRotation(slideOffset * -180);
