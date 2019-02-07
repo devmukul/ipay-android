@@ -84,8 +84,12 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
                     .formatTakaFromString(transactionHistory.getNetAmountFormatted()));
         } else {
             balanceTextView.setVisibility(View.GONE);
-            netAmountTextView.setText(Utilities
-                    .formatTakaFromString(String.valueOf(transactionHistory.getNetAmount())));
+            if(transactionHistory.getNetAmount() == 0.0){
+               netAmountTextView.setText(Utilities.formatTakaFromString(Double.toString(transactionHistory.getAmount())));
+            }else {
+                netAmountTextView.setText(Utilities
+                        .formatTakaFromString(String.valueOf(transactionHistory.getNetAmount())));
+            }
         }
 
         // showing receiver name

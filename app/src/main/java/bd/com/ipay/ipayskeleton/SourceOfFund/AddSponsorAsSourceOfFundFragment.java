@@ -34,7 +34,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
 
     @Override
     public void setFragmentTitle(String title) {
-        titleTextView.setText("iPay user as source of fund");
+        titleTextView.setText("iPay User");
     }
 
     @Override

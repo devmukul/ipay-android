@@ -119,7 +119,7 @@ public class Beneficiary   implements Notification ,Serializable,CommonData {
 
     @Override
     public long getTime() {
-        return 0;
+        return getUpdatedAt();
     }
 
     @Override

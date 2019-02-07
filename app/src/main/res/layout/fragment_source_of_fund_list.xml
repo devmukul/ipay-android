@@ -81,8 +81,8 @@
                     android:id="@+id/bank_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value24"
-                    android:layout_below="@+id/description">
+                    android:layout_below="@+id/description"
+                    android:layout_marginBottom="@dimen/value24">
 
                     <ImageView
                         android:id="@+id/bank_icon"
@@ -127,11 +127,60 @@
                     android:background="#19000000" />
 
                 <RelativeLayout
+                    android:id="@+id/card_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/divider"
+                    android:layout_marginBottom="@dimen/value16">
+
+                    <ImageView
+                        android:id="@+id/card_icon"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginLeft="@dimen/value32"
+                        app:srcCompat="@drawable/ic_debit_credit_card_icon" />
+
+                    <TextView
+                        android:id="@+id/card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/value14"
+                        android:layout_toRightOf="@id/card_icon"
+                        android:fontFamily="@font/open_sans_semibold"
+                        android:text="@string/debit_credit_card"
+                        android:textColor="#212121"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/card"
+                        android:layout_marginLeft="@dimen/value14"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="@dimen/value32"
+                        android:layout_toRightOf="@id/card_icon"
+                        android:lineSpacingExtra="4sp"
+                        android:text="@string/card_description"
+                        android:textColor="#666666"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/card_layout"
+                    android:layout_marginLeft="@dimen/value32"
+                    android:layout_marginRight="@dimen/value32"
+                    android:layout_marginBottom="@dimen/value24"
+                    android:background="#19000000" />
+
+                <RelativeLayout
                     android:id="@+id/sponsor_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value24"
-                    android:layout_below="@+id/divider">
+                    android:layout_below="@+id/divider2"
+                    android:layout_marginBottom="@dimen/value24">
 
                     <ImageView
                         android:id="@+id/sponsor_icon"
@@ -166,7 +215,7 @@
                 </RelativeLayout>
 
                 <View
-                    android:id="@+id/divider2"
+                    android:id="@+id/divider3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_below="@id/sponsor_layout"
@@ -175,12 +224,13 @@
                     android:layout_marginBottom="@dimen/value24"
                     android:background="#19000000" />
 
+
                 <RelativeLayout
                     android:id="@+id/beneficiary_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value24"
-                    android:layout_below="@+id/divider2">
+                    android:layout_below="@+id/divider3"
+                    android:layout_marginBottom="@dimen/value24">
 
                     <ImageView
                         android:id="@+id/beneficiary_icon"
@@ -210,55 +260,6 @@
                         android:layout_toRightOf="@id/beneficiary_icon"
                         android:lineSpacingExtra="4sp"
                         android:text="@string/link_beneficiary_description"
-                        android:textColor="#666666"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <View
-                    android:id="@+id/divider3"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/beneficiary_layout"
-                    android:layout_marginLeft="@dimen/value32"
-                    android:layout_marginRight="@dimen/value32"
-                    android:layout_marginBottom="@dimen/value24"
-                    android:background="#19000000" />
-
-                <RelativeLayout
-                    android:id="@+id/card_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value16"
-                    android:layout_below="@+id/divider3">
-
-                    <ImageView
-                        android:id="@+id/card_icon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_marginLeft="@dimen/value32"
-                        app:srcCompat="@drawable/ic_debit_credit_card_icon" />
-
-                    <TextView
-                        android:id="@+id/card"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/value14"
-                        android:layout_toRightOf="@id/card_icon"
-                        android:fontFamily="@font/open_sans_semibold"
-                        android:text="@string/debit_credit_card"
-                        android:textColor="#212121"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/card"
-                        android:layout_marginLeft="@dimen/value14"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginRight="@dimen/value32"
-                        android:layout_toRightOf="@id/card_icon"
-                        android:lineSpacingExtra="4sp"
-                        android:text="@string/card_description"
                         android:textColor="#666666"
                         android:textSize="12sp" />
                 </RelativeLayout>

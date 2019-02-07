@@ -73,9 +73,9 @@ public class IpaySourceOfFundListFragment extends Fragment implements View.OnCli
             divider3.setVisibility(View.GONE);
         } else {
             divider2.setVisibility(View.VISIBLE);
-            //iPayBeneficiaryView.setVisibility(View.VISIBLE);
+            iPayBeneficiaryView.setVisibility(View.VISIBLE);
             iPaySponsorView.setVisibility(View.VISIBLE);
-            //divider3.setVisibility(View.VISIBLE);
+            divider3.setVisibility(View.VISIBLE);
         }
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
             divider.setVisibility(View.GONE);

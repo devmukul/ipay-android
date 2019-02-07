@@ -297,6 +297,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         } else if (amountEditText.getText().toString().equals("")) {
             IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
             return false;
+        } else if (Integer.parseInt(amountEditText.getText().toString()) == 0) {
+            IPaySnackbar.error(doneButton, "Please enter a non zero amount", IPaySnackbar.LENGTH_LONG).show();
+            return false;
         } else {
             return true;
         }
@@ -618,7 +621,6 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                             (result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         Utilities.hideKeyboard(getActivity());
-                        Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.NAME, mName);
                         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
@@ -633,7 +635,6 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                             (result.getJsonString(), GenericResponseWithMessageOnly.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         Utilities.hideKeyboard(getActivity());
-                        Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.NAME, mName);
                         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
