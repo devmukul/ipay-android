@@ -281,7 +281,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
 		numberFormat.setMaximumFractionDigits(2);
 		mNameTextView.setText(amberITCustomerInfoResponse.getCustomerName());
 		mCurrentPackageView.setText(numberFormat.format(new BigDecimal(mAmount)));
-		mContinueButton.setText(R.string.pay_bill);
+		mContinueButton.setText(R.string.pay);
 		infoView.setVisibility(View.VISIBLE);
 		customerIDView.setVisibility(View.GONE);
 	}

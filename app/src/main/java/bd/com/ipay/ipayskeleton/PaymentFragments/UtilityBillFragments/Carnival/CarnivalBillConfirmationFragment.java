@@ -53,7 +53,7 @@ public class CarnivalBillConfirmationFragment extends IPayAbstractTransactionCon
 		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
 		setName(carnivalId);
 		setUserName(userName);
-		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
+		setTransactionConfirmationButtonTitle(getString(R.string.pay));
 	}
 
 	@Override
