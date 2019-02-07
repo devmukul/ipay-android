@@ -54,7 +54,7 @@ public class LankaBanglaDpsBillConfirmationFragment extends IPayAbstractTransact
 		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
 		setName(accountNumber);
 		setUserName(accountUserName);
-		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
+		setTransactionConfirmationButtonTitle(getString(R.string.pay));
 	}
 
 	@Override
