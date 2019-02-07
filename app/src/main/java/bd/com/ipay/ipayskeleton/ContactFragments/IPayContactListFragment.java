@@ -281,9 +281,7 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
             newText = newText.replaceAll("[^0-9.]", "");
             mQuery = newText;
         }
-
 		getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
-
 		return true;
 	}
 

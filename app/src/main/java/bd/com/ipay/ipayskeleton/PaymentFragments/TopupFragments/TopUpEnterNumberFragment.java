@@ -75,8 +75,8 @@ public class TopUpEnterNumberFragment extends Fragment {
 
 	private ProgressDialog mProgressDialog;
 
-	Object clipboardService;
-	ClipboardManager clipboardManager;
+	private Object clipboardService;
+	private ClipboardManager clipboardManager;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -204,11 +204,9 @@ public class TopUpEnterNumberFragment extends Fragment {
             @Override
             public void onCopy() { }
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onPaste() {
                 mNumberEditText.clearComposingText();
-                // Do your onPaste reactions
                 ClipData clipData = clipboardManager.getPrimaryClip();
                 int itemCount = clipData.getItemCount();
                 if(itemCount > 0){

@@ -15,17 +15,10 @@ public class CutCopyPasteEditText extends android.support.v7.widget.AppCompatEdi
 
     private OnCutCopyPasteListener mOnCutCopyPasteListener;
 
-    /**
-     * Set a OnCutCopyPasteListener.
-     * @param listener
-     */
     public void setOnCutCopyPasteListener(OnCutCopyPasteListener listener) {
         mOnCutCopyPasteListener = listener;
     }
 
-    /*
-        Just the constructors to create a new EditText...
-     */
     public CutCopyPasteEditText(Context context) {
         super(context);
     }
@@ -38,17 +31,9 @@ public class CutCopyPasteEditText extends android.support.v7.widget.AppCompatEdi
         super(context, attrs, defStyle);
     }
 
-    /**
-     * <p>This is where the "magic" happens.</p>
-     * <p>The menu used to cut/copy/paste is a normal ContextMenu, which allows us to
-     *  overwrite the consuming method and react on the different events.</p>
-     * @see <a href="http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/2.3_r1/android/widget/TextView.java#TextView.onTextContextMenuItem%28int%29">Original Implementation</a>
-     */
     @Override
     public boolean onTextContextMenuItem(int id) {
-        // Do your thing:
         boolean consumed = super.onTextContextMenuItem(id);
-        // React:
         switch (id){
             case android.R.id.cut:
                 onCut();
@@ -62,25 +47,16 @@ public class CutCopyPasteEditText extends android.support.v7.widget.AppCompatEdi
         return consumed;
     }
 
-    /**
-     * Text was cut from this EditText.
-     */
     public void onCut(){
         if(mOnCutCopyPasteListener!=null)
             mOnCutCopyPasteListener.onCut();
     }
 
-    /**
-     * Text was copied from this EditText.
-     */
     public void onCopy(){
         if(mOnCutCopyPasteListener!=null)
             mOnCutCopyPasteListener.onCopy();
     }
 
-    /**
-     * Text was pasted into the EditText.
-     */
     public void onPaste(){
         if(mOnCutCopyPasteListener!=null)
             mOnCutCopyPasteListener.onPaste();
