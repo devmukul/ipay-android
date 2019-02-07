@@ -117,7 +117,7 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
                     case Constants.request_money:
                         createRichNotification = new CreateRichNotification
                                 (mFcmNotificationResponse.getTransactionHistory(), this,
-                                        Constants.transaction, title);
+                                        Constants.request_money, title);
                         createRichNotification.setupNotification();
                         break;
                     case Constants.other:
@@ -141,9 +141,7 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
         }
         FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
 
-
     }
-
 
     private void setNotificationResponseFromData(Map data) {
         Gson gson = new Gson();

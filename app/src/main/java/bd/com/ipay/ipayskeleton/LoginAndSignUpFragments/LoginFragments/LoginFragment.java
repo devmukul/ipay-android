@@ -375,7 +375,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             case Constants.COMMAND_LOG_IN:
                 try {
                     mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
-
                     switch (result.getStatus()) {
                         case Constants.HTTP_RESPONSE_STATUS_OK:
                             ProfileInfoCacheManager.setLoggedInStatus(true);

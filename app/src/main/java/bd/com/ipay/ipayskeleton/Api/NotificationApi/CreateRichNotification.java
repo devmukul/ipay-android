@@ -127,7 +127,7 @@ public class CreateRichNotification {
                 (context.getPackageName(), R.layout.list_item_ta_notification_collapsed_view);
         transactionNotificationViewCollapsed.setTextViewText(R.id.title, title);
 
-        if (transactionHistory.getActions() == null) {
+        if (type.equals(Constants.transaction)) {
             transactionNotificationView.setViewVisibility(R.id.button_layout, View.GONE);
         } else {
             transactionNotificationView.setViewVisibility(R.id.button_layout, View.VISIBLE);
@@ -148,14 +148,13 @@ public class CreateRichNotification {
         transactionNotificationView.setOnClickPendingIntent(R.id.accept, acceptPendingIntent);
         transactionNotificationView.setOnClickPendingIntent(R.id.reject, rejectPendingIntent);
 
-
         setBitmap(transactionHistory.getOtherParty().getUserProfilePic(),
                 transactionNotificationView, R.id.profile_picture);
         fillUpViewsWithNecessaryData(transactionNotificationView);
-        initiateNotificationAction(pendingIntent, transactionNotificationView,transactionNotificationViewCollapsed);
+        initiateNotificationAction(pendingIntent, transactionNotificationView, transactionNotificationViewCollapsed);
     }
 
-    public void initiateNotificationAction(PendingIntent pendingIntent, RemoteViews transactionNotificationView,RemoteViews collapsedView) {
+    public void initiateNotificationAction(PendingIntent pendingIntent, RemoteViews transactionNotificationView, RemoteViews collapsedView) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String CHANNEL_ID = context.getPackageName();
             CharSequence name = "ipay";
@@ -366,7 +365,7 @@ public class CreateRichNotification {
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
 
         intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
-        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, isAccepted);
+        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, false);
         intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());

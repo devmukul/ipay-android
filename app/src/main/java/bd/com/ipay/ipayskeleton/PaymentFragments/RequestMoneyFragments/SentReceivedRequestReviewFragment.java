@@ -190,10 +190,6 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
         }
 
 
-        if (((SentReceivedRequestReviewActivity) getActivity()).isAcceptedFromNotification) {
-            mRejectButton.setVisibility(View.GONE);
-        }
-
         if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
