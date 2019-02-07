@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,6 +89,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 	private MakePaymentContactsSearchView mMobileNumberEditText;
     private ProgressDialog mProgressDialog;
     private String trendingJson;
+    private ProgressBar mProgressBar;
 
     private int transactionType;
 
@@ -124,6 +126,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mRailwayTicketPurchaseView = view.findViewById(R.id.railway_ticket);
         trendingBusinessListRefreshLayout = view.findViewById(R.id.trending_business_list_refresh_layout);
         mMobileNumberEditText = view.findViewById(R.id.searchView);
+        mProgressBar = view.findViewById(R.id.progess_bar);
 
         mTrendingListRecyclerView = view.findViewById(R.id.trending_business_recycler_view_parent);
         mTrendingListRecyclerView.setHasFixedSize(true);
@@ -132,11 +135,14 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
         trendingJson = SharedPrefManager.getTrendingBusiness(null);
         if(!TextUtils.isEmpty(trendingJson)){
+            mProgressBar.setVisibility(View.GONE);
             Gson gson = new Gson();
             mTrendingBusinessResponse = gson.fromJson(trendingJson, GetAllTrendingBusinessResponse.class);
             mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
             mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
             mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
+        }else {
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
         getTrendingBusinessList();
@@ -398,6 +404,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 				}
 				mGetTrendingBusinessListTask = null;
 				trendingBusinessListRefreshLayout.setRefreshing(false);
+				if(mProgressBar.getVisibility()==View.VISIBLE){
+				    mProgressBar.setVisibility(View.GONE);
+                }
 			} else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST)) {
 				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 					mUtilityProviderResponse = new Gson().fromJson(result.getJsonString(), GetProviderResponse.class);
