@@ -16,8 +16,8 @@
         android:id="@+id/trending_business_list_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground"
         android:layout_below="@+id/searchView"
+        android:background="@color/colorBackground"
         android:focusableInTouchMode="true">
 
         <android.support.v4.widget.NestedScrollView
@@ -35,8 +35,8 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                    android:paddingTop="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/value5"
+                    android:paddingTop="@dimen/activity_horizontal_margin"
                     android:singleLine="true"
                     android:text="@string/bill_pay"
                     android:textAllCaps="true"
@@ -50,8 +50,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/value8"
                         android:layout_marginBottom="@dimen/value8"
+                        android:layout_marginTop="@dimen/value8"
                         android:orientation="horizontal"
                         android:weightSum="4">
 
@@ -468,13 +468,29 @@
                     </LinearLayout>
                 </LinearLayout>
 
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/trending_business_recycler_view_parent"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:nestedScrollingEnabled="false"
-                    android:focusableInTouchMode="false"/>
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/trending_business_recycler_view_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false"
+                        android:focusableInTouchMode="false"/>
+
+                    <ProgressBar
+                        android:id="@+id/progess_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+
+                </FrameLayout>
+
+
+
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

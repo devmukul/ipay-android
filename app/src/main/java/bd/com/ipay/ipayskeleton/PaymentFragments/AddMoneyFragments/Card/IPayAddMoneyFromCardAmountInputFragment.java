@@ -9,20 +9,15 @@ import android.view.View;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractAmountFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.LankaBangla.Card.LankaBanglaAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CardNumberValidator;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import bd.com.ipay.ipayskeleton.Widget.View.BillDetailsDialog;
 import bd.com.ipay.ipayskeleton.Widget.View.CardChargeDialog;
 
 public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountFragment {

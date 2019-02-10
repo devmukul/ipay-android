@@ -113,6 +113,7 @@
     <string name="no_outlets">No Outlet Found</string>
     <string name="no_verified_contacts">No verified contacts available in your account</string>
     <string name="contacts">Contacts</string>
+    <string name="news_room">News Room</string>
     <string name="country">Country</string>
     <string name="set_pin">Set PIN</string>
     <string name="change_password">Change Password</string>
@@ -441,6 +442,10 @@
     <string name="upload">UPLOAD</string>
     <string name="business_tin">Business TIN</string>
     <string name="not_applicable">N/A</string>
+    <string name="sof_success_message">You have added %1$s as a beneficiary of your iPay wallet. The person can use your wallet for making payments up to the certain monthly limit you provided.
+                    To remove the beneficiary or to change the monthly limit
+                    please go to your source of fund section</string>
+    <string name="upload_again">Upload again</string>
     <string name="verified">Verified</string>
     <string name="unverified">Not Verified</string>
     <string name="invited">Invited to iPay</string>
@@ -1039,7 +1044,55 @@
     <string name="railway_ticket_name">Railway Ticket</string>
     <string name="failed_loading_ticket_info">Failed to get ticket info</string>
     <string name="failed_loading_train_list">Failed to get train list</string>
+    <string name="email_suggestion">email@example.com</string>
+    <string name="news_room_helper_text_sub_title">You can see here what is going on your iPay wallet and what is iPay doing around the community.</string>
+    <string name="empty_news_room">There is no news available right now.</string>
+    <string name="news_room_helper_text_title">Hey, what’s going-on here and there</string>
 
+    <string name="link_ipay_account">Link iPay</string>
+    <string name="source_of_fund_success">You have sent a request to %1$s to become a sponsor of your iPay wallet. We will inform you when he/she accepts the request."</string>
+    <string name="helper"> has asked you to become a sponsor of his/her wallet. He/She can use up to a certain limit monthly from your iPay wallet.</string>
+    <string name="select_source_type">Select Source Type</string>
+    <string name="link_bank_description">Link your bank account to add money from the bank. After link bank, iPay will send an amount to check and confirm your bank connectivity</string>
+    <string name="link_sponsor">iPAY USER AS SOURCE OF FUND</string>
+    <string name="link_sponsor_description">You can connect your wallet to other iPay user\'s wallet to make payment.</string>
+    <string name="link_beneficiary_description">To add and mange your benificiary iPay user</string>
+    <string name="link_beneficiary">BENEFICIARY iPAY USER</string>
+    <string name="permission_details">%1$s can use up to a certain amount monthly for making payments using your iPay wallet. You will have to take the full liability of the transactions made by %2$s using your iPay wallet. You can remove the privilege whenever you want and can change the monthly limit.</string>
+    <string name="beneficiary_helper_text">You can add other iPay users as your beneficiary . The beneficiary account holder can make payment using your account. To add a beneficiary, you need to follow the instructions below</string>
+    <string name="source_of_fund_helper_text">In low balance, you can make payment by using other user\'s iPay wallet. To add iPay User as Source of Fund you need to follow the instructions below.</string>
+    <string name="source_of_fund_step_one">Enter the mobile number or select the person from your contact.</string>
+    <string name="source_of_fund_step_two">Provide the relationship between you two.</string>
+    <string name="card_description">Add money from card is the fastest way to add balance to your iPay wallet</string>
+    <string name="beneficiary_helper_line_3">Provide a monthly amount you want to let your beneficiary to use and also enter your pin.</string>
+    <string name="sponsor_helper_line_3">Provide a monthly amount you want to use from your sponsor\'s iPay wallet</string>
+    <string name="ipay_user">iPay User</string>
+    <string name="no_sponsor_text">You have not added any iPay user as Source of Fund. To add one , tap the (+) button</string>
+    <string name="beneficiary_ipay_user">Beneficiary iPay user</string>
+    <string name="no_beneficiary_text">\"You do not have any beneficiary iPay user. Tap on the + icon to add one\"</string>
+    <string name="you_can_use_monthly">You can use monthly</string>
+    <string name="pending_with_bracket">(Pending)</string>
+    <string name="remove_sponsor">Do you want to remove this sponsor?</string>
+    <string name="he_can_use_monthly">He can use monthly</string>
+    <string name="remove_beneficiary">Do you want to remove this beneficiary?</string>
+    <string name="pending_all_caps">PENDING</string>
+    <string name="pay_by">Pay by: </string>
+    <string name="tap_to_pay_from_other_source">TAP TO PAY FROM OTHER SOURCE</string>
+    <string name="sponsor_blocked">The sponsor is blocked</string>
+    <string name="reject_all_caps">REJECT</string>
+    <string name="accept_all_caps">ACCEPT</string>
+    <string name="add_beneficiary_question">Add Beneficiary ?</string>
+    <string name="add_sponsor_question">Add sponsor?</string>
+    <string name="sponsor_request_string"> wants to be your sponsor.You can use his/her iPay wallet while making payments</string>
+    <string name="accept_request">Do you want to accept the request?</string>
+    <string name="beneficiary_request_message"> has asked you to become a sponsor of his/her iPay wallet. He/She can use up to a certain limit monthly from your iPay wallet</string>
+    <string name="nothing_to_show_right_now">Nothing to show right now</string>
+    <string name="please_enter_a_amount_to_use_from_sponsor">Please enter a monthly amount you want to use from your sponsor\'s iPay account</string>
+    <string name="can">can</string>
+    <string name="wants_to">wants to</string>
+    <string name="a_certain_amount">a certain amount</string>
+    <string name="please_enter_an_amount">Please enter an amount</string>
+    <string name="please_enter_your_pin">Please enter your pin</string>
     <string name="language">Language</string>
 
     <string name="language_english" translatable="false">English</string>

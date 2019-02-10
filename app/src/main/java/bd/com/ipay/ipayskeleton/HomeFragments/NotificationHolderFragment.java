@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import bd.com.ipay.ipayskeleton.R;
 
 public class NotificationHolderFragment extends Fragment {
+    public static TabLayout mNotificationTabLayout;
+    private  NotificationFragmentPagerAdapter mNotificationFragmentPagerAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,11 +26,15 @@ public class NotificationHolderFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification_holder, container, false);
         ViewPager mNotificationViewPager = view.findViewById(R.id.view_pager_notification);
-        NotificationFragmentPagerAdapter mNotificationFragmentPagerAdapter = new NotificationFragmentPagerAdapter(getChildFragmentManager());
+        mNotificationFragmentPagerAdapter = new NotificationFragmentPagerAdapter(getChildFragmentManager());
         mNotificationViewPager.setAdapter(mNotificationFragmentPagerAdapter);
-        TabLayout mNotificationTabLayout = view.findViewById(R.id.sliding_tabs);
+        mNotificationTabLayout = view.findViewById(R.id.sliding_tabs);
         mNotificationTabLayout.setupWithViewPager(mNotificationViewPager);
         return view;
+    }
+
+    public  Fragment getNotificationFragment() {
+        return mNotificationFragmentPagerAdapter.getItem(1);
     }
 
     @Override

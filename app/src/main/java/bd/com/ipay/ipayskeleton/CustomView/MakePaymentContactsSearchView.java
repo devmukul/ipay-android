@@ -57,9 +57,10 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
     private CustomItemClickListener customItemClickListener;
     private CustomBillPaymentClickListener customBillPaymentClickListener;
+    private static final String NUMERIC_PATTERN_WITH_SPACE = "^[0-9\\s\\+\\-!@#$%^&*(),.?\":{}|<>]*$";
 
 
-    private View mPayByQCView;
+    private  View mPayByQCView;
     private PinChecker pinChecker;
 
     private Context mContext;
@@ -284,6 +285,9 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
     @Override
     public boolean onQueryTextChange(String query) {
+        if(query.matches(NUMERIC_PATTERN_WITH_SPACE)){
+            query = query.replaceAll("[^0-9.]", "");
+        }
         if(mTransactionHistoryAdapter != null && query!=null && !TextUtils.isEmpty(query)){
             mTransactionHistoryAdapter.getFilter().filter(query);
             return true;

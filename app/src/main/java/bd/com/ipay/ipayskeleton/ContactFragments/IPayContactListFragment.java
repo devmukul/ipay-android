@@ -70,6 +70,7 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 	private LinearLayout mSearchedNumberLayout;
 
 	private int transactionType;
+    private static final String NUMERIC_PATTERN_WITH_SPACE = "^[0-9\\s\\+\\-!@#$%^&*(),.?\":{}|<>]*$";
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -276,8 +277,11 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 	@Override
 	public boolean onQueryTextChange(String newText) {
 		mQuery = newText;
+		if(newText.matches(NUMERIC_PATTERN_WITH_SPACE)){
+            newText = newText.replaceAll("[^0-9.]", "");
+            mQuery = newText;
+        }
 		getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
-
 		return true;
 	}
 
