@@ -573,10 +573,6 @@ public class HomeActivity extends BaseActivity
         if (id == R.id.nav_account) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
-        } else if (id == R.id.nav_bank_account) {
-
-            switchToManageBanksActivity();
-
         } else if (id == R.id.nav_contact) {
 
             switchToContactsActivity();
