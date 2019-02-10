@@ -30,15 +30,6 @@ public class TransactionHistory implements Parcelable {
     private final String outletName;
     private final long outletId;
     private final TransactionMetaData metaData;
-    //private MetaData metaData;
-
-    /*public MetaData getMetaData() {
-        return metaData;
-    }
-
-    public void setMetaData(MetaData metaData) {
-        this.metaData = metaData;
-    }*/
 
     protected TransactionHistory(Parcel in) {
         insertTime = in.readLong();
@@ -70,7 +61,6 @@ public class TransactionHistory implements Parcelable {
         outletName = in.readString();
         outletId = in.readLong();
         metaData = in.readParcelable(TransactionMetaData.class.getClassLoader());
-        //metaData = in.readParcelable(MetaData.class.getClassLoader());
     }
 
     @Override
