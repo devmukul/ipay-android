@@ -47,13 +47,11 @@ public class AddSourceOfFundSuccessFragment extends Fragment {
                 .error(getContext().getResources().getDrawable(R.drawable.user_brand_bg))
                 .into(profileImageView);
         if (type.equals(Constants.SPONSOR)) {
-            String setText = helperTextView.getText().toString();
-            setText = setText.replace("Arifur Rahman", name);
+            String setText = getString(R.string.source_of_fund_success, name);
             helperTextView.setText(setText);
         } else if (type.equals(Constants.BENEFICIARY)) {
-            helperTextView.setText("You have added " + name + " as a beneficiary of your iPay wallet. The person can use your wallet for making payments up to the certain monthly limit you provided. " +
-                    "To remove the beneficiary or to change the monthly limit, " +
-                    "please go to your source of fund section");
+            String successMessage = getString(R.string.sof_success_message, name);
+            helperTextView.setText(successMessage);
         }
         nameTextView.setText(name);
         gotoWalletButton.setOnClickListener(new View.OnClickListener() {

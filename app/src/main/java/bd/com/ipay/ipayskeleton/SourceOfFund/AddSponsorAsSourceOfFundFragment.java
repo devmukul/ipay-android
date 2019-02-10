@@ -34,7 +34,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
 
     @Override
     public void setFragmentTitle(String title) {
-        titleTextView.setText("iPay User");
+        titleTextView.setText(getString(R.string.ipay_user));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
         } else {
 
             ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Please wait  . . .");
+            ipayProgressDialog.setMessage(getString(R.string.please_wait));
             mGetSponsorAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
                     getContext(), this, false);
             mGetSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -120,9 +120,7 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
                 ArrayList<Sponsor> allSponsorArrayList = getSponsorListResponse.getSponsor();
                 if (allSponsorArrayList == null || allSponsorArrayList.size() == 0) {
                     noDataTextView.setVisibility(View.VISIBLE);
-                    setNoDataText("You have not added \n" +
-                            "any iPay user as Source of Fund. \n" +
-                            "To add one , tap the (+) button.");
+                    setNoDataText(getString(R.string.no_sponsor_text));
                     parentSponsorArrayList = allSponsorArrayList;
                     sourceOfFundListAdapter.notifyDataSetChanged();
                     setAddNewResourceButtonVisibility(View.VISIBLE);

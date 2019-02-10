@@ -145,10 +145,10 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                     @Override
                     public void onSponsorSelected(Sponsor sponsor) {
                         if (sponsor.getUser().getAccountStatus() == Constants.BLOCKED) {
-                            IPaySnackbar.error(mContinueButton, "The sponsor is blocked", IPaySnackbar.LENGTH_LONG).show();
+                            IPaySnackbar.error(mContinueButton, getString(R.string.sponsor_blocked), IPaySnackbar.LENGTH_LONG).show();
                         } else {
                             selectedSponsor = sponsor;
-                            sponsorNameTextView.setText("Pay by: " + sponsor.getUser().getName());
+                            sponsorNameTextView.setText(getString(R.string.pay_by) + sponsor.getUser().getName());
                             cancelSponsorImageView.setVisibility(View.VISIBLE);
                         }
                     }
@@ -171,7 +171,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         cancelSponsorImageView = (ImageView) view.findViewById(R.id.cancel);
 
         if (selectedSponsor != null) {
-            sponsorNameTextView.setText("Pay by: " + selectedSponsor.getUser().getName());
+            sponsorNameTextView.setText(getString(R.string.pay_by) + selectedSponsor.getUser().getName());
             cancelSponsorImageView.setVisibility(View.VISIBLE);
         }
 
@@ -206,7 +206,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                         cancelSponsorImageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                sponsorNameTextView.setText("TAP TO PAY FROM OTHER SOURCE");
+                                sponsorNameTextView.setText(getString(R.string.tap_to_pay_from_other_source));
                                 cancelSponsorImageView.setVisibility(GONE);
                                 selectedSponsor = null;
                             }

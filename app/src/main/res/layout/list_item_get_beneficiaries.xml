@@ -22,10 +22,10 @@
             android:id="@+id/helper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/profile_image"
+            android:layout_toRightOf="@+id/profile_image"
             android:fontFamily="@font/open_sans_semibold"
             android:lineSpacingExtra="8sp"
-            android:text="Add Beneficiary ?"
+            android:text="@string/add_beneficiary_question"
             android:textColor="#212121"
             android:textSize="12sp"
             tools:text="Add Beneficiary ?" />
@@ -34,9 +34,9 @@
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/helper"
+            android:layout_below="@+id/helper"
             android:layout_marginRight="@dimen/value16"
-            android:layout_toRightOf="@id/profile_image"
+            android:layout_toRightOf="@+id/profile_image"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="4sp"
             android:text="@string/helper"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/description"
             android:layout_marginBottom="@dimen/value8"
-            android:layout_toRightOf="@id/profile_image"
+            android:layout_toRightOf="@+id/profile_image"
             android:fontFamily="sans-serif-medium"
             android:textColor="#333333"
             android:textSize="11sp"
@@ -63,7 +63,7 @@
             android:layout_height="1dp"
             android:layout_below="@+id/time"
             android:layout_marginBottom="@dimen/value16"
-            android:layout_toRightOf="@id/profile_image"
+            android:layout_toRightOf="@+id/profile_image"
             android:background="#33acacac"></View>
 
         <TextView
@@ -74,7 +74,7 @@
             android:layout_marginRight="@dimen/value24"
             android:layout_toRightOf="@+id/profile_image"
             android:fontFamily="sans-serif-medium"
-            android:text="ACCEPT"
+            android:text="@string/accept_all_caps"
             android:textColor="#00b5a5"
             android:textSize="14sp"
             android:textStyle="normal" />
@@ -87,7 +87,7 @@
             android:layout_marginBottom="@dimen/value16"
             android:layout_toRightOf="@+id/accept"
             android:fontFamily="sans-serif-medium"
-            android:text="REJECT"
+            android:text="@string/reject_all_caps"
             android:textColor="#f24002"
             android:textSize="14sp"
             android:textStyle="normal" />

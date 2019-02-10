@@ -159,7 +159,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
         mProgressDialog = new ProgressDialog(getActivity());
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mEmptyListTextView.setText("Nothing to show right now");
+        mEmptyListTextView.setText(getString(R.string.nothing_to_show_right_now));
         getNotificationLists(getActivity());
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -960,7 +960,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
                 super.bindView(pos);
                 final int position = pos;
                 if (mNotifications.get(pos) instanceof Beneficiary) {
-                    titleTextView.setText("Add beneficiary?");
+                    titleTextView.setText(getString(R.string.add_beneficiary_question));
                     final Beneficiary beneficiary = (Beneficiary) mNotifications.get(pos);
                     Glide.with(getContext())
                             .load(Constants.BASE_URL_FTP_SERVER + beneficiary.getImageUrl())
@@ -970,8 +970,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
                     timeTextView.setText(Utilities.formatDateWithTime(beneficiary.getUpdatedAt()));
 
                     String description = "";
-                    description = beneficiary.getName() + " has asked you to become a sponsor of his/her iPay wallet. " +
-                            "He/She can use up to a certain limit monthly from your iPay wallet" ;
+                    description = beneficiary.getName() + " " + getString(R.string.beneficiary_request_message);
                     descriptionTextView.setText(description);
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -994,7 +993,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
                                     bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                                         @Override
                                         public void onStateChanged(@NonNull View view, int i) {
-                                            if( i == BottomSheetBehavior.STATE_COLLAPSED){
+                                            if (i == BottomSheetBehavior.STATE_COLLAPSED) {
                                                 Utilities.hideKeyboard(getActivity());
                                             }
                                         }
@@ -1029,20 +1028,19 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
                     });
                 } else if (mNotifications.get(pos) instanceof Sponsor) {
                     final Sponsor sponsor = (Sponsor) mNotifications.get(pos);
-                    titleTextView.setText("Add sponsor?");
+                    titleTextView.setText(getString(R.string.add_sponsor_question));
                     Glide.with(getContext())
                             .load(Constants.BASE_URL_FTP_SERVER + sponsor.getImageUrl())
                             .centerCrop()
                             .error(R.drawable.user_brand_bg)
                             .into(profileImageView);
                     timeTextView.setText(Utilities.formatDateWithTime(sponsor.getUpdatedAt()));
-                    descriptionTextView.setText(sponsor.getName() + " wants to be your sponsor. " +
-                            "You can use his/her iPay wallet while making payments");
+                    descriptionTextView.setText(sponsor.getName() + " " + getString(R.string.sponsor_request_string));
                     acceptTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             new AlertDialog.Builder(getContext())
-                                    .setMessage("Do you want to accept the request?")
+                                    .setMessage(getString(R.string.accept_request))
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {

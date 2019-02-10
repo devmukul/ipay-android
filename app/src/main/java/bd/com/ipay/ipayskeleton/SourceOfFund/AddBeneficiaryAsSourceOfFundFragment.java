@@ -42,7 +42,7 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
         } else {
 
             ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Please wait  . . .");
+            ipayProgressDialog.setMessage(getString(R.string.please_wait));
             mGetBeneficiaryAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BENEFICIARY_LIST, Constants.BASE_URL_MM + Constants.URL_GET_BENEFICIARY,
                     getContext(), this, false);
             mGetBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -57,7 +57,7 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
 
     @Override
     public void setFragmentTitle(String title) {
-        titleTextView.setText("Beneficiary iPay User");
+        titleTextView.setText(getString(R.string.beneficiary_ipay_user));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
         }
         parentBeneficiaryArrayList = beneficiaryArrayList;
         if (parentBeneficiaryArrayList == null || parentBeneficiaryArrayList.size() == 0) {
-            setNoDataText("You do not have any beneficiary iPay user. Tap on the + icon to add one");
+            setNoDataText(getString(R.string.no_beneficiary_text));
             setAddNewResourceButtonVisibility(View.VISIBLE);
             noDataTextView.setVisibility(View.VISIBLE);
         } else {
@@ -116,7 +116,7 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
                 ArrayList<Beneficiary> allBeneficiaryArrayList = getBeneficiaryListResponse.getBeneficiary();
                 if (allBeneficiaryArrayList == null || allBeneficiaryArrayList.size() == 0) {
                     noDataTextView.setVisibility(View.VISIBLE);
-                    setNoDataText("You do not have any beneficiary iPay user. Tap on the + icon to add one");
+                    setNoDataText(getString(R.string.no_beneficiary_text));
                     parentBeneficiaryArrayList = allBeneficiaryArrayList;
                     sourceOfFundListAdapter.notifyDataSetChanged();
                     setAddNewResourceButtonVisibility(View.VISIBLE);

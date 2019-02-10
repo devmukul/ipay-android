@@ -75,21 +75,19 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
             pinEditText.setVisibility(View.GONE);
             name = bundle.getString(Constants.NAME);
             mobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
-            permissionDetailsTextView.setText("Please enter a monthly amount you want to use from your sponsor's iPay account");
+            permissionDetailsTextView.setText(getString(R.string.please_enter_a_amount_to_use_from_sponsor));
             relation = bundle.getString(Constants.RELATION);
         } else {
             beneficiary = (Beneficiary) bundle.getSerializable(Constants.BENEFICIARY);
             name = beneficiary.getUser().getName();
             long monthlyLimit = beneficiary.getMonthlyCreditLimit();
             String permissionDetailsText = permissionDetailsTextView.getText().toString();
-            permissionDetailsText = permissionDetailsText.replaceFirst("can","wants to");
-            permissionDetailsText = permissionDetailsText.replace("a certain amount", Long.toString(monthlyLimit)+"TK");
+            permissionDetailsText = permissionDetailsText.replaceFirst(getString(R.string.can), getString(R.string.wants_to));
+            permissionDetailsText = permissionDetailsText.replace(getString(R.string.a_certain_amount), Long.toString(monthlyLimit) + getString(R.string.tk));
             amountEditText.setText(Long.toString(monthlyLimit));
             permissionDetailsTextView.setText(permissionDetailsText);
         }
-
-        String permissionDetailsText = permissionDetailsTextView.getText().toString();
-        permissionDetailsText = permissionDetailsText.replace("Sourav Saha", name);
+        String permissionDetailsText = getString(R.string.permission_details, name, name);
         permissionDetailsTextView.setText(permissionDetailsText);
         Button doneButton = view.findViewById(R.id.done);
         ipayProgressDialog = new IpayProgressDialog(getContext());
@@ -118,7 +116,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         if (mAddSponsorAsyncTask != null) {
             return;
         } else {
-            ipayProgressDialog.setMessage("Please wait. . .");
+            ipayProgressDialog.setMessage(getString(R.string.please_wait));
             ipayProgressDialog.show();
             AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(mobileNumber), relation,
                     Long.parseLong(amountEditText.getText().toString()));
@@ -134,7 +132,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         if (updateMonthlyLimitAsyncTask != null) {
             return;
         } else {
-            ipayProgressDialog.setMessage("Please wait. . .");
+            ipayProgressDialog.setMessage(getString(R.string.please_wait));
 
             UpdateMonthlyLimitRequest updateMonthlyLimitRequest = new UpdateMonthlyLimitRequest
                     (Long.parseLong(amountEditText.getText().toString()), pinEditText.getText().toString());
@@ -159,7 +157,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
             mAddBeneficiaryAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
                     , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
                     new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
-            ipayProgressDialog.setMessage("Please wait . . . ");
+            ipayProgressDialog.setMessage(getString(R.string.please_wait));
             ipayProgressDialog.show();
             mAddBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -174,19 +172,19 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         pinEditable = pinEditText.getText();
         amountEditable = amountEditText.getText();
         if (amountEditable == null) {
-            Toast.makeText(getContext(), "Please enter an amount", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.please_enter_an_amount), Toast.LENGTH_LONG).show();
             return false;
         } else if (amountEditable.toString() == null || amountEditable.toString().equals("")) {
-            Toast.makeText(getContext(), "Please enter an amount", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.please_enter_an_amount), Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (pinEditText.getVisibility() == View.VISIBLE && pinEditable == null) {
-            Toast.makeText(getContext(), "Please enter your pin", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.please_enter_your_pin), Toast.LENGTH_LONG).show();
             return false;
         } else if (pinEditText.getVisibility() == View.VISIBLE &&
                 (pinEditable.toString() == null || pinEditable.toString().equals(""))) {
-            Toast.makeText(getContext(), "Please enter your pin", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.please_enter_your_pin), Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -203,7 +201,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
                             Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + "beneficiary/" + id,
                     new Gson().toJson(acceptOrRejectBeneficiaryRequest), getContext(), this, false);
             updateBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setMessage("Please wait . . .");
+            ipayProgressDialog.setMessage(getString(R.string.please_wait));
             ipayProgressDialog.show();
         }
     }

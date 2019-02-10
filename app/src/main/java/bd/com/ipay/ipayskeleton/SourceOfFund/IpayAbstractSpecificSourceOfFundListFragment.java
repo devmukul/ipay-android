@@ -123,11 +123,9 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
         resourceListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         resourceListRecyclerView.setAdapter(sourceOfFundListAdapter);
         if (type.equals(Constants.BENEFICIARY)) {
-            noDataTextView.setText("You do not have any beneficiary iPay user. Tap on the + icon to add one");
+            noDataTextView.setText(getString(R.string.no_beneficiary_text));
         } else {
-            noDataTextView.setText("You have not added \n" +
-                    "any iPay user as Source of Fund. \n" +
-                    "To add one , tap  the (+) button.");
+            noDataTextView.setText(getString(R.string.no_sponsor_text));
         }
 
     }
@@ -198,7 +196,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                 }
             }, false);
             deleteSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setMessage("Please wait . . .");
+            ipayProgressDialog.setMessage(getString(R.string.please_wait));
             ipayProgressDialog.show();
         }
     }
@@ -240,11 +238,12 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             sourceOfFundViewHolder.nameTextView.setText(sponsor.getUser().getName());
             sourceOfFundViewHolder.numberTextView.setText(sponsor.getUser().getMobileNumber());
             sourceOfFundViewHolder.editImageView.setVisibility(View.GONE);
-            sourceOfFundViewHolder.monthlyLimitView.setText("You can use monthly " + Long.toString(sponsor.getMonthlyCreditLimit()) + "TK");
+            sourceOfFundViewHolder.monthlyLimitView.setText(getString(R.string.you_can_use_monthly)
+                    + Long.toString(sponsor.getMonthlyCreditLimit()) + getString(R.string.tk));
 
-            if (sponsor.getStatus().equals("PENDING")) {
+            if (sponsor.getStatus().equals(getString(R.string.pending_all_caps))) {
                 sourceOfFundViewHolder.statusTextView.setVisibility(View.VISIBLE);
-                sourceOfFundViewHolder.statusTextView.setText("(Pending)");
+                sourceOfFundViewHolder.statusTextView.setText(getString(R.string.pending_with_bracket));
 
             } else {
                 sourceOfFundViewHolder.statusTextView.setVisibility(View.GONE);
@@ -253,29 +252,29 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             sourceOfFundViewHolder.deleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (sponsor.getStatus().equals("PENDING")) {
+                    if (sponsor.getStatus().equals(getString(R.string.pending_all_caps))) {
                         new AlertDialog.Builder(getContext())
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         attemptRemoveSponsorOrBeneficiary(sponsor.getId(), null);
                                     }
-                                }).setMessage("Do you want to remove this sponsor?")
+                                }).setMessage(getString(R.string.remove_sponsor))
                                 .show();
                     } else {
                         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                         alertDialogBuilder
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         attemptRemoveSponsorOrBeneficiary(sponsor.getId(), null);
                                     }
-                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
                             }
-                        }).setMessage("Do you want to remove this sponsor?")
+                        }).setMessage(getString(R.string.remove_sponsor))
                                 .show();
                     }
 
@@ -292,11 +291,11 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
             sourceOfFundViewHolder.editImageView.setVisibility(View.VISIBLE);
             sourceOfFundViewHolder.profileImageView.setProfilePicture(beneficiary.getUser().getProfilePictureUrl(), false);
             sourceOfFundViewHolder.nameTextView.setText(beneficiary.getUser().getName());
-            sourceOfFundViewHolder.monthlyLimitView.setText("He can use monthly " + Long.toString(beneficiary.getMonthlyCreditLimit()) + "TK");
+            sourceOfFundViewHolder.monthlyLimitView.setText(getString(R.string.he_can_use_monthly) + Long.toString(beneficiary.getMonthlyCreditLimit()) + getString(R.string.tk));
             sourceOfFundViewHolder.numberTextView.setText(beneficiary.getUser().getMobileNumber());
-            if (beneficiary.getStatus().equals("PENDING")) {
+            if (beneficiary.getStatus().equals(getString(R.string.pending_all_caps))) {
                 sourceOfFundViewHolder.statusTextView.setVisibility(View.VISIBLE);
-                sourceOfFundViewHolder.statusTextView.setText("(Pending)");
+                sourceOfFundViewHolder.statusTextView.setText(getString(R.string.pending_with_bracket));
                 sourceOfFundViewHolder.editImageView.setVisibility(View.GONE);
             } else {
                 sourceOfFundViewHolder.statusTextView.setVisibility(View.GONE);
@@ -344,17 +343,17 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                 @Override
                 public void onClick(View v) {
                     new AlertDialog.Builder(getContext())
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     attemptRemoveSponsorOrBeneficiary(beneficiary.getId(), null);
                                 }
-                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
                         }
-                    }).setMessage("Do you want to remove this beneficiary?")
+                    }).setMessage(getString(R.string.remove_beneficiary))
                             .show();
                 }
             });

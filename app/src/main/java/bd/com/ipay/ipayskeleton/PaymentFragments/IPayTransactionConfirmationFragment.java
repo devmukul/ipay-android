@@ -456,11 +456,11 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                 }
                                 //Google Analytic event
                                 if (sponsorAccountID != -1) {
-                                    Utilities.sendFailedEventTracker(mTracker, getTrackerCategory(), ProfileInfoCacheManager.getAccountId(),
+                                    Utilities.sendFailedEventTracker(mTracker, Constants.MAKE_PAYMENT_USING_SOF, ProfileInfoCacheManager.getAccountId(),
                                             iPayTransactionResponse.getMessage(), amount.longValue());
                                 } else {
                                     Utilities.sendFailedEventTracker(mTracker,
-                                            Constants.MAKE_PAYMENT_USING_SOF,
+                                            getTrackerCategory(),
                                             ProfileInfoCacheManager.getAccountId(),
                                             iPayTransactionResponse.getMessage());
                                 }
