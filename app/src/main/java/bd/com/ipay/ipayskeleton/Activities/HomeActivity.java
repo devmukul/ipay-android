@@ -607,15 +607,22 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_logout) {
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
-                try {
-                    FirebaseInstanceId.getInstance().deleteInstanceId();
-                    attemptFirebaseLogout();
-                } catch (Exception e) {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        try {
+                            FirebaseInstanceId.getInstance().deleteInstanceId();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                attemptFirebaseLogout();
             }
+        } else {
+            Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
         }
     }
 

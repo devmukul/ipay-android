@@ -15,7 +15,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -390,8 +389,9 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                         updateNotificationState(timeList, "VISITED");
                         try {
                             DeepLinkedNotification deepLinkedNotification = mDeepLinkedNotifications.get(pos);
-                            if (deepLinkedNotification.getImageUrl() == null || TextUtils.isEmpty
-                                    (deepLinkedNotification.getImageUrl())) {
+                            if (deepLinkedNotification.getMeta() == null ||
+                                    deepLinkedNotification.getMeta().getImageUrl() == null||
+                                    deepLinkedNotification.getMeta().getImageUrl().equals("")) {
                                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
                                 intent.putExtra("url", mDeepLinkedNotifications.get(pos).getDeepLink());
                                 intent.putExtra("sourceActivity", "Notification");
@@ -405,9 +405,9 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
                             } else {
                                 Intent intent = new Intent(getContext(), RichNotificationDetailsActivity.class);
                                 intent.putExtra(Constants.TITLE, deepLinkedNotification.getTitle());
-                                intent.putExtra(Constants.DESCRIPTION, deepLinkedNotification.getDescription());
+                                intent.putExtra(Constants.DESCRIPTION, deepLinkedNotification.getMeta().getDescription());
                                 intent.putExtra(Constants.DEEP_LINK, deepLinkedNotification.getDeepLink());
-                                intent.putExtra(Constants.IMAGE_URL, deepLinkedNotification.getImageUrl());
+                                intent.putExtra(Constants.IMAGE_URL, deepLinkedNotification.getMeta().getImageUrl());
                                 startActivity(intent);
                             }
 

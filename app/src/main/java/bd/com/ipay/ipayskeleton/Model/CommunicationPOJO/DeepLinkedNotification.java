@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO;
 
 
+import bd.com.ipay.ipayskeleton.Service.FCM.NotificationMetaData;
+
 public class DeepLinkedNotification {
     private String accountId;
     private String deepLink;
@@ -13,6 +15,7 @@ public class DeepLinkedNotification {
     private String imageUrl;
     private String description;
     private String title;
+    private NotificationMetaData meta;
 
     public DeepLinkedNotification(String accountId, String deepLink, String icon, String status, String message, int serviceId, int time, String title) {
         this.accountId = accountId;
@@ -23,6 +26,14 @@ public class DeepLinkedNotification {
         this.serviceId = serviceId;
         this.time = time;
         this.title = title;
+    }
+
+    public NotificationMetaData getMeta() {
+        return meta;
+    }
+
+    public void setMeta(NotificationMetaData meta) {
+        this.meta = meta;
     }
 
     public String getBody() {
