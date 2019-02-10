@@ -21,7 +21,6 @@ import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -44,7 +43,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Visibility;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.models.ProfilePicture;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -212,83 +210,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-            if (!ProfileInfoCacheManager.isBusinessAccount()) {
-                TransactionMetaData metaData = transactionHistory.getMetaData();
-                if (metaData != null) {
-                    List<Visibility> metaDataVisibilities = metaData.getVisibility();
-                    List<ProfilePicture> profilePictures;
-                    boolean isSponsoredByOthers = false;
-                    String sponsorName = "";
-                    String beneficiaryName = "";
-                    String sponsorMobileNumber = "";
-                    String beneficiaryMobileNumber = "";
-                    if (metaDataVisibilities != null) {
-                        for (int i = 0; i < metaDataVisibilities.size(); i++) {
-                            String label = metaDataVisibilities.get(i).getLabel();
-                            if (label.equals("isSponsoredByOthers")) {
-                                isSponsoredByOthers = Boolean.parseBoolean(metaDataVisibilities.get(i).getValue());
-                            } else if (label.equals("Sponsor name")) {
-                                sponsorName = metaDataVisibilities.get(i).getValue();
-                            } else if (label.equals("Sponsor Mobile Number")) {
-                                sponsorMobileNumber = metaDataVisibilities.get(i).getValue();
-                            } else if (label.equals("Beneficiary Mobile Number")) {
-                                beneficiaryMobileNumber = metaDataVisibilities.get(i).getValue();
-                            } else if (label.equals("Beneficiary Name")) {
-                                beneficiaryName = metaDataVisibilities.get(i).getValue();
-                            }
-                        }
-                        if (isSponsoredByOthers) {
-                            sponsorProfilePictureView.setVisibility(View.VISIBLE);
-                            sponsorNumberView.setVisibility(View.VISIBLE);
-                            String mobileNumber = ProfileInfoCacheManager.getMobileNumber();
-                            if (sponsorMobileNumber.equals(ContactEngine.formatMobileNumberBD(
-                                    ProfileInfoCacheManager.getMobileNumber()))) {
-                                sponsorNumberView.setText("Paid for " + beneficiaryName);
-
-                            /*if (metaData.getBeneficiaryProfilePictures() != null) {
-                                if (metaData.getBeneficiaryProfilePictures().size() != 0) {
-                                    Glide.with(getContext())
-                                            .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
-                                            .centerCrop()
-                                            .error(R.drawable.user_brand_bg)
-                                            .into(sponsorOrBeneficiaryImageView);
-                                    sponsorOrBeneficiaryImageView.setVisibility(View.VISIBLE);
-                                } else {
-                                    Glide.with(getContext())
-                                            .load(R.drawable.user_brand_bg)
-                                            .centerCrop()
-                                            .into(sponsorOrBeneficiaryImageView);
-                                }
-                            } else {
-                                Glide.with(getContext())
-                                        .load(R.drawable.user_brand_bg)
-                                        .centerCrop()
-                                        .into(sponsorOrBeneficiaryImageView);
-                            }
-
-                        } else {
-                            if (metaData.getSponsorProfilePictures() != null) {
-                                if (metaData.getSponsorProfilePictures().size() != 0) {
-                                    Glide.with(getContext())
-                                            .load(Constants.BASE_URL_FTP_SERVER +
-                                                    metaData.getSponsorProfilePictures().get(0).getUrl())
-                                            .centerCrop()
-                                            .error(R.drawable.user_brand_bg)
-                                            .into(sponsorOrBeneficiaryImageView);
-                                }
-                            }*/
-                                sponsorNumberView.setText("Paid By " + sponsorName);
-
-                            }
-
-                        } else {
-                            sponsorNumberView.setVisibility(View.GONE);
-                            sponsorProfilePictureView.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
-
             TransactionMetaData metaData = transactionHistory.getMetaData();
 
             if (metaData.isSponsoredByOther()) {
