@@ -72,8 +72,8 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
 
     private HashMap<String, String> mProgressDialogStringMap;
 
-	private Long otpValidFor = null;
-	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
+    private Long otpValidFor = null;
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
 
     public OTPVerificationForTwoFactorAuthenticationServicesDialog(@NonNull Activity context, String json, String desiredRequest, String mUri, String method) {
         this(context, json, desiredRequest, mUri, method, null);
@@ -118,9 +118,9 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         mResendOTPButton = view.findViewById(R.id.buttonResend);
         mCancelButton = view.findViewById(R.id.buttonCancel);
 
-		mCustomProgressDialog = new CustomProgressDialog(context);
-		setCountDownTimer();
-		setButtonActions();
+        mCustomProgressDialog = new CustomProgressDialog(context);
+        setCountDownTimer();
+        setButtonActions();
 
     }
 
@@ -138,47 +138,48 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         return mOTPInputDialog.isShowing();
     }
 
-	private void setButtonActions() {
-		mActivateButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// Hiding the keyboard after verifying OTP
-				Utilities.hideKeyboard(context, v);
-				if (Utilities.isConnectionAvailable(context)) verifyInput();
-				else if (context != null)
-					Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-			}
-		});
-		mCancelButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mOTPInputDialog.dismiss();
-			}
-		});
-		mResendOTPButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (Utilities.isConnectionAvailable(context))
-					attemptDesiredRequestWithOTP(null);
-				else
-					Toaster.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG);
-			}
-		});
-	}
+    private void setButtonActions() {
+        mActivateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hiding the keyboard after verifying OTP
+                Utilities.hideKeyboard(context, v);
+                if (Utilities.isConnectionAvailable(context)) verifyInput();
+                else if (context != null)
+                    Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOTPInputDialog.dismiss();
+            }
+        });
+        mResendOTPButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utilities.isConnectionAvailable(context))
+                    attemptDesiredRequestWithOTP(null);
+                else
+                    Toaster.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG);
+            }
+        });
+    }
 
-	private void setCountDownTimer() {
-		mResendOTPButton.setEnabled(false);
-		final long otpValidTime = otpValidFor != null ? otpValidFor : SecuritySettingsActivity.otpDuration;
-		new CustomCountDownTimer(otpValidTime, 500) {
+    private void setCountDownTimer() {
+        mResendOTPButton.setEnabled(false);
+        final long otpValidTime = otpValidFor != null ? otpValidFor : SecuritySettingsActivity.otpDuration;
+        new CustomCountDownTimer(otpValidTime, 500) {
 
-			public void onTick(long millisUntilFinished) {
-				mResendOTPButton.setText(String.format(Locale.US, "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
-			}
-			public void onFinish() {
-				mResendOTPButton.setEnabled(true);
-			}
-		}.start();
-	}
+            public void onTick(long millisUntilFinished) {
+                mResendOTPButton.setText(String.format(Locale.US, "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
+            }
+
+            public void onFinish() {
+                mResendOTPButton.setEnabled(true);
+            }
+        }.start();
+    }
 
     private void verifyInput() {
         boolean cancel = false;
@@ -205,31 +206,28 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         if (mCustomProgressDialog != null) {
             mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
         }
-        if (method.equals(Constants.METHOD_PUT)) {
-            if (mHttpPutAsyncTask == null) {
-                mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
-                mCustomProgressDialog.showDialog();
-                hideOtpDialog();
-                mHttpPutAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
-                if (mHttpPutAsyncTask == null)
-                    return;
-                mHttpPutAsyncTask.mHttpResponseListener = this;
-                mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (method.equals(Constants.METHOD_PUT) && mHttpPutAsyncTask == null) {
+            mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
+            mCustomProgressDialog.showDialog();
+            hideOtpDialog();
+            mHttpPutAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
+            if (mHttpPutAsyncTask == null)
+                return;
+            mHttpPutAsyncTask.mHttpResponseListener = this;
+            mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        } else if (method.equals(Constants.METHOD_POST) && mHttpPostAsyncTask == null) {
+            mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
+            mCustomProgressDialog.showDialog();
+            hideOtpDialog();
+            mHttpPostAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);
+            if (desiredRequest.equals(Constants.COMMAND_PAYMENT)) {
+                mHttpPostAsyncTask.setSponsorAccountId(sponsorAccountId);
             }
-        } else if (method.equals(Constants.METHOD_POST)) {
-            if (mHttpPostAsyncTask == null) {
-                mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
-                mCustomProgressDialog.showDialog();
-                hideOtpDialog();
-                mHttpPostAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);
-                if (desiredRequest.equals(Constants.COMMAND_PAYMENT)) {
-                    mHttpPostAsyncTask.setSponsorAccountId(sponsorAccountId);
-                }
-                if (mHttpPostAsyncTask == null)
-                    return;
-                mHttpPostAsyncTask.mHttpResponseListener = this;
-                mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+            if (mHttpPostAsyncTask == null)
+                return;
+            mHttpPostAsyncTask.mHttpResponseListener = this;
+            mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

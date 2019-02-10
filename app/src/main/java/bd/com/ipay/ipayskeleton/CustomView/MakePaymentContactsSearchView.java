@@ -60,7 +60,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
     private static final String NUMERIC_PATTERN_WITH_SPACE = "^[0-9\\s\\+\\-!@#$%^&*(),.?\":{}|<>]*$";
 
 
-    public View mPayByQCView;
+    private  View mPayByQCView;
     private PinChecker pinChecker;
 
     private Context mContext;
