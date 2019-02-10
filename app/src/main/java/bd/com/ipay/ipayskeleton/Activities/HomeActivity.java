@@ -607,7 +607,12 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_logout) {
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
-                attemptFirebaseLogout();
+                try {
+                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                    attemptFirebaseLogout();
+                } catch (Exception e) {
+
+                }
             } else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
             }
@@ -668,7 +673,6 @@ public class HomeActivity extends BaseActivity
         if (mLogoutTask != null) {
             return;
         }
-        attemptFirebaseLogout();
         TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         try {
             LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
@@ -824,9 +828,7 @@ public class HomeActivity extends BaseActivity
                 break;
 
             case Constants.COMMAND_FIREBASE_LOGOUT:
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    attemptLogout();
-                }
+                attemptLogout();
                 firebaseLogoutTask = null;
                 break;
 
