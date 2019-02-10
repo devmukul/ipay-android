@@ -9,7 +9,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notificatio
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 
-public class Sponsor implements Serializable, CommonData, Notification {
+public class Sponsor implements Serializable, Notification {
     private long id;
 
     public String getType() {

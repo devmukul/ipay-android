@@ -150,14 +150,14 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mTrendingListRecyclerView.setLayoutManager(mLayoutManager);
 
         trendingJson = SharedPrefManager.getTrendingBusiness(null);
-        if(!TextUtils.isEmpty(trendingJson)){
+        if (!TextUtils.isEmpty(trendingJson)) {
             mProgressBar.setVisibility(View.GONE);
             Gson gson = new Gson();
             mTrendingBusinessResponse = gson.fromJson(trendingJson, GetAllTrendingBusinessResponse.class);
             mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
             mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
             mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
-        }else {
+        } else {
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
@@ -425,34 +425,34 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
                     mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
 
-				}
-				mGetTrendingBusinessListTask = null;
-				trendingBusinessListRefreshLayout.setRefreshing(false);
-				if(mProgressBar.getVisibility()==View.VISIBLE){
-				    mProgressBar.setVisibility(View.GONE);
                 }
-			} else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST)) {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-					mUtilityProviderResponse = new Gson().fromJson(result.getJsonString(), GetProviderResponse.class);
-					mUtilityProviderTypeList = mUtilityProviderResponse.getProviderCategories();
-					if (mUtilityProviderTypeList != null && mUtilityProviderTypeList.size() != 0) {
-						for (int i = 0; i < mUtilityProviderTypeList.size(); i++) {
-							for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
-								Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
-								if (!provider.isActive()) {
-									if (provider.getStatusMessage() != null) {
-										mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), provider.getStatusMessage());
-									} else {
-										mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
-									}
-								} else {
-									mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
-								}
-							}
-						}
-					}
-				}
-			}
+                mGetTrendingBusinessListTask = null;
+                trendingBusinessListRefreshLayout.setRefreshing(false);
+                if (mProgressBar.getVisibility() == View.VISIBLE) {
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mUtilityProviderResponse = new Gson().fromJson(result.getJsonString(), GetProviderResponse.class);
+                    mUtilityProviderTypeList = mUtilityProviderResponse.getProviderCategories();
+                    if (mUtilityProviderTypeList != null && mUtilityProviderTypeList.size() != 0) {
+                        for (int i = 0; i < mUtilityProviderTypeList.size(); i++) {
+                            for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
+                                Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
+                                if (!provider.isActive()) {
+                                    if (provider.getStatusMessage() != null) {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), provider.getStatusMessage());
+                                    } else {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
+                                    }
+                                } else {
+                                    mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             if (result.getApiCommand().equals(Constants.COMMAND_GET_SPONSOR_LIST)) {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     getSponsorListResponse = new Gson().fromJson(result.getJsonString(), GetSponsorListResponse.class);
@@ -464,8 +464,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                 }
                 getSponsorListAsyncTask = null;
             }
-		} catch (Exception e) {
-			e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
             if (getActivity() != null) {
                 Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
@@ -602,12 +602,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                                                     bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
                                                     bundle.putString(Constants.ADDRESS, address);
                                                     bundle.putLong(Constants.OUTLET_ID, outletId);
-                                                    if (approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0) {
-
-                                                    } else {
+                                                    if (!(approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0)) {
                                                         bundle.putSerializable(Constants.SPONSOR_LIST, (Serializable) approvedSponsorArrayList);
                                                     }
-
                                                     bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                                     if (getActivity() instanceof IPayTransactionActionActivity) {
                                                         ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
@@ -622,12 +619,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                                             bundle.putString(Constants.ADDRESS, merchantDetails.getOutlets().get(0).getAddressString());
                                             bundle.putLong(Constants.OUTLET_ID, merchantDetails.getOutlets().get(0).getOutletId());
 
-                                            if (approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0) {
-
-                                            } else {
+                                            if (!(approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0)) {
                                                 bundle.putSerializable(Constants.SPONSOR_LIST, (Serializable) approvedSponsorArrayList);
                                             }
-
                                             bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                             if (getActivity() instanceof IPayTransactionActionActivity) {
                                                 ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
@@ -640,12 +634,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                                         bundle.putString(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
                                         bundle.putString(Constants.ADDRESS, merchantDetails.getAddressString());
 
-                                        if (approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0) {
-
-                                        } else {
+                                        if (!(approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0)) {
                                             bundle.putSerializable(Constants.SPONSOR_LIST, (Serializable) approvedSponsorArrayList);
                                         }
-
                                         bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                         if (getActivity() instanceof IPayTransactionActionActivity) {
                                             ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
@@ -698,7 +689,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH)
+        if (requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH)
             getActivity().finish();
     }
 }

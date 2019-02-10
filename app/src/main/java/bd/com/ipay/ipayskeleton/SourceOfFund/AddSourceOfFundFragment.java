@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -42,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddSponsorRequest;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -82,6 +84,14 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
     private View divider;
 
     private String type;
+
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
     @Nullable
     @Override
@@ -288,13 +298,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
     }
 
     private boolean validateInputForSponsor() {
-        if (amountEditText.getText() == null) {
-            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
-            return false;
-        } else if (amountEditText.getText().toString() == null) {
-            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
-            return false;
-        } else if (amountEditText.getText().toString().equals("")) {
+        if (amountEditText.getText() == null ||
+                amountEditText.getText().toString() == null ||
+                amountEditText.getText().toString().equals("")) {
             IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
             return false;
         } else if (Integer.parseInt(amountEditText.getText().toString()) == 0) {
@@ -307,24 +313,15 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
 
     private boolean validateInputForBeneficiary() {
 
-        if (amountEditText.getText() == null) {
+        if (amountEditText.getText() == null ||
+                amountEditText.getText().toString() == null ||
+                amountEditText.getText().toString().equals("")) {
             IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
             return false;
 
-        } else if (amountEditText.getText().toString() == null) {
-            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
-            return false;
-
-        } else if (amountEditText.getText().toString().equals("")) {
-            IPaySnackbar.error(doneButton, "Please enter an amount", IPaySnackbar.LENGTH_LONG).show();
-            return false;
-        } else if (pinEditText.getText() == null) {
-            IPaySnackbar.error(doneButton, "Please enter your pin", IPaySnackbar.LENGTH_LONG).show();
-            return false;
-        } else if (pinEditText.getText().toString() == null) {
-            IPaySnackbar.error(doneButton, "Please enter your pin", IPaySnackbar.LENGTH_LONG).show();
-            return false;
-        } else if (pinEditText.getText().toString().equals("")) {
+        } else if (pinEditText.getText() == null ||
+                pinEditText.getText().toString() == null ||
+                pinEditText.getText().toString().equals("")) {
             IPaySnackbar.error(doneButton, "Please enter your pin", IPaySnackbar.LENGTH_LONG).show();
             return false;
         } else {
@@ -625,8 +622,12 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                         bundle.putString(Constants.NAME, mName);
                         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
                         bundle.putString(Constants.TYPE, Constants.SPONSOR);
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.ADD_SPONSOR, ProfileInfoCacheManager.getAccountId()
+                                , Long.parseLong(amountEditText.getText().toString()));
                         ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
                     } else {
+                        Utilities.sendFailedEventTracker(mTracker, Constants.ADD_SPONSOR, ProfileInfoCacheManager.getAccountId()
+                                , responseWithMessageOnly.getMessage());
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     mAddSponsorAsyncTask = null;
@@ -639,8 +640,12 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
                         bundle.putString(Constants.NAME, mName);
                         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
                         bundle.putString(Constants.TYPE, Constants.BENEFICIARY);
+                        Utilities.sendSuccessEventTracker(mTracker, Constants.ADD_BENEFICIARY, ProfileInfoCacheManager.getAccountId()
+                                , Long.parseLong(amountEditText.getText().toString()));
                         ((SourceOfFundActivity) getActivity()).switchToSourceOfSuccessFragment(bundle);
                     } else {
+                        Utilities.sendFailedEventTracker(mTracker, Constants.ADD_BENEFICIARY, ProfileInfoCacheManager.getAccountId()
+                                , responseWithMessageOnly.getMessage());
                         Toast.makeText(getContext(), responseWithMessageOnly.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     mAddBeneficiaryAsyncTask = null;

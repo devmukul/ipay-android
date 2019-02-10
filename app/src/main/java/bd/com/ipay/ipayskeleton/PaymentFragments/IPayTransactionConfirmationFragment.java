@@ -384,7 +384,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                 mCustomProgressDialog.setTitle(R.string.success);
                                 mCustomProgressDialog.showSuccessAnimationAndMessage(iPayTransactionResponse.getMessage());
                             }
-                            Utilities.sendSuccessEventTracker(mTracker, getTrackerCategory(), ProfileInfoCacheManager.getAccountId(), amount.longValue());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -396,8 +395,19 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                     bundle.putString(Constants.SENDER_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
                                     bundle.putSerializable(Constants.AMOUNT, amount);
                                     if (sponsorAccountID != -1) {
-                                        bundle.putString(Constants.SPONSOR_PROFILE_PICTURE, sponsorProfilePictureUrl);
+                                        bundle.putString(Constants.SPONSOR_PROFILE_PICTURE,
+                                                sponsorProfilePictureUrl);
                                         bundle.putString(Constants.SPONSOR_NAME, sponsorName);
+                                        Utilities.sendSuccessEventTracker(mTracker,
+                                                Constants.MAKE_PAYMENT_USING_SOF,
+                                                ProfileInfoCacheManager.getAccountId(),
+                                                amount.longValue());
+                                    } else {
+                                        Utilities.sendSuccessEventTracker(mTracker,
+                                                getTrackerCategory(),
+                                                ProfileInfoCacheManager.getAccountId(),
+                                                amount.longValue());
+
                                     }
                                     if (getActivity() instanceof IPayTransactionActionActivity) {
                                         if (apiCommand.equals(Constants.COMMAND_TOPUP_REQUEST)) {
@@ -445,8 +455,15 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                                     }
                                 }
                                 //Google Analytic event
-                                Utilities.sendFailedEventTracker(mTracker, getTrackerCategory(), ProfileInfoCacheManager.getAccountId(),
-                                        iPayTransactionResponse.getMessage(), amount.longValue());
+                                if (sponsorAccountID != -1) {
+                                    Utilities.sendFailedEventTracker(mTracker, getTrackerCategory(), ProfileInfoCacheManager.getAccountId(),
+                                            iPayTransactionResponse.getMessage(), amount.longValue());
+                                } else {
+                                    Utilities.sendFailedEventTracker(mTracker,
+                                            Constants.MAKE_PAYMENT_USING_SOF,
+                                            ProfileInfoCacheManager.getAccountId(),
+                                            iPayTransactionResponse.getMessage());
+                                }
                                 break;
                             }
                     }
