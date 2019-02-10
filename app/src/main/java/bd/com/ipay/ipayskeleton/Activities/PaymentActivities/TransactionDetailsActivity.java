@@ -111,7 +111,6 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistory);
                         transactionDetailsFragment.setArguments(bundle);
-
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, transactionDetailsFragment).commit();
                     }
 

@@ -130,10 +130,13 @@ public class ServiceIdConstants {
 	public static final int SIGN_UP_BUSINESS = 8028;
 
 
-	public static final int SEE_RESOURCE = 8029;
-	public static final int SEE_APP_VERSION = 8038;
-	public static final int SEE_ACCESS_TOKEN = 8042;
-	public static final int USER_EXISTENCE_CHECK = 8043;
-	public static final int SEE_MAX_ALLOWED_INVITATION = 8044;
-	public static final int SEE_CONSENT_AGREEMENT = 8045;
+    public static final int SEE_RESOURCE = 8029;
+    public static final int SEE_APP_VERSION = 8038;
+    public static final int SEE_ACCESS_TOKEN = 8042;
+    public static final int USER_EXISTENCE_CHECK = 8043;
+    public static final int SEE_MAX_ALLOWED_INVITATION = 8044;
+    public static final int SEE_CONSENT_AGREEMENT = 8045;
+
+    public static final int GET_SOURCE_OF_FUND = 8070;
+    public static final int CREATE_SOURCE_OF_FUND = 8071;
 }

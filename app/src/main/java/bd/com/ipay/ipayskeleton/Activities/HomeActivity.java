@@ -47,6 +47,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ContactsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
@@ -88,6 +89,9 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.SourceOfFundActivity;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -141,15 +145,20 @@ public class HomeActivity extends BaseActivity
     private DrawerLayout drawer;
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask;
+    private HttpRequestGetAsyncTask getSponsorListAsyncTask;
+    public static ArrayList<Sponsor> mSponsorList;
 
     public HomeActivity() {
+
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+        mSponsorList = new ArrayList<>();
         if (getIntent() != null) {
             if (getIntent().getData() != null && getIntent().getData().toString().contains("www.ipay.com.bd")) {
                 try {
@@ -246,6 +255,11 @@ public class HomeActivity extends BaseActivity
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
 
+        //get sponsor list
+
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+            attemptGetSponsorList();
+        }
         // Load the list of available business types, which will be accessed from multiple activities
         getAvailableBusinessTypes();
 
@@ -293,6 +307,17 @@ public class HomeActivity extends BaseActivity
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
         }
         return intent;
+    }
+
+
+    private void attemptGetSponsorList() {
+        if (getSponsorListAsyncTask != null) {
+            return;
+        } else {
+            getSponsorListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
+                    this, this, true);
+            getSponsorListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 
@@ -413,7 +438,11 @@ public class HomeActivity extends BaseActivity
     }
 
     private void updateProfileData() {
-        mNameView.setText(ProfileInfoCacheManager.getUserName());
+        if (ProfileInfoCacheManager.getUserName() != null) {
+            if (!ProfileInfoCacheManager.getUserName().equals("")) {
+                mNameView.setText(ProfileInfoCacheManager.getUserName());
+            }
+        }
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
@@ -501,6 +530,13 @@ public class HomeActivity extends BaseActivity
     }
 
     @ValidateAccess
+    public void switchToContactsActivity() {
+        Intent intent = new Intent(HomeActivity.this, ContactsActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
     public void switchToActivityLogActivity() {
         Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
         startActivity(intent);
@@ -531,6 +567,12 @@ public class HomeActivity extends BaseActivity
     @ValidateAccess
     public void switchToInviteActivity() {
         Intent intent = new Intent(HomeActivity.this, InviteFriendActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    public void switchToIpaySourceOfFundActivity() {
+        Intent intent = new Intent(HomeActivity.this, SourceOfFundActivity.class);
         startActivity(intent);
         switchedToHomeFragment = false;
     }
@@ -577,9 +619,9 @@ public class HomeActivity extends BaseActivity
         if (id == R.id.nav_account) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
-        } else if (id == R.id.nav_bank_account) {
+        } else if (id == R.id.nav_contact) {
 
-            switchToManageBanksActivity();
+            switchToContactsActivity();
 
         } else if (id == R.id.nav_user_activity) {
             switchToActivityLogActivity();
@@ -587,6 +629,9 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_security_settings) {
 
             switchToSecuritySettingsActivity();
+
+        } else if (id == R.id.nav_ipay_source_of_fund) {
+            switchToIpaySourceOfFundActivity();
 
         } else if (id == R.id.nav_promo) {
 
@@ -695,6 +740,18 @@ public class HomeActivity extends BaseActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void removeRejectedEntriesForSponsors(ArrayList<Sponsor> sponsors) {
+        mSponsorList = new ArrayList<>();
+        mSponsorList.clear();
+        for (int i = 0; i < sponsors.size(); i++) {
+            if (!sponsors.get(i).getStatus().equals("REJECTED") && !sponsors.get(i).getStatus().equals("PENDING")) {
+                mSponsorList.add(sponsors.get(i));
+            }
+        }
+
+
     }
 
     private void refreshBalance() {
@@ -846,8 +903,11 @@ public class HomeActivity extends BaseActivity
                     GetProfileInfoResponse mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        if (!ProfileInfoCacheManager.isBusinessAccount())
-                            mNameView.setText(mGetProfileInfoResponse.getName());
+                        if (!ProfileInfoCacheManager.isBusinessAccount()) {
+                            if (!mGetProfileInfoResponse.getName().equals("")) {
+                                mNameView.setText(mGetProfileInfoResponse.getName());
+                            }
+                        }
 
                         String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
@@ -917,6 +977,14 @@ public class HomeActivity extends BaseActivity
                     SharedPrefManager.setSentFireBaseToken(true);
                 }
                 mRefreshTokenAsyncTask = null;
+                break;
+            case Constants.COMMAND_GET_SPONSOR_LIST:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    GetSponsorListResponse getSponsorListResponse = new Gson().
+                            fromJson(result.getJsonString(), GetSponsorListResponse.class);
+                    removeRejectedEntriesForSponsors(getSponsorListResponse.getSponsor());
+                }
+                getSponsorListAsyncTask = null;
                 break;
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:
                 try {

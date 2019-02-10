@@ -57,7 +57,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
-import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
@@ -113,6 +112,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int verificationStatusIndex;
     private int accountTypeIndex;
     private int isMemberIndex;
+    private boolean mPersonalMemebersOnly;
 
     private ContactLoadFinishListener contactLoadFinishListener;
 
@@ -154,6 +154,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
             mShowNonInvitedNonMembersOnly = getArguments().getBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, false);
             mShowAllMembersToInvite = getArguments().getBoolean(Constants.SHOW_ALL_MEMBERS, false);
+            mPersonalMemebersOnly = getArguments().getBoolean(Constants.PERSONAL_ACCOUNT, false);
         }
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
@@ -212,9 +213,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 if (ContactsHolderFragment.mGetInviteInfoResponse != null)
                     invitees = ContactsHolderFragment.mGetInviteInfoResponse.getInvitees();
                 Cursor cursor;
-                if (ProfileInfoCacheManager.isAccountSwitched()) {
-                    cursor = dataHelper.searchBusinessContacts(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
-                            mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees, Long.parseLong(TokenManager.getOnAccountId()));
+                if (mPersonalMemebersOnly) {
+                    cursor = dataHelper.searchPersonalContacts(mQuery, miPayMembersOnly, mPersonalMemebersOnly, mShowNonInvitedNonMembersOnly,
+                            mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees);
                 } else {
                     cursor = dataHelper.searchContacts(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
                             mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees);

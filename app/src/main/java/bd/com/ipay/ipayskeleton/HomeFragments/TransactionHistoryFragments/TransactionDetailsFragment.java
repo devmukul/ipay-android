@@ -16,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 
@@ -37,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRevertResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionMetaData;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Visibility;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -46,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -86,6 +90,8 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
     private Integer statusCode;
     private String status;
     private String outletName;
+    private TextView sponsorNumberView;
+    private RoundedImageView sponsorProfilePictureView;
 
     private LinearLayout metaView;
 
@@ -96,7 +102,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         View v = inflater.inflate(R.layout.fragment_transaction_details, container, false);
 
         transactionHistory = getArguments().getParcelable(Constants.TRANSACTION_DETAILS);
-        System.out.println("Test "+transactionHistory.toString());
+        System.out.println("Test " + transactionHistory.toString());
 
         serviceId = transactionHistory.getServiceID();
         purpose = transactionHistory.getPurpose();
@@ -108,16 +114,19 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         statusCode = transactionHistory.getStatusCode();
         status = transactionHistory.getStatus();
 
-        descriptionTextView = v.findViewById(R.id.description);
-        timeTextView = v.findViewById(R.id.time);
-        amountTextView = v.findViewById(R.id.amount);
-        feeTextView = v.findViewById(R.id.fee);
-        transactionIDTextView = v.findViewById(R.id.transaction_id);
-        netAmountTextView = v.findViewById(R.id.netAmount);
-        balanceTextView = v.findViewById(R.id.balance);
-        purposeTextView = v.findViewById(R.id.purpose);
-        statusTextView = v.findViewById(R.id.status);
-        mobileNumberTextView = v.findViewById(R.id.your_number);
+        sponsorProfilePictureView = (RoundedImageView) v.findViewById(R.id.sponsor_image_view);
+        sponsorNumberView = (TextView) v.findViewById(R.id.sponsor_number);
+
+        descriptionTextView = (TextView) v.findViewById(R.id.description);
+        timeTextView = (TextView) v.findViewById(R.id.time);
+        amountTextView = (TextView) v.findViewById(R.id.amount);
+        feeTextView = (TextView) v.findViewById(R.id.fee);
+        transactionIDTextView = (TextView) v.findViewById(R.id.transaction_id);
+        netAmountTextView = (TextView) v.findViewById(R.id.netAmount);
+        balanceTextView = (TextView) v.findViewById(R.id.balance);
+        purposeTextView = (TextView) v.findViewById(R.id.purpose);
+        statusTextView = (TextView) v.findViewById(R.id.status);
+        mobileNumberTextView = (TextView) v.findViewById(R.id.your_number);
 
         mProfileImageView = v.findViewById(R.id.profile_picture);
         otherImageView = v.findViewById(R.id.other_image);
@@ -134,9 +143,18 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
-        netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
-        if (transactionHistory.getAccountBalance() != null)
+
+        if (transactionHistory.getNetAmount() != 0.0) {
+            netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
+        } else {
+            netAmountTextView.setText("-");
+        }
+
+        if (transactionHistory.getAccountBalance() != null) {
             balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAccountBalance()));
+        } else {
+            balanceTextView.setText("-");
+        }
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
 
@@ -147,21 +165,21 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
         }
 
 
-        if(transactionHistory.getMetaData() != null && transactionHistory.getMetaData().getVisibility() !=null){
-                metaView.removeAllViews();
-                for (Visibility visibility : transactionHistory.getMetaData().getVisibility()){
+        if (transactionHistory.getMetaData() != null && transactionHistory.getMetaData().getVisibility() != null) {
+            metaView.removeAllViews();
+            for (Visibility visibility : transactionHistory.getMetaData().getVisibility()) {
 
-                    View layout2 = LayoutInflater.from(getContext()).inflate(R.layout.item_transaction_history,  null, false);
+                View layout2 = LayoutInflater.from(getContext()).inflate(R.layout.item_transaction_history, null, false);
 
-                    TextView labelView = layout2.findViewById(R.id.label);
-                    TextView valueView = layout2.findViewById(R.id.value);
+                TextView labelView = layout2.findViewById(R.id.label);
+                TextView valueView = layout2.findViewById(R.id.value);
 
-                    labelView.setText(visibility.getLabel());
-                    valueView.setText(visibility.getValue());
-                    metaView.addView(layout2);
+                labelView.setText(visibility.getLabel());
+                valueView.setText(visibility.getValue());
+                metaView.addView(layout2);
 
-                }
-        }else {
+            }
+        } else {
             metaView.setVisibility(View.GONE);
         }
 
@@ -192,6 +210,56 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+            TransactionMetaData metaData = transactionHistory.getMetaData();
+
+            if (metaData.isSponsoredByOther()) {
+                if (!ProfileInfoCacheManager.isBusinessAccount()) {
+                    if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
+                            ProfileInfoCacheManager.getMobileNumber()))) {
+                        sponsorProfilePictureView.setVisibility(View.VISIBLE);
+                        if (metaData.getBeneficiaryProfilePictures() != null) {
+                            if (metaData.getBeneficiaryProfilePictures().size() != 0) {
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getBeneficiaryProfilePictures().get(0).getUrl())
+                                        .centerCrop()
+                                        .error(R.drawable.user_brand_bg)
+                                        .into(sponsorProfilePictureView);
+                            } else {
+                                Glide.with(getContext())
+                                        .load(R.drawable.user_brand_bg)
+                                        .centerCrop()
+                                        .into(sponsorProfilePictureView);
+                            }
+                        } else {
+                            Glide.with(getContext())
+                                    .load(R.drawable.user_brand_bg)
+                                    .centerCrop()
+                                    .into(sponsorProfilePictureView);
+                        }
+
+                        sponsorNumberView.setVisibility(View.VISIBLE);
+                        sponsorNumberView.setText("Paid for " + metaData.getBeneficiaryName());
+                    } else {
+                        sponsorProfilePictureView.setVisibility(View.VISIBLE);
+                        if (metaData.getBeneficiaryProfilePictures() != null) {
+                            if (metaData.getBeneficiaryProfilePictures().size() != 0) {
+                                Glide.with(getContext())
+                                        .load(Constants.BASE_URL_FTP_SERVER + metaData.getSponsorProfilePictures().get(0).getUrl())
+                                        .centerCrop()
+                                        .error(R.drawable.user_brand_bg)
+                                        .into(sponsorProfilePictureView);
+                            }
+                        }
+
+                        sponsorNumberView.setVisibility(View.VISIBLE);
+                        sponsorNumberView.setText("Paid By " + metaData.getSponsorName());
+                    }
+                } else {
+                    sponsorProfilePictureView.setVisibility(View.GONE);
+                    sponsorNumberView.setVisibility(View.GONE);
+                }
+            }
+
         } else {
             int iconId = transactionHistory.getAdditionalInfo().getImageWithType(getContext());
             mProfileImageView.setVisibility(View.GONE);
@@ -199,9 +267,9 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
             otherImageView.setImageResource(iconId);
         }
 
-        if(!TextUtils.isEmpty(outletName)) {
-            mNameView.setText(otherPartyName+" ("+outletName+")");
-        }else{
+        if (!TextUtils.isEmpty(outletName)) {
+            mNameView.setText(otherPartyName + " (" + outletName + ")");
+        } else {
             mNameView.setText(otherPartyName);
         }
         mMobileNumberView.setText(otherPartyNumber);
