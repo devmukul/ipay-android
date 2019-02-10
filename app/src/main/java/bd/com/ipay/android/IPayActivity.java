@@ -40,7 +40,6 @@ public class IPayActivity extends AppCompatActivity {
 		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			appConfig.setLocale(locale);
 		}
-
 		getApplication().getBaseContext().getResources().updateConfiguration(appConfig, getResources().getDisplayMetrics());
 		getApplication().getResources().updateConfiguration(appConfig, getResources().getDisplayMetrics());
 		getResources().updateConfiguration(appConfig, getResources().getDisplayMetrics());

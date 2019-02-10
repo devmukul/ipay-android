@@ -900,7 +900,6 @@
     <string name="send_money_success_description">We will notify receiver that you have sent money.\n See further details under \'Transactions\'.</string>
     <string name="make_payment_success_description">Successfully paid to %1$s which we will notify them. You can see the details in your \'Transactions\' in case  you need them in future.</string>
     <string name="pay_bill_success_description">You have successfully paid your bill from you iPay wallet.\n See further details under \'Transactions\'.</string>
-    <string name="train_ticket_success_description">Successfully paid for <b>Railway Ticket</b> which we will notify them. You will have a notifation and SMS for ticket details shortly.</string>
     <string name="request_money_success_description">We will notify receiver that you requested money. We will notify you when he accepts or rejects your request.</string>
     <string name="fetching_user_info">Fetching user info…</string>
     <string name="request_money_helper_text">Running low balance in your iPay wallet? Request other members to transfer money to your iPay wallet</string>
@@ -1030,6 +1029,7 @@
     <string name="select_a_gender">Select a Gender</string>
 
     <string name="invalid_journey_date">Please select journey date.</string>
+    <string name="train_ticket_success_description">Successfully paid for <b>Railway Ticket</b> which we will notify them. You will have a notifation and SMS for ticket details shortly.</string>
     <string name="invalid_start_station">Please select a station.</string>
     <string name="invalid_no_of_ticket">Please select no. of tickes.</string>
     <string name="invalid_gender">Please select gender.</string>
@@ -1048,4 +1048,6 @@
     <string name="hey_what_s_going_on_here_and_there">Hey, what’s going-on here and there</string>
     <string name="you_can_see_here_what_is_going_on_your_ipay_wallet_and_what_is_ipay_doing_around_the_community">You can see here what is going on your iPay wallet and what is iPay doing around the community.</string>
     <string name="my_qr_code_to_share">My QR Code to Share</string>
+    <string name="remember_me">Remember me</string>
+    <string name="pay">Pay</string>
 </resources>

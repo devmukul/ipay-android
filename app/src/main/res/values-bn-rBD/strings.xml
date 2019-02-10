@@ -239,7 +239,7 @@
     <string name="add_money">টাকা যোগ</string>
     <string name="note_optional">নোট (ঐচ্ছিক)</string>
     <string name="note">নোট</string>
-    <string name="withdraw_money">টাকা উঠানো</string>
+    <string name="withdraw_money">টাকা উত্তোলন</string>
     <string name="my_qr_code">আমার কিউআর কোড</string>
     <string name="qr_code">কিউআর কোড</string>
     <string name="enter_mobile_number">মোবাইল নম্বরটি লিখুন (+8801xxxxxxxx)</string>
@@ -939,4 +939,25 @@
     <string name="hey_what_s_going_on_here_and_there">দেখুন, কি হচ্ছে - এখানে এবং সেখানে</string>
     <string name="you_can_see_here_what_is_going_on_your_ipay_wallet_and_what_is_ipay_doing_around_the_community">আপনি এখানে আপনার আইপে ওয়ালেট এবং যা আইপে সম্প্রদায়ের চারপাশে করছেন কি হচ্ছে এখানে দেখতে পারেন।</string>
     <string name="my_qr_code_to_share">আমার কিউআর কোড</string>
+    <string name="remember_me">মনে রাখুন</string>
+    <string name="paying_money_for">আপনি পেমেন্ট করছেন</string>
+    <string name="train_ticket_success_description">সফলভাবে আপনি <b>রেলওয়ে টিকেটের</b> কিনেছেন যা আমরা তাদেরকে অভিহিত করবো। অতি শীঘ্রই আপনি টিকেট এর বিবরণ এর একটি এসএমএস পাবেন।</string>
+    <string name="make_payment_confirmation_message_tk">আপনি ৳ %1$s টাকা পেমেন্ট করেছেন</string>
+    <string name="make_payment_success_message_tk">সফলভাবে ৳ %1$s টাকা পেমেন্ট করেছেন</string>
+    <string name="railway_ticket">রেলওয়ে</string>
+    <string name="select_a_station">স্টেশন নির্বাচন করুন</string>
+    <string name="select_no_of_adult">পুর্নবয়স্ক মানুষের সংখ্যা নির্বাচন করুন</string>
+    <string name="select_no_of_child">নাবালক মানুষের সংখ্যা নির্বাচন করুন</string>
+    <string name="select_a_gender">একটি লিঙ্গ নির্বাচন করুন</string>
+    <string name="invalid_journey_date">অনুগ্রহ করে যাত্রা তারিখ নির্বাচন করুন</string>
+    <string name="invalid_start_station">অনুগ্রহ করে একটি স্টেশন নির্বাচন করুন</string>
+    <string name="invalid_no_of_ticket">অনুগ্রহ করে টিকেট সংখ্যা নির্বাচন করুন</string>
+    <string name="invalid_gender">অনুগ্রহ করে একটি লিঙ্গ নির্বাচন করুন</string>
+    <string name="failed_loading_station_list">স্টেশনের তালিকা আনতে পারা সম্ভব হয়নি</string>
+    <string name="railway_ticket_title">রেলওয়ে টিকেট কিনুন</string>
+    <string name="ticket_info">টিকেট তথ্য</string>
+    <string name="railway_ticket_name">রেলওয়ে টিকেট</string>
+    <string name="failed_loading_ticket_info">টিকেট তথ্য আনা সম্ভব হয়নি</string>
+    <string name="failed_loading_train_list">ট্রেনের তালিকা আনতে পারা সম্ভব হয়নি</string>
+    <string name="pay">পে</string>
 </resources>
