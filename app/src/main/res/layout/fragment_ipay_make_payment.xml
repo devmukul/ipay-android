@@ -468,13 +468,29 @@
                     </LinearLayout>
                 </LinearLayout>
 
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/trending_business_recycler_view_parent"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:focusableInTouchMode="false"
-                    android:nestedScrollingEnabled="false" />
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/trending_business_recycler_view_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false"
+                        android:focusableInTouchMode="false"/>
+
+                    <ProgressBar
+                        android:id="@+id/progess_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+
+                </FrameLayout>
+
+
+
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

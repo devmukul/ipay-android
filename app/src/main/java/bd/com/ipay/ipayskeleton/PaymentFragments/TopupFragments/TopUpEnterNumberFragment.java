@@ -2,13 +2,19 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.TopupFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
@@ -34,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.CutCopyPasteEditText;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -45,14 +52,17 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class TopUpEnterNumberFragment extends Fragment {
 
 	private static final String MOBILE_NUMBER_PREFIX = "+880-1";
 
 	private final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-	private EditText mNumberEditText;
+	private CutCopyPasteEditText mNumberEditText;
 	private TextView mMyNumberTopUpTextView;
 	private ImageView mContactImageView;
 	private RadioGroup mTypeSelector;
@@ -64,6 +74,9 @@ public class TopUpEnterNumberFragment extends Fragment {
 	private HttpRequestGetAsyncTask mGetProfileInfoTask;
 
 	private ProgressDialog mProgressDialog;
+
+	private Object clipboardService;
+	private ClipboardManager clipboardManager;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +94,11 @@ public class TopUpEnterNumberFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mNumberEditText = view.findViewById(R.id.number_edit_text);
+
+        clipboardService = getActivity().getSystemService(CLIPBOARD_SERVICE);
+        clipboardManager = (ClipboardManager)clipboardService;
+
+        mNumberEditText = view.findViewById(R.id.number_edit_text);
 		mMyNumberTopUpTextView = view.findViewById(R.id.my_number_topup_text_view);
 		mContactImageView = view.findViewById(R.id.contact_image_view);
 		mTypeSelector = view.findViewById(R.id.type_selector);
@@ -89,10 +106,10 @@ public class TopUpEnterNumberFragment extends Fragment {
 		operatorRadioGroup = view.findViewById(R.id.operator_radio_group);
 
 		mNumberEditText.setText(MOBILE_NUMBER_PREFIX);
-		setUpButtonActions();
+		setUpButtonActions(view);
 	}
 
-	private void setUpButtonActions() {
+	private void setUpButtonActions(final View v) {
 		mMyNumberTopUpTextView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -179,6 +196,32 @@ public class TopUpEnterNumberFragment extends Fragment {
 				}
 			}
 		});
+
+		mNumberEditText.setOnCutCopyPasteListener(new CutCopyPasteEditText.OnCutCopyPasteListener() {
+            @Override
+            public void onCut() { }
+
+            @Override
+            public void onCopy() { }
+
+            @Override
+            public void onPaste() {
+                mNumberEditText.clearComposingText();
+                ClipData clipData = clipboardManager.getPrimaryClip();
+                int itemCount = clipData.getItemCount();
+                if(itemCount > 0){
+                    ClipData.Item item = clipData.getItemAt(0);
+                    String text = item.getText().toString();
+                    if(InputValidator.isValidMobileNumberBD(text)) {
+                        String mobileNumber = ContactEngine.formatMobileNumberBD(text);
+                        mNumberEditText.setText(mobileNumber);
+                    }else{
+                        Snackbar snackbar = Snackbar.make(v, getString(R.string.error_invalid_mobile_number), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                }
+            }
+        });
 	}
 
 	private void showAmountInputFragment(String mobileNumber) {

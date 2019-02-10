@@ -53,7 +53,7 @@ public class LinkThreeBillConfirmationFragment extends IPayAbstractTransactionCo
 		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
 		setName(subscriberId);
 		setUserName(userName);
-		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
+		setTransactionConfirmationButtonTitle(getString(R.string.pay));
 	}
 
 	@Override

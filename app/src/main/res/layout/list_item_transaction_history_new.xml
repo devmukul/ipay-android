@@ -139,6 +139,5 @@
         android:layout_height="1dip"
         android:layout_marginStart="64dip"
         android:layout_marginLeft="64dip"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
         android:background="@color/divider_gray" />
 </LinearLayout>

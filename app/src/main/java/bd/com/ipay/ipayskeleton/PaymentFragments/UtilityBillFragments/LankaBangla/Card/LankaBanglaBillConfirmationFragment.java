@@ -57,7 +57,7 @@ public class LankaBanglaBillConfirmationFragment extends IPayAbstractTransaction
 		setTransactionDescription(getStyledTransactionDescription(R.string.pay_bill_confirmation_message, billAmount));
 		setName(CardNumberValidator.deSanitizeEntry(cardNumber, ' '));
 		setUserName(cardUserName);
-		setTransactionConfirmationButtonTitle(getString(R.string.pay_bill));
+		setTransactionConfirmationButtonTitle(getString(R.string.pay));
 	}
 
 	@Override
