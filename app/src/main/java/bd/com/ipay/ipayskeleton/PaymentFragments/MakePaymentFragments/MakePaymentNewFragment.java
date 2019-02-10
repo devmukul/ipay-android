@@ -25,10 +25,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
@@ -48,6 +52,9 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetProviderR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Provider;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.ProviderCategory;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
+import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -61,12 +68,19 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
 
     private static final int REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH = 100;
     private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
-	GetAllTrendingBusinessResponse mTrendingBusinessResponse;
-	List<TrendingBusinessList> mTrendingBusinessList;
+    GetAllTrendingBusinessResponse mTrendingBusinessResponse;
+    List<TrendingBusinessList> mTrendingBusinessList;
 
-	private HttpRequestGetAsyncTask mGetUtilityProviderListTask;
-	private GetProviderResponse mUtilityProviderResponse;
-	private List<ProviderCategory> mUtilityProviderTypeList;
+    private HttpRequestGetAsyncTask mGetUtilityProviderListTask;
+    private GetProviderResponse mUtilityProviderResponse;
+    private List<ProviderCategory> mUtilityProviderTypeList;
+
+    private HttpRequestGetAsyncTask getSponsorListAsyncTask;
+    private GetSponsorListResponse getSponsorListResponse = null;
+    private ArrayList<Sponsor> sponsorArrayList;
+    private ArrayList<Sponsor> approvedSponsorArrayList;
+
+    private IpayProgressDialog ipayProgressDialog;
 
     private View mBillPayView;
     private View mLink3BillPayView;
@@ -86,7 +100,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private PinChecker pinChecker;
     private RecyclerView mTrendingListRecyclerView;
     private TrendingListAdapter mTrendingListAdapter;
-	private MakePaymentContactsSearchView mMobileNumberEditText;
+    private MakePaymentContactsSearchView mMobileNumberEditText;
     private ProgressDialog mProgressDialog;
     private String trendingJson;
     private ProgressBar mProgressBar;
@@ -98,6 +112,8 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
         mProgressDialog = new ProgressDialog(getActivity());
+        ipayProgressDialog = new IpayProgressDialog(getContext());
+        approvedSponsorArrayList = new ArrayList<>();
         if (getArguments() != null) {
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
         }
@@ -134,17 +150,18 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mTrendingListRecyclerView.setLayoutManager(mLayoutManager);
 
         trendingJson = SharedPrefManager.getTrendingBusiness(null);
-        if(!TextUtils.isEmpty(trendingJson)){
+        if (!TextUtils.isEmpty(trendingJson)) {
             mProgressBar.setVisibility(View.GONE);
             Gson gson = new Gson();
             mTrendingBusinessResponse = gson.fromJson(trendingJson, GetAllTrendingBusinessResponse.class);
             mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
             mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
             mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
-        }else {
+        } else {
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
+        attemptGetSponsorList();
         getTrendingBusinessList();
         getServiceProviderList();
 
@@ -264,8 +281,14 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                 bundle.putString(Constants.PHOTO_URI, imageURL);
                 bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
                 bundle.putString(Constants.ADDRESS, address);
-                if(outletId!=null)
+                if (outletId != null)
                     bundle.putLong(Constants.OUTLET_ID, outletId);
+
+                if (approvedSponsorArrayList != null) {
+                    if (approvedSponsorArrayList.size() > 0) {
+                        bundle.putSerializable(Constants.SPONSOR_LIST, approvedSponsorArrayList);
+                    }
+                }
 
                 bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                 if (getActivity() instanceof IPayTransactionActionActivity) {
@@ -277,9 +300,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mMobileNumberEditText.setCustomBillPaymentClickListener(new MakePaymentContactsSearchView.CustomBillPaymentClickListener() {
             @Override
             public void onItemClick(String name, String id) {
-                if(name.equals(getContext().getString(R.string.lanka_bangla_card)))
+                if (name.equals(getContext().getString(R.string.lanka_bangla_card)))
                     payBill(id, "CARD");
-                else if(name.equals(getContext().getString(R.string.lanka_bangla_dps)))
+                else if (name.equals(getContext().getString(R.string.lanka_bangla_dps)))
                     payBill(id, "DPS");
                 else
                     payBill(id, null);
@@ -292,7 +315,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         new GetAllBusinessListAsyncTask(getContext(), mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void payBill(final String provider, final String type){
+    private void payBill(final String provider, final String type) {
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
             DialogUtils.showServiceNotAllowedDialog(getContext());
             return;
@@ -307,7 +330,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             @Override
             public void ifPinAdded() {
                 Intent intent;
-                switch (provider){
+                switch (provider) {
                     case Constants.BRILLIANT:
                     case Constants.AMBERIT:
                     case Constants.WESTZONE:
@@ -339,7 +362,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                         break;
                     case Constants.LANKABANGLA:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
-                        if(type.equals("CARD"))
+                        if (type.equals("CARD"))
                             intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_CARD);
                         else
                             intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_DPS);
@@ -356,81 +379,93 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         super.onSaveInstanceState(outState);
     }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
-	private void getTrendingBusinessList() {
-		if (mGetTrendingBusinessListTask != null) {
-			return;
-		}
+    private void getTrendingBusinessList() {
+        if (mGetTrendingBusinessListTask != null) {
+            return;
+        }
 
-		mGetTrendingBusinessListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
-				Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity(), false);
-		mGetTrendingBusinessListTask.mHttpResponseListener = this;
-		mGetTrendingBusinessListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+        mGetTrendingBusinessListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_TRENDING, getActivity(), false);
+        mGetTrendingBusinessListTask.mHttpResponseListener = this;
+        mGetTrendingBusinessListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-	private void getServiceProviderList() {
-		if (mGetUtilityProviderListTask != null) {
-			return;
-		}
+    private void getServiceProviderList() {
+        if (mGetUtilityProviderListTask != null) {
+            return;
+        }
 
-		mGetUtilityProviderListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST,
-				Constants.BASE_URL_UTILITY + Constants.URL_GET_PROVIDER, getActivity(), false);
-		mGetUtilityProviderListTask.mHttpResponseListener = this;
-		mGetUtilityProviderListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+        mGetUtilityProviderListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST,
+                Constants.BASE_URL_UTILITY + Constants.URL_GET_PROVIDER, getActivity(), false);
+        mGetUtilityProviderListTask.mHttpResponseListener = this;
+        mGetUtilityProviderListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-	@Override
-	public void httpResponseReceiver(GenericHttpResponse result) {
-		if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
-			mGetTrendingBusinessListTask = null;
-			mGetUtilityProviderListTask = null;
-			trendingBusinessListRefreshLayout.setRefreshing(false);
-			return;
-		}
-		try {
-			if (result.getApiCommand().equals(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST)) {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
+            mGetTrendingBusinessListTask = null;
+            mGetUtilityProviderListTask = null;
+            getSponsorListResponse = null;
+            trendingBusinessListRefreshLayout.setRefreshing(false);
+            return;
+        }
+        try {
+            if (result.getApiCommand().equals(Constants.COMMAND_GET_TRENDING_BUSINESS_LIST)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     SharedPrefManager.setTrendingBusiness(result.getJsonString());
-					Gson gson = new Gson();
+                    Gson gson = new Gson();
                     mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), GetAllTrendingBusinessResponse.class);
                     mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                     mTrendingListAdapter = new TrendingListAdapter(mTrendingBusinessList);
                     mTrendingListRecyclerView.setAdapter(mTrendingListAdapter);
 
-				}
-				mGetTrendingBusinessListTask = null;
-				trendingBusinessListRefreshLayout.setRefreshing(false);
-				if(mProgressBar.getVisibility()==View.VISIBLE){
-				    mProgressBar.setVisibility(View.GONE);
                 }
-			} else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST)) {
-				if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-					mUtilityProviderResponse = new Gson().fromJson(result.getJsonString(), GetProviderResponse.class);
-					mUtilityProviderTypeList = mUtilityProviderResponse.getProviderCategories();
-					if (mUtilityProviderTypeList != null && mUtilityProviderTypeList.size() != 0) {
-						for (int i = 0; i < mUtilityProviderTypeList.size(); i++) {
-							for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
-								Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
-								if (!provider.isActive()) {
-									if (provider.getStatusMessage() != null) {
-										mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), provider.getStatusMessage());
-									} else {
-										mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
-									}
-								} else {
-									mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
-								}
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+                mGetTrendingBusinessListTask = null;
+                trendingBusinessListRefreshLayout.setRefreshing(false);
+                if (mProgressBar.getVisibility() == View.VISIBLE) {
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_PROVIDER_LIST)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mUtilityProviderResponse = new Gson().fromJson(result.getJsonString(), GetProviderResponse.class);
+                    mUtilityProviderTypeList = mUtilityProviderResponse.getProviderCategories();
+                    if (mUtilityProviderTypeList != null && mUtilityProviderTypeList.size() != 0) {
+                        for (int i = 0; i < mUtilityProviderTypeList.size(); i++) {
+                            for (int j = 0; j < mUtilityProviderTypeList.get(i).getProviders().size(); j++) {
+                                Provider provider = mUtilityProviderTypeList.get(i).getProviders().get(j);
+                                if (!provider.isActive()) {
+                                    if (provider.getStatusMessage() != null) {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), provider.getStatusMessage());
+                                    } else {
+                                        mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.you_cant_avail_this_service));
+                                    }
+                                } else {
+                                    mProviderAvailabilityMap.put(provider.getCode().toUpperCase(), getString(R.string.active));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (result.getApiCommand().equals(Constants.COMMAND_GET_SPONSOR_LIST)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    getSponsorListResponse = new Gson().fromJson(result.getJsonString(), GetSponsorListResponse.class);
+                    sponsorArrayList = getSponsorListResponse.getSponsor();
+                    getOnlyApprovedSponsors();
+
+                } else {
+                    Toast.makeText(getContext(), getSponsorListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                getSponsorListAsyncTask = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
 
             if (getActivity() != null) {
                 Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
@@ -438,8 +473,18 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         }
     }
 
+    private void getOnlyApprovedSponsors() {
+        for (int i = 0; i < sponsorArrayList.size(); i++) {
+            if (sponsorArrayList.get(i).getStatus().equals("APPROVED")) {
+                approvedSponsorArrayList.add(sponsorArrayList.get(i));
+            }
+        }
+        QRCodePaymentActivity.sponsorList = approvedSponsorArrayList;
+        HomeActivity.mSponsorList = approvedSponsorArrayList;
+    }
 
-    public class TrendingListAdapter extends     RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
+
+    public class TrendingListAdapter extends RecyclerView.Adapter<TrendingListAdapter.MyViewHolder> {
         private List<TrendingBusinessList> trendingBusinessList;
 
         public TrendingListAdapter(List<TrendingBusinessList> trendingBusinessList) {
@@ -472,11 +517,22 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView titleView;
             public RecyclerView trendingBusinessCAtegory;
+
             public MyViewHolder(View view) {
                 super(view);
                 titleView = view.findViewById(R.id.trending_business_category_title);
                 trendingBusinessCAtegory = view.findViewById(R.id.trending_business_recycler_view_category);
             }
+        }
+    }
+
+    private void attemptGetSponsorList() {
+        if (getSponsorListAsyncTask != null) {
+            return;
+        } else {
+            getSponsorListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
+                    getContext(), this, true);
+            getSponsorListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -514,10 +570,10 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     glide.diskCacheStrategy(DiskCacheStrategy.ALL);
 
                     glide.placeholder(R.drawable.ic_business_logo_round)
-                        .error(R.drawable.ic_business_logo_round)
-                        .crossFade()
-                        .dontAnimate()
-                        .into(mImageView);
+                            .error(R.drawable.ic_business_logo_round)
+                            .crossFade()
+                            .dontAnimate()
+                            .into(mImageView);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -533,7 +589,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                             PinChecker payByQCPinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
                                 @Override
                                 public void ifPinAdded() {
-                                    if (mBusinessAccountEntryList.get(pos).getOutlets()!=null && mBusinessAccountEntryList.get(pos).getOutlets().size() > 0) {
+                                    if (mBusinessAccountEntryList.get(pos).getOutlets() != null && mBusinessAccountEntryList.get(pos).getOutlets().size() > 0) {
                                         if (mBusinessAccountEntryList.get(pos).getOutlets().size() > 1) {
                                             mMerchantBranchSelectorDialog = new TrendingBusinessOutletSelectorDialog(context, mBusinessAccountEntryList.get(pos));
                                             mMerchantBranchSelectorDialog.showDialog();
@@ -546,7 +602,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                                                     bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
                                                     bundle.putString(Constants.ADDRESS, address);
                                                     bundle.putLong(Constants.OUTLET_ID, outletId);
-
+                                                    if (!(approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0)) {
+                                                        bundle.putSerializable(Constants.SPONSOR_LIST, (Serializable) approvedSponsorArrayList);
+                                                    }
                                                     bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                                     if (getActivity() instanceof IPayTransactionActionActivity) {
                                                         ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
@@ -561,6 +619,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                                             bundle.putString(Constants.ADDRESS, merchantDetails.getOutlets().get(0).getAddressString());
                                             bundle.putLong(Constants.OUTLET_ID, merchantDetails.getOutlets().get(0).getOutletId());
 
+                                            if (!(approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0)) {
+                                                bundle.putSerializable(Constants.SPONSOR_LIST, (Serializable) approvedSponsorArrayList);
+                                            }
                                             bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                             if (getActivity() instanceof IPayTransactionActionActivity) {
                                                 ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
@@ -573,6 +634,9 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                                         bundle.putString(Constants.MOBILE_NUMBER, merchantDetails.getMerchantMobileNumber());
                                         bundle.putString(Constants.ADDRESS, merchantDetails.getAddressString());
 
+                                        if (!(approvedSponsorArrayList == null || approvedSponsorArrayList.size() == 0)) {
+                                            bundle.putSerializable(Constants.SPONSOR_LIST, (Serializable) approvedSponsorArrayList);
+                                        }
                                         bundle.putInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, transactionType);
                                         if (getActivity() instanceof IPayTransactionActionActivity) {
                                             ((IPayTransactionActionActivity) getActivity()).switchToAmountInputFragment(bundle);
@@ -625,7 +689,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH)
+        if (requestCode == REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH)
             getActivity().finish();
     }
 }

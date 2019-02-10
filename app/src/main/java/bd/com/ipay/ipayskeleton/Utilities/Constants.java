@@ -12,11 +12,11 @@ public class Constants {
     public static final String ApplicationPackage = "bd.com.ipay.android";
     public static final String ApplicationTitle = "iPay";
 
-	public static final String OPERATOR_CODE_GP = "GP";
-	public static final String OPERATOR_CODE_ROBI = "Robi";
-	public static final String OPERATOR_CODE_AIRTEL = "Airtel";
-	public static final String OPERATOR_CODE_BANGLALINK = "Banglalink";
-	public static final String OPERATOR_CODE_TELETALK = "Teletalk";
+    public static final String OPERATOR_CODE_GP = "GP";
+    public static final String OPERATOR_CODE_ROBI = "Robi";
+    public static final String OPERATOR_CODE_AIRTEL = "Airtel";
+    public static final String OPERATOR_CODE_BANGLALINK = "Banglalink";
+    public static final String OPERATOR_CODE_TELETALK = "Teletalk";
 
     public static final String ERROR = "ERROR";
     public static final String USER_AGENT = "User-Agent";
@@ -203,19 +203,53 @@ public class Constants {
 	public static final String FROM_CONTACT = "FROM_CONTACT";
 	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
     public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
-	public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
-	public static final String VISA = "VISA";
-	public static final String MASTERCARD = "MASTERCARD";
-	public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
+    public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
+    public static final String VISA = "VISA";
+    public static final String MASTERCARD = "MASTERCARD";
+    public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
+    public static final String COMMAND_GET_SPONSOR_LIST = "COMMAND_GET_SPONSOR_LIST";
+    public static final String URL_GET_BENEFICIARY = "ipay-source/beneficiary";
+    public static final String URL_GET_SPONSOR = "ipay-source/sponsor";
+    public static final String RELATION = "RELATION";
+    public static final String URL_ADD_SPONSOR = "ipay-source/sponsor";
+    public static final String COMMAND_ADD_SPONSOR = "COMMAND_ADD_SPONSOR";
+    public static final String COMMAND_REMOVE_SPONSOR_OR_BENEFICIARY = "COMMAND_REMOVE_SPONSOR_OR_BENEFICIARY";
+    public static final String URL_DELETE_SPONSOR = "ipay-source/";
+    public static final String COMMAND_GET_BENEFICIARY = "COMMAND_GET_BENEFICIARY";
+    public static final int NOTIFICATION_TYPE_SOURCE_OF_FUND_BENEFICIARIES = 10;
+    public static final int NOTIFICATION_TYPE_SOURCE_OF_FUND_SPONSORS = 9;
+    public static final String COMMAND_ACCEPT_OR_REJECT_BENEFICIARY = "COMMAND_ACCEPT_OR_REJECT_BENEFICIARY";
+    public static final String SPONSOR_LIST = "SPONSOR_LIST";
+    public static final long DEFAULT_CREDIT_LIMIT = 5000;
+    public static final String SPONSOR_ACCOUNT_ID = "SPONSOR_ACCOUNT_ID";
+    public static final String SPONSOR_ACCOUNT_ID_AS_HEADER = "sponsorAccountId";
+    public static final String COMMAND_GET_BENEFICIARY_LIST = "COMMAND_GET_BENEFICIARY_LIST";
+    public static final String SPONSOR = "SPONSOR";
+    public static final String BENEFICIARY = "BENEFICIARY";
+    public static final String TYPE = "TYPE";
+    public static final String COMMAND_ADD_BENEFICIARY = "COMMAND_ADD_BENEFICIARY";
+    public static final String SPONSOR_NAME = "SPONSOR_NAME";
+    public static final String SPONSOR_PROFILE_PICTURE = "SPONSOR_PROFILE_PICTURE";
+    public static final String EDIT_AMOUNT = "EDIT_AMOUNT";
+    public static final String TO_DO = "TO_DO";
+    public static final String COMMAND_CHANGE_MONTLY_LIMIT = "COMMAND_CHANGE_MONTLY_LIMIT";
+    public static final String URI_CHANGE_MONTHLY_LIMIT = "ipay-source/";
+    public static final String UPDATE_STATUS = "UPDATE_STATUS";
+    public static final String ADD_SOURCE_OF_FUND = "ADD_SOURCE_OF_FUND";
+    public static final String ADD_SOURCE_OF_FUND_BENEFICIARY = "ADD_SOURCE_OF_FUND_BENEFICIARY";
+    public static final String ADD_SOURCE_OF_FUND_SPONSOR = "ADD_SOURCE_OF_FUND_SPONSOR";
+    public static final String ADD_SPONSOR = "ADD_SPONSOR";
+    public static final String ADD_BENEFICIARY = "ADD_BENEFICIARY";
+    public static final String MAKE_PAYMENT_USING_SOF = "MAKE_PAYMENT_USING_SOF";
+    public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
+    public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String URL_GET_BANK_LIST = "credit-card/banks";
     public static final String CREDIT_CARD = "CREDIT_CARD";
     public static final String CREDIT_CARD_WITH_SPACE = "Credit Card";
     public static final String URL_GET_SAVED_CARDS = "credit-card/my-list";
     public static final String COMMAND_GET_SAVED_CARDS = "COMMAND_GET_SAVED_CARDS";
-    public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
-    public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
     public static final String URL_LANKABANGLA_DPS_BILL_PAY = "lankabangla/dps/billpay";
     public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
@@ -224,7 +258,6 @@ public class Constants {
     public static final String URL_LANKABANGLA_VISA_BILL_PAY = "lankabangla/visa/billpay";
     public static final String URL_LANKABANGLA_MASTERCARD_BILL_PAY = "lankabangla/mastercard/billpay";
     public static final String URL_CREDIT_CARD_BILL_PAY = "credit-card/billpay";
-
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -337,6 +370,10 @@ public class Constants {
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
     public static final String URL_GET_CARD = "user/card";
+
+    public static final String URL_ADD_BENEFICIARY = "ipay-source/beneficiary";
+    public static final String URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND = "ipay-source/";
+
     // Bank Transaction REST
     public static final String URL_ADD_MONEY_FROM_BANK = "banktransaction/cashin/v2";
     public static final String URL_ADD_MONEY_FROM_BANK_INSTANTLY = "credit";
@@ -374,6 +411,7 @@ public class Constants {
     public static final String URL_BUSINESS_RULE = "business-rule";
     public static final String URL_BUSINESS_RULE_V2 = "business-rule/v2";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
+
 
     // Introducer REST
     public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
@@ -976,6 +1014,8 @@ public class Constants {
     public static String CREDIT_BALANCE = "Credit balance";
     public static String MINIMUM_PAY = "Minimum pay";
     public static String OTHER = "Other";
+    public static long ACTIVE = 1;
+    public static long BLOCKED = 2;
     public static final int MAX_TICKET = 4;
     public static final int MAX_TICKET_PURCHASE_DAY = 9;
 }

@@ -2,15 +2,19 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BusinessRoleReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SourceOfFund.EditPermissionSourceOfFundBottomSheetFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationActivity extends BaseActivity {
 
@@ -48,6 +52,23 @@ public class NotificationActivity extends BaseActivity {
 
     public void switchToNotificationFragment() {
         switchToNotificationFragment("");
+    }
+
+    public void switchToEditPermissionFragment(
+            EditPermissionSourceOfFundBottomSheetFragment
+                    editPermissionSourceOfFundBottomSheetFragment, Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+        editPermissionSourceOfFundBottomSheetFragment =
+                new EditPermissionSourceOfFundBottomSheetFragment();
+        editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                editPermissionSourceOfFundBottomSheetFragment).setCustomAnimations(R.anim.slide_up,R.anim.slide_down)
+                .addToBackStack(null).commit();
+
+
     }
 
     public void switchToNotificationFragment(String tag) {
@@ -99,11 +120,26 @@ public class NotificationActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        Utilities.hideKeyboard(this);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment != null) {
+                if (fragment instanceof NotificationHolderFragment) {
+                    NotificationFragment notificationFragment = (NotificationFragment)
+                            ((NotificationHolderFragment) fragment).getNotificationFragment();
+                    if (notificationFragment != null) {
+                        if (notificationFragment.onBackPressed()) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
         else {
             super.onBackPressed();
         }
+
     }
 }
 
