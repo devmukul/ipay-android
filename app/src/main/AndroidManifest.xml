@@ -311,6 +311,13 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <activity
+            android:name=".Activities.RailwayTicketActionActivity"
+            android:label="@string/transaction"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
             <intent-filter>

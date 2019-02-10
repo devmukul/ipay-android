@@ -62,10 +62,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,11 +78,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserPr
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-import io.intercom.android.sdk.Intercom;
-import io.intercom.android.sdk.UserAttributes;
-import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
@@ -749,70 +743,6 @@ public class Utilities {
 		activity.finish();
 	}
 
-	private static Map<String, Object> getCustomIntercomUserAttributes() {
-		Map<String, Object> customAttributes = new HashMap<>();
-
-		customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
-		customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
-		customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
-		customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
-
-		return customAttributes;
-	}
-
-	public static void initIntercomLogin() {
-		Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
-		UserAttributes userAttributes = Utilities.getUserAttributesForIntercom();
-		registration.withUserAttributes(userAttributes);
-
-		Intercom.client().registerIdentifiedUser(registration);
-		Intercom.client().displayConversationsList();
-	}
-
-	public static void resetIntercomInformation() {
-		Intercom.client().reset();
-		Intercom.client().hideMessenger();
-	}
-
-	private static UserAttributes getUserAttributesForIntercom() {
-		Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
-		Map<String, Object> avatar = new HashMap<>();
-		if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
-			avatar.put(IntercomConstants.ATTR_TYPE, "avatar");
-			avatar.put(IntercomConstants.ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
-		}
-
-		UserAttributes userAttributes = new UserAttributes.Builder()
-				.withName(ProfileInfoCacheManager.getUserName())
-				.withPhone(ProfileInfoCacheManager.getMobileNumber())
-				.withEmail(ProfileInfoCacheManager.getPrimaryEmail())
-				.withPhone(DeviceInfoFactory.getDeviceName())
-				.withCustomAttributes(customAttributes)
-				.withCustomAttribute(IntercomConstants.ATTR_AVATAR, avatar)
-				.build();
-		return userAttributes;
-	}
-
-//    public static void performQRCodeScan(Fragment fragment, int requestCode) {
-//        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
-//        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
-//            initiateQRCodeScan(fragment);
-//        } else {
-//            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
-//        }
-//    }
-//
-//    public static void initiateQRCodeScan(Fragment fragment) {
-//        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
-//    }
-
-	public static String getFormattedCountryName(String countryName) {
-		if (countryName.toLowerCase().equals("bd")) {
-			countryName = "Bangladesh";
-		}
-		return countryName;
-	}
-
 
 	public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {
 		for (String permission : permissionList) {
@@ -842,7 +772,7 @@ public class Utilities {
 		ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
 	}
 
-	public static boolean isValidTokenWindowTime() {
+    public static boolean isValidTokenWindowTime() {
 		return currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME;
 	}
 
@@ -866,40 +796,40 @@ public class Utilities {
 		sendSuccessEventTracker(tracker, category, accountId, 0);
 	}
 
-	public static void sendSuccessEventTracker(Tracker tracker, String category, int accountId, long value) {
-		if (accountId == Constants.INVALID_ACCOUNT_ID) {
-			sendEventTracker(tracker,
-					category,
-					"Success",
-					String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
-					value);
-		} else {
-			sendEventTracker(tracker,
-					category,
-					"Success",
-					String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
-					value);
-		}
-	}
+    public static void sendSuccessEventTracker(Tracker tracker, String category, int accountId, long value) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            sendEventTracker(tracker,
+                    category,
+                    "Success",
+                    String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        } else {
+            sendEventTracker(tracker,
+                    category,
+                    "Success",
+                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        }
+    }
 
 	public static void sendBlockedEventTracker(Tracker tracker, String category, int accountId) {
 		sendBlockedEventTracker(tracker, category, accountId, 0);
 	}
 
-	public static void sendBlockedEventTracker(Tracker tracker, String category, int accountId, long value) {
-		if (accountId == Constants.INVALID_ACCOUNT_ID) {
-			sendEventTracker(tracker,
-					category,
-					"Blocked",
-					String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
-					value);
-		} else {
-			sendEventTracker(tracker,
-					category,
-					"Blocked",
-					String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
-					value);
-		}
+    public static void sendBlockedEventTracker(Tracker tracker, String category, int accountId, long value) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            sendEventTracker(tracker,
+                    category,
+                    "Blocked",
+                    String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        } else {
+            sendEventTracker(tracker,
+                    category,
+                    "Blocked",
+                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        }
 
 	}
 
@@ -907,33 +837,33 @@ public class Utilities {
 		sendFailedEventTracker(tracker, category, accountId, serverErrorMessage, 0);
 	}
 
-	public static void sendFailedEventTracker(Tracker tracker, String category, int accountId, String serverErrorMessage, long value) {
-		if (accountId == Constants.INVALID_ACCOUNT_ID) {
-			sendEventTracker(tracker,
-					category,
-					"Failed",
-					String.format(Locale.getDefault(), "At %s, SERVER_MESSAGE:%s", formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
-					value);
-		} else {
-			sendEventTracker(tracker,
-					category,
-					"Failed",
-					String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, SERVER_MESSAGE:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
-					value);
-		}
-	}
+    public static void sendFailedEventTracker(Tracker tracker, String category, int accountId, String serverErrorMessage, long value) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            sendEventTracker(tracker,
+                    category,
+                    "Failed",
+                    String.format(Locale.getDefault(), "At %s, SERVER_MESSAGE:%s", formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+                    value);
+        } else {
+            sendEventTracker(tracker,
+                    category,
+                    "Failed",
+                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, SERVER_MESSAGE:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+                    value);
+        }
+    }
 
-	public static void sendExceptionTracker(Tracker tracker, int accountId, String exceptionMessage) {
-		if (accountId == Constants.INVALID_ACCOUNT_ID) {
-			tracker.send(new HitBuilders.ExceptionBuilder().
-					setDescription(String.format(Locale.getDefault(), "EXCEPTION_MESSAGE:%s at %s, DEVICE_NAME:%s", exceptionMessage, formatDateWithoutTime(System.currentTimeMillis()), DeviceInfoFactory.getDeviceName()))
-					.setFatal(true).build());
-		} else {
-			tracker.send(new HitBuilders.ExceptionBuilder().
-					setDescription(String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, EXCEPTION_MESSAGE:%s, DEVICE_NAME:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), exceptionMessage, DeviceInfoFactory.getDeviceName()))
-					.setFatal(true).build());
-		}
-	}
+    public static void sendExceptionTracker(Tracker tracker, int accountId, String exceptionMessage) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            tracker.send(new HitBuilders.ExceptionBuilder().
+                    setDescription(String.format(Locale.getDefault(), "EXCEPTION_MESSAGE:%s at %s, DEVICE_NAME:%s", exceptionMessage, formatDateWithoutTime(System.currentTimeMillis()), DeviceInfoFactory.getDeviceName()))
+                    .setFatal(true).build());
+        } else {
+            tracker.send(new HitBuilders.ExceptionBuilder().
+                    setDescription(String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, EXCEPTION_MESSAGE:%s, DEVICE_NAME:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), exceptionMessage, DeviceInfoFactory.getDeviceName()))
+                    .setFatal(true).build());
+        }
+    }
 
 
 	public static void sendEventTracker(Tracker mTracker, String category, String action, String label, long value) {
@@ -1176,7 +1106,7 @@ public class Utilities {
 		}
 	}
 
-	private static final SimpleDateFormat promotionDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private static final SimpleDateFormat promotionDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
 	public static Date parsePromotionDate(String date) {
 		try {
@@ -1196,5 +1126,34 @@ public class Utilities {
 			return customerIdStr;
 		else
 			return "CID" + customerIdStr;
+	}
+
+	public static String formatJourneyInfoText(String infoText, int adults, int child) {
+
+		if(adults>1){
+			if(child>1){
+				return  infoText+" for "+adults +" Adults & "+child+" Children";
+			}else if(child == 0){
+				return  infoText+" for "+adults +" Adults";
+			}else{
+				return  infoText+" for "+adults +" Adults & "+child+" Child";
+			}
+		}else if(adults ==1 ){
+			if(child>1){
+				return  infoText+" for "+adults +" Adult & "+child+" Children";
+			}else if(child == 0){
+				return  infoText+" for "+adults +" Adult";
+			}else{
+				return  infoText+" for "+adults +" Adult & "+child+" Child";
+			}
+		}else {
+			if(child>1){
+				return  infoText+" for "+adults +" Adult & "+child+" Children";
+			}else if(child == 0){
+				return  infoText+" for "+adults +" Adult";
+			}else{
+				return  infoText+" for "+adults +" Adult & "+child+" Child";
+			}
+		}
 	}
 }

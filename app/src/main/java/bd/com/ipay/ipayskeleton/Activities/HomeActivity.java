@@ -507,23 +507,10 @@ public class HomeActivity extends BaseActivity
 		addPromoDialogBuilder.show();
 	}
 
-	@ValidateAccess
-	public void attemptLiveChat() {
-		if (isProfileInfoAvailable()) {
-			if (Utilities.isConnectionAvailable(this)) {
-				Utilities.initIntercomLogin();
-			} else {
-				Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
-			}
-		} else {
-			DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
-		}
-	}
-
-	@Override
-	@ValidateAccess
-	public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-		int id = item.getItemId();
+    @Override
+    @ValidateAccess
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        int id = item.getItemId();
 //         Handle navigation view item clicks here.
 
 		new Handler().postDelayed(new Runnable() {
@@ -555,10 +542,6 @@ public class HomeActivity extends BaseActivity
 		} else if (id == R.id.nav_security_settings) {
 
 			switchToSecuritySettingsActivity();
-
-		} else if (id == R.id.nav_invite) {
-
-			switchToInviteActivity();
 
 		} else if (id == R.id.nav_language) {
 
@@ -603,11 +586,7 @@ public class HomeActivity extends BaseActivity
 
 			showPromoCodeDialog();
 
-		} else if (id == R.id.nav_live_chat) {
-
-			attemptLiveChat();
-
-		} else if (id == R.id.nav_help) {
+        } else if (id == R.id.nav_help) {
 
 			switchToHelpActivity();
 
@@ -793,32 +772,31 @@ public class HomeActivity extends BaseActivity
 				try {
 					LogoutResponse mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
-					if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-						if (ProfileInfoCacheManager.isAccountSwitched()) {
-							ProfileInfoCacheManager.setAccountType(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType());
-							ProfileInfoCacheManager.updateBusinessInfoCache(Constants.ACCOUNT_INFO_DEFAULT);
-							ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(Constants.ACCOUNT_INFO_DEFAULT));
-							ProfileInfoCacheManager.updateProfileInfoCache(Utilities.
-									getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
-							ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
-							TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
-							ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
-							ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
-						}
-						Utilities.resetIntercomInformation();
-						if (!exitFromApplication) {
-							((MyApplication) this.getApplication()).launchLoginPage(null);
-						} else {
-							// Exit the application
-							((MyApplication) this.getApplication()).clearTokenAndTimer();
-							finish();
-						}
-					} else {
-						if (ProfileInfoCacheManager.isAccountSwitched()) {
-							((MyApplication) this.getApplication()).launchLoginPage(null);
-						}
-						Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
-					}
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (ProfileInfoCacheManager.isAccountSwitched()) {
+                            ProfileInfoCacheManager.setAccountType(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType());
+                            ProfileInfoCacheManager.updateBusinessInfoCache(Constants.ACCOUNT_INFO_DEFAULT);
+                            ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(Constants.ACCOUNT_INFO_DEFAULT));
+                            ProfileInfoCacheManager.updateProfileInfoCache(Utilities.
+                                    getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
+                            ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
+                            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                            ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                            ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
+                        }
+                        if (!exitFromApplication) {
+                            ((MyApplication) this.getApplication()).launchLoginPage(null);
+                        } else {
+                            // Exit the application
+                            ((MyApplication) this.getApplication()).clearTokenAndTimer();
+                            finish();
+                        }
+                    } else {
+                        if (ProfileInfoCacheManager.isAccountSwitched()) {
+                            ((MyApplication) this.getApplication()).launchLoginPage(null);
+                        }
+                        Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
 
 				} catch (Exception e) {
 					if (ProfileInfoCacheManager.isAccountSwitched()) {

@@ -29,6 +29,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityBillPayActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -77,6 +78,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private View mLankaBanglaDpsView;
     private View mAmberITBillPayView;
     private View mCreditCardBillPayView;
+    private View mRailwayTicketPurchaseView;
     private HashMap<String, String> mProviderAvailabilityMap;
     private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
@@ -119,6 +121,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mLankaBanglaDpsView = view.findViewById(R.id.lankaBanglaViewDps);
         mBrilliantRechargeView = view.findViewById(R.id.brilliant_recharge_view);
         mCreditCardBillPayView = view.findViewById(R.id.credit_card_bill);
+        mRailwayTicketPurchaseView = view.findViewById(R.id.railway_ticket);
         trendingBusinessListRefreshLayout = view.findViewById(R.id.trending_business_list_refresh_layout);
         mMobileNumberEditText = view.findViewById(R.id.searchView);
 
@@ -213,6 +216,25 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             @Override
             public void onClick(View v) {
                 payBill(Constants.CREDIT_CARD, null);
+            }
+        });
+
+        mRailwayTicketPurchaseView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RAILWAY_TICKET)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), RailwayTicketActionActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                    }
+                });
+                pinChecker.execute();
             }
         });
 

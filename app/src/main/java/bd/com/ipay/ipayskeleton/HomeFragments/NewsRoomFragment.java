@@ -167,6 +167,8 @@ public class NewsRoomFragment extends ProgressFragment implements HttpResponseLi
                         isLoading = false;
                 }
             } else {
+                mNewsRoomView.setVisibility(View.INVISIBLE);
+                mEmptyListTextView.setVisibility(View.VISIBLE);
                 if (getActivity() != null) {
                     Log.d("News Room", "Could not fetch news");
                 }
