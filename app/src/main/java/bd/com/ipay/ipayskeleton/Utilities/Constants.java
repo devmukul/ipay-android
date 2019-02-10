@@ -260,8 +260,6 @@ public class Constants {
     public static final String BODY = "BODY";
     public static final String COMMAND_FIREBASE_LOGOUT = "COMMAND_FIREBASE_LOGOUT";
     public static final String PACKAGE_NAME = "PACKAGE_NAME";
-    public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
-    public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
     public static final String URL_LANKABANGLA_DPS_BILL_PAY = "lankabangla/dps/billpay";
     public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
