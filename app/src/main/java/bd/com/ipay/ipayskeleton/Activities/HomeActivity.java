@@ -45,6 +45,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ContactsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
@@ -455,6 +456,13 @@ public class HomeActivity extends BaseActivity
     }
 
     @ValidateAccess
+    public void switchToContactsActivity() {
+        Intent intent = new Intent(HomeActivity.this, ContactsActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
     public void switchToActivityLogActivity() {
         Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
         startActivity(intent);
@@ -534,6 +542,10 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_bank_account) {
 
             switchToManageBanksActivity();
+
+        } else if (id == R.id.nav_contact) {
+
+            switchToContactsActivity();
 
         } else if (id == R.id.nav_user_activity) {
             switchToActivityLogActivity();

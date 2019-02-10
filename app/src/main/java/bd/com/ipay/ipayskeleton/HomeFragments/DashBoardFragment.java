@@ -24,7 +24,7 @@ public class DashBoardFragment extends Fragment
     private HomeFragment mHomeFragment;
     private IpayHereFragment mIPayHereFragment;
     private TransactionHistoryHolderFragment mTransactionHistoryFragment;
-    private ContactsHolderFragment mContactsHolderFragment;
+    private NewsRoomFragment mNewsRoomFragment;
 
     private MenuItem mPrevMenuItem;
     private BottomNavigationView bottomNavigationView;
@@ -42,7 +42,7 @@ public class DashBoardFragment extends Fragment
         setTitle();
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
-        mContactsHolderFragment = new ContactsHolderFragment();
+        mNewsRoomFragment = new NewsRoomFragment();
         mIPayHereFragment = new IpayHereFragment();
 
         bottomNavigationView = view.findViewById(R.id.bottom_navigation_view);
@@ -99,9 +99,9 @@ public class DashBoardFragment extends Fragment
                         .replace(R.id.fragment_container, mTransactionHistoryFragment)
                         .commit();
                 break;
-            case R.id.navigation_promotions:
+            case R.id.navigation_news_room:
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, mContactsHolderFragment)
+                        .replace(R.id.fragment_container, mNewsRoomFragment)
                         .commit();
                 break;
         }

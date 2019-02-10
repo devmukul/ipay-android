@@ -146,6 +146,7 @@
     <string name="no_outlets">No Outlet Found</string>
     <string name="no_verified_contacts">No verified contacts available in your account</string>
     <string name="contacts">Contacts</string>
+    <string name="news_room">News Room</string>
     <string name="country">Country</string>
     <string name="set_pin">Set PIN</string>
     <string name="change_password">Change Password</string>
