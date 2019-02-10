@@ -172,6 +172,7 @@ public class CreateRichNotification {
                     .setContentText(title)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
+                    .setPriority(NotificationManager.IMPORTANCE_HIGH)
                     .setContentTitle(title)
                     .setCustomContentView(collapsedView)
                     .setCustomBigContentView(transactionNotificationView);
@@ -183,6 +184,7 @@ public class CreateRichNotification {
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
                     .setContentTitle(title)
+                    .setPriority(NotificationManager.IMPORTANCE_HIGH)
                     .setContentText(title)
                     .setCustomContentView(collapsedView)
                     .setCustomBigContentView(transactionNotificationView);
