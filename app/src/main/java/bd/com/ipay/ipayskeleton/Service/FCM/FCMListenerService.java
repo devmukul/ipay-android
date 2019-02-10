@@ -104,6 +104,8 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
         if (data != null) {
             requestAction = (String) data.get("click_action");
             String title = (String) data.get("title");
+            String body = (String) data.get("body");
+            String imageUrl = (String) data.get("icon");
             CreateRichNotification createRichNotification;
 
             if (requestAction != null) {
@@ -121,8 +123,10 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
                         createRichNotification.setupNotification();
                         break;
                     case Constants.other:
-                        String description = (String) data.get("description");
-                        String image = (String) data.get("imageUrl");
+                        String meta = (String) data.get("meta");
+                        NotificationMetaData nMetaData = new Gson().fromJson(meta, NotificationMetaData.class);
+                        String description = nMetaData.getDescription();
+                        String image = nMetaData.getImageUrl();
                         String deepLink = (String) data.get("deepLink");
                         CreateOtherTypeRichNotification createOtherTypeRichNotification =
                                 new CreateOtherTypeRichNotification(this, description, title, image, deepLink);
@@ -132,9 +136,9 @@ public class FCMListenerService extends FirebaseMessagingService implements Http
                 }
             } else {
                 try {
-                    createNotification(this, data.values().toArray()[5].toString(),
-                            data.values().toArray()[3].toString(), mFcmNotificationResponse.getIcon());
+                    createNotification(this, title, body, imageUrl);
                 } catch (Exception e) {
+                    e.printStackTrace();
 
                 }
             }
