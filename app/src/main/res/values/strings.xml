@@ -146,6 +146,7 @@
     <string name="no_outlets">No Outlet Found</string>
     <string name="no_verified_contacts">No verified contacts available in your account</string>
     <string name="contacts">Contacts</string>
+    <string name="news_room">News Room</string>
     <string name="country">Country</string>
     <string name="set_pin">Set PIN</string>
     <string name="change_password">Change Password</string>
@@ -1417,6 +1418,10 @@
     <string name="railway_ticket_name">Railway Ticket</string>
     <string name="failed_loading_ticket_info">Failed to get ticket info</string>
     <string name="failed_loading_train_list">Failed to get train list</string>
+    <string name="email_suggestion">email@example.com</string>
+    <string name="news_room_helper_text_sub_title">You can see here what is going on your iPay wallet and what is iPay doing around the community.</string>
+    <string name="empty_news_room">There is no news available right now.</string>
+    <string name="news_room_helper_text_title">Hey, what’s going-on here and there</string>
 
     <string name="link_ipay_account">Link iPay</string>
     <string name="source_of_fund_success">You have sent a request to %1$s to become a sponsor of your iPay wallet. We will inform you when he/she accepts the request."</string>
