@@ -34,26 +34,26 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IPayTransactionActionActivity extends BaseActivity {
 
-	public static final String TRANSACTION_TYPE_KEY = "TRANSACTION_TYPE";
-	public static final int TRANSACTION_TYPE_INVALID = -1;
-	// 1
-	public static final int TRANSACTION_TYPE_SEND_MONEY = ServiceIdConstants.SEND_MONEY;
-	// 3001 | 3011 = 3067
-	public static final int TRANSACTION_TYPE_ADD_MONEY = ServiceIdConstants.ADD_MONEY_BY_BANK | ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
-	// 3001
-	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_BANK = ServiceIdConstants.ADD_MONEY_BY_BANK;
-	// 3002
-	public static final int TRANSACTION_TYPE_WITHDRAW_MONEY = ServiceIdConstants.WITHDRAW_MONEY;
-	// 3003
-	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY = ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY;
-	// 3011
-	public static final int TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
-	// 6001
-	public static final int TRANSACTION_TYPE_REQUEST_MONEY = ServiceIdConstants.REQUEST_MONEY;
-	// 6002
-	public static final int TRANSACTION_TYPE_MAKE_PAYMENT = ServiceIdConstants.MAKE_PAYMENT;
-	// 2001
-	public static final int TRANSACTION_TYPE_TOP_UP = ServiceIdConstants.TOP_UP;
+    public static final String TRANSACTION_TYPE_KEY = "TRANSACTION_TYPE";
+    public static final int TRANSACTION_TYPE_INVALID = -1;
+    // 1
+    public static final int TRANSACTION_TYPE_SEND_MONEY = ServiceIdConstants.SEND_MONEY;
+    // 3001 | 3011 = 3067
+    public static final int TRANSACTION_TYPE_ADD_MONEY = ServiceIdConstants.ADD_MONEY_BY_BANK | ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
+    // 3001
+    public static final int TRANSACTION_TYPE_ADD_MONEY_BY_BANK = ServiceIdConstants.ADD_MONEY_BY_BANK;
+    // 3002
+    public static final int TRANSACTION_TYPE_WITHDRAW_MONEY = ServiceIdConstants.WITHDRAW_MONEY;
+    // 3003
+    public static final int TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY = ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY;
+    // 3011
+    public static final int TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
+    // 6001
+    public static final int TRANSACTION_TYPE_REQUEST_MONEY = ServiceIdConstants.REQUEST_MONEY;
+    // 6002
+    public static final int TRANSACTION_TYPE_MAKE_PAYMENT = ServiceIdConstants.MAKE_PAYMENT;
+    // 2001
+    public static final int TRANSACTION_TYPE_TOP_UP = ServiceIdConstants.TOP_UP;
 
     private int transactionType;
 
@@ -62,91 +62,91 @@ public class IPayTransactionActionActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ipay_transaction_action);
 
-		transactionType = getIntent().getIntExtra(TRANSACTION_TYPE_KEY, TRANSACTION_TYPE_INVALID);
-		final Bundle bundle = new Bundle();
-		bundle.putInt(TRANSACTION_TYPE_KEY, transactionType);
-		switch (transactionType) {
-			case TRANSACTION_TYPE_ADD_MONEY:
-				switchFragment(new IPayAddMoneyOptionFragment(), bundle, 0, false);
-				break;
-			case TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
-				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchFragment(new IPayAddMoneyFromBankOptionFragment(), bundle, 0, false);
-				break;
-			case TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY:
-				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchFragment(new IPayAddMoneyFromBankInstantlyOptionFragment(), bundle, 0, false);
-				break;
-			case TRANSACTION_TYPE_WITHDRAW_MONEY:
-				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchFragment(new IPayWithdrawMoneyFromBankOptionFragment(), bundle, 0, false);
-				break;
-			case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 0, true);
-				break;
-			case TRANSACTION_TYPE_MAKE_PAYMENT:
-				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+        transactionType = getIntent().getIntExtra(TRANSACTION_TYPE_KEY, TRANSACTION_TYPE_INVALID);
+        final Bundle bundle = new Bundle();
+        bundle.putInt(TRANSACTION_TYPE_KEY, transactionType);
+        switch (transactionType) {
+            case TRANSACTION_TYPE_ADD_MONEY:
+                switchFragment(new IPayAddMoneyOptionFragment(), bundle, 0, false);
+                break;
+            case TRANSACTION_TYPE_ADD_MONEY_BY_BANK:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                switchFragment(new IPayAddMoneyFromBankOptionFragment(), bundle, 0, false);
+                break;
+            case TRANSACTION_TYPE_ADD_MONEY_BY_BANK_INSTANTLY:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                switchFragment(new IPayAddMoneyFromBankInstantlyOptionFragment(), bundle, 0, false);
+                break;
+            case TRANSACTION_TYPE_WITHDRAW_MONEY:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                switchFragment(new IPayWithdrawMoneyFromBankOptionFragment(), bundle, 0, false);
+                break;
+            case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 0, true);
+                break;
+            case TRANSACTION_TYPE_MAKE_PAYMENT:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
                 if (getIntent().hasExtra(Constants.SPONSOR_LIST)) {
                     ArrayList<Sponsor> sponsorList = getIntent().getParcelableArrayListExtra(Constants.SPONSOR_LIST);
                     bundle.putSerializable(Constants.SPONSOR_LIST, sponsorList);
                 }
-				if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
-						!getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
-					switchToMakePaymentFragment(bundle);
-				} else {
-					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
-					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
-					if (getIntent().hasExtra(Constants.ADDRESS))
-						bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
-					if (getIntent().hasExtra(Constants.OUTLET_ID))
-						bundle.putLong(Constants.OUTLET_ID, getIntent().getLongExtra(Constants.OUTLET_ID, 0));
-					switchToAmountInputFragment(bundle);
-				}
-				break;
-			case TRANSACTION_TYPE_SEND_MONEY:
-			case TRANSACTION_TYPE_REQUEST_MONEY:
-				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
-						!getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
-					switchToTransactionContactsFragment(bundle);
-				} else {
-					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
-					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
-					if (transactionType == TRANSACTION_TYPE_SEND_MONEY) {
-						switchFragment(new IPaySendMoneyAmountInputFragment(), bundle, 1, false);
-					} else if (transactionType == TRANSACTION_TYPE_REQUEST_MONEY) {
-						switchFragment(new IPayRequestMoneyAmountInputFragment(), bundle, 1, false);
-					} else {
-						switchToAmountInputFragment(bundle);
-					}
-				}
-				break;
-			case TRANSACTION_TYPE_TOP_UP:
-				BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
-				if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
-						!getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
-					switchToTransactionContactsFragment(bundle);
-				} else {
-					bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-					bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
-					bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
-					switchToAmountInputFragment(bundle);
-				}
-				break;
-			case TRANSACTION_TYPE_INVALID:
-			default:
-				Toaster.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT);
-				finish();
-				break;
-		}
-	}
+                if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
+                        !getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+                    switchToMakePaymentFragment(bundle);
+                } else {
+                    bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+                    bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
+                    bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
+                    if (getIntent().hasExtra(Constants.ADDRESS))
+                        bundle.putString(Constants.ADDRESS, getIntent().getStringExtra(Constants.ADDRESS));
+                    if (getIntent().hasExtra(Constants.OUTLET_ID))
+                        bundle.putLong(Constants.OUTLET_ID, getIntent().getLongExtra(Constants.OUTLET_ID, 0));
+                    switchToAmountInputFragment(bundle);
+                }
+                break;
+            case TRANSACTION_TYPE_SEND_MONEY:
+            case TRANSACTION_TYPE_REQUEST_MONEY:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
+                        !getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+                    switchToTransactionContactsFragment(bundle);
+                } else {
+                    bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+                    bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
+                    bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
+                    if (transactionType == TRANSACTION_TYPE_SEND_MONEY) {
+                        switchFragment(new IPaySendMoneyAmountInputFragment(), bundle, 1, false);
+                    } else if (transactionType == TRANSACTION_TYPE_REQUEST_MONEY) {
+                        switchFragment(new IPayRequestMoneyAmountInputFragment(), bundle, 1, false);
+                    } else {
+                        switchToAmountInputFragment(bundle);
+                    }
+                }
+                break;
+            case TRANSACTION_TYPE_TOP_UP:
+                BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                if (!getIntent().getBooleanExtra(Constants.FROM_CONTACT, false) &&
+                        !getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+                    switchToTransactionContactsFragment(bundle);
+                } else {
+                    bundle.putString(Constants.MOBILE_NUMBER, getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+                    bundle.putString(Constants.NAME, getIntent().getStringExtra(Constants.NAME));
+                    bundle.putString(Constants.PHOTO_URI, getIntent().getStringExtra(Constants.PHOTO_URI));
+                    switchToAmountInputFragment(bundle);
+                }
+                break;
+            case TRANSACTION_TYPE_INVALID:
+            default:
+                Toaster.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT);
+                finish();
+                break;
+        }
+    }
 
-	private void switchToTransactionContactsFragment(@NonNull Bundle bundle) {
-		switchFragment(new IPayTransactionContactFragment(), bundle, 0, false);
-	}
+    private void switchToTransactionContactsFragment(@NonNull Bundle bundle) {
+        switchFragment(new IPayTransactionContactFragment(), bundle, 0, false);
+    }
 
     public void switchToAmountInputFragment(@NonNull Bundle bundle) {
         switchFragment(new IPayTransactionAmountInputFragment(), bundle, 1, true);

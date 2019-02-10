@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 public class CutCopyPasteEditText extends android.support.v7.widget.AppCompatEditText {
 
