@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,9 +36,7 @@ public class CardSelectDialog {
 	private CardTypeAdapter mCardTypeAdapter;
 	List<CardType> cardTypes;
 	private String selectedCard = null;
-
-	private final RequestManager requestManager;
-	private final CircleTransform circleTransform;
+    private int selectedPos = -1;
 
 	public CardSelectDialog(Context context) {
 		numberFormat.setMinimumFractionDigits(2);
@@ -65,8 +64,6 @@ public class CardSelectDialog {
 				.setCancelable(false)
 				.create();
 
-		requestManager = Glide.with(context);
-		circleTransform = new CircleTransform(context);
 		genarateCardType();
         mCardTypeAdapter = new CardTypeAdapter(context,cardTypes);
         cardTypeRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -75,6 +72,7 @@ public class CardSelectDialog {
 	}
 
 	private void genarateCardType() {
+	    cardTypes = new ArrayList<>();
 		CardType cardType = new CardType(Constants.VISA_CARD, Constants.VISA, R.drawable.visa);
 		cardTypes.add(cardType);
 		cardType = new CardType(Constants.MASTER_CARD, Constants.MASTERCARD, R.drawable.mastercard);
@@ -164,13 +162,18 @@ public class CardSelectDialog {
             public void bindView(final int position) {
                 mNameTextView.setText(mCardType.get(position).getCardName());
                 cardIcon.setProfilePicture(mCardType.get(position).getCardIconDrawable());
+                if(position != selectedPos) {
+                    itemView.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+                }else{
+                    itemView.setBackgroundColor(context.getResources().getColor(R.color.colorSelectorBack));
+                }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         selectedCard = mCardType.get(position).getCardKey();
-                        view.setBackgroundColor(context.getResources().getColor(R.color.colorPaymentReviewSecondaryText));
-
+                        selectedPos = position;
+                        notifyDataSetChanged();
                     }
                 });
             }

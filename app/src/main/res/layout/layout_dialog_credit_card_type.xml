@@ -8,7 +8,8 @@
         android:id="@+id/card_type_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/value10">
+        android:layout_marginTop="@dimen/value10"
+        android:layout_marginBottom="@dimen/value10">
 
     </android.support.v7.widget.RecyclerView>
 

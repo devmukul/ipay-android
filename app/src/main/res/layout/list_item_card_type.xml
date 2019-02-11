@@ -4,8 +4,7 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:layout_marginTop="10dp">
+    android:padding="10dp">
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/card_icon"
@@ -18,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/value16"
-            android:layout_toRightOf="@+id/outlet_radio_button"
+            android:layout_toRightOf="@+id/card_icon"
             android:textSize="13sp"
             android:textColor="#212121"
             android:textStyle="bold"
