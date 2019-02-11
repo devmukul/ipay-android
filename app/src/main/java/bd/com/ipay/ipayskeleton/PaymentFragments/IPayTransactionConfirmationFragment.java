@@ -308,12 +308,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
         final String note = mNoteEditText.getText().toString();
         mPin = mPinEditText.getText().toString().trim();
         switch (transactionType) {
-//            case IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-//                apiCommand = Constants.COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD;
-//                requestJson = gson.toJson(new AddMoneyByCreditOrDebitCardRequest(amount.doubleValue(), note, null));
-//                url = Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD;
-//                mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-//                break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY:
                 apiCommand = Constants.COMMAND_SEND_MONEY;
                 requestJson = gson.toJson(new SendMoneyRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
