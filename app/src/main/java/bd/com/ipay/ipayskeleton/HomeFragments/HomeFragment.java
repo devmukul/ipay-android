@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -196,34 +195,32 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mUpArrow = view.findViewById(R.id.up_arrow);
         mUpArrowText = view.findViewById(R.id.up_arrow_text);
 
-        initializeBottomSheet();
-
-		mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			@ValidateAccess(or = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD, ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY})
-			public void onClick(View v) {
-				PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-					@Override
-					public void ifPinAdded() {
-						Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
-						intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY);
-						startActivity(intent);
-					}
-				});
-				addMoneyPinChecker.execute();
-			}
-		});
-		if (SharedPrefManager.getUserBalance().equals("0.0")) {
-			balanceView.setText(R.string.loading);
-		} else {
-			try {
-				balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(new BigDecimal(SharedPrefManager.getUserBalance()))));
-			} catch (Exception e) {
-				mTracker.send(new HitBuilders.ExceptionBuilder()
-						.setDescription("Parsing Error- " + SharedPrefManager.getUserBalance())
-						.build());
-			}
-		}
+        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(or = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD, ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY})
+            public void onClick(View v) {
+                PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY);
+                        startActivity(intent);
+                    }
+                });
+                addMoneyPinChecker.execute();
+            }
+        });
+        if (SharedPrefManager.getUserBalance().equals("0.0")) {
+            balanceView.setText(R.string.loading);
+        } else {
+            try {
+                balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(new BigDecimal(SharedPrefManager.getUserBalance()))));
+            } catch (Exception e) {
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("Parsing Error- " + SharedPrefManager.getUserBalance())
+                        .build());
+            }
+        }
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,9 +375,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             }
         }
 
-		transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-				new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBalanceUpdateBroadcastReceiver,
                 new IntentFilter(Constants.BALANCE_UPDATE_BROADCAST));
@@ -699,53 +696,12 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         }
     }
 
-    private void initializeBottomSheet() {
-
-        // init the bottom sheet behavior
-        BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-        // change the state of the bottom sheet
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        // change the state of the bottom sheet
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        // set callback for changes
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        mUpArrowText.setText(R.string.swipe_up_to_see_more);
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        mUpArrowText.setText(R.string.swipe_down_to_close);
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (isAdded()) {
-                    transitionBottomSheetBackgroundColor(slideOffset);
-                    animateBottomSheetArrows(slideOffset);
-                }
-            }
-        });
+    private void transitionBottomSheetBackgroundColor(float slideOffset) {
+        int colorFrom = getResources().getColor(R.color.colorTransparent);
+        int colorTo = getResources().getColor(R.color.colorWhite);
+        mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
+                colorFrom, colorTo));
     }
-
-	private void transitionBottomSheetBackgroundColor(float slideOffset) {
-		int colorFrom = getResources().getColor(R.color.colorTransparent);
-		int colorTo = getResources().getColor(R.color.colorWhite);
-		mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
-				colorFrom, colorTo));
-	}
 
     private void animateBottomSheetArrows(float slideOffset) {
         mUpArrow.setRotation(slideOffset * -180);
