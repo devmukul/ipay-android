@@ -356,22 +356,26 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
                         if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded()))  {
+                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
                             }
                         } else getAddedCards();
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
+                        }
                         hideProgressDialog();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    }
                     hideProgressDialog();
                 }
                 mGetProfileCompletionStatusTask = null;

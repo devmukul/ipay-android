@@ -196,12 +196,12 @@ public class Constants {
     public static final String LANKA_BANGLA_BILL_PAY = "LANKA BANGLA BILL PAY";
     public static final String LANKA_BANGLA_DPS_BILL_PAY = "LANKA BANGLA DPS BILL PAY";
     public static final String AMBERIT = "AMBERIT";
-	public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
-	public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
-	public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
-	public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
-	public static final String FROM_CONTACT = "FROM_CONTACT";
-	public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
+    public static final String COMMAND_GET_AMBERIT_CUSTOMER = "COMMAND_GET_AMBERIT_CUSTOMER";
+    public static final String COMMAND_AMBERIT_BILL_PAY = "COMMAND_AMBERIT_BILL_PAY";
+    public static final String URL_GET_AMBERIT_CUSTOMER = "amberit/customer";
+    public static final String URL_AMBERIT_BILL_PAY = "amberit/billpay/";
+    public static final String FROM_CONTACT = "FROM_CONTACT";
+    public static final String IS_FIRST_SEND_MONEY = "IS_FIRST_SEND_MONEY";
     public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
     public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
     public static final String VISA = "VISA";
@@ -250,6 +250,16 @@ public class Constants {
     public static final String CREDIT_CARD_WITH_SPACE = "Credit Card";
     public static final String URL_GET_SAVED_CARDS = "credit-card/my-list";
     public static final String COMMAND_GET_SAVED_CARDS = "COMMAND_GET_SAVED_CARDS";
+    public static final String ACTION = "ACTION";
+    public static final String ACTION_FROM_NOTIFICATION = "ACTION_FROM_NOTIFICATION";
+    public static final String DESIRED_ACTIVITY = "DESIRED_ACTIVITY";
+    public static final String REVIEW_PAGE = "REVIEW_PAGE";
+    public static final String TRANSACTION = "TRANSACTION";
+    public static final String DEEP_LINK = "DEEP_LINK";
+    public static final String IMAGE_URL = "IMAGE_URL";
+    public static final String BODY = "BODY";
+    public static final String COMMAND_FIREBASE_LOGOUT = "COMMAND_FIREBASE_LOGOUT";
+    public static final String PACKAGE_NAME = "PACKAGE_NAME";
     public static final String COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO = "COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO";
     public static final String URL_LANKABANGLA_DPS_BILL_PAY = "lankabangla/dps/billpay";
     public static final String COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO = "COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO";
@@ -585,6 +595,7 @@ public class Constants {
 
     // FCM notification
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
+    public static final String URL_FIREBASE_LOGOUT  = "firebase/logout/";
 
     // FCM notification
     public static final String URL_PROMO_ACTIVE = "promo/activate";
@@ -1018,4 +1029,7 @@ public class Constants {
     public static long BLOCKED = 2;
     public static final int MAX_TICKET = 4;
     public static final int MAX_TICKET_PURCHASE_DAY = 9;
+    public static final String transaction = "transaction";
+    public static final  String other = "other";
+    public static  final String  request_money ="request_money";
 }
