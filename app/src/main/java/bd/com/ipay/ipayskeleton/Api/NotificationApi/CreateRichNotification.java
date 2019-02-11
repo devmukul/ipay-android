@@ -55,6 +55,7 @@ public class CreateRichNotification {
     private String type;
     private String title;
     private CustomProgressDialog mProgressDialog;
+    private Bitmap imageBitmap;
 
     private static boolean isLoggedIn;
     private static HttpRequestPostAsyncTask mRejectRequestTask = null;
@@ -76,17 +77,22 @@ public class CreateRichNotification {
         Bitmap defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_profile);
 
         try {
+            if (url != null && !url.contains("ipay.com")) {
+                url = Constants.BASE_URL_FTP_SERVER + url;
+            }
             profilePictureBitmap = Glide.with(context)
-                    .load(Constants.BASE_URL_FTP_SERVER + url)
+                    .load(url)
                     .asBitmap()
                     .into(size, size).get();
-            newBitmap = getCircleBitmap(profilePictureBitmap);
+            if (imageBitmap == null) {
+                imageBitmap = getCircleBitmap(profilePictureBitmap);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (newBitmap != null) {
-            remoteView.setImageViewBitmap(viewId, newBitmap);
+        if (imageBitmap != null) {
+            remoteView.setImageViewBitmap(viewId, imageBitmap);
         } else {
             remoteView.setImageViewBitmap(viewId, defaultBitmap);
         }
@@ -147,9 +153,6 @@ public class CreateRichNotification {
         transactionNotificationView.setOnClickPendingIntent(R.id.accept, acceptPendingIntent);
         transactionNotificationView.setOnClickPendingIntent(R.id.reject, rejectPendingIntent);
 
-
-        setBitmap(transactionHistory.getOtherParty().getUserProfilePic(),
-                transactionNotificationView, R.id.profile_picture);
         fillUpViewsWithNecessaryData(transactionNotificationView);
         initiateNotificationAction(pendingIntent, transactionNotificationView, transactionNotificationViewCollapsed);
     }
