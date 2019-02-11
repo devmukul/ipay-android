@@ -205,7 +205,11 @@ public class Constants {
     public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
     public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
     public static final String VISA = "VISA";
+    public static final String AMEX = "AMEX";
     public static final String MASTERCARD = "MASTERCARD";
+    public static final String VISA_CARD = "Visa Card";
+    public static final String AMEX_CARD = "American Express";
+    public static final String MASTER_CARD = "Master Card";
     public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
@@ -317,7 +321,8 @@ public class Constants {
     public static final String BASE_URL_MM = BuildConfig.BASE_URL_IPAY + "/api/v1/";
     public static final String BASE_URL_SM = BuildConfig.BASE_URL_IPAY + "/api/v1/money/";
     public static final String BASE_URL_PG = BuildConfig.BASE_URL_IPAY + "/api/pg/order/";
-    public static final String BASE_URL_CARD = BuildConfig.BASE_URL_IPAY + "/api/v1/card/";
+    //public static final String BASE_URL_CARD = BuildConfig.BASE_URL_IPAY + "/api/v1/card/";
+    public static final String BASE_URL_CARD = BuildConfig.BASE_URL_IPAY + "/api/v1/card/add-money";
     public static final String BASE_URL_EDU = BuildConfig.BASE_URL_IPAY + "/api/v1/em/";
     public static final String BASE_URL_FTP_SERVER = BuildConfig.BASE_URL_IPAY;
     public static final String BASE_URL_CONTACT = BuildConfig.BASE_URL_IPAY + "/cm/api/v1/";
@@ -331,6 +336,7 @@ public class Constants {
     public static final String BASE_URL_CMS = BuildConfig.BASE_URL_IPAY + "/api/cms/";
     public static final String INTERCOM_API_KEY = BuildConfig.API_KEY_INTERCOM;
     public static final String INTERCOM_ANDROID_SDK_KEY = BuildConfig.SDK_KEY_INTERCOM;
+
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
@@ -1018,4 +1024,6 @@ public class Constants {
     public static long BLOCKED = 2;
     public static final int MAX_TICKET = 4;
     public static final int MAX_TICKET_PURCHASE_DAY = 9;
+
+    public static final String CARD_TYPE = "CARD_TYPE";
 }
