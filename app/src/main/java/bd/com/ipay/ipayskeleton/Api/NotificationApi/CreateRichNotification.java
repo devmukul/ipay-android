@@ -336,8 +336,7 @@ public class CreateRichNotification {
     }
 
     private static Intent launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted, boolean isLoggedIn, Context context) {
-        Intent intent;
-            intent = new Intent(context, SentReceivedRequestReviewActivity.class);
+        Intent intent = new Intent(context, SentReceivedRequestReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
