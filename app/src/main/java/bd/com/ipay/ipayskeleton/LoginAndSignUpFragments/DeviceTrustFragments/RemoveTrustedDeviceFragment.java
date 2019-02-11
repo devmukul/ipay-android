@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.DeviceTrustFragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -213,6 +215,14 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public void navigateToDesiredActivityViaWallet() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        intent.putExtra(Constants.TRANSACTION_DETAILS, ((DeviceTrustActivity) getActivity()).transactionHistory);
+        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, ((DeviceTrustActivity) getActivity()).isAccepted);
+        intent.putExtra(Constants.DESIRED_ACTIVITY, ((DeviceTrustActivity) getActivity()).desiredActivity);
+        startActivity(intent);
+    }
+
     private void getProfileCompletionStatus() {
 
         mProgressDialog.show();
@@ -358,18 +368,33 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                            if (((DeviceTrustActivity) getActivity()).transactionHistory != null) {
+                                navigateToDesiredActivityViaWallet();
+                            } else {
+                                ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                            }
                         }
                     } else getAddedCards();
                 } else {
-                    if (getActivity() != null)
-                        ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                    if (getActivity() != null) {
+                        if (((DeviceTrustActivity) getActivity()).transactionHistory != null) {
+                            navigateToDesiredActivityViaWallet();
+                        } else {
+                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                        }
+                    }
+
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null)
-                    ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                if (getActivity() != null) {
+                    if (((DeviceTrustActivity) getActivity()).transactionHistory != null) {
+                        navigateToDesiredActivityViaWallet();
+                    } else {
+                        ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                    }
+                }
             }
             mProgressDialog.dismiss();
             mGetProfileCompletionStatusTask = null;
@@ -405,7 +430,11 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                             || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                         ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                     } else {
-                        ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                        if (((DeviceTrustActivity) getActivity()).transactionHistory != null) {
+                            navigateToDesiredActivityViaWallet();
+                        } else {
+                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                        }
                     }
                 } else {
                     Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);

@@ -53,18 +53,15 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
-
         mDeepLinkAction = getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
         isRememberMe = true;
 
         if (SharedPrefManager.ifContainsUserID()) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new LoginFragment()).commit();
-        }
-        else if (mDeepLinkAction != null && mDeepLinkAction.getAction().trim().equalsIgnoreCase("signup")) {
+        } else if (mDeepLinkAction != null && mDeepLinkAction.getAction().trim().equalsIgnoreCase("signup")) {
             switchToSignupPersonalStepOneFragment();
-        }
-        else {
+        } else {
             if (getIntent().hasExtra(Constants.MESSAGE)) {
                 String message = getIntent().getStringExtra(Constants.MESSAGE);
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -76,16 +73,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 } else if (targetFragment.equals(Constants.SIGN_UP)) {
                     switchToAccountSelectionFragment();
                 }
-            }else {
-
+            } else {
                 Utilities.hideKeyboard(this);
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
             }
         }
-
-
-
     }
 
     public void switchToLoginFragment() {
@@ -158,8 +151,9 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToDeviceTrustActivity() {
         Intent intent = new Intent(SignupOrLoginActivity.this, DeviceTrustActivity.class);
-        if (mDeepLinkAction != null)
+        if (mDeepLinkAction != null) {
             intent.putExtra(Constants.DEEP_LINK_ACTION, mDeepLinkAction);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();
@@ -190,7 +184,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             this.finish();
-        }else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
             if (!SharedPrefManager.ifContainsUserID()) {
