@@ -56,12 +56,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class DescoBillPaymentFragment extends BaseFragment implements HttpResponseListener {
     private TextView mAccountIDTextView;
     private TextView mDueDateTextView;
-    private TextView mNetAmountTextView;
-    private TextView mVatTextView;
+    private TextView mVatAmountTextView;
     private TextView mTotalAmountTextView;
-    private TextView mIpcTextView;
-    private TextView mBillStatusTextView;
+    private TextView mStampAmountTextView;
+    private TextView mZoneCodeTextView;
+    private TextView mTransactionIdTextView;
+    private TextView mlpcAmountTextView;
     private TextView mBillNumberTextView;
+    private TextView mBillAmountTextView;
     private EditText mEnterBillNumberEditText;
     private Button mContinueButton;
     private View infoView;
@@ -100,13 +102,15 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         }
 
         mAccountIDTextView = (TextView) view.findViewById(R.id.account_number_view);
-        mNetAmountTextView = (TextView) view.findViewById(R.id.net_amount_view);
-        mVatTextView = (TextView) view.findViewById(R.id.vat_amount_view);
+        mVatAmountTextView = (TextView) view.findViewById(R.id.vat_amount_view);
         mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
-        mIpcTextView = (TextView) view.findViewById(R.id.ipc_view);
-        mBillStatusTextView = (TextView) view.findViewById(R.id.bill_status_view);
+        mlpcAmountTextView = (TextView) view.findViewById(R.id.lpc_amount_view);
         mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number_view);
         mDueDateTextView = (TextView) view.findViewById(R.id.due_date_view);
+        mStampAmountTextView = view.findViewById(R.id.stamp_amount_view);
+        mBillAmountTextView = (TextView) view.findViewById(R.id.bill_amount_view);
+        mZoneCodeTextView = (TextView) view.findViewById(R.id.zone_code_view);
+        mTransactionIdTextView = (TextView) view.findViewById(R.id.transaction_id_view);
         customerIDView = view.findViewById(R.id.customer_id_view);
         infoView = view.findViewById(R.id.info_view);
         mEnterBillNumberEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
@@ -256,26 +260,21 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
         }
     }
 
-    private void fillUpFiledsWithData() {
-        mNetAmountTextView.setText(mDescoCustomerInfoResponse.getNetAmount());
-        mBillStatusTextView.setText(mDescoCustomerInfoResponse.getBillStatus());
+    private void fillUpFieldsWithData() {
         mAccountIDTextView.setText(mDescoCustomerInfoResponse.getAccountNumber());
-        mVatTextView.setText(mDescoCustomerInfoResponse.getVatAmount());
-        mTotalAmountTextView.setText(mDescoCustomerInfoResponse.getTotalPayableAmount());
-        mAmount = mDescoCustomerInfoResponse.getTotalPayableAmount();
+        mVatAmountTextView.setText(mDescoCustomerInfoResponse.getVatAmount());
+        mTotalAmountTextView.setText(mDescoCustomerInfoResponse.getTotalAmount());
+        mAmount = mDescoCustomerInfoResponse.getTotalAmount();
+        mBillAmountTextView.setText(mDescoCustomerInfoResponse.getBillAmount());
+        mStampAmountTextView.setText(mDescoCustomerInfoResponse.getStampAmount());
+        mTransactionIdTextView.setText(mDescoCustomerInfoResponse.getTransactionId());
         mBillNumberTextView.setText(mBillNumber);
-        mIpcTextView.setText(mDescoCustomerInfoResponse.getLpc());
+        mlpcAmountTextView.setText(mDescoCustomerInfoResponse.getLpcAmount());
+        mZoneCodeTextView.setText(mDescoCustomerInfoResponse.getZoneCode());
         mContinueButton.setText("Pay bill");
         mDueDateTextView.setText(mDescoCustomerInfoResponse.getDueDate());
         infoView.setVisibility(View.VISIBLE);
         customerIDView.setVisibility(View.GONE);
-        if (mDescoCustomerInfoResponse.getBillStatus() != null) {
-            if (mDescoCustomerInfoResponse.getBillStatus().toLowerCase().equals("paid")) {
-                mContinueButton.setEnabled(false);
-            } else {
-                mContinueButton.setEnabled(true);
-            }
-        }
     }
 
     @Override
@@ -293,7 +292,8 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_DESCO_CUSTOMER)) {
                     mDescoCustomerInfoResponse = gson.fromJson(result.getJsonString(), DescoCustomerInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        fillUpFiledsWithData();
+                        Utilities.hideKeyboard(getActivity());
+                        fillUpFieldsWithData();
                     } else {
                         Toast.makeText(getContext(), mDescoCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -301,7 +301,6 @@ public class DescoBillPaymentFragment extends BaseFragment implements HttpRespon
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         gson = new Gson();
-
                         BusinessRuleV2 businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRuleV2.class);
                         List<Rule> rules = businessRuleArray.getRules();
 

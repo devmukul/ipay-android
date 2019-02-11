@@ -1467,4 +1467,8 @@
     <string name="a_certain_amount">a certain amount</string>
     <string name="please_enter_an_amount">Please enter an amount</string>
     <string name="please_enter_your_pin">Please enter your pin</string>
+    <string name="bill_amount">Bill amount</string>
+    <string name="stamp_amount">Stamp amount</string>
+    <string name="lpc">Lpc amount</string>
+    <string name="zone_code">Zone code</string>
 </resources>

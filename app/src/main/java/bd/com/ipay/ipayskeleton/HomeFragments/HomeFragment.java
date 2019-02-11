@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -196,7 +195,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mUpArrow = view.findViewById(R.id.up_arrow);
         mUpArrowText = view.findViewById(R.id.up_arrow_text);
 
-        initializeBottomSheet();
 
 		mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -697,47 +695,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 mTransactionHistoryTask = null;
                 break;
         }
-    }
-
-    private void initializeBottomSheet() {
-
-        // init the bottom sheet behavior
-        BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-
-        // change the state of the bottom sheet
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        // change the state of the bottom sheet
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        // set callback for changes
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        mUpArrowText.setText(R.string.swipe_up_to_see_more);
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        mUpArrowText.setText(R.string.swipe_down_to_close);
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (isAdded()) {
-                    transitionBottomSheetBackgroundColor(slideOffset);
-                    animateBottomSheetArrows(slideOffset);
-                }
-            }
-        });
     }
 
 	private void transitionBottomSheetBackgroundColor(float slideOffset) {

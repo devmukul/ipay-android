@@ -356,7 +356,7 @@ public class Constants {
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String INVALID_CREDENTIAL = "invalid credential";
-    public static final String URL_DESCO_BILL_PAY = "/desco/billpay";
+    public static final String URL_DESCO_BILL_PAY = "desco/bill-pay";
     public static final String URL_CARNIVAL = "/carnival/bill-info/";
 
 
