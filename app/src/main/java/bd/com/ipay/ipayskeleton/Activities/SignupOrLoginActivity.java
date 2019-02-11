@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
@@ -17,7 +15,6 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -51,60 +48,36 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static AddressClass mAddressBusinessHolder;
 
     private DeepLinkAction mDeepLinkAction;
-    public TransactionHistory transactionHistory;
-    public String desiredActivity;
-    public boolean isAccepted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
-        if (getIntent().hasExtra(Constants.TRANSACTION_DETAILS)) {
-            transactionHistory = new Gson().fromJson(getIntent().getStringExtra(Constants.TRANSACTION_DETAILS),
-                    TransactionHistory.class);
-            isAccepted = getIntent().getBooleanExtra(Constants.ACTION_FROM_NOTIFICATION, false);
-            desiredActivity = getIntent().getStringExtra(Constants.DESIRED_ACTIVITY);
-            switchToLoginFragment();
+        mDeepLinkAction = getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
+        isRememberMe = true;
+
+        if (SharedPrefManager.ifContainsUserID()) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, new LoginFragment()).commit();
+        } else if (mDeepLinkAction != null && mDeepLinkAction.getAction().trim().equalsIgnoreCase("signup")) {
+            switchToSignupPersonalStepOneFragment();
         } else {
-
-            mDeepLinkAction = getIntent().getParcelableExtra(Constants.DEEP_LINK_ACTION);
-            isRememberMe = true;
-
-            if (SharedPrefManager.ifContainsUserID()) {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, new LoginFragment()).commit();
-            } else if (mDeepLinkAction != null && mDeepLinkAction.getAction().trim().equalsIgnoreCase("signup")) {
-                switchToSignupPersonalStepOneFragment();
-            } else {
-                if (getIntent().hasExtra(Constants.MESSAGE)) {
-                    String message = getIntent().getStringExtra(Constants.MESSAGE);
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            if (getIntent().hasExtra(Constants.MESSAGE)) {
+                String message = getIntent().getStringExtra(Constants.MESSAGE);
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                switchToLoginFragment();
+            } else if (getIntent().hasExtra(Constants.TARGET_FRAGMENT)) {
+                String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
+                if (targetFragment.equals(Constants.SIGN_IN)) {
                     switchToLoginFragment();
-                } else if (getIntent().hasExtra(Constants.TARGET_FRAGMENT)) {
-                    String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
-                    if (targetFragment.equals(Constants.SIGN_IN)) {
-                        switchToLoginFragment();
-                    } else if (targetFragment.equals(Constants.SIGN_UP)) {
-                        switchToAccountSelectionFragment();
-                    }
-                } else {
-                    Utilities.hideKeyboard(this);
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
+                } else if (targetFragment.equals(Constants.SIGN_UP)) {
+                    switchToAccountSelectionFragment();
                 }
+            } else {
+                Utilities.hideKeyboard(this);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
             }
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (intent.hasExtra(Constants.TRANSACTION_DETAILS)) {
-            String transactionHistoryString = (String) intent.getExtras().get(Constants.TRANSACTION_DETAILS);
-            transactionHistory = new Gson().fromJson(transactionHistoryString, TransactionHistory.class);
-            isAccepted = intent.getBooleanExtra(Constants.ACTION_FROM_NOTIFICATION, false);
-            desiredActivity = intent.getStringExtra(Constants.DESIRED_ACTIVITY);
-            switchToLoginFragment();
         }
     }
 
@@ -180,10 +153,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         Intent intent = new Intent(SignupOrLoginActivity.this, DeviceTrustActivity.class);
         if (mDeepLinkAction != null) {
             intent.putExtra(Constants.DEEP_LINK_ACTION, mDeepLinkAction);
-        } else if (transactionHistory != null) {
-            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-            intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, isAccepted);
-            intent.putExtra(Constants.DESIRED_ACTIVITY, desiredActivity);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

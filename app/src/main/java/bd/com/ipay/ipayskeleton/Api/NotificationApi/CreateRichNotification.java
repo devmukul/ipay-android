@@ -33,7 +33,6 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -272,31 +271,16 @@ public class CreateRichNotification {
 
     private PendingIntent getNotificationPendingIntent() {
         PendingIntent pendingIntent;
-        if (!isLoggedIn) {
-            if (type.equals("transaction")) {
-                Intent intent = new Intent(context, SignupOrLoginActivity.class);
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.putExtra(Constants.DESIRED_ACTIVITY, Constants.TRANSACTION);
-                intent.putExtra(Constants.TRANSACTION_DETAILS, new Gson().toJson(transactionHistory));
-                pendingIntent = PendingIntent.getActivity(context, 0,
-                        intent, PendingIntent.FLAG_ONE_SHOT);
-            } else {
-                Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory, false, isLoggedIn);
-                pendingIntent = PendingIntent.getActivity(context, 0,
-                        intent, PendingIntent.FLAG_ONE_SHOT);
-            }
+        if (type.equals("transaction")) {
+            Intent intent = new Intent(context, TransactionDetailsActivity.class);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+            pendingIntent = PendingIntent.getActivity(context, 0,
+                    intent, PendingIntent.FLAG_ONE_SHOT);
         } else {
-            if (type.equals("transaction")) {
-                Intent intent = new Intent(context, TransactionDetailsActivity.class);
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-                pendingIntent = PendingIntent.getActivity(context, 0,
-                        intent, PendingIntent.FLAG_ONE_SHOT);
-            } else {
-                Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory, false, isLoggedIn);
-                pendingIntent = PendingIntent.getActivity(context, 0,
-                        intent, PendingIntent.FLAG_ONE_SHOT);
-            }
+            Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory, false, isLoggedIn, context);
+            pendingIntent = PendingIntent.getActivity(context, 0,
+                    intent, PendingIntent.FLAG_ONE_SHOT);
         }
         return pendingIntent;
     }
@@ -351,47 +335,9 @@ public class CreateRichNotification {
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private static Intent launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted, boolean isLoggedIn) {
-        Intent intent;
-        if (isLoggedIn) {
-            intent = new Intent(context, SentReceivedRequestReviewActivity.class);
-        } else {
-            intent = new Intent(context, SignupOrLoginActivity.class);
-            intent.putExtra(Constants.DESIRED_ACTIVITY, Constants.REVIEW_PAGE);
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-        }
-        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
-        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
-                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
-
-        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
-        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, false);
-        intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
-        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
-        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
-        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
-        intent.putExtra(Constants.IS_IN_CONTACTS,
-                new ContactSearchHelper(context).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
-
-        if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
-            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
-        }
-        return intent;
-    }
-
     private static Intent launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted, boolean isLoggedIn, Context context) {
         Intent intent;
-        if (isLoggedIn) {
             intent = new Intent(context, SentReceivedRequestReviewActivity.class);
-        } else {
-            intent = new Intent(context, SignupOrLoginActivity.class);
-            intent.putExtra(Constants.DESIRED_ACTIVITY, Constants.REVIEW_PAGE);
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-        }
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
