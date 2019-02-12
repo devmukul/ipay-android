@@ -75,6 +75,7 @@
     <string name="change_password_success_message">Your password is changed successfully. Now you will be logged out from all devices. Please login again to continue.</string>
     <string name="confirm_pin_not_matched">PIN did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account.</string>
+    <string name="no_bank_account_list">You have no bank account linked with iPay. Please press + button link a bank.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_ipay_here">No business found near this location.</string>
     <string name="empty_list">Nothing to show right now.</string>
@@ -1074,17 +1075,17 @@
     <string name="remove_sponsor">Do you want to remove this sponsor?</string>
     <string name="he_can_use_monthly">He can use monthly</string>
     <string name="remove_beneficiary">Do you want to remove this beneficiary?</string>
-    <string name="pending_all_caps">PENDING</string>
+    <string name="pending_all_caps" translatable="false">PENDING</string>
     <string name="pay_by">Pay by: </string>
     <string name="tap_to_pay_from_other_source">TAP TO PAY FROM OTHER SOURCE</string>
     <string name="sponsor_blocked">The sponsor is blocked</string>
-    <string name="reject_all_caps">REJECT</string>
-    <string name="accept_all_caps">ACCEPT</string>
+    <string name="reject_all_caps" translatable="false">REJECT</string>
+    <string name="accept_all_caps" translatable="false">ACCEPT</string>
     <string name="add_beneficiary_question">Add Beneficiary?</string>
     <string name="add_sponsor_question">Add sponsor?</string>
     <string name="sponsor_request_string">%1$s wants to be your sponsor.You can use his/her iPay wallet while making payments</string>
     <string name="accept_request">Do you want to accept the request?</string>
-    <string name="beneficiary_request_message"> has asked you to become a sponsor of his/her iPay wallet. He/She can use up to a certain limit monthly from your iPay wallet</string>
+    <string name="beneficiary_request_message">%1$s has asked you to become a sponsor of his/her iPay wallet. He/She can use up to a certain limit monthly from your iPay wallet</string>
     <string name="nothing_to_show_right_now">Nothing to show right now</string>
     <string name="please_enter_a_amount_to_use_from_sponsor">Please enter a monthly amount you want to use from your sponsor\'s iPay account</string>
     <string name="paid_for">Paid for %1$s</string>
@@ -1095,6 +1096,8 @@
     <string name="please_enter_an_amount">Please enter an amount</string>
     <string name="please_enter_your_pin">Please enter your pin</string>
     <string name="language">Language</string>
+    <string name="pending_notifications">Pending</string>
+    <string name="notifications_notifications">Notifications</string>
 
     <string name="language_english" translatable="false">English</string>
     <string name="language_bengali" translatable="false">বাংলা</string>
@@ -1109,4 +1112,5 @@
     <string name="postpaid">Postpaid</string>
     <string name="continue_button">Continue</string>
     <string name="completed_transaction">@string/complete</string>
+    <string name="add_your_convenient_source_of_fund_to_update_your_ipay_balance_anytime_when_you_are_in_need">Add your convenient source of fund to update your iPay balance anytime when you are in need.</string>
 </resources>

@@ -32,7 +32,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/value16"
                     android:layout_toRightOf="@+id/back"
-                    android:text="Source Of Fund"
+                    android:text="@string/source_of_fund"
                     android:textColor="@color/colorWhite"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -58,7 +58,7 @@
                     android:layout_marginRight="@dimen/value40"
                     android:fontFamily="@font/open_sans_light"
                     android:lineSpacingExtra="6sp"
-                    android:text="Source of Fund"
+                    android:text="@string/source_of_fund"
                     android:textColor="#212121"
                     android:textSize="28sp" />
 
@@ -73,7 +73,7 @@
                     android:layout_marginBottom="@dimen/value20"
                     android:fontFamily="@font/open_sans"
                     android:lineSpacingExtra="6sp"
-                    android:text="Add your convenient source of fund to update your iPay balance anytime when you are in need."
+                    android:text="@string/add_your_convenient_source_of_fund_to_update_your_ipay_balance_anytime_when_you_are_in_need"
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
@@ -98,7 +98,7 @@
                         android:layout_marginLeft="@dimen/value14"
                         android:layout_toRightOf="@id/bank_icon"
                         android:fontFamily="@font/open_sans_semibold"
-                        android:text="LINK BANK"
+                        android:text="@string/link_bank"
                         android:textColor="#212121"
                         android:textSize="14sp" />
 

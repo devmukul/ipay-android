@@ -10,7 +10,8 @@ import bd.com.ipay.ipayskeleton.R;
 
 
 public class GenderList {
-	private static final String[] genderCodes = {
+
+	public static final String[] genderCodes = {
 			"M", "F", "O"
 	};
 

@@ -51,7 +51,7 @@
                     android:layout_marginRight="@dimen/value16"
                     android:fontFamily="@font/open_sans_semibold"
                     android:gravity="end"
-                    android:text="HELP"
+                    android:text="@string/help"
                     android:textColor="#ffffff"
                     android:textSize="14sp" />
             </RelativeLayout>

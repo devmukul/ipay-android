@@ -47,7 +47,7 @@
 
     <string-array name="upload_picker_action">
         <item>@string/take_a_picture_message</item>
-        <item>Select from gallery</item>
+        <item>@string/select_from_gallery_message</item>
     </string-array>
 
     <string-array name="upload_picker_action_for_profile_picture">
