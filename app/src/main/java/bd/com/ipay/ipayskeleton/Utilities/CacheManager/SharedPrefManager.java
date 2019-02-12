@@ -43,7 +43,7 @@ public class SharedPrefManager {
 	}
 
 	public static String getAppLanguage() {
-		return pref.getString(SharedPrefConstants.DEVICE_LANGUAGE_KEY, "en");
+		return pref.getString(SharedPrefConstants.DEVICE_LANGUAGE_KEY, "bd");
 	}
 
 	public static CreditBalanceResponse getCreditBalance() {

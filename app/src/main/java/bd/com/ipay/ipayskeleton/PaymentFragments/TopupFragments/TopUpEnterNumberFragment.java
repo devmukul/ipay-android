@@ -295,7 +295,7 @@ public class TopUpEnterNumberFragment extends Fragment {
 				return true;
 			}
 		} catch (NumberParseException e) {
-			e.printStackTrace();
+			showErrorMessage(getString(R.string.please_enter_valid_mobile_number));
 		}
 		return false;
 	}

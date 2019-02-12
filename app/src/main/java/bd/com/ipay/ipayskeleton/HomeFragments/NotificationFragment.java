@@ -563,14 +563,6 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
         }
     }
 
-    private void launchBusinessRoleReviewFragment(final BusinessRoleManagerInvitation businessRoleManagerInvitation) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(businessRoleManagerInvitation);
-        bundle.putString(Constants.BUSINESS_ROLE_REQUEST, jsonString);
-        ((NotificationActivity) getActivity()).switchToBusinessRoleReviewFragment(bundle);
-    }
-
     @Override
     public void onBeneficiaryAdded() {
         NotificationFragment.this.refreshNotificationLists(getContext());
@@ -897,6 +889,135 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 
         }
 
+	    public class SourceOfFundBeneficiaryViewHolder extends NotificationViewHolder {
+		    private RoundedImageView profileImageView;
+		    private TextView timeTextView;
+		    private TextView descriptionTextView;
+		    private TextView acceptTextView;
+		    private TextView rejectTextView;
+		    private TextView titleTextView;
+
+
+		    public SourceOfFundBeneficiaryViewHolder(View itemView) {
+			    super(itemView);
+			    profileImageView = (RoundedImageView) itemView.findViewById(R.id.profile_image);
+			    timeTextView = (TextView) itemView.findViewById(R.id.time);
+			    descriptionTextView = (TextView) itemView.findViewById(R.id.description);
+			    titleTextView = (TextView) itemView.findViewById(R.id.helper);
+			    acceptTextView = (TextView) itemView.findViewById(R.id.accept);
+			    rejectTextView = (TextView) itemView.findViewById(R.id.reject);
+		    }
+
+		    @Override
+		    public void bindView(int pos) {
+			    super.bindView(pos);
+			    final int position = pos;
+			    if (mNotifications.get(pos) instanceof Beneficiary) {
+				    titleTextView.setText(getString(R.string.add_beneficiary_question));
+				    final Beneficiary beneficiary = (Beneficiary) mNotifications.get(pos);
+				    Glide.with(getContext())
+						    .load(Constants.BASE_URL_FTP_SERVER + beneficiary.getImageUrl())
+						    .centerCrop()
+						    .error(R.drawable.user_brand_bg)
+						    .into(profileImageView);
+				    timeTextView.setText(Utilities.formatDateWithTime(beneficiary.getUpdatedAt()));
+
+				    String description = "";
+				    description = beneficiary.getName() + " " + getString(R.string.beneficiary_request_message);
+				    descriptionTextView.setText(description);
+				    acceptTextView.setOnClickListener(new View.OnClickListener() {
+					    @Override
+					    public void onClick(View v) {
+
+						    new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
+							    @Override
+							    public void ifPinAdded() {
+								    Bundle bundle = new Bundle();
+								    bundle.putSerializable(Constants.BENEFICIARY, beneficiary);
+								    bundle.putString(Constants.TO_DO, Constants.UPDATE_STATUS);
+								    EditPermissionSourceOfFundBottomSheetFragment editPermissionSourceOfFundBottomSheetFragment
+										    = new EditPermissionSourceOfFundBottomSheetFragment();
+
+								    editPermissionSourceOfFundBottomSheetFragment.setArguments(bundle);
+								    getChildFragmentManager().beginTransaction().
+										    replace(R.id.test_fragment_container, editPermissionSourceOfFundBottomSheetFragment).commit();
+								    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+								    bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+									    @Override
+									    public void onStateChanged(@NonNull View view, int i) {
+										    if (i == BottomSheetBehavior.STATE_COLLAPSED) {
+											    Utilities.hideKeyboard(getActivity());
+										    }
+									    }
+
+									    @Override
+									    public void onSlide(@NonNull View view, float v) {
+
+									    }
+								    });
+
+								    editPermissionSourceOfFundBottomSheetFragment.setHttpResponseListener(new EditPermissionSourceOfFundBottomSheetFragment.HttpResponseListener() {
+									    @Override
+									    public void onSuccess() {
+										    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+										    Utilities.hideKeyboard(getActivity());
+										    refreshNotificationLists(getContext());
+									    }
+								    });
+							    }
+						    }).execute();
+
+					    }
+
+				    });
+
+				    rejectTextView.setOnClickListener(new View.OnClickListener() {
+					    @Override
+					    public void onClick(View v) {
+						    attemptAcceptOrRejectBeneficiary(Constants.BENEFICIARY,
+								    beneficiary.getId(), "REJECTED");
+					    }
+				    });
+			    } else if (mNotifications.get(pos) instanceof Sponsor) {
+				    final Sponsor sponsor = (Sponsor) mNotifications.get(pos);
+				    titleTextView.setText(getString(R.string.add_sponsor_question));
+				    Glide.with(getContext())
+						    .load(Constants.BASE_URL_FTP_SERVER + sponsor.getImageUrl())
+						    .centerCrop()
+						    .error(R.drawable.user_brand_bg)
+						    .into(profileImageView);
+				    timeTextView.setText(Utilities.formatDateWithTime(sponsor.getUpdatedAt()));
+				    descriptionTextView.setText(getString(R.string.sponsor_request_string,sponsor.getName()));
+				    acceptTextView.setOnClickListener(new View.OnClickListener() {
+					    @Override
+					    public void onClick(View v) {
+						    new AlertDialog.Builder(getContext())
+								    .setMessage(getString(R.string.accept_request))
+								    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+									    @Override
+									    public void onClick(DialogInterface dialogInterface, int i) {
+										    attemptAddBeneficiaryOrSponsor(Constants.SPONSOR, null, sponsor.getId(), "APPROVED");
+									    }
+								    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+							    @Override
+							    public void onClick(DialogInterface dialogInterface, int i) {
+								    dialogInterface.dismiss();
+							    }
+						    }).show();
+
+					    }
+				    });
+				    rejectTextView.setOnClickListener(new View.OnClickListener() {
+					    @Override
+					    public void onClick(View v) {
+						    attemptAcceptOrRejectBeneficiary(Constants.SPONSOR, sponsor.getId(), "REJECTED");
+					    }
+				    });
+			    }
+		    }
+	    }
+
         public class PendingIntroductionListViewHolder extends NotificationViewHolder {
 
             public PendingIntroductionListViewHolder(final View itemView) {
@@ -942,11 +1063,6 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
                         (R.layout.list_item_introduction_requests_notification, parent,
                                 false);
                 return new PendingIntroductionListViewHolder(v);
-            } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST) {
-                v = LayoutInflater.from(parent.getContext()).inflate
-                        (R.layout.list_item_business_role_manager_requests_notification_new,
-                                parent, false);
-                return new BusinessRoleManagerViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_SOURCE_OF_FUND_BENEFICIARIES) {
                 v = LayoutInflater.from(parent.getContext()).inflate
                         (R.layout.list_item_get_beneficiaries,

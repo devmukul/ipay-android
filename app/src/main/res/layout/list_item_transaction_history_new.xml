@@ -31,6 +31,7 @@
                 android:id="@+id/sponsor_or_beneficiary_image"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_alignEnd="@+id/transaction_image_view"
                 android:layout_alignRight="@+id/transaction_image_view"
                 android:layout_alignBottom="@+id/transaction_image_view"
                 app:riv_oval="true" />

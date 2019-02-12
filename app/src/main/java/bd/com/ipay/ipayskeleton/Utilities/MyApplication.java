@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
+import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import okhttp3.OkHttpClient;
 
@@ -59,6 +60,8 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 	public void onCreate() {
 		super.onCreate();
 		myApplicationInstance = this;
+		okHttpClient = new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
+				.connectTimeout(60, TimeUnit.SECONDS).build();
 		SharedPrefManager.initialize(getApplicationContext());
 		setupLanguage();
 
@@ -98,6 +101,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 			createConfigurationContext(appConfig);
 		}
 		Utilities.updateLocale();
+		GenderList.initialize(this);
 	}
 
 	public OkHttpClient getOkHttpClient() {

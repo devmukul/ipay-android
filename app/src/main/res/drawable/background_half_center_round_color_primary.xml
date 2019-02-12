@@ -5,16 +5,11 @@
             <solid android:color="@color/colorPrimary" />
             <!-- A numeric value is specified in "radius" for demonstrative purposes only,
                   it should be @dimen/val_name -->
-            <corners
-                android:bottomRightRadius="0dp"
-                android:bottomLeftRadius="3dp"
-                android:topLeftRadius="3dp"
-                android:topRightRadius="0dp"/>
         </shape>
     </item>
-    <!-- To keep the right corner ROUNDED set  offsets : -->
+    <!-- To keep the left corner ROUNDED set  offsets : -->
     <item
-        android:right="10dp">
+        android:left="10dp">
         <shape android:shape="rectangle">
             <solid android:color="@color/colorPrimary" />
         </shape>

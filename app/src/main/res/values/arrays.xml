@@ -9,6 +9,11 @@
         <item>@string/teletalk</item>
     </string-array>
 
+    <string-array name="gender_array">
+        <item>@string/male</item>
+        <item>@string/female</item>
+        <item>@string/other</item>
+    </string-array>
     <string-array name="package_type">
         <item>@string/pre_paid</item>
         <item>@string/post_paid</item>

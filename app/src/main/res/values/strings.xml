@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">iPay</string>
-    <string name="copyright">Copyright</string>
+    <string name="copyright" translatable="false">©</string>
     <string name="iPay_system">iPay Systems Ltd.</string>
     <string name="all_rights_reserved">All Rights Reserved. </string>
     <string name="bangladesh">Bangladesh</string>
@@ -264,7 +264,7 @@
     <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
     <string name="scan_valid_qr_code">Please scan a valid mobile number</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
-    <string name="oath_sign_up"><![CDATA[By clicking continue you are agreeing with]]> </string>
+    <string name="oath_sign_up">By clicking continue you are agreeing with <a href="https://www.ipay.com.bd/terms-condition/">Terms &amp; Conditions</a> and <a href="https://www.ipay.com.bd/privacy-policy/">Privacy Policy</a>.</string>
     <string name="already_have_an_account">"Already have an account?"</string>
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">iPay Balance</string>
@@ -272,8 +272,6 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
-    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/terms-condition/">Terms &amp; Conditions</a></string>
-    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/privacy-policy/">Privacy Policy</a></string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="update_now">Update Now</string>
     <string name="transaction_id">Transaction ID: </string>
@@ -337,7 +335,7 @@
     <string name="select_a_district">Select District</string>
     <string name="select_a_thana">Select Thana</string>
     <string name="select_an_occupation">Select Occupation</string>
-    <string name="select_an_operator">Select Operator</string>
+    <string name="select_an_operator">Please Select an Operator</string>
     <string name="opening_balance">Opening balance</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="sorry">Sorry</string>
@@ -351,6 +349,7 @@
     <string name="request_to_introduce">Request to introduce you</string>
     <string name="request_to_introduce_detail">This person wants to be your introducer to iPay. You can accept or reject this request.</string>
     <string name="pending">Pending</string>
+    <string name="complete">Complete</string>
     <string name="completed">Completed</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
@@ -1044,21 +1043,21 @@
     <string name="railway_ticket_name">Railway Ticket</string>
     <string name="failed_loading_ticket_info">Failed to get ticket info</string>
     <string name="failed_loading_train_list">Failed to get train list</string>
-    <string name="email_suggestion">email@example.com</string>
+    <string name="email_suggestion" translatable="false">email@example.com</string>
     <string name="news_room_helper_text_sub_title">You can see here what is going on your iPay wallet and what is iPay doing around the community.</string>
     <string name="empty_news_room">There is no news available right now.</string>
     <string name="news_room_helper_text_title">Hey, what’s going-on here and there</string>
 
     <string name="link_ipay_account">Link iPay</string>
     <string name="source_of_fund_success">You have sent a request to %1$s to become a sponsor of your iPay wallet. We will inform you when he/she accepts the request."</string>
-    <string name="helper"> has asked you to become a sponsor of his/her wallet. He/She can use up to a certain limit monthly from your iPay wallet.</string>
+    <string name="helper" translatable="false"> has asked you to become a sponsor of his/her wallet. He/She can use up to a certain limit monthly from your iPay wallet.</string>
     <string name="select_source_type">Select Source Type</string>
     <string name="link_bank_description">Link your bank account to add money from the bank. After link bank, iPay will send an amount to check and confirm your bank connectivity</string>
     <string name="link_sponsor">iPAY USER AS SOURCE OF FUND</string>
     <string name="link_sponsor_description">You can connect your wallet to other iPay user\'s wallet to make payment.</string>
-    <string name="link_beneficiary_description">To add and mange your benificiary iPay user</string>
+    <string name="link_beneficiary_description">To add and manage your benificiary iPay user</string>
     <string name="link_beneficiary">BENEFICIARY iPAY USER</string>
-    <string name="permission_details">%1$s can use up to a certain amount monthly for making payments using your iPay wallet. You will have to take the full liability of the transactions made by %2$s using your iPay wallet. You can remove the privilege whenever you want and can change the monthly limit.</string>
+    <string name="permission_details" translatable="false">%1$s can use up to a certain amount monthly for making payments using your iPay wallet. You will have to take the full liability of the transactions made by %2$s using your iPay wallet. You can remove the privilege whenever you want and can change the monthly limit.</string>
     <string name="beneficiary_helper_text">You can add other iPay users as your beneficiary . The beneficiary account holder can make payment using your account. To add a beneficiary, you need to follow the instructions below</string>
     <string name="source_of_fund_helper_text">In low balance, you can make payment by using other user\'s iPay wallet. To add iPay User as Source of Fund you need to follow the instructions below.</string>
     <string name="source_of_fund_step_one">Enter the mobile number or select the person from your contact.</string>
@@ -1081,15 +1080,17 @@
     <string name="sponsor_blocked">The sponsor is blocked</string>
     <string name="reject_all_caps">REJECT</string>
     <string name="accept_all_caps">ACCEPT</string>
-    <string name="add_beneficiary_question">Add Beneficiary ?</string>
+    <string name="add_beneficiary_question">Add Beneficiary?</string>
     <string name="add_sponsor_question">Add sponsor?</string>
-    <string name="sponsor_request_string"> wants to be your sponsor.You can use his/her iPay wallet while making payments</string>
+    <string name="sponsor_request_string">%1$s wants to be your sponsor.You can use his/her iPay wallet while making payments</string>
     <string name="accept_request">Do you want to accept the request?</string>
     <string name="beneficiary_request_message"> has asked you to become a sponsor of his/her iPay wallet. He/She can use up to a certain limit monthly from your iPay wallet</string>
     <string name="nothing_to_show_right_now">Nothing to show right now</string>
     <string name="please_enter_a_amount_to_use_from_sponsor">Please enter a monthly amount you want to use from your sponsor\'s iPay account</string>
-    <string name="can">can</string>
-    <string name="wants_to">wants to</string>
+    <string name="paid_for">Paid for %1$s</string>
+    <string name="paid_by">Paid by %1$s</string>
+    <string name="can" translatable="false">can</string>
+    <string name="wants_to" translatable="false">wants to</string>
     <string name="a_certain_amount">a certain amount</string>
     <string name="please_enter_an_amount">Please enter an amount</string>
     <string name="please_enter_your_pin">Please enter your pin</string>
@@ -1103,4 +1104,9 @@
     <string name="my_qr_code_to_share">My QR Code to Share</string>
     <string name="remember_me">Remember me</string>
     <string name="pay">Pay</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="prepaid">Prepaid</string>
+    <string name="postpaid">Postpaid</string>
+    <string name="continue_button">Continue</string>
+    <string name="completed_transaction">@string/complete</string>
 </resources>

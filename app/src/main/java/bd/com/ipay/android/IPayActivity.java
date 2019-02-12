@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
+import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -50,5 +51,6 @@ public class IPayActivity extends AppCompatActivity {
 			createConfigurationContext(appConfig);
 		}
 		Utilities.updateLocale();
+		GenderList.initialize(this);
 	}
 }
