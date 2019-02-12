@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -32,11 +33,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetPro
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widget.View.BulkSignUpHelperDialog;
 
 public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
 
@@ -147,6 +150,28 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 
         setOccupationAdapter();
         setOccupation();
+
+        if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
+            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                    "We have some of your basic info. Do you want to use it?");
+
+            bulkSignUpHelperDialog.setPositiveButton("USE", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mOrganizationNameEditText.setText(BulkSignupUserDetailsCacheManager.getOrganizationName(null));
+                    bulkSignUpHelperDialog.cancel();
+                }
+            });
+
+            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    bulkSignUpHelperDialog.cancel();
+                }
+            });
+
+            bulkSignUpHelperDialog.show();
+        }
 
         return view;
     }

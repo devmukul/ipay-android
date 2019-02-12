@@ -22,7 +22,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRes
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundHelperFragment;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardContactsFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
@@ -171,11 +170,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
     public void switchToBasicInfoEditFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OnBoardAddBasicInfoFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToAskedIntroductionHelperFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAskForIntroductionHelperFragment()).commit();
     }
 
     public void switchToContactFragment() {

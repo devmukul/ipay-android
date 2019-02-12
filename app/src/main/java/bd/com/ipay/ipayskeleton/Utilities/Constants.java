@@ -530,6 +530,9 @@ public class Constants {
     // User Rest (Profile Completion)
     public static final String URL_GET_PROFILE_COMPLETION_STATUS = "user/profilecompletion";
 
+    // Bulk Sign up
+    public static final String URL_GET_BULK_SIGN_UP_USER_DETAILS = "/bulk/sign-up/user/details";
+
     // API version check Rest
     public static final String URL_GET_MIN_API_VERSION_REQUIRED = "app/min-supported-versions";
 
@@ -752,6 +755,7 @@ public class Constants {
     public static final String COMMAND_BANGLALION_BILL_PAY = "COMMAND_BANGLALION_BILL_PAY";
     public static final String COMMAND_GET_BANGLALION_CUSTOMER_INFO = "COMMAND_GET_BANGLALION_CUSTOMER_INFO";
     public static final String COMMAND_GET_LINK_THREE_CUSTOMER_INFO = "COMMAND_GET_LINK_THREE_CUSTOMER_INFO";
+    public static final String COMMAND_GET_BULK_SIGN_UP_USER_DETAILS = "COMMAND_GET_BULK_SIGN_UP_USER_DETAILS";
 
     // Ticket
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
@@ -849,6 +853,9 @@ public class Constants {
 
     public static final String ADD_BANK = "ADD_BANK";
     public static final String VERIFY_BANK = "VERIFY_BANK";
+    public static final String UPLOAD_DOCUMENT = "UPLOAD_DOCUMENT";
+    public static final String BUNDLE = "BUNDLE";
+
 
     public static final String INTRODUCTION_REQUEST_STATUS_PENDING = "PENDING";
     public static final String INTRODUCTION_REQUEST_STATUS_APPROVED = "APPROVED";

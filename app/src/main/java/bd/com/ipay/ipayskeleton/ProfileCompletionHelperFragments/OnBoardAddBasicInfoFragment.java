@@ -1,9 +1,11 @@
 package bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +38,11 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetOccupationRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Widget.View.BulkSignUpHelperDialog;
 
 public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpResponseListener {
 
@@ -65,6 +69,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
     private Button mSkipButton;
     private ImageView mBackButtonTop;
+    private EditText mAddressLine1Field;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
         mOrganizationNameEditText = (EditText) v.findViewById(R.id.organizationNameEditText);
         mBackButtonTop = (ImageView) v.findViewById(R.id.back);
+        mAddressLine1Field = (EditText) mAddressInputView.findViewById(R.id.address_line_1);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mAddressInputView.clearFocus();
@@ -125,6 +131,29 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
         getProfileInfo();
         getOccupationList();
+
+        if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
+            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                    "We have some of your basic info. Do you want to use it?");
+
+            bulkSignUpHelperDialog.setPositiveButton("USE", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mAddressLine1Field.setText(BulkSignupUserDetailsCacheManager.getPresentAddress(null));
+                    mOrganizationNameEditText.setText(BulkSignupUserDetailsCacheManager.getOrganizationName(null));
+                    bulkSignUpHelperDialog.cancel();
+                }
+            });
+
+            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    bulkSignUpHelperDialog.cancel();
+                }
+            });
+
+            bulkSignUpHelperDialog.show();
+        }
 
         return v;
     }
