@@ -36,10 +36,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,8 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivi
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -81,8 +85,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notificatio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FCMRefreshTokenRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.FcmLogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.SourceOfFundActivity;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
@@ -91,6 +97,8 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -114,7 +122,9 @@ public class HomeActivity extends BaseActivity
 
 	private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
 
-	private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
+	private HttpRequestPostAsyncTask firebaseLogoutTask;
+
+    private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
 
 	private HttpRequestPostAsyncTask mRefreshTokenAsyncTask;
 
@@ -162,6 +172,21 @@ public class HomeActivity extends BaseActivity
 			}
 
 		}
+
+        if (getIntent().hasExtra(Constants.TRANSACTION_DETAILS)) {
+            String desiredActivity = getIntent().getStringExtra(Constants.DESIRED_ACTIVITY);
+            if (desiredActivity.equals(Constants.TRANSACTION)) {
+                Intent intent = new Intent(this, TransactionDetailsActivity.class);
+                intent.putExtra(Constants.TRANSACTION_DETAILS, getIntent().
+                        getParcelableExtra(Constants.TRANSACTION_DETAILS));
+                startActivity(intent);
+            } else {
+                TransactionHistory transactionHistory = getIntent().getParcelableExtra(Constants.TRANSACTION_DETAILS);
+                Intent intent = launchRequestMoneyReviewPageIntent(transactionHistory,
+                        getIntent().getBooleanExtra(Constants.ACTION_FROM_NOTIFICATION, false));
+                startActivity(intent);
+            }
+        }
 		refreshBalance();
 		mProgressDialog = new ProgressDialog(HomeActivity.this);
 		if (!SharedPrefManager.isFireBaseTokenSent()) {
@@ -260,6 +285,27 @@ public class HomeActivity extends BaseActivity
 		LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
 				new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
 	}
+
+    private Intent launchRequestMoneyReviewPageIntent(TransactionHistory transactionHistory, boolean isAccepted) {
+        Intent intent = new Intent(this, SentReceivedRequestReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
+                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
+
+        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
+        intent.putExtra(Constants.ACTION_FROM_NOTIFICATION, isAccepted);
+        intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
+        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+        intent.putExtra(Constants.IS_IN_CONTACTS,
+                new ContactSearchHelper(this).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
+
+        if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+        }
+        return intent;
+    }
 
 
 	private void attemptGetSponsorList() {
@@ -636,12 +682,25 @@ public class HomeActivity extends BaseActivity
 
 		} else if (id == R.id.nav_logout) {
 			if (Utilities.isConnectionAvailable(HomeActivity.this)) {
-				attemptLogout();
+				new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        try {
+                            FirebaseInstanceId.getInstance().deleteInstanceId();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                attemptFirebaseLogout();
+            }
 			} else {
 				Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
 			}
 		}
-	}
+
 
 	private boolean isProfileInfoAvailable() {
 		return (ProfileInfoCacheManager.getAccountId() != Constants.INVALID_ACCOUNT_ID) &&
@@ -667,7 +726,7 @@ public class HomeActivity extends BaseActivity
 							} else {
 								if (Utilities.isConnectionAvailable(HomeActivity.this)) {
 									exitFromApplication = true;
-									attemptLogout();
+									attemptFirebaseLogout();
 								} else {
 									ProfileInfoCacheManager.setLoggedInStatus(false);
 									((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
@@ -810,7 +869,7 @@ public class HomeActivity extends BaseActivity
 			mLocationUpdateRequestAsyncTask = null;
 			mGetNotificationAsyncTask = null;
 			mRefreshTokenAsyncTask = null;
-			return;
+			firebaseLogoutTask = null;return;
 		}
 		mProgressDialog.dismiss();
 		Gson gson = new Gson();
@@ -859,7 +918,12 @@ public class HomeActivity extends BaseActivity
 				mLogoutTask = null;
 
 				break;
-			case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
+			case Constants.COMMAND_FIREBASE_LOGOUT:
+                attemptLogout();
+                firebaseLogoutTask = null;
+                break;
+
+            case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
 				try {
 
@@ -976,7 +1040,17 @@ public class HomeActivity extends BaseActivity
 		}
 	}
 
-	@Override
+	private void attemptFirebaseLogout() {
+        if (firebaseLogoutTask != null) {
+            return;
+        }
+        String url = Constants.BASE_URL_PUSH_NOTIFICATION + Constants.URL_FIREBASE_LOGOUT;
+        FcmLogoutRequest fcmLogoutRequest = new FcmLogoutRequest(FirebaseInstanceId.getInstance().getToken());
+        firebaseLogoutTask = new HttpRequestPostAsyncTask(Constants.
+                COMMAND_FIREBASE_LOGOUT, url,
+                new Gson().toJson(fcmLogoutRequest), this, this, true);
+        firebaseLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }@Override
 	public void onLocationChanged(Location location) {
 		if (location != null) {
 			UserLocation userLocation = new UserLocation(location.getLatitude(), location.getLongitude());

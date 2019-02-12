@@ -212,7 +212,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 			mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 			TransactionMetaData metaData = transactionHistory.getMetaData();
 
-			if (metaData.isSponsoredByOther()) {
+			if (metaData != null &&metaData.isSponsoredByOther()) {
 				if (!ProfileInfoCacheManager.isBusinessAccount()) {
 					if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
 							ProfileInfoCacheManager.getMobileNumber()))) {
@@ -235,8 +235,8 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 									.load(R.drawable.user_brand_bg)
 									.centerCrop()
 									.into(sponsorProfilePictureView);
-						}
 
+                        }
 						sponsorNumberView.setVisibility(View.VISIBLE);
 						sponsorNumberView.setText(getString(R.string.paid_for, metaData.getBeneficiaryName()));
 					} else {

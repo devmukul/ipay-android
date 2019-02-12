@@ -41,6 +41,7 @@ public class LauncherActivity extends IPayActivity {
         }
         switch (activityAction) {
             case Intent.ACTION_VIEW:
+
                 Uri uri = getIntent().getData();
                 if (uri != null)
                     Logger.logD(TAG, uri.toString());

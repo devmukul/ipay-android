@@ -152,6 +152,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
         mRejectButton = v.findViewById(R.id.button_reject);
         mCancelButton = v.findViewById(R.id.button_cancel);
 
+
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
@@ -187,6 +188,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             mRejectButton.setVisibility(View.GONE);
             mCancelButton.setVisibility(View.VISIBLE);
         }
+
 
         if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);

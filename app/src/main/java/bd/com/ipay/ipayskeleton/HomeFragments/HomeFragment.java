@@ -186,6 +186,32 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		mProfileCompletionRecyclerView = view.findViewById(R.id.profile_completion);
 		mProgressBarTransaction = view.findViewById(R.id.progress_bar_transaction);
 
+        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(or = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD, ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY})
+            public void onClick(View v) {
+                PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), IPayTransactionActionActivity.class);
+                        intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY);
+                        startActivity(intent);
+                    }
+                });
+                addMoneyPinChecker.execute();
+            }
+        });
+        if (SharedPrefManager.getUserBalance().equals("0.0")) {
+            balanceView.setText(R.string.loading);
+        } else {
+            try {
+                balanceView.setText(getString(R.string.balance_holder, Utilities.takaWithComma(new BigDecimal(SharedPrefManager.getUserBalance()))));
+            } catch (Exception e) {
+                mTracker.send(new HitBuilders.ExceptionBuilder()
+                        .setDescription("Parsing Error- " + SharedPrefManager.getUserBalance())
+                        .build());
+            }
+        }
 		mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			@ValidateAccess(or = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD, ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY})
@@ -366,9 +392,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 			}
 		}
 
-		transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-				new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
 
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBalanceUpdateBroadcastReceiver,
 				new IntentFilter(Constants.BALANCE_UPDATE_BROADCAST));
