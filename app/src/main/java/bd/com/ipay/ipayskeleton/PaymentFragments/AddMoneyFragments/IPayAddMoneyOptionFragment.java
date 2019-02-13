@@ -12,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +36,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.Model.AddMoneyOption;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.CardType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.CreditBalanceResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card.IPayAddMoneyFromCardAmountInputFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card.IPayAddMoneyFromCardTransactionConfirmationFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayChooseBankOptionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
@@ -46,6 +50,8 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widget.View.CardChargeDialog;
+import bd.com.ipay.ipayskeleton.Widget.View.CardSelectDialog;
 
 public class IPayAddMoneyOptionFragment extends Fragment {
 
@@ -55,6 +61,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 	private TextView bottomSheetTitleTextView;
 	private TextView addMoneyBankOptionMessageTextView;
 	private CustomProgressDialog customProgressDialog;
+    private String cardType;
 	private final Gson gson = new GsonBuilder()
 			.create();
 	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.getDefault());
@@ -120,11 +127,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 
 						break;
 					case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
-						BusinessRuleCacheManager.fetchBusinessRule(getContext(), IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
-						Bundle bundle = new Bundle();
-						if (getActivity() instanceof IPayTransactionActionActivity) {
-							((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 1, true);
-						}
+						showCardType();
 						break;
 				}
 			}
@@ -231,5 +234,37 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 		} else {
 			return false;
 		}
+	}
+
+	private void showCardType() {
+		if (getActivity() == null)
+			return;
+
+		final CardSelectDialog cardSelectDialog = new CardSelectDialog(getContext());
+		cardSelectDialog.setTitle("Select Card Type");
+		cardSelectDialog.setCloseButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				cardSelectDialog.cancel();
+			}
+		});
+		cardSelectDialog.setPayBillButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+                cardType = cardSelectDialog.getSelectedCardType();
+                if(!TextUtils.isEmpty(cardType)) {
+                    cardSelectDialog.cancel();
+                    BusinessRuleCacheManager.fetchBusinessRule(getContext(), IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.CARD_TYPE, cardType);
+                    if (getActivity() instanceof IPayTransactionActionActivity) {
+                        ((IPayTransactionActionActivity) getActivity()).switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 1, true);
+                    }
+                }else{
+                    Toaster.makeText(getContext(), "Please select a card!", Toast.LENGTH_LONG);
+                }
+			}
+		});
+        cardSelectDialog.show();
 	}
 }

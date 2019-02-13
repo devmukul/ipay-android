@@ -951,7 +951,7 @@
     <string name="instant_add_money">INSTANT MONEY</string>
     <string name="debit_credit_card">DEBIT/CREDIT CARD</string>
     <string name="money_from_bank">BANK</string>
-    <string name="add_money_card_option_message">Adding money from Debit or Credit card is Instant! Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
+    <string name="add_money_card_option_message">Adding money from Debit or Credit card is Instant! Adding money from Debit or Credit Card is subjected upto 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
     <string name="add_money_instant_option_message">Add money instantly to your iPay wallet. It will be adjusted from your associated bank account.</string>
     <string name="add_money_bank_option_message">Adding money from banks is the most reliable way to update your balance. It takes 3&#8211;5 business days to add balance into your iPay wallet.</string>
     <string name="choose_a_convenient_way">Choose a \nconvenient way</string>
@@ -1113,4 +1113,5 @@
     <string name="continue_button">Continue</string>
     <string name="completed_transaction">@string/complete</string>
     <string name="add_your_convenient_source_of_fund_to_update_your_ipay_balance_anytime_when_you_are_in_need">Add your convenient source of fund to update your iPay balance anytime when you are in need.</string>
+    <string name="continue_text">@string/continue_button_text</string>
 </resources>
