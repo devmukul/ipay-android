@@ -1014,5 +1014,21 @@
     <string name="completed_transaction">@string/complete</string>
     <string name="add_your_convenient_source_of_fund_to_update_your_ipay_balance_anytime_when_you_are_in_need">আপনার অর্থের উৎস্য থেকে আইপেতে টাকা আনুন যখন তখন যেভাবে প্রয়োজন।</string>
     <string name="continue_text">@string/continue_button_text</string>
+    <string name="use">ব্যবহার করুন</string>
+    <string name="bulk_signup_nid_helper_msg">আপনার জাতীয় পরিচয়পত্র নাম্বার আমাদের কাছে আছে, আপনি কি তা ব্যবহার করতে চান?</string>
+    <string name="bulk_signup_bank_helper_msg">আমাদের কাছে আপনার ব্যাংকের তথ্য আছে, আপনি কি তা ব্যবহার করতে চান?</string>
+    <string name="bulk_signup_basic_info_helper_msg">আপনার কিছু তথ্য আমাদের কাছে আছে, আপনি কি তা ব্যবহার করতে চান?</string>
+
+    <string name="dashboard_profile_picture_text">Please upload your profile picture for verification purpose.</string>
+    <string name="dashboard_basic_info_text">Please update your basic information.</string>
+    <string name="dashboard_personal_address_text">We require your present address along with basic info for faster verification.</string>
+    <string name="dashboard_photo_id_text">Please upload your Photo ID(i.e National ID).</string>
+    <string name="dashboard_verify_bank_text">Add your bank or debit/card card as a source of fund.</string>
+    <string name="dashboard_profile_picture">Profile Picture</string>
+    <string name="dashboard_verify_bank">Verify Bank or Card</string>
+    <string name="dashboard_present_address">Personal Address</string>
+    <string name="dashboard_national_id">Photo ID</string>
+    <string name="dashboard_basic_info">Personal Info</string>
+    <string name="unconsented">অনুনমোদিত</string>
 </resources>
 

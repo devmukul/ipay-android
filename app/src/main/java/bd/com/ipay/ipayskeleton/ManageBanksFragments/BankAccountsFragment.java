@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.RemoveBankAccountRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -433,6 +434,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             private final ImageView mAttachmentChequebook;
             private final ImageView mBankVerifiedStatus;
             private final Button mBankPending;
+            private final Button mBankUnconsented;
             private final TextView mBranchName;
             private final View divider;
             private final ImageView bankIcon;
@@ -448,6 +450,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 mBankVerifiedStatus =  itemView.findViewById(R.id.bank_account_verify_status);
                 mAttachmentChequebook =  itemView.findViewById(R.id.chequebook_attachment);
                 mBankPending =  itemView.findViewById(R.id.bank_account_pending_button);
+                mBankUnconsented =  itemView.findViewById(R.id.bank_account_unconsented_button);
                 mBranchName =  itemView.findViewById(R.id.bank_branch_name);
                 divider = itemView.findViewById(R.id.divider);
                 bankIcon =  itemView.findViewById(R.id.portrait);
@@ -503,6 +506,13 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                         mAttachmentChequebook.setVisibility(View.GONE);
                         break;
 
+                    case Constants.BANK_ACCOUNT_STATUS_UNCONSENTED:
+                        mBankUnconsented.setVisibility(View.VISIBLE);
+                        mBankPending.setVisibility(View.GONE);
+                        mBankVerifiedStatus.setVisibility(View.GONE);
+                        mBankActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_bank_action));
+                        break;
+
                     default:
                         // Bank verification status pending
                         mBankPending.setVisibility(View.VISIBLE);
@@ -516,16 +526,20 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     public void onClick(View v) {
                         if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_BLOCKED)) {
                             showBlockedBankAccountDialog(bankName, bankAccountNumber, branchName, bankAccountID);
-                        } else {
+                        } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_UNCONSENTED)) {
+                            launchAddBankAgreementPage(mListUserBankClasses.get(pos));
+                        }else {
                             mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), bankName, mBankActionList);
                             mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                                 @Override
                                 public void onResourceSelected(int selectedIndex, String action) {
-                                    if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
+                                    if (getContext().getString(R.string.remove).equalsIgnoreCase(action)) {
+                                        mCustomSelectorDialog.dismiss();
                                         showRemoveBankAccountDialog(bankAccountID);
 
-                                    } else if (Constants.ACTION_TYPE_VERIFY.equals(action)) {
+                                    } else if (getContext().getString(R.string.verify).equalsIgnoreCase(action)) {
                                         if (!verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                                            mCustomSelectorDialog.dismiss();
                                             showVerifyBankWithAmountDialog(bankAccountID);
                                         }
                                     }
@@ -597,5 +611,20 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             }
 
         }
+    }
+
+    private void launchAddBankAgreementPage(BankAccountList bankAccountList) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.BANK_NAME, bankAccountList.getBankName());
+        bundle.putString(Constants.BANK_BRANCH_NAME, bankAccountList.getBranchName());
+        bundle.putString(Constants.BANK_BRANCH_ROUTE_NO, bankAccountList.getBranchRoutingNumber());
+        bundle.putBoolean(Constants.FROM_ON_BOARD, false);
+        bundle.putString(Constants.BANK_ACCOUNT_NAME, bankAccountList.getAccountName());
+        bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountList.getAccountNumber());
+        bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, false);
+        bundle.putBoolean(Constants.IS_STARTED_FROM_UNCONCENTED_LIST, true);
+        bundle.putLong(Constants.BANK_ACCOUNT_ID, bankAccountList.getBankAccountId());
+
+        ((ManageBanksActivity) getActivity()).switchToAddBankAgreementFragment(bundle);
     }
 }

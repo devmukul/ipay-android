@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranchRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetBankBranchesResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -58,6 +60,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widget.View.BulkSignUpHelperDialog;
 import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
 public class AddBankFragment extends BaseFragment implements HttpResponseListener {
@@ -173,6 +176,30 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 verifyUserInputs();
             }
         });
+
+        if(!BulkSignupUserDetailsCacheManager.isBankInfoChecked(true)){
+            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                    getString(R.string.bulk_signup_bank_helper_msg));
+
+            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mAccountNameEditText.setText(BulkSignupUserDetailsCacheManager.getBankAccountName(null));
+                    mAccountNumberEditText.setText(BulkSignupUserDetailsCacheManager.getBankAccountNumber(null));
+                    bulkSignUpHelperDialog.cancel();
+                }
+            });
+
+            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    bulkSignUpHelperDialog.cancel();
+                    bulkSignUpHelperDialog.setCheckedResponse("Bank");
+                }
+            });
+
+            bulkSignUpHelperDialog.show();
+        }
 
 
         return v;
@@ -366,11 +393,13 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BANK_NAME, mSelectedBankName);
-        bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
+        bundle.putString(Constants.BANK_BRANCH_NAME, bankBranch.getName());
+        bundle.putString(Constants.BANK_BRANCH_ROUTE_NO, bankBranch.getRoutingNumber());
         bundle.putBoolean(Constants.FROM_ON_BOARD, isSwitchedFromOnBoard);
         bundle.putString(Constants.BANK_ACCOUNT_NAME, accountName);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
+        bundle.putBoolean(Constants.IS_STARTED_FROM_UNCONCENTED_LIST, false);
         if (mChequebookCoverImageFile != null) {
             bundle.putString(Constants.DOCUMENT_TYPE, "cheque");
             bundle.putStringArray(Constants.PHOTO_URI, getUploadFilePaths());

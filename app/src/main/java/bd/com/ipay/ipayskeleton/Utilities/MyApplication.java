@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRes
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
@@ -66,6 +67,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 		setupLanguage();
 
 		ProfileInfoCacheManager.initialize(getApplicationContext());
+        BulkSignupUserDetailsCacheManager.initialize(getApplicationContext());
 		ACLManager.initialize(this);
 		TokenManager.initialize(this);
 		BusinessRuleCacheManager.initialize(this);
