@@ -31,7 +31,7 @@ public class IPayActivity extends AppCompatActivity {
 				break;
 			default:
 			case Constants.APP_LANGUAGE_BENGALI:
-				locale = new Locale("bn", "rBD");
+				locale = new Locale("bn");
 				break;
 		}
 		Locale.setDefault(locale);
