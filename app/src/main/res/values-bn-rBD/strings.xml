@@ -1013,5 +1013,6 @@
     <string name="continue_button">কন্টিনিউ</string>
     <string name="completed_transaction">@string/complete</string>
     <string name="add_your_convenient_source_of_fund_to_update_your_ipay_balance_anytime_when_you_are_in_need">আপনার অর্থের উৎস্য থেকে আইপেতে টাকা আনুন যখন তখন যেভাবে প্রয়োজন।</string>
+    <string name="continue_text">@string/continue_button_text</string>
 </resources>
 
