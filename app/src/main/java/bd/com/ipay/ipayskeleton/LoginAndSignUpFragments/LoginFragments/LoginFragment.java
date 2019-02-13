@@ -589,8 +589,10 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
             case Constants.COMMAND_GET_BULK_SIGN_UP_USER_DETAILS:
                 try {
-                    mGetUserDetailsResponse = gson.fromJson(result.getJsonString(), GetUserDetailsResponse.class);
-                    BulkSignupUserDetailsCacheManager.updateBulkSignupUserInfoCache(mGetUserDetailsResponse);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mGetUserDetailsResponse = gson.fromJson(result.getJsonString(), GetUserDetailsResponse.class);
+                        BulkSignupUserDetailsCacheManager.updateBulkSignupUserInfoCache(mGetUserDetailsResponse);
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }

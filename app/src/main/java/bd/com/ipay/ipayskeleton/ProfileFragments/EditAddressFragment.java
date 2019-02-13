@@ -131,6 +131,7 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     bulkSignUpHelperDialog.cancel();
+                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
                 }
             });
 

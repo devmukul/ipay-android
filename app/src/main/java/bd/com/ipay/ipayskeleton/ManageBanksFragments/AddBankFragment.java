@@ -194,6 +194,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     bulkSignUpHelperDialog.cancel();
+                    bulkSignUpHelperDialog.setCheckedResponse("Bank");
                 }
             });
 

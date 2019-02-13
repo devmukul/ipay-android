@@ -132,7 +132,10 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         getProfileInfo();
         getOccupationList();
 
-        if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
+        boolean isChecked = BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true);
+        System.out.println(">>>>>  "+isChecked);
+
+        if(!isChecked){
             final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
                     "We have some of your basic info. Do you want to use it?");
 
@@ -149,6 +152,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     bulkSignUpHelperDialog.cancel();
+                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
                 }
             });
 

@@ -167,6 +167,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     bulkSignUpHelperDialog.cancel();
+                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
                 }
             });
 

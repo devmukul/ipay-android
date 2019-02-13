@@ -243,7 +243,8 @@ public class Constants {
     public static final String ADD_SPONSOR = "ADD_SPONSOR";
     public static final String ADD_BENEFICIARY = "ADD_BENEFICIARY";
     public static final String MAKE_PAYMENT_USING_SOF = "MAKE_PAYMENT_USING_SOF";
-    public static String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
+    public static final String COMMAND_SEND_BULK_SIGN_UP_USER_CHECKED_RESPONSE = "COMMAND_SEND_BULK_SIGN_UP_USER_CHECKED_RESPONSE";
+    public static final String URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO = "lankabangla/mastercard/";
     public static final String LANKABANGLA_DPS_USER = "/lankabangla/dps/";
     public static final String URL_GET_BANK_LIST = "credit-card/banks";
     public static final String CREDIT_CARD = "CREDIT_CARD";
@@ -532,6 +533,7 @@ public class Constants {
 
     // Bulk Sign up
     public static final String URL_GET_BULK_SIGN_UP_USER_DETAILS = "/bulk/sign-up/user/details";
+    public static final String URL_SEND_BULK_SIGN_UP_USER_RESPONSE = "/bulk/sign-up/user/details/checked";
 
     // API version check Rest
     public static final String URL_GET_MIN_API_VERSION_REQUIRED = "app/min-supported-versions";
