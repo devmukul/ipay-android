@@ -73,7 +73,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
     private HashMap<String, String> mProgressDialogStringMap;
 
     private Long otpValidFor = null;
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.US);
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss", Locale.getDefault());
 
     public OTPVerificationForTwoFactorAuthenticationServicesDialog(@NonNull Activity context, String json, String desiredRequest, String mUri, String method) {
         this(context, json, desiredRequest, mUri, method, null);
@@ -172,7 +172,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         new CustomCountDownTimer(otpValidTime, 500) {
 
             public void onTick(long millisUntilFinished) {
-                mResendOTPButton.setText(String.format(Locale.US, "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
+                mResendOTPButton.setText(String.format(Locale.getDefault(), "%s %s", context.getString(R.string.resend), simpleDateFormat.format(new Date(millisUntilFinished))));
             }
 
             public void onFinish() {

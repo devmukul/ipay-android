@@ -290,6 +290,8 @@
 
                             <TextView
                                 style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:drawableTop="@drawable/background_icon_pay_by_qc_home"
                                 android:ellipsize="marquee"
                                 android:fontFamily="@font/open_sans_semibold"

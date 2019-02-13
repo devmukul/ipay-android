@@ -99,7 +99,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
         new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
             public void onTick(long millisUntilFinished) {
-                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.US).format(new Date(millisUntilFinished)));
+                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millisUntilFinished)));
             }
 
             public void onFinish() {
@@ -281,7 +281,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                         new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
                             public void onTick(long millisUntilFinished) {
-                                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.US).format(new Date(millisUntilFinished)));
+                                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millisUntilFinished)));
                             }
 
                             public void onFinish() {

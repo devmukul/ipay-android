@@ -1029,6 +1029,9 @@ public class Constants {
     public static String CREDIT_BALANCE = "Credit balance";
     public static String MINIMUM_PAY = "Minimum pay";
     public static String OTHER = "Other";
+
+    public static final String APP_LANGUAGE_ENGLISH="en";
+    public static final String APP_LANGUAGE_BENGALI="bn";
     public static long ACTIVE = 1;
     public static long BLOCKED = 2;
     public static final int MAX_TICKET = 4;

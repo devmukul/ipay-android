@@ -70,7 +70,7 @@ import static android.view.View.GONE;
 
 public class IPayTransactionConfirmationFragment extends Fragment implements HttpResponseListener {
     private MandatoryBusinessRules mandatoryBusinessRules;
-    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 
     private int transactionType;
     private String name;

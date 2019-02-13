@@ -64,7 +64,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
     private String cardType;
 	private final Gson gson = new GsonBuilder()
 			.create();
-	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.US);
+	private final NumberFormat balanceBreakDownFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 
 	@Nullable
 	@Override
