@@ -103,6 +103,7 @@ public class Constants {
     public static final String IS_IN_CONTACTS = "is-in-contacts";
     public static final String SWITCHED_FROM_BANK_VERIFICATION = "switched_from_bank_validation";
     public static final String IS_STARTED_FROM_PROFILE_COMPLETION = "is_started_from_profile_completion";
+    public static final String IS_STARTED_FROM_UNCONCENTED_LIST = "is_started_from_unconcented_list";
     public static final String SWITCHED_FROM_TRANSACTION_HISTORY = "switched_from_transaction_history";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
@@ -291,6 +292,8 @@ public class Constants {
     public static final String BANK_CODE = "bank_code";
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
+    public static final String BANK_BRANCH_NAME = "bank_branch_name";
+    public static final String BANK_BRANCH_ROUTE_NO = "bank_branch_route_no";
 
     public static final String STATE_LOADING = "LOADING";
     public static final String STATE_SUCCESS = "SUCCESS";
@@ -400,6 +403,7 @@ public class Constants {
 
     // Check book covor upload Rest
     public static final String URL_CHECKBOOK_COVOR_UPLOAD = "bank/document";
+    public static final String URL_CONCENT_UPLOAD = "bank";
 
     // Card Transaction REST
     public static final String URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD = "add-money";
@@ -537,7 +541,7 @@ public class Constants {
 
     // Bulk Sign up
     public static final String URL_GET_BULK_SIGN_UP_USER_DETAILS = "/bulk/sign-up/user/details";
-    public static final String URL_SEND_BULK_SIGN_UP_USER_RESPONSE = "/bulk/sign-up/user/details/checked";
+    public static final String URL_SEND_BULK_SIGN_UP_USER_RESPONSE = "/bulk/sign-up/user/details/checked?checkedInfoName=";
 
     // API version check Rest
     public static final String URL_GET_MIN_API_VERSION_REQUIRED = "app/min-supported-versions";
@@ -658,6 +662,7 @@ public class Constants {
     public static final String BANK_ACCOUNT_STATUS_PENDING = "PENDING";
     public static final String BANK_ACCOUNT_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
     public static final String BANK_ACCOUNT_STATUS_BLOCKED = "BLOCKED";
+    public static final String BANK_ACCOUNT_STATUS_UNCONSENTED = "UNCONSENTED";
 
     public static final int MOBILE_TYPE_PREPAID = 1;
     public static final int MOBILE_TYPE_POSTPAID = 2;
@@ -707,6 +712,8 @@ public class Constants {
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE = "COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
+
+    public static final String COMMAND_UPDATE_CONCENT = "COMMAND_UPDATE_CONCENT";
     public static final String COMMAND_VERIFICATION_BANK_WITH_AMOUNT = "COMMAND_VERIFICATION_BANK_WITH_AMOUNT";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";

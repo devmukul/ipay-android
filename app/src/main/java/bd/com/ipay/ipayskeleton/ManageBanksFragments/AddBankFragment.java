@@ -179,9 +179,9 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
         if(!BulkSignupUserDetailsCacheManager.isBankInfoChecked(true)){
             final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-                    "We have found your bank account info in our database. Do you want to use it?");
+                    getString(R.string.bulk_signup_bank_helper_msg));
 
-            bulkSignUpHelperDialog.setPositiveButton("USE", new DialogInterface.OnClickListener() {
+            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     mAccountNameEditText.setText(BulkSignupUserDetailsCacheManager.getBankAccountName(null));
@@ -393,11 +393,13 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BANK_NAME, mSelectedBankName);
-        bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
+        bundle.putString(Constants.BANK_BRANCH_NAME, bankBranch.getName());
+        bundle.putString(Constants.BANK_BRANCH_ROUTE_NO, bankBranch.getRoutingNumber());
         bundle.putBoolean(Constants.FROM_ON_BOARD, isSwitchedFromOnBoard);
         bundle.putString(Constants.BANK_ACCOUNT_NAME, accountName);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
+        bundle.putBoolean(Constants.IS_STARTED_FROM_UNCONCENTED_LIST, false);
         if (mChequebookCoverImageFile != null) {
             bundle.putString(Constants.DOCUMENT_TYPE, "cheque");
             bundle.putStringArray(Constants.PHOTO_URI, getUploadFilePaths());

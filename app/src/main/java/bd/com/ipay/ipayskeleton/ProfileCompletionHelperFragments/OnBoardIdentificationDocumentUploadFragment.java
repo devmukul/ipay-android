@@ -178,9 +178,9 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
 
         if(!TextUtils.isEmpty(BulkSignupUserDetailsCacheManager.getNid(null))){
             final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-                    "We have found your NID number in our database. Do you want to use it?");
+                    getString(R.string.bulk_signup_nid_helper_msg));
 
-            bulkSignUpHelperDialog.setPositiveButton("USE", new DialogInterface.OnClickListener() {
+            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     mDocumentIdEditText.setText(BulkSignupUserDetailsCacheManager.getNid(null));

@@ -37,19 +37,17 @@ public class BulkSignUpHelperDialog implements HttpResponseListener {
         mProgressDialog.setCanceledOnTouchOutside(false);
 
 		alertDialog = new AlertDialog.Builder(context)
-				.setTitle("Info")
 				.setMessage(text)
 				.setCancelable(false)
-				.setNegativeButton("CANCEL", null)
 				.create();
 	}
 
-	public void setPositiveButton(CharSequence text, final DialogInterface.OnClickListener onClickListener) {
-	    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, text ,onClickListener);
+	public void setPositiveButton(final DialogInterface.OnClickListener onClickListener) {
+	    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.use) ,onClickListener);
 	}
 
 	public void setNegativeButton(final DialogInterface.OnClickListener onClickListener) {
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL" ,onClickListener);
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, (context.getString(R.string.cancel)).toUpperCase() ,onClickListener);
 	}
 
     public void setCheckedResponse(String checkedInfo) {
@@ -103,7 +101,7 @@ public class BulkSignUpHelperDialog implements HttpResponseListener {
             return;
 
         mSendStatusCheckedTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_BULK_SIGN_UP_USER_CHECKED_RESPONSE,
-                Constants.BASE_URL_MM + Constants.URL_SEND_BULK_SIGN_UP_USER_RESPONSE+"?checkedInfoName="+checkedInfo, null, context, true);
+                Constants.BASE_URL_MM + Constants.URL_SEND_BULK_SIGN_UP_USER_RESPONSE+checkedInfo, null, context, true);
         mSendStatusCheckedTask.mHttpResponseListener = this;
         mSendStatusCheckedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

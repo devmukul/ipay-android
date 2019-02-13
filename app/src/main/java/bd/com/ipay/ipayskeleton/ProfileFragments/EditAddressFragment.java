@@ -103,9 +103,9 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
 
         if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
             final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-                    "We have some of your basic info. Do you want to use it?");
+                    getString(R.string.bulk_signup_basic_info_helper_msg));
 
-            bulkSignUpHelperDialog.setPositiveButton("USE", new DialogInterface.OnClickListener() {
+            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if(mAddressType.equals(Constants.ADDRESS_TYPE_PRESENT)) {

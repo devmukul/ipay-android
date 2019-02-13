@@ -449,7 +449,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 		mTransactionHistoryView.setVisibility(GONE);
 		mProgressBarTransaction.setVisibility(GONE);
 		mProfileCompletionRecyclerView.setVisibility(View.VISIBLE);
-		List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData();
+		List<DashboardProfileCompletionPOJO> requiredInfo = mProfileCompletionStatusResponse.dashboardProfileCompletionData(getContext());
 		if (requiredInfo != null && requiredInfo.size() > 0) {
 			ProfileCompletionAdapter mProfileCompletionAdapter = new ProfileCompletionAdapter(requiredInfo);
 			LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
