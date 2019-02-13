@@ -696,33 +696,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         }
     }
 
-    private void transitionBottomSheetBackgroundColor(float slideOffset) {
-        int colorFrom = getResources().getColor(R.color.colorTransparent);
-        int colorTo = getResources().getColor(R.color.colorWhite);
-        mBottomSheet.setBackgroundColor(interpolateColor(slideOffset,
-                colorFrom, colorTo));
-    }
-
-    private void animateBottomSheetArrows(float slideOffset) {
-        mUpArrow.setRotation(slideOffset * -180);
-    }
-
-    // Helper method to interpolate colors
-    private int interpolateColor(float fraction, int startValue, int endValue) {
-        int startA = (startValue >> 24) & 0xff;
-        int startR = (startValue >> 16) & 0xff;
-        int startG = (startValue >> 8) & 0xff;
-        int startB = startValue & 0xff;
-        int endA = (endValue >> 24) & 0xff;
-        int endR = (endValue >> 16) & 0xff;
-        int endG = (endValue >> 8) & 0xff;
-        int endB = endValue & 0xff;
-        return ((startA + (int) (fraction * (endA - startA))) << 24) |
-                ((startR + (int) (fraction * (endR - startR))) << 16) |
-                ((startG + (int) (fraction * (endG - startG))) << 8) |
-                ((startB + (int) (fraction * (endB - startB))));
-    }
-
     private class ProfileCompletionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         List<DashboardProfileCompletionPOJO> requiredInfo;
 
