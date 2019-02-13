@@ -105,14 +105,16 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
             receiverNameTextView.setVisibility(View.VISIBLE);
         }
 
-        // showing time
-        if (DateUtils.isToday(transactionHistory.getTime())) {
-            transactionTimeTextView.setText(String.format("Today, %s",
-                    Utilities.formatTimeOnly(transactionHistory.getTime())));
-        } else {
-            transactionTimeTextView.setText(Utilities
-                    .formatDayMonthYear(transactionHistory.getTime()));
-        }
+		// showing time
+		if (DateUtils.isToday(transactionHistory.getTime())) {
+
+			transactionTimeTextView.setText(itemView.getContext()
+					.getString(R.string.today_date,
+							Utilities.formatTimeOnly(transactionHistory.getTime())));
+		} else {
+			transactionTimeTextView.setText(Utilities
+					.formatDayMonthYear(transactionHistory.getTime()));
+		}
 
         // showing status icon
         switch (transactionHistory.getStatusCode()) {
@@ -168,7 +170,7 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
                     if (metaData.getSponsorMobileNumber().equals(ContactEngine.formatMobileNumberBD(
                             ProfileInfoCacheManager.getMobileNumber()))) {
 
-                        sponsorOrBeneficiaryNameTextView.setText("Paid for " + metaData.getBeneficiaryName());
+                        sponsorOrBeneficiaryNameTextView.setText(context.getString(R.string.paid_for,metaData.getBeneficiaryName()));
 
                         if (metaData.getBeneficiaryProfilePictures() != null) {
                             if (metaData.getBeneficiaryProfilePictures().size() != 0) {
@@ -204,7 +206,7 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
                             }
                         }
 
-                        sponsorOrBeneficiaryNameTextView.setText("Paid By " + metaData.getSponsorName());
+                        sponsorOrBeneficiaryNameTextView.setText(context.getString(R.string.paid_by,metaData.getSponsorName()));
 
                     }
 

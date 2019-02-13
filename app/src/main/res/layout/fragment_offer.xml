@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:focusableInTouchMode="true"
-    android:clickable="true">
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <include layout="@layout/layout_progress_container" />
 
@@ -14,19 +14,19 @@
         android:id="@+id/empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/value24"
-        android:text="@string/empty_news_room"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:padding="@dimen/value24"
+        android:text="@string/empty_news_room"
+        android:visibility="gone" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/parent_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -36,26 +36,32 @@
                 android:id="@+id/topText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="28sp"
-                android:textColor="@color/colorPaymentReviewPrimaryText"
-                android:lineSpacingExtra="6sp"
-                android:text="@string/news_room_helper_text_title"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:paddingHorizontal="@dimen/value24"
-                android:fontFamily="@font/open_sans_light"/>
+                android:fontFamily="@font/open_sans_light"
+                android:lineSpacingExtra="6sp"
+                android:paddingStart="@dimen/value24"
+                android:paddingLeft="@dimen/value24"
+                android:paddingEnd="@dimen/value24"
+                android:paddingRight="@dimen/value24"
+                android:text="@string/hey_what_s_going_on_here_and_there"
+                android:textColor="#212121"
+                android:textSize="28sp" />
 
             <TextView
                 android:id="@+id/topSubText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="@color/colorPaymentReviewSecondaryText"
-                android:lineSpacingExtra="6sp"
-                android:text="@string/news_room_helper_text_sub_title"
                 android:layout_below="@+id/topText"
-                android:paddingHorizontal="@dimen/value24"
+                android:layout_marginTop="@dimen/value8"
                 android:fontFamily="@font/open_sans"
-                android:layout_marginTop="@dimen/value8"/>
+                android:lineSpacingExtra="6sp"
+                android:paddingStart="@dimen/value24"
+                android:paddingLeft="@dimen/value24"
+                android:paddingEnd="@dimen/value24"
+                android:paddingRight="@dimen/value24"
+                android:text="@string/you_can_see_here_what_is_going_on_your_ipay_wallet_and_what_is_ipay_doing_around_the_community"
+                android:textColor="#666666"
+                android:textSize="13sp" />
 
             <RelativeLayout
                 android:id="@+id/content_container"
@@ -69,16 +75,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="center"
                     android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:gravity="center"
                     android:text="@string/empty_news_room"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_transaction_history"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:focusableInTouchMode="false"/>
+                    android:focusableInTouchMode="false" />
 
             </RelativeLayout>
 

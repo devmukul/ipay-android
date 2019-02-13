@@ -206,23 +206,30 @@
 
                     <RadioButton
                         android:id="@+id/prepaid"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true"
+                        android:paddingStart="@dimen/value8"
                         android:paddingLeft="@dimen/value8"
-                        android:text="Prepaid"
+                        android:paddingEnd="0dp"
+                        android:paddingRight="0dp"
+                        android:text="@string/prepaid"
                         android:textColor="#666666" />
 
                     <RadioButton
                         android:id="@+id/post_paid"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dip"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/value20"
                         android:layout_marginLeft="@dimen/value20"
                         android:layout_weight="1"
                         android:checked="false"
+                        android:paddingStart="@dimen/value8"
                         android:paddingLeft="@dimen/value8"
-                        android:text="Postpaid"
+                        android:paddingEnd="0dp"
+                        android:paddingRight="0dp"
+                        android:text="@string/postpaid"
                         android:textColor="#666666" />
                 </RadioGroup>
             </RelativeLayout>
@@ -236,6 +243,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/value10"
         android:background="#00c0af"
-        android:text="Continue"
+        android:text="@string/continue_button"
         android:textColor="@color/colorWhite" />
 </RelativeLayout>

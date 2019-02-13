@@ -205,7 +205,11 @@ public class Constants {
     public static final String IS_FIRST_MAKE_PAYMENT = "IS_FIRST_MAKE_PAYMENT";
     public static final String IS_FIRST_REQUEST_MONEY = "IS_FIRST_REQUEST_MONEY";
     public static final String VISA = "VISA";
+    public static final String AMEX = "AMEX";
     public static final String MASTERCARD = "MASTERCARD";
+    public static final String VISA_CARD = "Visa Card";
+    public static final String AMEX_CARD = "American Express";
+    public static final String MASTER_CARD = "Master Card";
     public static final String URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO = "lankabangla/visa/";
     public static final String OPERATOR_TYPE = "OPERATOR_TYPE";
     public static final String IS_FIRST_TOP_UP = "IS_FIRST_TOP_UP";
@@ -1034,10 +1038,15 @@ public class Constants {
     public static String CREDIT_BALANCE = "Credit balance";
     public static String MINIMUM_PAY = "Minimum pay";
     public static String OTHER = "Other";
+
+    public static final String APP_LANGUAGE_ENGLISH="en";
+    public static final String APP_LANGUAGE_BENGALI="bn";
     public static long ACTIVE = 1;
     public static long BLOCKED = 2;
     public static final int MAX_TICKET = 4;
     public static final int MAX_TICKET_PURCHASE_DAY = 9;
+
+    public static final String CARD_TYPE = "CARD_TYPE";
     public static final String transaction = "transaction";
     public static final  String other = "other";
     public static  final String  request_money ="request_money";

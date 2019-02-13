@@ -1,20 +1,20 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -43,113 +43,92 @@ import bd.com.ipay.ipayskeleton.Widget.View.BulkSignUpHelperDialog;
 
 public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
 
-    private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
-    private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
+	private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
+	private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
 
-    private EditText mNameEditText;
-    private EditText mDateOfBirthEditText;
-    private final DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    mDateOfBirthEditText.setText(
-                            String.format(Locale.getDefault(), Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year));
-                }
-            };
-    private EditText mOccupationEditText;
-    private EditText mOrganizationNameEditText;
-    private CheckBox mFemaleCheckBox;
-    private CheckBox mMaleCheckBox;
-    private ProgressDialog mProgressDialog;
-    private String mName = "";
-    private com.tsongkha.spinnerdatepicker.DatePickerDialog mDatePickerDialog;
-    private String mDateOfBirth = "";
-    private String mGender = null;
-    private String mOrganizationName;
-    private int mOccupation = -1;
-    private List<Occupation> mOccupationList;
+	private EditText mNameEditText;
+	private EditText mDateOfBirthEditText;
+	private EditText mOccupationEditText;
+	private EditText mOrganizationNameEditText;
+	private RadioGroup genderSelectionRadioGroup;
+	private ProgressDialog mProgressDialog;
+	private String mName = "";
+	private com.tsongkha.spinnerdatepicker.DatePickerDialog mDatePickerDialog;
+	private String mDateOfBirth = "";
+	private String mGender = null;
+	private String mOrganizationName;
+	private int mOccupation = -1;
+	private List<Occupation> mOccupationList;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		View view = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
 
-        if (ProfileInfoCacheManager.isBusinessAccount())
-            getActivity().setTitle(getString(R.string.edit_contact_info));
-        else getActivity().setTitle(getString(R.string.edit_basic_info));
-        Bundle bundle = getArguments();
+		if (getActivity() != null) {
+			if (ProfileInfoCacheManager.isBusinessAccount())
+				getActivity().setTitle(getString(R.string.edit_contact_info));
+			else
+				getActivity().setTitle(getString(R.string.edit_basic_info));
+		}
+		Bundle bundle = getArguments();
+		if (bundle != null) {
+			mName = bundle.getString(Constants.NAME);
+			mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
+			mGender = bundle.getString(Constants.GENDER);
+			mOccupation = bundle.getInt(Constants.OCCUPATION);
+			mOccupationList = bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
+			mOrganizationName = bundle.getString(Constants.ORGANIZATION_NAME);
+		}
 
-        mName = bundle.getString(Constants.NAME);
-        mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
-        mGender = bundle.getString(Constants.GENDER);
-        mOccupation = bundle.getInt(Constants.OCCUPATION);
-        mOccupationList = bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
-        mOrganizationName = bundle.getString(Constants.ORGANIZATION_NAME);
+		Button infoSaveButton = view.findViewById(R.id.button_save);
+		mNameEditText = view.findViewById(R.id.name);
+		mDateOfBirthEditText = view.findViewById(R.id.birthdayEditText);
+		mOccupationEditText = view.findViewById(R.id.occupationEditText);
+		mOrganizationNameEditText = view.findViewById(R.id.organizationNameEditText);
+		genderSelectionRadioGroup = view.findViewById(R.id.gender_selection_radio_group);
+		mProgressDialog = new ProgressDialog(getActivity());
 
-        Button infoSaveButton = (Button) view.findViewById(R.id.button_save);
-        mNameEditText = (EditText) view.findViewById(R.id.name);
-        mDateOfBirthEditText = (EditText) view.findViewById(R.id.birthdayEditText);
-        mOccupationEditText = (EditText) view.findViewById(R.id.occupationEditText);
-        mOrganizationNameEditText = (EditText) view.findViewById(R.id.organizationNameEditText);
-        mMaleCheckBox = (CheckBox) view.findViewById(R.id.checkBoxMale);
-        mFemaleCheckBox = (CheckBox) view.findViewById(R.id.checkBoxFemale);
-        mProgressDialog = new ProgressDialog(getActivity());
+		Date date = Utilities.formatDateFromString(mDateOfBirth);
+		mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), date, this);
 
-        Date date = Utilities.formatDateFromString(mDateOfBirth);
-        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), date, this);
+		if (ProfileInfoCacheManager.isAccountVerified())
+			mNameEditText.setEnabled(false);
+		else {
+			mNameEditText.setEnabled(true);
+		}
 
-        if (ProfileInfoCacheManager.isAccountVerified())
-            mNameEditText.setEnabled(false);
-        else {
-            mNameEditText.setEnabled(true);
-        }
+		if (ProfileInfoCacheManager.isAccountVerified())
+			mDateOfBirthEditText.setEnabled(false);
+		else {
+			mNameEditText.setEnabled(true);
+			mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mDatePickerDialog.show();
+				}
+			});
+		}
 
-        if (ProfileInfoCacheManager.isAccountVerified())
-            mDateOfBirthEditText.setEnabled(false);
-        else {
-            mNameEditText.setEnabled(true);
-            mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mDatePickerDialog.show();
-                }
-            });
-        }
+		genderSelectionRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-        mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mMaleCheckBox.setChecked(true);
-                mFemaleCheckBox.setChecked(false);
+			}
+		});
 
-                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
-            }
-        });
+		infoSaveButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (verifyUserInputs() && getActivity() != null) {
+					Utilities.hideKeyboard(getActivity());
+					attemptSaveBasicInfo();
+				}
+			}
+		});
 
-        mFemaleCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFemaleCheckBox.setChecked(true);
-                mMaleCheckBox.setChecked(false);
-
-                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
-            }
-        });
-
-        infoSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (verifyUserInputs()) {
-                    Utilities.hideKeyboard(getActivity());
-                    attemptSaveBasicInfo();
-                }
-            }
-        });
-
-        setProfileInformation();
-
-        setOccupationAdapter();
-        setOccupation();
+		setOccupationAdapter();
+		setOccupation();
 
         if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
             final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
@@ -177,209 +156,181 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_basic_info_edit));
-    }
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setProfileInformation();
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+	@Override
+	public void onResume() {
+		super.onResume();
+		Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_basic_info_edit));
+	}
 
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return super.onOptionsItemSelected(item);
 
-    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
-        if (maleCheckBoxChecked)
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
-            } else {
-                //noinspection deprecation
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-            }
-        }
+	}
 
-        if (femaleCheckBoxChecked)
-            mFemaleCheckBox.setTextColor((Color.WHITE));
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
-            } else {
-                //noinspection deprecation
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-            }
-        }
-    }
+	private boolean verifyUserInputs() {
+		boolean cancel = false;
+		View focusView = null;
 
-    private boolean verifyUserInputs() {
-        boolean cancel = false;
-        View focusView = null;
+		mName = mNameEditText.getText().toString().trim();
+		mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
+		mOrganizationName = mOrganizationNameEditText.getText().toString().trim();
 
-        mName = mNameEditText.getText().toString().trim();
-        mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
-        mOrganizationName = mOrganizationNameEditText.getText().toString().trim();
+		if (mOrganizationName.isEmpty())
+			mOrganizationName = null;
 
-        if (mOrganizationName.isEmpty())
-            mOrganizationName = null;
+		if (genderSelectionRadioGroup.getCheckedRadioButtonId() != -1 && getView() != null)
+			mGender = GenderList.genderNameToCodeMap.get(((RadioButton) getView().findViewById(genderSelectionRadioGroup.getCheckedRadioButtonId())).getText().toString());
 
-        if (mMaleCheckBox.isChecked())
-            mGender = GenderList.genderNameToCodeMap.get(
-                    getString(R.string.male));
+		if (mOccupation < 0) {
+			mOccupationEditText.setError(getString(R.string.please_enter_occupation));
+			return false;
+		}
 
-        if (mFemaleCheckBox.isChecked())
-            mGender = GenderList.genderNameToCodeMap.get(
-                    getString(R.string.female));
+		if (mName.isEmpty()) {
+			mNameEditText.setError(getString(R.string.error_invalid_first_name));
+			focusView = mNameEditText;
+			cancel = true;
+		} else if (!InputValidator.isValidNameWithRequiredLength(mName)) {
+			mNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
+			focusView = mNameEditText;
+			cancel = true;
+		}
 
-        if (mOccupation < 0) {
-            mOccupationEditText.setError(getString(R.string.please_enter_occupation));
-            return false;
-        }
+		if (!InputValidator.isDateOfBirthValid(mDateOfBirth)) {
+			focusView = mDateOfBirthEditText;
+			cancel = true;
+			mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));
+		}
 
-        if (mName.isEmpty()) {
-            mNameEditText.setError(getString(R.string.error_invalid_first_name));
-            focusView = mNameEditText;
-            cancel = true;
-        } else if (!InputValidator.isValidNameWithRequiredLength(mName)) {
-            mNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
-            focusView = mNameEditText;
-            cancel = true;
-        }
+		if (cancel) {
+			focusView.requestFocus();
+			return false;
+		} else {
+			return true;
+		}
+	}
 
-        if (!InputValidator.isDateOfBirthValid(mDateOfBirth)) {
-            focusView = mDateOfBirthEditText;
-            cancel = true;
-            mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));
-        }
+	private void attemptSaveBasicInfo() {
+		mProgressDialog.setMessage(getString(R.string.saving_profile_information));
+		mProgressDialog.show();
 
-        if (cancel) {
-            focusView.requestFocus();
-            return false;
-        } else {
-            return true;
-        }
-    }
+		Gson gson = new Gson();
 
-    private void attemptSaveBasicInfo() {
-        mProgressDialog.setMessage(getString(R.string.saving_profile_information));
-        mProgressDialog.show();
+		SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
+				mOccupation, mOrganizationName);
 
-        Gson gson = new Gson();
+		String profileInfoJson = gson.toJson(setProfileInfoRequest);
+		mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
+				Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, getActivity(), this, false);
+		mSetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 
-        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
-                mOccupation, mOrganizationName);
+	private void setProfileInformation() {
+		mNameEditText.setText(mName);
+		mDateOfBirthEditText.setText(mDateOfBirth);
+		mOrganizationNameEditText.setText(mOrganizationName);
 
-        String profileInfoJson = gson.toJson(setProfileInfoRequest);
-        mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, getActivity(), this, false);
-        mSetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+		String[] genderArray = GenderList.genderCodes;
 
-    private void setProfileInformation() {
-        mNameEditText.setText(mName);
-        mDateOfBirthEditText.setText(mDateOfBirth);
-        mOrganizationNameEditText.setText(mOrganizationName);
+		if (mGender != null && getView() != null) {
+			if (mGender.equals(genderArray[0])) {
 
-        String[] genderArray = GenderList.genderNames;
+				((RadioButton) getView().findViewById(R.id.male_radio_button)).setChecked(true);
+			} else if (mGender.equals(genderArray[1])) {
+				((RadioButton) getView().findViewById(R.id.female_radio_button)).setChecked(true);
+			} else if (mGender.equals(genderArray[2])) {
+				((RadioButton) getView().findViewById(R.id.other_radio_button)).setChecked(true);
+			}
+		}
+	}
 
-        if (mGender != null) {
-            if (mGender.equals(GenderList.genderNameToCodeMap.get(
-                    genderArray[0]))) {
-                mMaleCheckBox.setChecked(true);
-                mFemaleCheckBox.setChecked(false);
+	public void httpResponseReceiver(GenericHttpResponse result) {
+		mProgressDialog.dismiss();
+		if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+			mSetProfileInfoTask = null;
+			return;
+		}
 
-                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
-            } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
-                    genderArray[1]))) {
-                mMaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setChecked(true);
+		Gson gson = new Gson();
 
-                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
-            }
-        }
-    }
+		switch (result.getApiCommand()) {
+			case Constants.COMMAND_SET_PROFILE_INFO_REQUEST:
 
-    public void httpResponseReceiver(GenericHttpResponse result) {
-        mProgressDialog.dismiss();
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
-            mSetProfileInfoTask = null;
-            return;
-        }
+				try {
+					SetProfileInfoResponse mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
+					if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+						if (getActivity() != null) {
+							Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+							if (mGender != null)
+								ProfileInfoCacheManager.setGender(GenderList.genderCodeToNameMap.get(mGender));
 
-        Gson gson = new Gson();
+							//Google Analytic event
+							Utilities.sendSuccessEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId());
+							getActivity().onBackPressed();
+						}
+					} else {
+						if (getActivity() != null)
+							Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
 
-        switch (result.getApiCommand()) {
-            case Constants.COMMAND_SET_PROFILE_INFO_REQUEST:
+						//Google Analytic event
+						Utilities.sendFailedEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId(), mSetProfileInfoResponse.getMessage());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					if (getActivity() != null)
+						Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
 
-                try {
-                    SetProfileInfoResponse mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            if (mGender != null)
-                                ProfileInfoCacheManager.setGender(GenderList.genderCodeToNameMap.get(mGender));
+					//Google Analytic event
+					Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+				}
 
-                            //Google Analytic event
-                            Utilities.sendSuccessEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId());
-                            getActivity().onBackPressed();
-                        }
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+				mSetProfileInfoTask = null;
+				break;
+		}
+	}
 
-                        //Google Analytic event
-                        Utilities.sendFailedEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId(), mSetProfileInfoResponse.getMessage());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+	private void setOccupation() {
 
-                    //Google Analytic event
-                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
-                }
+		for (int i = 0; i < mOccupationList.size(); i++) {
+			if (mOccupationList.get(i).getId() == mOccupation) {
+				String occupation = mOccupationList.get(i).getName();
+				if (occupation != null) {
+					mOccupationEditText.setText(occupation);
+				}
 
-                mSetProfileInfoTask = null;
-                break;
-        }
-    }
+				break;
+			}
+		}
+	}
 
-    private void setOccupation() {
+	private void setOccupationAdapter() {
+		mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.select_an_occupation), mOccupationList);
+		mOccupationTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
+			@Override
+			public void onResourceSelected(int id, String name) {
+				mOccupationEditText.setText(name);
+				mOccupation = id;
+			}
+		});
 
-        for (int i = 0; i < mOccupationList.size(); i++) {
-            if (mOccupationList.get(i).getId() == mOccupation) {
-                String occupation = mOccupationList.get(i).getName();
-                if (occupation != null) {
-                    mOccupationEditText.setText(occupation);
-                }
+		mOccupationEditText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mOccupationTypeResourceSelectorDialog.show();
+			}
+		});
+	}
 
-                break;
-            }
-        }
-    }
-
-    private void setOccupationAdapter() {
-        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.select_an_occupation), mOccupationList);
-        mOccupationTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
-            @Override
-            public void onResourceSelected(int id, String name) {
-                mOccupationEditText.setText(name);
-                mOccupation = id;
-            }
-        });
-
-        mOccupationEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOccupationTypeResourceSelectorDialog.show();
-            }
-        });
-    }
-
-    @Override
-    public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker datePicker, int i, int i1, int i2) {
-        mDateOfBirthEditText.setText(
-                String.format(Locale.getDefault(), Constants.DATE_FORMAT, i2, i1 + 1, i));
-    }
+	@Override
+	public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker datePicker, int i, int i1, int i2) {
+		mDateOfBirthEditText.setText(
+				String.format(Locale.getDefault(), Constants.DATE_FORMAT, i2, i1 + 1, i));
+	}
 }

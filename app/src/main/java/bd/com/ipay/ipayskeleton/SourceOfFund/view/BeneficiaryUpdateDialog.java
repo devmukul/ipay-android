@@ -30,7 +30,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BeneficiaryUpdateDialog implements HttpResponseListener {
     private EditText monthlyLimitEditText;
-    private TextView headerTextView;
     private View headerView;
     private View bodyView;
     private Context context;
@@ -89,7 +88,6 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
         cancelImageView = (ImageView) headerView.findViewById(R.id.cancel);
         instructionTextView = (TextView) bodyView.findViewById(R.id.instruction);
         ipayProgressDialog = new IpayProgressDialog(context);
-        headerTextView = (TextView) bodyView.findViewById(R.id.header);
         monthlyLimitEditText = (EditText) bodyView.findViewById(R.id.amount);
         updateButton = (Button) bodyView.findViewById(R.id.update);
         String instructionText = instructionTextView.getText().toString();
