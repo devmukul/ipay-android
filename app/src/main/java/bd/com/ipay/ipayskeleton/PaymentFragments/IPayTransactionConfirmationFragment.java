@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -185,7 +186,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 updateTransactionDescription(transactionDescriptionTextView,
-                        getString(R.string.make_payment_confirmation_message, amountValue), 15, 15 + amountValue.length());
+                        getString(R.string.make_payment_confirmation_message, amountValue), getString(R.string.paying_message).length()+1, getString(R.string.paying_message).length()+1 + amountValue.length());
                 mNoteEditText.setHint(R.string.short_note_optional_hint);
                 transactionConfirmationButton.setText(R.string.make_payment);
                 break;
@@ -276,6 +277,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
         spannableAmount.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorLightGreenSendMoney)), startPoint, endPoint, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(spannableAmount, TextView.BufferType.SPANNABLE);
     }
+
 
     private void showErrorMessage(String errorMessage) {
         if (getActivity() != null && getView() != null) {
