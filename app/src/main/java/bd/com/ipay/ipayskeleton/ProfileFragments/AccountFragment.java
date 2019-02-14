@@ -492,9 +492,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
                     if (!mProfileCompletionStatusResponse.isCompletedMandatoryFields()) {
-                        mProfileCompletionStatusView.setText("Your profile is " +
-                                mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                                + "complete.\nSubmit documents and other information to improve your profile.");
+                        mProfileCompletionStatusView.setText(getString(R.string.profile_completeness_percentage, mProfileCompletionStatusResponse.getCompletionPercentage()));
                         mProfileCompletionStatusView.setVisibility(View.VISIBLE);
                     }
                 }
