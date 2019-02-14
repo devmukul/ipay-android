@@ -136,7 +136,7 @@ public class IPayTransactionSuccessFragment extends Fragment implements HttpResp
                 successDescriptionTextView.setText(R.string.send_money_success_description);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-                updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.make_payment_success_message, amountValue), 18, 18 + amountValue.length());
+                updateTransactionDescription(transactionSuccessMessageTextView, getString(R.string.make_payment_success_message, amountValue), getString(R.string.payment_success_message).length()+1, getString(R.string.payment_success_message).length()+1 + amountValue.length());
                 successDescriptionTextView.setText(getString(R.string.make_payment_success_description, name));
                 ratingView.setVisibility(View.VISIBLE);
                 if (sponsorName != null) {
