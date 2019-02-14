@@ -152,6 +152,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
         mRejectButton = v.findViewById(R.id.button_reject);
         mCancelButton = v.findViewById(R.id.button_cancel);
 
+
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
@@ -187,6 +188,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             mRejectButton.setVisibility(View.GONE);
             mCancelButton.setVisibility(View.VISIBLE);
         }
+
 
         if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
@@ -301,7 +303,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_canceling));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
         // No PIN needed for now to place a request from me

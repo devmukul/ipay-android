@@ -30,6 +30,7 @@ public class IPayAddMoneyFromCardTransactionConfirmationFragment extends IPayAbs
 	protected HttpRequestPostAsyncTask httpRequestPostAsyncTask = null;
 	protected CustomProgressDialog mCustomProgressDialog = null;
 	protected Number transactionAmount;
+	protected String cardType;
 	protected final Gson gson = new GsonBuilder().create();
 
 	@Override
@@ -37,6 +38,7 @@ public class IPayAddMoneyFromCardTransactionConfirmationFragment extends IPayAbs
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			transactionAmount = (Number) getArguments().getSerializable(TRANSACTION_AMOUNT_KEY);
+			cardType = getArguments().getString(Constants.CARD_TYPE);
 		}
 		mCustomProgressDialog = new CustomProgressDialog(getContext());
 	}
@@ -107,7 +109,7 @@ public class IPayAddMoneyFromCardTransactionConfirmationFragment extends IPayAbs
 	protected void performContinueAction() {
 		mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
 		mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-		final String requestJson = gson.toJson(new AddMoneyByCreditOrDebitCardRequest(transactionAmount.doubleValue(), getNote(), null));
+		final String requestJson = gson.toJson(new AddMoneyByCreditOrDebitCardRequest(transactionAmount.doubleValue(), cardType, getNote(), null));
 		httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD, Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD,
 				requestJson, getActivity(), this, false);
 		httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

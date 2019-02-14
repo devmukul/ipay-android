@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequ
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestTrustedDevice;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseTrustedDevice;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.BulkSignUp.GetUserDetailsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
@@ -37,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.Model.GetCardResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -65,6 +67,9 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
     private HttpRequestGetAsyncTask mGetAllAddedCards = null;
     private GetCardResponse mGetCardResponse;
+
+    private HttpRequestGetAsyncTask mGetBulkSignupUserDetailsTask = null;
+    private GetUserDetailsResponse mGetUserDetailsResponse;
 
     private Button mActivateButton;
     private EditText mOTPEditText;
@@ -204,7 +209,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
+        if (HttpErrorHandler.isErrorFound(result, getContext(), null) && !result.getApiCommand().equals(Constants.COMMAND_GET_BULK_SIGN_UP_USER_DETAILS)) {
             hideProgressDialog();
             mLoginTask = null;
             mGetAllAddedCards = null;
@@ -342,6 +347,39 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 mAddTrustedDeviceTask = null;
                 break;
 
+            case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
+
+                try {
+                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
+                        getBulkSignUpUserDetails();
+                    } else {
+                        hideProgressDialog();
+                        Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    }
+                } catch (Exception e) {
+                    hideProgressDialog();
+                    e.printStackTrace();
+                    Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                }
+                mGetProfileInfoTask = null;
+                break;
+
+            case Constants.COMMAND_GET_BULK_SIGN_UP_USER_DETAILS:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mGetUserDetailsResponse = gson.fromJson(result.getJsonString(), GetUserDetailsResponse.class);
+                        BulkSignupUserDetailsCacheManager.updateBulkSignupUserInfoCache(mGetUserDetailsResponse);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                getProfileCompletionStatus();
+                mGetBulkSignupUserDetailsTask = null;
+                break;
+
             case Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS:
                 hideProgressDialog();
                 try {
@@ -356,22 +394,26 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
                         if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded()))  {
+                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
                             }
                         } else getAddedCards();
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
+                        }
                         hideProgressDialog();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    }
                     hideProgressDialog();
                 }
                 mGetProfileCompletionStatusTask = null;
@@ -399,26 +441,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
                 mGetAllAddedCards = null;
-                break;
-
-            case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
-
-                try {
-                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
-                        ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
-                        getProfileCompletionStatus();
-                    } else {
-                        hideProgressDialog();
-                        Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
-                    }
-                } catch (Exception e) {
-                    hideProgressDialog();
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
-                }
-                mGetProfileInfoTask = null;
                 break;
             default:
                 hideProgressDialog();
@@ -462,5 +484,14 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), true);
         mGetProfileInfoTask.mHttpResponseListener = this;
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getBulkSignUpUserDetails() {
+        if (mGetBulkSignupUserDetailsTask != null) {
+            return;
+        }
+        mGetBulkSignupUserDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BULK_SIGN_UP_USER_DETAILS,
+                Constants.BASE_URL_MM + Constants.URL_GET_BULK_SIGN_UP_USER_DETAILS, getActivity(), this, true);
+        mGetBulkSignupUserDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

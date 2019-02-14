@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,11 +26,13 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widget.View.BulkSignUpHelperDialog;
 
 public class EditParentInfoFragment extends BaseFragment implements HttpResponseListener {
 
@@ -102,6 +105,32 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
                 }
             }
         });
+
+        if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
+            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                    getString(R.string.bulk_signup_basic_info_helper_msg));
+
+            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mFathersNameEditText.setText(BulkSignupUserDetailsCacheManager.getFatherName(null));
+                    mFathersMobileEditText.setText(BulkSignupUserDetailsCacheManager.getFatherMobile(null));
+                    mMothersNameEditText.setText(BulkSignupUserDetailsCacheManager.getMotherName(null));
+                    mMothersMobileEditText.setText(BulkSignupUserDetailsCacheManager.getMotherMobile(null));
+                    bulkSignUpHelperDialog.cancel();
+                }
+            });
+
+            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    bulkSignUpHelperDialog.cancel();
+                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
+                }
+            });
+
+            bulkSignUpHelperDialog.show();
+        }
 
         return view;
     }

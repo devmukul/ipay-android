@@ -101,6 +101,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.HomeActivity"
+            android:configChanges="locale"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -116,6 +117,7 @@
         <activity
             android:name=".Activities.SignupOrLoginActivity"
             android:label="@string/sign_up_with_ipay"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
@@ -310,6 +312,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <receiver android:name=".Api.NotificationApi.CreateRichNotification$NotificationButtonClickHandler" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -343,6 +346,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+        <activity
+            android:name=".Activities.RichNotificationDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+
+
     </application>
 
 </manifest>

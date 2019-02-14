@@ -59,7 +59,7 @@ import static android.view.View.GONE;
 public class IPayTransactionAmountInputFragment extends Fragment implements View.OnClickListener {
 
     public MandatoryBusinessRules mMandatoryBusinessRules;
-    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
     private TextView mAmountTextView;
     private Button mContinueButton;
 
