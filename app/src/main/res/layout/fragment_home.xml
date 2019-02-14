@@ -399,6 +399,7 @@
                                 android:drawableTop="@drawable/request_payment"
                                 android:ellipsize="marquee"
                                 android:singleLine="true"
+                                android:fontFamily="@font/open_sans_semibold"
                                 android:text="@string/request_payment" />
 
                         </LinearLayout>
