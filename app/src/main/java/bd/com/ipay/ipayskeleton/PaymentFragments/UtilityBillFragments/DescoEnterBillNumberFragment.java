@@ -1,35 +1,30 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -42,33 +37,19 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DescoCustome
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 
-public class DescoBillInfoFragment extends BaseFragment implements HttpResponseListener {
-    private TextView mAccountIDTextView;
-    private TextView mDueDateTextView;
-    private TextView mVatAmountTextView;
-    private TextView mTotalAmountTextView;
-    private TextView mStampAmountTextView;
-    private TextView mZoneCodeTextView;
-    private TextView mTransactionIdTextView;
-    private TextView mlpcAmountTextView;
-    private TextView mBillNumberTextView;
-    private TextView mBillAmountTextView;
+public class DescoEnterBillNumberFragment extends BaseFragment implements HttpResponseListener {
     private EditText mEnterBillNumberEditText;
     private Button mContinueButton;
     private View infoView;
     private View customerIDView;
     private ProgressDialog mProgressDialog;
+    private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private String mUri;
@@ -88,7 +69,7 @@ public class DescoBillInfoFragment extends BaseFragment implements HttpResponseL
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_desco_bill_payment, container, false);
-        getActivity().setTitle("Desco");
+        getActivity().setTitle(getString(R.string.desco));
         attemptGetBusinessRule(ServiceIdConstants.UTILITY_BILL_PAYMENT);
         mProgressDialog = new ProgressDialog(getContext());
         mCustomProgressDialog = new CustomProgressDialog(getContext());
@@ -100,17 +81,6 @@ public class DescoBillInfoFragment extends BaseFragment implements HttpResponseL
         if (UtilityBillPaymentActivity.mMandatoryBusinessRules == null) {
             UtilityBillPaymentActivity.mMandatoryBusinessRules = new MandatoryBusinessRules(Constants.UTILITY_BILL_PAYMENT);
         }
-
-        mAccountIDTextView = (TextView) view.findViewById(R.id.account_number_view);
-        mVatAmountTextView = (TextView) view.findViewById(R.id.vat_amount_view);
-        mTotalAmountTextView = (TextView) view.findViewById(R.id.total_amount_view);
-        mlpcAmountTextView = (TextView) view.findViewById(R.id.lpc_amount_view);
-        mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number_view);
-        mDueDateTextView = (TextView) view.findViewById(R.id.due_date_view);
-        mStampAmountTextView = view.findViewById(R.id.stamp_amount_view);
-        mBillAmountTextView = (TextView) view.findViewById(R.id.bill_amount_view);
-        mZoneCodeTextView = (TextView) view.findViewById(R.id.zone_code_view);
-        mTransactionIdTextView = (TextView) view.findViewById(R.id.transaction_id_view);
         customerIDView = view.findViewById(R.id.customer_id_view);
         infoView = view.findViewById(R.id.info_view);
         mEnterBillNumberEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
@@ -119,105 +89,20 @@ public class DescoBillInfoFragment extends BaseFragment implements HttpResponseL
         setUpButtonAction();
     }
 
-    private void launchOTPVerification() {
-        String jsonString = new Gson().toJson(mDescoBillPayRequest);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_DESCO_BILL_PAY,
-                Constants.BASE_URL_UTILITY + Constants.URL_DESCO_BILL_PAY, Constants.METHOD_POST);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
-
-    }
-
     private void setUpButtonAction() {
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Utilities.isConnectionAvailable(getContext())) {
-                    if (mContinueButton.getText().toString().toUpperCase().equals("CONTINUE")) {
-                        if (verifyUserInput()) {
-                            getCustomerInfo();
-                        }
-                    } else {
-                        if (isUserEligibleToPaySufficient()) {
-                            attemptBillPayWithPinCheck();
-                        }
+                    if (verifyUserInput()) {
+                        getCustomerInfo();
                     }
+
                 } else {
                     Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
                 }
             }
         });
-    }
-
-    private void attemptBillPayWithPinCheck() {
-        if (UtilityBillPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
-                @Override
-                public void ifPinCheckedAndAdded(String pin) {
-                    attemptBillPay(pin);
-                }
-            });
-        } else {
-            attemptBillPay(null);
-        }
-    }
-
-    private boolean isUserEligibleToPaySufficient() {
-        boolean cancel = false;
-        mTotalAmountTextView.setError(null);
-        String errorMessage = null;
-        if (!Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                || !Utilities.isValueAvailable(UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-            return false;
-        }
-
-        if (UtilityBillPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
-            DialogUtils.showDialogVerificationRequired(getActivity());
-            return false;
-        }
-
-        if (SharedPrefManager.ifContainsUserBalance()) {
-            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-
-            //validation check of amount
-            if (mTotalAmountTextView.getText() != null) {
-                final BigDecimal topUpAmount = new BigDecimal(mTotalAmountTextView.getText().toString());
-                if (topUpAmount.compareTo(balance) > 0) {
-                    errorMessage = getString(R.string.insufficient_balance);
-                } else {
-                    final BigDecimal minimumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumTopupAmount = UtilityBillPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
-                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
-                }
-            }
-        } else {
-            errorMessage = getString(R.string.balance_not_available);
-            cancel = true;
-        }
-
-        if (errorMessage != null) {
-            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-            cancel = true;
-        }
-        return !cancel;
-    }
-
-    private void attemptBillPay(String pin) {
-        if (mDescoBillPayTask != null) {
-            return;
-        } else {
-            mDescoBillPayRequest = new DescoBillPayRequest(mBillNumber, pin);
-
-            Gson gson = new Gson();
-            String json = gson.toJson(mDescoBillPayRequest);
-            mDescoBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DESCO_BILL_PAY,
-                    Constants.BASE_URL_UTILITY + Constants.URL_DESCO_BILL_PAY, json, getActivity(), false);
-            mDescoBillPayTask.mHttpResponseListener = this;
-            mDescoBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            mCustomProgressDialog.setLoadingMessage("Please wait");
-            mCustomProgressDialog.showDialog();
-        }
     }
 
     private void attemptGetBusinessRule(int serviceID) {
@@ -234,7 +119,7 @@ public class DescoBillInfoFragment extends BaseFragment implements HttpResponseL
         if (mDescoCustomerInfoTask != null) {
             return;
         } else {
-            mProgressDialog.setMessage("Please wait");
+            mProgressDialog.setMessage(getString(R.string.please_wait));
             mUri = Constants.BASE_URL_UTILITY + Constants.URL_DESCO_CUSTOMER_INFO + mBillNumber;
             mDescoCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DESCO_CUSTOMER, mUri,
                     getActivity(), this, false);
@@ -260,23 +145,6 @@ public class DescoBillInfoFragment extends BaseFragment implements HttpResponseL
         }
     }
 
-    private void fillUpFieldsWithData() {
-        mAccountIDTextView.setText(mDescoCustomerInfoResponse.getAccountNumber());
-        mVatAmountTextView.setText(mDescoCustomerInfoResponse.getVatAmount());
-        mTotalAmountTextView.setText(mDescoCustomerInfoResponse.getTotalAmount());
-        mAmount = mDescoCustomerInfoResponse.getTotalAmount();
-        mBillAmountTextView.setText(mDescoCustomerInfoResponse.getBillAmount());
-        mStampAmountTextView.setText(mDescoCustomerInfoResponse.getStampAmount());
-        mTransactionIdTextView.setText(mDescoCustomerInfoResponse.getTransactionId());
-        mBillNumberTextView.setText(mBillNumber);
-        mlpcAmountTextView.setText(mDescoCustomerInfoResponse.getLpcAmount());
-        mZoneCodeTextView.setText(mDescoCustomerInfoResponse.getZoneCode());
-        mContinueButton.setText("Pay bill");
-        mDueDateTextView.setText(mDescoCustomerInfoResponse.getDueDate());
-        infoView.setVisibility(View.VISIBLE);
-        customerIDView.setVisibility(View.GONE);
-    }
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
@@ -293,9 +161,21 @@ public class DescoBillInfoFragment extends BaseFragment implements HttpResponseL
                     mDescoCustomerInfoResponse = gson.fromJson(result.getJsonString(), DescoCustomerInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         Utilities.hideKeyboard(getActivity());
-                        fillUpFieldsWithData();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.BILL_NUMBER, mBillNumber);
+                        bundle.putSerializable(Constants.ZONE_CODE, numberFormat.parse(mDescoCustomerInfoResponse.getZoneCode()));
+                        bundle.putString(Constants.DUE_DATE, mDescoCustomerInfoResponse.getDueDate());
+                        bundle.putString(Constants.ACCOUNT_ID, mDescoCustomerInfoResponse.getAccountNumber());
+                        bundle.putSerializable(Constants.BILL_AMOUNT, numberFormat.parse(mDescoCustomerInfoResponse.getBillAmount()));
+                        if (mDescoCustomerInfoResponse.getStampAmount() != null && Integer.parseInt(mDescoCustomerInfoResponse.getStampAmount()) != 0) {
+                            bundle.putSerializable(Constants.STAMP_AMOUNT, numberFormat.parse(mDescoCustomerInfoResponse.getStampAmount()));
+                        }
+                        bundle.putSerializable(Constants.VAT_AMOUNT, numberFormat.parse(mDescoCustomerInfoResponse.getVatAmount()));
+                        bundle.putSerializable(Constants.LPC_AMOUNT, numberFormat.parse(mDescoCustomerInfoResponse.getLpcAmount()));
+                        bundle.putSerializable(Constants.TOTAL_AMOUNT, numberFormat.parse(mDescoCustomerInfoResponse.getTotalAmount()));
+                        ((UtilityBillPaymentActivity) getActivity()).switchToDescoBillInfoFragment(bundle);
                     } else {
-                        Toast.makeText(getContext(), mDescoCustomerInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        IPaySnackbar.error(mContinueButton, mDescoCustomerInfoResponse.getMessage(), IPaySnackbar.LENGTH_LONG).show();
                     }
                     mDescoCustomerInfoTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
@@ -324,93 +204,6 @@ public class DescoBillInfoFragment extends BaseFragment implements HttpResponseL
                         }
                     }
                     mGetBusinessRuleTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_DESCO_BILL_PAY)) {
-                    try {
-                        mDescoBillPayResponse = gson.fromJson(result.getJsonString(), DescoBillPayResponse.class);
-                        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                            if (getActivity() != null) {
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getActivity().setResult(Activity.RESULT_OK);
-                                        getActivity().finish();
-                                    }
-                                }, 2000);
-                            }
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                            if (mContinueButton != null) {
-                                mContinueButton.setClickable(false);
-                            }
-
-                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-                            } else {
-                                mCustomProgressDialog.showSuccessAnimationAndMessage(mDescoBillPayResponse.getMessage());
-                            }
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getActivity().setResult(Activity.RESULT_OK);
-                                    getActivity().finish();
-
-                                }
-                            }, 2000);
-                            Utilities.sendSuccessEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
-
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                            mCustomProgressDialog.showFailureAnimationAndMessage(mDescoBillPayResponse.getMessage());
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mDescoBillPayResponse.getMessage());
-                                }
-                            }, 2000);
-                            Utilities.sendBlockedEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId());
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
-                            final String errorMessage;
-                            if (!TextUtils.isEmpty(mDescoBillPayResponse.getMessage())) {
-                                errorMessage = mDescoBillPayResponse.getMessage();
-                            } else {
-                                errorMessage = getString(R.string.payment_failed);
-                            }
-                            mCustomProgressDialog.showFailureAnimationAndMessage(errorMessage);
-                            Utilities.sendFailedEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDescoBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
-
-                        } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                            Toast.makeText(getActivity(), mDescoBillPayResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                            mCustomProgressDialog.dismissDialog();
-                            SecuritySettingsActivity.otpDuration = mDescoBillPayResponse.getOtpValidFor();
-                            launchOTPVerification();
-                        } else {
-                            if (getActivity() != null) {
-                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog == null) {
-                                    mCustomProgressDialog.showFailureAnimationAndMessage(mDescoBillPayResponse.getMessage());
-                                } else {
-                                    Toast.makeText(getContext(), mDescoBillPayResponse.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-
-                                if (mDescoBillPayResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
-                                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
-                                        mCustomProgressDialog.dismissDialog();
-                                    }
-                                } else {
-                                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-                                    }
-                                }
-                                //Google Analytic event
-                            }
-                            Utilities.sendFailedEventTracker(mTracker, Constants.DESCO_BILL_PAY, ProfileInfoCacheManager.getAccountId(), mDescoBillPayResponse.getMessage(), new BigDecimal(mAmount).longValue());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        mCustomProgressDialog.showFailureAnimationAndMessage(getString(R.string.recharge_failed));
-                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
-                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
-                        }
-                    }
-                    mDescoBillPayTask = null;
                 }
             } catch (Exception e) {
                 mProgressDialog.dismiss();

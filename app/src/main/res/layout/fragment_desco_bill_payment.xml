@@ -14,6 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:animateLayoutChanges="true"
             android:gravity="center"
             android:orientation="vertical"
@@ -41,11 +42,12 @@
                     <EditText
                         android:id="@+id/customer_id_edit_text"
                         style="@style/CustomEditText"
+                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
-                        android:hint="Desco bill number"
+                        android:hint="@string/desco_bill_number"
                         android:inputType="text"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
@@ -62,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
-                    android:gravity="left"
+                    android:gravity="center"
                     android:text="@string/desco_bill_pay_message" />
             </LinearLayout>
 
@@ -109,8 +111,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/value8"
                     android:gravity="center"
-                    android:visibility="gone"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:weightSum="2">
 
                     <TextView
@@ -132,8 +134,8 @@
                     style="@style/Divider"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/value8" />
+                    android:layout_marginBottom="@dimen/value8"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

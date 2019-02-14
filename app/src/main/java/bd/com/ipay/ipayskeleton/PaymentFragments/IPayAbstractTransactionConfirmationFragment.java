@@ -32,6 +32,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -89,7 +90,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		pinEditText = view.findViewById(R.id.pin_edit_text);
 		noteEditText = view.findViewById(R.id.note_edit_text);
 
-		if (getActivity() instanceof AppCompatActivity) {
+		if (getActivity() instanceof AppCompatActivity && !(getActivity() instanceof UtilityBillPaymentActivity)) {
 			((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 			ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 			if (actionBar != null) {

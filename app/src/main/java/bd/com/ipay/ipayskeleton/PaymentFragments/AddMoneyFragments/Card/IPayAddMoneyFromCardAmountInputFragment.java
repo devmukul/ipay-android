@@ -10,7 +10,6 @@ import android.view.View;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.BankAccountList;
 import bd.com.ipay.ipayskeleton.PaymentFragments.BankTransactionFragments.IPayAbstractBankTransactionConfirmationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractAmountFragment;
 import bd.com.ipay.ipayskeleton.R;

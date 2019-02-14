@@ -32,6 +32,7 @@
     <string name="primary_email_address">Primary Email Address</string>
     <string name="other_email_address">Other Email Addresses</string>
     <string name="full_name">Full Name</string>
+    <string name="full_name_from_nid">Full Name (Same as your NID)</string>
     <string name="address">Address</string>
     <string name="address_line_1">Address Line 1</string>
     <string name="invalid_address_line_1">Please enter Address Line 1</string>
@@ -205,7 +206,7 @@
     <string name="logout_from_this_device">Logout from this device</string>
     <string name="enter_otp">Enter Code</string>
     <string name="promo_code">Promo Code</string>
-    <string name="enter_promo_code_optional">Promo/Invitation Code (Optional)</string>
+    <string name="enter_promo_code_optional">Promo Code (Optional)</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
     <string name="save_failed">Failed to save…</string>
     <string name="sending_otp">Sending OTP in your mobile…</string>
@@ -261,7 +262,7 @@
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
     <string name="failed_empty_pin">PIN cannot be empty</string>
-    <string name="account_number">Account Number</string>
+    <string name="account_number">Account number</string>
     <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
     <string name="scan_valid_qr_code">Please scan a valid mobile number</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
@@ -485,6 +486,12 @@
     <string name="other_id">Document ID</string>
     <string name="document_name">Document Name</string>
     <string name="mobile">Mobile No.</string>
+    <string name="father_mobile">Father\'s Mobile No.</string>
+    <string name="mother_mobile">Mother\'s Mobile No.</string>
+    <string name="lpc">Lpc amount</string>
+    <string name="bill_amount">Bill amount</string>
+    <string name="zone_code">Zone code</string>
+    <string name="stamp_amount">Stamp amount</string>
     <string name="this_device">This device</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
@@ -1095,10 +1102,6 @@
     <string name="a_certain_amount">a certain amount</string>
     <string name="please_enter_an_amount">Please enter an amount</string>
     <string name="please_enter_your_pin">Please enter your pin</string>
-    <string name="bill_amount">Bill amount</string>
-    <string name="stamp_amount">Stamp amount</string>
-    <string name="lpc">Lpc amount</string>
-    <string name="zone_code">Zone code</string>
     <string name="language">Language</string>
     <string name="pending_notifications">Pending</string>
     <string name="notifications_notifications">Notifications</string>
@@ -1127,12 +1130,15 @@
     <string name="dashboard_basic_info_text">Please update your basic information.</string>
     <string name="dashboard_personal_address_text">We require your present address along with basic info for faster verification.</string>
     <string name="dashboard_photo_id_text">Please upload your Photo ID(i.e National ID).</string>
-    <string name="dashboard_verify_bank_text">Add your bank or debit/card card as a source of fund.</string>
+    <string name="dashboard_verify_bank_text">Add your bank or debit/Credit card as a source of fund.</string>
     <string name="dashboard_profile_picture">Profile Picture</string>
     <string name="dashboard_verify_bank">Verify Bank or Card</string>
     <string name="dashboard_present_address">Personal Address</string>
     <string name="dashboard_national_id">Photo ID</string>
     <string name="dashboard_basic_info">Personal Info</string>
     <string name="unconsented">Unconsented</string>
+    <string name="profile_completeness_percentage">Your profile is %1$d \% complete. Submit documents and other information to improve your profile.</string>
+    <string name="profile_completeness_information">You need to complete the following information to get verified:%1$s\n.</string>
+    <string name="desco_bill_number">Desco bill number</string>
 
 </resources>

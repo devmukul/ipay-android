@@ -11,6 +11,12 @@
     <string name="navigation_drawer_open">ন্যাভিগেশন ড্রয়ার খুলুন</string>
     <string name="navigation_drawer_close">ন্যাভিগেশন ড্রয়ার বন্ধ করুন</string>
     <string name="prompt_password">পাসওয়ার্ড</string>
+    <string name="zone_code">জোন কোড</string>
+    <string name="bill_amount">বিল আমাউন্ট</string>
+    <string name="lpc">এলপিসি আমাউন্ট</string>
+    <string name="stamp_amount">স্ট্যাম্প আমাউন্ট</string>
+    <string name="father_mobile">পিতার মোবাইল নাম্বার</string>
+    <string name="mother_mobile">মাতার মোবাইল নাম্বার</string>
     <string name="prompt_password_new">আপনার পাসওয়ার্ড লিখুন</string>
     <string name="prompt_doing_business_as">যে হিসাবে ব্যবসা করছেন</string>
     <string name="prompt_company_name">কোম্পানির নাম (ঐচ্ছিক)</string>
@@ -784,6 +790,7 @@
     <string name="bill_month">বিলের মাস</string>
     <string name="principal_amount">প্রধান পরিমাণ</string>
     <string name="vat_amount">ভ্যাট পরিমাণ</string>
+    <string name="full_name_from_nid">পূর্ণ নাম(আপনার এনআইডি অনুসারে)</string>
     <string name="bill_status">বিল স্থিতি</string>
     <string name="enter_customer_id">অনুগ্রহ করে গ্রাহক আইডি লিখুন</string>
     <string name="enter_subscriber_id">অনুগ্রহ করে গ্রাহক আইডি লিখুন</string>
@@ -794,9 +801,10 @@
     <string name="upload_identification_document">সনাক্তকরণ নথি আপলোড করুন</string>
     <string name="due_date">দেনা পরিশোধের তারিখ</string>
     <string name="ipc">আইপিসি</string>
-    <string name="desco_bill_pay_message">অনুগ্রহ করে আপনার DESCO এর বিল নম্বরটি লিখুন</string>
+    <string name="desco_bill_pay_message">অনুগ্রহ করে আপনার ডেস্কো এর বিল নম্বরটি লিখুন</string>
     <string name="enter_bill_no">বিল নম্বরটি লিখুন</string>
     <string name="desco">ডেস্কো</string>
+    <string name="desco_bill_number">ডেস্কো বিল নাম্বার</string>
     <string name="dpdc_bill_pay_message">অনুগ্রহ করে আপনার ডিপিডিসি অ্যাকাউন্ট নম্বরটি এবং লোকেশনটি লিখুন</string>
     <string name="enter_account_number">অনুগ্রহ করে অ্যাকাউন্ট নম্বরটি লিখুন</string>
     <string name="dpdc">ডিপিডিসি</string>
@@ -1030,5 +1038,9 @@
     <string name="dashboard_national_id">Photo ID</string>
     <string name="dashboard_basic_info">Personal Info</string>
     <string name="unconsented">অনুনমোদিত</string>
+    <string name="profile_completeness_percentage">আপনার প্রোফাইল %1$d সম্পন্ন হয়েছে।</string>
+    <string name="profile_completeness_information">ভেরিফাইড হতে নীচে দেওয়া তথ্য গুলি প্রয়োজন:%1$s\n.</string>
+
 </resources>
+
 

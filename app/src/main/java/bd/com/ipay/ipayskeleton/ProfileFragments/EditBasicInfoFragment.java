@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
