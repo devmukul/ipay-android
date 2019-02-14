@@ -372,14 +372,14 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
         String errorMessage;
 
         if (selectedSponsor != null) {
-            if (TextUtils.isEmpty(mAmountTextView.getText())) {
+            if (TextUtils.isEmpty(mAmountDummyEditText.getText())) {
                 errorMessage = getString(R.string.please_enter_amount);
-            } else if (!InputValidator.isValidDigit(mAmountTextView.getText().toString().trim())) {
+            } else if (!InputValidator.isValidDigit(mAmountDummyEditText.getText().toString().trim())) {
                 errorMessage = getString(R.string.please_enter_amount);
             } else {
                 final BigDecimal minimumAmount = mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
                 final BigDecimal maximumAmount;
-                final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
+                final BigDecimal amount = new BigDecimal(mAmountDummyEditText.getText().toString().replaceAll("[^\\d.]", ""));
                 final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
                 if (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY
                         || transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_WITHDRAW_MONEY) {
@@ -391,12 +391,12 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
             }
         } else {
             if (SharedPrefManager.ifContainsUserBalance()) {
-                if (TextUtils.isEmpty(mAmountTextView.getText())) {
+                if (TextUtils.isEmpty(mAmountDummyEditText.getText())) {
                     errorMessage = getString(R.string.please_enter_amount);
-                } else if (!InputValidator.isValidDigit(mAmountTextView.getText().toString().trim())) {
+                } else if (!InputValidator.isValidDigit(mAmountDummyEditText.getText().toString().trim())) {
                     errorMessage = getString(R.string.please_enter_amount);
                 } else {
-                    final BigDecimal amount = new BigDecimal(mAmountTextView.getText().toString().replaceAll("[^\\d.]", ""));
+                    final BigDecimal amount = new BigDecimal(mAmountDummyEditText.getText().toString().replaceAll("[^\\d.]", ""));
                     final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
                     if (((transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_SEND_MONEY) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP) || (transactionType == IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT)) && amount.compareTo(balance) > 0) {
                         errorMessage = getString(R.string.insufficient_balance);
