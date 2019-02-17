@@ -1035,6 +1035,7 @@
     <string name="unconsented">অনুনমোদিত</string>
     <string name="profile_completeness_percentage">আপনার প্রোফাইল %1$d সম্পন্ন হয়েছে।</string>
     <string name="profile_completeness_information">ভেরিফাইড হতে নীচে দেওয়া তথ্য গুলি প্রয়োজন:%1$s\n.</string>
+    <string name="qr_code_helper_text">সঠিক ও নির্ভুলভাবে স্ক্যান করার জন্য,কিউআর কোডটি ফ্রেমের মধ্যে ধরুন।</string>
     <string name="invie_msg_text">%1$s এই আমন্ত্রণ কোড দিয়ে সাইন আপ করুন। লিঙ্ক:</string>
     <string name="shop_outlet_name">দোকান বা আউটলেট নাম</string>
     <string name="paying_message">আপনি পেমেন্ট করছেন</string>

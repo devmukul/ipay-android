@@ -1,17 +1,18 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SourceOfFundActivity extends AppCompatActivity {
+public class SourceOfFundActivity extends BaseActivity {
 	public BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
 
 
@@ -61,6 +62,11 @@ public class SourceOfFundActivity extends AppCompatActivity {
 		getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_to_left_enter,
 				R.anim.right_to_left_exit, R.anim.left_to_right_enter, R.anim.left_to_right_exit).replace
 				(R.id.fragment_container, addSourceOfFundFragment).addToBackStack(null).commit();
+	}
+
+	@Override
+	protected Context setContext() {
+		return SourceOfFundActivity.this;
 	}
 
 	@Override
