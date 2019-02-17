@@ -274,6 +274,17 @@ public class Constants {
     public static final String URL_LANKABANGLA_VISA_BILL_PAY = "lankabangla/visa/billpay";
     public static final String URL_LANKABANGLA_MASTERCARD_BILL_PAY = "lankabangla/mastercard/billpay";
     public static final String URL_CREDIT_CARD_BILL_PAY = "credit-card/billpay";
+    public static final String BILL_AMOUNT = "BILL_AMOUNT";
+
+    public static final String STAMP_AMOUNT = "STAMP_AMOUNT";
+    public static final String TOTAL_AMOUNT = "TOTAL_AMOUNT";
+    public static final String VAT_AMOUNT = "VAT_AMOUNT";
+    public static final String LPC_AMOUNT = "LPC_AMOUNT";
+    public static final String ZONE_CODE = "ZONE_CODE";
+    public static final String DUE_DATE = "DUE_DATE";
+    public static final String BILL_NUMBER = "BILL_NUMBER";
+
+
     public static String ROLEID = "ROLEID";
     public static final String OUTLET_ID = "OUTLET_ID";
     public static final String OUTLET_NAME = "OUTLET_NAME";
@@ -374,7 +385,7 @@ public class Constants {
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String INVALID_CREDENTIAL = "invalid credential";
-    public static final String URL_DESCO_BILL_PAY = "/desco/billpay";
+    public static final String URL_DESCO_BILL_PAY = "desco/bill-pay";
     public static final String URL_CARNIVAL = "/carnival/bill-info/";
 
 

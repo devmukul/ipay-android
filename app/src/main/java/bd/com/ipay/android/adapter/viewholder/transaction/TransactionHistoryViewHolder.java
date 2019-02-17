@@ -84,9 +84,9 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
                     .formatTakaFromString(transactionHistory.getNetAmountFormatted()));
         } else {
             balanceTextView.setVisibility(View.GONE);
-            if(transactionHistory.getNetAmount() == 0.0){
-               netAmountTextView.setText(Utilities.formatTakaFromString(Double.toString(transactionHistory.getAmount())));
-            }else {
+            if (transactionHistory.getNetAmount() == 0.0) {
+                netAmountTextView.setText(Utilities.formatTakaFromString(Double.toString(transactionHistory.getAmount())));
+            } else {
                 netAmountTextView.setText(Utilities
                         .formatTakaFromString(String.valueOf(transactionHistory.getNetAmount())));
             }
@@ -152,12 +152,17 @@ public class TransactionHistoryViewHolder extends PagedListViewHolder<Transactio
                     .crossFade()
                     .into(transactionImageView);
         } else {
-            Glide.with(itemView.getContext())
-                    .load(transactionHistory.getAdditionalInfo().
-                            getImageWithType(itemView.getContext()))
-                    .transform(circleTransform)
-                    .crossFade()
-                    .into(transactionImageView);
+            try {
+                Glide.with(itemView.getContext())
+                        .load(transactionHistory.getAdditionalInfo().
+                                getImageWithType(itemView.getContext()))
+                        .transform(circleTransform)
+                        .crossFade()
+                        .into(transactionImageView);
+            } catch (Exception e) {
+
+            }
+
         }
         //showing source_of_fund_related_information
         TransactionMetaData metaData = transactionHistory.getMetaData();

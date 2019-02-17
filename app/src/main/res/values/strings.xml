@@ -262,7 +262,7 @@
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
     <string name="failed_empty_pin">PIN cannot be empty</string>
-    <string name="account_number">Account Number</string>
+    <string name="account_number">Account number</string>
     <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
     <string name="scan_valid_qr_code">Please scan a valid mobile number</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
@@ -488,6 +488,10 @@
     <string name="mobile">Mobile No.</string>
     <string name="father_mobile">Father\'s Mobile No.</string>
     <string name="mother_mobile">Mother\'s Mobile No.</string>
+    <string name="lpc">Lpc amount</string>
+    <string name="bill_amount">Bill amount</string>
+    <string name="zone_code">Zone code</string>
+    <string name="stamp_amount">Stamp amount</string>
     <string name="this_device">This device</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
@@ -1140,5 +1144,6 @@
     <string name="shop_outlet_name">Shop, store or outlet name</string>
     <string name="paying_message">YOU ARE PAYING</string>
     <string name="payment_success_message">SUCCESSFULLY PAID</string>
+    <string name="desco_bill_number">Desco bill number</string>
 
 </resources>
