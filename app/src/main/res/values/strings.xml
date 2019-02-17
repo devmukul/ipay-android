@@ -1135,6 +1135,7 @@
     <string name="unconsented">Unconsented</string>
     <string name="profile_completeness_percentage">Your profile is %1$d \% complete. Submit documents and other information to improve your profile.</string>
     <string name="profile_completeness_information">You need to complete the following information to get verified:%1$s\n.</string>
+    <string name="qr_code_helper_text">Align QR code with in the frame,to Scan fast without any problem.</string>
     <string name="invie_msg_text">Signup with this invitation code %1$s - link:</string>
     <string name="shop_outlet_name">Shop, store or outlet name</string>
     <string name="paying_message">YOU ARE PAYING</string>
