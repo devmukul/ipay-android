@@ -120,8 +120,6 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 		mContinueButton = (Button) view.findViewById(R.id.continue_button);
 		mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number);
 
-		mPrevMonthView.setText("( Bill month " + ((UtilityBillPaymentActivity) getActivity()).getPreviousMonth() + " )");
-
 		UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
 		setUpButtonAction();
 	}
