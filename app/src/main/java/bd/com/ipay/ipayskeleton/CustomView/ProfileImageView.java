@@ -62,27 +62,15 @@ public class ProfileImageView extends FrameLayout {
                 .into(mProfilePictureView);
     }
 
-    public void setProfilePicture(String photoUri, boolean forceLoad) {
-
-        if (photoUri != null) {
-            if (!photoUri.contains("ipay.com")) {
-                photoUri = Constants.BASE_URL_FTP_SERVER + photoUri;
-            }
-        }
-
+    public void setProfilePicture(String photoURI) {
         try {
-            final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
+            final DrawableTypeRequest<String> glide = Glide.with(context).load(photoURI);
 
             glide
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
 
-            if (forceLoad) {
-                glide
-                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
-            }
-
-            glide
-                    .placeholder(R.drawable.ic_profile)
+            glide.signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
+            glide.placeholder(R.drawable.ic_profile)
                     .error(R.drawable.ic_profile)
                     .crossFade()
                     .dontAnimate()
@@ -90,6 +78,15 @@ public class ProfileImageView extends FrameLayout {
                     .into(mProfilePictureView);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setProfilePicture(String photoUrl, boolean forceLoad) {
+
+        if (photoUrl != null) {
+            if (!photoUrl.contains("ipay.com")) {
+                photoUrl = Constants.BASE_URL_FTP_SERVER + photoUrl;
+            }
         }
     }
 

@@ -1141,8 +1141,8 @@
         <item name="android:minWidth">0dip</item>
         <item name="android:paddingTop">@dimen/value5</item>
         <item name="android:paddingBottom">@dimen/value5</item>
-        <item name="android:paddingLeft">@dimen/value25</item>
-        <item name="android:paddingRight">@dimen/value25</item>
+        <item name="android:paddingLeft">@dimen/value10</item>
+        <item name="android:paddingRight">@dimen/value10</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_centerHorizontal">true</item>

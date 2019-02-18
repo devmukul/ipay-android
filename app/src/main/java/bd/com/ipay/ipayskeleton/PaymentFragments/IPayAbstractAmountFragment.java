@@ -95,7 +95,7 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		numberFormat.setMinimumFractionDigits(0);
 		numberFormat.setMaximumFractionDigits(2);
-		numberFormat.setMinimumIntegerDigits(2);
+		numberFormat.setMinimumIntegerDigits(1);
 
 		balanceBreakDownFormat.setMinimumFractionDigits(2);
 		balanceBreakDownFormat.setMaximumFractionDigits(2);
@@ -471,6 +471,18 @@ public abstract class IPayAbstractAmountFragment extends Fragment {
 
 	protected void setTransactionDescription(String transactionDescription) {
 		transactionDescriptionTextView.setText(transactionDescription);
+	}
+
+	protected void hideTransactionDescription() {
+		transactionDescriptionTextView.setVisibility(View.GONE);
+	}
+
+    protected void hideBalance() {
+        balanceInfoLayout.setVisibility(View.GONE);
+    }
+
+	protected void hideName() {
+		nameTextView.setVisibility(View.GONE);
 	}
 
 	protected void setTransactionImageResource(int imageResource) {

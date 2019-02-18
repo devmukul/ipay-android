@@ -56,6 +56,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
     public static final int TRANSACTION_TYPE_TOP_UP = ServiceIdConstants.TOP_UP;
 
     private int transactionType;
+    private String cardType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +64,8 @@ public class IPayTransactionActionActivity extends BaseActivity {
         setContentView(R.layout.activity_ipay_transaction_action);
 
         transactionType = getIntent().getIntExtra(TRANSACTION_TYPE_KEY, TRANSACTION_TYPE_INVALID);
+        cardType = getIntent().getStringExtra(Constants.CARD_TYPE);
+
         final Bundle bundle = new Bundle();
         bundle.putInt(TRANSACTION_TYPE_KEY, transactionType);
         switch (transactionType) {
@@ -83,6 +86,7 @@ public class IPayTransactionActionActivity extends BaseActivity {
                 break;
             case TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
                 BusinessRuleCacheManager.fetchBusinessRule(this, transactionType);
+                bundle.putString(Constants.CARD_TYPE, cardType);
                 switchFragment(new IPayAddMoneyFromCardAmountInputFragment(), bundle, 0, true);
                 break;
             case TRANSACTION_TYPE_MAKE_PAYMENT:

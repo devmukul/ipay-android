@@ -187,7 +187,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 updateTransactionDescription(transactionDescriptionTextView,
-                        getString(R.string.make_payment_confirmation_message, amountValue), getString(R.string.paying_message).length()+1, getString(R.string.paying_message).length()+1 + amountValue.length());
+                        getString(R.string.make_payment_confirmation_message, amountValue), getString(R.string.money_amount).length()+1, getString(R.string.money_amount).length()+1 + amountValue.length());
                 mNoteEditText.setHint(R.string.short_note_optional_hint);
                 transactionConfirmationButton.setText(R.string.make_payment);
                 break;

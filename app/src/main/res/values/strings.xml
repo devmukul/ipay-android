@@ -812,7 +812,7 @@
     <string name="switching">Switching</string>
     <string name="account_switched">Account switched</string>
     <string name="source_of_fund">Source Of Fund</string>
-    <string name="onboard_source_of_fund_text">Add your bank or debit/credit card as a source of fund of your iPay wallet and enjoy full access to our services.</string>
+    <string name="onboard_source_of_fund_text">Add your bank as a source of fund of your iPay wallet and enjoy full access to our services.</string>
     <string name="add_money_by_card">Add Money By Credit/Debit Card</string>
     <string name="added_cards">Added Cards</string>
     <string name="card">Credit or Debit Card</string>
@@ -922,7 +922,7 @@
     <string name="lanka_bangla_card">LankaBangla Card</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
-    <string name="zero_amount">00</string>
+    <string name="zero_amount">0</string>
     <string name="send_money_confirmation_message">YOU ARE SENDING Tk. %1$s TO</string>
     <string name="make_payment_confirmation_message">YOU ARE PAYING %1$s TO</string>
     <string name="make_payment_confirmation_message_tk">YOU ARE PAYING Tk. %1$s TO</string>
@@ -1133,11 +1133,24 @@
     <string name="dashboard_national_id">Photo ID</string>
     <string name="dashboard_basic_info">Personal Info</string>
     <string name="unconsented">Unconsented</string>
-    <string name="profile_completeness_percentage">Your profile is %1$d \% complete. Submit documents and other information to improve your profile.</string>
+    <string name="profile_completeness_percentage">Your profile is %1$d complete. Submit documents and other information to improve your profile.</string>
     <string name="profile_completeness_information">You need to complete the following information to get verified:%1$s\n.</string>
     <string name="invie_msg_text">Signup with this invitation code %1$s - link:</string>
     <string name="shop_outlet_name">Shop, store or outlet name</string>
-    <string name="paying_message">YOU ARE PAYING</string>
+    <string name="paying_message"></string>
     <string name="payment_success_message">SUCCESSFULLY PAID</string>
+    <string name="confirm_title">Please Confirm</string>
+    <string name="agreed_to_proceed">I AGREED TO PROCEED</string>
+    <string name="rate_this_marchant">Please rate this merchant</string>
+    <string name="add_money_from_card_title">YOU ARE ADDING MONEY FROM DEBIT/CREDIT CARD</string>
+
+    <string name="money_amount">YOU ARE PAYING</string>
+    <string name="date">Date</string>
+    <string name="station_from">Station From</string>
+    <string name="station_to">Station To</string>
+    <string name="adult">Adult</string>
+    <string name="child">Child</string>
+    <string name="you_can_purchase_max_4_tickets_at_once_and_heighst_8_tickets_per_week">You can purchase max 4 tickets at once and heighst 8 tickets per week.</string>
+    <string name="to_settle_your_bill_payment_request_it_will_take_3_5_business_day">To settle your bill payment request, it will take 3-5 business day.</string>
 
 </resources>

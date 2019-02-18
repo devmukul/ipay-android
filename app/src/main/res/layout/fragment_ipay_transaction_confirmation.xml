@@ -178,7 +178,7 @@
         android:layout_height="@dimen/value50"
         android:layout_alignParentBottom="true"
         android:fontFamily="@font/open_sans"
-        android:text="@string/continue_send_money"
+        android:text="@string/confirm_title"
         android:textColor="@color/colorWhite"
         android:textSize="14sp" />
 </RelativeLayout>

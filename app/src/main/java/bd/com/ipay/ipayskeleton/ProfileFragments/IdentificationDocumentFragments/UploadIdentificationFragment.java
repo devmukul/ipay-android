@@ -407,7 +407,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
                 customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                     @Override
                     public void onResourceSelected(int actionId, String action) {
-                        if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
+                        if (getString(R.string.take_a_picture_message).equals(action) || getString(R.string.select_from_gallery_message).equals(action))
                             if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                                 selectDocument(actionId, documentSide);
                             else {

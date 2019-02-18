@@ -52,7 +52,6 @@ public class IPaySendMoneyConfirmationFragment extends IPayAbstractTransactionCo
 		setUserName(mobileNumber);
 		setTransactionImage(profilePicture);
 		setNoteEditTextHint(getString(R.string.short_note_optional_hint));
-		setTransactionConfirmationButtonTitle(getString(R.string.send_money));
 	}
 
 	@Override
