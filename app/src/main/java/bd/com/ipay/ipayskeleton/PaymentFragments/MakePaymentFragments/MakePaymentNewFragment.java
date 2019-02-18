@@ -319,7 +319,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
             DialogUtils.showServiceNotAllowedDialog(getContext());
             return;
-        } else if (mProviderAvailabilityMap.get(provider) != null) {
+        } else if (!provider.equals(Constants.DESCO) && mProviderAvailabilityMap.get(provider) != null) {
             if (!mProviderAvailabilityMap.get(provider).
                     equals(getString(R.string.active))) {
                 DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(provider));

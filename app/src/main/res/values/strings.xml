@@ -262,7 +262,7 @@
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
     <string name="failed_empty_pin">PIN cannot be empty</string>
-    <string name="account_number">Account Number</string>
+    <string name="account_number">Account number</string>
     <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
     <string name="scan_valid_qr_code">Please scan a valid mobile number</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
@@ -488,6 +488,10 @@
     <string name="mobile">Mobile No.</string>
     <string name="father_mobile">Father\'s Mobile No.</string>
     <string name="mother_mobile">Mother\'s Mobile No.</string>
+    <string name="lpc">Lpc amount</string>
+    <string name="bill_amount">Bill amount</string>
+    <string name="zone_code">Zone code</string>
+    <string name="stamp_amount">Stamp amount</string>
     <string name="this_device">This device</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
@@ -1135,6 +1139,7 @@
     <string name="unconsented">Unconsented</string>
     <string name="profile_completeness_percentage">Your profile is %1$d complete. Submit documents and other information to improve your profile.</string>
     <string name="profile_completeness_information">You need to complete the following information to get verified:%1$s\n.</string>
+    <string name="qr_code_helper_text">Align QR code with in the frame,to Scan fast without any problem.</string>
     <string name="invie_msg_text">Signup with this invitation code %1$s - link:</string>
     <string name="shop_outlet_name">Shop, store or outlet name</string>
     <string name="paying_message"></string>
@@ -1152,5 +1157,6 @@
     <string name="child">Child</string>
     <string name="you_can_purchase_max_4_tickets_at_once_and_heighst_8_tickets_per_week">You can purchase max 4 tickets at once and heighst 8 tickets per week.</string>
     <string name="to_settle_your_bill_payment_request_it_will_take_3_5_business_day">To settle your bill payment request, it will take 3-5 business day.</string>
+    <string name="desco_bill_number">Desco bill number</string>
 
 </resources>

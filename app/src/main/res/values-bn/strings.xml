@@ -11,6 +11,12 @@
     <string name="navigation_drawer_open">ন্যাভিগেশন ড্রয়ার খুলুন</string>
     <string name="navigation_drawer_close">ন্যাভিগেশন ড্রয়ার বন্ধ করুন</string>
     <string name="prompt_password">পাসওয়ার্ড</string>
+    <string name="zone_code">জোন কোড</string>
+    <string name="bill_amount">বিল আমাউন্ট</string>
+    <string name="lpc">এলপিসি আমাউন্ট</string>
+    <string name="stamp_amount">স্ট্যাম্প আমাউন্ট</string>
+    <string name="father_mobile">পিতার মোবাইল নাম্বার</string>
+    <string name="mother_mobile">মাতার মোবাইল নাম্বার</string>
     <string name="prompt_password_new">আপনার পাসওয়ার্ড লিখুন</string>
     <string name="prompt_doing_business_as">যে হিসাবে ব্যবসা করছেন</string>
     <string name="prompt_company_name">কোম্পানির নাম (ঐচ্ছিক)</string>
@@ -56,7 +62,7 @@
     <string name="invalid_nid_max_length">এনআইডি সর্বাধিক ১৭ ডিজিট লম্বা হওয়া উচিত</string>
     <string name="invalid_business_tin_wrong_length">ব্যবসায় টিআইএন ১২ ডিজিট লম্বা হওয়া উচিত</string>
     <string name="invalid_vat_reg_cert_ID_wrong_length">ভ্যাট রেজিস্ট্রেশন সার্টিফিকেট আইডি ১১ ডিজিট লম্বা হওয়া উচিত</string>
-    <string name="occupation">পেশা</string> 
+    <string name="occupation">পেশা</string>
     <string name="organization_name">প্রতিষ্ঠানের নাম</string>
     <string name="mobile_number">মোবাইল নাম্বার</string>
     <string name="name_mobile_number">নাম বা মোবাইল নাম্বার</string>
@@ -475,8 +481,6 @@
     <string name="other_id">ডকুমেন্ট আইডি</string>
     <string name="document_name">ডকুমেন্ট নাম</string>
     <string name="mobile">মোবাইল নাম্বার</string>
-    <string name="father_mobile">পিতার মোবাইল নাম্বার</string>
-    <string name="mother_mobile">মাতার মোবাইল নাম্বার</string>
     <string name="this_device">এই ডিভাইস</string>
     <string name="present_address">বর্তমান ঠিকানা</string>
     <string name="permanent_address">স্থায়ী ঠিকানা</string>
@@ -797,11 +801,12 @@
     <string name="upload_identification_document">জাতীয় পরিচয়পত্র আপলোড করুন</string>
     <string name="due_date">দেনা পরিশোধের তারিখ</string>
     <string name="ipc">আইপিসি</string>
-    <string name="desco_bill_pay_message">অনুগ্রহ করে আপনার DESCO এর বিল নাম্বারটি লিখুন</string>
     <string name="enter_bill_no">বিল নাম্বারটি লিখুন</string>
+    <string name="desco_bill_pay_message">অনুগ্রহ করে আপনার ডেস্কো এর বিল নম্বরটি লিখুন</string>
     <string name="desco">ডেস্কো</string>
-    <string name="dpdc_bill_pay_message">অনুগ্রহ করে আপনার ডিপিডিসি অ্যাকাউন্ট নাম্বারটি এবং লোকেশনটি লিখুন</string>
-    <string name="enter_account_number">অনুগ্রহ করে অ্যাকাউন্ট নাম্বারটি লিখুন</string>
+    <string name="desco_bill_number">ডেস্কো বিল নাম্বার</string>
+    <string name="dpdc_bill_pay_message">অনুগ্রহ করে আপনার ডিপিডিসি অ্যাকাউন্ট নম্বরটি এবং লোকেশনটি লিখুন</string>
+    <string name="enter_account_number">অনুগ্রহ করে অ্যাকাউন্ট নম্বরটি লিখুন</string>
     <string name="dpdc">ডিপিডিসি</string>
     <string name="enter_location_code">লোকেশন কোডটি লিখুন</string>
     <string name="current_package_rate">পরিমাণ</string>
@@ -1035,6 +1040,7 @@
     <string name="unconsented">অনুনমোদিত</string>
     <string name="profile_completeness_percentage">আপনার প্রোফাইল %1$d সম্পন্ন হয়েছে।</string>
     <string name="profile_completeness_information">ভেরিফাইড হতে নীচে দেওয়া তথ্য গুলি প্রয়োজন:%1$s\n.</string>
+    <string name="qr_code_helper_text">সঠিক ও নির্ভুলভাবে স্ক্যান করার জন্য,কিউআর কোডটি ফ্রেমের মধ্যে ধরুন।</string>
     <string name="invie_msg_text">%1$s এই আমন্ত্রণ কোড দিয়ে সাইন আপ করুন। লিঙ্ক:</string>
     <string name="shop_outlet_name">দোকান বা আউটলেট নাম</string>
     <string name="paying_message">আপনি পেমেন্ট করছেন</string>
@@ -1054,4 +1060,5 @@
 
 
 </resources>
+
 
