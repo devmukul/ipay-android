@@ -105,8 +105,8 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         mContinueButton = view.findViewById(R.id.continue_button);
         mHelperText = view.findViewById(R.id.helper_text);
-        String text = "You can purchase max <font color='#00c0af'>4 seats</font> at once and highest <font color='#00c0af'>8 seats</font> per week.";
-        mHelperText.setText(Html.fromHtml(text));
+        //String text = "You can purchase max <font color='#00c0af'>4 seats</font> at once and highest <font color='#00c0af'>8 seats</font> per week.";
+        //mHelperText.setText(Html.fromHtml(text));
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

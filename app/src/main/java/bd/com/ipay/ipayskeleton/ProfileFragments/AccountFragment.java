@@ -365,9 +365,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
                     if (uri == null) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(),
-                                    R.string.could_not_load_image,
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.could_not_load_image, Toast.LENGTH_SHORT).show();
                     } else {
                         // Check for a valid profile picture
                         if (isSelectedProfilePictureValid(uri)) {

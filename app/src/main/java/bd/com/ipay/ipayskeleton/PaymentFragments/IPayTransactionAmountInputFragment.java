@@ -196,8 +196,7 @@ public class IPayTransactionAmountInputFragment extends Fragment implements View
                 mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
-
-                transactionDescriptionTextView.setText(R.string.paying_money_to);
+                transactionDescriptionTextView.setVisibility(GONE);
                 balanceInfoLayout.setVisibility(View.VISIBLE);
                 mTopUpDefaultAmountLayout.setVisibility(View.GONE);
                 if (sponsorList != null) {

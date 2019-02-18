@@ -277,7 +277,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                     } else {
                         // Check for a valid profile picture
                         if (isSelectedProfilePictureValid(mUri)) {
-                            mUploadImageView.setProfilePicture(mUri.getPath(), true);
+                            mUploadImageView.setProfilePicture(mUri.getPath());
                             mDocumentHelperTextView.setText("Nice Profile Photo");
                             mSelectPhotoButton.setVisibility(View.GONE);
                             mUploadPhotoButton.setVisibility(View.VISIBLE);

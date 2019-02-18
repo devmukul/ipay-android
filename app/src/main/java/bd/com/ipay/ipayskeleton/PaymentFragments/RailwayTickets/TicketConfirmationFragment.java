@@ -73,7 +73,6 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 		setTransactionDescription(getStyledTransactionDescription(R.string.make_payment_confirmation_message_tk, mTotalAmount));
         setName(getString(R.string.railway_ticket_name));
         setUserName(Utilities.formatJourneyInfoText(mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
-		setTransactionConfirmationButtonTitle(getString(R.string.pay));
 	}
 
 	@Override

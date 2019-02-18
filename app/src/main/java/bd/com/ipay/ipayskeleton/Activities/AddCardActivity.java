@@ -9,12 +9,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -29,10 +31,14 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddCardResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card.IPayAddMoneyFromCardAmountInputFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Widget.View.CardSelectDialog;
 
 public class AddCardActivity extends BaseActivity implements HttpResponseListener {
 
@@ -51,6 +57,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 	public ArrayList<String> mBranchNames;
 
 	private RecyclerView mAllCardListRecyclerView;
+	private String cardType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +81,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 			@Override
 			@ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
 			public void onClick(View v) {
-				Intent intent = new Intent(AddCardActivity.this, IPayTransactionActionActivity.class);
-				intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
-				startActivity(intent);
+				showCardType();
 			}
 		});
 	}
@@ -200,5 +205,33 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 				mCardImageView = itemView.findViewById(R.id.icon_card);
 			}
 		}
+	}
+
+	private void showCardType() {
+		final CardSelectDialog cardSelectDialog = new CardSelectDialog(AddCardActivity.this);
+		cardSelectDialog.setTitle("Select Card Type");
+		cardSelectDialog.setCloseButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				cardSelectDialog.cancel();
+			}
+		});
+		cardSelectDialog.setPayBillButtonAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				cardType = cardSelectDialog.getSelectedCardType();
+				if(!TextUtils.isEmpty(cardType)) {
+					cardSelectDialog.cancel();
+
+					Intent intent = new Intent(AddCardActivity.this, IPayTransactionActionActivity.class);
+					intent.putExtra(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY, IPayTransactionActionActivity.TRANSACTION_TYPE_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
+					intent.putExtra(Constants.CARD_TYPE, cardType);
+					startActivity(intent);
+				}else{
+					Toaster.makeText(AddCardActivity.this, "Please select a card!", Toast.LENGTH_LONG);
+				}
+			}
+		});
+		cardSelectDialog.show();
 	}
 }

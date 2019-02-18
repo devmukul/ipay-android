@@ -516,7 +516,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                             mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                                 @Override
                                 public void onResourceSelected(int selectedIndex, String action) {
-                                    if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
+                                    if (getString(R.string.remove).equals(action)) {
                                         showDeleteEmailConfirmationDialog(email);
                                     } else if (Constants.ACTION_TYPE_MAKE_PRIMARY.equals(action)) {
                                         makeEmailPrimary(email.getEmailId());

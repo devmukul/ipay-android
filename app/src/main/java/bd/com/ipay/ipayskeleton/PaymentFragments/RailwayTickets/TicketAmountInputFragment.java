@@ -62,7 +62,7 @@ public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 	@Override
 	protected void setupViewProperties() {
 		setBalanceInfoLayoutVisibility(View.VISIBLE);
-		setTransactionDescription(getString(R.string.paying_money_for));
+		hideTransactionDescription();
 		setInputType(InputType.TYPE_CLASS_NUMBER);
 		setTransactionImageResource(R.drawable.bd_railway);
 		setName(getString(R.string.railway_ticket_name));

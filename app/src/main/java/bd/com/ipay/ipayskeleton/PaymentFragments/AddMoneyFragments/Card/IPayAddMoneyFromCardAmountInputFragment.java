@@ -36,7 +36,7 @@ public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountF
 
 	@Override
 	protected void setupViewProperties() {
-		setTransactionDescription(getString(R.string.add_money_from_title));
+    	hideTransactionDescription();
 		setName(getString(R.string.debit_credit_card));
 		setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
 		setTransactionImageResource(R.drawable.ic_debit_credit_card_icon);
@@ -115,7 +115,7 @@ public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountF
 			return;
 
 		final CardChargeDialog cardChargeDialog = new CardChargeDialog(getContext());
-		cardChargeDialog.setTitle("Please Confirm");
+		cardChargeDialog.setTitle(getString(R.string.confirm_title));
 		cardChargeDialog.setCloseButtonAction(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
