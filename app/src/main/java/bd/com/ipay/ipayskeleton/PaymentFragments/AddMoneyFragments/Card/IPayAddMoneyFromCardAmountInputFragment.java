@@ -37,6 +37,7 @@ public class IPayAddMoneyFromCardAmountInputFragment extends IPayAbstractAmountF
 	@Override
 	protected void setupViewProperties() {
     	hideTransactionDescription();
+    	hideBalance();
 		setName(getString(R.string.debit_credit_card));
 		setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
 		setTransactionImageResource(R.drawable.ic_debit_credit_card_icon);

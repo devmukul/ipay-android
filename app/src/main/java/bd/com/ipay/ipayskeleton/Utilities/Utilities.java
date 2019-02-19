@@ -885,20 +885,21 @@ public class Utilities {
 
 	public static List<AddMoneyOption> getAddMoneyOptions() {
 		final List<AddMoneyOption> addMoneyOptionList = new ArrayList<>();
-		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY)) {
-			addMoneyOptionList.add(new AddMoneyOption(ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY,
-					R.drawable.ic_instant_money_icon,
-					R.string.instant_add_money, R.string.add_money_instant_option_message));
+
+		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK)) {
+			addMoneyOptionList.add(new AddMoneyOption(ServiceIdConstants.ADD_MONEY_BY_BANK,
+					R.drawable.ic_bank_icon,
+					R.string.money_from_bank, R.string.add_money_bank_option_message));
 		}
 		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
 			addMoneyOptionList.add(new AddMoneyOption(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD,
 					R.drawable.ic_debit_credit_card_icon,
 					R.string.debit_credit_card, R.string.add_money_card_option_message));
 		}
-		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK)) {
-			addMoneyOptionList.add(new AddMoneyOption(ServiceIdConstants.ADD_MONEY_BY_BANK,
-					R.drawable.ic_bank_icon,
-					R.string.money_from_bank, R.string.add_money_bank_option_message));
+		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY)) {
+			addMoneyOptionList.add(new AddMoneyOption(ServiceIdConstants.ADD_MONEY_BY_BANK_INSTANTLY,
+					R.drawable.ic_instant_money_icon,
+					R.string.instant_add_money, R.string.add_money_instant_option_message));
 		}
 		return addMoneyOptionList;
 	}
@@ -1128,7 +1129,7 @@ public class Utilities {
 			return "CID" + customerIdStr;
 	}
 
-	public static String formatJourneyInfoText(String infoText, int adults, int child) {
+	public static String formatJourneyInfoText(Context c, String infoText, int adults, int child) {
 
 		if(adults>1){
 			if(child>1){

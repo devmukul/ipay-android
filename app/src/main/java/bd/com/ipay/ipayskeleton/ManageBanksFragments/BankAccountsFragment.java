@@ -347,15 +347,12 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         if (this.isAdded())
             setContentShown(true);
 
-        System.out.println("Test " + result.toString());
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_BANK_LIST:
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                         processGetBankListResponse(result.getJsonString());
-
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);

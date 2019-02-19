@@ -66,7 +66,7 @@ public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 		setInputType(InputType.TYPE_CLASS_NUMBER);
 		setTransactionImageResource(R.drawable.bd_railway);
 		setName(getString(R.string.railway_ticket_name));
-		setUserName(Utilities.formatJourneyInfoText(mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
+		setUserName(Utilities.formatJourneyInfoText(getContext(),mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
 		setAmount(String.valueOf( mTotalAmount ));
 		setAmountFieldEnabled(false);
 	}

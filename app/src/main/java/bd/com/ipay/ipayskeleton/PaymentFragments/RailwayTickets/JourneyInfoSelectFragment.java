@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -175,12 +176,21 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
                 datePickerDialog.show();
             }
         });
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mStationFromSelection.setText("");
+        mStationToSelection.setText("");
+        mAdultSelection.setText("");
+        mChildSelection.setText("");
+        mGenderSelection.setText("");
+        getStationFromList();
         getAdultLIst();
         setAdultAdapter(mAdultList);
         getGenderLIst();
         setGenderAdapter(mGenderList);
-        getStationFromList();
     }
 
     private void getStationFromList() {
@@ -262,7 +272,8 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
                 if (Integer.valueOf(mSelectedAdult) < Constants.MAX_TICKET && Integer.valueOf(mSelectedAdult) >0 ) {
                     mChildList = new ArrayList<>();
                     for (int i = 0; i <= Constants.MAX_TICKET - Integer.valueOf(mSelectedAdult); i++) {
-                        mChildList.add(String.valueOf(i));
+                        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+                        mChildList.add(String.valueOf(numberFormat.format(i)));
                     }
                     setChildAdapter(mChildList);
 
@@ -316,10 +327,10 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             public void onResourceSelected(String name) {
                 mGenderSelection.setError(null);
                 mGenderSelection.setText(name);
-                if(name.equalsIgnoreCase("male"))
+                if(name.equalsIgnoreCase(getString(R.string.male)))
                 {
                     mSelectedGender = "M";
-                }else if(name.equalsIgnoreCase("female")){
+                }else if(name.equalsIgnoreCase(getString(R.string.female))){
                     mSelectedGender = "F";
                 }else {
                     mSelectedGender = null;
@@ -445,13 +456,14 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
     public void getAdultLIst(){
         mAdultList = new ArrayList<>();
         for(int i=1; i<=Constants.MAX_TICKET; i++){
-            mAdultList.add(String.valueOf(i));
+            NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+            mAdultList.add(String.valueOf(numberFormat.format(i)));
         }
     }
 
     public void getGenderLIst(){
         mGenderList = new ArrayList<>();
-        mGenderList.add("Male");
-        mGenderList.add("Female");
+        mGenderList.add(getString(R.string.male));
+        mGenderList.add(getString(R.string.female));
     }
 }
