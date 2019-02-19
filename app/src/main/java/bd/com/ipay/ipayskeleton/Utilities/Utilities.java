@@ -1130,37 +1130,31 @@ public class Utilities {
 	}
 
 	public static String formatJourneyInfoText(Context c, String infoText, int adults, int child) {
-        String forText = " "+c.getString(R.string.for_text)+" ";
-        String andText = " "+c.getString(R.string.and_text)+" ";
-        String adultText = " "+c.getString(R.string.adult);
-        String adultsText = " "+ c.getString(R.string.adults);
-        String childText = " "+c.getString(R.string.child);
-        String childrenText = " "+c.getString(R.string.children);
 
 		if(adults>1){
 			if(child>1){
-				return  infoText + forText + adults + adultsText + andText + child + childrenText;
+				return  infoText+" for "+adults +" Adults & "+child+" Children";
 			}else if(child == 0){
-				return  infoText+forText+adults +adultsText;
+				return  infoText+" for "+adults +" Adults";
 			}else{
-				return  infoText + forText + adults + adultsText + andText + child + childText;
+				return  infoText+" for "+adults +" Adults & "+child+" Child";
 			}
 		}else if(adults ==1 ){
 			if(child>1){
-				return  infoText + forText + adults + adultText + andText + child + childrenText;
+				return  infoText+" for "+adults +" Adult & "+child+" Children";
 			}else if(child == 0){
-				return  infoText + forText + adults + adultText;
+				return  infoText+" for "+adults +" Adult";
 			}else{
-				return  infoText + forText + adults + adultText + andText + child + childText;
+				return  infoText+" for "+adults +" Adult & "+child+" Child";
 			}
 		}else {
-            if(child>1){
-                return  infoText + forText + adults + adultText + andText + child + childrenText;
-            }else if(child == 0){
-                return  infoText + forText + adults + adultText;
-            }else{
-                return  infoText + forText + adults + adultText + andText + child + childText;
-            }
+			if(child>1){
+				return  infoText+" for "+adults +" Adult & "+child+" Children";
+			}else if(child == 0){
+				return  infoText+" for "+adults +" Adult";
+			}else{
+				return  infoText+" for "+adults +" Adult & "+child+" Child";
+			}
 		}
 	}
 }
