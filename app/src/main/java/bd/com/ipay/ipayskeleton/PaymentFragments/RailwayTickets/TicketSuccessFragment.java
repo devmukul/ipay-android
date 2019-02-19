@@ -33,7 +33,7 @@ public class TicketSuccessFragment extends IPayAbstractTransactionSuccessFragmen
 		setTransactionSuccessMessage(getStyledTransactionDescription(R.string.make_payment_success_message_tk, mTotalAmount));
 		setSuccessDescription(getString(R.string.train_ticket_success_description));
 		setName(getString(R.string.railway_ticket_name));
-		setUserName(Utilities.formatJourneyInfoText(mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
+		setUserName(Utilities.formatJourneyInfoText(getContext(), mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
 		setReceiverImage(R.drawable.bd_railway);
 	}
 }

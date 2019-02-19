@@ -19,12 +19,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.RailwayTicketActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -118,7 +120,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        journeyInfo.setText(Utilities.formatJourneyInfoText(mSelectedStationFrom+" to "+mSelectedStationTo, mSelectedAdult, mSelectedChild));
+        journeyInfo.setText(Utilities.formatJourneyInfoText(getContext(),mSelectedStationFrom+" "+getString(R.string.to_text)+" "+mSelectedStationTo, mSelectedAdult, mSelectedChild));
 
         trainListAdapter = new TrainListAdapter();
         mTrainListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -226,7 +228,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         billDetailsDialog.setTitle(getString(R.string.ticket_info));
         billDetailsDialog.setTrainName(mSelectedTrain+" - "+trainNo);
         billDetailsDialog.setClassName(mSelectedClass);
-        billDetailsDialog.setAdultChild(Utilities.formatJourneyInfoText("", mSelectedAdult, mSelectedChild));
+        billDetailsDialog.setAdultChild(Utilities.formatJourneyInfoText(getContext(),"", mSelectedAdult, mSelectedChild));
         billDetailsDialog.setDate(ticketInfoResponse.getJourneyDate());
         billDetailsDialog.setFareAmount(ticketInfoResponse.getFare());
         billDetailsDialog.setVatAmount(ticketInfoResponse.getVat());
@@ -295,7 +297,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         }
 
         private void setClassAdapter(final BankViewHolder holder, final int position, List<String> classList) {
-            final SelectorDialog classSelectorDialog = new SelectorDialog (getContext(), getContext().getString(R.string.select_a_thana), classList);
+            final SelectorDialog classSelectorDialog = new SelectorDialog (getContext(), getContext().getString(R.string.select_a_class), classList);
             classSelectorDialog.setOnResourceSelectedListener(new SelectorDialog.OnResourceSelectedListener() {
                 @Override
                 public void onResourceSelected(String name) {
@@ -359,6 +361,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
             Date currentItem = getItem(position);
             final VHItem VHitem = (VHItem)holder;
             final Calendar calendar = Calendar.getInstance();
@@ -366,7 +369,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
             SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEE");
-            VHitem.dateText.setText(""+calendar.get(Calendar.DAY_OF_MONTH));
+            VHitem.dateText.setText(""+numberFormat.format(calendar.get(Calendar.DAY_OF_MONTH)));
             VHitem.dayText.setText(""+dayFormat.format(currentItem));
             if(mSelectedDate == calendar.get(Calendar.DAY_OF_MONTH)){
                 selectedPos = position;

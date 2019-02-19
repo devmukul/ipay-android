@@ -317,7 +317,7 @@
                                 android:ellipsize="marquee"
                                 android:gravity="center_horizontal"
                                 android:singleLine="true"
-                                android:text="@string/credit_card"
+                                android:text="@string/credit_card_title"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/text_size_extra_smaller_value11"
                                 app:layout_constraintTop_toBottomOf="@+id/credit_card_image" />
@@ -330,38 +330,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="4">
-
-                        <android.support.constraint.ConstraintLayout
-                            android:id="@+id/railway_ticket"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:padding="4dp">
-
-                            <ImageView
-                                android:id="@+id/railway_image"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_gravity="center_horizontal"
-                                android:background="@drawable/semiround_white_default"
-                                android:elevation="@dimen/value2"
-                                android:padding="2dp"
-                                android:src="@drawable/bd_railway"
-                                app:layout_constraintDimensionRatio="1:1" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                                android:ellipsize="marquee"
-                                android:gravity="center_horizontal"
-                                android:singleLine="true"
-                                android:text="@string/railway_ticket"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="@dimen/text_size_extra_smaller_value11"
-                                app:layout_constraintTop_toBottomOf="@+id/railway_image" />
-                        </android.support.constraint.ConstraintLayout>
 
                         <android.support.constraint.ConstraintLayout
                             android:id="@+id/desco"
@@ -462,6 +430,66 @@
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/text_size_extra_smaller_value11"
                                 app:layout_constraintTop_toBottomOf="@+id/west_zone_image" />
+                        </android.support.constraint.ConstraintLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/value5"
+                    android:singleLine="true"
+                    android:text="@string/buy_ticket"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/text_size_small" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/value8"
+                        android:layout_marginBottom="@dimen/value8"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/railway_ticket"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="4dp">
+
+                            <ImageView
+                                android:id="@+id/railway_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/semiround_white_default"
+                                android:elevation="@dimen/value2"
+                                android:padding="2dp"
+                                android:src="@drawable/bd_railway"
+                                app:layout_constraintDimensionRatio="1:1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                                android:ellipsize="marquee"
+                                android:gravity="center_horizontal"
+                                android:singleLine="true"
+                                android:text="@string/railway_ticket"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_extra_smaller_value11"
+                                app:layout_constraintTop_toBottomOf="@+id/railway_image" />
                         </android.support.constraint.ConstraintLayout>
 
                     </LinearLayout>

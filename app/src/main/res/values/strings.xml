@@ -80,7 +80,6 @@
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_ipay_here">No business found near this location.</string>
     <string name="empty_list">Nothing to show right now.</string>
-    <string name="empty_list_offer">No promotional offer available right now.</string>
     <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
     <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network.\n\nIf you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network.\nYou will be asked to enter the codes contained in those messages.</string>
     <string name="remove_trusted_device_message">Removing device from your trusted device list</string>
@@ -102,14 +101,10 @@
     <string name="bank_verification_help">Steps to verify a bank account: \n\nStep 1. iPay will send a small amount of money to your bank account, this may take 3–5 business days. \nStep 2. You have to contact your bank to know the exact amount. \nStep 3. Tap the name of your bank and select Verify. \nStep 4. Enter the exact amount and tap OK. \n\n*Entering an incorrect amount 5 times will permanently block the bank account.</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="are_you_sure_to_invite">Do you want to invite this person to iPay? By inviting to iPay you acknowledge that you know this person personally.</string>
-    <string name="accept">Accept</string>
-    <string name="accepting_business_role_manager_request">Accepting Business Role Manager Request</string>
-    <string name="rejecting_business_role_manager_request">Rejecting Business Role Manager Request</string>
-    <string name="this_person">this person</string>
+    <string name="accept">Accept</string><string name="this_person">this person</string>
     <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
     <string name="blocked_bank_message">Sorry, you have taken too many attempts to verify this bank account. Please contact with our customer support for any further queries.</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
-    <string name="create_invoice">Create Invoice</string>
     <string name="request_payment">Request Payment</string>
     <string name="no_contacts">No Contacts Available</string>
     <string name="no_outlets">No Outlet Found</string>
@@ -129,7 +124,6 @@
     <string name="service_not_available">Service Currently Not Available</string>
     <string name="contact_support_message">This service is unavailable right now for you. Please contact support for more info.</string>
     <string name="service_unavailable_support_message">This service is unavailable right now for you. Please try again later.</string>
-    <string name="country_not_support_message">iPay is not officially supported in your country, some features may not work properly.</string>
     <string name="instant_money_not_entitled">Your\'re not entitled for instant money.</string>
     <string name="verification_required_message">You need to get verified to access this feature. Please complete the verification process and try again.</string>
     <string name="please_wait_loading">Please wait. Loading…</string>
@@ -600,7 +594,6 @@
     <string name="privacy_link" translatable="false">https://www.ipay.com.bd/legal/privacy-policy</string>
     <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
     <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
-    <string name="live_chat">Live Chat</string>
     <string name="help">Help</string>
     <string name="create_ticket">Create Ticket</string>
     <string name="subject">Subject</string>
@@ -851,14 +844,14 @@
     <string name="facebook_app_id" translatable="false">269331673611619</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb269331673611619</string>
     <string name="utility_bill">Utility Bill</string>
-    <string name="banglalion">Banglalion</string>
+    <string name="banglalion"  translatable="false">Banglalion</string>
     <string name="bill_pay_help_message">Enter your Banglalion CustomerID or CustomerNumber or MSISDN number.</string>
     <string name="prepaid_amount_bill_pay_help_message">Enter amount to pay your Banglalion bill.</string>
     <string name="choose_your_package">Choose Your Package</string>
     <string name="pay_bill">Pay Bill</string>
     <string name="please_select_package">Please select a package.</string>
-    <string name="link_three">Link3</string>
-    <string name="brilliant">Brilliant</string>
+    <string name="link_three" translatable="false">Link3</string>
+    <string name="brilliant" translatable="false">Brilliant</string>
     <string name="west_zone_bill_pay_message">Please enter your westzone account number</string>
     <string name="bill_month">Bill Month</string>
     <string name="principal_amount">Principal Amount</string>
@@ -875,13 +868,13 @@
     <string name="ipc">Ipc</string>
     <string name="desco_bill_pay_message">Please enter the bill number of desco</string>
     <string name="enter_bill_no">Enter bill number</string>
-    <string name="desco">Desco</string>
+    <string name="desco"  translatable="false">Desco</string>
     <string name="dpdc_bill_pay_message">Please enter your DPDC account number and your location code</string>
     <string name="enter_account_number">Please enter an account number</string>
     <string name="dpdc">Dpdc</string>
     <string name="enter_location_code">Enter location code</string>
     <string name="current_package_rate">Amount</string>
-    <string name="carnival">Carnival</string>
+    <string name="carnival"  translatable="false">Carnival</string>
     <string name="you_cant_avail_this_service">You can\'t avail this service now , please try again later</string>
     <string name="active">Active</string>
     <string name="request_failed">Request Failed</string>
@@ -889,8 +882,8 @@
     <string name="amberit_bill_pay_message">Please enter your AmberIT customer ID and amount</string>
     <string name="swipe_up_to_see_more">SWIPE UP TO SEE MORE</string>
     <string name="swipe_down_to_close">SWIPE DOWN TO CLOSE</string>
-    <string name="claim">Claim</string>
-    <string name="you_have_already_redeemed_this_offer_times">You have %1$d gift(s) available for redemption.</string>
+    <string name="claim" translatable="false">Claim</string>
+    <string name="you_have_already_redeemed_this_offer_times" translatable="false">You have %1$d gift(s) available for redemption.</string>
     <string name="send_money_helper_text">You can send money from your iPay account to another iPay member\'s account.To send money, you just have to follow following steps</string>
     <string name="send_money_step_one">Search <b>Name/Mobile number</b> or select the person from the list</string>
     <string name="request_money_step_one">@string/send_money_step_one</string>
@@ -920,10 +913,10 @@
     <string name="add_money_from_title">YOU ARE ADDING MONEY FROM</string>
     <string name="add_instant_money_from_title">YOU ARE ADDING INSTANT MONEY FROM</string>
     <string name="withdraw_money_to_title">YOU ARE WITHDRAWING MONEY TO</string>
-    <string name="amberIT">AmberIT</string>
+    <string name="amberIT" translatable="false">AmberIT</string>
     <string name="lanka_bangla_card_number">LankaBangla card number</string>
     <string name="card_number">Card number</string>
-    <string name="lanka_bangla_card">LankaBangla Card</string>
+    <string name="lanka_bangla_card" translatable="false">LankaBangla Card</string>
     <string name="something_went_wrong">Something Went Wrong!</string>
     <string name="empty_string" translatable="false" />
     <string name="zero_amount">0</string>
@@ -993,7 +986,7 @@
     <string name="account_maturity_date">Account Maturity Date</string>
     <string name="installment_amount">Installment Amount</string>
     <string name="branch_id">Branch ID</string>
-    <string name="lanka_bangla_dps">LankaBangla DPS</string>
+    <string name="lanka_bangla_dps" translatable="false">LankaBangla DPS</string>
     <string name="lanka_bangla_dps_number_input_message">Please enter your LankaBangla DPS account number</string>
     <string name="top_up_step_one">Insert <b>mobile number</b> or <b>Search</b> mobile number from contact</string>
     <string name="top_up_step_two">Insert <b>Amount</b> you want to recharge</string>
@@ -1034,7 +1027,7 @@
     <string name="enter_email_address">Enter Email Address</string>
     <string name="add_money_credit_card_charge_msg">Adding money from Debit or Credit Card is subjected to 2.5% service charge for Visa/Master card and 3.5% service charge for Amex card.</string>
 
-    <string name="railway_ticket">Railway</string>
+    <string name="railway_ticket" translatable="false">Railway</string>
     <string name="select_a_station">Select Station</string>
     <string name="select_no_of_adult">Select No. of Adult</string>
     <string name="select_no_of_child">Select No. of Child</string>
@@ -1158,5 +1151,15 @@
     <string name="you_can_purchase_max_4_tickets_at_once_and_heighst_8_tickets_per_week">You can purchase max 4 tickets at once and heighst 8 tickets per week.</string>
     <string name="to_settle_your_bill_payment_request_it_will_take_3_5_business_day">To settle your bill payment request, it will take 3-5 business day.</string>
     <string name="desco_bill_number">Desco bill number</string>
+    <string name="buy_ticket">Buy Ticket</string>
+    <string name="credit_card_title" translatable="false">Credit Card</string>
+    <string name="verification_information_required">VERIFICATION INFORMATION REQUIRED</string>
+    <string name="for_text">for</string>
+    <string name="and_text"><![CDATA[&]]></string>
+    <string name="to_text">to</string>
+    <string name="adults">Adults</string>
+    <string name="children">Children</string>
+    <string name="select_a_class">Select Class</string>
+    <string name="find_ticket">Find Ticket</string>
 
 </resources>

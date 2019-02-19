@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 
+import bd.com.ipay.ipayskeleton.R;
+
 public class IPaySupportPlaceAutocompleteFragment extends SupportPlaceAutocompleteFragment {
 
     private OnSearchClearListener onSearchClearListener;
@@ -18,6 +20,7 @@ public class IPaySupportPlaceAutocompleteFragment extends SupportPlaceAutocomple
 
 
         final EditText query = view.findViewById(com.google.android.gms.location.places.R.id.place_autocomplete_search_input);
+        query.setHint(getString(R.string.search));
 
         final View clear = view.findViewById(com.google.android.gms.location.places.R.id.place_autocomplete_clear_button);
         clear.setOnClickListener(new View.OnClickListener() {
