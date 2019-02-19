@@ -176,12 +176,21 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
                 datePickerDialog.show();
             }
         });
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mStationFromSelection.setText("");
+        mStationToSelection.setText("");
+        mAdultSelection.setText("");
+        mChildSelection.setText("");
+        mGenderSelection.setText("");
+        getStationFromList();
         getAdultLIst();
         setAdultAdapter(mAdultList);
         getGenderLIst();
         setGenderAdapter(mGenderList);
-        getStationFromList();
     }
 
     private void getStationFromList() {
