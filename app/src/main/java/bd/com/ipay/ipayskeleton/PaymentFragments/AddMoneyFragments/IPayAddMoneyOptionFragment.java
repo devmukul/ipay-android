@@ -237,7 +237,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 			return;
 
 		final CardSelectDialog cardSelectDialog = new CardSelectDialog(getContext());
-		cardSelectDialog.setTitle("Select Card Type");
+		cardSelectDialog.setTitle(getString(R.string.select_card_type));
 		cardSelectDialog.setCloseButtonAction(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
