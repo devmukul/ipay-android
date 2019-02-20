@@ -197,9 +197,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         TextView titleTextView = view.findViewById(R.id.title);
 
         if (type.equals(Constants.BENEFICIARY)) {
-            titleTextView.setText("Add a beneficiary");
+            titleTextView.setText(getString(R.string.add_benificiary));
         } else {
-            titleTextView.setText("Add a sponsor");
+            titleTextView.setText(getString(R.string.add_sponsor));
         }
 
         mContactImageView = view.findViewById(R.id.contact_image_view);

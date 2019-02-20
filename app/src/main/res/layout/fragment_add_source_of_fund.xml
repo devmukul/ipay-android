@@ -107,7 +107,7 @@
                         android:layout_marginBottom="@dimen/value24"
                         android:gravity="center_horizontal"
                         android:lineSpacingExtra="5sp"
-                        android:text="Insert number or find an iPay user from your contact and choose the relation"
+                        android:text="@string/insert_number_or_find_an_ipay_user_from_your_contact_and_choose_the_relation"
                         android:textColor="#666666"
                         android:textSize="13sp" />
 
@@ -173,7 +173,7 @@
                             android:inputType="phone"
                             android:lineSpacingExtra="12sp"
                             android:maxLength="15"
-                            android:text="Relationship"
+                            android:text="@string/relationship"
                             android:textColor="#212121"
                             android:textSize="18sp" />
 
@@ -204,7 +204,7 @@
                         android:background="@android:color/transparent"
                         android:fontFamily="sans-serif-light"
                         android:gravity="center"
-                        android:hint="Amount"
+                        android:hint="@string/amount"
                         android:inputType="number"
                         android:maxLength="15"
                         android:textColor="#212121"
@@ -230,7 +230,7 @@
                         android:background="@android:color/transparent"
                         android:fontFamily="sans-serif-light"
                         android:gravity="center"
-                        android:hint="Pin"
+                        android:hint="@string/enter_pin"
                         android:inputType="numberPassword"
                         android:lineSpacingExtra="12sp"
                         android:maxLength="15"
@@ -258,7 +258,7 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:background="#00c0af"
-            android:text="Continue"
+            android:text="@string/continue_text"
             android:textColor="@color/colorWhite" />
 
     </RelativeLayout>

@@ -1161,5 +1161,9 @@
     <string name="children">Children</string>
     <string name="select_a_class">Select Class</string>
     <string name="find_ticket">Find Ticket</string>
+    <string name="select_card_type">Select Card Type</string>
+    <string name="insert_number_or_find_an_ipay_user_from_your_contact_and_choose_the_relation">Insert number or find an iPay user from your contact and choose the relation</string>
+    <string name="add_sponsor">Add a sponsor</string>
+    <string name="add_benificiary">Add a beneficiary</string>
 
 </resources>

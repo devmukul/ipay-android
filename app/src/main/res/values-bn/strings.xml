@@ -1273,13 +1273,13 @@
 আপনার আইপে ওয়ালেটে সবচেয়ে দ্রুত অর্থ আনুন ডেবিট/ক্রেডিট কার্ড ব্যবহার করে
 </string>
     <string name="beneficiary_helper_line_3">
-Provide a monthly amount you want to let your beneficiary to use and also enter your pin.
+আপনি আপনার সুবিধাভোগীকে মাসিক যে পরিমাণ টাকা ব্যবহার করতে দিতে চান তা উল্লেখ করুন এবং আপনার পিন দিন।
 </string>
     <string name="sponsor_helper_line_3">
-Provide a monthly amount you want to use from your sponsor\'s iPay wallet
+আপনি আপনার পৃষ্ঠপোষকের কাছ থেকে মাসিক যে পরিমাণ টাকা ব্যবহার করতে চান তা উল্লেখ করুন।
 </string>
-    <string name="no_sponsor_text">You have not added any iPay user as Source of Fund. To add one , tap the (+) button</string>
-    <string name="no_beneficiary_text">You do not have any beneficiary iPay user. Tap on the + icon to add one</string>
+    <string name="no_sponsor_text">টাকার উৎস হিসেবে আপনি কোন আইপে ব্যবহারকারীকে যুক্ত করেন নি। কাউকে যুক্ত করার জন্য (+) বাটনটি চাপুন।</string>
+    <string name="no_beneficiary_text">আপনার কোন সুবিধাভোগী আইপে ব্যবহারকারী নেই। যোগ করার জন্য, (+) বাটনটি চাপুন।</string>
     <string name="you_can_use_monthly">মাসিক হিসেবে ব্যবহার করতে পারবেন</string>
     <string name="he_can_use_monthly">মাসিক হিসেবে ব্যবহার করতে পারবে</string>
     <string name="remove_beneficiary">আপনি কি এই সুবিধাভোগকারীকে মুছে ফেলতে চান?</string>
@@ -1338,6 +1338,10 @@ Provide a monthly amount you want to use from your sponsor\'s iPay wallet
     <string name="children">শিশু</string>
     <string name="select_a_class">ক্লাস নির্বাচন করুন</string>
     <string name="find_ticket">টিকেট খুঁজুন</string>
+    <string name="select_card_type">আপনার কার্ডটি নির্বাচন করুন</string>
+    <string name="insert_number_or_find_an_ipay_user_from_your_contact_and_choose_the_relation">মোবাইল নম্বর দিন অথবা কন্ট্যাক্ট থেকে আইপে ব্যবহারকারীকে নির্বাচন করুন এবং সম্পর্ক নির্বাচন করুন</string>
+    <string name="add_sponsor">পৃষ্ঠপোষক যোগ করুন </string>
+    <string name="add_benificiary">সুবিধাভোগী যোগ করুন</string>
 </resources>
 
 

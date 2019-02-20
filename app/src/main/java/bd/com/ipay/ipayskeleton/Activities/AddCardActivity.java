@@ -209,7 +209,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 
 	private void showCardType() {
 		final CardSelectDialog cardSelectDialog = new CardSelectDialog(AddCardActivity.this);
-		cardSelectDialog.setTitle("Select Card Type");
+		cardSelectDialog.setTitle(getString(R.string.select_card_type));
 		cardSelectDialog.setCloseButtonAction(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -228,7 +228,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 					intent.putExtra(Constants.CARD_TYPE, cardType);
 					startActivity(intent);
 				}else{
-					Toaster.makeText(AddCardActivity.this, "Please select a card!", Toast.LENGTH_LONG);
+					Toaster.makeText(AddCardActivity.this, getString(R.string.select_card_type), Toast.LENGTH_LONG);
 				}
 			}
 		});
