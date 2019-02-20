@@ -1133,27 +1133,20 @@ public class Utilities {
 
 		if(adults>1){
 			if(child>1){
-				return  infoText+" for "+adults +" Adults & "+child+" Children";
+				return  infoText+" "+ c.getString(R.string.train_ticket_msg_adults_childs, adults, child) ;
 			}else if(child == 0){
-				return  infoText+" for "+adults +" Adults";
+				return  infoText+" "+ c.getString(R.string.train_ticket_msg_adults, adults);
 			}else{
-				return  infoText+" for "+adults +" Adults & "+child+" Child";
-			}
-		}else if(adults ==1 ){
-			if(child>1){
-				return  infoText+" for "+adults +" Adult & "+child+" Children";
-			}else if(child == 0){
-				return  infoText+" for "+adults +" Adult";
-			}else{
-				return  infoText+" for "+adults +" Adult & "+child+" Child";
+				return  infoText+" "+ c.getString(R.string.train_ticket_msg_adults_child, adults, child);
 			}
 		}else {
 			if(child>1){
-				return  infoText+" for "+adults +" Adult & "+child+" Children";
+
+				return  infoText+" "+ c.getString(R.string.train_ticket_msg_adult_childs, adults, child) ;
 			}else if(child == 0){
-				return  infoText+" for "+adults +" Adult";
+				return  infoText+" "+ c.getString(R.string.train_ticket_msg_adult, adults) ;
 			}else{
-				return  infoText+" for "+adults +" Adult & "+child+" Child";
+				return  infoText+" "+ c.getString(R.string.train_ticket_msg_adult_child, adults, child) ;
 			}
 		}
 	}

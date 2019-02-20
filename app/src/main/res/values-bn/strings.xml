@@ -1342,6 +1342,13 @@
     <string name="insert_number_or_find_an_ipay_user_from_your_contact_and_choose_the_relation">মোবাইল নম্বর দিন অথবা কন্ট্যাক্ট থেকে আইপে ব্যবহারকারীকে নির্বাচন করুন এবং সম্পর্ক নির্বাচন করুন</string>
     <string name="add_sponsor">পৃষ্ঠপোষক যোগ করুন </string>
     <string name="add_benificiary">সুবিধাভোগী যোগ করুন</string>
+
+    <string name="train_ticket_msg_adults_childs">%1d জন প্রাপ্তবয়স্ক এবং %1d টি শিশুর জন্য।</string>
+    <string name="train_ticket_msg_adults_child">%1d জন প্রাপ্তবয়স্ক এবং %1d টি শিশুর জন্য।</string>
+    <string name="train_ticket_msg_adult_childs">%1d জন প্রাপ্তবয়স্ক এবং %1d টি শিশুর জন্য।</string>
+    <string name="train_ticket_msg_adult_child">%1d জন প্রাপ্তবয়স্ক এবং %1d টি শিশুর জন্য।</string>
+    <string name="train_ticket_msg_adults">%1d জন প্রাপ্তবয়স্কের জন্য।</string>
+    <string name="train_ticket_msg_adult">%1d জন প্রাপ্তবয়স্কের জন্য।</string>
 </resources>
 
 
