@@ -399,6 +399,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
+                getActivity().finish();
             }
         });
         Button introduceUserButton = mSheetViewIpayMember.findViewById(R.id.button_introduce);
@@ -433,6 +434,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
+                getActivity().finish();
             }
         });
 
@@ -466,6 +468,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
+                getActivity().finish();
             }
         });
 
