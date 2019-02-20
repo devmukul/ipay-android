@@ -131,6 +131,11 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         mBillPayView = view.findViewById(R.id.billPayView);
         mLink3BillPayView = view.findViewById(R.id.linkThreeBill);
         mDescoBillPayView = view.findViewById(R.id.desco);
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.DESCO)) {
+            mDescoBillPayView.setVisibility(View.VISIBLE);
+        } else {
+            mDescoBillPayView.setVisibility(View.GONE);
+        }
         mWestZoneBillPayView = view.findViewById(R.id.west_zone);
         mDozeBillPayView = view.findViewById(R.id.carnival);
         mDpdcBillPayView = view.findViewById(R.id.dpdc);
@@ -304,7 +309,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     payBill(id, "CARD");
                 else if (name.equals(getContext().getString(R.string.lanka_bangla_dps)))
                     payBill(id, "DPS");
-                else if (name.equals(getContext().getString(R.string.railway_ticket))){
+                else if (name.equals(getContext().getString(R.string.railway_ticket))) {
                     if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RAILWAY_TICKET)) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                         return;
@@ -317,8 +322,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                         }
                     });
                     pinChecker.execute();
-                }
-                else
+                } else
                     payBill(id, null);
             }
         });
@@ -333,7 +337,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.UTILITY_BILL_PAYMENT)) {
             DialogUtils.showServiceNotAllowedDialog(getContext());
             return;
-        } else if (!provider.equals(Constants.DESCO) && mProviderAvailabilityMap.get(provider) != null) {
+        } else if (mProviderAvailabilityMap.get(provider) != null) {
             if (!mProviderAvailabilityMap.get(provider).
                     equals(getString(R.string.active))) {
                 DialogUtils.showCancelableAlertDialog(getContext(), mProviderAvailabilityMap.get(provider));
@@ -353,26 +357,31 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         intent.putExtra(Constants.SERVICE, provider);
                         startActivity(intent);
+                        getActivity().finish();
                         break;
                     case Constants.LINK3:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
                         intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LINK_THREE);
                         startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                        getActivity().finish();
                         break;
                     case Constants.CARNIVAL:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
                         intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_CARNIVAL);
                         startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                        getActivity().finish();
                         break;
                     case Constants.BLION:
                         intent = new Intent(getActivity(), UtilityBillPaymentActivity.class);
                         intent.putExtra(Constants.SERVICE, Constants.BANGLALION);
                         startActivity(intent);
+                        getActivity().finish();
                         break;
                     case Constants.CREDIT_CARD:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
                         intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.CREDIT_CARD);
                         startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                        getActivity().finish();
                         break;
                     case Constants.LANKABANGLA:
                         intent = new Intent(getActivity(), IPayUtilityBillPayActionActivity.class);
@@ -381,6 +390,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                         else
                             intent.putExtra(IPayUtilityBillPayActionActivity.BILL_PAY_PARTY_NAME_KEY, IPayUtilityBillPayActionActivity.BILL_PAY_LANKABANGLA_DPS);
                         startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                        getActivity().finish();
                         break;
                 }
             }
