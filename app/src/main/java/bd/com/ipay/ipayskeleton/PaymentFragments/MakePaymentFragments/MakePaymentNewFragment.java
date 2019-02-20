@@ -304,6 +304,20 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
                     payBill(id, "CARD");
                 else if (name.equals(getContext().getString(R.string.lanka_bangla_dps)))
                     payBill(id, "DPS");
+                else if (name.equals(getContext().getString(R.string.railway_ticket))){
+                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RAILWAY_TICKET)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
+                    pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                        @Override
+                        public void ifPinAdded() {
+                            Intent intent = new Intent(getActivity(), RailwayTicketActionActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE_SUCCESSFUL_ACTIVITY_FINISH);
+                        }
+                    });
+                    pinChecker.execute();
+                }
                 else
                     payBill(id, null);
             }

@@ -274,8 +274,7 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
     public AddressClass getInformation() {
         String addressLine1 = mAddressLine1Field.getText().toString().trim();
         String postalCode = mPostalCodeField.getText().toString().trim();
-        String country = CountryList.countryNameToCountryCodeMap.get(
-                mCountrySelection.getText().toString());
+        String country = "BD";
         int thana = mSelectedThanaId;
         int district = mSelectedDistrictId;
 

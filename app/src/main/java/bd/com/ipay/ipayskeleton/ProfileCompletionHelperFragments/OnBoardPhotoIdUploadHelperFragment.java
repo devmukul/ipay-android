@@ -51,12 +51,7 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.SELECTED_IDENTIFICATION_DOCUMENT, identificationDocument);
         bundle.putBoolean(Constants.FROM_ON_BOARD, true);
-//        ((ProfileVerificationHelperActivity) getActivity()).switchToUploadIdentificationDocumentFragment(bundle);
-
-        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-        intent.putExtra(Constants.TARGET_FRAGMENT, Constants.UPLOAD_DOCUMENT);
-        intent.putExtra(Constants.BUNDLE , bundle);
-        startActivity(intent);
+        ((ProfileVerificationHelperActivity) getActivity()).switchToUploadIdentificationDocumentFragment(bundle);
     }
 
     public void setButtonActions() {
