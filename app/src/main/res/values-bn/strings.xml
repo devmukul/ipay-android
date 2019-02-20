@@ -60,9 +60,7 @@
     <string name="invalid_nid_min_length">এনআইডি কমপক্ষে ১০ ডিজিট হওয়া উচিত</string>
     <string name="invalid_nid_max_length">এনআইডি সর্বাধিক ১৭ ডিজিট হওয়া উচিত</string>
     <string name="invalid_business_tin_wrong_length">ব্যবসায় টিআইএন ১২ ডিজিট হওয়া উচিত</string>
-    <string name="invalid_vat_reg_cert_ID_wrong_length">
-ভ্যাট রেজিস্ট্রেশন সার্টিফিকেট আইডি ১১ ডিজিট হওয়া উচিত
-</string>
+    <string name="invalid_vat_reg_cert_ID_wrong_length">ভ্যাট রেজিস্ট্রেশন সার্টিফিকেট আইডি ১১ ডিজিট হওয়া উচিত</string>
     <string name="occupation">পেশা</string>
     <string name="organization_name">প্রতিষ্ঠানের নাম</string>
     <string name="mobile_number">মোবাইল নাম্বার</string>
@@ -71,35 +69,21 @@
     <string name="contact_us">আমাদের সাথে যোগাযোগ করুন</string>
     <string name="terms_of_service">ব্যবহারের নীতিমালা</string>
     <string name="privacy_policy">গোপনীয়তা নীতি</string>
-    <string name="contacts_info">
-যেকোনো ধরণের মতামত কিংবা অভিযোগ জানাতে আমাদের সাথে যোগাযোগ করুন।
-</string>
+    <string name="contacts_info">যেকোনো ধরণের মতামত কিংবা অভিযোগ জানাতে আমাদের সাথে যোগাযোগ করুন।</string>
     <string name="contact_already_exists">কন্ট্যাক্ট ইতিমধ্যে আছে</string>
     <string name="business_mobile_number">ব্যবসায়িক মোবাইল নাম্বার</string>
     <string name="confirm_password_not_matched">পাসওয়ার্ড মেলেনি</string>
     <string name="change_password_success">পাসওয়ার্ড পরিবর্তন সফল হয়েছে</string>
-    <string name="change_password_success_message">
-আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে। এখন আপনার সব ডিভাইস থেকে লগ আউট করা হবে। পুনরায় আবার লগইন করুন।
-</string>
+    <string name="change_password_success_message">আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে। এখন আপনার সব ডিভাইস থেকে লগ আউট করা হবে। পুনরায় আবার লগইন করুন।</string>
     <string name="confirm_pin_not_matched">পিন মেলে নি</string>
-    <string name="empty_bank_account_list">
-আইপেতে কোন ব্যাংক অ্যাকাউন্ট যোগ করা নেই। আপনার আইপে অ্যাকাউন্টে টাকা আনার জন্য একটি ব্যাংক অ্যাকাউন্ট যুক্ত করুন।
-</string>
-    <string name="no_bank_account_list">
-আইপেতে কোন ব্যাংক অ্যাকাউন্ট যোগ করা নেই। + বাটনটি প্রেস করে একটি ব্যাংক যোগ করুন।
-</string>
+    <string name="empty_bank_account_list">আইপেতে কোন ব্যাংক অ্যাকাউন্ট যোগ করা নেই। আপনার আইপে অ্যাকাউন্টে টাকা আনার জন্য একটি ব্যাংক অ্যাকাউন্ট যুক্ত করুন।</string>
+    <string name="no_bank_account_list">আইপেতে কোন ব্যাংক অ্যাকাউন্ট যোগ করা নেই। + বাটনটি প্রেস করে একটি ব্যাংক যোগ করুন।</string>
     <string name="empty_transaction_history">দেখানোর কিছু নেই।</string>
     <string name="empty_ipay_here">আপনার আশেপাশে কোন আইপে মার্চেন্ট পাওয়া যায় নি</string>
     <string name="empty_list">এখন দেখানোর জন্য কিছুই নেই।</string>
-    <string name="not_empty_list_for_password_recovery">
-আপনি যদি পাসওয়ার্ড ভুলে গিয়ে থাকেন এবং পুনরুদ্ধার করতে চান তাহলে আমরা তাকে একটি এসএমএস পাঠাব\nতখন আপনাকে এসএমএস থেকে ঐ কোডটি দিতে হবে।
-</string>
-    <string name="empty_list_for_password_recovery">
-কাউকে ট্রাস্টেড নেটওয়ার্কে যোগ করতে + বাটন চাপুন\n\nআপনি যদি পাসওয়ার্ড ভুলে গিয়ে থাকেন এবং পুনরুদ্ধার করতে চান তাহলে আমরা তাকে একটি এসএমএস পাঠাব\nতখন আপনাকে এসএমএস থেকে ঐ কোডটি দিতে হবে।
-</string>
-    <string name="remove_trusted_device_message">
-আপনার ট্রাস্টেড ডিভাইস তালিকা থেকে ডিভাইস মুছে ফেলা হচ্ছে
-</string>
+    <string name="not_empty_list_for_password_recovery">আপনি যদি পাসওয়ার্ড ভুলে গিয়ে থাকেন এবং পুনরুদ্ধার করতে চান তাহলে আমরা তাকে একটি এসএমএস পাঠাব\nতখন আপনাকে এসএমএস থেকে ঐ কোডটি দিতে হবে।</string>
+    <string name="empty_list_for_password_recovery">কাউকে ট্রাস্টেড নেটওয়ার্কে যোগ করতে + বাটন চাপুন\n\nআপনি যদি পাসওয়ার্ড ভুলে গিয়ে থাকেন এবং পুনরুদ্ধার করতে চান তাহলে আমরা তাকে একটি এসএমএস পাঠাব\nতখন আপনাকে এসএমএস থেকে ঐ কোডটি দিতে হবে।</string>
+    <string name="remove_trusted_device_message">আপনার ট্রাস্টেড ডিভাইস তালিকা থেকে ডিভাইস মুছে ফেলা হচ্ছে</string>
     <string name="remove_trusted_person_message">আপনার ট্রাস্টেড নেটওয়ার্ক থেকে মুছে ফেলা হচ্ছে</string>
     <string name="error_invalid_mobile_number">একটি সঠিক মোবাইল নাম্বার লিখুন দয়া করে</string>
     <string name="error_invalid_pin">পিন ৪ ডিজিট হতে হবে</string>
@@ -128,12 +112,8 @@
 </string>
     <string name="accept">গ্রহণ করুন</string>
     <string name="this_person">এই লোকটি</string>
-    <string name="are_you_sure_to_remove_bank_account">
-আপনি কি আপনার ব্যাংক তালিকা থেকে এই অ্যাকাউন্টটি মুছে ফেলতে চান?
-</string>
-    <string name="blocked_bank_message">
-দুঃখিত, আপনি এই ব্যাঙ্ক অ্যাকাউন্টটি যাচাই করার জন্য অনেকগুলি প্রচেষ্টা করেছেন। কোন অতিরিক্ত প্রশ্নের জন্য আমাদের গ্রাহক সমর্থন সঙ্গে কন্ট্যাক্ট করুন।
-</string>
+    <string name="are_you_sure_to_remove_bank_account">আপনি কি আপনার ব্যাংক তালিকা থেকে এই অ্যাকাউন্টটি মুছে ফেলতে চান?</string>
+    <string name="blocked_bank_message">দুঃখিত, আপনি এই ব্যাঙ্ক অ্যাকাউন্টটি ব্লক করা হয়েছে।</string>
     <string name="cancel_money_request_confirm">আপনি কি অর্থের জন্য আপনার অনুরোধ বাতিল করতে চান?</string>
     <string name="request_payment">পেমেন্ট অনুরোধ</string>
     <string name="no_contacts">কোনো কন্ট্যাক্ট পাওয়া যায়নি</string>
@@ -301,7 +281,7 @@
     <string name="requesting_money">রিকোয়েস্ট মানি প্রক্রিয়াধীন…</string>
     <string name="payment_processing">পেমেন্টটি প্রক্রিয়াধীন…</string>
     <string name="progress_dialog_requesting">অনুরোধটি প্রক্রিয়াধীন…</string>
-    <string name="add_money">আইপেতে আনুন</string>
+    <string name="add_money">টাকা আনুন</string>
     <string name="note_optional">নোট (ঐচ্ছিক)</string>
     <string name="note">নোট</string>
     <string name="withdraw_money">ব্যাংকে পাঠান</string>
@@ -1270,7 +1250,7 @@
 আপনার আইপে ওয়ালেট সুবিধাভোগকারী পরিচালনা অথবা যুক্ত করুন
 </string>
     <string name="source_of_fund_step_two">আপনাদের দুজনের মধ্যে সম্পর্কটি নির্বাচন করুন</string>
-    <string name="pending_with_bracket">(মুলতুবি)</string>
+    <string name="pending_with_bracket">(পেন্ডিং)</string>
     <string name="pending_notifications">পেন্ডিং</string>
     <string name="notifications_notifications">নোটিফিকেশন</string>
     <string name="remove_sponsor">আপনি কি এই পৃষ্ঠপোষককে মুছে ফেলতে চান?</string>

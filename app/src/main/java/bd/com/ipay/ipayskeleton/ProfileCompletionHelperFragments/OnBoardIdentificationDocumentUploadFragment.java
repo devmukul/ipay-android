@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.UploadIdentificationFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -411,14 +412,15 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
                     break;
 
             }
+
             if (isAdded()) {
                 CustomUploadPickerDialog customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(),
                         getActivity().getString(R.string.select_a_document),
-                        Arrays.asList(getResources().getStringArray(R.array.upload_picker_action_for_document)));
+                        Arrays.asList(getResources().getStringArray(R.array.upload_picker_action)));
                 customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                     @Override
                     public void onResourceSelected(int actionId, String action) {
-                        if (Constants.ACTION_TYPE_TAKE_PICTURE_FOR_DOCUMENT.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY_FOR_DOCUMENT.equals(action))
+                        if (getString(R.string.take_a_picture_message).equals(action) || getString(R.string.select_from_gallery_message).equals(action))
                             if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                                 selectDocument(actionId, documentSide);
                             else {
