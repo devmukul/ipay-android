@@ -343,6 +343,6 @@
         style="@style/ButtonPrimary.IPayTransactionAction.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/make_payment"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:text="@string/continue_add_money" />
 </RelativeLayout>

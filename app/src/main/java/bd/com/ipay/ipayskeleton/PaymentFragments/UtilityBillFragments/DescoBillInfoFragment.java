@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +20,9 @@ import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 public class DescoBillInfoFragment extends Fragment {
     private TextView mAccountIDTextView;
@@ -114,32 +118,53 @@ public class DescoBillInfoFragment extends Fragment {
 
 
         mBillNumberTextView.setText(billNumberString);
-        mBillAmountTextView.setText(getString(R.string.tk)+" " + billAmountString);
-        mVatAmountTextView.setText(getString(R.string.tk) +" "+ vatAmountString);
+        mBillAmountTextView.setText(getString(R.string.tk) + " " + billAmountString);
+        mVatAmountTextView.setText(getString(R.string.tk) + " " + vatAmountString);
 
         if (stampAmount != null) {
-            mStampAmountTextView.setText(getString(R.string.tk) +" "+ stampAmountString);
+            mStampAmountTextView.setText(getString(R.string.tk) + " " + stampAmountString);
         } else {
             stampView.setVisibility(View.GONE);
             divider.setVisibility(View.GONE);
         }
 
-        mTotalAmountTextView.setText(getString(R.string.tk)+" " + totalAmountString);
-        mlpcAmountTextView.setText(getString(R.string.tk)+" " + lpcAmountString);
+        mTotalAmountTextView.setText(getString(R.string.tk) + " " + totalAmountString);
+        mlpcAmountTextView.setText(getString(R.string.tk) + " " + lpcAmountString);
 
-        mZoneCodeTextView.setText(getString(R.string.tk)+" " + zoneCodeString);
+        mZoneCodeTextView.setText(zoneCodeString);
         mDueDateTextView.setText(getFormattedDate(dueDate));
         mAccountIDTextView.setText(accountIdString);
 
         payBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.BILL_NUMBER, billNumberString);
-                bundle.putSerializable(Constants.TOTAL_AMOUNT, totalAmount);
-                bundle.putString(Constants.ACCOUNT_ID, accountIdString);
-                ((UtilityBillPaymentActivity) getActivity()).switchToDescoBillConfirmationFragment(bundle);
+                if (checkBalance()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.BILL_NUMBER, billNumberString);
+                    bundle.putSerializable(Constants.TOTAL_AMOUNT, totalAmount);
+                    bundle.putString(Constants.ACCOUNT_ID, accountIdString);
+                    ((UtilityBillPaymentActivity) getActivity()).switchToDescoBillConfirmationFragment(bundle);
+                }
             }
         });
+    }
+
+    private boolean checkBalance() {
+        String errorMessage;
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+            BigDecimal amount = new BigDecimal(totalAmount.toString());
+            if (amount.compareTo(balance) > 0) {
+                errorMessage = getString(R.string.insufficient_balance);
+                IPaySnackbar.error(payBillButton, errorMessage,
+                        Snackbar.LENGTH_LONG).show();
+                return false;
+            }
+        } else {
+            IPaySnackbar.error(payBillButton, getString(R.string.balance_not_available),
+                    Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 }
