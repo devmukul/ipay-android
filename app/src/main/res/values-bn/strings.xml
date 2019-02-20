@@ -1219,7 +1219,7 @@
     <string name="pay">পে</string>
     <string name="news_room">সংবাদ</string>
     <string name="sof_success_message">
-আপনি আপনার আইপে ওয়ালেটের সুবিধাভোগী হিসেবে %1$sকে যুক্ত করেছেন। এতে আপনি তাকে আপনার ওয়ালেট হতে প্রতি মাসে একটি নির্দিষ্ট পরিমাণ টাকা ব্যবহারের সুযোগ দিচ্ছেন। আপনি যদি উক্ত ব্যক্তিকে আপনার ওয়ালেটের সুবিধাভোগী না রাখতে চান অথবা যদি তার মাসিক টাকা ব্যবহারের পরিমাণ যদি পরিবর্তন করতে চান তবে সোর্স অফ ফান্ড এ যান।
+আপনি আপনার আইপে ওয়ালেটের সুবিধাভোগী হিসেবে %1$sকে যুক্ত করেছেন। এতে আপনি তাকে আপনার ওয়ালেট হতে প্রতি মাসে একটি নির্দিষ্ট পরিমাণ টাকা ব্যবহারের সুযোগ দিচ্ছেন। আপনি যদি উক্ত ব্যক্তিকে আপনার ওয়ালেটের সুবিধাভোগী না রাখতে চান অথবা যদি তার মাসিক টাকা ব্যবহারের পরিমাণ যদি পরিবর্তন করতে চান তবে টাকার উৎস এ যান।
 </string>
     <string name="upload_again">পুনরায় আপলোড করুন</string>
     <string name="news_room_helper_text_sub_title">
@@ -1234,7 +1234,7 @@
     <string name="please_enter_your_pin">অনুগ্রহ করে পিন দিন</string>
     <string name="please_enter_an_amount">অনুগ্রহ করে পরিমাণটি লিখুন</string>
     <string name="a_certain_amount">একটি নির্দিষ্ট পরিমাণ</string>
-    <string name="link_sponsor">সোর্স অফ ফান্ড হিসেবে আইপে ব্যবহারকারী</string>
+    <string name="link_sponsor">টাকার উৎস হিসেবে আইপে ব্যবহারকারী</string>
     <string name="select_source_type">উৎসের ধরণ নির্বাচন করুন</string>
     <string name="tap_to_pay_from_other_source">অন্য উৎস হতে পে করতে ট্যাপ করুন</string>
     <string name="sponsor_blocked">পৃষ্ঠপোষক ব্লকড আছেন</string>
@@ -1264,7 +1264,7 @@
 আপনি অন্যান্য আইপে অ্যাকাউন্টকে সুযোগ দিতে পারেন আপনার আইপে অ্যাকাউন্ট থেকে পে করার। যোগ করতে নিচের ধাপগুলো অনুসরণ করতে হবে।
 </string>
     <string name="source_of_fund_helper_text">
-যখন আপনার ব্যাল্যান্স অল্প থাকে তখন আপনি অন্যের আইপে অ্যাকাউন্ট পেমেন্ট করতে পারবেন। আইপে ব্যবহারকারীকে সোর্স অফ ফান্ড হিসেবে ব্যবহার করতে নিচের ধাপগুলো অনুসরণ করতে হবে।
+যখন আপনার ব্যাল্যান্স অল্প থাকে তখন আপনি অন্যের আইপে অ্যাকাউন্ট পেমেন্ট করতে পারবেন। আইপে ব্যবহারকারীকে টাকার উৎস হিসেবে ব্যবহার করতে নিচের ধাপগুলো অনুসরণ করতে হবে।
 </string>
     <string name="source_of_fund_step_one">
 অন্যগ্রহ করে মোবাইল নাম্বারটি লিখুন অথবা কন্ট্যাক্ট হতে নির্বাচন করুন
@@ -1293,7 +1293,7 @@
     <string name="postpaid">পোস্টপেইড</string>
     <string name="continue_button">পরবর্তী</string>
     <string name="completed_transaction">@string/complete</string>
-    <string name="add_your_convenient_source_of_fund_to_update_your_ipay_balance_anytime_when_you_are_in_need">আপনার সোর্স অফ ফান্ড থেকে আইপেতে টাকা আনুন যখন তখন যেভাবে প্রয়োজন।</string>
+    <string name="add_your_convenient_source_of_fund_to_update_your_ipay_balance_anytime_when_you_are_in_need">আপনার টাকার উৎস থেকে আইপেতে টাকা আনুন যখন তখন যেভাবে প্রয়োজন।</string>
     <string name="continue_text">@string/continue_button_text</string>
     <string name="use">ব্যবহার করুন</string>
     <string name="bulk_signup_nid_helper_msg">আপনার জাতীয় পরিচয়পত্র নাম্বার আমাদের কাছে আছে, আপনি কি তা ব্যবহার করতে চান?</string>
@@ -1303,7 +1303,7 @@
     <string name="dashboard_basic_info_text">আপনার প্রয়োজনীয় তথ্য আপডেট করুন।</string>
     <string name="dashboard_personal_address_text">দ্রুত ভেরিফিকেশনের জন্য প্রয়োজনীয় তথ্য সহ আপনার বর্তমান ঠিকানা দিন।</string>
     <string name="dashboard_photo_id_text">আপনার জাতীয় পরিচয়পত্র আপলোড করুন।</string>
-    <string name="dashboard_verify_bank_text">সোর্স অফ ফান্ড হিসাবে আপনার ব্যাংক বা ডেবিট/ক্রেডিট কার্ড যুক্ত করুন।</string>
+    <string name="dashboard_verify_bank_text">টাকার উৎস হিসাবে আপনার ব্যাংক বা ডেবিট/ক্রেডিট কার্ড যুক্ত করুন।</string>
     <string name="dashboard_profile_picture">প্রোফাইল ফটো</string>
     <string name="dashboard_verify_bank">ব্যাংক ভেরিফাই করুন</string>
     <string name="dashboard_present_address">বর্তমান ঠিকানা</string>
