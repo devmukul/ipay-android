@@ -175,7 +175,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         } else {
             pinEditText.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
-            amountEditText.setHint("Amount");
+            amountEditText.setHint(getString(R.string.amount));
         }
 
         doneButton.setOnClickListener(new View.OnClickListener() {

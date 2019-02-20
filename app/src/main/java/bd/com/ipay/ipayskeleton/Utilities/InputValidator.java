@@ -73,7 +73,7 @@ public class InputValidator {
 		} else if (minAmount.compareTo(maxAmount) > 0) {
 			errorMessage = context.getResources().getString(R.string.insufficient_balance);
 		} else if (amount.compareTo(maxAmount) == 1) {
-			errorMessage = context.getResources().getString(R.string.please_enter_not_more_than_max_amount, context.getResources().getString(R.string.balance_holder, Utilities.takaWithComma(minAmount)));
+			errorMessage = context.getResources().getString(R.string.please_enter_not_more_than_max_amount, context.getResources().getString(R.string.balance_holder, Utilities.takaWithComma(maxAmount)));
 		} else {
 			errorMessage = null;
 		}

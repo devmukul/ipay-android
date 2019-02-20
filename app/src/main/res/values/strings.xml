@@ -1166,4 +1166,12 @@
     <string name="add_sponsor">Add a sponsor</string>
     <string name="add_benificiary">Add a beneficiary</string>
 
+
+    <string name="train_ticket_msg_adults_childs">for %1d Adults &amp; %1d Children</string>
+    <string name="train_ticket_msg_adults_child">for %1d Adult &amp; %1d Children</string>
+    <string name="train_ticket_msg_adult_childs">for %1d Adult &amp; %1d Children</string>
+    <string name="train_ticket_msg_adult_child">for %1d Adult &amp; %1d Child</string>
+    <string name="train_ticket_msg_adults">for %1d Adults</string>
+    <string name="train_ticket_msg_adult">for %1d Adult</string>
+
 </resources>
