@@ -986,7 +986,7 @@
     <string name="due_date">দেনা পরিশোধের তারিখ</string>
     <string name="ipc">আইপিসি</string>
     <string name="enter_bill_no">বিল নাম্বারটি লিখুন</string>
-    <string name="desco_bill_pay_message">অনুগ্রহ করে আপনার ডেস্কো এর বিল নম্বরটি লিখুন</string>
+    <string name="desco_bill_pay_message">অনুগ্রহ করে আপনার ডেস্কো এর বিল নাম্বারটি লিখুন</string>
     <string name="desco_bill_number">ডেস্কো বিল নাম্বার</string>
     <string name="dpdc_bill_pay_message">
 অনুগ্রহ করে আপনার ডিপিডিসি অ্যাকাউন্ট নম্বরটি এবং লোকেশনটি লিখুন
