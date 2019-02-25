@@ -407,30 +407,35 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
                     }
                 }
 
-                if (!typeInList.equals("Bill_Pay")) {
-                    profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
-                }else{
-                    if(businessName.equalsIgnoreCase(mContext.getString(R.string.amberIT)))
-                        profilePictureView.setProfilePicture(R.drawable.ic_amber_it);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.banglalion)))
-                        profilePictureView.setProfilePicture(R.drawable.banglalion);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.brilliant)))
-                        profilePictureView.setProfilePicture(R.drawable.brilliant_logo);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.carnival)))
-                        profilePictureView.setProfilePicture(R.drawable.ic_carnival);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.credit_card_title)))
-                        profilePictureView.setProfilePicture(R.drawable.credit_card);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.desco)))
-                        profilePictureView.setProfilePicture(R.drawable.desco);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_card)))
-                        profilePictureView.setProfilePicture(R.drawable.lbf_credit_card);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_dps)))
-                        profilePictureView.setProfilePicture(R.drawable.lbf_credit_card_dps);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.link_three)))
-                        profilePictureView.setProfilePicture(R.drawable.link_three_logo);
-                    else if(businessName.equalsIgnoreCase(mContext.getString(R.string.railway_ticket)))
-                        profilePictureView.setProfilePicture(R.drawable.bd_railway);
+                if(!TextUtils.isEmpty(profilePictureUrl)){
+                    profilePictureView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePictureUrl, false);
                 }
+                else {
+                    if (businessName.equalsIgnoreCase(mContext.getString(R.string.amberIT)))
+                        profilePictureView.setProfilePicture(R.drawable.ic_amber_it);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.banglalion)))
+                        profilePictureView.setProfilePicture(R.drawable.banglalion);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.brilliant)))
+                        profilePictureView.setProfilePicture(R.drawable.brilliant_logo);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.carnival)))
+                        profilePictureView.setProfilePicture(R.drawable.ic_carnival);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.credit_card_title)))
+                        profilePictureView.setProfilePicture(R.drawable.credit_card);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.desco)))
+                        profilePictureView.setProfilePicture(R.drawable.desco);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_card)))
+                        profilePictureView.setProfilePicture(R.drawable.lbf_credit_card);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.lanka_bangla_dps)))
+                        profilePictureView.setProfilePicture(R.drawable.lbf_credit_card_dps);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.link_three)))
+                        profilePictureView.setProfilePicture(R.drawable.link_three_logo);
+                    else if (businessName.equalsIgnoreCase(mContext.getString(R.string.railway_ticket)))
+                        profilePictureView.setProfilePicture(R.drawable.bd_railway);
+                    else {
+                        profilePictureView.setBusinessLogoPlaceHolder();
+                    }
+                }
+
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -473,7 +478,7 @@ public class MakePaymentContactsSearchView extends RelativeLayout implements Sea
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new BusinessContactListAdapter.NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_contact, parent, false));
+            return new BusinessContactListAdapter.NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_search, parent, false));
 
         }
 

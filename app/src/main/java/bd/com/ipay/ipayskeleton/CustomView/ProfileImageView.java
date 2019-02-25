@@ -88,6 +88,28 @@ public class ProfileImageView extends FrameLayout {
                 photoUrl = Constants.BASE_URL_FTP_SERVER + photoUrl;
             }
         }
+
+        try {
+            final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUrl);
+
+            glide
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+            if (forceLoad) {
+                glide
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
+            }
+
+            glide.signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
+            glide.placeholder(R.drawable.ic_profile)
+                    .error(R.drawable.ic_profile)
+                    .crossFade()
+                    .dontAnimate()
+                    .transform(new CircleTransform(context))
+                    .into(mProfilePictureView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setBusinessLogoPlaceHolder() {
