@@ -9,10 +9,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.AmberITBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BanglalionBillPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.BrilliantBillPayFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillConfirmationFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillInfoFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoBillSuccessFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DescoEnterBillNumberFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Desco.DescoBillConfirmationFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Desco.DescoBillInfoFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Desco.DescoBillSuccessFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Desco.DescoEnterBillNumberFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.DpdcBillPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.UtilityProviderListFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.WestzoneBillPaymentFragment;

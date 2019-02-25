@@ -66,6 +66,7 @@
                     android:layout_marginRight="0dp"
                     android:gravity="center"
                     android:text="@string/desco_bill_pay_message" />
+
             </LinearLayout>
 
             <LinearLayout

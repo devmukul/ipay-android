@@ -866,7 +866,7 @@
     <string name="upload_identification_document">Upload NID</string>
     <string name="due_date">Due Date</string>
     <string name="ipc">Ipc</string>
-    <string name="desco_bill_pay_message">Please enter the bill number of desco</string>
+    <string name="desco_bill_pay_message">From 8 AM until 10 PM you can pay the bills.</string>
     <string name="enter_bill_no">Enter bill number</string>
     <string name="desco"  translatable="false">Desco</string>
     <string name="dpdc_bill_pay_message">Please enter your DPDC account number and your location code</string>
@@ -1173,5 +1173,6 @@
     <string name="train_ticket_msg_adult_child">for %1d Adult &amp; %1d Child</string>
     <string name="train_ticket_msg_adults">for %1d Adults</string>
     <string name="train_ticket_msg_adult">for %1d Adult</string>
+    <string name="transaction_help_title">Help</string>
 
 </resources>
