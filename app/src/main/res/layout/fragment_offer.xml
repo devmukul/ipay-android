@@ -26,7 +26,8 @@
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
         android:overScrollMode="never"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="invisible">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -45,7 +46,8 @@
                 android:paddingRight="@dimen/value24"
                 android:text="@string/hey_what_s_going_on_here_and_there"
                 android:textColor="#212121"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/topSubText"

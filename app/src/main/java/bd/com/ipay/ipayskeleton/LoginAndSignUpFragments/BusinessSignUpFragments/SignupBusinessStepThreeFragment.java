@@ -312,7 +312,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
 		numberFormat.setMinimumIntegerDigits(2);
 		numberFormat.setMaximumIntegerDigits(2);
 		mDOB = String.format(Locale.US, "%s/%s/%s", numberFormat.format(dayOfMonth),
-				numberFormat.format(month), Integer.toString(year));
+				numberFormat.format(month+1), Integer.toString(year));
 		final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 		calendar.set(Calendar.YEAR, year);
 		calendar.set(Calendar.MONTH, month);

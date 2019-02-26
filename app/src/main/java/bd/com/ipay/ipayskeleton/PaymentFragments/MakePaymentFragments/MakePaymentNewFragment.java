@@ -166,7 +166,11 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
-        attemptGetSponsorList();
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_SOURCE_OF_FUND)) {
+            attemptGetSponsorList();
+        }
+
+
         getTrendingBusinessList();
         getServiceProviderList();
 

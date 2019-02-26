@@ -18,9 +18,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -40,7 +44,10 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.Widget.View.BulkSignUpHelperDialog;
 
-public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
+import com.tsongkha.spinnerdatepicker.DatePicker;
+import com.tsongkha.spinnerdatepicker.DatePickerDialog;
+
+public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener, DatePickerDialog.OnDateSetListener {
 
 	private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
 	private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
@@ -52,7 +59,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 	private RadioGroup genderSelectionRadioGroup;
 	private ProgressDialog mProgressDialog;
 	private String mName = "";
-	private com.tsongkha.spinnerdatepicker.DatePickerDialog mDatePickerDialog;
+	private DatePickerDialog mDatePickerDialog;
 	private String mDateOfBirth = "";
 	private String mGender = null;
 	private String mOrganizationName;
@@ -178,7 +185,6 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 		View focusView = null;
 
 		mName = mNameEditText.getText().toString().trim();
-		mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
 		mOrganizationName = mOrganizationNameEditText.getText().toString().trim();
 
 		if (mOrganizationName.isEmpty())
@@ -328,8 +334,25 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 	}
 
 	@Override
-	public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker datePicker, int i, int i1, int i2) {
-		mDateOfBirthEditText.setText(
-				String.format(Locale.getDefault(), Constants.DATE_FORMAT, i2, i1 + 1, i));
+	public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+
+		final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+		mDateOfBirth = String.format(Locale.US, "%s/%s/%s", getFormattedDate(dayOfMonth),
+				getFormattedDate(month+1), Integer.toString(year));
+		final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month);
+		calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EE, dd MMMM, yyyy", Locale.getDefault());
+		mDateOfBirthEditText.setError(null);
+		mDateOfBirthEditText.setText(simpleDateFormat.format(calendar.getTime()));
+	}
+
+	private String getFormattedDate(int value) {
+		if(value<10) {
+			return String.format(Locale.US,"0%d",value);
+		} else {
+			return Integer.toString(value);
+		}
 	}
 }
