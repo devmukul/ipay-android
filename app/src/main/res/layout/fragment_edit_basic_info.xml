@@ -27,7 +27,8 @@
                     android:hint="@string/name"
                     android:inputType="textCapWords"
                     android:maxLines="1"
-                    android:singleLine="true">
+                    android:singleLine="true"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ">
 
                     <requestFocus />
                 </EditText>
@@ -96,7 +97,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/organization_name"
                     android:inputType="text"
-                    android:maxLength="50" />
+                    android:maxLength="50"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
 
             </android.support.design.widget.TextInputLayout>
 

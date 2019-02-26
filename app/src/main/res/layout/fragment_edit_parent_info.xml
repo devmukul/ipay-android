@@ -27,7 +27,8 @@
                     android:hint="@string/fathers_name"
                     android:inputType="textCapWords"
                     android:maxLines="1"
-                    android:singleLine="true">
+                    android:singleLine="true"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ">
 
                     <requestFocus />
                 </EditText>
@@ -80,7 +81,8 @@
                     android:hint="@string/mothers_name"
                     android:inputType="textCapWords"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
 
             </android.support.design.widget.TextInputLayout>
 
