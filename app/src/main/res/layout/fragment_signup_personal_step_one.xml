@@ -47,7 +47,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/full_name"
                     android:inputType="textCapWords"
-                    android:maxLines="1">
+                    android:maxLines="1"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ">
 
                     <requestFocus />
                 </EditText>
@@ -151,7 +152,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/enter_promo_code_optional"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"/>
                 </android.support.design.widget.TextInputLayout>
 
             </RelativeLayout>

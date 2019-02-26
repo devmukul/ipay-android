@@ -385,7 +385,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 
 		final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 		mDOB = String.format(Locale.US, "%s/%s/%s", getFormattedDate(dayOfMonth),
-				getFormattedDate(month), Integer.toString(year));
+				getFormattedDate(month+1), Integer.toString(year));
 		final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 		calendar.set(Calendar.YEAR, year);
 		calendar.set(Calendar.MONTH, month);

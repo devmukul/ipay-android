@@ -418,9 +418,9 @@
     <string name="pending">প্রক্রিয়াধীন</string>
     <string name="complete">সম্পন্ন</string>
     <string name="completed">সম্পন্ন হয়েছে</string>
-    <string name="filter_by_date">তারিখ দ্বারা ফিল্টার করুন</string>
-    <string name="filter_by_service">সেবা দ্বারা ফিল্টার করুন</string>
-    <string name="filter_by_event">ঘটনা দ্বারা ফিল্টার করুন</string>
+    <string name="filter_by_date">তারিখ অনুসারে ফিল্টার</string>
+    <string name="filter_by_service">সেবা অনুসারে ফিল্টার</string>
+    <string name="filter_by_event">ঘটনা অনুসারে ফিল্টার</string>
     <string name="filter_verification">যাচাই ইভেন্ট</string>
     <string name="filter_security_changes">নিরাপত্তার পরিবর্তনগুলো</string>
     <string name="remove_filter">ফিল্টার মুছুন</string>
@@ -509,7 +509,7 @@
     <string name="basic_info">প্রয়োজনীয় তথ্য</string>
     <string name="profile_documents">পরিচয়পত্র</string>
     <string name="profile_introducers">পরিচয় প্রদানকারী</string>
-    <string name="national_id">জাতীয় পরিচয়পত্রের নম্বর</string>
+    <string name="national_id">জাতীয় পরিচয়পত্র</string>
     <string name="passport">পাসপোর্ট</string>
     <string name="passport_id">পাসপোর্ট আইডি</string>
     <string name="driving_license">ড্রাইভিং লাইসেন্স</string>
@@ -1286,7 +1286,7 @@
     <string name="sponsor_request_string">%1$s আপনার পৃষ্ঠপোষক হতে চান। পেমেন্ট করার সময় আপনি তার আইপে ওয়ালেট ব্যবহার করতে পারবেন।</string>
     <string name="beneficiary_request_message">%1$s আপনাকে তার পৃষ্ঠপোষক হবার জন্য জিজ্ঞাসা করেছেন। এতে সে আপনার আইপে ওয়ালেট থেকে নির্ধারিত পরিমাণ টাকা ব্যবহার করতে পারবে।</string>
     <string name="please_enter_a_amount_to_use_from_sponsor">অনুগ্রহ করে একটি মাসিক পরিমাণ লিখুন যা আপনি আপনার পৃষ্ঠপোষণকারী আইপে একাউন্ট হতে ব্যবহার করতে পারবেন।</string>
-    <string name="paid_for">%1$s জন্য পেইড</string>
+    <string name="paid_for">%1$s এর জন্য পেইড</string>
     <string name="paid_by">%1$s দ্বারা পেইড</string>
     <string name="profile_picture">প্রোফাইল পিকচার</string>
     <string name="prepaid">প্রিপেইড</string>
@@ -1310,7 +1310,7 @@
     <string name="dashboard_national_id">পরিচয় পত্র</string>
     <string name="dashboard_basic_info">নিজস্ব তথ্য</string>
     <string name="unconsented">অনুনমোদিত</string>
-    <string name="profile_completeness_percentage">আপনার প্রোফাইল %1$d সম্পন্ন হয়েছে।</string>
+    <string name="profile_completeness_percentage">আপনার প্রোফাইল %1$d\%% সম্পন্ন হয়েছে।</string>
     <string name="profile_completeness_information">ভেরিফাইড হতে নীচে দেওয়া তথ্য গুলি প্রয়োজন:%1$s\n.</string>
     <string name="qr_code_helper_text">সঠিক ও নির্ভুলভাবে স্ক্যান করার জন্য,কিউআর কোডটি ফ্রেমের মধ্যে ধরুন।</string>
     <string name="invie_msg_text">%1$s এই আমন্ত্রণ কোড দিয়ে সাইন আপ করুন। লিঙ্ক:</string>
@@ -1350,6 +1350,9 @@
     <string name="train_ticket_msg_adults">%1d জন প্রাপ্তবয়স্কের জন্য।</string>
     <string name="train_ticket_msg_adult">%1d জন প্রাপ্তবয়স্কের জন্য।</string>
     <string name="transaction_help_title">হেল্প</string>
+    <string name="preview">প্রিভিউ</string>
+    <string name="document">ডকুমেন্ট</string>
+    <string name="national_id_no">জাতীয় পরিচয়পত্রের নম্বর</string>
 </resources>
 
 
