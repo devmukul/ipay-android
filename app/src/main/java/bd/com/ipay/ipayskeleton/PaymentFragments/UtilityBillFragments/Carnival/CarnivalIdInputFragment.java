@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.CarnivalCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractUserIdInputFragment;
@@ -28,13 +28,13 @@ import bd.com.ipay.ipayskeleton.Widget.View.BillDetailsDialog;
 public class CarnivalIdInputFragment extends IPayAbstractUserIdInputFragment implements HttpResponseListener {
 
 	private HttpRequestGetAsyncTask mGetCustomerInfoTask;
-	private CustomProgressDialog customProgressDialog;
+	private AnimatedProgressDialog customProgressDialog;
 	private final Gson gson = new Gson();
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		customProgressDialog = new CustomProgressDialog(getContext());
+		customProgressDialog = new AnimatedProgressDialog(getContext());
 	}
 
 	@Override
@@ -62,9 +62,6 @@ public class CarnivalIdInputFragment extends IPayAbstractUserIdInputFragment imp
 		} else if (mGetCustomerInfoTask != null) {
 			return;
 		}
-
-		customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-		customProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
 		customProgressDialog.showDialog();
 
 		mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CARNIVAL_CUSTOMER_INFO,

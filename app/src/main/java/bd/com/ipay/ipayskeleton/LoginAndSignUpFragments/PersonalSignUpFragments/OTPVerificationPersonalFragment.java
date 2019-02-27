@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestPersonalSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponsePersonalSignup;
@@ -66,7 +66,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private String mDeviceID;
     private String mDeviceName;
 
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private Tracker mTracker;
 
     @Override
@@ -96,8 +96,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         mDeviceName = DeviceInfoFactory.getDeviceName();
 
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
+        mProgressDialog = new CustomProgressDialog(getActivity());
 
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractCardNumberInputFragment;
@@ -30,7 +30,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 
 	private HttpRequestGetAsyncTask mGetLankaBanglaCardUserInfoAsyncTask = null;
 	private final Gson gson = new GsonBuilder().create();
-	private CustomProgressDialog mProgressDialog;
+	private AnimatedProgressDialog mProgressDialog;
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 		setMessage(getString(R.string.lanka_bangla_card_number_input_message));
 		setCardNumberHint(getString(R.string.lanka_bangla_card_number));
 		setAllowedCards(CardNumberValidator.Cards.VISA, CardNumberValidator.Cards.MASTERCARD);
-		mProgressDialog = new CustomProgressDialog(getActivity());
+		mProgressDialog = new AnimatedProgressDialog(getActivity());
 	}
 
 	@Override
@@ -84,7 +84,6 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
 				url, getContext(), this, false);
 		mGetLankaBanglaCardUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		mProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-		mProgressDialog.setMessage(getString(R.string.fetching_user_info));
 		mProgressDialog.showDialog();
 	}
 

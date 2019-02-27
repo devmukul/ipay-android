@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddCardResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
@@ -50,7 +50,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 	public FloatingActionButton mFabAddNewBank;
 	private TextView mDescriptionTextView;
 
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 
 	public ArrayList<String> mDistrictNames;
 	public ArrayList<BankBranch> mBranches;
@@ -63,7 +63,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_card);
-		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog = new CustomProgressDialog(this);
 		mDistrictNames = new ArrayList<>();
 		mBranches = new ArrayList<>();
 		mBranchNames = new ArrayList<>();
@@ -107,7 +107,6 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 			mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
 					Constants.BASE_URL_MM + Constants.URL_GET_CARD, this, this, false);
 			mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			mProgressDialog.setMessage(getString(R.string.loading));
 			mProgressDialog.show();
 		}
 	}

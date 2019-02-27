@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaDpsUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.IPayAbstractUserIdInputFragment;
@@ -28,12 +28,12 @@ public class LankaBanglaDpsNumberInputFragment extends IPayAbstractUserIdInputFr
 
 	private HttpRequestGetAsyncTask mGetLankaBanglaDpsUserInfoAsyncTask = null;
 	private final Gson gson = new GsonBuilder().create();
-	private CustomProgressDialog customProgressDialog;
+	private AnimatedProgressDialog customProgressDialog;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		customProgressDialog = new CustomProgressDialog(getContext());
+		customProgressDialog = new AnimatedProgressDialog(getContext());
 	}
 
 	@Override
@@ -48,8 +48,6 @@ public class LankaBanglaDpsNumberInputFragment extends IPayAbstractUserIdInputFr
 		mGetLankaBanglaDpsUserInfoAsyncTask = new HttpRequestGetAsyncTask(
 				Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO, url, getContext(), false);
 		mGetLankaBanglaDpsUserInfoAsyncTask.mHttpResponseListener = this;
-		customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-		customProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
 		customProgressDialog.showDialog();
 		mGetLankaBanglaDpsUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}

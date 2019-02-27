@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.TopupFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
@@ -37,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CutCopyPasteEditText;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -68,7 +68,7 @@ public class TopUpEnterNumberFragment extends Fragment {
 
 	private HttpRequestGetAsyncTask mGetProfileInfoTask;
 
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 
 	private Object clipboardService;
 	private ClipboardManager clipboardManager;
@@ -76,7 +76,7 @@ public class TopUpEnterNumberFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mProgressDialog = new ProgressDialog(getContext());
+		mProgressDialog = new CustomProgressDialog(getContext());
 
 	}
 
@@ -338,7 +338,6 @@ public class TopUpEnterNumberFragment extends Fragment {
 				}
 			}
 		}, true);
-		mProgressDialog.setMessage(getString(R.string.fetching_user_info));
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.show();
 		mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

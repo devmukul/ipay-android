@@ -100,8 +100,6 @@ public class IPaySendMoneyConfirmationFragment extends IPayAbstractTransactionCo
 					uri, json, getActivity(), this, false);
 			sendMoneyRequestTask.setPinAsHeader(getPin());
 			sendMoneyRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
-			customProgressDialog.setLoadingMessage(getString(R.string.sending_money));
 			customProgressDialog.showDialog();
 		}
 	}

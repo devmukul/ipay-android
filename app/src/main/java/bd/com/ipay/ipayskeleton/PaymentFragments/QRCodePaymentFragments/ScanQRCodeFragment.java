@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -28,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -56,7 +56,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     private List<BusinessContact> mBusinessContactList;
 
     private View mRootView;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private String mobileNumber;
     private String brandName;
@@ -74,8 +74,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_scan_qr_code, container, false);
         }
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.please_wait_loading));
+        mProgressDialog = new CustomProgressDialog(getActivity());
         mProgressDialog.setCancelable(false);
 
         Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);

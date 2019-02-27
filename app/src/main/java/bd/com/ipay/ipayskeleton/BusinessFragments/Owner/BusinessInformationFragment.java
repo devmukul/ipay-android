@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PhotoSelectionHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -140,7 +140,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 	private View mBusinessInformationViewHolder;
 	private View mBusinessAddressViewHolder;
 
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 	private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
 	private MaterialDialog mProfilePictureErrorDialog;
 	private PhotoSelectionHelperDialog photoSelectionHelperDialog;
@@ -195,7 +195,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
 		mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 		mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
 
 		if (ProfileInfoCacheManager.isAccountVerified()) {
@@ -586,7 +586,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 	}
 
 	private void updateProfilePicture(Uri selectedImageUri) {
-		mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
 		mProgressDialog.show();
 
 		mSelectedImagePath = selectedImageUri.getPath();

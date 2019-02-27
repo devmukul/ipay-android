@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -53,8 +53,8 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
 	private EditText amountEditText;
 	private Button mContinueButton;
 
-	private ProgressDialog mProgressDialog;
-	private CustomProgressDialog mCustomProgressDialog;
+	private CustomProgressDialog mProgressDialog;
+	private AnimatedProgressDialog mCustomProgressDialog;
 
 	private String mCustomerID;
 	private String mAmount;
@@ -76,8 +76,8 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
 		mCustomerIdEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
 		amountEditText = (EditText) view.findViewById(R.id.amount_edit_text);
 		mContinueButton = (Button) view.findViewById(R.id.continue_button);
-		mProgressDialog = new ProgressDialog(getContext());
-		mCustomProgressDialog = new CustomProgressDialog(getContext());
+		mProgressDialog = new CustomProgressDialog(getContext());
+		mCustomProgressDialog = new AnimatedProgressDialog(getContext());
 		if (UtilityBillPaymentActivity.mMandatoryBusinessRules == null) {
 			UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
 		}
@@ -127,7 +127,6 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
 					mBrilliantRechargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BRILLIANT_RECHARGE,
 							Constants.BASE_URL_UTILITY + Constants.URL_BRILLIANT_RECHARGE, jsonString, getContext(), this, false);
 					mBrilliantRechargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-					mCustomProgressDialog.setLoadingMessage("Please wait, recharge in progress");
 					mCustomProgressDialog.showDialog();
 				}
 			}

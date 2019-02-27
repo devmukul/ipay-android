@@ -103,8 +103,6 @@ public class DescoBillConfirmationFragment extends IPayAbstractTransactionConfir
             descoBillPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DESCO_BILL_PAY,
                     uri, json, getActivity(), this, false);
             descoBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
-            customProgressDialog.setLoadingMessage(getString(R.string.payment_processing));
             customProgressDialog.showDialog();
         }
     }

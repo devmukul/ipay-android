@@ -34,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Adapters.OnItemClickListener;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.Model.AddMoneyOption;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.CreditBalanceResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.Card.IPayAddMoneyFromCardAmountInputFragment;
@@ -56,7 +56,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 	private HttpRequestGetAsyncTask httpRequestGetAsyncTask;
 	private TextView bottomSheetTitleTextView;
 	private TextView addMoneyBankOptionMessageTextView;
-	private CustomProgressDialog customProgressDialog;
+	private AnimatedProgressDialog customProgressDialog;
     private String cardType;
 	private final Gson gson = new GsonBuilder()
 			.create();
@@ -112,9 +112,7 @@ public class IPayAddMoneyOptionFragment extends Fragment {
 								DialogUtils.showDialogForNotEntitledForInstantMoney(getActivity());
 							}
 						} else if (httpRequestGetAsyncTask != null) {
-							customProgressDialog = new CustomProgressDialog(getActivity());
-							customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-							customProgressDialog.setMessage(getString(R.string.fetching_user_info));
+							customProgressDialog = new AnimatedProgressDialog(getActivity());
 							customProgressDialog.showDialog();
 						} else {
 							Toaster.makeText(getActivity(),

@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankResponse;
@@ -37,7 +37,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
     private AddBankResponse mAddBankResponse;
     private HttpRequestPostAsyncTask mAddConcentTask = null;
     private UploadChequebookCoverAsyncTask mUploadCheckbookCovorAsyncTask;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private TextView mAccountNameTextView;
     private TextView mBankNameTextView;
@@ -135,7 +135,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
     }
 
     private void initializeViews(View view) {
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new CustomProgressDialog(getActivity());
         mAccountNameTextView = (TextView) view.findViewById(R.id.bank_account_name);
         mBankNameTextView = (TextView) view.findViewById(R.id.bank_name);
         mBranchNameTextView = (TextView) view.findViewById(R.id.bank_branch_name);
@@ -145,8 +145,6 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
     }
 
     private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
-
-        mProgressDialog.setMessage(getString(R.string.adding_bank));
         mProgressDialog.show();
         AddBankRequest mAddBankRequest = new AddBankRequest(branchRoutingNumber, accountType, accountName, accountNumber);
         Gson gson = new Gson();
@@ -159,13 +157,10 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
 
     private void performIdentificationDocumentUpload(long bankId) {
         final String url;
-
-        mProgressDialog.setMessage(getString(R.string.adding_bank));
         mProgressDialog.show();
         url = Constants.BASE_URL_MM + Constants.URL_CHECKBOOK_COVOR_UPLOAD;
         mUploadCheckbookCovorAsyncTask = new UploadChequebookCoverAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), mDocType, mImageUrl, ConsentAgreementForBankFragment.this, bankId);
         mUploadCheckbookCovorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        mProgressDialog.show();
     }
 
     private void performConcentAgreement(long bankId) {

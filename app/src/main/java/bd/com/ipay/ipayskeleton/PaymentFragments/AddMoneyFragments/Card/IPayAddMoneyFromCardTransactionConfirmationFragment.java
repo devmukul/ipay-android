@@ -13,7 +13,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardResponse;
@@ -28,7 +28,7 @@ public class IPayAddMoneyFromCardTransactionConfirmationFragment extends IPayAbs
 	private static final int CARD_PAYMENT_WEB_VIEW_REQUEST = 2001;
 	public static final String TRANSACTION_AMOUNT_KEY = "TRANSACTION_AMOUNT";
 	protected HttpRequestPostAsyncTask httpRequestPostAsyncTask = null;
-	protected CustomProgressDialog mCustomProgressDialog = null;
+	protected AnimatedProgressDialog mCustomProgressDialog = null;
 	protected Number transactionAmount;
 	protected String cardType;
 	protected final Gson gson = new GsonBuilder().create();
@@ -40,7 +40,7 @@ public class IPayAddMoneyFromCardTransactionConfirmationFragment extends IPayAbs
 			transactionAmount = (Number) getArguments().getSerializable(TRANSACTION_AMOUNT_KEY);
 			cardType = getArguments().getString(Constants.CARD_TYPE);
 		}
-		mCustomProgressDialog = new CustomProgressDialog(getContext());
+		mCustomProgressDialog = new AnimatedProgressDialog(getContext());
 	}
 
 	@Override
@@ -107,8 +107,6 @@ public class IPayAddMoneyFromCardTransactionConfirmationFragment extends IPayAbs
 
 	@Override
 	protected void performContinueAction() {
-		mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-		mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
 		final String requestJson = gson.toJson(new AddMoneyByCreditOrDebitCardRequest(transactionAmount.doubleValue(), cardType, getNote(), null));
 		httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY_FROM_CREDIT_DEBIT_CARD, Constants.BASE_URL_CARD + Constants.URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD,
 				requestJson, getActivity(), this, false);

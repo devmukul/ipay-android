@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund;
 
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
@@ -59,8 +59,6 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     private HttpDeleteWithBodyAsyncTask deleteSponsorAsyncTask;
 
     private IpayProgressDialog ipayProgressDialog;
-
-    private ProgressDialog progressDialog;
 
     private SourceOfFundListAdapter sponsorAdapter;
     private SourceOfFundListAdapter beneficiaryAdapter;

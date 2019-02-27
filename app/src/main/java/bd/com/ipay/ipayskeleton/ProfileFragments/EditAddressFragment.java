@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressRequest;
@@ -44,7 +44,7 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
 
     private CheckBox mSameAsPresentAddressCheckbox;
 
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private EditText mAddressLine1Field;
 
     @Override
@@ -60,7 +60,7 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
 
         getActivity().setTitle(getString(R.string.edit_address));
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new CustomProgressDialog(getActivity());
         mAddressInputView = (AddressInputView) v.findViewById(R.id.input_address);
         View mSameAsPresentAddressCheckboxHolder = v.findViewById(R.id.holder_same_as_present_address);
         mSameAsPresentAddressCheckbox = (CheckBox) v.findViewById(R.id.checkbox_same_as_present_address);
@@ -139,7 +139,6 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
 
 
     private void setUserAddress() {
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_saving_address));
         mProgressDialog.show();
 
         SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(mAddressType, mAddress);

@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -22,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
@@ -46,7 +46,7 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
     private EditText mMothersMobileEditText;
     private ImageView mSelectFatherMobileContactButton;
     private ImageView mSelectMotherMobileContactButton;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private String mFathersName = "";
     private String mMothersName = "";
     private String mFathersMobile = "";
@@ -75,7 +75,7 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
 
         mInfoSaveButton = (Button) view.findViewById(R.id.button_save);
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new CustomProgressDialog(getActivity());
 
 
         setParentInformation();
@@ -220,7 +220,6 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
     }
 
     private void attemptSaveParentInfo() {
-        mProgressDialog.setMessage(getString(R.string.saving_parent_information));
         mProgressDialog.show();
 
         Gson gson = new Gson();

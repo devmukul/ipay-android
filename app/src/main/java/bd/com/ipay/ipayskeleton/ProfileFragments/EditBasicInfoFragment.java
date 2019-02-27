@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoRequest;
@@ -50,7 +50,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 	private EditText mOccupationEditText;
 	private EditText mOrganizationNameEditText;
 	private RadioGroup genderSelectionRadioGroup;
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 	private String mName = "";
 	private com.tsongkha.spinnerdatepicker.DatePickerDialog mDatePickerDialog;
 	private String mDateOfBirth = "";
@@ -86,7 +86,7 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 		mOccupationEditText = view.findViewById(R.id.occupationEditText);
 		mOrganizationNameEditText = view.findViewById(R.id.organizationNameEditText);
 		genderSelectionRadioGroup = view.findViewById(R.id.gender_selection_radio_group);
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 
 		Date date = Utilities.formatDateFromString(mDateOfBirth);
 		mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), date, this);
@@ -217,7 +217,6 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 	}
 
 	private void attemptSaveBasicInfo() {
-		mProgressDialog.setMessage(getString(R.string.saving_profile_information));
 		mProgressDialog.show();
 
 		Gson gson = new Gson();

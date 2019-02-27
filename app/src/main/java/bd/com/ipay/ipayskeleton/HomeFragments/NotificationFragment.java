@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -114,7 +114,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 	private NotificationListAdapter mNotificationListAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
 	private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 	private TextView mEmptyListTextView;
 
 	private List<Notification> mNotifications;
@@ -156,7 +156,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 
 		mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 		mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 		mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 		mEmptyListTextView.setText(getString(R.string.nothing_to_show_right_now));
 		getNotificationLists(getActivity());
@@ -344,7 +344,6 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 			return;
 		}
 
-		mProgressDialog.setMessage(getString(R.string.loading));
 		mProgressDialog.show();
 
 		int accountType = ProfileInfoCacheManager.getAccountType();

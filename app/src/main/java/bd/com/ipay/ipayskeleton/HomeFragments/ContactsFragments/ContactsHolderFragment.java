@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
@@ -81,7 +81,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 	private EditText mobileNumberView;
 	private ImageView buttonScanQRCode;
 
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 
 	private EditText mEditTextRelationship;
 	private ResourceSelectorDialog mResourceSelectorDialog;
@@ -138,7 +138,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 			}
 		});
 
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 		if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS))
 			getInviteInfo();
 
@@ -228,7 +228,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 				if (verifyUserInputs()) {
 					mName = nameView.getText().toString();
 					mMobileNumber = mobileNumberView.getText().toString();
-					mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_contact));
 
 					if (mRelationship != null)
 						mRelationship = mRelationship.toUpperCase();

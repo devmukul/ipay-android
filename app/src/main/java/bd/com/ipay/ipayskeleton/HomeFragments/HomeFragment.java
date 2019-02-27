@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DashboardProfileCompletionPOJO;
@@ -81,7 +81,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 	private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
 	private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
 
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 	private TextView balanceView;
 
 	// Transaction History
@@ -150,7 +150,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
 		View view = inflater.inflate(R.layout.fragment_home, container, false);
 		balanceView = view.findViewById(R.id.balance);
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 		refreshBalanceButton = view.findViewById(R.id.refresh_balance_button);
 		View mAddMoneyButton = view.findViewById(R.id.button_add_money);
 		View mWithdrawMoneyButton = view.findViewById(R.id.button_withdraw_money);

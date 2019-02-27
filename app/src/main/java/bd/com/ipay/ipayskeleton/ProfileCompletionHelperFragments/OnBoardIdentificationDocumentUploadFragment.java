@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
@@ -83,7 +83,7 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
     private File mDocumentFirstPageImageFile;
     private File mDocumentSecondPageImageFile;
 
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private ImageView mBackButtonTop;
 
@@ -98,8 +98,7 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
                 mDocumentIdEditTextHint = getString(IdentificationDocumentConstants.getDocumentIDHintText(mSelectedIdentificationDocument.getDocumentType()));
             }
         }
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage(getString(R.string.uploading));
+        mProgressDialog = new CustomProgressDialog(getContext());
 
     }
 

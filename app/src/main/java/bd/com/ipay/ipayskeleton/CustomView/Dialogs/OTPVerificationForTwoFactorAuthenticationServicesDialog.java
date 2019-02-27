@@ -66,7 +66,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         this.sponsorAccountId = sponsorAccountId;
     }
 
-    private CustomProgressDialog mCustomProgressDialog;
+    private AnimatedProgressDialog mCustomProgressDialog;
 
     public HttpResponseListener mParentHttpResponseListener;
 
@@ -118,7 +118,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
         mResendOTPButton = view.findViewById(R.id.buttonResend);
         mCancelButton = view.findViewById(R.id.buttonCancel);
 
-        mCustomProgressDialog = new CustomProgressDialog(context);
+        mCustomProgressDialog = new AnimatedProgressDialog(context);
         setCountDownTimer();
         setButtonActions();
 
@@ -207,7 +207,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
             mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
         }
         if (method.equals(Constants.METHOD_PUT) && mHttpPutAsyncTask == null) {
-            mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
             mCustomProgressDialog.showDialog();
             hideOtpDialog();
             mHttpPutAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
@@ -217,7 +216,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Ale
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else if (method.equals(Constants.METHOD_POST) && mHttpPostAsyncTask == null) {
-            mCustomProgressDialog.setLoadingMessage(mProgressDialogStringMap.get(desiredRequest));
             mCustomProgressDialog.showDialog();
             hideOtpDialog();
             mHttpPostAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);

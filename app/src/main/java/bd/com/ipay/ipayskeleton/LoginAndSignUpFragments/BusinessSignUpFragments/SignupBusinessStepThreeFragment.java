@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments;
 
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseBusinessSignup;
@@ -54,7 +54,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
 	private CheckBox mMaleCheckBox;
 	private CheckBox mFemaleCheckBox;
 	private AddressInputSignUpView mPersonalAddressView;
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 
 	private String mDeviceID;
 	private String mDOB;
@@ -65,7 +65,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_signup_business_step_three, container, false);
 
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 
 		mBusinessHolderFullNameView = v.findViewById(R.id.full_name);
 
@@ -211,7 +211,6 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
 			SignupOrLoginActivity.mAddressBusinessHolder = mPersonalAddressView.getInformation();
-			mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
 			mProgressDialog.show();
 			OTPRequestBusinessSignup mOtpRequestBusinessSignup = new OTPRequestBusinessSignup(SignupOrLoginActivity.mMobileNumberBusiness,
 					Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE);

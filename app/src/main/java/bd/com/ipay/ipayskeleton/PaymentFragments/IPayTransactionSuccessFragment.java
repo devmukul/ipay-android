@@ -34,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.Rating.Feedback;
 import bd.com.ipay.ipayskeleton.Model.Rating.Meta;
@@ -57,7 +57,7 @@ public class IPayTransactionSuccessFragment extends Fragment implements HttpResp
     private String senderProfilePicture;
     private String receiverProfilePicture;
     private String mAddressString;
-    private CustomProgressDialog mCustomProgressDialog;
+    private AnimatedProgressDialog mCustomProgressDialog;
 
 
     private RoundedImageView sponsorImageView;
@@ -92,7 +92,7 @@ public class IPayTransactionSuccessFragment extends Fragment implements HttpResp
         numberFormat.setMinimumIntegerDigits(1);
 
         if (getActivity() != null) {
-            mCustomProgressDialog = new CustomProgressDialog(getActivity());
+            mCustomProgressDialog = new AnimatedProgressDialog(getActivity());
         }
     }
 
@@ -218,7 +218,6 @@ public class IPayTransactionSuccessFragment extends Fragment implements HttpResp
         if (httpRequestPostAsyncTask != null)
             return;
 
-        mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
         mCustomProgressDialog.showDialog();
         final String apiCommand;
         final String url;
@@ -235,7 +234,6 @@ public class IPayTransactionSuccessFragment extends Fragment implements HttpResp
         RatingSubmitRequestBuilder ratingSubmitRequestBuilder = new RatingSubmitRequestBuilder(feedbackList);
         requestJson = gson.toJson(ratingSubmitRequestBuilder);
         url = Constants.BASE_URL_MM + Constants.URL_FEEDBACK;
-        mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_sending_fragment));
         httpRequestPostAsyncTask = new HttpRequestPostAsyncTask(apiCommand, url, requestJson, getContext(), this, false);
         httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

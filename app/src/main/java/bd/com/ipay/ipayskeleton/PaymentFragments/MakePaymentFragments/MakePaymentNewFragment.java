@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -41,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -101,7 +101,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private RecyclerView mTrendingListRecyclerView;
     private TrendingListAdapter mTrendingListAdapter;
     private MakePaymentContactsSearchView mMobileNumberEditText;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private String trendingJson;
     private ProgressBar mProgressBar;
 
@@ -111,7 +111,7 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new CustomProgressDialog(getActivity());
         ipayProgressDialog = new IpayProgressDialog(getContext());
         approvedSponsorArrayList = new ArrayList<>();
         if (getArguments() != null) {
