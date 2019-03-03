@@ -12,6 +12,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
@@ -21,7 +22,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSourceOfFundListFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetSponsorAsyncTask;
-    private IpayProgressDialog ipayProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private ArrayList<Sponsor> sponsorArrayList;
 
@@ -76,13 +77,12 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
             return;
         } else {
 
-            ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog = new CustomProgressDialog(getContext());
             mGetSponsorAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
                     getContext(), this, false);
             mGetSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setCancelable(false);
-            ipayProgressDialog.show();
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
         }
 
     }
@@ -110,10 +110,10 @@ public class AddSponsorAsSourceOfFundFragment extends IpayAbstractSpecificSource
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetSponsorAsyncTask = null;
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             return;
         } else {
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 GetSponsorListResponse getSponsorListResponse = new Gson().
                         fromJson(result.getJsonString(), GetSponsorListResponse.class);

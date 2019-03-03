@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -69,7 +69,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 	private Button mContinueButton;
 	private View infoView;
 	private View customerIDView;
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 	private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
 	private String mUri;
@@ -85,7 +85,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 	private DpdcBillPayRequest mDpdcBillPayRequest;
 	private HttpRequestGetAsyncTask mGetBusinessRuleTask;
 	private DpdcBillPayResponse mDpdcBillPayResponse;
-	private CustomProgressDialog mCustomProgressDialog;
+	private AnimatedProgressDialog mCustomProgressDialog;
 
 	@Nullable
 	@Override
@@ -94,8 +94,8 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 		View view = inflater.inflate(R.layout.fragment_dpdc_bill_payment, container, false);
 		getActivity().setTitle("DPDC");
 		attemptGetBusinessRule(ServiceIdConstants.UTILITY_BILL_PAYMENT);
-		mProgressDialog = new ProgressDialog(getContext());
-		mCustomProgressDialog = new CustomProgressDialog(getContext());
+		mProgressDialog = new CustomProgressDialog(getContext());
+		mCustomProgressDialog = new AnimatedProgressDialog(getContext());
 		setUpView(view);
 		return view;
 	}
@@ -178,7 +178,6 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 					Constants.BASE_URL_UTILITY + Constants.URL_DPDC_BILL_PAY, json, getActivity(), false);
 			mDpdcBillPayTask.mHttpResponseListener = this;
 			mDpdcBillPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			mCustomProgressDialog.setLoadingMessage("Please wait");
 			mCustomProgressDialog.showDialog();
 		}
 	}
@@ -239,7 +238,6 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 		if (mDpdcCustomerInfoTask != null) {
 			return;
 		} else {
-			mProgressDialog.setMessage("Please wait");
 			mUri = Constants.BASE_URL_UTILITY + Constants.URL_DPDC_CUSTOMER_INFO;
 			mDpdcUserInfoGetRequest = new DPDCUserInfoGetRequest(mAccountID, mLocationCode);
 			mJsonString = new Gson().toJson(mDpdcUserInfoGetRequest);

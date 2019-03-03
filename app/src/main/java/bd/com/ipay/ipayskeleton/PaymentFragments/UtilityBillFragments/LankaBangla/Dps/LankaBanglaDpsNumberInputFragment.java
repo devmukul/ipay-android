@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaDpsUserInfoResponse;
@@ -27,15 +27,15 @@ import bd.com.ipay.ipayskeleton.Widget.View.DpsBillDetailsDialog;
 
 public class LankaBanglaDpsNumberInputFragment extends IPayAbstractUserIdInputFragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetLankaBanglaDpsUserInfoAsyncTask = null;
-    private final Gson gson = new GsonBuilder().create();
-    private CustomProgressDialog customProgressDialog;
+	private HttpRequestGetAsyncTask mGetLankaBanglaDpsUserInfoAsyncTask = null;
+	private final Gson gson = new GsonBuilder().create();
+	private AnimatedProgressDialog customProgressDialog;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        customProgressDialog = new CustomProgressDialog(getContext());
-    }
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		customProgressDialog = new AnimatedProgressDialog(getContext());
+	}
 
     @Override
     protected void performContinueAction() {
@@ -45,15 +45,13 @@ public class LankaBanglaDpsNumberInputFragment extends IPayAbstractUserIdInputFr
             return;
         }
 
-        String url = Constants.BASE_URL_UTILITY + Constants.LANKABANGLA_DPS_USER + getUserId();
-        mGetLankaBanglaDpsUserInfoAsyncTask = new HttpRequestGetAsyncTask(
-                Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO, url, getContext(), false);
-        mGetLankaBanglaDpsUserInfoAsyncTask.mHttpResponseListener = this;
-        customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-        customProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
-        customProgressDialog.showDialog();
-        mGetLankaBanglaDpsUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+		String url = Constants.BASE_URL_UTILITY + Constants.LANKABANGLA_DPS_USER + getUserId();
+		mGetLankaBanglaDpsUserInfoAsyncTask = new HttpRequestGetAsyncTask(
+				Constants.COMMAND_GET_LANKABANGLA_DPS_CUSTOMER_INFO, url, getContext(), false);
+		mGetLankaBanglaDpsUserInfoAsyncTask.mHttpResponseListener = this;
+		customProgressDialog.showDialog();
+		mGetLankaBanglaDpsUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 
     @Override
     public boolean verifyInput() {

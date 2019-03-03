@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogA
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -70,7 +71,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
 
     private boolean isSelectedFromContact;
 
-    private IpayProgressDialog ipayProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private final int PICK_CONTACT_REQUEST = 100;
     private HttpRequestGetAsyncTask mGetProfileInfoTask;
@@ -97,7 +98,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         isSelectedFromContact = false;
-        ipayProgressDialog = new IpayProgressDialog(getContext());
+        mProgressDialog = new CustomProgressDialog(getContext());
         type = getArguments().getString(Constants.TYPE);
         mMobileNumber = "";
         mName = "";
@@ -348,8 +349,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             return;
         } else {
             long amount = 5000;
-            ipayProgressDialog.setMessage("Please wait. . .");
-            ipayProgressDialog.show();
+            mProgressDialog.show();
             if (amountEditText.getText() != null) {
                 if (amountEditText.getText().toString() != null) {
                     if (!amountEditText.getText().toString().equals("")) {
@@ -424,8 +424,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             mAddBeneficiaryAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
                     , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
                     new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
-            ipayProgressDialog.setMessage("Please wait . . . ");
-            ipayProgressDialog.show();
+            mProgressDialog.show();
             mAddBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -477,8 +476,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             mAddSponsorAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
                     , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
                     new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
-            ipayProgressDialog.setMessage("Please wait . . . ");
-            ipayProgressDialog.show();
+            mProgressDialog.show();
             mAddSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -495,8 +493,7 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
             return;
         }
         mMobileNumber = mobileNumber;
-        ipayProgressDialog.setMessage("Please wait . . .");
-        ipayProgressDialog.show();
+        mProgressDialog.show();
         GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(ContactEngine.
                 formatMobileNumberBD(mobileNumber));
 
@@ -570,9 +567,9 @@ public class AddSourceOfFundFragment extends Fragment implements bd.com.ipay.ipa
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetProfileInfoTask = null;
             mAddSponsorAsyncTask = null;
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
         } else {
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             try {
                 mGetProfileInfoTask = null;
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {

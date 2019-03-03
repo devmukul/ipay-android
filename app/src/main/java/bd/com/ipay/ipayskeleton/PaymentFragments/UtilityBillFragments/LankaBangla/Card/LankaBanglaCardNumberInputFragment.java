@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.LankaBanglaCustomerInfoResponse;
@@ -29,9 +29,9 @@ import bd.com.ipay.ipayskeleton.Widget.View.BillDetailsDialog;
 
 public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberInputFragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetLankaBanglaCardUserInfoAsyncTask = null;
-    private final Gson gson = new GsonBuilder().create();
-    private CustomProgressDialog mProgressDialog;
+	private HttpRequestGetAsyncTask mGetLankaBanglaCardUserInfoAsyncTask = null;
+	private final Gson gson = new GsonBuilder().create();
+	private AnimatedProgressDialog mProgressDialog;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -40,12 +40,12 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
         if (getActivity() != null)
             getActivity().setTitle(R.string.lanka_bangla_card);
 
-        setCardIconImageResource(R.drawable.ic_debit_credit_card_icon);
-        setMessage(getString(R.string.lanka_bangla_card_number_input_message));
-        setCardNumberHint(getString(R.string.lanka_bangla_card_number));
-        setAllowedCards(CardNumberValidator.Cards.VISA, CardNumberValidator.Cards.MASTERCARD);
-        mProgressDialog = new CustomProgressDialog(getActivity());
-    }
+		setCardIconImageResource(R.drawable.ic_debit_credit_card_icon);
+		setMessage(getString(R.string.lanka_bangla_card_number_input_message));
+		setCardNumberHint(getString(R.string.lanka_bangla_card_number));
+		setAllowedCards(CardNumberValidator.Cards.VISA, CardNumberValidator.Cards.MASTERCARD);
+		mProgressDialog = new AnimatedProgressDialog(getActivity());
+	}
 
     @Override
     protected boolean verifyInput() {
@@ -60,34 +60,33 @@ public class LankaBanglaCardNumberInputFragment extends IPayAbstractCardNumberIn
         }
     }
 
-    @Override
-    protected void performContinueAction() {
-        if (!Utilities.isConnectionAvailable(getContext())) {
-            Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
-        } else if (mGetLankaBanglaCardUserInfoAsyncTask != null) {
-            return;
-        }
-        CardNumberValidator.Cards cards = CardNumberValidator.getCardType(getCardNumber());
-        final String url;
-        if (cards == null)
-            return;
-        switch (cards) {
-            case VISA:
-                url = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO + CardNumberValidator.sanitizeEntry(getCardNumber(), true);
-                break;
-            case MASTERCARD:
-                url = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO + CardNumberValidator.sanitizeEntry(getCardNumber(), true);
-                break;
-            default:
-                return;
-        }
-        mGetLankaBanglaCardUserInfoAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO,
-                url, getContext(), this, false);
-        mGetLankaBanglaCardUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        mProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-        mProgressDialog.setMessage(getString(R.string.fetching_user_info));
-        mProgressDialog.showDialog();
-    }
+	@Override
+	protected void performContinueAction() {
+		if (!Utilities.isConnectionAvailable(getContext())) {
+			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
+		} else if (mGetLankaBanglaCardUserInfoAsyncTask != null) {
+			return;
+		}
+		CardNumberValidator.Cards cards = CardNumberValidator.getCardType(getCardNumber());
+		final String url;
+		if (cards == null)
+			return;
+		switch (cards) {
+			case VISA:
+				url = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_VISA_CUSTOMER_INFO + CardNumberValidator.sanitizeEntry(getCardNumber(), true);
+				break;
+			case MASTERCARD:
+				url = Constants.BASE_URL_UTILITY + Constants.URL_GET_LANKA_BANGLA_MASTERCARD_CUSTOMER_INFO + CardNumberValidator.sanitizeEntry(getCardNumber(), true);
+				break;
+			default:
+				return;
+		}
+		mGetLankaBanglaCardUserInfoAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_LANKA_BANGLA_CUSTOMER_INFO,
+				url, getContext(), this, false);
+		mGetLankaBanglaCardUserInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		mProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
+		mProgressDialog.showDialog();
+	}
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {

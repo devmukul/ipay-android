@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -64,7 +64,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 
 	private HttpRequestPostAsyncTask mPaymentRevertTask = null;
 	private PaymentRevertRequest mPaymentRevertRequest;
-	private CustomProgressDialog mCustomProgressDialog;
+	private AnimatedProgressDialog mCustomProgressDialog;
 
 
 	private TextView descriptionTextView;
@@ -133,7 +133,7 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 		mMobileNumberView = v.findViewById(R.id.textview_mobile_number);
 		mAddInContactsButton = v.findViewById(R.id.add_in_contacts);
 		mRevertTransactionButton = v.findViewById(R.id.button_revert);
-		mCustomProgressDialog = new CustomProgressDialog(getContext());
+		mCustomProgressDialog = new AnimatedProgressDialog(getContext());
 		metaView = v.findViewById(R.id.metadata);
 
 		if (transactionHistory.getDescription() != null)
@@ -360,8 +360,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 		if (mPaymentRevertTask != null) {
 			return;
 		}
-
-		mCustomProgressDialog.setLoadingMessage(getString(R.string.processing));
 		mCustomProgressDialog.showDialog();
 
 		mPaymentRevertRequest = new PaymentRevertRequest(null, transactionHistory.getTransactionID(), pin);

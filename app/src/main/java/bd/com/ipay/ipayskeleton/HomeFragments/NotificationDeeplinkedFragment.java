@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.DeepLinkedNotification;
@@ -71,7 +71,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
     private HttpRequestGetAsyncTask mGetNotificationAsyncTask;
     private HttpRequestPutAsyncTask mUpdateNotificationStateTask;
 
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private NotificationBroadcastReceiver notificationBroadcastReceiver;
     private Tracker mTracker;
@@ -91,7 +91,6 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
 
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
-        mProgressDialog = new ProgressDialog(getActivity());
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         if (mEmptyListTextView != null) {
             mEmptyListTextView.setText("You do not have any notifications");
@@ -100,7 +99,7 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
         mNotificationsRecyclerView.setAdapter(mNotificationListAdapter);
-        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog = new CustomProgressDialog(getContext());
         getNotifications();
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
@@ -307,7 +306,6 @@ public class NotificationDeeplinkedFragment extends ProgressFragment implements 
             boolean isSilent = true;
             if (state.toUpperCase().equals("CLEARED")) {
                 isSilent = false;
-                mProgressDialog.setMessage("Please wait");
                 mProgressDialog.show();
             }
             UpdateNotificationStateRequest updateNotificationStateRequest = new UpdateNotificationStateRequest(timeList, state.toUpperCase());

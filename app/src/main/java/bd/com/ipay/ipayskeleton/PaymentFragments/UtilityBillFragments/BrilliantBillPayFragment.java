@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -54,8 +54,8 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
     private EditText amountEditText;
     private Button mContinueButton;
 
-    private ProgressDialog mProgressDialog;
-    private CustomProgressDialog mCustomProgressDialog;
+	private CustomProgressDialog mProgressDialog;
+	private AnimatedProgressDialog mCustomProgressDialog;
 
     private String mCustomerID;
     private String mAmount;
@@ -70,34 +70,34 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_brilliant_recahrge, container, false);
-        mCustomerIdEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
-        amountEditText = (EditText) view.findViewById(R.id.amount_edit_text);
-        mContinueButton = (Button) view.findViewById(R.id.continue_button);
-        mProgressDialog = new ProgressDialog(getContext());
-        mCustomProgressDialog = new CustomProgressDialog(getContext());
-        if (UtilityBillPaymentActivity.mMandatoryBusinessRules == null) {
-            UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
-        }
-        attemptGetBusinessRule(Constants.SERVICE_ID_UTILITY_BILL);
-        mContinueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Utilities.isConnectionAvailable(getContext())) {
-                    if (verifyUserInputs()) {
-                        attemptRechargeWithPinCheck();
-                    }
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        getActivity().setTitle("Brilliant");
-        return view;
-    }
+	@Nullable
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_brilliant_recahrge, container, false);
+		mCustomerIdEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
+		amountEditText = (EditText) view.findViewById(R.id.amount_edit_text);
+		mContinueButton = (Button) view.findViewById(R.id.continue_button);
+		mProgressDialog = new CustomProgressDialog(getContext());
+		mCustomProgressDialog = new AnimatedProgressDialog(getContext());
+		if (UtilityBillPaymentActivity.mMandatoryBusinessRules == null) {
+			UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
+		}
+		attemptGetBusinessRule(Constants.SERVICE_ID_UTILITY_BILL);
+		mContinueButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (Utilities.isConnectionAvailable(getContext())) {
+					if (verifyUserInputs()) {
+						attemptRechargeWithPinCheck();
+					}
+				} else {
+					Toast.makeText(getContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		getActivity().setTitle("Brilliant");
+		return view;
+	}
 
     private void attemptRechargeWithPinCheck() {
         if (UtilityBillPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
@@ -112,28 +112,27 @@ public class BrilliantBillPayFragment extends BaseFragment implements HttpRespon
         }
     }
 
-    private void attemptRecharge(String pin) {
-        if (mBrilliantRechargeTask != null) {
-            return;
-        } else {
-            mCustomerID = mCustomerIdEditText.getText().toString();
-            if (mCustomerID == null || mCustomerID.isEmpty()) {
-                mCustomerIdEditText.setError("Please enter a valid customer ID");
-            } else {
-                if (verifyUserInputs()) {
-                    mAmount = amountEditText.getText().toString();
-                    brilliantBillPayRequest = new BrilliantBillPayRequest(mCustomerID, Long.parseLong(mAmount), pin);
-                    jsonString = "";
-                    jsonString = new Gson().toJson(brilliantBillPayRequest);
-                    mBrilliantRechargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BRILLIANT_RECHARGE,
-                            Constants.BASE_URL_UTILITY + Constants.URL_BRILLIANT_RECHARGE, jsonString, getContext(), this, false);
-                    mBrilliantRechargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    mCustomProgressDialog.setLoadingMessage("Please wait, recharge in progress");
-                    mCustomProgressDialog.showDialog();
-                }
-            }
-        }
-    }
+	private void attemptRecharge(String pin) {
+		if (mBrilliantRechargeTask != null) {
+			return;
+		} else {
+			mCustomerID = mCustomerIdEditText.getText().toString();
+			if (mCustomerID == null || mCustomerID.isEmpty()) {
+				mCustomerIdEditText.setError("Please enter a valid customer ID");
+			} else {
+				if (verifyUserInputs()) {
+					mAmount = amountEditText.getText().toString();
+					brilliantBillPayRequest = new BrilliantBillPayRequest(mCustomerID, Long.parseLong(mAmount), pin);
+					jsonString = "";
+					jsonString = new Gson().toJson(brilliantBillPayRequest);
+					mBrilliantRechargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_BRILLIANT_RECHARGE,
+							Constants.BASE_URL_UTILITY + Constants.URL_BRILLIANT_RECHARGE, jsonString, getContext(), this, false);
+					mBrilliantRechargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					mCustomProgressDialog.showDialog();
+				}
+			}
+		}
+	}
 
     private void attemptGetBusinessRule(int serviceID) {
         if (mGetBusinessRuleTask != null) {

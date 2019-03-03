@@ -975,7 +975,7 @@
 </string>
     <string name="bill_month">বিলের মাস</string>
     <string name="principal_amount">প্রধান পরিমাণ</string>
-    <string name="vat_amount">ভ্যাট পরিমাণ</string>
+    <string name="vat_amount">ভ্যাট</string>
     <string name="bill_status">বিলের স্ট্যাটাস</string>
     <string name="enter_customer_id">অনুগ্রহ করে গ্রাহক আইডি লিখুন</string>
     <string name="enter_subscriber_id">অনুগ্রহ করে গ্রাহক আইডি লিখুন</string>
@@ -1354,6 +1354,8 @@
     <string name="preview">প্রিভিউ</string>
     <string name="document">ডকুমেন্ট</string>
     <string name="national_id_no">জাতীয় পরিচয়পত্রের নম্বর</string>
+    <string name="buy_this_ticket">টিকেট ক্রয় করুন</string>
+    <string name="fare">ভাড়া (৳)</string>
 </resources>
 
 

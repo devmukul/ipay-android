@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
@@ -35,7 +35,7 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
 
 	private AddressInputSignUpView mBusinessAddressView;
 
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 	private int mSelectedBusinessTypeId = -1;
 	public int mSelectedThanaId = -1;
 	public int mSelectedDistrictId = -1;
@@ -44,7 +44,7 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_signup_business_step_two, container, false);
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 		mBusinessNameView = v.findViewById(R.id.business_name);
 		mCompanyNameView = v.findViewById(R.id.company_name);
 		mBusinessType = v.findViewById(R.id.business_type);
@@ -75,7 +75,6 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
 		// Asynchronously load business types into the spinner
 		GetBusinessTypesAsyncTask getBusinessTypesAsyncTask =
 				new GetBusinessTypesAsyncTask(getActivity(), businessTypeLoadListener);
-		mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_business_types));
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.show();
 		getBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

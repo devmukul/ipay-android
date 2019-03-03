@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
@@ -16,6 +15,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
@@ -59,7 +59,7 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
     private EditText mPostalCodeField;
     private EditTextWithProgressBar mDistrictEditTextProgressBar;
     private EditTextWithProgressBar mThanaEditTextProgressBar;
-    ProgressDialog mProgressDialog;
+    CustomProgressDialog mProgressDialog;
 
     private ResourceSelectorDialog<District> districtSelectorDialog;
     private ResourceSelectorDialog<Thana> thanaSelectorDialog;
@@ -92,7 +92,7 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
         mDistrictEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.district);
         mDistrictSelection = mDistrictEditTextProgressBar.getEditText();
         mThanaSelection = mThanaEditTextProgressBar.getEditText();
-        mProgressDialog = new ProgressDialog(context);
+        mProgressDialog = new CustomProgressDialog(context);
 
 
         addView(v);
@@ -286,8 +286,6 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
         if (mGetUserAddressTask != null) {
             return;
         }
-
-        mProgressDialog.setMessage(context.getString(R.string.loading));
         mProgressDialog.show();
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, context, this,false);

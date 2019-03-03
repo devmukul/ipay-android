@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -67,6 +66,7 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPromoDialogBuilder;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
@@ -134,7 +134,7 @@ public class HomeActivity extends BaseActivity
 	private ProfileImageView mOptionMenuProfileImageView;
 	private NavigationView mNavigationView;
 
-	public ProgressDialog mProgressDialog;
+	public CustomProgressDialog mProgressDialog;
 	public static NotificationFragment mNotificationFragment;
 	private Menu mOptionsMenu;
 	private int mBadgeCount = 0;
@@ -188,7 +188,7 @@ public class HomeActivity extends BaseActivity
             }
         }
 		refreshBalance();
-		mProgressDialog = new ProgressDialog(HomeActivity.this);
+		mProgressDialog = new CustomProgressDialog(HomeActivity.this);
 		if (!SharedPrefManager.isFireBaseTokenSent()) {
 			sendFireBaseTokenToServer();
 		}
@@ -766,7 +766,6 @@ public class HomeActivity extends BaseActivity
 					Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this, false);
 			mLogoutTask.mHttpResponseListener = this;
 			mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
 			mProgressDialog.show();
 		} catch (Exception e) {
 			e.printStackTrace();

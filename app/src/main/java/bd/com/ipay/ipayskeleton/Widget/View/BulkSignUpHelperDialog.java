@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Widget.View;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -14,6 +13,7 @@ import java.util.Locale;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.BulkSignupUserDetailsCacheManager;
@@ -22,7 +22,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class BulkSignUpHelperDialog implements HttpResponseListener {
 	private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 	private AlertDialog alertDialog;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private String checkedInfo;
 
     private HttpRequestPostAsyncTask mSendStatusCheckedTask = null;
@@ -32,7 +32,7 @@ public class BulkSignUpHelperDialog implements HttpResponseListener {
 
         this.context = context;
 
-        mProgressDialog = new ProgressDialog(context);
+        mProgressDialog = new CustomProgressDialog(context);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
 
@@ -95,7 +95,6 @@ public class BulkSignUpHelperDialog implements HttpResponseListener {
     }
 
     private void sendCheckedResponse(String checkedInfo) {
-	    mProgressDialog.setMessage(context.getString(R.string.loading));
         mProgressDialog.show();
         if (mSendStatusCheckedTask != null)
             return;

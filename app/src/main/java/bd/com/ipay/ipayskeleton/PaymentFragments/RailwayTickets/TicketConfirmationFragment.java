@@ -132,8 +132,6 @@ public class TicketConfirmationFragment extends IPayAbstractTransactionConfirmat
 			railwayTicketTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RAILWAY_TICKET_PURCHASE,
 					uri, json, getActivity(), this, false);
 			railwayTicketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
-			customProgressDialog.setLoadingMessage(getString(R.string.payment_processing));
 			customProgressDialog.showDialog();
 		}
 	}

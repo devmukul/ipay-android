@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.BanglalionPackageSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -83,8 +83,8 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
     private Button mContinue;
 
     private List<AllowablePackage> mAllowedPackage;
-    private ProgressDialog mProgressDialog;
-    private CustomProgressDialog mCustomProgressDialog;
+    private CustomProgressDialog mProgressDialog;
+    private AnimatedProgressDialog mCustomProgressDialog;
 
     private String mCunnectionType = "";
     private int mAmount;
@@ -97,8 +97,7 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
+        mProgressDialog = new CustomProgressDialog(getActivity());
     }
 
     @Nullable
@@ -186,7 +185,7 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
 
         mPayBillButton = v.findViewById(R.id.bill_pay_button);
         mContinue = v.findViewById(R.id.continue_button);
-        mCustomProgressDialog = new CustomProgressDialog(getContext());
+        mCustomProgressDialog = new AnimatedProgressDialog(getContext());
 
         UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
     }
@@ -195,7 +194,6 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
         if (mGetCustomerInfoTask != null) {
             return;
         }
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
         mProgressDialog.show();
         mCustomerId = mCustomerIdEditText.getText().toString();
         mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANGLALION_CUSTOMER_INFO,
@@ -245,7 +243,6 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
             return;
         mBanglalionBillPayRequestModel = new BanglalionBillPayRequest(mCustomerId, mAmount, pin);
 
-        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_bill_payment_in_progress));
         mCustomProgressDialog.showDialog();
         Gson gson = new Gson();
         String json = gson.toJson(mBanglalionBillPayRequestModel);

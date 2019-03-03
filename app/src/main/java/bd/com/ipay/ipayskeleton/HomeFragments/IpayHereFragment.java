@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -50,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Fragments.IPaySupportPlaceAutocompleteFragment;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -87,7 +87,7 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
 
     private RecyclerView mTransactionHistoryRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -270,8 +270,7 @@ public class IpayHereFragment extends ProgressFragment implements PlaceSelection
         autocompleteFragment.setOnPlaceSelectedListener(this);
         autocompleteFragment.setFilter(autocompleteFilter);
 
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog = new CustomProgressDialog(getContext());
         mProgressDialog.setCancelable(false);
 
         mTransactionHistoryRecyclerView = v.findViewById(R.id.address_recycler_view);

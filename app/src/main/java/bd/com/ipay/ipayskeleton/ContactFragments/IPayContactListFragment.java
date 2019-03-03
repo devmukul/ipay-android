@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.ContactFragments;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -58,7 +58,7 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 
 
 	private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 
 	private ContactListAdapter mAdapter;
 	private Cursor mCursor;
@@ -75,7 +75,7 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 
 		if (getArguments() != null) {
 			transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);
@@ -162,7 +162,6 @@ public class IPayContactListFragment extends Fragment implements LoaderManager.L
 				}
 			}
 		}, false);
-		mProgressDialog.setMessage(getString(R.string.fetching_user_info));
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.show();
 		mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

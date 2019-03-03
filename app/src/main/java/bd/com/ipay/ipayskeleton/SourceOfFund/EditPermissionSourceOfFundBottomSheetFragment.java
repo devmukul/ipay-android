@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.R;
@@ -48,7 +49,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
     private String mobileNumber;
     private String relation;
 
-    private IpayProgressDialog ipayProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     public HttpResponseListener httpResponseListener;
 
     private String action;
@@ -90,7 +91,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         String permissionDetailsText = getString(R.string.permission_details, name, name);
         permissionDetailsTextView.setText(permissionDetailsText);
         Button doneButton = view.findViewById(R.id.done);
-        ipayProgressDialog = new IpayProgressDialog(getContext());
+        mProgressDialog = new CustomProgressDialog(getContext());
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,8 +117,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         if (mAddSponsorAsyncTask != null) {
             return;
         } else {
-            ipayProgressDialog.setMessage(getString(R.string.please_wait));
-            ipayProgressDialog.show();
+            mProgressDialog.show();
             AddSponsorRequest addSponsorRequest = new AddSponsorRequest(ContactEngine.formatMobileNumberBD(mobileNumber), relation,
                     Long.parseLong(amountEditText.getText().toString()));
             String jsonString = new Gson().toJson(addSponsorRequest);
@@ -132,8 +132,6 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
         if (updateMonthlyLimitAsyncTask != null) {
             return;
         } else {
-            ipayProgressDialog.setMessage(getString(R.string.please_wait));
-
             UpdateMonthlyLimitRequest updateMonthlyLimitRequest = new UpdateMonthlyLimitRequest
                     (Long.parseLong(amountEditText.getText().toString()), pinEditText.getText().toString());
             String jsonString = new Gson().toJson(updateMonthlyLimitRequest);
@@ -143,7 +141,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
                     (Constants.COMMAND_CHANGE_MONTLY_LIMIT, mUri,
                             jsonString, getContext(), this, false);
             updateMonthlyLimitAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.show();
+            mProgressDialog.show();
         }
     }
 
@@ -157,8 +155,7 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
             mAddBeneficiaryAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_BENEFICIARY
                     , Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
                     new Gson().toJson(addBeneficiaryRequest), getContext(), this, false);
-            ipayProgressDialog.setMessage(getString(R.string.please_wait));
-            ipayProgressDialog.show();
+            mProgressDialog.show();
             mAddBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -201,22 +198,21 @@ public class EditPermissionSourceOfFundBottomSheetFragment extends Fragment impl
                             Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + "beneficiary/" + id,
                     new Gson().toJson(acceptOrRejectBeneficiaryRequest), getContext(), this, false);
             updateBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setMessage(getString(R.string.please_wait));
-            ipayProgressDialog.show();
+            mProgressDialog.show();
         }
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             updateBeneficiaryAsyncTask = null;
             updateMonthlyLimitAsyncTask = null;
             mAddBeneficiaryAsyncTask = null;
             mAddSponsorAsyncTask = null;
             return;
         } else {
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY)) {
                 try {
                     GenericResponseWithMessageOnly genericResponseWithMessageOnly =

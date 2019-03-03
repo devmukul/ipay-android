@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -41,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.TrendingBusinessOutletSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.MakePaymentContactsSearchView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -52,7 +52,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetProviderR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Provider;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.ProviderCategory;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -80,8 +79,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private ArrayList<Sponsor> sponsorArrayList;
     private ArrayList<Sponsor> approvedSponsorArrayList;
 
-    private IpayProgressDialog ipayProgressDialog;
-
     private View mBillPayView;
     private View mLink3BillPayView;
     private View mBrilliantRechargeView;
@@ -101,7 +98,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private RecyclerView mTrendingListRecyclerView;
     private TrendingListAdapter mTrendingListAdapter;
     private MakePaymentContactsSearchView mMobileNumberEditText;
-    private ProgressDialog mProgressDialog;
     private String trendingJson;
     private ProgressBar mProgressBar;
 
@@ -111,8 +107,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
-        mProgressDialog = new ProgressDialog(getActivity());
-        ipayProgressDialog = new IpayProgressDialog(getContext());
         approvedSponsorArrayList = new ArrayList<>();
         if (getArguments() != null) {
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);

@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -41,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
@@ -71,7 +71,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
 
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     // Contains a list of bank branch corresponding to each district
     private Map<String, ArrayList<BankBranch>> bankDistrictToBranchMap;
@@ -126,7 +126,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
             }
         }
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new CustomProgressDialog(getActivity());
         mSelectedBankId = -1;
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
@@ -247,7 +247,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
                         }
                     }
                 });
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
         mProgressDialog.show();
         mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -427,8 +426,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         if (mGetBankTask != null) {
             return;
         }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity(), false);

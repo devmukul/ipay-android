@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -63,7 +63,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndI
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.EditPermissionSourceOfFundBottomSheetFragment;
-import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectSponsorRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
@@ -114,7 +113,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 	private NotificationListAdapter mNotificationListAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
 	private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 	private TextView mEmptyListTextView;
 
 	private List<Notification> mNotifications;
@@ -134,9 +133,6 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 	private long mMoneyRequestId;
 	private String mTitle;
 	private String mDescriptionOfRequest;
-
-	private IpayProgressDialog ipayProgressDialog;
-
 	public BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
 
 	private OnNotificationUpdateListener mOnNotificationUpdateListener;
@@ -156,7 +152,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 
 		mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 		mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 		mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 		mEmptyListTextView.setText(getString(R.string.nothing_to_show_right_now));
 		getNotificationLists(getActivity());
@@ -176,8 +172,6 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 					}
 				}
 		);
-
-		ipayProgressDialog = new IpayProgressDialog(getContext());
 		mNotificationsRecyclerView.setAdapter(mNotificationListAdapter);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
@@ -344,7 +338,6 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 			return;
 		}
 
-		mProgressDialog.setMessage(getString(R.string.loading));
 		mProgressDialog.show();
 
 		int accountType = ProfileInfoCacheManager.getAccountType();
@@ -585,8 +578,8 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 				acceptOrRejectBeneficiaryAsyncTask = null;
 				mGetSponsorAsyncTask = null;
 				mGetBeneficiaryAsyncTask = null;
-				if (ipayProgressDialog != null) {
-					ipayProgressDialog.dismiss();
+				if (mProgressDialog != null) {
+					mProgressDialog.dismiss();
 				}
 				setContentShown(true);
 
@@ -699,7 +692,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 
 				case Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY:
 					try {
-						ipayProgressDialog.dismiss();
+						mProgressDialog.dismiss();
 						GenericResponseWithMessageOnly responseWithMessageOnly = gson.fromJson(result.getJsonString(),
 								GenericResponseWithMessageOnly.class);
 						if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -1139,8 +1132,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 								Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + "beneficiary/" + id,
 						new Gson().toJson(acceptOrRejectBeneficiaryRequest), getContext(), this, false);
 				acceptOrRejectBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-				ipayProgressDialog.setMessage("Please wait . . .");
-				ipayProgressDialog.show();
+				mProgressDialog.show();
 
 			} else {
 				acceptOrRejectSponsorRequest = new AcceptOrRejectSponsorRequest
@@ -1150,8 +1142,7 @@ public class NotificationFragment extends ProgressFragment implements bd.com.ipa
 								Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + "sponsor/" + id,
 						new Gson().toJson(acceptOrRejectSponsorRequest), getContext(), this, false);
 				acceptOrRejectBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-				ipayProgressDialog.setMessage("Please wait . . .");
-				ipayProgressDialog.show();
+				mProgressDialog.show();
 			}
 
 		}

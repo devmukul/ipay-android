@@ -34,7 +34,7 @@ import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.UtilityBillPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -55,7 +55,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 	private Button transactionConfirmationButton;
 	protected final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 	protected OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
-	protected CustomProgressDialog customProgressDialog;
+	protected AnimatedProgressDialog customProgressDialog;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public abstract class IPayAbstractTransactionConfirmationFragment extends Fragme
 		numberFormat.setMinimumIntegerDigits(2);
 		if (getActivity() != null)
 			mTracker = Utilities.getTracker(getActivity());
-		customProgressDialog = new CustomProgressDialog(getActivity());
+		customProgressDialog = new AnimatedProgressDialog(getActivity());
 		customProgressDialog.setCancelable(false);
 	}
 

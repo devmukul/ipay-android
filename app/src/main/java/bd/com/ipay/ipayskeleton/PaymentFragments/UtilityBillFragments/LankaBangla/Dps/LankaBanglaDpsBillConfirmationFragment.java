@@ -101,8 +101,6 @@ public class LankaBanglaDpsBillConfirmationFragment extends IPayAbstractTransact
 			lankaBanglaDpsPayTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LANKABANGLA_BILL_PAY,
 					uri, json, getActivity(), this, false);
 			lankaBanglaDpsPayTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			customProgressDialog.setTitle(getString(R.string.please_wait_no_ellipsis));
-			customProgressDialog.setLoadingMessage(getString(R.string.payment_processing));
 			customProgressDialog.showDialog();
 		}
 	}

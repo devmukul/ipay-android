@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -72,7 +72,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     private ImageView mInfoView;
     private CheckBox mRememberMeCheckbox;
 
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private boolean tryLogInWithTouchID = false;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
@@ -96,7 +96,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new CustomProgressDialog(getActivity());
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -324,7 +324,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
             SignupOrLoginActivity.mPasswordBusiness = mPasswordLogin;
 
-            mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
             mProgressDialog.show();
 
             String UUID = null;

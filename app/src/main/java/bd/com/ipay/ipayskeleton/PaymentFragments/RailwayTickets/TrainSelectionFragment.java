@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.SelectorDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RailwayTickets.GetTicketInfoRequest;
@@ -55,7 +55,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
 
     private LinearLayout mProgressLayout;
     private TrainListAdapter trainListAdapter;
-    private CustomProgressDialog mProgressDialog;
+    private AnimatedProgressDialog mProgressDialog;
 
     private HttpRequestPostAsyncTask mGetTrainInfoAsyncTask = null;
     private GetTicketInfoResponse mTicketInfoResponse;
@@ -106,7 +106,7 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
         ((RailwayTicketActionActivity) getActivity()).setSupportActionBar(toolbar);
         ((RailwayTicketActionActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivity().setTitle(R.string.railway_ticket_title);
-        mProgressDialog = new CustomProgressDialog(getActivity());
+        mProgressDialog = new AnimatedProgressDialog(getActivity());
         mTrainListRecyclerView = view.findViewById(R.id.user_bank_list_recycler_view);
         mProgressLayout = view.findViewById(R.id.progress_layout);
         journeyInfo = view.findViewById(R.id.journey_info_text);
@@ -149,7 +149,6 @@ public class TrainSelectionFragment extends Fragment implements HttpResponseList
                 Constants.BASE_URL_CNS + Constants.URL_TICKET_QUERY, jsonBody, getContext(), this, false);
         mGetTrainInfoAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-        mProgressDialog.setMessage(getString(R.string.fetching_user_info));
         mProgressDialog.showDialog();
     }
 

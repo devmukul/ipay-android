@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.SourceOfFund;
 
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
@@ -58,9 +58,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
 
     private HttpDeleteWithBodyAsyncTask deleteSponsorAsyncTask;
 
-    private IpayProgressDialog ipayProgressDialog;
-
-    private ProgressDialog progressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private SourceOfFundListAdapter sponsorAdapter;
     private SourceOfFundListAdapter beneficiaryAdapter;
@@ -150,12 +148,11 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         if (getSponsorListAsyncTask != null) {
             return;
         } else {
-            ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Please wait  . . .");
+            mProgressDialog = new CustomProgressDialog(getContext());
             getSponsorListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SPONSOR_LIST, Constants.BASE_URL_MM + Constants.URL_GET_SPONSOR,
                     getContext(), this, false);
             getSponsorListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.show();
+            mProgressDialog.show();
 
         }
     }
@@ -164,12 +161,11 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
         if (getBeneficiaryListAsyncTask != null) {
             return;
         } else {
-            ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage("Please wait . . .");
+            mProgressDialog = new CustomProgressDialog(getContext());
             getBeneficiaryListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BENEFICIARY_LIST, Constants.BASE_URL_MM + Constants.URL_GET_BENEFICIARY,
                     getContext(), this, false);
             getBeneficiaryListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.show();
+            mProgressDialog.show();
 
         }
     }
@@ -190,15 +186,15 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             getSponsorListAsyncTask = null;
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             return;
         } else {
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             GetSponsorListResponse getSponsorListResponse = null;
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_SPONSOR_LIST)) {
                     attemptGetBeneficiaryList();
-                    ipayProgressDialog.dismiss();
+                    mProgressDialog.dismiss();
                     isSponsorApiCalled = true;
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         getSponsorListResponse = new Gson().fromJson(result.getJsonString(), GetSponsorListResponse.class);
@@ -228,7 +224,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                     getSponsorListAsyncTask = null;
 
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BENEFICIARY_LIST)) {
-                    ipayProgressDialog.dismiss();
+                    mProgressDialog.dismiss();
                     isBeneficiaryApiCalled = true;
                     GetBeneficiaryListResponse getBeneficiaryListResponse = new Gson().fromJson(result.getJsonString(),
                             GetBeneficiaryListResponse.class);
@@ -287,8 +283,7 @@ public class SourceOfFundListShowFragment extends Fragment implements HttpRespon
                     (removeSponsorOrBeneficiaryRequest),
                     getContext(), this, false);
             deleteSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setMessage("Please wait . . .");
-            ipayProgressDialog.show();
+            mProgressDialog.show();
         }
     }
 

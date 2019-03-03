@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments;
 
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestPersonalSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponsePersonalSignup;
@@ -61,7 +61,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 	private EditText mBirthdayEditText;
 	private EditText mGenderEditText;
 
-	private ProgressDialog mProgressDialog;
+	private CustomProgressDialog mProgressDialog;
 
 	private String mDeviceID;
 
@@ -147,7 +147,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 		mGenderEditText = v.findViewById(R.id.genderEditText);
 		ImageView mCrossButton = v.findViewById(R.id.button_cross);
 		Button mLoginButton = v.findViewById(R.id.button_log_in);
-		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog = new CustomProgressDialog(getActivity());
 
 		mNameView.requestFocus();
 		// Enable hyperlinked
@@ -294,7 +294,6 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 		} else {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
-			mProgressDialog.setMessage(getString(R.string.progress_dialog_requesting));
 			mProgressDialog.show();
 			OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
 					Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);

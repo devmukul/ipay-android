@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.DeviceTrustFragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
@@ -85,7 +85,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mTrustedDevicesRecyclerView;
 
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private Button mLogOutButton;
     private Tracker mTracker;
 
@@ -107,7 +107,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         setTitle();
 
         mTrustedDevicesRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new CustomProgressDialog(getActivity());
         mLogOutButton = (Button) v.findViewById(R.id.button_logout);
 
         mLogOutButton.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +170,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         if (mRemoveTrustedDeviceTask != null)
             return;
 
-        mProgressDialog.setMessage(getString(R.string.remove_trusted_device_message));
         mProgressDialog.show();
 
         mRemoveTrustedDeviceTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
@@ -187,7 +186,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
         mProgressDialog.show();
 
         String mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
@@ -207,7 +205,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         if (mLogoutTask != null) {
             return;
         }
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
         Gson gson = new Gson();
@@ -298,7 +295,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.success_device_removed, Toast.LENGTH_LONG).show();
                         }
-                        mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
                         mProgressDialog.show();
                         // Add the device as trusted immediately after removing any device
                         getTrustedDeviceList();

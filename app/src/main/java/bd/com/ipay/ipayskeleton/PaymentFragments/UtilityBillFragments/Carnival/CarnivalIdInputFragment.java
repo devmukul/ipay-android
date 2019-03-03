@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Activities.UtilityBillPayActivities.IPayUtilityB
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.CarnivalCustomerInfoResponse;
@@ -28,15 +28,15 @@ import bd.com.ipay.ipayskeleton.Widget.View.BillDetailsDialog;
 
 public class CarnivalIdInputFragment extends IPayAbstractUserIdInputFragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetCustomerInfoTask;
-    private CustomProgressDialog customProgressDialog;
-    private final Gson gson = new Gson();
+	private HttpRequestGetAsyncTask mGetCustomerInfoTask;
+	private AnimatedProgressDialog customProgressDialog;
+	private final Gson gson = new Gson();
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        customProgressDialog = new CustomProgressDialog(getContext());
-    }
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		customProgressDialog = new AnimatedProgressDialog(getContext());
+	}
 
     @Override
     protected void setupViewProperties() {
@@ -56,17 +56,14 @@ public class CarnivalIdInputFragment extends IPayAbstractUserIdInputFragment imp
         }
     }
 
-    @Override
-    protected void performContinueAction() {
-        if (!Utilities.isConnectionAvailable(getContext())) {
-            Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
-        } else if (mGetCustomerInfoTask != null) {
-            return;
-        }
-
-        customProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
-        customProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_customer_info));
-        customProgressDialog.showDialog();
+	@Override
+	protected void performContinueAction() {
+		if (!Utilities.isConnectionAvailable(getContext())) {
+			Toaster.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
+		} else if (mGetCustomerInfoTask != null) {
+			return;
+		}
+		customProgressDialog.showDialog();
 
         mGetCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CARNIVAL_CUSTOMER_INFO,
                 Constants.BASE_URL_UTILITY + Constants.URL_CARNIVAL + getUserId(), getActivity(), this, false);

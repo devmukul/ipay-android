@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.UtilityBillFragments.Desco;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
@@ -49,7 +49,7 @@ public class DescoEnterBillNumberFragment extends BaseFragment implements HttpRe
     private Button mContinueButton;
     private View infoView;
     private View customerIDView;
-    private ProgressDialog mProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
@@ -63,7 +63,7 @@ public class DescoEnterBillNumberFragment extends BaseFragment implements HttpRe
     private DescoBillPayRequest mDescoBillPayRequest;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
     private DescoBillPayResponse mDescoBillPayResponse;
-    private CustomProgressDialog mCustomProgressDialog;
+    private AnimatedProgressDialog mCustomProgressDialog;
 
     @Nullable
     @Override
@@ -72,8 +72,8 @@ public class DescoEnterBillNumberFragment extends BaseFragment implements HttpRe
         View view = inflater.inflate(R.layout.fragment_desco_bill_payment, container, false);
         getActivity().setTitle(getString(R.string.desco));
         attemptGetBusinessRule(ServiceIdConstants.UTILITY_BILL_PAYMENT);
-        mProgressDialog = new ProgressDialog(getContext());
-        mCustomProgressDialog = new CustomProgressDialog(getContext());
+        mProgressDialog = new CustomProgressDialog(getContext());
+        mCustomProgressDialog = new AnimatedProgressDialog(getContext());
         setUpView(view);
         return view;
     }
@@ -120,7 +120,6 @@ public class DescoEnterBillNumberFragment extends BaseFragment implements HttpRe
         if (mDescoCustomerInfoTask != null) {
             return;
         } else {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
             mUri = Constants.BASE_URL_UTILITY + Constants.URL_DESCO_CUSTOMER_INFO + mBillNumber;
             mDescoCustomerInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DESCO_CUSTOMER, mUri,
                     getActivity(), this, false);

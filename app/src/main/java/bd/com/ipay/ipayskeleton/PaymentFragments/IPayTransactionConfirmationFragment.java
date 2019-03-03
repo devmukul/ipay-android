@@ -43,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Activities.IPayTransactionActionActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
@@ -90,7 +90,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
     private String operatorCode;
     private int operatorType;
-    private CustomProgressDialog mCustomProgressDialog;
+    private AnimatedProgressDialog mCustomProgressDialog;
 
     private String mPin;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
@@ -133,7 +133,7 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
 
         if (getActivity() != null) {
             mTracker = Utilities.getTracker(getActivity());
-            mCustomProgressDialog = new CustomProgressDialog(getActivity());
+            mCustomProgressDialog = new AnimatedProgressDialog(getActivity());
         }
     }
 
@@ -313,7 +313,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 requestJson = gson.toJson(new SendMoneyRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
                         amount.toString(), mPin));
                 url = Constants.BASE_URL_SM + Constants.URL_SEND_MONEY_V3;
-                mCustomProgressDialog.setMessage(getString(R.string.sending_money));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_MAKE_PAYMENT:
                 apiCommand = Constants.COMMAND_PAYMENT;
@@ -322,14 +321,12 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 paymentRequest.setPin(mPin);
                 requestJson = gson.toJson(paymentRequest);
                 url = Constants.BASE_URL_SM + Constants.URL_PAYMENT_V3;
-                mCustomProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_REQUEST_MONEY:
                 apiCommand = Constants.COMMAND_REQUEST_MONEY;
                 requestJson = gson.toJson(new RequestMoneyRequest(ContactEngine.formatMobileNumberBD(mobileNumber),
                         Double.valueOf(amount.toString()), note));
                 url = Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY;
-                mCustomProgressDialog.setMessage(getString(R.string.requesting_money));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_TOP_UP:
                 apiCommand = Constants.COMMAND_TOPUP_REQUEST;
@@ -338,7 +335,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                 requestJson = gson.toJson(new TopupRequest(number,
                         operatorType, operatorCode, Integer.parseInt(amount.toString().trim())));
                 url = Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST_V3;
-                mCustomProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
                 break;
             case IPayTransactionActionActivity.TRANSACTION_TYPE_INVALID:
             default:
@@ -352,7 +348,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
             }
         }
         httpRequestPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        mCustomProgressDialog.setTitle(R.string.please_wait_no_ellipsis);
         mCustomProgressDialog.showDialog();
     }
 
@@ -375,7 +370,6 @@ public class IPayTransactionConfirmationFragment extends Fragment implements Htt
                             if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
                             } else {
-                                mCustomProgressDialog.setTitle(R.string.success);
                                 mCustomProgressDialog.showSuccessAnimationAndMessage(iPayTransactionResponse.getMessage());
                             }
                             new Handler().postDelayed(new Runnable() {

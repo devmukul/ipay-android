@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsA
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AnimatedProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
@@ -54,7 +54,7 @@ public class CreateRichNotification {
     private static Context context;
     private String type;
     private String title;
-    private CustomProgressDialog mProgressDialog;
+    private AnimatedProgressDialog mProgressDialog;
     private Bitmap imageBitmap;
 
     private static boolean isLoggedIn;

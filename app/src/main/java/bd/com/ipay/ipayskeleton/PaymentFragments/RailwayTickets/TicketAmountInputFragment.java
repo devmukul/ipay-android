@@ -56,7 +56,8 @@ public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 			mFareAmount = getArguments().getDouble(RailwayTicketActionActivity.KEY_TICKET_FARE_AMOUNT, 0);
 			mVatAmount = getArguments().getDouble(RailwayTicketActionActivity.KEY_TICKET_VAT_AMOUNT, 0);
 			mTotalAmount = getArguments().getDouble(RailwayTicketActionActivity.KEY_TICKET_TOTAL_AMOUNT, 0);
-		}
+
+        }
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class TicketAmountInputFragment extends IPayAbstractAmountFragment {
 		setTransactionImageResource(R.drawable.bd_railway);
 		setName(getString(R.string.railway_ticket_name));
 		setUserName(Utilities.formatJourneyInfoText(getContext(),mSelectedTrain +" - "+mSelectedTrainNo, mSelectedAdult, mSelectedChild));
-		setAmount(String.valueOf( mTotalAmount ));
+		setAmount(String.valueOf(String.format("%.0f", mTotalAmount) ));
 		setAmountFieldEnabled(false);
 	}
 

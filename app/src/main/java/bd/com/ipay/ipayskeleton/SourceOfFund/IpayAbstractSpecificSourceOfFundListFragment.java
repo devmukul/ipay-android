@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpDeleteWithBodyAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
@@ -59,7 +60,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
 
     public HttpDeleteWithBodyAsyncTask deleteSponsorAsyncTask;
 
-    private IpayProgressDialog ipayProgressDialog;
+    private CustomProgressDialog mProgressDialog;
     private BottomSheetBehavior<RelativeLayout> bottomSheetBehavior;
 
     @Nullable
@@ -73,7 +74,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
         titleTextView = view.findViewById(R.id.title);
         backButton = view.findViewById(R.id.back);
         helpTextView = view.findViewById(R.id.help);
-        ipayProgressDialog = new IpayProgressDialog(getContext());
+        mProgressDialog = new CustomProgressDialog(getContext());
         noDataTextView = view.findViewById(R.id.no_data_text_view);
         addNewResourceButton = view.findViewById(R.id.add_new_resource);
         final RelativeLayout relativeLayout = view.findViewById(R.id.test_bottom_sheet_layout);
@@ -170,11 +171,11 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                 public void httpResponseReceiver(GenericHttpResponse result) {
                     if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
                         deleteSponsorAsyncTask = null;
-                        ipayProgressDialog.dismiss();
+                        mProgressDialog.dismiss();
                         return;
                     } else {
                         deleteSponsorAsyncTask = null;
-                        ipayProgressDialog.dismiss();
+                        mProgressDialog.dismiss();
                         try {
                             GenericResponseWithMessageOnly genericResponseWithMessageOnly =
                                     new Gson().fromJson
@@ -196,8 +197,7 @@ public abstract class IpayAbstractSpecificSourceOfFundListFragment extends Fragm
                 }
             }, false);
             deleteSponsorAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setMessage(getString(R.string.please_wait));
-            ipayProgressDialog.show();
+            mProgressDialog.show();
         }
     }
 
