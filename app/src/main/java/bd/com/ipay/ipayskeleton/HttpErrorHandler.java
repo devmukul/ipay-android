@@ -75,6 +75,30 @@ public class HttpErrorHandler {
         }
     }
 
+    public static boolean isErrorFoundWithout404(GenericHttpResponse result, Context context, Dialog alertDialog) {
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+        }
+        if (result == null) {
+            return true;
+        } else if (result.getErrorMessage() != null) {
+            if (!result.isSilent()) {
+                Toast.makeText(context, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+            }
+            return true;
+        } else {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+                if (!result.isSilent()) {
+                    Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
+                }
+                return true;
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isErrorFoundForProgressDialogListener(GenericHttpResponse result, Context context, ProgressDialogListener alertDialog) {
         if (alertDialog != null) {
             if (result == null) {
@@ -165,4 +189,5 @@ public class HttpErrorHandler {
             return false;
         }
     }
+
 }

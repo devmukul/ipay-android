@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DescoBillPayRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DescoBillPayResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.DescoCustomerInfoResponse;
@@ -40,7 +42,6 @@ import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import bd.com.ipay.ipayskeleton.Widgets.IPaySnackbar;
 
 
 public class DescoEnterBillNumberFragment extends BaseFragment implements HttpResponseListener {
@@ -147,15 +148,24 @@ public class DescoEnterBillNumberFragment extends BaseFragment implements HttpRe
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFoundWithout404(result, getContext(), mCustomProgressDialog)) {
             mProgressDialog.dismiss();
             mCustomProgressDialog.dismissDialog();
             mDescoCustomerInfoTask = null;
-            mDescoBillPayTask = null;
             mGetBusinessRuleTask = null;
+            if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                try {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                            fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    Utilities.showErrorDialog(getContext(), genericResponseWithMessageOnly.getMessage());
+                } catch (Exception e) {
+                    Utilities.showErrorDialog(getContext(), getString(R.string.not_found));
+                }
+            }
             return;
         } else {
             try {
+                mProgressDialog.dismiss();
                 Gson gson = new Gson();
                 if (result.getApiCommand().equals(Constants.COMMAND_GET_DESCO_CUSTOMER)) {
                     mDescoCustomerInfoResponse = gson.fromJson(result.getJsonString(), DescoCustomerInfoResponse.class);
@@ -175,7 +185,12 @@ public class DescoEnterBillNumberFragment extends BaseFragment implements HttpRe
                         bundle.putSerializable(Constants.TOTAL_AMOUNT, numberFormat.parse(mDescoCustomerInfoResponse.getTotalAmount()));
                         ((UtilityBillPaymentActivity) getActivity()).switchToDescoBillInfoFragment(bundle);
                     } else {
-                        IPaySnackbar.error(mContinueButton, mDescoCustomerInfoResponse.getMessage(), IPaySnackbar.LENGTH_LONG).show();
+                        if (!TextUtils.isEmpty(mDescoCustomerInfoResponse.getMessage())) {
+                            Utilities.showErrorDialog(getContext(), mDescoCustomerInfoResponse.getMessage());
+                        } else {
+                            Utilities.showErrorDialog(getContext(), getString(R.string.not_found));
+
+                        }
                     }
                     mDescoCustomerInfoTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
@@ -208,9 +223,8 @@ public class DescoEnterBillNumberFragment extends BaseFragment implements HttpRe
             } catch (Exception e) {
                 mProgressDialog.dismiss();
                 mDescoCustomerInfoTask = null;
-                mDescoBillPayTask = null;
                 mGetBusinessRuleTask = null;
-                Toast.makeText(getContext(), getString(R.string.request_failed), Toast.LENGTH_LONG).show();
+                Utilities.showErrorDialog(getContext(), getString(R.string.request_failed));
                 e.printStackTrace();
             }
         }
