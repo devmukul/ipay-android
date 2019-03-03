@@ -853,6 +853,7 @@
 </string>
     <string name="upload_document">আপলোড</string>
     <string name="upload_photo">ফটো নিশ্চিত করুন</string>
+    <string name="not_found">খুঁজে পাওয়া যায়নি</string>
     <string name="add_basic_info">আপডেট করুন</string>
     <string name="skip_now">স্কিপ করুন</string>
     <string name="balance_holder">৳ %1$s</string>

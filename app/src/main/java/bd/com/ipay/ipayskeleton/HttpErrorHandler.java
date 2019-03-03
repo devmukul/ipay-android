@@ -91,9 +91,12 @@ public class HttpErrorHandler {
                 if (!result.isSilent()) {
                     Toast.makeText(context, "Internal Server Error", Toast.LENGTH_LONG).show();
                 }
+                return true;
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                return true;
             }
-            return true;
         }
+        return false;
     }
 
     public static boolean isErrorFoundForProgressDialogListener(GenericHttpResponse result, Context context, ProgressDialogListener alertDialog) {
