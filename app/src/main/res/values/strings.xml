@@ -1177,6 +1177,7 @@
     <string name="preview">Preview</string>
     <string name="document">Document</string>
     <string name="national_id_no">National ID Number</string>
+    <string name="not_found">Not found</string>
     <string name="buy_this_ticket">BUY THIS TICKET</string>
     <string name="fare">Fare(Tk)</string>
 

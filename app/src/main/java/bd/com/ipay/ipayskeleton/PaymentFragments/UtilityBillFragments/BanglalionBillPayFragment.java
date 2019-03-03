@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRuleV2;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.Rule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.AllowablePackage;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.BanglalionBillPayResponse;
@@ -383,11 +384,20 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        if (HttpErrorHandler.isErrorFound(result, getContext(), mProgressDialog)) {
+        if (HttpErrorHandler.isErrorFoundWithout404(result, getContext(), mProgressDialog)) {
             mProgressDialog.dismiss();
             mGetCustomerInfoTask = null;
             mGetBusinessRuleTask = null;
             mBanglalionBillPayTask = null;
+            if (result != null && result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                try {
+                    GenericResponseWithMessageOnly genericResponseWithMessageOnly = new Gson().
+                            fromJson(result.getJsonString(), GenericResponseWithMessageOnly.class);
+                    Utilities.showErrorDialog(getContext(), genericResponseWithMessageOnly.getMessage());
+                } catch (Exception e) {
+                    Utilities.showErrorDialog(getContext(), getString(R.string.not_found));
+                }
+            }
             return;
         }
 
@@ -397,7 +407,9 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_BANGLALION_CUSTOMER_INFO:
-                GetCustomerInfoResponse mCustomerInfoResponse;
+                mProgressDialog.dismiss();
+                mCustomProgressDialog.dismissDialog();
+                GetCustomerInfoResponse mCustomerInfoResponse = null;
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         try {
@@ -429,8 +441,11 @@ public class BanglalionBillPayFragment extends BaseFragment implements HttpRespo
                         }
                         break;
                     default:
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                        if (!TextUtils.isEmpty(mCustomerInfoResponse.getMessage())) {
+                            Utilities.showErrorDialog(getContext(), mCustomerInfoResponse.getMessage());
+                        } else {
+                            Utilities.showErrorDialog(getContext(), getString(R.string.service_not_available));
+                        }
                         break;
                 }
                 break;
