@@ -102,7 +102,6 @@ public class TransactionDetailsFragment extends BaseFragment implements HttpResp
 		View v = inflater.inflate(R.layout.fragment_transaction_details, container, false);
 
 		transactionHistory = getArguments().getParcelable(Constants.TRANSACTION_DETAILS);
-		System.out.println("Test " + transactionHistory.toString());
 
 		serviceId = transactionHistory.getServiceID();
 		purpose = transactionHistory.getPurpose();

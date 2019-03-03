@@ -383,10 +383,8 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 	public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
 
 		final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-		numberFormat.setMinimumIntegerDigits(2);
-		numberFormat.setMaximumIntegerDigits(2);
-		mDOB = String.format(Locale.US, "%s/%s/%s", numberFormat.format(dayOfMonth),
-				numberFormat.format(month), Integer.toString(year));
+		mDOB = String.format(Locale.US, "%s/%s/%s", getFormattedDate(dayOfMonth),
+				getFormattedDate(month+1), Integer.toString(year));
 		final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 		calendar.set(Calendar.YEAR, year);
 		calendar.set(Calendar.MONTH, month);
@@ -394,5 +392,13 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EE, dd MMMM, yyyy", Locale.getDefault());
 		mBirthdayEditText.setError(null);
 		mBirthdayEditText.setText(simpleDateFormat.format(calendar.getTime()));
+	}
+
+	private String getFormattedDate(int value) {
+		 if(value<10) {
+			 return String.format(Locale.US,"0%d",value);
+		 } else {
+		 	return Integer.toString(value);
+		 }
 	}
 }
