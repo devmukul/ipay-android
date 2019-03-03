@@ -117,6 +117,7 @@ public class AnimatedProgressDialog extends android.support.v7.app.AlertDialog {
 
     private void clearAnimation() {
         animationView.clearAnimation();
+        progressDialogTextView.setText(context.getString(R.string.please_wait));
     }
 }
 

@@ -52,7 +52,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.GetProviderR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.Provider;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UtilityBill.ProviderCategory;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.GetSponsorListResponse;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Sponsor;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -80,8 +79,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private ArrayList<Sponsor> sponsorArrayList;
     private ArrayList<Sponsor> approvedSponsorArrayList;
 
-    private IpayProgressDialog ipayProgressDialog;
-
     private View mBillPayView;
     private View mLink3BillPayView;
     private View mBrilliantRechargeView;
@@ -101,7 +98,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     private RecyclerView mTrendingListRecyclerView;
     private TrendingListAdapter mTrendingListAdapter;
     private MakePaymentContactsSearchView mMobileNumberEditText;
-    private CustomProgressDialog mProgressDialog;
     private String trendingJson;
     private ProgressBar mProgressBar;
 
@@ -111,8 +107,6 @@ public class MakePaymentNewFragment extends BaseFragment implements HttpResponse
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
-        mProgressDialog = new CustomProgressDialog(getActivity());
-        ipayProgressDialog = new IpayProgressDialog(getContext());
         approvedSponsorArrayList = new ArrayList<>();
         if (getArguments() != null) {
             transactionType = getArguments().getInt(IPayTransactionActionActivity.TRANSACTION_TYPE_KEY);

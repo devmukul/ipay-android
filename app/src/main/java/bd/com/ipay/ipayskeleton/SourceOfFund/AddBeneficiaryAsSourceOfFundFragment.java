@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.Beneficiary;
@@ -20,7 +21,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSourceOfFundListFragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetBeneficiaryAsyncTask;
-    private IpayProgressDialog ipayProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private ArrayList<Beneficiary> beneficiaryArrayList;
 
@@ -41,12 +42,11 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
             return;
         } else {
 
-            ipayProgressDialog = new IpayProgressDialog(getContext());
-            ipayProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog = new CustomProgressDialog(getContext());
             mGetBeneficiaryAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BENEFICIARY_LIST, Constants.BASE_URL_MM + Constants.URL_GET_BENEFICIARY,
                     getContext(), this, false);
             mGetBeneficiaryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.show();
+            mProgressDialog.show();
         }
     }
 
@@ -106,10 +106,10 @@ public class AddBeneficiaryAsSourceOfFundFragment extends IpayAbstractSpecificSo
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, getContext(), null)) {
             mGetBeneficiaryAsyncTask = null;
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             return;
         } else {
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 GetBeneficiaryListResponse getBeneficiaryListResponse = new Gson().
                         fromJson(result.getJsonString(), GetBeneficiaryListResponse.class);

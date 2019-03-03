@@ -20,10 +20,10 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.HttpErrorHandler;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.GenericResponseWithMessageOnly;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SourceOfFund.IpayProgressDialog;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AcceptOrRejectBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.SourceOfFund.models.AddBeneficiaryRequest;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -34,7 +34,7 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
     private View bodyView;
     private Context context;
 
-    private IpayProgressDialog ipayProgressDialog;
+    private CustomProgressDialog mProgressDialog;
 
     private ImageView cancelImageView;
 
@@ -87,7 +87,7 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
         ((TextView) headerView.findViewById(R.id.title)).setText("Edit Permission");
         cancelImageView = (ImageView) headerView.findViewById(R.id.cancel);
         instructionTextView = (TextView) bodyView.findViewById(R.id.instruction);
-        ipayProgressDialog = new IpayProgressDialog(context);
+        mProgressDialog = new CustomProgressDialog(context);
         monthlyLimitEditText = (EditText) bodyView.findViewById(R.id.amount);
         updateButton = (Button) bodyView.findViewById(R.id.update);
         String instructionText = instructionTextView.getText().toString();
@@ -165,8 +165,7 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
                     Constants.BASE_URL_MM + Constants.URL_ADD_BENEFICIARY,
                     new Gson().toJson(addBeneficiaryRequest), context, this, false);
             mAddBeneficiaryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setMessage("Please wait ");
-            ipayProgressDialog.show();
+            mProgressDialog.show();
         }
     }
 
@@ -181,8 +180,7 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
                             Constants.URL_ACCEPT_OR_REJECT_SOURCE_OF_FUND + id,
                     new Gson().toJson(acceptOrRejectBeneficiaryRequest), context, this, false);
             mUpdateBeneficiaryAsyckTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ipayProgressDialog.setMessage("Please wait . . .");
-            ipayProgressDialog.show();
+            mProgressDialog.show();
         }
     }
 
@@ -190,10 +188,10 @@ public class BeneficiaryUpdateDialog implements HttpResponseListener {
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (HttpErrorHandler.isErrorFound(result, context, null)) {
             mUpdateBeneficiaryAsyckTask = null;
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             return;
         } else {
-            ipayProgressDialog.dismiss();
+            mProgressDialog.dismiss();
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_OR_REJECT_BENEFICIARY)) {
                     GenericResponseWithMessageOnly genericResponseWithMessageOnly =
