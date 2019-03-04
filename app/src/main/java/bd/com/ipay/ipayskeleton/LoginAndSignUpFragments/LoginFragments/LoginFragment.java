@@ -342,14 +342,14 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         }
     }
 
-    private void getAddedCards() {
-        if (mGetAllAddedCards != null) return;
-        else {
-            mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
-                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity(), this, false);
-            mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
+//    private void getAddedCards() {
+//        if (mGetAllAddedCards != null) return;
+//        else {
+//            mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
+//                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity(), this, false);
+//            mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        }
+//    }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -425,7 +425,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId());
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
-                            hideProgressDialog();
 
                             /*
                              * Two situation might arise here. Wrong user name or password throws 401
@@ -482,7 +481,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                 mLoginTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
-                hideProgressDialog();
 
                 try {
                     mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
@@ -491,12 +489,17 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
                         getProfileInfo();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                        hideProgressDialog();
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                    else
+                    }
+                    else {
+                        hideProgressDialog();
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
 
                 } catch (Exception e) {
+                    hideProgressDialog();
                     e.printStackTrace();
                     Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device));
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
@@ -504,42 +507,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                 mAddTrustedDeviceTask = null;
                 break;
-
-            case Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS:
-                hideProgressDialog();
-                try {
-                    mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                        mProfileCompletionStatusResponse.initScoreFromPropertyName();
-                        ProfileInfoCacheManager.switchedFromSignup(false);
-                        ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
-                        ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
-                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
-                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
-
-                        if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
-                            if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
-                                ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                            } else {
-                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                            }
-                        } else getAddedCards();
-                    } else {
-                        if (getActivity() != null)
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                }
-                mProgressDialog.dismiss();
-                mGetProfileCompletionStatusTask = null;
-                break;
-
 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
@@ -562,30 +529,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                 break;
 
-            case Constants.COMMAND_ADD_CARD:
-                try {
-                    mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                        if (!mGetCardResponse.isAnyCardVerified()) {
-                            ProfileInfoCacheManager.addSourceOfFund(false);
-                        } else ProfileInfoCacheManager.addSourceOfFund(true);
-
-                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
-                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        } else {
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                        }
-                    } else {
-                        Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
-                    }
-                } catch (Exception e) {
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-                mGetAllAddedCards = null;
-                break;
-
             case Constants.COMMAND_GET_BULK_SIGN_UP_USER_DETAILS:
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -598,6 +541,41 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                 getProfileCompletionStatus();
                 mGetBulkSignupUserDetailsTask = null;
                 break;
+
+
+            case Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS:
+                hideProgressDialog();
+                try {
+                    mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                        mProfileCompletionStatusResponse.initScoreFromPropertyName();
+                        ProfileInfoCacheManager.switchedFromSignup(false);
+                        ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
+                        ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
+                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
+                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
+
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() &&
+                                (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
+                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        } else {
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        }
+                    } else {
+                        if (getActivity() != null)
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                }
+                mGetProfileCompletionStatusTask = null;
+                break;
+
 
             default:
                 hideProgressDialog();
