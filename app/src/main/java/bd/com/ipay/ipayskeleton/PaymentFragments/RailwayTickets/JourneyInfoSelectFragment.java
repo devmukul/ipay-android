@@ -437,11 +437,15 @@ public class JourneyInfoSelectFragment extends Fragment implements HttpResponseL
             mAdultSelection.setError(getContext().getString(R.string.invalid_no_of_ticket));
             focusedView = mAdultSelection;
             cancel = true;
-        } else if (Integer.valueOf(mAdultSelection.getText().toString())== 1) {
-            if (mGenderSelection.getText().toString().trim().length() == 0) {
-                mGenderSelection.setError(getContext().getString(R.string.invalid_gender));
-                focusedView = mGenderSelection;
-                cancel = true;
+        } else if ((TextUtils.isEmpty(mAdultSelection.getText().toString()) || Integer.valueOf(mAdultSelection.getText().toString())== 1)) {
+
+            if ( (TextUtils.isEmpty(mChildSelection.getText().toString()) || Integer.valueOf(mChildSelection.getText().toString())== 0)) {
+
+                if ((TextUtils.isEmpty(mGenderSelection.getText().toString()) || mGenderSelection.getText().toString().trim().length() == 0)) {
+                    mGenderSelection.setError(getContext().getString(R.string.invalid_gender));
+                    focusedView = mGenderSelection;
+                    cancel = true;
+                }
             }
         }
 

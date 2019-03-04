@@ -91,8 +91,8 @@ public class Utilities {
     public static void updateLocale() {
         dateFormat = new SimpleDateFormat("dd/MM/yyyy, h:mm a", Locale.getDefault());
         timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-        DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.getDefault());
-        DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+        DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMMM d, yyyy, h:mm a", Locale.getDefault());
+        DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
         DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     }
