@@ -41,9 +41,11 @@ import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
@@ -501,18 +503,20 @@ public class HomeActivity extends BaseActivity
 	}
 
 	private void updateNotificationBadgeCount(int badgeCount) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 		mBadgeCount = badgeCount;
-		Logger.logD("Notification Count", badgeCount + "");
 		if (mOptionsMenu != null) {
-			if (badgeCount > 0) {
-				ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY,
-						badgeCount + SharedPrefManager.getNotificationCount());
+			int totalBadge = badgeCount + SharedPrefManager.getNotificationCount();
+			if (totalBadge > 0) {
+				if(totalBadge>9) {
+                    ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY,
+                            String.valueOf(numberFormat.format(9)) + "+");
+                }
+				else
+					ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY,
+                            String.valueOf(numberFormat.format(totalBadge)));
 			} else {
-				if (SharedPrefManager.getNotificationCount() != 0) {
-					ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, SharedPrefManager.getNotificationCount());
-				} else {
-					ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
-				}
+				ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
 			}
 		}
 	}
