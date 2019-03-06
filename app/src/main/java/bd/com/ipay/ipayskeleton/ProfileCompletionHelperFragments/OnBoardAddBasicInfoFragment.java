@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,27 +135,32 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         boolean isChecked = BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true);
 
         if(!isChecked){
-            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-                    getString(R.string.bulk_signup_basic_info_helper_msg));
+            final String cachePresentAddress = BulkSignupUserDetailsCacheManager.getPresentAddress(null);
+            final String cacheOrganizationName = BulkSignupUserDetailsCacheManager.getOrganizationName(null);
 
-            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    mAddressLine1Field.setText(BulkSignupUserDetailsCacheManager.getPresentAddress(null));
-                    mOrganizationNameEditText.setText(BulkSignupUserDetailsCacheManager.getOrganizationName(null));
-                    bulkSignUpHelperDialog.cancel();
-                }
-            });
+            if(!TextUtils.isEmpty(cachePresentAddress) || !TextUtils.isEmpty(cacheOrganizationName)) {
+                final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                        getString(R.string.bulk_signup_basic_info_helper_msg));
 
-            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    bulkSignUpHelperDialog.cancel();
-                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
-                }
-            });
+                bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mAddressLine1Field.setText(cachePresentAddress);
+                        mOrganizationNameEditText.setText(cacheOrganizationName);
+                        bulkSignUpHelperDialog.cancel();
+                    }
+                });
 
-            bulkSignUpHelperDialog.show();
+                bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bulkSignUpHelperDialog.cancel();
+                        bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
+                    }
+                });
+
+                bulkSignUpHelperDialog.show();
+            }
         }
 
         return v;

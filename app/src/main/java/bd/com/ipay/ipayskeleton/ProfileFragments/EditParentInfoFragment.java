@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -107,29 +108,37 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
         });
 
         if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
-            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-                    getString(R.string.bulk_signup_basic_info_helper_msg));
+            final String cacheFathersName = BulkSignupUserDetailsCacheManager.getFatherName(null);
+            final String cacheFathersMobile = BulkSignupUserDetailsCacheManager.getFatherMobile(null);
+            final String cacheMothersName = BulkSignupUserDetailsCacheManager.getMotherName(null);
+            final String cacheMothersMobile = BulkSignupUserDetailsCacheManager.getMotherMobile(null);
 
-            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    mFathersNameEditText.setText(BulkSignupUserDetailsCacheManager.getFatherName(null));
-                    mFathersMobileEditText.setText(BulkSignupUserDetailsCacheManager.getFatherMobile(null));
-                    mMothersNameEditText.setText(BulkSignupUserDetailsCacheManager.getMotherName(null));
-                    mMothersMobileEditText.setText(BulkSignupUserDetailsCacheManager.getMotherMobile(null));
-                    bulkSignUpHelperDialog.cancel();
-                }
-            });
+            if(!TextUtils.isEmpty(cacheFathersName) || !TextUtils.isEmpty(cacheFathersMobile) || !TextUtils.isEmpty(cacheMothersName) || !TextUtils.isEmpty(cacheMothersMobile)) {
 
-            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    bulkSignUpHelperDialog.cancel();
-                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
-                }
-            });
+                final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                        getString(R.string.bulk_signup_basic_info_helper_msg));
 
-            bulkSignUpHelperDialog.show();
+                bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mFathersNameEditText.setText(cacheFathersName);
+                        mFathersMobileEditText.setText(cacheFathersMobile);
+                        mMothersNameEditText.setText(cacheMothersName);
+                        mMothersMobileEditText.setText(cacheMothersMobile);
+                        bulkSignUpHelperDialog.cancel();
+                    }
+                });
+
+                bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bulkSignUpHelperDialog.cancel();
+                        bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
+                    }
+                });
+
+                bulkSignUpHelperDialog.show();
+            }
         }
 
         return view;
