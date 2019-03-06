@@ -124,7 +124,7 @@ public class AmberITBillPayFragment extends BaseFragment implements HttpResponse
             @Override
             public void onClick(View view) {
                 if (Utilities.isConnectionAvailable(getContext())) {
-                    if (mContinueButton.getText().toString().toUpperCase().equals("CONTINUE")) {
+                    if (mContinueButton.getText().toString().toUpperCase().equals(getString(R.string.continue_button))) {
                         if (verifyUserInput()) {
                             getCustomerInfo();
                         }
