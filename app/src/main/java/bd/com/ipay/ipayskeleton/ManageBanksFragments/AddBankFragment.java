@@ -178,27 +178,32 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         });
 
         if(!BulkSignupUserDetailsCacheManager.isBankInfoChecked(true)){
-            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-                    getString(R.string.bulk_signup_bank_helper_msg));
+            final String cacheAccountName = BulkSignupUserDetailsCacheManager.getBankAccountName(null);
+            final String cacheAccountNumber = BulkSignupUserDetailsCacheManager.getBankAccountNumber(null);
 
-            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    mAccountNameEditText.setText(BulkSignupUserDetailsCacheManager.getBankAccountName(null));
-                    mAccountNumberEditText.setText(BulkSignupUserDetailsCacheManager.getBankAccountNumber(null));
-                    bulkSignUpHelperDialog.cancel();
-                }
-            });
+            if(!TextUtils.isEmpty(cacheAccountName) || !TextUtils.isEmpty(cacheAccountNumber)) {
+                final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                        getString(R.string.bulk_signup_bank_helper_msg));
 
-            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    bulkSignUpHelperDialog.cancel();
-                    bulkSignUpHelperDialog.setCheckedResponse("Bank");
-                }
-            });
+                bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mAccountNameEditText.setText(cacheAccountName);
+                        mAccountNumberEditText.setText(cacheAccountNumber);
+                        bulkSignUpHelperDialog.cancel();
+                    }
+                });
 
-            bulkSignUpHelperDialog.show();
+                bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bulkSignUpHelperDialog.cancel();
+                        bulkSignUpHelperDialog.setCheckedResponse("Bank");
+                    }
+                });
+
+                bulkSignUpHelperDialog.show();
+            }
         }
 
 

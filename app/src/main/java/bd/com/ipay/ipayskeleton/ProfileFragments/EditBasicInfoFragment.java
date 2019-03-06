@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,26 +138,31 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 		setOccupation();
 
         if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
-			final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-					getString(R.string.bulk_signup_basic_info_helper_msg));
+			final String cacheOrganizationName = BulkSignupUserDetailsCacheManager.getOrganizationName(null);
 
-            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    mOrganizationNameEditText.setText(BulkSignupUserDetailsCacheManager.getOrganizationName(null));
-                    bulkSignUpHelperDialog.cancel();
-                }
-            });
+			if(!TextUtils.isEmpty(cacheOrganizationName)) {
 
-            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    bulkSignUpHelperDialog.cancel();
-                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
-                }
-            });
+				final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+						getString(R.string.bulk_signup_basic_info_helper_msg));
 
-            bulkSignUpHelperDialog.show();
+				bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						mOrganizationNameEditText.setText(cacheOrganizationName);
+						bulkSignUpHelperDialog.cancel();
+					}
+				});
+
+				bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						bulkSignUpHelperDialog.cancel();
+						bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
+					}
+				});
+
+				bulkSignUpHelperDialog.show();
+			}
         }
 
         return view;

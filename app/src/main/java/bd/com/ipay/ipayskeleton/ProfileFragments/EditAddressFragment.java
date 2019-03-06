@@ -102,30 +102,56 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
         });
 
         if(!BulkSignupUserDetailsCacheManager.isBasicInfoChecked(true)){
-            final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
-                    getString(R.string.bulk_signup_basic_info_helper_msg));
+            final String cachePresentAddress = BulkSignupUserDetailsCacheManager.getPresentAddress(null);
+            final String cacheParmanentAddress = BulkSignupUserDetailsCacheManager.getPermanentAddress(null);
 
-            bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    if(mAddressType.equals(Constants.ADDRESS_TYPE_PRESENT)) {
-                        mAddressLine1Field.setText(BulkSignupUserDetailsCacheManager.getPresentAddress(null));
-                    }else{
-                        mAddressLine1Field.setText(BulkSignupUserDetailsCacheManager.getPermanentAddress(null));
-                    }
-                    bulkSignUpHelperDialog.cancel();
+            if (mAddressType.equals(Constants.ADDRESS_TYPE_PRESENT)) {
+                if(!TextUtils.isEmpty(cachePresentAddress)) {
+                    final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                            getString(R.string.bulk_signup_basic_info_helper_msg));
+
+                    bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mAddressLine1Field.setText(cachePresentAddress);
+                            bulkSignUpHelperDialog.cancel();
+                        }
+                    });
+
+                    bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            bulkSignUpHelperDialog.cancel();
+                            bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
+                        }
+                    });
+
+                    bulkSignUpHelperDialog.show();
                 }
-            });
+            } else {
+                if(!TextUtils.isEmpty(cacheParmanentAddress)) {
+                    final BulkSignUpHelperDialog bulkSignUpHelperDialog = new BulkSignUpHelperDialog(getContext(),
+                            getString(R.string.bulk_signup_basic_info_helper_msg));
 
-            bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    bulkSignUpHelperDialog.cancel();
-                    bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
+                    bulkSignUpHelperDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mAddressLine1Field.setText(cacheParmanentAddress);
+                            bulkSignUpHelperDialog.cancel();
+                        }
+                    });
+
+                    bulkSignUpHelperDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            bulkSignUpHelperDialog.cancel();
+                            bulkSignUpHelperDialog.setCheckedResponse("BasicInfo");
+                        }
+                    });
+
+                    bulkSignUpHelperDialog.show();
                 }
-            });
-
-            bulkSignUpHelperDialog.show();
+            }
         }
 
         return v;
