@@ -283,6 +283,7 @@ public class Constants {
     public static final String ZONE_CODE = "ZONE_CODE";
     public static final String DUE_DATE = "DUE_DATE";
     public static final String BILL_NUMBER = "BILL_NUMBER";
+    public static final String WASA = "WASA";
 
 
     public static String ROLEID = "ROLEID";

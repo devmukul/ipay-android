@@ -1180,5 +1180,6 @@
     <string name="not_found">Not found</string>
     <string name="buy_this_ticket">BUY THIS TICKET</string>
     <string name="fare">Fare(Tk)</string>
+    <string name="wasa">Dhaka WASA</string>
 
 </resources>

@@ -117,7 +117,7 @@ public class DpdcBillPaymentFragment extends BaseFragment implements HttpRespons
 		customerIDView = view.findViewById(R.id.customer_id_view);
 		infoView = view.findViewById(R.id.info_view);
 		mAccountIDEditText = (EditText) view.findViewById(R.id.customer_id_edit_text);
-		mContinueButton = (Button) view.findViewById(R.id.continue_button);
+		mContinueButton = (Button) view.findViewById(R.id.button_send_money);
 		mBillNumberTextView = (TextView) view.findViewById(R.id.bill_number);
 
 		UtilityBillPaymentActivity.mMandatoryBusinessRules = BusinessRuleCacheManager.getBusinessRules(Constants.UTILITY_BILL_PAYMENT);
