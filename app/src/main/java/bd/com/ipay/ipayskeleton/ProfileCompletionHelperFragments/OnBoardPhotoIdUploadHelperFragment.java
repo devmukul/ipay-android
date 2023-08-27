@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
 
     private ImageView mUploadImageView;
+
     private Button mUploadButton;
     private Button mSkipButton;
     private ImageView mBackButtonTop;
